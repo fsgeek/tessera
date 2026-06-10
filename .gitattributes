@@ -1,0 +1,16 @@
+# Enforce LF line endings in the repository for all text files.
+# Rationale: this project's integrity rests on GPG signatures and OpenTimestamps
+# hashes over canonical bytes. A CRLF/LF flip after signing or stamping would
+# invalidate those without any visible source change. We normalize to LF on
+# commit regardless of the checkout platform (Windows tooling may still touch
+# these files). See docs/ pre-registration for the WHO/WHEN integrity model.
+* text=auto eol=lf
+
+# Explicitly binary — never normalize, never diff as text.
+*.ots    binary
+*.asc    -text
+*.pdf    binary
+*.png    binary
+*.jpg    binary
+*.gz     binary
+*.zip    binary

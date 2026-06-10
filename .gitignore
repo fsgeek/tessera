@@ -1,0 +1,40 @@
+# --- Secrets and credentials (NEVER commit) ---
+# Hard rule for this project: no key material, no credentials, ever — see the
+# "secure observability" invariant in the Phase-0 pre-registration.
+.env
+.env.*
+*.pem
+*.key
+!**/*.pub.key            # allow explicitly-public keys if ever named this way
+*.p12
+*.pfx
+secrets/
+.aws/
+aws-credentials*
+**/credentials
+*.tfvars                 # Terraform variable files often hold secrets
+*.tfvars.json
+
+# --- Python / uv ---
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+*.egg-info/
+
+# --- Tooling state ---
+.serena/
+
+# --- Terraform / IaC state (later phases) ---
+*.tfstate
+*.tfstate.*
+.terraform/
+.terraform.lock.hcl
+
+# --- OS / editor noise ---
+.DS_Store
+Thumbs.db
+*.swp
+*~
