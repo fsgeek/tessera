@@ -16,7 +16,7 @@ requires a signed amendment.
 | P1   | Integrity (headline)               | [model]        | TLA+ and ProVerif  | open   | —        |
 | P2   | Signature-set completeness         | [model]        | TLA+ and ProVerif  | open   | —        |
 | P3   | Key binding (anti-DSKS)            | [model]+[assum]| ProVerif; H1a prof.| open   | —        |
-| P4   | Fail-closed state logic            | [model]        | TLA+               | open   | —        |
+| P4   | Fail-closed state logic            | [model]        | TLA+               | checked| `formal/tla/P4_VerifierStates.tla` |
 | P5   | Temporal soundness (two-sided)     | [model]+[assum]| TLA+               | open   | —        |
 | P6   | Revocation over uncertainty window | [model]        | TLA+               | open   | —        |
 | P7   | Wrapper / object-type soundness    | [model]        | TLA+ and ProVerif  | open   | —        |
