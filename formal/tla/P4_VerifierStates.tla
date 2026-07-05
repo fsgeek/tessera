@@ -109,4 +109,17 @@ UnverifiableIsHonest ==
     /\ \E c \in RequiredUnder(waived) : status[c] = "unperformable"
     /\ \A c \in RequiredUnder(waived) : status[c] # "fail"
 
+(***************************************************************************)
+(* Vacuity checks — used ONLY by the _Sanity cfg (run with TLC -continue), *)
+(* where TLC VIOLATING all four is the healthy result: each verdict is    *)
+(* reachable under the correct verdict function, so the implication-      *)
+(* shaped invariants above are not vacuously true. If VerdictFor had a    *)
+(* bug making any verdict unsatisfiable, its invariants would pass        *)
+(* vacuously — these witnesses close that hole.                            *)
+(***************************************************************************)
+VerdictNeverStrict       == Verdict # "VALID_STRICT"
+VerdictNeverDegraded     == Verdict # "VALID_DEGRADED"
+VerdictNeverInvalid      == Verdict # "INVALID"
+VerdictNeverUnverifiable == Verdict # "UNVERIFIABLE"
+
 ===================================================================================
