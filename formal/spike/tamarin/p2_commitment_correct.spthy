@@ -1,0 +1,119 @@
+/*
+  Tessera Band 0 tool spike — Tamarin candidate
+  Fragment: P2 (signature-set completeness / anti-stripping), minimal form.
+  Governed by Amendment 1 §A1.4 and formal/spike/SPIKE.md.
+
+  This is the CORRECT construction: the required-signer manifest is
+  committed INSIDE the signed bytes. Each signature is over the pair
+  <payload, manifest>, so a signature made for a dual-signed package can
+  never verify as a signature for a single-signed one. "Issued with one"
+  and "issued with two, one stripped" are distinguishable by construction
+  — the A1.2 P2 claim, in miniature. Both stripping directions are
+  modeled: strip KMS → present as gpg_only, and strip GPG → present as
+  kms_only.
+
+  Companion file p2_commitment_broken.spthy removes the commitment (signs
+  the payload alone) and Tamarin finds the stripping attack.
+
+  Reading guide (Tony): rules are protocol steps; facts in [ ] are
+  consumed, facts in [ ]-> are produced; --[ Action ]-> records events the
+  lemmas quantify over; !F is a persistent fact; ~x is a fresh value;
+  'both' is a public constant. The Dolev-Yao adversary sits on the
+  network: everything Out() is theirs, everything In() may be theirs.
+*/
+
+theory Tessera_P2_Correct
+begin
+
+builtins: signing
+
+/* One issuer, two long-lived keys in independent custody domains:
+   ~kms (cloud custody) and ~gpg (local custody). Public keys published.
+   The single_issuer restriction below pins this rule to one firing, for
+   parity with the ProVerif model's single top-level keypair. */
+rule Register_Issuer:
+  [ Fr(~kms), Fr(~gpg) ]
+  --[ IssuerRegistered() ]->
+  [ !IssuerKeys(~kms, ~gpg)
+  , !PkKms(pk(~kms))
+  , !PkGpg(pk(~gpg))
+  , Out(pk(~kms))
+  , Out(pk(~gpg)) ]
+
+restriction single_issuer:
+  "All #i #j. IssuerRegistered() @ i & IssuerRegistered() @ j ==> #i = #j"
+
+/* Issue a dual-signed package. The manifest constant 'both' is inside
+   the signed bytes — this is the P2 commitment. */
+rule Issue_Both:
+  [ !IssuerKeys(~kms, ~gpg), Fr(~p) ]
+  --[ Issued(~p, 'both') ]->
+  [ Out(<~p, 'both',
+        sign(<~p, 'both'>, ~kms),
+        sign(<~p, 'both'>, ~gpg)>) ]
+
+/* The issuer may also legitimately issue single-signed packages under
+   either key alone (so both single-signature acceptance paths exist to
+   attack — the adversary may strip EITHER signature). */
+rule Issue_GpgOnly:
+  [ !IssuerKeys(~kms, ~gpg), Fr(~p) ]
+  --[ Issued(~p, 'gpg_only') ]->
+  [ Out(<~p, 'gpg_only', sign(<~p, 'gpg_only'>, ~gpg)>) ]
+
+rule Issue_KmsOnly:
+  [ !IssuerKeys(~kms, ~gpg), Fr(~p) ]
+  --[ Issued(~p, 'kms_only') ]->
+  [ Out(<~p, 'kms_only', sign(<~p, 'kms_only'>, ~kms)>) ]
+
+/* Verifier, dual-manifest path: accepts 'both' only if BOTH signatures
+   verify over bytes that commit to 'both'. */
+rule Verify_Both:
+  [ In(<p, 'both', s1, s2>), !PkKms(pkK), !PkGpg(pkG) ]
+  --[ Accepted(p, 'both')
+    , Eq(verify(s1, <p, 'both'>, pkK), true)
+    , Eq(verify(s2, <p, 'both'>, pkG), true) ]->
+  []
+
+/* Verifier, single-manifest paths: one signature suffices — but it must
+   verify over bytes committing to THAT single-signer manifest. */
+rule Verify_GpgOnly:
+  [ In(<p, 'gpg_only', s>), !PkGpg(pkG) ]
+  --[ Accepted(p, 'gpg_only')
+    , Eq(verify(s, <p, 'gpg_only'>, pkG), true) ]->
+  []
+
+rule Verify_KmsOnly:
+  [ In(<p, 'kms_only', s>), !PkKms(pkK) ]
+  --[ Accepted(p, 'kms_only')
+    , Eq(verify(s, <p, 'kms_only'>, pkK), true) ]->
+  []
+
+restriction Equality:
+  "All x y #i. Eq(x, y) @ i ==> x = y"
+
+/* Sanity: every acceptance path is actually reachable (the model is not
+   vacuously secure). */
+lemma executable_both:
+  exists-trace
+  "Ex p #i. Accepted(p, 'both') @ i"
+
+lemma executable_gpg_only:
+  exists-trace
+  "Ex p #i. Accepted(p, 'gpg_only') @ i"
+
+lemma executable_kms_only:
+  exists-trace
+  "Ex p #i. Accepted(p, 'kms_only') @ i"
+
+/* P2, minimal form: whatever manifest the verifier accepts a package
+   under, the issuer issued that package under THAT manifest. A dual-
+   signed package with either signature stripped cannot be accepted under
+   a single-signer manifest, because each signature commits to 'both'.
+   Note: rejection is modeled as non-acceptance; the typed verdict
+   partition (INVALID vs UNVERIFIABLE) is P4's state-machine concern,
+   assigned to TLA+ by A1.4 — not this fragment's job. */
+lemma p2_manifest_binding:
+  "All p m #i. Accepted(p, m) @ i
+     ==> Ex #j. Issued(p, m) @ j & j < i"
+
+end

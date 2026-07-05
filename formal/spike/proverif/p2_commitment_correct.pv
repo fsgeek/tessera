@@ -1,0 +1,95 @@
+(*
+  Tessera Band 0 tool spike — ProVerif candidate
+  Fragment: P2 (signature-set completeness / anti-stripping), minimal
+  form — the same fragment as the Tamarin candidate, for the A1.4
+  expressiveness/readability comparison. Single issuer (matching the
+  Tamarin model's single_issuer restriction); both stripping directions
+  modeled via gpg_only and kms_only manifests.
+
+  CORRECT construction: the required-signer manifest is committed INSIDE
+  the signed bytes; each signature is over the pair (payload, manifest).
+
+  Reading guide (Tony): ProVerif models processes in the applied pi
+  calculus. `out(c, ...)`/`in(c, ...)` are network sends/receives on the
+  public channel c — the Dolev-Yao adversary owns c. `new x` creates a
+  fresh secret; `!` replicates a process unboundedly; `=M` in a pattern
+  requires an exact match. The query is a correspondence assertion:
+  every Accepted event must be preceded by a matching Issued event.
+  Rejection is modeled as non-acceptance; the typed verdict partition
+  (INVALID vs UNVERIFIABLE) is P4's state-machine concern, assigned to
+  TLA+ by A1.4 — not this fragment's job.
+*)
+
+free c: channel.
+
+type skey.
+type pkey.
+
+fun pk(skey): pkey.
+fun sign(bitstring, skey): bitstring.
+reduc forall m: bitstring, k: skey; checksign(sign(m, k), pk(k)) = m.
+
+(* Manifest labels are public constants. *)
+free ManifestBoth: bitstring.
+free ManifestGpgOnly: bitstring.
+free ManifestKmsOnly: bitstring.
+
+event Issued(bitstring, bitstring).
+event Accepted(bitstring, bitstring).
+
+(* P2, minimal form: whatever manifest the verifier accepts under, the
+   issuer issued under THAT manifest. *)
+query p: bitstring, m: bitstring;
+  event(Accepted(p, m)) ==> event(Issued(p, m)).
+
+(* Sanity: every acceptance path is reachable (model not vacuously
+   secure). ProVerif idiom: reachability is queried negatively — these
+   queries coming back "false" is the healthy result. *)
+query p: bitstring; event(Accepted(p, ManifestBoth)).
+query p: bitstring; event(Accepted(p, ManifestGpgOnly)).
+query p: bitstring; event(Accepted(p, ManifestKmsOnly)).
+
+let issuerBoth(kkms: skey, kgpg: skey) =
+  new p: bitstring;
+  event Issued(p, ManifestBoth);
+  out(c, (p, ManifestBoth,
+          sign((p, ManifestBoth), kkms),
+          sign((p, ManifestBoth), kgpg))).
+
+let issuerGpgOnly(kgpg: skey) =
+  new p: bitstring;
+  event Issued(p, ManifestGpgOnly);
+  out(c, (p, ManifestGpgOnly, sign((p, ManifestGpgOnly), kgpg))).
+
+let issuerKmsOnly(kkms: skey) =
+  new p: bitstring;
+  event Issued(p, ManifestKmsOnly);
+  out(c, (p, ManifestKmsOnly, sign((p, ManifestKmsOnly), kkms))).
+
+let verifierBoth(pkms: pkey, pgpg: pkey) =
+  in(c, (p: bitstring, =ManifestBoth, s1: bitstring, s2: bitstring));
+  if checksign(s1, pkms) = (p, ManifestBoth) then
+  if checksign(s2, pgpg) = (p, ManifestBoth) then
+  event Accepted(p, ManifestBoth).
+
+let verifierGpgOnly(pgpg: pkey) =
+  in(c, (p: bitstring, =ManifestGpgOnly, s: bitstring));
+  if checksign(s, pgpg) = (p, ManifestGpgOnly) then
+  event Accepted(p, ManifestGpgOnly).
+
+let verifierKmsOnly(pkms: pkey) =
+  in(c, (p: bitstring, =ManifestKmsOnly, s: bitstring));
+  if checksign(s, pkms) = (p, ManifestKmsOnly) then
+  event Accepted(p, ManifestKmsOnly).
+
+process
+  new kkms: skey;
+  new kgpg: skey;
+  out(c, pk(kkms));
+  out(c, pk(kgpg));
+  ( !issuerBoth(kkms, kgpg)
+  | !issuerGpgOnly(kgpg)
+  | !issuerKmsOnly(kkms)
+  | !verifierBoth(pk(kkms), pk(kgpg))
+  | !verifierGpgOnly(pk(kgpg))
+  | !verifierKmsOnly(pk(kkms)) )

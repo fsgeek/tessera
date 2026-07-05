@@ -1,0 +1,166 @@
+Process 0 (that is, the initial process):
+{1}new kkms: skey;
+{2}new kgpg: skey;
+{3}out(c, pk(kkms));
+{4}out(c, pk(kgpg));
+(
+    {5}!
+    {6}let kkms_1: skey = kkms in
+    {7}let kgpg_1: skey = kgpg in
+    {8}new p: bitstring;
+    {9}event Issued(p,ManifestBoth);
+    {10}out(c, (p,ManifestBoth,sign(p,kkms_1),sign(p,kgpg_1)))
+) | (
+    {11}!
+    {12}let kgpg_2: skey = kgpg in
+    {13}new p_1: bitstring;
+    {14}event Issued(p_1,ManifestGpgOnly);
+    {15}out(c, (p_1,ManifestGpgOnly,sign(p_1,kgpg_2)))
+) | (
+    {16}!
+    {17}let kkms_2: skey = kkms in
+    {18}new p_2: bitstring;
+    {19}event Issued(p_2,ManifestKmsOnly);
+    {20}out(c, (p_2,ManifestKmsOnly,sign(p_2,kkms_2)))
+) | (
+    {21}!
+    {22}let pkms: pkey = pk(kkms) in
+    {23}let pgpg: pkey = pk(kgpg) in
+    {24}in(c, (p_3: bitstring,=ManifestBoth,s1: bitstring,s2: bitstring));
+    {25}if (checksign(s1,pkms) = p_3) then
+    {26}if (checksign(s2,pgpg) = p_3) then
+    {27}event Accepted(p_3,ManifestBoth)
+) | (
+    {28}!
+    {29}let pgpg_1: pkey = pk(kgpg) in
+    {30}in(c, (p_4: bitstring,=ManifestGpgOnly,s: bitstring));
+    {31}if (checksign(s,pgpg_1) = p_4) then
+    {32}event Accepted(p_4,ManifestGpgOnly)
+) | (
+    {33}!
+    {34}let pkms_1: pkey = pk(kkms) in
+    {35}in(c, (p_5: bitstring,=ManifestKmsOnly,s_1: bitstring));
+    {36}if (checksign(s_1,pkms_1) = p_5) then
+    {37}event Accepted(p_5,ManifestKmsOnly)
+)
+
+--  Process 1 (that is, process 0, with let moved downwards):
+{1}new kkms: skey;
+{2}new kgpg: skey;
+{3}out(c, pk(kkms));
+{4}out(c, pk(kgpg));
+(
+    {5}!
+    {8}new p: bitstring;
+    {9}event Issued(p,ManifestBoth);
+    {7}let kgpg_1: skey = kgpg in
+    {6}let kkms_1: skey = kkms in
+    {10}out(c, (p,ManifestBoth,sign(p,kkms_1),sign(p,kgpg_1)))
+) | (
+    {11}!
+    {13}new p_1: bitstring;
+    {14}event Issued(p_1,ManifestGpgOnly);
+    {12}let kgpg_2: skey = kgpg in
+    {15}out(c, (p_1,ManifestGpgOnly,sign(p_1,kgpg_2)))
+) | (
+    {16}!
+    {18}new p_2: bitstring;
+    {19}event Issued(p_2,ManifestKmsOnly);
+    {17}let kkms_2: skey = kkms in
+    {20}out(c, (p_2,ManifestKmsOnly,sign(p_2,kkms_2)))
+) | (
+    {21}!
+    {24}in(c, (p_3: bitstring,=ManifestBoth,s1: bitstring,s2: bitstring));
+    {22}let pkms: pkey = pk(kkms) in
+    {25}if (checksign(s1,pkms) = p_3) then
+    {23}let pgpg: pkey = pk(kgpg) in
+    {26}if (checksign(s2,pgpg) = p_3) then
+    {27}event Accepted(p_3,ManifestBoth)
+) | (
+    {28}!
+    {30}in(c, (p_4: bitstring,=ManifestGpgOnly,s: bitstring));
+    {29}let pgpg_1: pkey = pk(kgpg) in
+    {31}if (checksign(s,pgpg_1) = p_4) then
+    {32}event Accepted(p_4,ManifestGpgOnly)
+) | (
+    {33}!
+    {35}in(c, (p_5: bitstring,=ManifestKmsOnly,s_1: bitstring));
+    {34}let pkms_1: pkey = pk(kkms) in
+    {36}if (checksign(s_1,pkms_1) = p_5) then
+    {37}event Accepted(p_5,ManifestKmsOnly)
+)
+
+-- Query event(Accepted(p_6,m)) ==> event(Issued(p_6,m)) in process 1.
+Translating the process into Horn clauses...
+Completing...
+Starting query event(Accepted(p_6,m)) ==> event(Issued(p_6,m))
+goal reachable: b-event(Issued(p_6,ManifestBoth[])) -> event(Accepted(p_6,ManifestKmsOnly[]))
+Abbreviations:
+p_6 = p[!1 = @sid]
+
+Derivation:
+Abbreviations:
+p_6 = p[!1 = @sid]
+
+1. The event Issued(p_6,ManifestBoth[]) may be executed at {9}.
+So the message (p_6,ManifestBoth[],sign(p_6,kkms[]),sign(p_6,kgpg[])) may be sent to the attacker at output {10}.
+attacker((p_6,ManifestBoth[],sign(p_6,kkms[]),sign(p_6,kgpg[]))).
+
+2. By 1, the attacker may know (p_6,ManifestBoth[],sign(p_6,kkms[]),sign(p_6,kgpg[])).
+Using the function 3-proj-4-tuple the attacker may obtain sign(p_6,kkms[]).
+attacker(sign(p_6,kkms[])).
+
+3. The attacker initially knows ManifestKmsOnly[].
+attacker(ManifestKmsOnly[]).
+
+4. By 1, the attacker may know (p_6,ManifestBoth[],sign(p_6,kkms[]),sign(p_6,kgpg[])).
+Using the function 1-proj-4-tuple the attacker may obtain p_6.
+attacker(p_6).
+
+5. By 4, the attacker may know p_6.
+By 3, the attacker may know ManifestKmsOnly[].
+By 2, the attacker may know sign(p_6,kkms[]).
+Using the function 3-tuple the attacker may obtain (p_6,ManifestKmsOnly[],sign(p_6,kkms[])).
+attacker((p_6,ManifestKmsOnly[],sign(p_6,kkms[]))).
+
+6. The message (p_6,ManifestKmsOnly[],sign(p_6,kkms[])) that the attacker may have by 5 may be received at input {35}.
+So event Accepted(p_6,ManifestKmsOnly[]) may be executed at {37}.
+event(Accepted(p_6,ManifestKmsOnly[])).
+
+7. By 6, event(Accepted(p_6,ManifestKmsOnly[])).
+The goal is reached, represented in the following fact:
+event(Accepted(p_6,ManifestKmsOnly[])).
+
+
+A more detailed output of the traces is available with
+  set traceDisplay = long.
+
+new kkms: skey creating kkms_3 at {1}
+
+new kgpg: skey creating kgpg_3 at {2}
+
+out(c, ~M) with ~M = pk(kkms_3) at {3}
+
+out(c, ~M_1) with ~M_1 = pk(kgpg_3) at {4}
+
+new p: bitstring creating p_7 at {8} in copy a
+
+event Issued(p_7,ManifestBoth) at {9} in copy a
+
+out(c, (~M_2,~M_3,~M_4,~M_5)) with ~M_2 = p_7, ~M_3 = ManifestBoth, ~M_4 = sign(p_7,kkms_3), ~M_5 = sign(p_7,kgpg_3) at {10} in copy a
+
+in(c, (~M_2,ManifestKmsOnly,~M_4)) with ~M_2 = p_7, ~M_4 = sign(p_7,kkms_3) at {35} in copy a_1
+
+event Accepted(p_7,ManifestKmsOnly) at {37} in copy a_1 (goal)
+
+The event Accepted(p_7,ManifestKmsOnly) is executed at {37} in copy a_1.
+A trace has been found.
+RESULT event(Accepted(p_6,m)) ==> event(Issued(p_6,m)) is false.
+
+--------------------------------------------------------------
+Verification summary:
+
+Query event(Accepted(p_6,m)) ==> event(Issued(p_6,m)) is false.
+
+--------------------------------------------------------------
+

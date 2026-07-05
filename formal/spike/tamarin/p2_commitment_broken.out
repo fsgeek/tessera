@@ -1,0 +1,23 @@
+maude tool: 'maude'
+ checking version: 3.1. OK.
+ checking installation: OK.
+[Theory Tessera_P2_Broken] Theory loaded
+[Theory Tessera_P2_Broken] Theory translated
+[Theory Tessera_P2_Broken] Derivation checks started
+[Theory Tessera_P2_Broken] Derivation checks ended
+[Theory Tessera_P2_Broken] Theory closed
+[Saturating Sources] Step 1 (Max 5)
+[Saturating Sources] Done
+
+==============================================================================
+summary of summaries:
+
+analyzed: formal/spike/tamarin/p2_commitment_broken.spthy
+
+  output:          formal/spike/tamarin/p2_commitment_broken.proof.spthy
+  processing time: 1.73s
+  
+  executable_both (exists-trace): verified (8 steps)
+  p2_manifest_binding (all-traces): falsified - found trace (6 steps)
+
+==============================================================================

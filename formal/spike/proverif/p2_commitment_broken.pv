@@ -1,0 +1,74 @@
+(*
+  Tessera Band 0 tool spike — ProVerif candidate, DELIBERATELY BROKEN.
+  Signatures cover the payload ALONE; the manifest is an unsigned package
+  field. Expected: the correspondence query FAILS and ProVerif exhibits a
+  stripping attack (dual-signed package re-presented under a single-
+  signer manifest). Both stripping directions exist; the tool exhibits
+  one counterexample.
+
+  Spike criterion 3 (SPIKE.md): is the counterexample readable?
+*)
+
+free c: channel.
+
+type skey.
+type pkey.
+
+fun pk(skey): pkey.
+fun sign(bitstring, skey): bitstring.
+reduc forall m: bitstring, k: skey; checksign(sign(m, k), pk(k)) = m.
+
+free ManifestBoth: bitstring.
+free ManifestGpgOnly: bitstring.
+free ManifestKmsOnly: bitstring.
+
+event Issued(bitstring, bitstring).
+event Accepted(bitstring, bitstring).
+
+(* Same property as the correct model. EXPECTED: falsified. *)
+query p: bitstring, m: bitstring;
+  event(Accepted(p, m)) ==> event(Issued(p, m)).
+
+let issuerBoth(kkms: skey, kgpg: skey) =
+  new p: bitstring;
+  event Issued(p, ManifestBoth);
+  (* BROKEN: manifest outside the signed bytes. *)
+  out(c, (p, ManifestBoth, sign(p, kkms), sign(p, kgpg))).
+
+let issuerGpgOnly(kgpg: skey) =
+  new p: bitstring;
+  event Issued(p, ManifestGpgOnly);
+  out(c, (p, ManifestGpgOnly, sign(p, kgpg))).
+
+let issuerKmsOnly(kkms: skey) =
+  new p: bitstring;
+  event Issued(p, ManifestKmsOnly);
+  out(c, (p, ManifestKmsOnly, sign(p, kkms))).
+
+let verifierBoth(pkms: pkey, pgpg: pkey) =
+  in(c, (p: bitstring, =ManifestBoth, s1: bitstring, s2: bitstring));
+  if checksign(s1, pkms) = p then
+  if checksign(s2, pgpg) = p then
+  event Accepted(p, ManifestBoth).
+
+let verifierGpgOnly(pgpg: pkey) =
+  in(c, (p: bitstring, =ManifestGpgOnly, s: bitstring));
+  if checksign(s, pgpg) = p then
+  event Accepted(p, ManifestGpgOnly).
+
+let verifierKmsOnly(pkms: pkey) =
+  in(c, (p: bitstring, =ManifestKmsOnly, s: bitstring));
+  if checksign(s, pkms) = p then
+  event Accepted(p, ManifestKmsOnly).
+
+process
+  new kkms: skey;
+  new kgpg: skey;
+  out(c, pk(kkms));
+  out(c, pk(kgpg));
+  ( !issuerBoth(kkms, kgpg)
+  | !issuerGpgOnly(kgpg)
+  | !issuerKmsOnly(kkms)
+  | !verifierBoth(pk(kkms), pk(kgpg))
+  | !verifierGpgOnly(pk(kgpg))
+  | !verifierKmsOnly(pk(kkms)) )
