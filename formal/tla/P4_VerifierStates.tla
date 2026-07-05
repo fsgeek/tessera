@@ -110,6 +110,31 @@ UnverifiableIsHonest ==
     /\ \A c \in RequiredUnder(waived) : status[c] # "fail"
 
 (***************************************************************************)
+(* Exact classification (iff, not just one-way safety). The one-way       *)
+(* implications above would all pass under an over-conservative verdict   *)
+(* function (e.g. everything INVALID); these pin the classification in    *)
+(* both directions, so a future edit to VerdictFor cannot silently drift  *)
+(* toward misclassification in either the permissive or the conservative  *)
+(* direction. Together the four right-hand sides partition all outcomes.  *)
+(***************************************************************************)
+AnyRequiredFail == \E c \in RequiredUnder(waived) : status[c] = "fail"
+AnyRequiredUnperf == \E c \in RequiredUnder(waived) : status[c] = "unperformable"
+AllRequiredPass == \A c \in RequiredUnder(waived) : status[c] = "pass"
+
+ExactInvalid ==
+  (Verdict = "INVALID") <=> AnyRequiredFail
+
+ExactUnverifiable ==
+  (Verdict = "UNVERIFIABLE") <=> (~AnyRequiredFail /\ AnyRequiredUnperf)
+
+ExactStrict ==
+  (Verdict = "VALID_STRICT") <=>
+    (waived = {} /\ \A c \in Checks : status[c] = "pass")
+
+ExactDegraded ==
+  (Verdict = "VALID_DEGRADED") <=> (waived # {} /\ AllRequiredPass)
+
+(***************************************************************************)
 (* Vacuity checks — used ONLY by the _Sanity cfg (run with TLC -continue), *)
 (* where TLC VIOLATING all four is the healthy result: each verdict is    *)
 (* reachable under the correct verdict function, so the implication-      *)
