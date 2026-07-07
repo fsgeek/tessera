@@ -17,8 +17,9 @@ requires a signed amendment.
 | P2   | Signature-set completeness         | [model]        | TLA+ and ProVerif  | open   | —        |
 | P3   | Key binding (anti-DSKS)            | [model]+[assum]| ProVerif; H1a prof.| open   | —        |
 | P4   | Fail-closed state logic            | [model]        | TLA+               | checked| `formal/tla/P4_VerifierStates.tla` |
-| P5   | Temporal soundness (two-sided)     | [model]+[assum]| TLA+               | open   | —        |
-| P6   | Revocation over uncertainty window | [model]        | TLA+               | open   | —        |
+| P5   | Temporal soundness (verifier side) | [model]+[assum]| TLA+               | checked| `formal/tla/P5P6_TemporalRevocation.tla` |
+| P5c  | Issuance corollary (depth k, reissue)| [model]      | TLA+               | checked| `formal/tla/P5c_IssuanceProtocol.tla` |
+| P6   | Revocation over uncertainty window | [model]        | TLA+               | checked| `formal/tla/P5P6_TemporalRevocation.tla` |
 | P7   | Wrapper / object-type soundness    | [model]        | TLA+ and ProVerif  | open   | —        |
 | P8   | Canonicalization inj. + framing    | [proof]        | Lean4 or prose+vec | open   | —        |
 | P9   | Verification statelessness         | [model]        | TLA+               | open   | —        |
@@ -38,3 +39,11 @@ Cross-cutting obligations (A1.4, A1.7):
 - [ ] Conformance vectors extracted from checked traces (feeds H1a).
 - [ ] Informal written proof (defend-it-cold) in repository.
 - [ ] Parameter ratification at Band 0 exit: δ = 72h, ε = 24h, k = 6.
+- [x] **P5 issuance corollary** (anchor confirmed at depth k within δ;
+      re-issue on late/reorged anchors) — modeled as a real state machine
+      in `formal/tla/P5c_IssuanceProtocol.tla` (checked; broken companion
+      exhibits ship-shallow-then-reorg, the Gemini-named harm). NOTE: the
+      model surfaced a semantic fork in the registered text — strict
+      reading (depth k reached within δ, modeled) vs. permissive
+      (block time within δ, depth k whenever) — author ratification
+      pending, recorded in the module header.
