@@ -1,14 +1,14 @@
 TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)
 Warning: Please run the Java VM which executes TLC with a throughput optimized garbage collector by passing the "-XX:+UseParallelGC" property.
 (Use the -nowarning option to disable this warning.)
-Running breadth-first search Model-Checking with fp 114 and seed 2363701592232468331 with 1 worker on 128 cores with 30688MB heap and 64MB offheap memory [pid: 1592803] (Linux 6.18.33.2-microsoft-standard-WSL2 amd64, Ubuntu 11.0.31 x86_64, MSBDiskFPSet, DiskStateQueue).
+Running breadth-first search Model-Checking with fp 112 and seed 3975094261405515491 with 128 workers on 128 cores with 30688MB heap and 64MB offheap memory [pid: 2604361] (Linux 6.18.33.2-microsoft-standard-WSL2 amd64, Ubuntu 11.0.31 x86_64, MSBDiskFPSet, DiskStateQueue).
 Parsing file /home/tony/projects/tessera/formal/tla/P5P6_TemporalRevocation.tla
 Parsing file /tmp/Integers.tla
 Parsing file /tmp/Naturals.tla
 Semantic processing of module Naturals
 Semantic processing of module Integers
 Semantic processing of module P5P6_TemporalRevocation
-Starting... (2026-07-05 10:44:22)
+Starting... (2026-07-07 10:19:11)
 Computing initial states...
 Computed 2 initial states...
 Computed 4 initial states...
@@ -29,13 +29,16 @@ Computed 65536 initial states...
 Computed 131072 initial states...
 Computed 262144 initial states...
 Computed 524288 initial states...
-Finished computing initial states: 614656 distinct states generated at 2026-07-05 10:44:45.
+Computed 1048576 initial states...
+Computed 2097152 initial states...
+Computed 4194304 initial states...
+Finished computing initial states: 4302592 distinct states generated at 2026-07-07 10:21:45.
 Model checking completed. No error has been found.
   Estimates of the probability that TLC did not check all reachable states
   because two distinct states had the same fingerprint:
-  calculated (optimistic):  val = 2.0E-8
-  based on the actual fingerprints:  val = 3.6E-12
-1229312 states generated, 614656 distinct states found, 0 states left on queue.
+  calculated (optimistic):  val = 1.0E-6
+  based on the actual fingerprints:  val = 3.2E-11
+8605184 states generated, 4302592 distinct states found, 0 states left on queue.
 The depth of the complete state graph search is 1.
 The average outdegree of the complete state graph is 0 (minimum is 0, the maximum 0 and the 95th percentile is 0).
-Finished in 23s at (2026-07-05 10:44:46)
+Finished in 02min 38s at (2026-07-07 10:21:48)

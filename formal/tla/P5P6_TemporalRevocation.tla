@@ -6,14 +6,17 @@
 (* P5's window. Authoritative statements: Amendment 1 §A1.2 (P5, P6),      *)
 (* §A1.6.                                                                   *)
 (*                                                                          *)
-(* SCOPE BOUNDARY (explicit): this module discharges the VERIFIER-SIDE    *)
-(* face of P5 — the acceptance predicate over declared/anchor/policy.      *)
-(* P5's issuance-protocol corollary (anchor confirmed at depth k within    *)
-(* delta, re-issue on late/reorged anchors) is ISSUER-side protocol        *)
-(* behavior and is NOT modeled here; it is tracked as a separate            *)
-(* obligation in formal/PROPERTIES.md. The model takes `anchor` as an      *)
-(* already-usable block time — i.e. post-confirmation — which is exactly   *)
-(* what the corollary guarantees the verifier may assume.                   *)
+(* SCOPE BOUNDARY (revised by Amendment 2): this module discharges the    *)
+(* VERIFIER-SIDE face of P5 — the acceptance predicate over declared/      *)
+(* anchor/confirmedAt/policy. P5's issuance-protocol corollary (ship       *)
+(* rule, re-issue, attempt bound) remains ISSUER-side behavior, modeled    *)
+(* in P5c_IssuanceProtocol. Amendment 2 (A2.2) gave the corollary a        *)
+(* verifier-checkable face — the confirmation-timing conjunct              *)
+(* confirmedAt <= declared + delta — and that face lives HERE: it is the   *)
+(* same predicate the issuer's Ship rule evaluates (A2.1, one predicate    *)
+(* on one chain-visible observable, both sides), so the correspondence     *)
+(* between this module's acceptance and P5c's Ship is exact by             *)
+(* construction, not by argument.                                           *)
 (*                                                                          *)
 (* Time is abstract small integers (TLC-bounded); DeltaMax and EpsilonMax  *)
 (* are scaled-down stand-ins for the ratified 72h/24h strict maxima — the  *)
@@ -31,6 +34,12 @@
 (*               fact: bytes existed not-after anchor, hence signed <=     *)
 (*               anchor is a model CONSTRAINT (the anchor assumption, not  *)
 (*               a verifier check).                                         *)
+(*   confirmedAt - timestamp of the block granting the k-th confirmation  *)
+(*               (height h+k-1; A2.1). Chain-visible to issuer and        *)
+(*               verifier alike. Deliberately UNCONSTRAINED relative to   *)
+(*               anchor: block timestamps are not monotonic (A2.1), so    *)
+(*               confirmedAt < anchor is a legal state and the model      *)
+(*               assumes no ordering.                                      *)
 (*   revoked   - the key's revocation time; NoRev = never. Lifecycle is    *)
 (*               monotonic per P6 (revocation is terminal), which is what  *)
 (*               lets one number represent it.                              *)
@@ -43,8 +52,8 @@
 (*               check that acceptance never depends on them. A future     *)
 (*               edit routing them into TemporalOK breaks                   *)
 (*               VerifierOwnsTolerances - see the _BrokenTol companion.    *)
-(* The verifier sees declared, anchor, revoked, and its own policy —       *)
-(* never signed.                                                            *)
+(* The verifier sees declared, anchor, confirmedAt, revoked, and its own   *)
+(* policy — never signed.                                                   *)
 (***************************************************************************)
 EXTENDS Integers
 
@@ -55,14 +64,17 @@ ASSUME DeltaMax \in Nat /\ EpsilonMax \in Nat /\ MaxTime \in Nat
 
 NoRev == MaxTime + 1  \* revocation never happens (sorts after all times)
 
-VARIABLES declared, signed, anchor, revoked,
+VARIABLES declared, signed, anchor, confirmedAt, revoked,
           polDelta, polEps, rcptDelta, rcptEps
 
 (* Every combination the universe permits. The one constraint is the      *)
 (* anchor upper-bound assumption: the signed bytes existed when anchored.  *)
+(* confirmedAt carries NO constraint relative to anchor — non-monotonic   *)
+(* block timestamps, A2.1.                                                  *)
 Init ==
   /\ declared  \in 0..MaxTime
   /\ anchor    \in 0..MaxTime
+  /\ confirmedAt \in 0..MaxTime
   /\ signed    \in 0..anchor         \* Layer 2: existence not-after anchor
   /\ revoked   \in 0..MaxTime \cup {NoRev}
   /\ polDelta  \in 0..DeltaMax       \* verifier may choose stricter, never larger
@@ -70,7 +82,7 @@ Init ==
   /\ rcptDelta \in 0..RcptTolMax     \* adversarial receipt claims, incl. oversized
   /\ rcptEps   \in 0..RcptTolMax
 
-Next == UNCHANGED <<declared, signed, anchor, revoked,
+Next == UNCHANGED <<declared, signed, anchor, confirmedAt, revoked,
                     polDelta, polEps, rcptDelta, rcptEps>>
 
 (***************************************************************************)
@@ -84,12 +96,15 @@ Next == UNCHANGED <<declared, signed, anchor, revoked,
 (* manipulation that every pure safety invariant misses) — breaks it.     *)
 (***************************************************************************)
 
-(* P5: two-sided consistency under the verifier's policy. rd/re are the   *)
-(* receipt-declared tolerances — unused by design; the signature exists   *)
-(* so independence is checkable.                                            *)
+(* P5: two-sided consistency under the verifier's policy, plus the A2.2   *)
+(* confirmation-timing conjunct (third line) — the verifier-checkable     *)
+(* face of the issuance corollary, on the verifier's OWN delta. rd/re are *)
+(* the receipt-declared tolerances — unused by design; the signature      *)
+(* exists so independence is checkable.                                     *)
 TemporalOKWith(rd, re) ==
   /\ anchor >= declared - polEps
   /\ anchor <= declared + polDelta
+  /\ confirmedAt <= declared + polDelta   \* A2.2: k-th confirmation in-window
 
 TemporalOK == TemporalOKWith(rcptDelta, rcptEps)
 
@@ -124,7 +139,9 @@ ForgeryRejected ==
 (* the verifier-policy window (backdating bounded by polDelta,            *)
 (* post-dating by polEps).                                                  *)
 WindowRespected ==
-  StrictAccept => (anchor - declared <= polDelta /\ declared - anchor <= polEps)
+  StrictAccept => (/\ anchor - declared <= polDelta
+                   /\ declared - anchor <= polEps
+                   /\ confirmedAt - declared <= polDelta)
 
 (* A1.2 P5, "delta and epsilon belong to the verifier, not the receipt":  *)
 (* acceptance NEVER exceeds the strict maxima, whatever tolerances the    *)
@@ -133,7 +150,22 @@ WindowRespected ==
 (* window and TLC exhibits a receipt-enlarged acceptance violating it.    *)
 VerifierOwnsTolerances ==
   StrictAccept =>
-    (anchor - declared <= DeltaMax /\ declared - anchor <= EpsilonMax)
+    (/\ anchor - declared <= DeltaMax
+     /\ declared - anchor <= EpsilonMax
+     /\ confirmedAt - declared <= DeltaMax)
+
+(* THE A2.0 ARTIFACT, REJECTED (Amendment 2): an anchor whose block is    *)
+(* in-window but whose k-th confirmation arrived past the window — the    *)
+(* discarded-attempt artifact that strict issuance never ships but whose  *)
+(* transaction typically confirms anyway. The pre-A2 verifier             *)
+(* (anchor-only checks) accepts it; the _BrokenConf companion carries     *)
+(* that verifier, passes every anchor-only invariant, and violates        *)
+(* exactly this one.                                                        *)
+AbandonedArtifactRejected ==
+  (/\ anchor >= declared - polEps
+   /\ anchor <= declared + polDelta
+   /\ confirmedAt > declared + polDelta)
+  => ~StrictAccept
 
 (* Full noninterference, "ignore receipt tolerances" taken literally: the *)
 (* verdict is IDENTICAL under every receipt-declared tolerance pair — not *)
@@ -168,7 +200,13 @@ HonestCostIsExactlyTheWindow ==
 (* -continue), where TLC VIOLATING both is the healthy result: each       *)
 (* violation exhibits a reachable state satisfying a defined-predicate    *)
 (* antecedent, so the implications above are not vacuously true.           *)
+NonMonotonicAcceptUnreachable ==      \* accepted with confirmedAt < anchor:
+  ~(StrictAccept /\ confirmedAt < anchor)  \* non-monotonicity (A2.1) exercised
 AcceptanceUnreachable == ~StrictAccept
+LateBurialCaseUnreachable ==          \* the A2.0 artifact is reachable, so
+  ~(/\ anchor >= declared - polEps    \* AbandonedArtifactRejected is not vacuous
+    /\ anchor <= declared + polDelta
+    /\ confirmedAt > declared + polDelta)
 HonestCostCaseUnreachable ==
   ~(/\ TemporalOK
     /\ signed < revoked

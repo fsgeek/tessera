@@ -30,12 +30,13 @@ ASSUME DeltaMax \in Nat /\ EpsilonMax \in Nat /\ MaxTime \in Nat
 
 NoRev == MaxTime + 1
 
-VARIABLES declared, signed, anchor, revoked,
+VARIABLES declared, signed, anchor, confirmedAt, revoked,
           polDelta, polEps, rcptDelta, rcptEps
 
 Init ==
   /\ declared  \in 0..MaxTime
   /\ anchor    \in 0..MaxTime
+  /\ confirmedAt \in 0..MaxTime
   /\ signed    \in 0..anchor
   /\ revoked   \in 0..MaxTime \cup {NoRev}
   /\ polDelta  \in 0..DeltaMax
@@ -43,15 +44,17 @@ Init ==
   /\ rcptDelta \in 0..RcptTolMax
   /\ rcptEps   \in 0..RcptTolMax
 
-Next == UNCHANGED <<declared, signed, anchor, revoked,
+Next == UNCHANGED <<declared, signed, anchor, confirmedAt, revoked,
                     polDelta, polEps, rcptDelta, rcptEps>>
 
 Min(a, b) == IF a < b THEN a ELSE b
 
-(* BROKEN: effective tolerances honor receipt-declared NARROWING.          *)
+(* BROKEN: effective tolerances honor receipt-declared NARROWING — in     *)
+(* every conjunct, including the A2.2 confirmation-timing one.             *)
 TemporalOKWith(rd, re) ==
   /\ anchor >= declared - Min(polEps, re)
   /\ anchor <= declared + Min(polDelta, rd)
+  /\ confirmedAt <= declared + Min(polDelta, rd)
 
 AuthorizedThroughWindow ==
   /\ revoked > declared
@@ -67,11 +70,15 @@ ForgeryRejected ==
   (revoked <= signed) => ~StrictAccept
 
 WindowRespected ==
-  StrictAccept => (anchor - declared <= polDelta /\ declared - anchor <= polEps)
+  StrictAccept => (/\ anchor - declared <= polDelta
+                   /\ declared - anchor <= polEps
+                   /\ confirmedAt - declared <= polDelta)
 
 VerifierOwnsTolerances ==
   StrictAccept =>
-    (anchor - declared <= DeltaMax /\ declared - anchor <= EpsilonMax)
+    (/\ anchor - declared <= DeltaMax
+     /\ declared - anchor <= EpsilonMax
+     /\ confirmedAt - declared <= DeltaMax)
 
 (* Independence invariant from the correct module. EXPECTED: VIOLATED —   *)
 (* the verdict now varies with the receipt-declared tolerances.            *)

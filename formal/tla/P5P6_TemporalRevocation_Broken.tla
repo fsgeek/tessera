@@ -10,7 +10,9 @@
 (*                                                                          *)
 (* A green run of this module would mean the security invariant is        *)
 (* vacuous. State space and variables match the correct module exactly    *)
-(* (apples-to-apples); only AuthorizedPointOnly differs.                    *)
+(* (apples-to-apples, incl. the post-Amendment-2 confirmedAt observable   *)
+(* and its A2.2 conjunct, which is CORRECT here); only                     *)
+(* AuthorizedPointOnly differs.                                             *)
 (***************************************************************************)
 EXTENDS Integers
 
@@ -21,12 +23,13 @@ ASSUME DeltaMax \in Nat /\ EpsilonMax \in Nat /\ MaxTime \in Nat
 
 NoRev == MaxTime + 1
 
-VARIABLES declared, signed, anchor, revoked,
+VARIABLES declared, signed, anchor, confirmedAt, revoked,
           polDelta, polEps, rcptDelta, rcptEps
 
 Init ==
   /\ declared  \in 0..MaxTime
   /\ anchor    \in 0..MaxTime
+  /\ confirmedAt \in 0..MaxTime
   /\ signed    \in 0..anchor
   /\ revoked   \in 0..MaxTime \cup {NoRev}
   /\ polDelta  \in 0..DeltaMax
@@ -34,12 +37,13 @@ Init ==
   /\ rcptDelta \in 0..RcptTolMax
   /\ rcptEps   \in 0..RcptTolMax
 
-Next == UNCHANGED <<declared, signed, anchor, revoked,
+Next == UNCHANGED <<declared, signed, anchor, confirmedAt, revoked,
                     polDelta, polEps, rcptDelta, rcptEps>>
 
 TemporalOK ==
   /\ anchor >= declared - polEps
   /\ anchor <= declared + polDelta
+  /\ confirmedAt <= declared + polDelta   \* A2.2 conjunct, correct here
 
 (* BROKEN: authorization evaluated at the declared time ONLY — the        *)
 (* anchor-window clause is missing.                                        *)

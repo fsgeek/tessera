@@ -1,8 +1,11 @@
 # Band 0 — property obligations tracker
 
 Working tracker for discharging the pre-registered properties of
-Amendment 1 §A1.2 (commit `03cd3db`, anchored). The *authoritative*
-statements live in the amendment; this file only tracks discharge status
+Amendment 1 §A1.2 (commit `03cd3db`, anchored), as amended by
+Amendment 2 (`docs/phase-0-prereg-amendment-2.md`, DRAFT — pending
+non-author review and author signature; its model obligations are
+tracked here already so they cannot silently lapse). The *authoritative*
+statements live in the amendments; this file only tracks discharge status
 and artifact locations. If this table and the amendment ever disagree, the
 amendment wins — and the disagreement is a bug in this file.
 
@@ -38,12 +41,26 @@ Cross-cutting obligations (A1.4, A1.7):
       artifacts in `docs/reviews/`.
 - [ ] Conformance vectors extracted from checked traces (feeds H1a).
 - [ ] Informal written proof (defend-it-cold) in repository.
-- [ ] Parameter ratification at Band 0 exit: δ = 72h, ε = 24h, k = 6.
+- [ ] Parameter ratification at Band 0 exit: δ = 72h, ε = 24h, k = 6,
+      and (A2.3) the issuance attempt bound N (working default 3).
 - [x] **P5 issuance corollary** (anchor confirmed at depth k within δ;
       re-issue on late/reorged anchors) — modeled as a real state machine
       in `formal/tla/P5c_IssuanceProtocol.tla` (checked; broken companion
-      exhibits ship-shallow-then-reorg, the Gemini-named harm). NOTE: the
-      model surfaced a semantic fork in the registered text — strict
-      reading (depth k reached within δ, modeled) vs. permissive
-      (block time within δ, depth k whenever) — author ratification
-      pending, recorded in the module header.
+      exhibits ship-shallow-then-reorg, the Gemini-named harm). The
+      semantic fork the model surfaced (strict vs. permissive reading)
+      was RATIFIED strict on 2026-07-07 in the chain-time form —
+      `confirmed_at := timestamp(block h+k−1) ≤ declared + δ`, one
+      predicate for issuer and verifier — by Amendment 2 (A2.1), which
+      also pins the depth convention `DepthK = k − 1`.
+- [x] **A2.2 confirmation-timing conjunct (verifier side)** — added to
+      `formal/tla/P5P6_TemporalRevocation.tla` (`confirmedAt`,
+      `AbandonedArtifactRejected`; checked, all invariants green, all
+      vacuity witnesses fire). New broken companion `_BrokenConf` carries
+      the pre-A2 verifier: ForgeryRejected and ReceiptIndependence HOLD,
+      AbandonedArtifactRejected VIOLATED with the abandoned-anchor
+      artifact as the counterexample — the A2.0 correction made
+      mechanical (the artifact is no forgery; only the new conjunct
+      rejects it).
+- [ ] A2.2 conformance-vector cases: late-burial artifact → `INVALID`;
+      headers unavailable → `UNVERIFIABLE` (with the general extraction
+      obligation above).

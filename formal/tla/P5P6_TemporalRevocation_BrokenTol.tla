@@ -23,12 +23,13 @@ ASSUME DeltaMax \in Nat /\ EpsilonMax \in Nat /\ MaxTime \in Nat
 
 NoRev == MaxTime + 1
 
-VARIABLES declared, signed, anchor, revoked,
+VARIABLES declared, signed, anchor, confirmedAt, revoked,
           polDelta, polEps, rcptDelta, rcptEps
 
 Init ==
   /\ declared  \in 0..MaxTime
   /\ anchor    \in 0..MaxTime
+  /\ confirmedAt \in 0..MaxTime
   /\ signed    \in 0..anchor
   /\ revoked   \in 0..MaxTime \cup {NoRev}
   /\ polDelta  \in 0..DeltaMax
@@ -36,16 +37,18 @@ Init ==
   /\ rcptDelta \in 0..RcptTolMax
   /\ rcptEps   \in 0..RcptTolMax
 
-Next == UNCHANGED <<declared, signed, anchor, revoked,
+Next == UNCHANGED <<declared, signed, anchor, confirmedAt, revoked,
                     polDelta, polEps, rcptDelta, rcptEps>>
 
 Max(a, b) == IF a > b THEN a ELSE b
 
-(* BROKEN: effective tolerances honor receipt-declared enlargement.       *)
+(* BROKEN: effective tolerances honor receipt-declared enlargement — in   *)
+(* every conjunct, including the A2.2 confirmation-timing one.             *)
 (* Parameterized shape matches the correct module (apples-to-apples).      *)
 TemporalOKWith(rd, re) ==
   /\ anchor >= declared - Max(polEps, re)
   /\ anchor <= declared + Max(polDelta, rd)
+  /\ confirmedAt <= declared + Max(polDelta, rd)
 
 AuthorizedThroughWindow ==
   /\ revoked > declared
@@ -58,6 +61,8 @@ StrictAccept == StrictAcceptWith(rcptDelta, rcptEps)
 (* Same invariant as the correct module. EXPECTED: VIOLATED.              *)
 VerifierOwnsTolerances ==
   StrictAccept =>
-    (anchor - declared <= DeltaMax /\ declared - anchor <= EpsilonMax)
+    (/\ anchor - declared <= DeltaMax
+     /\ declared - anchor <= EpsilonMax
+     /\ confirmedAt - declared <= DeltaMax)
 
 =================================================================================
