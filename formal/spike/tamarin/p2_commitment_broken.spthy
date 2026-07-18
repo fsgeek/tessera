@@ -1,0 +1,85 @@
+/*
+  Tessera Band 0 tool spike — Tamarin candidate, DELIBERATELY BROKEN.
+  Fragment: P2 with the commitment removed — signatures are over the
+  payload ALONE; the manifest is a bare package field outside the signed
+  bytes. This is the construction P2 forbids.
+
+  Expected result: Tamarin FALSIFIES p2_manifest_binding and produces a
+  stripping-attack trace — take a dual-signed package, discard either
+  signature, re-label the manifest to the corresponding single-signer
+  value, present it. The verifier cannot tell "issued with one" from
+  "issued with two, one stripped". Both stripping directions exist; the
+  tool exhibits one counterexample.
+
+  Spike criterion 3 (SPIKE.md): is the counterexample trace readable?
+*/
+
+theory Tessera_P2_Broken
+begin
+
+builtins: signing
+
+rule Register_Issuer:
+  [ Fr(~kms), Fr(~gpg) ]
+  --[ IssuerRegistered() ]->
+  [ !IssuerKeys(~kms, ~gpg)
+  , !PkKms(pk(~kms))
+  , !PkGpg(pk(~gpg))
+  , Out(pk(~kms))
+  , Out(pk(~gpg)) ]
+
+restriction single_issuer:
+  "All #i #j. IssuerRegistered() @ i & IssuerRegistered() @ j ==> #i = #j"
+
+/* BROKEN: signatures cover ~p only. The manifest field travels outside
+   the signed bytes. */
+rule Issue_Both:
+  [ !IssuerKeys(~kms, ~gpg), Fr(~p) ]
+  --[ Issued(~p, 'both') ]->
+  [ Out(<~p, 'both', sign(~p, ~kms), sign(~p, ~gpg)>) ]
+
+rule Issue_GpgOnly:
+  [ !IssuerKeys(~kms, ~gpg), Fr(~p) ]
+  --[ Issued(~p, 'gpg_only') ]->
+  [ Out(<~p, 'gpg_only', sign(~p, ~gpg)>) ]
+
+rule Issue_KmsOnly:
+  [ !IssuerKeys(~kms, ~gpg), Fr(~p) ]
+  --[ Issued(~p, 'kms_only') ]->
+  [ Out(<~p, 'kms_only', sign(~p, ~kms)>) ]
+
+/* BROKEN verifier: checks signatures over the bare payload; trusts the
+   unsigned manifest field. */
+rule Verify_Both:
+  [ In(<p, 'both', s1, s2>), !PkKms(pkK), !PkGpg(pkG) ]
+  --[ Accepted(p, 'both')
+    , Eq(verify(s1, p, pkK), true)
+    , Eq(verify(s2, p, pkG), true) ]->
+  []
+
+rule Verify_GpgOnly:
+  [ In(<p, 'gpg_only', s>), !PkGpg(pkG) ]
+  --[ Accepted(p, 'gpg_only')
+    , Eq(verify(s, p, pkG), true) ]->
+  []
+
+rule Verify_KmsOnly:
+  [ In(<p, 'kms_only', s>), !PkKms(pkK) ]
+  --[ Accepted(p, 'kms_only')
+    , Eq(verify(s, p, pkK), true) ]->
+  []
+
+restriction Equality:
+  "All x y #i. Eq(x, y) @ i ==> x = y"
+
+lemma executable_both:
+  exists-trace
+  "Ex p #i. Accepted(p, 'both') @ i"
+
+/* Same property as the correct model. EXPECTED: FALSIFIED, with a
+   stripping trace as counterexample. */
+lemma p2_manifest_binding:
+  "All p m #i. Accepted(p, m) @ i
+     ==> Ex #j. Issued(p, m) @ j & j < i"
+
+end

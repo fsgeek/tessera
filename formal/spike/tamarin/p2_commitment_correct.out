@@ -1,0 +1,314 @@
+maude tool: 'maude'
+ checking version: 3.1. OK.
+ checking installation: OK.
+[Theory Tessera_P2_Correct] Theory loaded
+[Theory Tessera_P2_Correct] Theory translated
+[Theory Tessera_P2_Correct] Derivation checks started
+[Theory Tessera_P2_Correct] Derivation checks ended
+[Theory Tessera_P2_Correct] Theory closed
+[Saturating Sources] Step 1 (Max 5)
+[Saturating Sources] Done
+theory Tessera_P2_Correct
+
+begin
+
+// Function signature and definition of the equational theory E
+
+functions: fst/1, pair/2, pk/1, sign/2, snd/1, true/0, verify/3
+equations:
+    fst(<x.1, x.2>) = x.1,
+    snd(<x.1, x.2>) = x.2,
+    verify(sign(x.1, x.2), x.1, pk(x.2)) = true
+
+rule (modulo E) Register_Issuer:
+   [ Fr( ~kms ), Fr( ~gpg ) ]
+  --[ IssuerRegistered( ) ]->
+   [
+   !IssuerKeys( ~kms, ~gpg ), !PkKms( pk(~kms) ), !PkGpg( pk(~gpg) ),
+   Out( pk(~kms) ), Out( pk(~gpg) )
+   ]
+
+  /* has exactly the trivial AC variant */
+
+restriction single_issuer:
+  "∀ #i #j.
+    ((IssuerRegistered( ) @ #i) ∧ (IssuerRegistered( ) @ #j)) ⇒ (#i = #j)"
+  // safety formula
+
+  /*
+  expanded formula:
+  "∀ #i #j.
+    ((IssuerRegistered( ) @ #i) ∧ (IssuerRegistered( ) @ #j)) ⇒ (#i = #j)"
+  */
+
+rule (modulo E) Issue_Both:
+   [ !IssuerKeys( ~kms, ~gpg ), Fr( ~p ) ]
+  --[ Issued( ~p, 'both' ) ]->
+   [ Out( <~p, 'both', sign(<~p, 'both'>, ~kms), sign(<~p, 'both'>, ~gpg)> )
+   ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) Issue_GpgOnly:
+   [ !IssuerKeys( ~kms, ~gpg ), Fr( ~p ) ]
+  --[ Issued( ~p, 'gpg_only' ) ]->
+   [ Out( <~p, 'gpg_only', sign(<~p, 'gpg_only'>, ~gpg)> ) ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) Issue_KmsOnly:
+   [ !IssuerKeys( ~kms, ~gpg ), Fr( ~p ) ]
+  --[ Issued( ~p, 'kms_only' ) ]->
+   [ Out( <~p, 'kms_only', sign(<~p, 'kms_only'>, ~kms)> ) ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) Verify_Both:
+   [ In( <p, 'both', s1, s2> ), !PkKms( pkK ), !PkGpg( pkG ) ]
+  --[
+  Accepted( p, 'both' ), Eq( verify(s1, <p, 'both'>, pkK), true ),
+  Eq( verify(s2, <p, 'both'>, pkG), true )
+  ]->
+   [ ]
+
+  /*
+  rule (modulo AC) Verify_Both:
+     [ In( <p, 'both', s1, s2> ), !PkKms( pkK ), !PkGpg( pkG ) ]
+    --[ Accepted( p, 'both' ), Eq( z, true ), Eq( z.1, true ) ]->
+     [ ]
+    variants (modulo AC)
+    1. p     = p.10
+       pkG   = pkG.11
+       pkK   = pkK.12
+       s1    = s1.13
+       s2    = s2.14
+       z     = verify(s1.13, <p.10, 'both'>, pkK.12)
+       z.1   = verify(s2.14, <p.10, 'both'>, pkG.11)
+    
+    2. p     = p.12
+       pkG   = pk(x.21)
+       pkK   = pkK.14
+       s1    = s1.15
+       s2    = sign(<p.12, 'both'>, x.21)
+       z     = verify(s1.15, <p.12, 'both'>, pkK.14)
+       z.1   = true
+    
+    3. p     = p.12
+       pkG   = pk(x.21)
+       pkK   = pk(x.22)
+       s1    = sign(<p.12, 'both'>, x.22)
+       s2    = sign(<p.12, 'both'>, x.21)
+       z     = true
+       z.1   = true
+    
+    4. p     = p.13
+       pkG   = pkG.14
+       pkK   = pk(x.23)
+       s1    = sign(<p.13, 'both'>, x.23)
+       s2    = s2.17
+       z     = true
+       z.1   = verify(s2.17, <p.13, 'both'>, pkG.14)
+  */
+
+rule (modulo E) Verify_GpgOnly:
+   [ In( <p, 'gpg_only', s> ), !PkGpg( pkG ) ]
+  --[
+  Accepted( p, 'gpg_only' ), Eq( verify(s, <p, 'gpg_only'>, pkG), true )
+  ]->
+   [ ]
+
+  /*
+  rule (modulo AC) Verify_GpgOnly:
+     [ In( <p, 'gpg_only', s> ), !PkGpg( pkG ) ]
+    --[ Accepted( p, 'gpg_only' ), Eq( z, true ) ]->
+     [ ]
+    variants (modulo AC)
+    1. p     = p.7
+       pkG   = pkG.8
+       s     = s.9
+       z     = verify(s.9, <p.7, 'gpg_only'>, pkG.8)
+    
+    2. p     = p.8
+       pkG   = pk(x.14)
+       s     = sign(<p.8, 'gpg_only'>, x.14)
+       z     = true
+  */
+
+rule (modulo E) Verify_KmsOnly:
+   [ In( <p, 'kms_only', s> ), !PkKms( pkK ) ]
+  --[
+  Accepted( p, 'kms_only' ), Eq( verify(s, <p, 'kms_only'>, pkK), true )
+  ]->
+   [ ]
+
+  /*
+  rule (modulo AC) Verify_KmsOnly:
+     [ In( <p, 'kms_only', s> ), !PkKms( pkK ) ]
+    --[ Accepted( p, 'kms_only' ), Eq( z, true ) ]->
+     [ ]
+    variants (modulo AC)
+    1. p     = p.7
+       pkK   = pkK.8
+       s     = s.9
+       z     = verify(s.9, <p.7, 'kms_only'>, pkK.8)
+    
+    2. p     = p.8
+       pkK   = pk(x.14)
+       s     = sign(<p.8, 'kms_only'>, x.14)
+       z     = true
+  */
+
+restriction Equality:
+  "∀ x y #i. (Eq( x, y ) @ #i) ⇒ (x = y)"
+  // safety formula
+
+  /*
+  expanded formula:
+  "∀ x y #i. (Eq( x, y ) @ #i) ⇒ (x = y)"
+  */
+
+lemma executable_both:
+  exists-trace "∃ p #i. Accepted( p, 'both' ) @ #i"
+/*
+guarded formula characterizing all satisfying traces:
+"∃ p #i. (Accepted( p, 'both' ) @ #i)"
+*/
+simplify
+solve( Accepted( p, 'both' ) @ #i )
+  case Verify_Both
+  solve( !PkKms( pk(x) ) ▶₁ #i )
+    case Register_Issuer
+    solve( !PkGpg( pk(x) ) ▶₂ #i )
+      case Register_Issuer
+      solve( !KU( sign(<p, 'both'>, ~kms) ) @ #vk.5 )
+        case Issue_Both
+        solve( !KU( ~p ) @ #vk.2 )
+          case Issue_Both
+          solve( !KU( sign(<~p, 'both'>, ~gpg) ) @ #vk.6 )
+            case Issue_Both
+            SOLVED // trace found
+          qed
+        qed
+      qed
+    qed
+  qed
+qed
+
+lemma executable_gpg_only:
+  exists-trace "∃ p #i. Accepted( p, 'gpg_only' ) @ #i"
+/*
+guarded formula characterizing all satisfying traces:
+"∃ p #i. (Accepted( p, 'gpg_only' ) @ #i)"
+*/
+simplify
+solve( Accepted( p, 'gpg_only' ) @ #i )
+  case Verify_GpgOnly
+  solve( !PkGpg( pk(x) ) ▶₁ #i )
+    case Register_Issuer
+    solve( !KU( sign(<p, 'gpg_only'>, ~gpg) ) @ #vk.4 )
+      case Issue_GpgOnly
+      solve( !KU( ~p ) @ #vk.2 )
+        case Issue_GpgOnly
+        SOLVED // trace found
+      qed
+    qed
+  qed
+qed
+
+lemma executable_kms_only:
+  exists-trace "∃ p #i. Accepted( p, 'kms_only' ) @ #i"
+/*
+guarded formula characterizing all satisfying traces:
+"∃ p #i. (Accepted( p, 'kms_only' ) @ #i)"
+*/
+simplify
+solve( Accepted( p, 'kms_only' ) @ #i )
+  case Verify_KmsOnly
+  solve( !PkKms( pk(x) ) ▶₁ #i )
+    case Register_Issuer
+    solve( !KU( sign(<p, 'kms_only'>, ~kms) ) @ #vk.4 )
+      case Issue_KmsOnly
+      solve( !KU( ~p ) @ #vk.2 )
+        case Issue_KmsOnly
+        SOLVED // trace found
+      qed
+    qed
+  qed
+qed
+
+lemma p2_manifest_binding:
+  all-traces
+  "∀ p m #i.
+    (Accepted( p, m ) @ #i) ⇒ (∃ #j. (Issued( p, m ) @ #j) ∧ (#j < #i))"
+/*
+guarded formula characterizing all counter-examples:
+"∃ p m #i.
+  (Accepted( p, m ) @ #i) ∧ ∀ #j. (Issued( p, m ) @ #j) ⇒ ¬(#j < #i)"
+*/
+simplify
+solve( Accepted( p, m ) @ #i )
+  case Verify_Both
+  solve( !PkKms( pk(x) ) ▶₁ #i )
+    case Register_Issuer
+    solve( !PkGpg( pk(x) ) ▶₂ #i )
+      case Register_Issuer
+      solve( !KU( sign(<p, 'both'>, ~kms) ) @ #vk.5 )
+        case Issue_Both
+        by contradiction /* from formulas */
+      next
+        case c_sign
+        by solve( !KU( ~kms ) @ #vk.8 )
+      qed
+    qed
+  qed
+next
+  case Verify_GpgOnly
+  solve( !PkGpg( pk(x) ) ▶₁ #i )
+    case Register_Issuer
+    solve( !KU( sign(<p, 'gpg_only'>, ~gpg) ) @ #vk.4 )
+      case Issue_GpgOnly
+      by contradiction /* from formulas */
+    next
+      case c_sign
+      by solve( !KU( ~gpg ) @ #vk.6 )
+    qed
+  qed
+next
+  case Verify_KmsOnly
+  solve( !PkKms( pk(x) ) ▶₁ #i )
+    case Register_Issuer
+    solve( !KU( sign(<p, 'kms_only'>, ~kms) ) @ #vk.4 )
+      case Issue_KmsOnly
+      by contradiction /* from formulas */
+    next
+      case c_sign
+      by solve( !KU( ~kms ) @ #vk.6 )
+    qed
+  qed
+qed
+
+/* All wellformedness checks were successful. */
+
+/*
+Generated from:
+Tamarin version 1.12.0
+Maude version 3.1
+Git revision: 82780bbaf3328a45f624ddb41e51bf75425f851c (with uncommited changes), branch: master
+Compiled at: 2026-03-07 14:22:39.174278293 UTC
+*/
+
+end
+
+==============================================================================
+summary of summaries:
+
+analyzed: formal/spike/tamarin/p2_commitment_correct.spthy
+
+  processing time: 1.66s
+  
+  executable_both (exists-trace): verified (8 steps)
+  executable_gpg_only (exists-trace): verified (6 steps)
+  executable_kms_only (exists-trace): verified (6 steps)
+  p2_manifest_binding (all-traces): verified (15 steps)
+
+==============================================================================
