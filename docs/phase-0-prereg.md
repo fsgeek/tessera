@@ -44,14 +44,14 @@ attestation of website ownership with a fixed expiration.
 
 Why would you use an attestation:
 
-1. to demonstrate a tamper resistant pre-registration, such as an hypothesis,
-an experimental design, and a predicted outcome.
+1. to demonstrate a tamper-resistant pre-registration, such as a hypothesis,
+   an experimental design, and a predicted outcome.
 2. to record the findings of one or more third parties, such as an
-audit, regulatory policy, ontology, or citation.  Note: this is a
-suggested but not exhaustive list.
+   audit, regulatory policy, ontology, or citation.  Note: this is a
+   suggested but not exhaustive list.
 3. to record agreements between parties, such as a contract, and
-signatures of parties to that contract, similar to the way a notary validates
-documents.
+   signatures of parties to that contract, similar to the way a notary validates
+   documents.
 
 The distinction here is that this attestation is over a _digital artifact_.  Thus,
 for example, the SHA256 hash value of a document, or a blockchain address, or
