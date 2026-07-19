@@ -37,6 +37,19 @@ Cross-cutting obligations (A1.4, A1.7):
 - [ ] Every symbolic lemma carries a prose mapping to its A1.2 property.
 - [ ] Cross-model correspondence mapping (TLA+ ↔ symbolic) in the written
       proof.
+- [ ] Cross-model correspondence (TLA+ ↔ TLA+): P5c (issuance) and P5P6
+      (verifier) agree on the A2.1 confirmation predicate in prose but
+      model the quantity incompatibly — operational `depth` vs. free
+      integer `confirmedAt`; the join is asserted, not checked. Obligation:
+      a bridge model that represents block timestamps *separately* from
+      the tick clock and derives `confirmedAt` from headers (latching it
+      under P5c's single clock would be true by construction), plus a
+      broken-bridge companion substituting `anchorAt` that must go red.
+      Surfaced 2026-07-18; the alarming "burial delay vanishes" form did
+      NOT reproduce under Codex non-author check — the narrowed obligation
+      is what remains. Itemized distinct from the TLA+↔symbolic line
+      above; disposition to be registered in Amendment 3. See
+      `docs/exploration-2026-07-18-causal-dag-commons.md` §0/§8/§8b.
 - [ ] Agreement-gate falsification reviews run by non-author models;
       artifacts in `docs/reviews/`.
 - [ ] Conformance vectors extracted from checked traces (feeds H1a).
