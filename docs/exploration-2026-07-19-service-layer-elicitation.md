@@ -431,3 +431,46 @@ makes foreseen-vs-unforeseen auditable, so the distinction is enforced by
 the architecture, not by memory or goodwill. Stage-one skeleton drafting
 (assets, objectives, actors, exclusions — nothing mechanism-dependent)
 may proceed before the exercise runs.
+
+**Ruling 4 — A2 review dispositions 1–2 (Band 0): ACCEPTED**, recorded at
+the disposition itself in
+`docs/reviews/2026-07-07-codex-amendment-2-review.md` (FLP rationale;
+`Refuse` path; `_BrokenSilent` red-bar companion as the
+not-manufacturing-silence evidence). P5c refusal-state work unblocked.
+
+**Ruling 5 — A2.4 discharge paths (Band 0, resolves the review's
+disposition 3): the REFINED split accepted** — after the author
+conditioned acceptance on exhaustive analysis, the assistant's honest
+re-enumeration found four omissions and strengthened the recommendation
+(the condition working as designed; "the pressure to produce quickly
+often weighs against exhaustive analysis" — author):
+
+- **Anchor standing:** `[proof]+[vector]` obligation, distinct tracker
+  line cross-referencing P8, **plus a named ProVerif lemma rider on P2**
+  ("accepted ⇒ anchor-binding holds"), with the H1a mapping noted so the
+  vector family and H1a's substitute-attack red-bar suite converge into
+  one set of artifacts at Band 1 rather than being discharged twice.
+- **Declared-time confinement:** `[policy]+[vector]` **in the
+  by-construction form** — the reference verifier's output type contains
+  no field from which priority can be derived (the prohibited behavior is
+  inexpressible; the vector confirms the absence) — **plus a named row-5
+  handoff** carrying the marketplace half of the prohibition into the
+  service-layer registration, where marketplace rules actually live.
+- Both registered via Amendment 3, per break-the-chain.
+- Tail alternatives recorded for the future, not now: dual-anchor
+  redundancy (Bitcoin + RFC 3161 TSA) noted by the author as potentially
+  interesting **for a different service tier** some customers might want;
+  ZK time-bracketing rejected outright.
+
+**Follow-through commitment attached to Rulings 4–5 (author):** once
+these decisions are settled, the ProVerif and TLA+ specifications must be
+verified to *properly model what we claim they model* — this lands on the
+existing cross-cutting obligations (per-lemma prose mapping, TLA+↔symbolic
+correspondence, the TLA+↔TLA+ bridge) plus the new P2 lemma rider, and is
+the standing test every new obligation must pass before its tracker
+status advances.
+
+**Status of this rulings section:** resolved but NOT final — the author
+will pass this updated document through Codex for objections before the
+rulings feed the pre-registration stage. Freedom to adjust remains until
+then.
