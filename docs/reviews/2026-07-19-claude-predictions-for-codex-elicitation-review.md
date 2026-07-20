@@ -96,3 +96,14 @@ flaws, not its design's blind spots. This asymmetry is a direct, worked
 argument for the non-author gate and should temper any future confidence
 the assistant expresses about design-space completeness — including lists
 it has already enriched once under pushback.
+
+> **TEMPERED 2026-07-20 (Codex round-2 review).** The pattern above is a
+> **working hypothesis, not a universal fact**: the hit/partial scoring
+> contains judgment, and the sample is small (this exercise plus the two
+> earlier §9 episodes). It nonetheless already justifies a process change,
+> adopted as a working rule: *every proposed mechanism must be reviewed
+> against the simplest plausible alternative and traced through at least
+> one operational consequence outside its own happy path.* "How can this
+> fail?" and "does this do anything a simpler construction does not?" find
+> different flaws; the assistant's self-review does the former adequately
+> and cannot be trusted for the latter.
