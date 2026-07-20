@@ -50,3 +50,49 @@ Predictions, in descending order of confidence that the reviewer flags it:
 Calibration note: if the review's most serious finding is something absent
 from this list, that miss is itself the interesting datum and should be
 recorded in the disposition.
+
+---
+
+## Scoring addendum (2026-07-19, after the review returned)
+
+Review: `docs/reviews/2026-07-19-codex-service-layer-elicitation-review.md`.
+
+- **Prediction 1 (temporal semantics / "dissolves the fork" overclaim): HIT.**
+  The review's "authority section needs temporal semantics" — the misleading
+  discovery/verification sentence, activation windows, revocation as a
+  safety-vs-availability decision. The review went further than predicted
+  (activation rule, verdict classification table).
+- **Prediction 2 (secret-seed not verifier-enforceable): DIRECT HIT.** Same
+  mechanism predicted (thief supplies own successor slot); the review added
+  the structural repair (reveal must authorize rotation → pre-rotation).
+- **Prediction 3 (detection vs. adjudication/recovery): PARTIAL.** Recovery
+  appears as a column of the review's mechanism table and in the C-ladder,
+  but the review's sharper adjacent finding (registry uniqueness can
+  *destroy* equivocation evidence) was not predicted.
+- **Prediction 4 (inter-stage drift in staged signing): NOT RAISED.** Not
+  confirmed, not refuted. Remains a live concern for the structure decision.
+- **Prediction 5 (KERI comparison loose): PARTIAL HIT.** The review kept the
+  comparison as productive but demoted the fencing-token analogy and flagged
+  the vlei.wiki citation as AI-generated (reference hygiene) — adjacent to,
+  but not identical with, the predicted witness-infrastructure objection.
+
+**Unpredicted serious findings (the calibration datum):**
+
+1. id-of-next may be redundant with sequence+previous-hash — the review's
+   headline. Not predicted at all.
+2. The per-issuer serialization / concurrency constraint and the
+   control-plane vs. claim-plane split. Not predicted.
+3. Evidence-destroying registry behavior (uniqueness enforcement without
+   retention destroys the collision proof). Not predicted.
+4. The guarantee renaming (row 2 = conditional split-brain evidence, not
+   takeover resistance) and the C0–C4 profile ladder. Not predicted.
+
+**Pattern, recorded for future calibration:** the assistant's predictions
+caught its own *prose-level* overclaims — places where it wrote a stronger
+sentence than the mechanism supported — and missed every *design-level*
+finding that required comparing the mechanism against a simpler alternative
+or tracing an operational consequence. The assistant predicts its rhetoric's
+flaws, not its design's blind spots. This asymmetry is a direct, worked
+argument for the non-author gate and should temper any future confidence
+the assistant expresses about design-space completeness — including lists
+it has already enriched once under pushback.
