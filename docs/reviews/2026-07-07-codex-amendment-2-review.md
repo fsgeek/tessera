@@ -100,7 +100,21 @@ Checked before committing this artifact, against the recovery claims above:
 - **Prior-transcript visibility:** yes — the reviewer had repo access
   including the committed A1 review artifacts in `docs/reviews/`.
 
-## Disposition (DRAFT — AI collaborator, 2026-07-19; pending author sign-off)
+## Disposition (AI collaborator draft 2026-07-19; dispositions 1–2 ACCEPTED by the author 2026-07-20)
+
+> **Author sign-off, 2026-07-20 (walk-through session):** dispositions 1
+> and 2 accepted as drafted. Author's rationale for 1, recorded: "We're
+> trying to avoid FLP. An honest stop is better than a never-halting
+> system or (worse) a manufactured-silence-generating system" — `Refuse`
+> is the right path, and the silent-stall broken companion provides the
+> evidence that the model is not manufacturing silence. Modeling note
+> agreed: refusal is modeled as *safety* (terminal ⇒ shipped ∨ refused;
+> silent deadlock unreachable), with vacuity witnesses showing `Refuse`
+> fires on a real exhaustion path and a `_BrokenSilent` companion (Refuse
+> deleted, all else identical) that must go red on exactly that
+> invariant. Disposition 3 (A2.4 discharge path) resolved separately —
+> see the ruling recorded in
+> `docs/exploration-2026-07-19-service-layer-elicitation.md` §6.
 
 1. **High (refusal unmodeled): ACCEPT.** Independently corroborates Q7 of
    `formal/tla/P5c_IssuanceProtocol.READ-AND-CHALLENGE.md` (silent stall on
