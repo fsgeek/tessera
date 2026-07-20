@@ -351,3 +351,38 @@ separately.
    organizing lens for which service-layer claims are *claimable* at all —
    with the reviewer's caution: proximity to the frontier is not permission
    to invent mechanisms confidently; the contribution is honest borders.
+
+## 6. Author rulings (2026-07-20, resolved in walk-through with Claude)
+
+**Ruling 1 — revocation under partial authority-channel availability
+(resolves open question 7).** Author's frame: Tessera's role is to make
+risk *legible*, never to dictate verifier policy — the A1.2 "delta belongs
+to the verifier" principle extended from time-tolerance to key state.
+Resolved position (author: "a responsible position for stage one," with
+room to tighten later):
+
+1. **Verifier side — expose, never dictate.** Transition type
+   (planned/reactive), verdict classification (VALID_STRICT /
+   VALID_DEGRADED with exact waived evidence named / UNVERIFIABLE /
+   INVALID), and evidence freshness (checkpoint age against a
+   bounded-staleness policy) are *published signals* in the
+   continuity-profile evidence surface. Interpretation belongs to the
+   relying party per their risk tolerance.
+2. **Issuer side — planned/reactive split.** Planned transitions
+   pre-publish evidence and activate at pre-committed epoch boundaries: no
+   halt. Reactive transitions halt issuance for the gap's duration — not
+   as policy taste but by trace: the reactive trigger (observed revocation
+   intent) makes the signing key *suspect*, and a suspect key cannot
+   trustworthily label its own output, so there is nothing legible the
+   issuer can say with it during the gap.
+3. **VALID_DEGRADED is verifier-side only** — a relying-party policy
+   naming the waived evidence; never an issuer-side license to issue under
+   suspended lineage, and never a redefinition of strict validity.
+4. **RECOVERY is an explicitly open mechanism** for stage-one drafting
+   (candidates: pre-committed recovery keys; re-origination via surviving
+   channels with an explicit successor-of link; terminal + new identity).
+   Timeout value and its owner defined in stage one.
+
+Codex's round-2 state machine is adopted as the *reactive* path; the
+planned path is the amendment that prevents routine rotations from being
+recurring self-inflicted outages.
