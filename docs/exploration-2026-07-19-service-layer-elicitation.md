@@ -354,6 +354,17 @@ separately.
 
 ## 6. Author rulings (2026-07-20, resolved in walk-through with Claude)
 
+> **STATUS OF EVERY RULING IN THIS SECTION: AUTHOR-ADOPTED FOR STAGE-ONE
+> DRAFTING; NOT RATIFIED.** (Corrected 2026-07-20 after round-3 Codex
+> review — the original text called Ruling 2 "RATIFIED," which violated
+> that ruling's own citation rule while the document's banner says
+> working notes. Nothing here is ratified until its hash appears in a
+> signed, anchored registration manifest.) Round-3 findings folded below
+> as CORRECTED blocks; review archived at
+> `docs/reviews/2026-07-20-codex-rulings-review-round3.md`. Findings 6–7
+> reword the author's own recorded rationale and analogy and are applied
+> **pending the author's confirmation**, marked as such.
+
 **Ruling 1 — revocation under partial authority-channel availability
 (resolves open question 7).** Author's frame: Tessera's role is to make
 risk *legible*, never to dictate verifier policy — the A1.2 "delta belongs
@@ -387,8 +398,34 @@ Codex's round-2 state machine is adopted as the *reactive* path; the
 planned path is the amendment that prevents routine rotations from being
 recurring self-inflicted outages.
 
+> **CORRECTED 2026-07-20 (round-3 review, finding 1).** Four repairs to
+> Ruling 1 as stated above. *(a)* VALID_STRICT/VALID_DEGRADED/
+> UNVERIFIABLE/INVALID are **policy-computed judgments, not raw
+> signals** — and Band 0 already uses that vocabulary for receipt
+> validity, so one receipt can legitimately be VALID_STRICT under its
+> issue-time context and UNVERIFIABLE under a continuity profile *at the
+> same evaluation*. Stage one must separate: immutable evidence
+> observations; protocol transition state (ACTIVE / PENDING / SUSPENDED /
+> RECOVERY / TERMINAL); `ReceiptVerdict`; and
+> `ContinuityVerdict(profile_id, evidence_snapshot_hash, evaluated_at)`.
+> Relying-party discretion is bounded by the registered waiver lattice
+> (A1 §304): non-waivable unperformable checks stay UNVERIFIABLE.
+> *(b)* Planned-vs-reactive is **derived from trace evidence, never an
+> issuer-supplied label** — otherwise a thief marks the takeover
+> "planned." *(c)* If the activation boundary arrives before every
+> planned publication converges, the path enters SUSPENDED — the
+> unqualified "planned transitions: no halt" was a fail-open statement.
+> *(d)* "Observed revocation intent" needs an exact authentication
+> threshold; if one recognized-but-compromised path can suspend the key,
+> that availability attack is accepted only as an explicit safety trade.
+> RECOVERY may stay undesigned in stage one **only** registered as
+> unclaimed with SUSPENDED → TERMINAL as the complete current behavior —
+> a recovery *transition* in the machine requires designed authorization
+> and entry/exit conditions, not a candidate list.
+
 **Ruling 2 — registration structure (resolves open question 5 / §4).**
-RATIFIED: manifest-bound multi-file staged registration per the Codex
+AUTHOR-ADOPTED FOR STAGE-ONE DRAFTING (label corrected from "RATIFIED" —
+see §6 status note): manifest-bound multi-file staged registration per the Codex
 round-2 recommendation — root manifest binding every component file by
 hash with per-file normative status, the seam/handoff matrix as
 first-class content, `WORKING → REGISTERED → DISCHARGED / SUPERSEDED`
@@ -414,6 +451,28 @@ honest target is syntactic/status unambiguity by construction plus
 *detection and forced explicit resolution* of semantic ambiguity, not its
 impossibility.
 
+> **CORRECTED 2026-07-20 (round-3 review, findings 2 and 7; finding-7
+> wording PENDING AUTHOR CONFIRMATION).** *(a)* The single lifecycle enum
+> conflated three orthogonal axes, now separated: **component role**
+> (normative / informative / candidate), **registration state** (working
+> / registered / superseded), **property discharge** (open / modeled /
+> checked / discharged) — a registered document can hold undischarged
+> obligations; a discharged registration can be superseded. *(b)*
+> "Manifest wins" is an interpretation rule but insufficient for
+> validation; strengthened to: *the manifest is authoritative, and any
+> duplicated status metadata must agree with it — disagreement is a
+> validation failure* (a conforming tool rejects the bundle). Schema
+> obligations for stage one: role+state assignment (hash inclusion alone
+> is insufficient), canonical manifest encoding, detached signing or
+> equivalent non-self-referential construction, manifest identity, and
+> authenticated supersession. *(c)* Finding 7, on the paragraph above:
+> the mathematical examples concern **independence and undecidability,
+> not ambiguity** — a formal system can be perfectly unambiguous while
+> incomplete. The conclusion survives stated directly: the DSL makes
+> syntax, identifiers, status, and references machine-decidable, and
+> forces unresolved semantic choices to be *named*. The analogy's removal
+> awaits the author's confirmation since the caveat was his.
+
 **Ruling 3 — the mechanism-comparison exercise (resolves open question
 6): ADOPT AND SCHEDULE.** The four-mechanism × four-trace comparison plus
 Codex's two operational checks and per-mechanism record schema is adopted
@@ -431,6 +490,20 @@ makes foreseen-vs-unforeseen auditable, so the distinction is enforced by
 the architecture, not by memory or goodwill. Stage-one skeleton drafting
 (assets, objectives, actors, exclusions — nothing mechanism-dependent)
 may proceed before the exercise runs.
+
+> **CORRECTED 2026-07-20 (round-3 review, finding 6; PENDING AUTHOR
+> CONFIRMATION — this rewords the author's recorded principle).** The
+> principle as stated moralizes *accepted* residual risk: engineers
+> legitimately identify risks whose mitigation would create greater cost,
+> harm, or fragility, and a later occurrence of an analyzed, disclosed,
+> bounded, explicitly-accepted risk is not dishonesty. Sharpened form:
+> *allowing a foreseen risk to remain **without analysis, disclosure, and
+> an accountable acceptance decision** is a breach of the representation
+> made to users; an explicitly accepted residual risk is not an
+> unanticipated failure — but neither is it concealment.* Also corrected:
+> the anchored record does not *enforce* the distinction; it preserves
+> the evidence that makes it auditable and supports accountability —
+> which is still the substantial contribution.
 
 **Ruling 4 — A2 review dispositions 1–2 (Band 0): ACCEPTED**, recorded at
 the disposition itself in
@@ -469,6 +542,50 @@ existing cross-cutting obligations (per-lemma prose mapping, TLA+↔symbolic
 correspondence, the TLA+↔TLA+ bridge) plus the new P2 lemma rider, and is
 the standing test every new obligation must pass before its tracker
 status advances.
+
+> **CORRECTED 2026-07-20 (round-3 review, findings 3, 4, 5).** Three
+> repairs to Rulings 4–5 as recorded above.
+>
+> *(Finding 4 — refusal semantics; FLP replacement pending author
+> confirmation since the FLP framing was his.)* A `refused` bit plus a
+> separately-enabled `Refuse` action proves nothing about firing — TLA+
+> needs a fairness assumption plus a liveness property (`exhausted ~>
+> refused`) for that construction. Adopted construction instead: **atomic
+> entry** — the final failed attempt enters `refused` in the same
+> transition, making refusal a transition-level *safety* fact, keeping
+> P5c safety-only with no fairness machinery. The claim is narrowed to
+> *"refusal durably recorded and available for retrieval"* — "reported"
+> would require modeling an outbox/delivery/acknowledgment handoff, which
+> is not claimed. The FLP rationale is replaced by the clean form: *a
+> bounded, explicit negative result is preferable to silent deadlock,
+> while eventual successful issuance remains unclaimed* (FLP concerns
+> consensus termination in fully asynchronous systems; an explicit
+> bounded refusal does not "avoid" it — it relinquishes a liveness
+> objective).
+>
+> *(Finding 3 — the "by-construction" claim was FALSE as written, and it
+> was the AI collaborator's own refinement-stage strengthening.)* The
+> verifier's output type cannot make downstream priority ordering
+> inexpressible: the marketplace holds the input receipt containing
+> `declared_issue_time` and can order receipts itself. The honest
+> guarantee stack: the reference verifier emits no priority judgment; its
+> API endorses no priority interpretation; marketplace policy forbids
+> declared-time ordering; marketplace conformance tests exercise the
+> prohibition; and **a nonconforming downstream consumer can still
+> violate the rule — an explicit residual**, not a discharged
+> impossibility.
+>
+> *(Finding 5 — the P2 rider is withdrawn as a seam-burial.)* Anchor
+> standing becomes its **own property with a stable identifier**
+> (allocated in A3), dependent on P7/P8, with explicit subclaims: exactly
+> one designated proof/transaction pair has standing; the proof commits
+> to the exact framed receipt bytes; the txid identifies the transaction
+> containing that commitment; proof and txid are mutually coherent;
+> discarded/unshipped anchors are ignored; substitution yields rejection
+> or another valid proof of the same exact bytes. Evidence classes stay
+> visibly separate: framing proof, ProVerif correspondence (which relates
+> *modeled* events only — it cannot attest Bitcoin/OTS implementation
+> correctness), implementation vectors, and named external assumptions.
 
 **Status of this rulings section:** resolved but NOT final — the author
 will pass this updated document through Codex for objections before the
