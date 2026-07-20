@@ -465,13 +465,24 @@ impossibility.
 > obligations for stage one: role+state assignment (hash inclusion alone
 > is insufficient), canonical manifest encoding, detached signing or
 > equivalent non-self-referential construction, manifest identity, and
-> authenticated supersession. *(c)* Finding 7, on the paragraph above:
-> the mathematical examples concern **independence and undecidability,
-> not ambiguity** — a formal system can be perfectly unambiguous while
-> incomplete. The conclusion survives stated directly: the DSL makes
-> syntax, identifiers, status, and references machine-decidable, and
-> forces unresolved semantic choices to be *named*. The analogy's removal
-> awaits the author's confirmation since the caveat was his.
+> authenticated supersession. *(c)* Finding 7, RESOLVED 2026-07-20 by
+> synthesis after the author disputed the removal (was CH not exactly "a
+> statement that can neither be proven nor refuted"?): the author and the
+> reviewer were using **two different, both-legitimate senses of
+> "ambiguity."** *Interpretive (sentence-level):* a statement admits
+> multiple readings — the P5c "confirmed within δ" fork. CH is NOT this:
+> its meaning is exact. *Referential (theory-level):* the axioms fail to
+> pin down their subject — models of ZFC exist where CH holds and where
+> it fails, so "the universe of sets" has multiple non-isomorphic
+> referents (the set-theoretic multiverse view). The author's examples
+> are this kind. *Undecidability* (halting) is a third bin, bounding what
+> checking tools can promise. Three phenomena, three DSL responses:
+> **eliminate interpretive ambiguity by construction; surface referential
+> underdetermination and force the fork to be registered** (as
+> mathematics did: ZF+CH and ZF+¬CH both studied, chosen per context —
+> the amendment mechanism); **bound tooling claims** where checking is
+> undecidable. The author's examples are retained, correctly filed,
+> rather than removed.
 
 **Ruling 3 — the mechanism-comparison exercise (resolves open question
 6): ADOPT AND SCHEDULE.** The four-mechanism × four-trace comparison plus
@@ -491,8 +502,9 @@ the architecture, not by memory or goodwill. Stage-one skeleton drafting
 (assets, objectives, actors, exclusions — nothing mechanism-dependent)
 may proceed before the exercise runs.
 
-> **CORRECTED 2026-07-20 (round-3 review, finding 6; PENDING AUTHOR
-> CONFIRMATION — this rewords the author's recorded principle).** The
+> **CORRECTED 2026-07-20 (round-3 review, finding 6; CONFIRMED by the
+> author 2026-07-20 as "a language level clarification. Quite
+> reasonable").** The
 > principle as stated moralizes *accepted* residual risk: engineers
 > legitimately identify risks whose mitigation would create greater cost,
 > harm, or fragility, and a later occurrence of an analyzed, disclosed,
@@ -546,8 +558,13 @@ status advances.
 > **CORRECTED 2026-07-20 (round-3 review, findings 3, 4, 5).** Three
 > repairs to Rulings 4–5 as recorded above.
 >
-> *(Finding 4 — refusal semantics; FLP replacement pending author
-> confirmation since the FLP framing was his.)* A `refused` bit plus a
+> *(Finding 4 — refusal semantics; FLP replacement CONFIRMED by the
+> author 2026-07-20, "not wedded to language," with his gloss recorded
+> because the intuition was structurally right: FLP's adversary wins by
+> forever deferring the deciding message, and the real-world response is
+> a finite bound accepted as a patch — `MaxAttempts` is that pattern
+> applied to adversarially-deferrable anchor confirmation. The formal
+> claim "avoids FLP" is what's withdrawn; the pattern kinship stands.)* A `refused` bit plus a
 > separately-enabled `Refuse` action proves nothing about firing — TLA+
 > needs a fairness assumption plus a liveness property (`exhausted ~>
 > refused`) for that construction. Adopted construction instead: **atomic
