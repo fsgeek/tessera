@@ -386,3 +386,30 @@ room to tighten later):
 Codex's round-2 state machine is adopted as the *reactive* path; the
 planned path is the amendment that prevents routine rotations from being
 recurring self-inflicted outages.
+
+**Ruling 2 — registration structure (resolves open question 5 / §4).**
+RATIFIED: manifest-bound multi-file staged registration per the Codex
+round-2 recommendation — root manifest binding every component file by
+hash with per-file normative status, the seam/handoff matrix as
+first-class content, `WORKING → REGISTERED → DISCHARGED / SUPERSEDED`
+lifecycle, the inter-stage citation rule (unsigned stage-two material is
+non-normative candidate material; nothing downstream may call it
+registered/ratified/required/discharged until its hash appears in a
+signed, anchored manifest), stable identifiers allocatable in stage one
+without wording import, and repairs only by new manifest version. Plus
+the author-confirmed clarification: **the manifest is the sole authority
+on normative status** — file banners are convenience copies; on conflict
+the manifest wins and the conflict is a bug in the file ("banners can be
+forgotten, text ambiguities present; it is the manifest that
+determines"). Signing authority: the author, as with amendments.
+
+Author's forward note, registered as a future evolution rather than a
+stage-one requirement: manifest *structure* should tend toward making
+ambiguity impossible to encode — a later manifest version could adopt a
+DSL that limits or eliminates encoding ambiguity. Registered with the
+author's own epistemic caveat: mathematics teaches that ambiguity and
+undecidability arise regardless (Euclid's fifth postulate, the axiom of
+choice, the continuum hypothesis, the halting problem) — so the DSL's
+honest target is syntactic/status unambiguity by construction plus
+*detection and forced explicit resolution* of semantic ambiguity, not its
+impossibility.
