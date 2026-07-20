@@ -358,12 +358,13 @@ separately.
 > DRAFTING; NOT RATIFIED.** (Corrected 2026-07-20 after round-3 Codex
 > review — the original text called Ruling 2 "RATIFIED," which violated
 > that ruling's own citation rule while the document's banner says
-> working notes. Nothing here is ratified until its hash appears in a
-> signed, anchored registration manifest.) Round-3 findings folded below
-> as CORRECTED blocks; review archived at
-> `docs/reviews/2026-07-20-codex-rulings-review-round3.md`. Findings 6–7
-> reword the author's own recorded rationale and analogy and are applied
-> **pending the author's confirmation**, marked as such.
+> working notes. Nothing here is ratified until a signed, anchored
+> registration manifest assigns it the appropriate role and registration
+> state — hash inclusion alone is insufficient.) Round-3 findings folded
+> below as CORRECTED blocks; reviews archived at
+> `docs/reviews/2026-07-20-codex-rulings-review-round3.md` and
+> `...-round4.md`. Findings 6–7 were routed to the author and are now
+> RESOLVED (6 confirmed; 7 resolved by synthesis, validated in round 4).
 
 **Ruling 1 — revocation under partial authority-channel availability
 (resolves open question 7).** Author's frame: Tessera's role is to make
@@ -471,18 +472,35 @@ impossibility.
 > reviewer were using **two different, both-legitimate senses of
 > "ambiguity."** *Interpretive (sentence-level):* a statement admits
 > multiple readings — the P5c "confirmed within δ" fork. CH is NOT this:
-> its meaning is exact. *Referential (theory-level):* the axioms fail to
-> pin down their subject — models of ZFC exist where CH holds and where
-> it fails, so "the universe of sets" has multiple non-isomorphic
-> referents (the set-theoretic multiverse view). The author's examples
-> are this kind. *Undecidability* (halting) is a third bin, bounding what
-> checking tools can promise. Three phenomena, three DSL responses:
-> **eliminate interpretive ambiguity by construction; surface referential
-> underdetermination and force the fork to be registered** (as
-> mathematics did: ZF+CH and ZF+¬CH both studied, chosen per context —
-> the amendment mechanism); **bound tooling claims** where checking is
-> undecidable. The author's examples are retained, correctly filed,
-> rather than removed.
+> its meaning is exact. *Axiomatic underdetermination (theory-level;
+> round-4 technical label, acknowledged as a kind of ambiguity in
+> Tessera's umbrella vocabulary per the author's usage):* the axioms fail
+> to pin down their subject — assuming ZFC is consistent, models of ZFC
+> exist where CH holds and where it fails (CH and ¬CH each consistent
+> relative to Con(ZFC)), so "the universe of sets" has multiple
+> non-isomorphic referents (the set-theoretic multiverse view). The
+> author's examples are this kind. *Algorithmic undecidability* (halting)
+> is a third bin, bounding what checking tools can promise. Three
+> phenomena, three DSL responses: **eliminate interpretive ambiguity by
+> construction; surface axiomatic underdetermination and force the fork
+> to be registered** (as mathematics did: ZFC+CH and ZFC+¬CH both
+> studied, chosen per context — the amendment mechanism); **bound tooling
+> claims** where checking is undecidable. The author's examples are
+> retained, correctly filed, rather than removed.
+>
+> **Architectural boundary (round 4; the DFA/Turing-complete split is the
+> author's, validity conditions the reviewer's):** keep the normative
+> manifest/status core **finite-state and deliberately
+> non-Turing-complete** — syntax, status transitions, reachability,
+> equivalence, and transition-coverage completeness are then decidable,
+> conditional on finite domains, total transitions, and mutually
+> exclusive guards. Richer specifications live *outside* that core and
+> must name their undecidable or unresolved obligations for future
+> review, making the expressiveness tradeoff explicit rather than
+> accidental. Standing limitation, stated where it belongs: the finite
+> core eliminates machine-level uncertainty *within the encoded world*
+> only — the ayllu still decides whether that world is adequate, and
+> preserves unresolved forks when it cannot.
 
 **Ruling 3 — the mechanism-comparison exercise (resolves open question
 6): ADOPT AND SCHEDULE.** The four-mechanism × four-trace comparison plus
@@ -559,12 +577,17 @@ status advances.
 > repairs to Rulings 4–5 as recorded above.
 >
 > *(Finding 4 — refusal semantics; FLP replacement CONFIRMED by the
-> author 2026-07-20, "not wedded to language," with his gloss recorded
-> because the intuition was structurally right: FLP's adversary wins by
-> forever deferring the deciding message, and the real-world response is
-> a finite bound accepted as a patch — `MaxAttempts` is that pattern
-> applied to adversarially-deferrable anchor confirmation. The formal
-> claim "avoids FLP" is what's withdrawn; the pattern kinship stands.)* A `refused` bit plus a
+> author 2026-07-20, "not wedded to language"; precision-corrected in
+> round 4: the FLP scheduler chooses an admissible event ordering that
+> keeps the system bivalent — it need not withhold one fixed "deciding
+> message" — and such an execution is not technically live with respect
+> to consensus termination: processes keep stepping while the useful
+> liveness property fails. Final form, adopted verbatim from round 4:
+> "FLP provides the analogy: a system may remain operationally active
+> while an admissible schedule indefinitely postpones the useful outcome.
+> MaxAttempts does not solve or avoid FLP; it changes Tessera's contract
+> from guaranteed successful issuance to bounded termination in either
+> success or explicit refusal.")* A `refused` bit plus a
 > separately-enabled `Refuse` action proves nothing about firing — TLA+
 > needs a fairness assumption plus a liveness property (`exhausted ~>
 > refused`) for that construction. Adopted construction instead: **atomic
@@ -604,7 +627,11 @@ status advances.
 > *modeled* events only — it cannot attest Bitcoin/OTS implementation
 > correctness), implementation vectors, and named external assumptions.
 
-**Status of this rulings section:** resolved but NOT final — the author
-will pass this updated document through Codex for objections before the
-rulings feed the pre-registration stage. Freedom to adjust remains until
-then.
+**Status of this rulings section:** resolved; Codex objection passes
+COMPLETE (round 3: seven findings, folded; round 4: precision repairs and
+the DSL architectural boundary, folded — archived in
+`docs/reviews/2026-07-20-codex-rulings-review-round3.md` / `-round4.md`).
+Standing gate: stage-one skeleton drafting and the comparison exercise
+proceed; every ruling remains AUTHOR-ADOPTED FOR STAGE-ONE DRAFTING until
+a signed, anchored registration manifest assigns its content the
+appropriate role and registration state.
