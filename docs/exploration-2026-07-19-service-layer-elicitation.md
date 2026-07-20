@@ -413,3 +413,21 @@ choice, the continuum hypothesis, the halting problem) — so the DSL's
 honest target is syntactic/status unambiguity by construction plus
 *detection and forced explicit resolution* of semantic ambiguity, not its
 impossibility.
+
+**Ruling 3 — the mechanism-comparison exercise (resolves open question
+6): ADOPT AND SCHEDULE.** The four-mechanism × four-trace comparison plus
+Codex's two operational checks and per-mechanism record schema is adopted
+as the mechanism-selection discipline for the successor-slot, scheduled
+as its own design session (the author intends to force the AI
+collaborators to trace failure states so they can be reasoned about
+together). The shortcut — adopting the reviewer's provisional baseline
+without the exercise — is REJECTED, with the author's rationale recorded
+as a standing principle: *a failure on a scenario the record shows was
+already hypothesized is not an honest mistake but a betrayal of the
+representations made to the service's users; mistakes happen, but
+declining to address a foreseen risk is a different category of wrong.*
+Note the mechanism this project gives that principle: the anchored record
+makes foreseen-vs-unforeseen auditable, so the distinction is enforced by
+the architecture, not by memory or goodwill. Stage-one skeleton drafting
+(assets, objectives, actors, exclusions — nothing mechanism-dependent)
+may proceed before the exercise runs.
