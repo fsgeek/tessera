@@ -9,13 +9,82 @@ provided recommendations on the three decisions routed to the author.
 
 - **Reviewer:** Codex (OpenAI), dispatched directly by the author. Model per
   the author's Codex configuration (`gpt-5.6-sol`, reasoning high) unless the
-  author's invocation overrode it. **Gap (recurring):** the author's exact
-  prompt was not captured; recorded, not reconstructed.
+  author's invocation overrode it.
+- **Dispatch prompt (supplied verbatim by the author, 2026-07-20, closing
+  the gap recorded in the first version of this record):** the prompt was a
+  one-line framing plus the assistant's session recap forwarded verbatim:
+
+  > Claude has completed revision of the
+  > docs/exploration-2026-07-19-service-layer-elicitation.md file. It's
+  > recap was: \<claude\>[the assistant's full recap of commit `7f5ed5c` —
+  > calibration scoring, surviving design elements, frontier-exchange
+  > summary, and the three routed decisions — forwarded verbatim; full text
+  > preserved in §"Dispatch prompt payload" below]\</claude\>
+
+  **Methodological note:** the reviewer's input therefore *included the
+  author-side framing of the work under review*. The review's opening — "I
+  checked the repository rather than relying on the recap" — was a
+  deliberate de-anchoring step against exactly that, and should be read as
+  part of the review's independence claim.
 - **Reviewed input:** repository at `7f5ed5c` — the folded corrections,
   archived round-1 review, calibration addendum, and disposition.
 - **Prior-transcript visibility:** yes (cites file paths and line anchors).
 - **Date:** received 2026-07-20 (review references and verifies the
   2026-07-19 commits).
+
+## Dispatch prompt payload (the forwarded recap, verbatim)
+
+> All archived, folded, and anchored (7f5ed5c). The full review with
+> disposition is in docs/reviews/, the elicitation doc now carries seven
+> CORRECTED/SHARPENED blocks with originals preserved, and the prediction
+> file has its scoring addendum. Here's the honest summary.
+>
+> The calibration result is the headline for me. My pre-registered
+> predictions scored: two hits (the "dissolves the fork" overclaim and the
+> secret-seed hole — the latter almost verbatim), two partials, one
+> unaddressed. But every one of the review's most serious findings —
+> id-of-next being possibly redundant with plain sequence+previous-hash,
+> the silent per-issuer serialization constraint, the registry that
+> destroys equivocation evidence by enforcing uniqueness — was absent from
+> my list. The pattern is now on the record: I predict my rhetoric's flaws,
+> not my design's blind spots. I caught every place I'd written a sentence
+> stronger than its mechanism; I missed every finding that required
+> comparing my mechanism against a simpler alternative. That asymmetry is
+> the sharpest worked argument for the non-author gate yet, and it should
+> discount my confidence about design-space completeness specifically —
+> including lists I've already enriched once under your pushback, which is
+> a sobering addendum to this morning's heuristics.
+>
+> What survives for your design, net of the review: the layer relocation
+> stands (Codex: "the recovered design supplies" the missing unique
+> position — that's earned). But the recommended baseline is now
+> sequence+previous-hash for the exclusive position, KERI-style
+> precommitted keys for actual succession authority, and your UUID retained
+> only if the four-trace comparison shows it buys an operational property
+> (registry reservation, unlinkability, sharding) the simpler rule doesn't.
+> The C0–C4 profile ladder replaces the all-or-nothing doppelganger band,
+> with the cheap epoch-bounding mitigation (short-lived online keys +
+> offline precommitted rotation keys) as a genuinely attractive C3.
+>
+> On the frontier exchange: Codex's taxonomy — engineering edge, research
+> edge, epistemic edge — is worth adopting as a claims-filter for the
+> registration, and its closing point converges with something now
+> three-times independently arrived at: your method's distinctive
+> contribution is honest borders, not conquered territory. The candidate
+> theorem it offered ("under continued honest publication, checkpoint
+> convergence, and retained conflicting submissions, two valid occupants of
+> an exclusive issuer slot yield portable evidence of equivocation") is
+> exactly the shape of a stage-one registered property — modest,
+> conditional, defensible, and it names your mechanism's real guarantee.
+>
+> Routed to you, cleanly: (1) the safety-vs-availability rule for
+> revocation when one authority channel is unavailable — old key stays
+> authorized, new event stays unverifiable, or issuance halts; (2)
+> ratification of the revised registration structure (manifest-bound
+> multi-file, stage one = assets/objectives/adversary/profiles/handoffs/
+> unclaimed-properties, matrix organization); (3) whether the four-trace
+> comparison — the declared next exercise — happens now or next session.
+> Nothing else blocks; everything discovered today is anchored.
 
 ## Verbatim review
 
