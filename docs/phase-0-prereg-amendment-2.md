@@ -1,10 +1,10 @@
-# Tessera — Phase 0 Pre-Registration, Amendment 2 — DRAFT
+# Tessera — Phase 0 Pre-Registration, Amendment 2 — ADOPTED
 
-> **Status: DRAFT.** Not signed, not in force. Per Amendment 1 precedent,
-> this draft goes through falsification-style non-author review (the A1.7
-> discipline, applied to the amendment itself) before the author signs,
-> commits, and OTS-anchors it. Review artifacts and dispositions land in
-> `docs/reviews/` either way.
+> **Status: ADOPTED.** Signed and in force. Per Amendment 1 precedent,
+> this document went through falsification-style non-author review (the A1.7
+> discipline, applied to the amendment itself) before the author signed and
+> committed it, OpenTimestamps-stamped for subsequent Bitcoin anchoring.
+> Review artifacts and dispositions land in `docs/reviews/`.
 >
 > **What this document is.** The second amendment to the Phase 0
 > pre-registration (`phase-0-prereg.md`, commit `75207ba`), layered on
@@ -43,8 +43,13 @@ strict issuer discards and re-issues, yet the discarded transaction
 persists and typically confirms later, so a complete, chain-verifiable
 (receipt, anchor) pair exists that was never shipped. Checked against the
 registered properties: this artifact violates **none of them** — none of
-the **pre-Amendment-2 registered set**; A2.2 below changes exactly that,
-by rejecting it. The
+the **pre-Amendment-2 registered set**; A2.2 below changes exactly that
+for the **chain-late subclass** (`confirmed_at > declared + δ`), which
+it rejects. An operationally abandoned but **chain-valid** artifact
+(predicate holds; no timely eligibility latch, so the attempt was
+refused — possible under the A2.1 clock roles) is *not* rejected by
+A2.2; it is governed by the A2.1/A2.4 standing rules: cryptographically
+valid, evidentially admissible, no protocol standing. The
 anchor's security content is the block time alone — backdating is bounded
 because no forger can place bytes in a past block (P5), and P6's
 uncertainty window is bounded by `anchor_time` because signing precedes
@@ -220,10 +225,14 @@ aggregation-to-confirmation lag, so this amendment does not move it.
 
 Consequences, stated explicitly:
 
-- The abandoned-anchor artifact of A2.0 is **rejected outright** — its
+- The **chain-late subclass** of the A2.0 abandoned-anchor artifact
+  (`confirmed_at > declared + δ`) is **rejected outright** — its
   `confirmed_at` exceeds its own window. Within this system the conjunct
   rejects *only* such artifacts: strict issuance ships nothing that fails
-  it (A2.1).
+  it (A2.1). An operationally abandoned but chain-valid artifact passes
+  this conjunct and is governed instead by the A2.1/A2.4 standing rules
+  (no protocol standing; closure of the two-receipts residue is
+  Amendment 3's obligation, per A2.0).
 - **Evidence obligation.** The verifier must evaluate `confirmed_at`
   statelessly (P9): block headers `h … h + k − 1` are available either
   archived in the bundle or from the verifier-distributed header store the
@@ -330,7 +339,7 @@ obligations to be registered in Amendment 3 (planned, not yet in force).
 - **Verifier-side family (P5/P6):** add the `confirmed_at` observable and
   the A2.2 conjunct under the existing verifier-owns-tolerances
   discipline; a broken companion omitting the conjunct must accept the
-  abandoned-anchor artifact — witnessing exactly the gap A2.0 records.
+  the chain-late subclass — witnessing exactly the gap A2.0 records.
   Standing working rules apply (broken companions, `_Sanity` vacuity
   witnesses for every defined-predicate antecedent).
 - **P5c:** the header's semantic-fork paragraph resolves to

@@ -2,9 +2,9 @@
 
 Working tracker for discharging the pre-registered properties of
 Amendment 1 §A1.2 (commit `03cd3db`, anchored), as amended by
-Amendment 2 (`docs/phase-0-prereg-amendment-2.md`, DRAFT — pending
-non-author review and author signature; its model obligations are
-tracked here already so they cannot silently lapse). The *authoritative*
+Amendment 2 (`docs/phase-0-prereg-amendment-2.md`, ADOPTED 2026-07-21
+after three non-author review rounds and the clock-precedence ruling;
+its model obligations are tracked here). The *authoritative*
 statements live in the amendments; this file only tracks discharge status
 and artifact locations. If this table and the amendment ever disagree, the
 amendment wins — and the disagreement is a bug in this file.
