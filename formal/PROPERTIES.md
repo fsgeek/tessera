@@ -37,18 +37,41 @@ Cross-cutting obligations (A1.4, A1.7):
 - [ ] Every symbolic lemma carries a prose mapping to its A1.2 property.
 - [ ] Cross-model correspondence mapping (TLA+ ↔ symbolic) in the written
       proof.
-- [ ] Cross-model correspondence (TLA+ ↔ TLA+): P5c (issuance) and P5P6
+- [x] Cross-model correspondence (TLA+ ↔ TLA+): P5c (issuance) and P5P6
       (verifier) agree on the A2.1 confirmation predicate in prose but
       model the quantity incompatibly — operational `depth` vs. free
-      integer `confirmedAt`; the join is asserted, not checked. Obligation:
-      a bridge model that represents block timestamps *separately* from
-      the tick clock and derives `confirmedAt` from headers (latching it
-      under P5c's single clock would be true by construction), plus a
-      broken-bridge companion substituting `anchorAt` that must go red.
-      Surfaced 2026-07-18; the alarming "burial delay vanishes" form did
-      NOT reproduce under Codex non-author check — the narrowed obligation
-      is what remains. Itemized distinct from the TLA+↔symbolic line
-      above; disposition to be registered in Amendment 3. See
+      integer `confirmedAt`; the join was asserted, not checked.
+      **Bridge model built and checked 2026-07-21:**
+      `formal/tla/P5cP5P6_Bridge.tla` — block timestamps decoupled from
+      the tick clock (skewed, non-monotonic), `confirmedAt` DERIVED from
+      the chain (never latched — the by-construction vacuity trap
+      avoided), issuer and verifier transcribed independently (depth
+      convention vs. height-h+k−1 convention), with the `DepthK = k − 1`
+      pin as a checked INVARIANT, not an ASSUME. Green (456k states):
+      PinAgreement, ShippedDesignatedAgree (the join itself),
+      HonestShipAccepted (A2.1's by-construction claim, now checked),
+      LateBurialRejected; all six vacuity witnesses fire, including the
+      ε side (unrepresentable under P5c's fused clock) and wall-clock/
+      chain-time divergence. Companions: `_BrokenAnchorSubst` (the
+      obligated one — verifier substitutes `anchorAt`) red on exactly
+      the correspondence + late-burial invariants, isolation green
+      passes; `_BrokenWallClock` (P5c's fused-clock ship rule
+      transplanted) red on HonestShipAccepted — A2.1's "why chain time
+      on both sides" exhibited; `_BrokenPin` cfg (DepthK = KConf) red at
+      configuration time. Scoped abstractions, named in the module: one
+      attempt (no retry/refusal), no reorgs (A1.6 permanence — reorg
+      re-verification NOT discharged here), stateless verdicts, no
+      UNVERIFIABLE arm. **Design-time finding routed to the A2 review
+      rounds:** A2.1's "The rule" sentence states conjunct 3 only; under
+      decoupled clocks conjunct 3 does not imply conjunct 2, so the
+      issuer must evaluate the full VALID_STRICT at ship (the bridge's
+      Ship does; A2.1's prose should say so). Calibration artifact:
+      `docs/reviews/2026-07-21-claude-predictions-bridge-bench.md`.
+      Surfaced 2026-07-18; "burial delay vanishes" did NOT reproduce
+      under Codex non-author check on the fused model, and the bridge
+      confirms: the vanishing requires the broken substitution.
+      NON-AUTHOR REVIEW PENDING; disposition to be registered in
+      Amendment 3. See
       `docs/exploration-2026-07-18-causal-dag-commons.md` §0/§8/§8b.
 - [ ] Agreement-gate falsification reviews run by non-author models;
       artifacts in `docs/reviews/`.
