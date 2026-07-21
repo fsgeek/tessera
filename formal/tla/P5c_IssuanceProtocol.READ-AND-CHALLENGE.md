@@ -246,9 +246,9 @@ invariant among the checked set. What is discharged (wording narrowed
 2026-07-20 by the Codex review of this work, which withdrew its own
 earlier "durably recorded and available for retrieval" as too strong):
 **the abstract refusal state is entered atomically and latches**.
-Storage durability, retrievability, and the word "reported" in A2.3 all
-remain promises — the record→report gap is an Amendment 3 disposition
-item. Q7's "silent stall on attempt N" is now unrepresentable *as a
+Storage durability, retrievability, and reporting all remain promises —
+the record→report gap is an Amendment 3 disposition item (A2.3's draft
+text was aligned to this split on 2026-07-21). Q7's "silent stall on attempt N" is now unrepresentable *as a
 state*: no reachable state has the final window expired without the
 refusal recorded. It is not excluded *as a behavior* — without fairness,
 Tick can be postponed indefinitely before the crossing, and a mid-loop

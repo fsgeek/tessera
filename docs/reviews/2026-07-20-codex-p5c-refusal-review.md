@@ -1,6 +1,9 @@
 # Codex non-author review — P5c refusal state (atomic entry)
 
-**Date:** 2026-07-20. **Reviewer:** Codex (GPT-5.5), dispatched by the
+**Date:** 2026-07-20. **Reviewer:** Codex (GPT-5.5 ~~— CORRECTED
+2026-07-21: the CLI's configured model has been `gpt-5.6-sol` since
+2026-07-19 13:06, so this review ran on GPT-5.6; the 5.5 label was the
+session assistant carrying a stale handoff note~~), dispatched by the
 author. **Scope:** the refusal-state bench work
 (`formal/tla/P5c_IssuanceProtocol.tla` and companions, tracker bullet,
 READ-AND-CHALLENGE postscript 2). **Verdict:** "accept the atomic-entry

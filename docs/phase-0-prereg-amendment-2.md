@@ -15,7 +15,10 @@
 > **Provenance.** Building the P5c issuance-protocol state machine
 > (`formal/tla/P5c_IssuanceProtocol.tla`) forced a precision the registered
 > prose did not have: "confirmed … within δ" admits a strict reading (depth
-> k *reached* by `declared_issue_time + δ`) and a permissive one (block
+> k *reached* by `declared_issue_time + δ` — ratified below in its
+> chain-time form: the designated k-th-confirmation block carries an
+> in-window timestamp, the chosen proxy, not a wall-clock measurement of
+> when burial occurred) and a permissive one (block
 > time in-window, depth reached whenever). The fork was flagged in the
 > module header per the recorded-decision rule, and resolved by the author
 > on 2026-07-07 after an adversarial ratification dialogue with the AI
@@ -29,7 +32,8 @@
 The state machine did what pre-registering models is for: it made a prose
 ambiguity mechanically undeniable. The author ratifies the **strict**
 reading — restated below on a chain-visible observable so that the issuer
-and the verifier check the *same predicate*.
+and the verifier check the *same temporal conjuncts* (under the issuance
+policy's tolerances; A2.1).
 
 One correction from the ratification dialogue is registered alongside,
 because leaving it implicit would invite a misreading of what the strict
@@ -38,7 +42,9 @@ attempt whose anchor lands in an in-window block but buries slowly; the
 strict issuer discards and re-issues, yet the discarded transaction
 persists and typically confirms later, so a complete, chain-verifiable
 (receipt, anchor) pair exists that was never shipped. Checked against the
-registered properties: this artifact violates **none of them**. The
+registered properties: this artifact violates **none of them** — none of
+the **pre-Amendment-2 registered set**; A2.2 below changes exactly that,
+by rejecting it. The
 anchor's security content is the block time alone — backdating is bounded
 because no forger can place bytes in a past block (P5), and P6's
 uncertainty window is bounded by `anchor_time` because signing precedes
@@ -52,7 +58,8 @@ declared times — is closed by A2.2 and A2.4 below.
 
 The ratified form strengthens P5 with a new verifier-side conjunct and
 adds obligations; under A1.2's change discipline that requires this
-amendment. Nothing is weakened; the A1.1 falsifier is not triggered.
+amendment. No A1.2 property is weakened; the A1.1 falsifier is not
+triggered (stated precisely in A2.6).
 
 ---
 
@@ -69,21 +76,44 @@ block that grants the k-th confirmation has height `h + k − 1`. Define
 
     confirmed_at  ≤  declared_issue_time + δ
 
-The issuer evaluates this predicate before shipping; the verifier
-evaluates the **identical predicate on the identical observable** at
-verification (A2.2). If it fails at issuance time, the attempt is
-discarded and re-issued per the P5 corollary, subject to the attempt
-bound of A2.3.
+The issuer evaluates this conjunct **as part of the full three-conjunct
+temporal predicate** (the P5 temporal test inside `VALID_STRICT`; all
+three A2.2 conjuncts — not the whole verdict, which contains more than
+the temporal test) before shipping: under
+skewed, non-monotonic block timestamps the confirmation conjunct does
+not imply the anchor-time conjunct, so shipping on this conjunct alone
+could ship a receipt the verifier rejects (surfaced by the bridge model,
+`formal/tla/P5cP5P6_Bridge.tla`, 2026-07-21). The verifier evaluates the
+same conjuncts on the same chain observables at verification (A2.2),
+**under the issuance policy's tolerances**: the verifier-owns-tolerances
+discipline permits stricter verifier values of either tolerance (a
+stricter δ′ < δ, or a stricter ε′ on the anchor-time lower bound), and
+such a verifier may reject honestly-shipped receipts — the
+no-disagreement guarantee below is scoped to verification under the
+issuance policy's δ and ε.
+**Boundary tie, registered:** at exactly `confirmed_at = declared + δ`
+the predicate holds and shipping is admissible; at the same boundary the
+window may equally be treated as expired and the attempt discarded (or,
+on the final attempt, refused) — both outcomes are admissible, with no
+priority guarantee between them. If the predicate fails at issuance
+time, the attempt is discarded and re-issued per the P5 corollary,
+subject to the attempt bound of A2.3.
 
 **Why chain time on both sides.** A wall-clock ship rule ("ship if depth k
 by `now ≤ declared + δ`") and a block-timestamp verifier check can
 disagree at the δ boundary by the consensus-bounded skew (block timestamps
 may run up to about two hours ahead of network-adjusted time). Defining
 the rule once, on the chain-visible quantity, removes the divergence: **no
-honestly-shipped receipt can fail the verifier's confirmation conjunct, by
-construction**, and the model's `Ship` action and the verifier predicate
-become the same statement about the same observable — the exact
-correspondence A1.4 demands.
+honestly-shipped receipt can fail the verifier's confirmation conjunct
+under the issuance policy's δ**, and the issuer's ship rule and the
+verifier predicate become the same intended statement about the same
+observable under the declared abstractions — the correspondence A1.4
+demands, asserted here and checked mechanically by the bridge model
+(`formal/tla/P5cP5P6_Bridge.tla`; its own non-author review pending).
+P5c's fused-clock guard (`now ≤ declared + δ` at depth k) is a locally
+*stronger* condition that implies the chain predicate under that
+module's single-clock abstraction; with the clocks decoupled, the
+bridge's `Ship` evaluates the chain quantities directly.
 
 **Named residuals.**
 
@@ -95,6 +125,23 @@ correspondence A1.4 demands.
   `confirmed_at` may even precede `anchor_time`. The predicate is a single
   comparison on one designated block and is well-defined regardless; no
   monotonicity is assumed.
+- *`confirmed_at` is a proxy, including backward skew.* The observable is
+  the designated block's header timestamp — the chosen chain-time proxy
+  for burial, not a measurement of when depth k was reached in wall-clock
+  time. Median-time-past rules allow a block mined after a real-time
+  deadline to carry an in-window timestamp (the mirror of the
+  forward-skew griefing above). The predicate is well-defined on the
+  proxy; wall-clock burial lateness is not what it measures.
+- *Header provenance.* The conjunct's verdict is only as trustworthy as
+  the headers it is evaluated over. Bundled headers form a candidate
+  chain segment, not proof of canonicity: a privately-mined in-window
+  fork presented in a bundle, or a lying header store, yields false
+  acceptance under naive stateless evaluation. Header authentication
+  against the canonical chain — proof-of-work validity, cumulative-work
+  or checkpoint anchoring, store identity pinned in declared verifier
+  policy, bundle/store conflict rules — is part of the A2.2 evidence
+  obligation; its full specification is deferred to that obligation's
+  discharge, not silently assumed here.
 
 **Model-convention pin (off-by-one, fixed here so it cannot drift).**
 P5c's `depth` variable counts blocks mined *after* inclusion (`depth = 0`
@@ -124,7 +171,10 @@ Consequences, stated explicitly:
   statelessly (P9): block headers `h … h + k − 1` are available either
   archived in the bundle or from the verifier-distributed header store the
   anchor check already requires — the same trust-configuration pattern as
-  A1.5's historical trust-anchor store. This joins the H1a evidence
+  A1.5's historical trust-anchor store. Header *authentication* rules
+  (canonicity, work validation, store identity in declared policy,
+  bundle/store conflict resolution — the header-provenance residual of
+  A2.1) are part of this obligation. This joins the H1a evidence
   obligations.
 - **Waiver status.** Temporal-anchor consistency is already non-waivable
   (A1.2.1); the new conjunct is part of it. The P4 partition applies
@@ -141,17 +191,33 @@ its dominant triggers — fee spikes, congestion, calendar outage — are
 fresh draw, so "re-issue until it works" can livelock. Fail-closed means
 issuance must be able to end in refusal, not only in success.
 
-Amended: issuance makes at most **N attempts**. Exhausting them terminates
-issuance in an **explicit, reported refusal** — a first-class protocol
-outcome, not an error path. N is a protocol constant ratified at Band 0
-exit alongside δ, ε, k (working default **N = 3**; at δ = 72h that bounds
-the issuance process at nine days).
+Amended: issuance makes at most **N attempts**. Exhausting them obligates
+the implementation to terminate issuance in an **explicit refusal, durably
+recorded; reporting is a delivery obligation to be registered in
+Amendment 3** — a first-class protocol outcome, not an error path. N is a
+protocol constant ratified at Band 0 exit alongside δ, ε, k (working
+default **N = 3**; at δ = 72h the three windows give a **nominal window
+budget** of nine days — a budget on the chain-time windows, not a proven
+wall-clock bound on the process; see the model note).
+[**Note:** refusal as a separate delivery obligation added 2026/07/21 per
+review process/response.]
 
 Model note: P5c's `MaxAttempts` is hereby promoted from a state-space
-bound to protocol semantics. The unbounded "eventually ships" liveness
-claim remains explicitly unproven (bounded model); the discharged claims
-are safety claims, and this amendment adds *termination by construction*
-rather than a proven liveness property.
+bound to protocol semantics. The refusal state is modeled by **atomic
+entry** (the transition expiring the final attempt's window records the
+refusal in the same step; checked, with a broken companion red on
+exactly the silent-deadlock invariant among the checked set — review
+archived in
+`docs/reviews/2026-07-20-codex-p5c-refusal-review.md`). Scope of proof
+versus contract, per that review: the model proves the *conditional
+safety half* — the refusal state is entered atomically and latches; it
+does not prove the crossing occurs (no fairness is assumed), so
+**termination is a contract obligation on the implementation, not a
+proven liveness property**. The unbounded "eventually ships" claim
+likewise remains explicitly unproven. Storage durability, retrievability,
+and reporting of the refusal record are implementation/handoff
+obligations to be registered in Amendment 3 (planned, not yet in force).
+[**Note:** model-note scope split added 2026/07/21, same review cycle.]
 
 ---
 
@@ -160,10 +226,21 @@ rather than a proven liveness property.
 - **A receipt's anchor is the proof it ships with.** A shipped receipt
   contains exactly one anchor proof (the OTS proof over its canonical
   bytes) together with the anchor transaction's id, which serves as the
-  **retrieval handle** back to the chain. Verification evaluates the
-  shipped proof and no other; an anchor not shipped inside a receipt has
-  **no standing** in verification or dispute — in particular, a discarded
-  attempt's transaction confirming later confers nothing. The handle
+  **identity handle** binding the receipt to its chain transaction. (An
+  identity/coherence handle, not by itself a retrieval mechanism:
+  txid → transaction *availability* requires chain access — a node,
+  index, or archive — which is an implementation obligation under the
+  evidence discipline, joining A2.2's; the hash argument below covers
+  identity, not availability.) Verification evaluates the
+  shipped proof and no other; an anchor not shipped inside a receipt
+  confers **no validity, no priority, and no claimed anchor identity**
+  in verification or dispute — in particular, a discarded attempt's
+  transaction confirming later confers nothing toward any of the three.
+  (This confines *protocol standing*; it does not render such artifacts
+  inadmissible as *evidence* — e.g., of issuer conduct — in dispute
+  processes. The stand-alone anchor-standing property is Amendment 3's
+  to register; this clause is written to underdetermine it, not
+  pre-empt it.) The handle
   requires no new assumption: a txid is the double-SHA-256 of the
   transaction, so txid → transaction → committed bytes rests on the
   SHA-256 resistance already cited in Layer 2, and the OTS proof's merkle
@@ -204,10 +281,25 @@ rather than a proven liveness property.
 ## A2.6 What changed, and what did not
 
 This amendment **strengthens** P5 (a third strict conjunct), **adds**
-obligations (header evidence for stateless confirmation checking, the
-attempt bound with reported refusal, the anchor-standing rule, the
-declared-time confinement commitment, new conformance-vector cases), and
-**registers** a correction that narrows what the strict rule may be
-claimed to protect. No property is weakened, no capability excluded, no
-construction changed: the A1.1 falsifier is not triggered. The bands,
-hypotheses, hard invariants, and division of labor are unchanged.
+obligations (header evidence and authentication for stateless
+confirmation checking, the attempt bound with recorded refusal —
+reporting to be registered in Amendment 3, per A2.3 — the
+anchor-identity rule, the declared-time confinement commitment, new
+conformance-vector cases), and **registers** a correction that narrows
+what the strict rule may be claimed to protect.
+
+Stated in A1.1's terms, exactly: no A1.2 property is weakened; no proof
+is demoted to an assumption; no declared A1.3 adversary capability is
+excluded; the construction remains dual-signature plus temporal anchor.
+The A1.1 falsifier is not triggered. In ordinary language, behavior
+does change, and this amendment does not pretend otherwise: the
+permissive reading's acceptances are excluded by ratifying strict, a
+refusal outcome and attempt bound now exist, exactly one shipped anchor
+carries protocol standing, and declared-time priority policies are
+prohibited — all registered strengthenings or confinements. One
+acknowledged cost: the new evidence obligation adds an `UNVERIFIABLE`
+path (headers unavailable) where pre-A2 verification could return a
+verdict — an availability cost of the strengthened check, carried by
+the P4 partition, not a weakening of any registered property. The
+bands, hypotheses, hard invariants, and division of labor are
+unchanged.

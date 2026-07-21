@@ -125,9 +125,9 @@ Cross-cutting obligations (A1.4, A1.7):
       intentional boundary race, named in the module. Discharged claim
       (narrowed on review; the reviewer withdrew its own round-3
       wording): **the abstract refusal state is entered atomically and
-      latches** — storage durability, retrievability, reporting, and
-      A2.3's registered "reported" are Amendment 3 disposition items (the
-      refusal tracker line). Also explicitly unclaimed: that the final
+      latches** — storage durability, retrievability, and reporting are
+      Amendment 3 disposition items (the refusal tracker line; A2.3's
+      draft text was aligned to this split 2026-07-21). Also explicitly unclaimed: that the final
       crossing ever occurs (Tick is postponable; safety-only).
       Calibration artifact:
       `docs/reviews/2026-07-20-claude-predictions-p5c-refusal-bench.md`
