@@ -54,7 +54,14 @@ receipt can be orphaned by a tolerated reorganization (the P5c
 `NoShippedOrphan` invariant), and the issuer's evidence trail stays free
 of receipts whose completion needs explaining. The residue the artifact
 does create — two verifiable receipts for the same content with different
-declared times — is closed by A2.2 and A2.4 below.
+declared times — is **not closed by this amendment** (correction,
+2026-07-21: an earlier draft claimed closure via A2.2 and A2.4; that
+argument silently assumed the fused clock, under which every discarded
+attempt is chain-late. Under the ruled clock roles of A2.1 a discarded
+attempt can be chain-valid, A2.2 rejects only late-burial artifacts, and
+A2.4 confines standing without deduplicating content). Closure — a
+lineage/equivocation-evidence mechanism or an explicit dedup rule — is
+registered as an Amendment 3 obligation.
 
 The ratified form strengthens P5 with a new verifier-side conjunct and
 adds obligations; under A1.2's change discipline that requires this
@@ -91,13 +98,56 @@ stricter δ′ < δ, or a stricter ε′ on the anchor-time lower bound), and
 such a verifier may reject honestly-shipped receipts — the
 no-disagreement guarantee below is scoped to verification under the
 issuance policy's δ and ε.
-**Boundary tie, registered:** at exactly `confirmed_at = declared + δ`
-the predicate holds and shipping is admissible; at the same boundary the
-window may equally be treated as expired and the attempt discarded (or,
-on the final attempt, refused) — both outcomes are admissible, with no
-priority guarantee between them. If the predicate fails at issuance
-time, the attempt is discarded and re-issued per the P5 corollary,
-subject to the attempt bound of A2.3.
+**Clock roles (ruling, 2026-07-21).** Chain time and wall time hold
+separate, explicitly-ranked roles. **Chain time governs evidence:** the
+three-conjunct predicate above, evaluated identically by issuer and
+verifier on the designated blocks' timestamps. **Wall time governs the
+attempt lifecycle:** the service waits through `declared + δ + S` before
+treating an attempt as expired, where S ≥ 0 is an **operational slack
+constant** joining δ, ε, k, N for ratification at Band 0 exit (working
+default S = 24 h, sized to the observation path — outages and polling,
+not timestamp skew alone). **No global bound on the backward observation
+lag is assumed.** Writing C = `confirmed_at` and B = the service's
+wall-clock observation of the designated block: Bitcoin consensus
+provides no finite bound on B − C (median-time-past and the two-hour
+future rule bound the forward direction only), and B additionally
+absorbs the entire observation path — network and header-store delay,
+polling, outage and recovery, wall-clock error. Registering a hard
+bound would assert, at Phase 0, a property of an operational stack that
+does not yet exist. Instead the guarantee is registered **conditionally
+on the observable antecedent**: *if B − C ≤ S for an attempt whose
+predicate holds, that attempt has a live shipping opportunity at
+eligibility* (slack-parameter analysis,
+`formal/tla/P5cP5P6_BridgeSlack.tla` and its `_Latch` variant;
+predictions-first record in
+`docs/reviews/2026-07-21-claude-predictions-slack-bench.md`). Since B
+and C are both observable, a violated antecedent is a detectable
+operating-envelope event, not a silently failed assumption. Timeliness
+is **latched at eligibility**: an attempt eligible within the envelope
+cannot be expired by later packaging or scheduling delay —
+eligible/finalizing, shipped, and expired/refused are mutually
+exclusive states (a construction obligation on the implementation,
+registered with the ruling). An attempt whose lag exceeds S may be
+refused; a chain-valid artifact of such an attempt remains
+cryptographically valid and evidentially admissible but carries **no
+protocol standing** (A2.4; enforcing that distinction against later
+publication is Amendment 3's lineage/standing obligation). If
+operational evidence later supports an SLA-style hard bound, it may
+enter a **deployment profile** with monitoring and an explicit
+violation outcome — never this pre-registration's assumption set. What
+the opportunity guarantee buys is opportunity, not outcome: "every
+timely-eligible attempt ships" is a contract obligation on the
+implementation, the same proof-versus-contract split as A2.3's refusal.
+
+**Boundary ties, registered per clock.** The chain-side predicate is
+stateless: at exactly `confirmed_at = declared + δ` it holds, and holds
+identically whenever evaluated — there is no chain-side race. The
+wall-side lifecycle race is registered at `now = declared + δ + S`: an
+eligible attempt at that boundary may equally ship or be treated as
+expired (on the final attempt, refused) — both outcomes admissible,
+with no priority guarantee between them. If the predicate fails at
+issuance time, the attempt is discarded and re-issued per the P5
+corollary, subject to the attempt bound of A2.3.
 
 **Why chain time on both sides.** A wall-clock ship rule ("ship if depth k
 by `now ≤ declared + δ`") and a block-timestamp verifier check can
@@ -191,13 +241,20 @@ its dominant triggers — fee spikes, congestion, calendar outage — are
 fresh draw, so "re-issue until it works" can livelock. Fail-closed means
 issuance must be able to end in refusal, not only in success.
 
-Amended: issuance makes at most **N attempts**. Exhausting them obligates
+Amended: issuance makes at most **N attempts**. The expiry clock is the
+**wall clock** (A2.1 clock roles): an attempt expires when wall time
+passes `declared + δ + S`, except that timely-latched eligibility
+excludes expiry — eligible/finalizing, shipped, and expired/refused are
+mutually exclusive states (construction obligation, registered with the
+ruling). Exhausting them obligates
 the implementation to terminate issuance in an **explicit refusal, durably
 recorded; reporting is a delivery obligation to be registered in
 Amendment 3** — a first-class protocol outcome, not an error path. N is a
-protocol constant ratified at Band 0 exit alongside δ, ε, k (working
-default **N = 3**; at δ = 72h the three windows give a **nominal window
-budget** of nine days — a budget on the chain-time windows, not a proven
+protocol constant ratified at Band 0 exit alongside δ, ε, k, and S
+(working default **N = 3**; per the A2.1 clock-roles ruling each
+attempt's lifecycle is wall-governed through δ + S, so N attempts give
+a **nominal lifecycle budget** of N × (δ + S) — twelve days at the
+working defaults δ = 72 h, S = 24 h — a nominal budget, not a proven
 wall-clock bound on the process; see the model note).
 [**Note:** refusal as a separate delivery obligation added 2026/07/21 per
 review process/response.]
@@ -275,6 +332,15 @@ obligations to be registered in Amendment 3 (planned, not yet in force).
 - **Conformance vectors (A1.7):** extracted traces must include the new
   conjunct's reject case (late-burial artifact → `INVALID`) and its
   unperformable case (missing headers → `UNVERIFIABLE`).
+- **Clock-roles analysis (discharged with the ruling, 2026-07-21):** the
+  slack companions `P5cP5P6_BridgeSlack.tla` / `_Latch.tla` check the
+  conditional opportunity guarantee (B − C ≤ S ⇒ timely opportunity at
+  eligibility; residue witnessed non-empty below the bound; cutoff
+  exercised; iff status = argument plus bounded check). The committed
+  bridge **registers the absence** of a lifecycle guard in its `Ship` —
+  it checks the chain-evidence seam only. Predictions-first record and
+  outcomes: `docs/reviews/2026-07-21-claude-predictions-slack-bench.md`;
+  ruling archive: `docs/reviews/2026-07-21-clock-precedence-ruling.md`.
 
 ---
 
@@ -285,8 +351,14 @@ obligations (header evidence and authentication for stateless
 confirmation checking, the attempt bound with recorded refusal —
 reporting to be registered in Amendment 3, per A2.3 — the
 anchor-identity rule, the declared-time confinement commitment, new
-conformance-vector cases), and **registers** a correction that narrows
-what the strict rule may be claimed to protect.
+conformance-vector cases), **registers** a correction that narrows
+what the strict rule may be claimed to protect, **rules** the
+clock-roles question (chain time governs evidence, wall time governs
+the attempt lifecycle with operational slack S — a new constant
+joining δ, ε, k, N at Band 0 exit; the opportunity guarantee is
+conditional on the observable lag, and no hard backward-lag assumption
+is registered), and **withdraws** the two-receipts closure claim,
+re-registering it as an Amendment 3 obligation.
 
 Stated in A1.1's terms, exactly: no A1.2 property is weakened; no proof
 is demoted to an assumption; no declared A1.3 adversary capability is
