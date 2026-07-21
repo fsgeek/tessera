@@ -77,3 +77,36 @@ Cross-cutting obligations (A1.4, A1.7):
 - [ ] A2.2 conformance-vector cases: late-burial artifact → `INVALID`;
       headers unavailable → `UNVERIFIABLE` (with the general extraction
       obligation above).
+- [x] **A2.3 refusal state** (2026-07-20, round-3 ruling 4 construction,
+      AUTHOR-ADOPTED FOR STAGE-ONE DRAFTING; non-author review passed
+      same day, `docs/reviews/2026-07-20-codex-p5c-refusal-review.md` —
+      "accept the atomic-entry safety construction", three prose
+      overclaims folded) — `refused` added to
+      `formal/tla/P5c_IssuanceProtocol.tla` by **atomic entry**: the Tick
+      expiring the FINAL attempt's window records the refusal in the same
+      transition, making it a transition-level safety fact — safety-only,
+      no fairness, no liveness claim. Checked (all green, MaxTime raised
+      8→14: minimum 12 = MaxAttempts·(Delta+1) for the final window to
+      expire at all — below it the refusal invariants are vacuous, the
+      `RefusalUnreachable` witness guards; +DepthK headroom = 14
+      exercises post-refusal burial, the `RefusalBuriedAnchorUnreachable`
+      witness guards): `NoSilentDeadlock` (no reachable state with the
+      final window expired and no refusal recorded),
+      `RefusedOnlyWhenExhausted` (which contains shipped/refused mutual
+      exclusion), and action property `RefusalLatched` (in-model latch).
+      New companion `P5c_IssuanceProtocol_BrokenSilent` implements the
+      review's warned construction (separately enabled Refuse,
+      postponable): red on exactly `NoSilentDeadlock` among the checked
+      set; its `_Green` cfg (all other invariants) passes. Ship and the
+      refusal trigger deliberately overlap at now = declared+Delta — an
+      intentional boundary race, named in the module. Discharged claim
+      (narrowed on review; the reviewer withdrew its own round-3
+      wording): **the abstract refusal state is entered atomically and
+      latches** — storage durability, retrievability, reporting, and
+      A2.3's registered "reported" are Amendment 3 disposition items (the
+      refusal tracker line). Also explicitly unclaimed: that the final
+      crossing ever occurs (Tick is postponable; safety-only).
+      Calibration artifact:
+      `docs/reviews/2026-07-20-claude-predictions-p5c-refusal-bench.md`
+      (first run caught a TLA+ precedence bug that silently disabled the
+      atomic entry — `NoSilentDeadlock` flagged its own author's error).

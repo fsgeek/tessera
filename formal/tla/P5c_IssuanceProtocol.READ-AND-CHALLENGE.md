@@ -232,3 +232,28 @@ destined for Amendment 3 disposition per the break-the-chain decision. See
 The questions remain a teaching artifact; the headline should no longer be
 read as a live alarm. Original text above is unedited, per the
 record-preservation rule.
+
+## Postscript 2 (2026-07-20, appended after the refusal-state bench work)
+
+Q7's question — "is the refusal-is-reported claim discharged anywhere, or
+is it currently a promise?" — now has a precise partial answer. The model
+carries a `refused` state entered by **atomic entry** (the Tick expiring
+the final window records it in the same transition; round-3 ruling 4),
+with `NoSilentDeadlock`, `RefusedOnlyWhenExhausted`, and the
+`RefusalLatched` latch checked, and a `_BrokenSilent` companion
+(separately enabled, postponable Refuse) red on exactly the deadlock
+invariant among the checked set. What is discharged (wording narrowed
+2026-07-20 by the Codex review of this work, which withdrew its own
+earlier "durably recorded and available for retrieval" as too strong):
+**the abstract refusal state is entered atomically and latches**.
+Storage durability, retrievability, and the word "reported" in A2.3 all
+remain promises — the record→report gap is an Amendment 3 disposition
+item. Q7's "silent stall on attempt N" is now unrepresentable *as a
+state*: no reachable state has the final window expired without the
+refusal recorded. It is not excluded *as a behavior* — without fairness,
+Tick can be postponed indefinitely before the crossing, and a mid-loop
+stall (Reissue postponed forever, attempts unexhausted) is likewise
+representable; both are the explicitly-unclaimed liveness, named in the
+module header. This work has passed one non-author falsification pass
+(`docs/reviews/2026-07-20-codex-p5c-refusal-review.md`); discharge
+status is the tracker's to say, not this file's.

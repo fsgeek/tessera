@@ -603,6 +603,24 @@ status advances.
 > bounded refusal does not "avoid" it — it relinquishes a liveness
 > objective).
 >
+> **SCOPE ANNOTATION 2026-07-20 (post-bench Codex review of the built
+> model; ruling text above unedited).** Two phrases above now carry
+> known deltas against what the checked model proves. *(a)* "durably
+> recorded and available for retrieval" was withdrawn by its own
+> author-reviewer as too strong once the model existed: a latched
+> Boolean proves in-model persistence, not storage durability or
+> accessibility; the checked claim is "the abstract refusal state is
+> entered atomically and latches." *(b)* "bounded termination in either
+> success or explicit refusal" (the round-4 FLP paragraph) is a
+> statement of the CONTRACT — what an implementation is obligated to
+> deliver — not of the proof: without fairness the model's Tick can be
+> postponed indefinitely, so the model proves only the safety half (IF
+> the final crossing occurs, the refusal is in its post-state), and the
+> termination half is an implementation obligation. Dispositions in
+> `docs/reviews/2026-07-20-codex-p5c-refusal-review.md`; if this
+> annotation misstates the contract's intent, strike the annotation,
+> not the ruling text.
+>
 > *(Finding 3 — the "by-construction" claim was FALSE as written, and it
 > was the AI collaborator's own refinement-stage strengthening.)* The
 > verifier's output type cannot make downstream priority ordering

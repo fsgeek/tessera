@@ -1,21 +1,21 @@
 TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)
 Warning: Please run the Java VM which executes TLC with a throughput optimized garbage collector by passing the "-XX:+UseParallelGC" property.
 (Use the -nowarning option to disable this warning.)
-Running breadth-first search Model-Checking with fp 12 and seed 510523806675586915 with 1 worker on 128 cores with 30688MB heap and 64MB offheap memory [pid: 79680] (Linux 6.18.33.2-microsoft-standard-WSL2 amd64, Ubuntu 11.0.31 x86_64, MSBDiskFPSet, DiskStateQueue).
-Parsing file /home/tony/projects/tessera/formal/tla/P5c_IssuanceProtocol.tla
+Running breadth-first search Model-Checking with fp 117 and seed -3223071300083296023 with 1 worker on 128 cores with 30688MB heap and 64MB offheap memory [pid: 79961] (Linux 6.18.33.2-microsoft-standard-WSL2 amd64, Ubuntu 11.0.31 x86_64, MSBDiskFPSet, DiskStateQueue).
+Parsing file /home/tony/projects/tessera/formal/tla/P5c_IssuanceProtocol_BrokenSilent.tla
 Parsing file /tmp/Integers.tla
 Parsing file /tmp/Naturals.tla
 Semantic processing of module Naturals
 Semantic processing of module Integers
-Semantic processing of module P5c_IssuanceProtocol
-Starting... (2026-07-20 21:24:39)
+Semantic processing of module P5c_IssuanceProtocol_BrokenSilent
+Starting... (2026-07-20 21:24:44)
 Computing initial states...
-Finished computing initial states: 1 distinct state generated at 2026-07-20 21:24:39.
+Finished computing initial states: 1 distinct state generated at 2026-07-20 21:24:44.
 Model checking completed. No error has been found.
   Estimates of the probability that TLC did not check all reachable states
   because two distinct states had the same fingerprint:
-  calculated (optimistic):  val = 1.7E-13
-3606 states generated, 2190 distinct states found, 0 states left on queue.
+  calculated (optimistic):  val = 1.9E-13
+3825 states generated, 2310 distinct states found, 0 states left on queue.
 The depth of the complete state graph search is 23.
 The average outdegree of the complete state graph is 1 (minimum is 0, the maximum 3 and the 95th percentile is 2).
-Finished in 00s at (2026-07-20 21:24:39)
+Finished in 00s at (2026-07-20 21:24:44)
