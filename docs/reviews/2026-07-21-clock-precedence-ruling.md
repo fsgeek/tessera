@@ -87,6 +87,22 @@ still be reported, but re-litigating settled dispositions or opening a
 fresh unrestricted falsification round is out of scope. After bounded
 verification: sign, commit, anchor.
 
+## Round-3 outcome (same day)
+
+**First pass (GPT-5.6): do-not-sign-yet, one in-scope defect —
+verified real and repaired.** The rewritten A2.1 boundary paragraph
+carried the fused-clock race forward: it permitted an attempt eligible
+at exactly `B = declared + δ + S` to "equally expire," contradicting
+the latch clause registered in the same section (inclusive antecedent
+`B − C ≤ S`) and A2.3's "passes the boundary." Repair: the wall
+boundary is inclusive and latch-winning — eligibility at equality
+latches and excludes expiry; expiry/refusal applies only strictly
+after the boundary to attempts with no timely latch; latch/expiry
+atomicity assigned to the mutual-exclusion construction obligation.
+All other round-3 checks passed on the first pass (clock roles, slack,
+conditional guarantee, no-hard-L, standing, A2.3, A2.0 withdrawal,
+both TLA+ header alignments).
+
 ## Assistant's dispositions on the second consultation
 
 Received-with-verification, not performed agreement: the reframed

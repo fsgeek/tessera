@@ -142,12 +142,19 @@ implementation, the same proof-versus-contract split as A2.3's refusal.
 **Boundary ties, registered per clock.** The chain-side predicate is
 stateless: at exactly `confirmed_at = declared + δ` it holds, and holds
 identically whenever evaluated — there is no chain-side race. The
-wall-side lifecycle race is registered at `now = declared + δ + S`: an
-eligible attempt at that boundary may equally ship or be treated as
-expired (on the final attempt, refused) — both outcomes admissible,
-with no priority guarantee between them. If the predicate fails at
-issuance time, the attempt is discarded and re-issued per the P5
-corollary, subject to the attempt bound of A2.3.
+wall-side boundary is **resolved by the latch, not raced** (round-3
+repair, 2026-07-21: an earlier draft of this paragraph carried the
+fused-clock race forward; under latched eligibility there is none).
+Eligibility observed at exactly `B = declared + δ + S` is timely — the
+boundary is **inclusive and latch-winning**, matching the mechanized
+form (`burialAtWall <= declared + Delta + Slack` in the `_Latch`
+companion) — so such an attempt latches eligible/finalizing and cannot
+expire. Expiry (on the final attempt, refusal) applies only **strictly
+after** the boundary, and only to attempts with no timely-latched
+eligibility. Atomicity of the latch against the expiry transition is
+part of the mutual-exclusion construction obligation (A2.3). If the
+predicate fails at issuance time, the attempt is discarded and
+re-issued per the P5 corollary, subject to the attempt bound of A2.3.
 
 **Why chain time on both sides.** A wall-clock ship rule ("ship if depth k
 by `now ≤ declared + δ`") and a block-timestamp verifier check can
