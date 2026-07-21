@@ -128,3 +128,97 @@ obligation on the implementation (act on the live opportunity), the
 same proof-vs-contract split as A2.3's refusal, and the two-receipts
 residue closure (A3/row-2) should be argued from the opportunity form,
 not from an assumed-empty outcome form.
+
+---
+
+## CORRECTION and extension (same day) — non-author bench contract, received after the run
+
+Codex (GPT-5.6) supplied a bench contract for this experiment that
+reached the author after the runs above. Scored against it honestly:
+
+**CORRECTION 1 — "consensus lag bound" was an overclaim (Codex
+constraint 2, a clean hit).** Bitcoin consensus gives median-time-past
+(timestamp must exceed the median of the prior eleven) and the
+two-hour future bound. Neither yields a fixed finite bound on the
+BACKWARD lag `B − C` between a block's timestamp and the wall time it
+is observed. The `MaxSkew` symmetric-skew abstraction (inherited from
+the bridge) is STRONGER than Bitcoin's rules on exactly the difficult
+half. `L` is hereby reclassified as a **declared
+environment/operational-policy assumption**, not a consensus
+derivation, and the result above must be read in the conditional form:
+
+> Under a declared maximum backward timestamp-lag assumption L, slack
+> S >= L makes every chain-timely attempt operationally timely at the
+> moment eligibility is reached.
+
+Whether L is an assumption Tessera is willing to register is now
+explicitly PART of the clock-precedence ruling (Codex's stopping
+outcome 2: if not registrable, slack has not solved the protocol
+problem and precedence must be chosen without it).
+
+**CORRECTION 2 — the iff's epistemic status.** TLC established the two
+directions at bounded parameter instances (S = MaxSkew green,
+S = MaxSkew − 1 red, cutoff witness). The general claim rides on the
+accompanying arguments, now stated as such: (⇐) `w <= ts + MaxSkew`
+gives `B <= declared + Delta + L` for any chain-valid designated block
+— two lines, parameter-free; (⇒) the length-10 witness construction
+(blocks at wall `declared + Delta + L` carrying maximally backdated
+in-window timestamps) generalizes to any S < L. "Iff" is
+argument-plus-bounded-check, not TLC-established generality.
+
+**Scored, not corrected — constraint 1 (eligibility instant).** The
+analysis invariant was already defined on B (`burialAtWall`), so no
+scheduler-manufactured expiry contaminated the headline result — the
+model's answer matches Codex's predicted implication exactly. But the
+variant Ship guard checks `now` at EXECUTION time, not latched-at-B,
+so the state space EXCLUDES shipped states that latch semantics would
+allow (ship after the wall envelope when eligibility was timely). The
+`_Latch` variant below closes that gap.
+
+### Latch-variant predictions (pre-run, per the standing rule)
+
+- **P5 — Latch main cfg (Slack = 2): green on all five invariants.**
+  `ChainValidBurialInLifecycle` is untouched (defined on B). The four
+  carried bridge invariants survive the ADDED late-shipped states
+  because the chain predicate in Ship is unchanged. State count: bet
+  0.7M–1.5M distinct (new shipped tail states over the 602k).
+- **P6 — Latch sanity: the new PostEnvelopeShip witness fires**
+  (shipped with `shipAtWall > declared + Delta + Slack` — the state
+  execution-guard semantics forbade; under latch it is legal because
+  eligibility was timely), alongside ship-reachable. Semantics note
+  predicted with it: under latch, the outcome-form laziness residue
+  changes meaning — an eligible-in-time unshipped attempt past the
+  envelope is no longer "discarded," it remains shippable; discard
+  semantics under latch are ruled by B alone.
+
+### Latch-variant outcome (appended post-run)
+
+- **P5 — HIT on the property, MISS on the state-count bet.** Latch main
+  cfg: green on all five invariants, `ChainValidBurialInLifecycle`
+  included. But 613,441 distinct states — BELOW my 0.7M–1.5M bet. The
+  latch added only ~11k states over the base 602,219 (~2%), not the
+  multiplied shipped tail I imagined: MaxTime = 6 bounds the
+  post-envelope shipping window far tighter than my mental picture.
+  The miss stays on the record.
+- **P6 — HIT.** Latch sanity: both witnesses fire, including
+  **PostEnvelopeShip** (shipped with `shipAtWall > declared + Delta +
+  Slack` on timely eligibility) — the exact state the execution-time
+  guard excluded. Codex constraint 1's scheduler artifact is
+  eliminated under latch semantics, and the headline result is
+  unchanged by the semantics choice — as expected, since the analysis
+  invariant was always defined on B.
+
+**Net for the ruling, both semantics now checked:** the conditional
+result stands under execution-time AND latched lifecycle guards; the
+latch variant is the semantics the contract recommends the protocol
+adopt if slack is adopted (the scheduler cannot expire an eligible
+attempt, and discard is ruled by B alone). The load-bearing open
+choice is unchanged and is the author's: whether a maximum backward
+timestamp-lag assumption L is registrable in A1.6-style Layer 2 terms
+— if yes, two-clock-with-slack (S >= L, latched at eligibility) is
+viable; if no, explicit precedence must be chosen without slack
+(Codex's provisional preference: separate roles — chain time governs
+the verifier predicate, wall time governs waiting-before-refusal,
+refusal removes standing without touching cryptographic validity,
+standing enforced by A3's lineage/equivocation mechanism — is
+compatible with either answer).

@@ -1,0 +1,212 @@
+TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)
+Running breadth-first search Model-Checking with fp 3 and seed -4573973650731677796 with 1 worker on 128 cores with 27305MB heap and 64MB offheap memory [pid: 241744] (Linux 6.18.33.2-microsoft-standard-WSL2 amd64, Ubuntu 11.0.31 x86_64, MSBDiskFPSet, DiskStateQueue).
+Parsing file /home/tony/projects/tessera/formal/tla/P5cP5P6_BridgeSlack_Latch.tla
+Parsing file /tmp/Integers.tla
+Parsing file /tmp/Sequences.tla
+Parsing file /tmp/Naturals.tla
+Semantic processing of module Naturals
+Semantic processing of module Integers
+Semantic processing of module Sequences
+Semantic processing of module P5cP5P6_BridgeSlack_Latch
+Starting... (2026-07-21 08:49:52)
+Computing initial states...
+Finished computing initial states: 1 distinct state generated at 2026-07-21 08:49:52.
+Error: Invariant ShipUnreachable is violated.
+Error: The behavior up to this point is:
+State 1: <Initial predicate>
+/\ shipAtWall = -1
+/\ now = 0
+/\ declared = -1
+/\ anchorH = -1
+/\ burialAtWall = -1
+/\ shipped = FALSE
+/\ chain = <<>>
+/\ pendingAnchor = FALSE
+
+State 2: <Declare line 75, col 3 to line 78, col 31 of module P5cP5P6_BridgeSlack_Latch>
+/\ shipAtWall = -1
+/\ now = 0
+/\ declared = 0
+/\ anchorH = -1
+/\ burialAtWall = -1
+/\ shipped = FALSE
+/\ chain = <<>>
+/\ pendingAnchor = FALSE
+
+State 3: <AnchorNext line 81, col 3 to line 84, col 31 of module P5cP5P6_BridgeSlack_Latch>
+/\ shipAtWall = -1
+/\ now = 0
+/\ declared = 0
+/\ anchorH = -1
+/\ burialAtWall = -1
+/\ shipped = FALSE
+/\ chain = <<>>
+/\ pendingAnchor = TRUE
+
+State 4: <NewBlock line 63, col 3 to line 72, col 53 of module P5cP5P6_BridgeSlack_Latch>
+/\ shipAtWall = -1
+/\ now = 0
+/\ declared = 0
+/\ anchorH = 1
+/\ burialAtWall = -1
+/\ shipped = FALSE
+/\ chain = <<0>>
+/\ pendingAnchor = FALSE
+
+State 5: <NewBlock line 63, col 3 to line 72, col 53 of module P5cP5P6_BridgeSlack_Latch>
+/\ shipAtWall = -1
+/\ now = 0
+/\ declared = 0
+/\ anchorH = 1
+/\ burialAtWall = -1
+/\ shipped = FALSE
+/\ chain = <<0, 0>>
+/\ pendingAnchor = FALSE
+
+State 6: <NewBlock line 63, col 3 to line 72, col 53 of module P5cP5P6_BridgeSlack_Latch>
+/\ shipAtWall = -1
+/\ now = 0
+/\ declared = 0
+/\ anchorH = 1
+/\ burialAtWall = 0
+/\ shipped = FALSE
+/\ chain = <<0, 0, 0>>
+/\ pendingAnchor = FALSE
+
+State 7: <Ship line 100, col 3 to line 107, col 77 of module P5cP5P6_BridgeSlack_Latch>
+/\ shipAtWall = 0
+/\ now = 0
+/\ declared = 0
+/\ anchorH = 1
+/\ burialAtWall = 0
+/\ shipped = TRUE
+/\ chain = <<0, 0, 0>>
+/\ pendingAnchor = FALSE
+
+Error: Invariant PostEnvelopeShipUnreachable is violated.
+Error: The behavior up to this point is:
+State 1: <Initial predicate>
+/\ shipAtWall = -1
+/\ now = 0
+/\ declared = -1
+/\ anchorH = -1
+/\ burialAtWall = -1
+/\ shipped = FALSE
+/\ chain = <<>>
+/\ pendingAnchor = FALSE
+
+State 2: <Declare line 75, col 3 to line 78, col 31 of module P5cP5P6_BridgeSlack_Latch>
+/\ shipAtWall = -1
+/\ now = 0
+/\ declared = 0
+/\ anchorH = -1
+/\ burialAtWall = -1
+/\ shipped = FALSE
+/\ chain = <<>>
+/\ pendingAnchor = FALSE
+
+State 3: <Tick line 57, col 3 to line 60, col 31 of module P5cP5P6_BridgeSlack_Latch>
+/\ shipAtWall = -1
+/\ now = 1
+/\ declared = 0
+/\ anchorH = -1
+/\ burialAtWall = -1
+/\ shipped = FALSE
+/\ chain = <<>>
+/\ pendingAnchor = FALSE
+
+State 4: <Tick line 57, col 3 to line 60, col 31 of module P5cP5P6_BridgeSlack_Latch>
+/\ shipAtWall = -1
+/\ now = 2
+/\ declared = 0
+/\ anchorH = -1
+/\ burialAtWall = -1
+/\ shipped = FALSE
+/\ chain = <<>>
+/\ pendingAnchor = FALSE
+
+State 5: <Tick line 57, col 3 to line 60, col 31 of module P5cP5P6_BridgeSlack_Latch>
+/\ shipAtWall = -1
+/\ now = 3
+/\ declared = 0
+/\ anchorH = -1
+/\ burialAtWall = -1
+/\ shipped = FALSE
+/\ chain = <<>>
+/\ pendingAnchor = FALSE
+
+State 6: <Tick line 57, col 3 to line 60, col 31 of module P5cP5P6_BridgeSlack_Latch>
+/\ shipAtWall = -1
+/\ now = 4
+/\ declared = 0
+/\ anchorH = -1
+/\ burialAtWall = -1
+/\ shipped = FALSE
+/\ chain = <<>>
+/\ pendingAnchor = FALSE
+
+State 7: <AnchorNext line 81, col 3 to line 84, col 31 of module P5cP5P6_BridgeSlack_Latch>
+/\ shipAtWall = -1
+/\ now = 4
+/\ declared = 0
+/\ anchorH = -1
+/\ burialAtWall = -1
+/\ shipped = FALSE
+/\ chain = <<>>
+/\ pendingAnchor = TRUE
+
+State 8: <NewBlock line 63, col 3 to line 72, col 53 of module P5cP5P6_BridgeSlack_Latch>
+/\ shipAtWall = -1
+/\ now = 4
+/\ declared = 0
+/\ anchorH = 1
+/\ burialAtWall = -1
+/\ shipped = FALSE
+/\ chain = <<2>>
+/\ pendingAnchor = FALSE
+
+State 9: <NewBlock line 63, col 3 to line 72, col 53 of module P5cP5P6_BridgeSlack_Latch>
+/\ shipAtWall = -1
+/\ now = 4
+/\ declared = 0
+/\ anchorH = 1
+/\ burialAtWall = -1
+/\ shipped = FALSE
+/\ chain = <<2, 2>>
+/\ pendingAnchor = FALSE
+
+State 10: <NewBlock line 63, col 3 to line 72, col 53 of module P5cP5P6_BridgeSlack_Latch>
+/\ shipAtWall = -1
+/\ now = 4
+/\ declared = 0
+/\ anchorH = 1
+/\ burialAtWall = 4
+/\ shipped = FALSE
+/\ chain = <<2, 2, 2>>
+/\ pendingAnchor = FALSE
+
+State 11: <Tick line 57, col 3 to line 60, col 31 of module P5cP5P6_BridgeSlack_Latch>
+/\ shipAtWall = -1
+/\ now = 5
+/\ declared = 0
+/\ anchorH = 1
+/\ burialAtWall = 4
+/\ shipped = FALSE
+/\ chain = <<2, 2, 2>>
+/\ pendingAnchor = FALSE
+
+State 12: <Ship line 100, col 3 to line 107, col 77 of module P5cP5P6_BridgeSlack_Latch>
+/\ shipAtWall = 5
+/\ now = 5
+/\ declared = 0
+/\ anchorH = 1
+/\ burialAtWall = 4
+/\ shipped = TRUE
+/\ chain = <<2, 2, 2>>
+/\ pendingAnchor = FALSE
+
+### filter-tlc-output.sh: 173531 further violation report(s) of already-witnessed invariants omitted; full output reproduces from the .cfg ###
+825134 states generated, 613441 distinct states found, 0 states left on queue.
+The depth of the complete state graph search is 14.
+The average outdegree of the complete state graph is 1 (minimum is 0, the maximum 7 and the 95th percentile is 5).
+Finished in 01min 59s at (2026-07-21 08:51:51)
