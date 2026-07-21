@@ -1,0 +1,23 @@
+TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)
+Running breadth-first search Model-Checking with fp 102 and seed 4467608399533311941 with 1 worker on 128 cores with 27305MB heap and 64MB offheap memory [pid: 232235] (Linux 6.18.33.2-microsoft-standard-WSL2 amd64, Ubuntu 11.0.31 x86_64, MSBDiskFPSet, DiskStateQueue).
+Parsing file /home/tony/projects/tessera/formal/tla/P5cP5P6_BridgeSlack.tla
+Parsing file /tmp/Integers.tla
+Parsing file /tmp/Sequences.tla
+Parsing file /tmp/Naturals.tla
+Semantic processing of module Naturals
+Semantic processing of module Integers
+Semantic processing of module Sequences
+Semantic processing of module P5cP5P6_BridgeSlack
+Starting... (2026-07-21 08:23:13)
+Computing initial states...
+Finished computing initial states: 1 distinct state generated at 2026-07-21 08:23:13.
+Progress(14) at 2026-07-21 08:23:17: 762,418 states generated (762,418 s/min), 565,939 distinct states found (565,939 ds/min), 138,116 states left on queue.
+Model checking completed. No error has been found.
+  Estimates of the probability that TLC did not check all reachable states
+  because two distinct states had the same fingerprint:
+  calculated (optimistic):  val = 6.8E-9
+  based on the actual fingerprints:  val = 1.3E-9
+810082 states generated, 602219 distinct states found, 0 states left on queue.
+The depth of the complete state graph search is 14.
+The average outdegree of the complete state graph is 1 (minimum is 0, the maximum 7 and the 95th percentile is 5).
+Finished in 04s at (2026-07-21 08:23:17)

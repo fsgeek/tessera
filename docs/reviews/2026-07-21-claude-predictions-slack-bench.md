@@ -1,0 +1,130 @@
+# Calibration predictions — slack-parameter bridge extension (pre-run)
+
+**Date:** 2026-07-21. **Instance:** Claude (session of the README
+adoption / A2 readiness assessment). **Rule:** predictions written and
+committed intent stated BEFORE any TLC run of the new module. Outcome
+section appended after the runs; misses stay on the record.
+
+**Bench item:** the slack-parameter analysis adopted as the path to the
+clock-precedence ruling (round-2 blocker, GPT-5.6). Extend the bridge
+with a wall-clock lifecycle guard carrying slack `S`, keep the
+consensus-bounded timestamp skew (`MaxSkew`), and check whether the
+chain-valid-but-discarded residue class is empty iff `S >= MaxSkew`.
+
+## Design decisions (mine, registered)
+
+1. **Companion module, not an edit.** `P5cP5P6_BridgeSlack.tla` copies
+   the reviewed bridge and adds the lifecycle machinery. The committed
+   bridge stays untouched mid-review; its header already registers that
+   `Ship` gains a lifecycle guard *per the ruling* — this module is
+   input to that ruling, not its implementation.
+2. **The residue class is defined on opportunity, not outcome.** Under
+   interleaving semantics a raw "expired AND unshipped AND chain-valid"
+   state is reachable at ANY slack — scheduler laziness alone gets
+   there (Tick is always enabled; nothing forces Ship). The checkable
+   question is whether every chain-valid attempt HAD a live shipping
+   opportunity: record `burialAtWall` (wall clock at the NewBlock that
+   completes burial to the designated block) and check
+
+       ChainValidBurialInLifecycle ==
+         chain-valid  =>  burialAtWall <= declared + Delta + Slack
+
+   The naive outcome-form residue is exhibited as a *sanity witness*
+   instead (LifecycleBinds), so the scope narrowing is visible, not
+   silent. Consequence for the ruling, stated now: even at sufficient
+   slack, "no chain-valid attempt is discarded" is a CONTRACT statement
+   (act on the opportunity), not a provable liveness property — same
+   proof-vs-contract split as A2.3's refusal.
+3. **Why the bound is MaxSkew.** A block arriving at wall time `w`
+   carries `ts \in [w - MaxSkew, w + MaxSkew]`, so `w <= ts + MaxSkew`.
+   Chain-valid requires `ts <= declared + Delta` on the designated
+   block, hence `burialAtWall <= declared + Delta + MaxSkew`. The lag
+   bound in this abstraction IS `MaxSkew`; the two-hour consensus
+   future-bound is its real-world counterpart on the backdated side.
+
+## Predictions (the bets)
+
+- **P1 — Main cfg (`Slack = MaxSkew = 2`): all green**, including the
+  four carried bridge invariants (PinAgreement, ShippedDesignatedAgree,
+  HonestShipAccepted, LateBurialRejected — Ship's guard is strictly
+  stronger, so nothing shipped-dependent can break) and the new
+  `ChainValidBurialInLifecycle`. State count same order as the bridge's
+  456k, modestly larger from the `burialAtWall` component (bet:
+  under 2M distinct).
+- **P2 — `_BrokenSlack` cfg (`Slack = 1 = MaxSkew - 1`): red on exactly
+  `ChainValidBurialInLifecycle`** among the checked set. Predicted
+  counterexample shape: Declare at now = 0; anchor block with in-window
+  timestamp; wall clock runs ahead; burial block arrives at
+  `now = declared + Delta + MaxSkew = 4` carrying a maximally backdated
+  in-window timestamp `ts = 2`; burialAtWall = 4 > 3 = declared +
+  Delta + Slack. Bet on trace length: 8–12 states.
+- **P3 — Sanity cfg (`Slack = 2`), all four witnesses fire:**
+  ship reachable; wall-clock divergence still live WITHIN the slack
+  envelope (shipAtWall in `(declared+Delta, declared+Delta+Slack]` —
+  the slack rule's point: chain governs inside a bounded wall
+  envelope); LifecycleBinds (the laziness residue — chain-valid,
+  unshipped, expired — reachable even at sufficient slack, per design
+  decision 2); BurialAtCutoff (burial exactly at
+  `declared + Delta + Slack`, chain-valid — tightness: the MaxSkew
+  bound is achieved, so the iff is sharp, not slack).
+- **P4 — The epsilon side contributes no second lag source.** The
+  residue bound depends only on the designated block's timestamp;
+  conjuncts 1–2 constrain the anchor block, not burial wall time. No
+  epsilon-dependent violation appears at `Slack = MaxSkew`.
+
+**Where I most expect to be wrong** (bet-and-expect-to-be-wrong): the
+boundary arithmetic at the cutoff (off-by-one between `<=` in the guard
+and the `BlockTimestamps` bound — exactly the class the DepthK pin
+caught last time), and the possibility that `_BrokenSlack` goes red on
+a SHORTER trace through the non-monotonic case than the shape I
+predicted.
+
+## Outcome (appended post-run, same day)
+
+All four predictions held. Scored against the bets:
+
+- **P1 — HIT.** Main cfg (Slack = 2 = MaxSkew): green on all five
+  invariants; 810,082 generated / 602,219 distinct (bet "under 2M" —
+  comfortably; the bridge's 456k grew ~32% from `burialAtWall`).
+- **P2 — HIT, with one shape variance worth recording.** `_BrokenSlack`
+  (Slack = 1): red on exactly `ChainValidBurialInLifecycle` — a full
+  `-continue` sweep reports NO other invariant violated (the four
+  carried bridge invariants stay green). Trace length 10, inside the
+  8–12 bet. Shape variance: I predicted anchor-block-then-wall-advance;
+  TLC found wall-advance-first (Tick to now = 4, then Declare's anchor
+  and both burial blocks all arrive at now = 4 with maximally backdated
+  in-window ts = 2, burialAtWall = 4 > 3 = declared + Delta + Slack).
+  Same essential mechanism — maximally backdated in-window timestamps
+  at wall time declared + Delta + MaxSkew — reached by a lazier
+  schedule than my mental trace. Consistent with the round-2 lesson
+  that the model finds the cheapest path, not the narrative one.
+- **P3 — HIT.** Sanity: all four witnesses fire (ship reachable;
+  wall-clock divergence live within the slack envelope; the
+  outcome-form laziness residue live at sufficient slack;
+  **BurialAtCutoff fires — the MaxSkew bound is achieved, the iff is
+  sharp at this discretization**).
+- **P4 — HIT** (implicitly, by the main cfg's green: no epsilon-side
+  second lag source at Slack = MaxSkew).
+- **Feared off-by-one at the cutoff: did not materialize.** The `<=`
+  guard and the `BlockTimestamps` bound compose as intended; the
+  tightness witness confirms the boundary is exercised, not merely
+  admitted.
+
+**Result, stated for the ruling (analysis, not recommendation — the
+ruling is the author's):** under the two-clock candidate rule
+(wall-governed lifecycle with slack S beyond the chain window,
+chain-governed shipping inside it), the chain-valid-but-discarded
+residue class — in its checkable opportunity form — is **empty iff
+S >= the consensus lag bound** (MaxSkew in this abstraction; the
+real-world counterpart of the backdated side is the median-time-past
+allowance). Below the bound the residue is non-empty by a length-10
+mechanical witness; at the bound it is empty and the bound is tight.
+Two consequences the ruling should weigh: (1) at sufficient slack the
+rule preserves BOTH A2.1's chain-governed shipping AND A2.3's
+wall-clock refusal semantics, with the divergence confined to the
+bounded envelope; (2) what sufficiency buys is *opportunity*, not
+outcome — "no chain-valid attempt is discarded" remains a contract
+obligation on the implementation (act on the live opportunity), the
+same proof-vs-contract split as A2.3's refusal, and the two-receipts
+residue closure (A3/row-2) should be argued from the opportunity form,
+not from an assumed-empty outcome form.
