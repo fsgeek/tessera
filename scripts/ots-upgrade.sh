@@ -21,19 +21,31 @@ else
 fi
 
 upgraded=0
+changed_paths=()
 for f in timestamps/*.ots; do
     [ -f "$f" ] || continue
+    original_hash=$(sha256sum "$f" | cut -d' ' -f1)
     if "${OTS[@]}" upgrade "$f" 2>/dev/null; then
-        echo "upgraded: $f"
-        upgraded=$((upgraded + 1))
+        upgraded_hash=$(sha256sum "$f" | cut -d' ' -f1)
+        if [ "$original_hash" != "$upgraded_hash" ]; then
+            echo "upgraded: $f"
+            upgraded=$((upgraded + 1))
+            changed_paths+=("$f")
+            if [ -f "$f.bak" ]; then
+                changed_paths+=("$f.bak")
+            fi
+        else
+            echo "already complete: $f"
+        fi
     else
         echo "pending:  $f"
     fi
 done
 
 if [ "$upgraded" -gt 0 ]; then
-    git add timestamps/
-    git commit --no-verify -m "ots: upgrade $upgraded timestamp(s)"
+    git add -- "${changed_paths[@]}"
+    git commit --only --no-verify \
+        -m "ots: upgrade $upgraded timestamp(s)" -- "${changed_paths[@]}"
 else
-    echo "No timestamps ready to upgrade yet (Bitcoin anchoring takes a few hours)."
+    echo "No timestamps ready to upgrade yet."
 fi
