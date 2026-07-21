@@ -56,7 +56,7 @@ The method is as load-bearing as the artifact:
 
 | Layer | Status |
 |-------|--------|
-| Phase 0 pre-registration | Signed and amended (Amendment 1 in force; Amendment 2 draft through two non-author review rounds, sign-blocked on one author ruling — clock precedence) |
+| Phase 0 pre-registration | Signed and amended (Amendments 1 and 2 in force; A2 adopted 2026-07-21 after three non-author review rounds and the clock-precedence ruling) |
 | Band 0 formal models | Active — TLA+ (P4, P5/P6, P5c issuance, bridge), ProVerif spike; see `formal/` |
 | Cloud-independent crypto core | Not yet frozen (gated on Band 0) |
 | LocalStack / AWS vertical slice | Not started |
@@ -78,8 +78,8 @@ Recommended order for a new reader (human or collaborator instance):
    — property list, adversary model, temporal-anchor semantics, agreement
    gate as falsification task.
 4. [`docs/phase-0-prereg-amendment-2.md`](docs/phase-0-prereg-amendment-2.md)
-   — draft refinement of confirmation, refusal, and anchor standing
-   (status may still be DRAFT; check the header).
+   — refinement of confirmation, refusal, anchor standing, and the
+   clock-roles ruling (adopted 2026-07-21, three review rounds).
 5. [`docs/tessera-cloud-demo-spec.md`](docs/tessera-cloud-demo-spec.md) —
    demonstration architecture and capability map.
 6. [`docs/travelog.md`](docs/travelog.md) — contemporaneous journal of
