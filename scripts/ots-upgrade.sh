@@ -34,8 +34,6 @@ for f in timestamps/*.ots; do
             if [ -f "$f.bak" ]; then
                 changed_paths+=("$f.bak")
             fi
-        else
-            echo "already complete: $f"
         fi
     else
         echo "pending:  $f"
