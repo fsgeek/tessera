@@ -34,6 +34,38 @@ Cross-cutting obligations (A1.4, A1.7):
       **before any substantive proof work** (A1.4). **Chosen: ProVerif**
       (2026-07-05; Tamarin rejected on the counterexample-readability
       tie-breaker).
+- [ ] Symbolic-suite architecture (ruled in dialogue 2026-07-28;
+      requirement-level restatement 2026-08-07, scope narrowed on
+      Codex non-author review same day; author accepted as written
+      2026-08-07, adoption completes at commit — see
+      `docs/reviews/2026-08-07-survivability-mechanisms-ruling.md` §1):
+      per-property ProVerif models over a shared theory library; every
+      model carries an explicit assumes-from-elsewhere ledger holding
+      two entry kinds — dischargeable cross-model obligations and
+      exposed Layer 2 assumptions; **Band 0 exit is gated on a
+      capstone composition context in which every ledgered cross-model
+      assumption is discharged by a machine-checked producer query and
+      carries a broken companion that must fail the query consuming
+      the severed link; Layer 2 assumptions are explicitly exposed and
+      unclaimed, never silently absorbed.** Any termination-forced
+      scoping is named in-module and disposed by amendment discipline,
+      never silently. Implementation note (non-binding, subject to the
+      mechanism spike below): current candidate is a single capstone
+      model that transcribes the shared library. Obligation text to be
+      registered in Amendment 3 at requirement level.
+- [ ] Capstone mechanism spike (2026-08-07 ruling §2; precedes the
+      suite scaffold): exercise the capstone pattern at representative
+      complexity — the linked evidence floor chain (2026-07-28
+      Ruling 2) — real-first, ablate on break. The drafted
+      assumes-from-elsewhere ledger interface (conservation-rule
+      schema in the 2026-08-07 ruling §1) is the spike's scaffolding
+      (one artifact, not two; merges the middle step of the A3 →
+      ledger interface → scaffold sequence). Per-query timebox
+      declared before running, with three named outcomes: query
+      violation (counterexample), timeout (mechanism-viability
+      failure — ablate or change tactic; not evidence about the
+      property), successful termination (evidence for the checked
+      abstraction only). Predictions registered before running.
 - [ ] Every symbolic lemma carries a prose mapping to its A1.2 property.
 - [ ] Cross-model correspondence mapping (TLA+ ↔ symbolic) in the written
       proof.
