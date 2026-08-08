@@ -47,3 +47,7 @@ Which form of the strict confirmation policy should Amendment 2 register?
 ```
 
 I'd say about 80% of the time what I am given isn't really a set of disjoint options, its a weird ordering issue or one clear issue with multiple distractors. The irony is that the current AI coding agents seem to make this sort of exploration as painful as possible.
+
+## August 8, 2026
+
+Clearly I'm not doing a good job of keeping this updated.  The progress has been slow for the past while.  I think we're still in various rounds of amending the protocol.  Today I expressed a concern that at some point planning becomes an excuse to avoid implementing.  Having said that, I must also admit that this project, while conceptually simple, is trying to demonstrate a challenging principle - trying to produce a service that is honest about its abilities and limitations. The infrastructure seeks to embody these ideas, but in the end, I'm also looking forward to building it. Most people will never look at this side of the service we're building, but it is an important piece of it.
