@@ -1,6 +1,6 @@
 # First-link spike — predictions addendum 1: single-evidence coverage
 
-Status: APPROVE by author 2026-08-09 (drafted 2026-08-09 from the Codex
+Status: APPROVED by author 2026-08-09 (drafted 2026-08-09 from the Codex
 independent-review finding recorded in RESULTS.md ledger entry 4.
 Same discipline as PREDICTIONS.md: this addendum is committed BEFORE
 any of its runs; the author's signing commit freezes it and opens
