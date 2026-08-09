@@ -308,7 +308,10 @@ gap analysis and the 2026-08-08 author dialogue):
 > collaboration — can reconstruct Tessera verification and interpret
 > its bounded result using only the preserved receipt bundle and the
 > exact external standards dependencies declared by that bundle,
-> without Tessera-specific institutional knowledge. For horizons
+> without Tessera-specific institutional knowledge. This
+> reconstructability claim is scoped to survivability claim 1 alone;
+> it promises nothing about availability or evidentiary continuity.
+> For horizons
 > requiring claims 2 and 3, the Designated Community is not only the
 > bundle's *audience* but its *custodian*: availability and evidentiary
 > continuity are declared custodial dependencies, named here rather
@@ -543,6 +546,15 @@ amendment — with a clear conscience, recorded here.
    `verification = VALID_STRICT` and `protocol_standing = ABSENT`.
    Relying-party policy decides whether those facts meet its own
    requirements; Tessera does not collapse them into one checkmark.
+
+   `[PANEL-DRIVEN CLARIFICATION — 2026-08-08, from the Kimi cold
+   read]` Standing is not a member of the A1.2.1 waiver lattice: it
+   is reported, never waived. No verifier policy, strict or degraded,
+   rewrites the reported standing value. A relying-party policy may
+   accept an artifact whose standing is `ABSENT` or `UNVERIFIABLE`,
+   but that acceptance is the policy's own recorded decision outside
+   the verdict — the same separation the lattice already enforces
+   between waiving a check and erasing its record.
 2. **Refusal records (the A2.3 split).** The abstract refusal state
    was discharged atomic-and-latching in Band 0. A2.3 registered
    durability, retrievability, and reporting of the refusal record and
@@ -639,13 +651,26 @@ amendment — with a clear conscience, recorded here.
    not reconstruct a lost one; absent a separately registered
    transparency mechanism, it does not prove that every refusal was
    published.
-3. **The bridge finding (tracker, NON-AUTHOR REVIEW PENDING).**
+3. **The bridge finding (tracker; non-author review of the
+   disposition performed 2026-08-08 — see
+   `docs/reviews/2026-08-08-A3-panel-disposition.md`).**
    A2.1's "The rule" sentence states conjunct 3 only; under decoupled
    clocks conjunct 3 does not imply conjunct 2, so the issuer
-   evaluates the full `VALID_STRICT` predicate at ship — as the
-   bridge model's Ship action already does. Registered here as the
-   authoritative prose repair; its non-author review is in this
-   amendment's panel scope.
+   evaluates the **full three-conjunct temporal predicate of A2.2
+   (the P5 temporal test inside `VALID_STRICT`)** before shipping —
+   as the bridge model's Ship action already does. Evaluation of
+   conjunct 3 alone is insufficient and is forbidden. Registered here
+   as the authoritative prose repair.
+
+   `[PANEL-DRIVEN REPAIR — 2026-08-08, from the Kimi addendum,
+   clerk-verified against the model]` An earlier form of this repair
+   said the issuer evaluates "the full `VALID_STRICT` predicate" at
+   ship. That overstates the model and the obligation: the bridge
+   model's Ship guard is the three-conjunct temporal predicate plus
+   the burial-depth requirement (its header registers exactly this),
+   and the issuer does not re-run envelope verification (P1–P3) at
+   ship. The repair sentence itself is now scoped to match the model
+   — the same prose/model discipline this item exists to enforce.
 
 ---
 
@@ -731,6 +756,54 @@ Tracked in `formal/PROPERTIES.md` upon adoption:
   bytes; embedded Tessera specification + conformance-vector typed
   objects; layered standards-dependency manifest; optional typed payload
   Representation Information companion; purpose preamble.
+
+`[PANEL-DRIVEN ADDITIONS — 2026-08-08 addendum round]`
+
+- Issuance-path conformance vector for the decoupled-clock divergence
+  (Kimi): `anchor_time = declared + δ + 1` (conjunct 2 fails),
+  `confirmed_at = declared + δ − 1` (conjunct 3 passes); required
+  issuer behavior is refuse-to-ship (discard, count against N).
+  Extracted from the bridge model; lands in the H1a red-bar suite as
+  a dedicated issuance-path test.
+- Bridge broken companion for the exact finding (DeepSeek; clerk
+  verified absent from the committed set): a `_BrokenConjunct3Only`
+  variant whose Ship guard is burial depth plus conjunct 3 alone,
+  expected `HonestShipAccepted` RED. `_BrokenWallClock` exhibits the
+  divergence class; this companion exhibits the registered finding
+  itself.
+- `formal/PROPERTIES.md` carries a pointer at the A2.1 entry (Kimi):
+  the frozen "The rule" sentence is superseded by A3.7.3 — issuer
+  evaluates the full three-conjunct temporal predicate. Documentation
+  hedge only; A2 text is never edited.
+
+`[REGISTERED OBLIGATION — 2026-08-09, Kimi panel finding 2; placement
+per the author's tail-search deliberation, recorded in
+docs/reviews/2026-08-08-A3-panel-disposition.md]`
+
+**The integrated adversarial lifecycle model.** At least one model in
+which the A1.3 adversary drives the full protocol lifecycle —
+issuance → wrapping → supersession → refusal → verification → tending
+— including a broken companion in which a wrapper transplants
+standing evidence from a valid inner artifact onto a forged outer
+artifact (expected result: the standing query goes red). Rationale on
+record: every composition-class failure this project has actually
+observed (the bridge finding, the checkmark relay) arose at a seam
+between separately-checked components, and a targeted per-model
+companion would assert the cross-model correspondence in prose — the
+same relay pattern one layer down. The only non-relayed check of a
+cross-model claim is a model containing both sides.
+
+**Trigger and placement — deliberately NOT a Band 0 exit
+obligation.** This model consumes the first-link and
+standing-mechanism choices, which are outputs of the mechanism spike;
+gating Band 0 exit on it would make H0 hostage to decisions its own
+process has not yet made. Registered placement: the obligation
+triggers on completion of the mechanism spike, and the model must be
+green — or its timeout disposed by signed amendment under the
+three-outcome discipline — **before the H1a crypto-core freeze**.
+Phase 1a opens on unchanged H0 terms. The spike's discipline applies
+(per-query timebox, predictions first); reachability and
+correspondence queries suffice — equivalence is not required.
 - Dead-service and dead-project demonstrations, with recorded
   evaluation conditions.
 - Tending-assessment mechanism: exposed policy, observations, judgments,
@@ -812,7 +885,9 @@ space is not narrowed before spike evidence supplies a reason.
 
 **Category (b) register — author directions taken in drafting
 dialogue** (compiled by the assistant from the revision record,
-2026-08-08; author to confirm completeness at cold read):
+2026-08-08; author confirmed completeness at cold read — ratified,
+commit `c54d70d`. Status of every item below: **ratified**; the
+2026-08-08 four-model panel raised no objection to any register item):
 
 1. §A3.2: per-layer results reported without aggregate replacement
    (resolves the docketed "A3 decides" question).
