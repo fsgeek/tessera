@@ -49,5 +49,8 @@ if ! "${OTS[@]}" stamp "$HASH_FILE"; then
     exit 1
 fi
 
-git add "$TIMESTAMP_DIR/"
+# Add only the two files this hook created — never the whole directory,
+# which would silently sweep unrelated timestamps/ state (e.g. in-flight
+# anchored/ moves) into a stamp commit.
+git add "$HASH_FILE" "$HASH_FILE.ots"
 git commit --no-verify -m "ots: stamp $HASH"
