@@ -1,0 +1,105 @@
+(* ==================================================================== *)
+(* Q3 — CANDIDATE MECHANISM: transcription binding. Authority evidence  *)
+(* commits to the DIGEST of the exact map-v1 authority-relevant tuple:  *)
+(* sign((STMT, h(t)), channel_key). The verifier recomputes h(t) from   *)
+(* the presented tuple and requires both channels' evidence to bind it. *)
+(* Variant: DNS channel COMPROMISED (skDNS leaked to the adversary).    *)
+(*                                                                      *)
+(* Registered prediction (PREDICTIONS.md, frozen): terminates, property *)
+(* holds (p~0.6); violation, most likely encoding defect but trace      *)
+(* inspection required (p~0.25); timeout (p~0.15) — state-space risk    *)
+(* concentrates here. Timebox: 30 min.                                  *)
+(*                                                                      *)
+(* Ledger note (A3.3 conservation rule): the symbolic hash h is         *)
+(* injective by construction — collision resistance of the concrete     *)
+(* digest is the residual Layer 2 assumption this model consumes,       *)
+(* discharged by cited external hardness assumptions per prereg §8,     *)
+(* never by this model.                                                 *)
+(*                                                                      *)
+(* Identical to q1_chain_dns_compromised.pv except the binding term:    *)
+(* h(t) instead of t in the authority processes and the verifier's      *)
+(* first-link check.                                                    *)
+(*                                                                      *)
+(* Run: proverif q3_mechanism_dns_compromised.pv                        *)
+(* ==================================================================== *)
+
+free c: channel.
+
+type skey.
+type pkey.
+fun pk(skey): pkey.
+
+fun sign(bitstring, skey): bitstring.
+reduc forall m: bitstring, k: skey; checksign(sign(m, k), pk(k)) = m.
+fun fp(pkey): bitstring.
+fun h(bitstring): bitstring.
+
+const STMT: bitstring.
+const POSS: bitstring.
+const BYTES: bitstring.
+
+free issuerId: bitstring.
+free ssetH: bitstring.
+free algH: bitstring.
+free verH: bitstring.
+free fbH: bitstring.
+
+event AuthorityPublishedDNS(bitstring).
+event AuthorityPublishedRepo(bitstring).
+event IssuerPossession(pkey).
+event IssuerSigned(pkey, bitstring).
+event Accept(bitstring, bitstring, bitstring, pkey, bitstring).
+
+query t: bitstring, k: pkey, fb: bitstring, evD: bitstring, evR: bitstring;
+  event(Accept(evD, evR, t, k, fb)) ==>
+    ( (event(AuthorityPublishedDNS(t)) || event(AuthorityPublishedRepo(t)))
+   && event(IssuerPossession(k))
+   && event(IssuerSigned(k, fb)) ).
+  (* Recut 2026-08-09 after Q1 run 1 (evidence: *_run1.out): the        *)
+  (* conjunctive both-channels conclusion overclaimed — a compromised   *)
+  (* channel's publication event is forgeable-around by definition.     *)
+  (* The design's actual claim under A1.3 "never all" is: at least one  *)
+  (* UNCOMPROMISED channel published this exact tuple. The disjunction  *)
+  (* is that claim, variant-independent; possession and signature       *)
+  (* links stay conjunctive.                                            *)
+
+let AuthorityDNS(skD: skey, t: bitstring) =
+  event AuthorityPublishedDNS(t);
+  (* MECHANISM: evidence commits to the digest of the exact tuple *)
+  out(c, sign((STMT, h(t)), skD)).
+
+let AuthorityRepo(skR: skey, t: bitstring) =
+  event AuthorityPublishedRepo(t);
+  out(c, sign((STMT, h(t)), skR)).
+
+let Issuer(skI: skey, fb: bitstring) =
+  event IssuerPossession(pk(skI));
+  out(c, sign((POSS, fp(pk(skI))), skI));
+  event IssuerSigned(pk(skI), fb);
+  out(c, sign((BYTES, fb), skI)).
+
+let Verifier(pkD: pkey, pkR: pkey) =
+  in(c, (t: bitstring, label: bitstring, evD: bitstring, evR: bitstring,
+         kX: pkey, ppf: bitstring, sg: bitstring, fb: bitstring));
+  (* first link, mechanism form: both evidences bind the recomputed    *)
+  (* digest of the presented tuple                                     *)
+  let (=STMT, =h(t)) = checksign(evD, pkD) in
+  let (=STMT, =h(t)) = checksign(evR, pkR) in
+  let (id: bitstring, kfpr: bitstring, ss: bitstring, alg: bitstring,
+       ver: bitstring) = t in
+  if fp(kX) = kfpr then
+  let (=POSS, =fp(kX)) = checksign(ppf, kX) in
+  let (=BYTES, =fb) = checksign(sg, kX) in
+  event Accept(evD, evR, t, kX, fb);
+  0.
+
+process
+  new skD: skey; new skR: skey; new skI: skey;
+  let tH = (issuerId, fp(pk(skI)), ssetH, algH, verH) in
+  out(c, pk(skD)); out(c, pk(skR)); out(c, pk(skI));
+  (* VARIANT: DNS channel compromised — its signing key is public *)
+  out(c, skD);
+  ( !AuthorityDNS(skD, tH)
+  | !AuthorityRepo(skR, tH)
+  | !Issuer(skI, fbH)
+  | !Verifier(pk(skD), pk(skR)) )

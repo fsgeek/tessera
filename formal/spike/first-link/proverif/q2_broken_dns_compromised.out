@@ -1,0 +1,474 @@
+Process 0 (that is, the initial process):
+{1}new skD: skey;
+{2}new skR: skey;
+{3}new skI: skey;
+{4}let tH: bitstring = (issuerId,fp(pk(skI)),ssetH,algH,verH) in
+{5}out(c, pk(skD));
+{6}out(c, pk(skR));
+{7}out(c, pk(skI));
+{8}out(c, skD);
+(
+    {9}!
+    {10}let skD_1: skey = skD in
+    {11}event AuthorityPublishedDNS(tH);
+    {12}let (id: bitstring,kfpr: bitstring,ss: bitstring,alg: bitstring,ver: bitstring) = tH in
+    {13}out(c, sign((STMT,id),skD_1))
+) | (
+    {14}!
+    {15}let skR_1: skey = skR in
+    {16}event AuthorityPublishedRepo(tH);
+    {17}let (id_1: bitstring,kfpr_1: bitstring,ss_1: bitstring,alg_1: bitstring,ver_1: bitstring) = tH in
+    {18}out(c, sign((STMT,id_1),skR_1))
+) | (
+    {19}!
+    {20}let skI_1: skey = skI in
+    {21}let fb: bitstring = fbH in
+    {22}event IssuerPossession(pk(skI_1));
+    {23}out(c, sign((POSS,fp(pk(skI_1))),skI_1));
+    {24}event IssuerSigned(pk(skI_1),fb);
+    {25}out(c, sign((BYTES,fb),skI_1))
+) | (
+    {26}!
+    {27}let pkD: pkey = pk(skD) in
+    {28}let pkR: pkey = pk(skR) in
+    {29}in(c, (t: bitstring,label: bitstring,evD: bitstring,evR: bitstring,kX: pkey,ppf: bitstring,sg: bitstring,fb_1: bitstring));
+    {30}let (id_2: bitstring,kfpr_2: bitstring,ss_2: bitstring,alg_2: bitstring,ver_2: bitstring) = t in
+    {31}let (=STMT,=id_2) = checksign(evD,pkD) in
+    {32}let (=STMT,=id_2) = checksign(evR,pkR) in
+    {33}if (fp(kX) = kfpr_2) then
+    {34}let (=POSS,=fp(kX)) = checksign(ppf,kX) in
+    {35}let (=BYTES,=fb_1) = checksign(sg,kX) in
+    {36}event Accept(evD,evR,t,kX,fb_1);
+    {37}out(accCh, (evD,evR,t))
+) | (
+    {38}!
+    {39}in(accCh, (e1: bitstring,e2: bitstring,t1: bitstring));
+    {40}in(accCh, (=e1,=e2,t2: bitstring));
+    {41}if (t1 = t2) then
+        0
+    else
+        {42}event TwoWorldsBroken(e1,e2,t1,t2)
+)
+
+--  Process 1 (that is, process 0, with let moved downwards):
+{1}new skD: skey;
+{2}new skR: skey;
+{3}new skI: skey;
+{5}out(c, pk(skD));
+{6}out(c, pk(skR));
+{7}out(c, pk(skI));
+{8}out(c, skD);
+{4}let tH: bitstring = (issuerId,fp(pk(skI)),ssetH,algH,verH) in
+(
+    {9}!
+    {11}event AuthorityPublishedDNS(tH);
+    {12}let (id: bitstring,kfpr: bitstring,ss: bitstring,alg: bitstring,ver: bitstring) = tH in
+    {10}let skD_1: skey = skD in
+    {13}out(c, sign((STMT,id),skD_1))
+) | (
+    {14}!
+    {16}event AuthorityPublishedRepo(tH);
+    {17}let (id_1: bitstring,kfpr_1: bitstring,ss_1: bitstring,alg_1: bitstring,ver_1: bitstring) = tH in
+    {15}let skR_1: skey = skR in
+    {18}out(c, sign((STMT,id_1),skR_1))
+) | (
+    {19}!
+    {20}let skI_1: skey = skI in
+    {22}event IssuerPossession(pk(skI_1));
+    {23}out(c, sign((POSS,fp(pk(skI_1))),skI_1));
+    {21}let fb: bitstring = fbH in
+    {24}event IssuerSigned(pk(skI_1),fb);
+    {25}out(c, sign((BYTES,fb),skI_1))
+) | (
+    {26}!
+    {29}in(c, (t: bitstring,label: bitstring,evD: bitstring,evR: bitstring,kX: pkey,ppf: bitstring,sg: bitstring,fb_1: bitstring));
+    {30}let (id_2: bitstring,kfpr_2: bitstring,ss_2: bitstring,alg_2: bitstring,ver_2: bitstring) = t in
+    {27}let pkD: pkey = pk(skD) in
+    {31}let (=STMT,=id_2) = checksign(evD,pkD) in
+    {28}let pkR: pkey = pk(skR) in
+    {32}let (=STMT,=id_2) = checksign(evR,pkR) in
+    {33}if (fp(kX) = kfpr_2) then
+    {34}let (=POSS,=fp(kX)) = checksign(ppf,kX) in
+    {35}let (=BYTES,=fb_1) = checksign(sg,kX) in
+    {36}event Accept(evD,evR,t,kX,fb_1);
+    {37}out(accCh, (evD,evR,t))
+) | (
+    {38}!
+    {39}in(accCh, (e1: bitstring,e2: bitstring,t1: bitstring));
+    {40}in(accCh, (=e1,=e2,t2: bitstring));
+    {41}if (t1 = t2) then
+        0
+    else
+        {42}event TwoWorldsBroken(e1,e2,t1,t2)
+)
+
+-- Query event(Accept(evD_1,evR_1,t_1,k,fb_2)) ==> (event(AuthorityPublishedDNS(t_1)) || event(AuthorityPublishedRepo(t_1))) && event(IssuerPossession(k)) && event(IssuerSigned(k,fb_2)) in process 1.
+Translating the process into Horn clauses...
+Completing...
+Starting query event(Accept(evD_1,evR_1,t_1,k,fb_2)) ==> (event(AuthorityPublishedDNS(t_1)) || event(AuthorityPublishedRepo(t_1))) && event(IssuerPossession(k)) && event(IssuerSigned(k,fb_2))
+goal reachable: attacker(ss_3) && attacker(alg_3) && attacker(ver_3) && b-event(AuthorityPublishedRepo((issuerId[],fp(pk(skI[])),ssetH[],algH[],verH[]))) && attacker(k) && attacker(fb_2) -> event(Accept(sign((STMT,issuerId[]),skD[]),sign((STMT,issuerId[]),skR[]),(issuerId[],fp(pk(k)),ss_3,alg_3,ver_3),pk(k),fb_2))
+
+Derivation:
+
+1. We assume as hypothesis that
+attacker(fb_2).
+
+2. We assume as hypothesis that
+attacker(k).
+
+3. Using the function BYTES the attacker may obtain BYTES.
+attacker(BYTES).
+
+4. By 3, the attacker may know BYTES.
+By 1, the attacker may know fb_2.
+Using the function 2-tuple the attacker may obtain (BYTES,fb_2).
+attacker((BYTES,fb_2)).
+
+5. By 4, the attacker may know (BYTES,fb_2).
+By 2, the attacker may know k.
+Using the function sign the attacker may obtain sign((BYTES,fb_2),k).
+attacker(sign((BYTES,fb_2),k)).
+
+6. By 2, the attacker may know k.
+Using the function pk the attacker may obtain pk(k).
+attacker(pk(k)).
+
+7. By 6, the attacker may know pk(k).
+Using the function fp the attacker may obtain fp(pk(k)).
+attacker(fp(pk(k))).
+
+8. Using the function POSS the attacker may obtain POSS.
+attacker(POSS).
+
+9. By 8, the attacker may know POSS.
+By 7, the attacker may know fp(pk(k)).
+Using the function 2-tuple the attacker may obtain (POSS,fp(pk(k))).
+attacker((POSS,fp(pk(k)))).
+
+10. By 9, the attacker may know (POSS,fp(pk(k))).
+By 2, the attacker may know k.
+Using the function sign the attacker may obtain sign((POSS,fp(pk(k))),k).
+attacker(sign((POSS,fp(pk(k))),k)).
+
+11. The event AuthorityPublishedRepo((issuerId[],fp(pk(skI[])),ssetH[],algH[],verH[])) may be executed at {16}.
+So the message sign((STMT,issuerId[]),skR[]) may be sent to the attacker at output {18}.
+attacker(sign((STMT,issuerId[]),skR[])).
+
+12. The message skD[] may be sent to the attacker at output {8}.
+attacker(skD[]).
+
+13. The attacker initially knows issuerId[].
+attacker(issuerId[]).
+
+14. Using the function STMT the attacker may obtain STMT.
+attacker(STMT).
+
+15. By 14, the attacker may know STMT.
+By 13, the attacker may know issuerId[].
+Using the function 2-tuple the attacker may obtain (STMT,issuerId[]).
+attacker((STMT,issuerId[])).
+
+16. By 15, the attacker may know (STMT,issuerId[]).
+By 12, the attacker may know skD[].
+Using the function sign the attacker may obtain sign((STMT,issuerId[]),skD[]).
+attacker(sign((STMT,issuerId[]),skD[])).
+
+17. The attacker has some term label_1.
+attacker(label_1).
+
+18. We assume as hypothesis that
+attacker(ver_3).
+
+19. We assume as hypothesis that
+attacker(alg_3).
+
+20. We assume as hypothesis that
+attacker(ss_3).
+
+21. By 13, the attacker may know issuerId[].
+By 7, the attacker may know fp(pk(k)).
+By 20, the attacker may know ss_3.
+By 19, the attacker may know alg_3.
+By 18, the attacker may know ver_3.
+Using the function 5-tuple the attacker may obtain (issuerId[],fp(pk(k)),ss_3,alg_3,ver_3).
+attacker((issuerId[],fp(pk(k)),ss_3,alg_3,ver_3)).
+
+22. By 21, the attacker may know (issuerId[],fp(pk(k)),ss_3,alg_3,ver_3).
+By 17, the attacker may know label_1.
+By 16, the attacker may know sign((STMT,issuerId[]),skD[]).
+By 11, the attacker may know sign((STMT,issuerId[]),skR[]).
+By 6, the attacker may know pk(k).
+By 10, the attacker may know sign((POSS,fp(pk(k))),k).
+By 5, the attacker may know sign((BYTES,fb_2),k).
+By 1, the attacker may know fb_2.
+Using the function 8-tuple the attacker may obtain ((issuerId[],fp(pk(k)),ss_3,alg_3,ver_3),label_1,sign((STMT,issuerId[]),skD[]),sign((STMT,issuerId[]),skR[]),pk(k),sign((POSS,fp(pk(k))),k),sign((BYTES,fb_2),k),fb_2).
+attacker(((issuerId[],fp(pk(k)),ss_3,alg_3,ver_3),label_1,sign((STMT,issuerId[]),skD[]),sign((STMT,issuerId[]),skR[]),pk(k),sign((POSS,fp(pk(k))),k),sign((BYTES,fb_2),k),fb_2)).
+
+23. The message ((issuerId[],fp(pk(k)),ss_3,alg_3,ver_3),label_1,sign((STMT,issuerId[]),skD[]),sign((STMT,issuerId[]),skR[]),pk(k),sign((POSS,fp(pk(k))),k),sign((BYTES,fb_2),k),fb_2) that the attacker may have by 22 may be received at input {29}.
+So event Accept(sign((STMT,issuerId[]),skD[]),sign((STMT,issuerId[]),skR[]),(issuerId[],fp(pk(k)),ss_3,alg_3,ver_3),pk(k),fb_2) may be executed at {36}.
+event(Accept(sign((STMT,issuerId[]),skD[]),sign((STMT,issuerId[]),skR[]),(issuerId[],fp(pk(k)),ss_3,alg_3,ver_3),pk(k),fb_2)).
+
+24. By 23, event(Accept(sign((STMT,issuerId[]),skD[]),sign((STMT,issuerId[]),skR[]),(issuerId[],fp(pk(k)),ss_3,alg_3,ver_3),pk(k),fb_2)).
+The goal is reached, represented in the following fact:
+event(Accept(sign((STMT,issuerId[]),skD[]),sign((STMT,issuerId[]),skR[]),(issuerId[],fp(pk(k)),ss_3,alg_3,ver_3),pk(k),fb_2)).
+
+
+A more detailed output of the traces is available with
+  set traceDisplay = long.
+
+new skD: skey creating skD_2 at {1}
+
+new skR: skey creating skR_2 at {2}
+
+new skI: skey creating skI_2 at {3}
+
+out(c, ~M) with ~M = pk(skD_2) at {5}
+
+out(c, ~M_1) with ~M_1 = pk(skR_2) at {6}
+
+out(c, ~M_2) with ~M_2 = pk(skI_2) at {7}
+
+out(c, ~M_3) with ~M_3 = skD_2 at {8}
+
+event AuthorityPublishedRepo((issuerId,fp(pk(skI_2)),ssetH,algH,verH)) at {16} in copy a
+
+out(c, ~M_4) with ~M_4 = sign((STMT,issuerId),skR_2) at {18} in copy a
+
+in(c, ((issuerId,fp(pk(a_1)),a_2,a_3,a_4),a_5,sign((STMT,issuerId),~M_3),~M_4,pk(a_1),sign((POSS,fp(pk(a_1))),a_1),sign((BYTES,a_6),a_1),a_6)) with sign((STMT,issuerId),~M_3) = sign((STMT,issuerId),skD_2), ~M_4 = sign((STMT,issuerId),skR_2) at {29} in copy a_7
+
+event Accept(sign((STMT,issuerId),skD_2),sign((STMT,issuerId),skR_2),(issuerId,fp(pk(a_1)),a_2,a_3,a_4),pk(a_1),a_6) at {36} in copy a_7 (goal)
+
+The event Accept(sign((STMT,issuerId),skD_2),sign((STMT,issuerId),skR_2),(issuerId,fp(pk(a_1)),a_2,a_3,a_4),pk(a_1),a_6) is executed at {36} in copy a_7.
+A trace has been found.
+RESULT event(Accept(evD_1,evR_1,t_1,k,fb_2)) ==> (event(AuthorityPublishedDNS(t_1)) || event(AuthorityPublishedRepo(t_1))) && event(IssuerPossession(k)) && event(IssuerSigned(k,fb_2)) is false.
+-- Query not event(TwoWorldsBroken(evD_1,evR_1,t1_1,t2_1)) in process 1.
+Translating the process into Horn clauses...
+Completing...
+Starting query not event(TwoWorldsBroken(evD_1,evR_1,t1_1,t2_1))
+goal reachable: (k ≠ skI[] | ss_3 ≠ ss_4 | alg_3 ≠ alg_4 | ver_3 ≠ ver_4) && attacker(ss_4) && attacker(alg_4) && attacker(ver_4) && attacker(ss_3) && attacker(alg_3) && attacker(ver_3) && attacker(k) -> event(TwoWorldsBroken(sign((STMT,issuerId[]),skD[]),sign((STMT,issuerId[]),skR[]),(issuerId[],fp(pk(k)),ss_3,alg_3,ver_3),(issuerId[],fp(pk(skI[])),ss_4,alg_4,ver_4)))
+
+Derivation:
+
+1. The attacker has some term fb_2.
+attacker(fb_2).
+
+2. We assume as hypothesis that
+attacker(k).
+
+3. Using the function BYTES the attacker may obtain BYTES.
+attacker(BYTES).
+
+4. By 3, the attacker may know BYTES.
+By 1, the attacker may know fb_2.
+Using the function 2-tuple the attacker may obtain (BYTES,fb_2).
+attacker((BYTES,fb_2)).
+
+5. By 4, the attacker may know (BYTES,fb_2).
+By 2, the attacker may know k.
+Using the function sign the attacker may obtain sign((BYTES,fb_2),k).
+attacker(sign((BYTES,fb_2),k)).
+
+6. By 2, the attacker may know k.
+Using the function pk the attacker may obtain pk(k).
+attacker(pk(k)).
+
+7. By 6, the attacker may know pk(k).
+Using the function fp the attacker may obtain fp(pk(k)).
+attacker(fp(pk(k))).
+
+8. Using the function POSS the attacker may obtain POSS.
+attacker(POSS).
+
+9. By 8, the attacker may know POSS.
+By 7, the attacker may know fp(pk(k)).
+Using the function 2-tuple the attacker may obtain (POSS,fp(pk(k))).
+attacker((POSS,fp(pk(k)))).
+
+10. By 9, the attacker may know (POSS,fp(pk(k))).
+By 2, the attacker may know k.
+Using the function sign the attacker may obtain sign((POSS,fp(pk(k))),k).
+attacker(sign((POSS,fp(pk(k))),k)).
+
+11. The message sign((STMT,issuerId[]),skR[]) may be sent to the attacker at output {18}.
+attacker(sign((STMT,issuerId[]),skR[])).
+
+12. The message skD[] may be sent to the attacker at output {8}.
+attacker(skD[]).
+
+13. The attacker initially knows issuerId[].
+attacker(issuerId[]).
+
+14. Using the function STMT the attacker may obtain STMT.
+attacker(STMT).
+
+15. By 14, the attacker may know STMT.
+By 13, the attacker may know issuerId[].
+Using the function 2-tuple the attacker may obtain (STMT,issuerId[]).
+attacker((STMT,issuerId[])).
+
+16. By 15, the attacker may know (STMT,issuerId[]).
+By 12, the attacker may know skD[].
+Using the function sign the attacker may obtain sign((STMT,issuerId[]),skD[]).
+attacker(sign((STMT,issuerId[]),skD[])).
+
+17. The attacker has some term label_1.
+attacker(label_1).
+
+18. We assume as hypothesis that
+attacker(ver_3).
+
+19. We assume as hypothesis that
+attacker(alg_3).
+
+20. We assume as hypothesis that
+attacker(ss_3).
+
+21. By 13, the attacker may know issuerId[].
+By 7, the attacker may know fp(pk(k)).
+By 20, the attacker may know ss_3.
+By 19, the attacker may know alg_3.
+By 18, the attacker may know ver_3.
+Using the function 5-tuple the attacker may obtain (issuerId[],fp(pk(k)),ss_3,alg_3,ver_3).
+attacker((issuerId[],fp(pk(k)),ss_3,alg_3,ver_3)).
+
+22. By 21, the attacker may know (issuerId[],fp(pk(k)),ss_3,alg_3,ver_3).
+By 17, the attacker may know label_1.
+By 16, the attacker may know sign((STMT,issuerId[]),skD[]).
+By 11, the attacker may know sign((STMT,issuerId[]),skR[]).
+By 6, the attacker may know pk(k).
+By 10, the attacker may know sign((POSS,fp(pk(k))),k).
+By 5, the attacker may know sign((BYTES,fb_2),k).
+By 1, the attacker may know fb_2.
+Using the function 8-tuple the attacker may obtain ((issuerId[],fp(pk(k)),ss_3,alg_3,ver_3),label_1,sign((STMT,issuerId[]),skD[]),sign((STMT,issuerId[]),skR[]),pk(k),sign((POSS,fp(pk(k))),k),sign((BYTES,fb_2),k),fb_2).
+attacker(((issuerId[],fp(pk(k)),ss_3,alg_3,ver_3),label_1,sign((STMT,issuerId[]),skD[]),sign((STMT,issuerId[]),skR[]),pk(k),sign((POSS,fp(pk(k))),k),sign((BYTES,fb_2),k),fb_2)).
+
+23. The message ((issuerId[],fp(pk(k)),ss_3,alg_3,ver_3),label_1,sign((STMT,issuerId[]),skD[]),sign((STMT,issuerId[]),skR[]),pk(k),sign((POSS,fp(pk(k))),k),sign((BYTES,fb_2),k),fb_2) that the attacker may have by 22 may be received at input {29}.
+So the message (sign((STMT,issuerId[]),skD[]),sign((STMT,issuerId[]),skR[]),(issuerId[],fp(pk(k)),ss_3,alg_3,ver_3)) may be sent on channel accCh[] at output {37}.
+mess(accCh[],(sign((STMT,issuerId[]),skD[]),sign((STMT,issuerId[]),skR[]),(issuerId[],fp(pk(k)),ss_3,alg_3,ver_3))).
+
+24. The attacker initially knows fbH[].
+attacker(fbH[]).
+
+25. The message sign((BYTES,fbH[]),skI[]) may be sent to the attacker at output {25}.
+attacker(sign((BYTES,fbH[]),skI[])).
+
+26. The message sign((POSS,fp(pk(skI[]))),skI[]) may be sent to the attacker at output {23}.
+attacker(sign((POSS,fp(pk(skI[]))),skI[])).
+
+27. The message pk(skI[]) may be sent to the attacker at output {7}.
+attacker(pk(skI[])).
+
+28. The attacker has some term label_2.
+attacker(label_2).
+
+29. We assume as hypothesis that
+attacker(ver_4).
+
+30. We assume as hypothesis that
+attacker(alg_4).
+
+31. We assume as hypothesis that
+attacker(ss_4).
+
+32. By 27, the attacker may know pk(skI[]).
+Using the function fp the attacker may obtain fp(pk(skI[])).
+attacker(fp(pk(skI[]))).
+
+33. By 13, the attacker may know issuerId[].
+By 32, the attacker may know fp(pk(skI[])).
+By 31, the attacker may know ss_4.
+By 30, the attacker may know alg_4.
+By 29, the attacker may know ver_4.
+Using the function 5-tuple the attacker may obtain (issuerId[],fp(pk(skI[])),ss_4,alg_4,ver_4).
+attacker((issuerId[],fp(pk(skI[])),ss_4,alg_4,ver_4)).
+
+34. By 33, the attacker may know (issuerId[],fp(pk(skI[])),ss_4,alg_4,ver_4).
+By 28, the attacker may know label_2.
+By 16, the attacker may know sign((STMT,issuerId[]),skD[]).
+By 11, the attacker may know sign((STMT,issuerId[]),skR[]).
+By 27, the attacker may know pk(skI[]).
+By 26, the attacker may know sign((POSS,fp(pk(skI[]))),skI[]).
+By 25, the attacker may know sign((BYTES,fbH[]),skI[]).
+By 24, the attacker may know fbH[].
+Using the function 8-tuple the attacker may obtain ((issuerId[],fp(pk(skI[])),ss_4,alg_4,ver_4),label_2,sign((STMT,issuerId[]),skD[]),sign((STMT,issuerId[]),skR[]),pk(skI[]),sign((POSS,fp(pk(skI[]))),skI[]),sign((BYTES,fbH[]),skI[]),fbH[]).
+attacker(((issuerId[],fp(pk(skI[])),ss_4,alg_4,ver_4),label_2,sign((STMT,issuerId[]),skD[]),sign((STMT,issuerId[]),skR[]),pk(skI[]),sign((POSS,fp(pk(skI[]))),skI[]),sign((BYTES,fbH[]),skI[]),fbH[])).
+
+35. The message ((issuerId[],fp(pk(skI[])),ss_4,alg_4,ver_4),label_2,sign((STMT,issuerId[]),skD[]),sign((STMT,issuerId[]),skR[]),pk(skI[]),sign((POSS,fp(pk(skI[]))),skI[]),sign((BYTES,fbH[]),skI[]),fbH[]) that the attacker may have by 34 may be received at input {29}.
+So the message (sign((STMT,issuerId[]),skD[]),sign((STMT,issuerId[]),skR[]),(issuerId[],fp(pk(skI[])),ss_4,alg_4,ver_4)) may be sent on channel accCh[] at output {37}.
+mess(accCh[],(sign((STMT,issuerId[]),skD[]),sign((STMT,issuerId[]),skR[]),(issuerId[],fp(pk(skI[])),ss_4,alg_4,ver_4))).
+
+36. The message (sign((STMT,issuerId[]),skD[]),sign((STMT,issuerId[]),skR[]),(issuerId[],fp(pk(k)),ss_3,alg_3,ver_3)) that may be sent on channel accCh[] by 23 may be received at input {39}.
+The message (sign((STMT,issuerId[]),skD[]),sign((STMT,issuerId[]),skR[]),(issuerId[],fp(pk(skI[])),ss_4,alg_4,ver_4)) that may be sent on channel accCh[] by 35 may be received at input {40}.
+We have (issuerId[],fp(pk(k)),ss_3,alg_3,ver_3) ≠ (issuerId[],fp(pk(skI[])),ss_4,alg_4,ver_4).
+So event TwoWorldsBroken(sign((STMT,issuerId[]),skD[]),sign((STMT,issuerId[]),skR[]),(issuerId[],fp(pk(k)),ss_3,alg_3,ver_3),(issuerId[],fp(pk(skI[])),ss_4,alg_4,ver_4)) may be executed at {42}.
+event(TwoWorldsBroken(sign((STMT,issuerId[]),skD[]),sign((STMT,issuerId[]),skR[]),(issuerId[],fp(pk(k)),ss_3,alg_3,ver_3),(issuerId[],fp(pk(skI[])),ss_4,alg_4,ver_4))).
+
+37. By 36, event(TwoWorldsBroken(sign((STMT,issuerId[]),skD[]),sign((STMT,issuerId[]),skR[]),(issuerId[],fp(pk(k)),ss_3,alg_3,ver_3),(issuerId[],fp(pk(skI[])),ss_4,alg_4,ver_4))).
+The goal is reached, represented in the following fact:
+event(TwoWorldsBroken(sign((STMT,issuerId[]),skD[]),sign((STMT,issuerId[]),skR[]),(issuerId[],fp(pk(k)),ss_3,alg_3,ver_3),(issuerId[],fp(pk(skI[])),ss_4,alg_4,ver_4))).
+
+
+A more detailed output of the traces is available with
+  set traceDisplay = long.
+
+new skD: skey creating skD_2 at {1}
+
+new skR: skey creating skR_2 at {2}
+
+new skI: skey creating skI_2 at {3}
+
+out(c, ~M) with ~M = pk(skD_2) at {5}
+
+out(c, ~M_1) with ~M_1 = pk(skR_2) at {6}
+
+out(c, ~M_2) with ~M_2 = pk(skI_2) at {7}
+
+out(c, ~M_3) with ~M_3 = skD_2 at {8}
+
+event IssuerPossession(pk(skI_2)) at {22} in copy a
+
+out(c, ~M_4) with ~M_4 = sign((POSS,fp(pk(skI_2))),skI_2) at {23} in copy a
+
+event IssuerSigned(pk(skI_2),fbH) at {24} in copy a
+
+out(c, ~M_5) with ~M_5 = sign((BYTES,fbH),skI_2) at {25} in copy a
+
+event IssuerPossession(pk(skI_2)) at {22} in copy a_1
+
+out(c, ~M_6) with ~M_6 = sign((POSS,fp(pk(skI_2))),skI_2) at {23} in copy a_1
+
+event IssuerSigned(pk(skI_2),fbH) at {24} in copy a_1
+
+out(c, ~M_7) with ~M_7 = sign((BYTES,fbH),skI_2) at {25} in copy a_1
+
+event AuthorityPublishedRepo((issuerId,fp(pk(skI_2)),ssetH,algH,verH)) at {16} in copy a_2
+
+out(c, ~M_8) with ~M_8 = sign((STMT,issuerId),skR_2) at {18} in copy a_2
+
+in(c, ((issuerId,fp(~M_2),a_3,a_4,a_5),a_6,sign((STMT,issuerId),~M_3),~M_8,~M_2,~M_4,~M_5,fbH)) with fp(~M_2) = fp(pk(skI_2)), sign((STMT,issuerId),~M_3) = sign((STMT,issuerId),skD_2), ~M_8 = sign((STMT,issuerId),skR_2), ~M_2 = pk(skI_2), ~M_4 = sign((POSS,fp(pk(skI_2))),skI_2), ~M_5 = sign((BYTES,fbH),skI_2) at {29} in copy a_7
+
+event Accept(sign((STMT,issuerId),skD_2),sign((STMT,issuerId),skR_2),(issuerId,fp(pk(skI_2)),a_3,a_4,a_5),pk(skI_2),fbH) at {36} in copy a_7
+
+in(c, ((issuerId,fp(pk(a_8)),a_9,a_10,a_11),a_12,sign((STMT,issuerId),~M_3),~M_8,pk(a_8),sign((POSS,fp(pk(a_8))),a_8),sign((BYTES,a_13),a_8),a_13)) with sign((STMT,issuerId),~M_3) = sign((STMT,issuerId),skD_2), ~M_8 = sign((STMT,issuerId),skR_2) at {29} in copy a_14
+
+event Accept(sign((STMT,issuerId),skD_2),sign((STMT,issuerId),skR_2),(issuerId,fp(pk(a_8)),a_9,a_10,a_11),pk(a_8),a_13) at {36} in copy a_14
+
+out(accCh, (sign((STMT,issuerId),skD_2),sign((STMT,issuerId),skR_2),(issuerId,fp(pk(a_8)),a_9,a_10,a_11))) at {37} in copy a_14 received at {39} in copy a_15
+
+out(accCh, (sign((STMT,issuerId),skD_2),sign((STMT,issuerId),skR_2),(issuerId,fp(pk(skI_2)),a_3,a_4,a_5))) at {37} in copy a_7 received at {40} in copy a_15
+
+event TwoWorldsBroken(sign((STMT,issuerId),skD_2),sign((STMT,issuerId),skR_2),(issuerId,fp(pk(a_8)),a_9,a_10,a_11),(issuerId,fp(pk(skI_2)),a_3,a_4,a_5)) at {42} in copy a_15 (goal)
+
+The event TwoWorldsBroken(sign((STMT,issuerId),skD_2),sign((STMT,issuerId),skR_2),(issuerId,fp(pk(a_8)),a_9,a_10,a_11),(issuerId,fp(pk(skI_2)),a_3,a_4,a_5)) is executed at {42} in copy a_15.
+A trace has been found.
+RESULT not event(TwoWorldsBroken(evD_1,evR_1,t1_1,t2_1)) is false.
+
+--------------------------------------------------------------
+Verification summary:
+
+Query event(Accept(evD_1,evR_1,t_1,k,fb_2)) ==> (event(AuthorityPublishedDNS(t_1)) || event(AuthorityPublishedRepo(t_1))) && event(IssuerPossession(k)) && event(IssuerSigned(k,fb_2)) is false.
+
+Query not event(TwoWorldsBroken(evD_1,evR_1,t1_1,t2_1)) is false.
+
+--------------------------------------------------------------
+

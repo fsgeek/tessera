@@ -1,0 +1,95 @@
+(* ==================================================================== *)
+(* Q4 — two-worlds ATTACK OBJECTIVE against the INTACT mechanism.       *)
+(* Distinct from Q2 explicitly: NOTHING IS REMOVED. The transcription   *)
+(* binding of Q3 is fully in place; the adversary must beat the         *)
+(* mechanism, not its absence. The question: can the A1.3 adversary     *)
+(* (this variant: DNS channel compromised) cause one evidence pair to   *)
+(* support two manifests differing in a map-v1 authority-relevant       *)
+(* field?                                                               *)
+(*                                                                      *)
+(* Registered prediction (PREDICTIONS.md, frozen): no attack found,     *)
+(* terminating (p~0.55); a REAL attack surfaces (p~0.2 — the outcome    *)
+(* that earns the spike its keep); timeout (p~0.25). Timebox: 30 min.   *)
+(* Q4 carries the highest genuine uncertainty and is the reason the     *)
+(* spike exists.                                                        *)
+(*                                                                      *)
+(* Model = q3_mechanism_dns_compromised.pv + the TwoWorlds judge from   *)
+(* Q2 (private accCh; judge raises TwoWorldsBroken on same evidence     *)
+(* pair, different tuples). Expected: TwoWorldsBroken UNREACHABLE.      *)
+(*                                                                      *)
+(* Ledger note: symbolic h is injective; concrete collision resistance  *)
+(* is the residual Layer 2 assumption, discharged externally.           *)
+(*                                                                      *)
+(* Run: proverif q4_attack_dns_compromised.pv                           *)
+(* ==================================================================== *)
+
+free c: channel.
+free accCh: channel [private].
+
+type skey.
+type pkey.
+fun pk(skey): pkey.
+
+fun sign(bitstring, skey): bitstring.
+reduc forall m: bitstring, k: skey; checksign(sign(m, k), pk(k)) = m.
+fun fp(pkey): bitstring.
+fun h(bitstring): bitstring.
+
+const STMT: bitstring.
+const POSS: bitstring.
+const BYTES: bitstring.
+
+free issuerId: bitstring.
+free ssetH: bitstring.
+free algH: bitstring.
+free verH: bitstring.
+free fbH: bitstring.
+
+event Accept(bitstring, bitstring, bitstring, pkey, bitstring).
+event TwoWorldsBroken(bitstring, bitstring, bitstring, bitstring).
+
+(* The attack objective, mechanical — expected UNREACHABLE with the    *)
+(* mechanism intact                                                    *)
+query evD: bitstring, evR: bitstring, t1: bitstring, t2: bitstring;
+  event(TwoWorldsBroken(evD, evR, t1, t2)).
+
+let AuthorityDNS(skD: skey, t: bitstring) =
+  out(c, sign((STMT, h(t)), skD)).
+
+let AuthorityRepo(skR: skey, t: bitstring) =
+  out(c, sign((STMT, h(t)), skR)).
+
+let Issuer(skI: skey, fb: bitstring) =
+  out(c, sign((POSS, fp(pk(skI))), skI));
+  out(c, sign((BYTES, fb), skI)).
+
+let Verifier(pkD: pkey, pkR: pkey) =
+  in(c, (t: bitstring, label: bitstring, evD: bitstring, evR: bitstring,
+         kX: pkey, ppf: bitstring, sg: bitstring, fb: bitstring));
+  let (=STMT, =h(t)) = checksign(evD, pkD) in
+  let (=STMT, =h(t)) = checksign(evR, pkR) in
+  let (id: bitstring, kfpr: bitstring, ss: bitstring, alg: bitstring,
+       ver: bitstring) = t in
+  if fp(kX) = kfpr then
+  let (=POSS, =fp(kX)) = checksign(ppf, kX) in
+  let (=BYTES, =fb) = checksign(sg, kX) in
+  event Accept(evD, evR, t, kX, fb);
+  out(accCh, (evD, evR, t)).
+
+let Judge =
+  in(accCh, (e1: bitstring, e2: bitstring, t1: bitstring));
+  in(accCh, (=e1, =e2, t2: bitstring));
+  if t1 = t2 then 0
+  else event TwoWorldsBroken(e1, e2, t1, t2).
+
+process
+  new skD: skey; new skR: skey; new skI: skey;
+  let tH = (issuerId, fp(pk(skI)), ssetH, algH, verH) in
+  out(c, pk(skD)); out(c, pk(skR)); out(c, pk(skI));
+  (* VARIANT: DNS channel compromised — its signing key is public *)
+  out(c, skD);
+  ( !AuthorityDNS(skD, tH)
+  | !AuthorityRepo(skR, tH)
+  | !Issuer(skI, fbH)
+  | !Verifier(pk(skD), pk(skR))
+  | !Judge )

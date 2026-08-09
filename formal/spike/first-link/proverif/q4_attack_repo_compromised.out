@@ -1,0 +1,105 @@
+Process 0 (that is, the initial process):
+{1}new skD: skey;
+{2}new skR: skey;
+{3}new skI: skey;
+{4}let tH: bitstring = (issuerId,fp(pk(skI)),ssetH,algH,verH) in
+{5}out(c, pk(skD));
+{6}out(c, pk(skR));
+{7}out(c, pk(skI));
+{8}out(c, skR);
+(
+    {9}!
+    {10}let skD_1: skey = skD in
+    {11}out(c, sign((STMT,h(tH)),skD_1))
+) | (
+    {12}!
+    {13}let skR_1: skey = skR in
+    {14}out(c, sign((STMT,h(tH)),skR_1))
+) | (
+    {15}!
+    {16}let skI_1: skey = skI in
+    {17}let fb: bitstring = fbH in
+    {18}out(c, sign((POSS,fp(pk(skI_1))),skI_1));
+    {19}out(c, sign((BYTES,fb),skI_1))
+) | (
+    {20}!
+    {21}let pkD: pkey = pk(skD) in
+    {22}let pkR: pkey = pk(skR) in
+    {23}in(c, (t: bitstring,label: bitstring,evD: bitstring,evR: bitstring,kX: pkey,ppf: bitstring,sg: bitstring,fb_1: bitstring));
+    {24}let (=STMT,=h(t)) = checksign(evD,pkD) in
+    {25}let (=STMT,=h(t)) = checksign(evR,pkR) in
+    {26}let (id: bitstring,kfpr: bitstring,ss: bitstring,alg: bitstring,ver: bitstring) = t in
+    {27}if (fp(kX) = kfpr) then
+    {28}let (=POSS,=fp(kX)) = checksign(ppf,kX) in
+    {29}let (=BYTES,=fb_1) = checksign(sg,kX) in
+    {30}event Accept(evD,evR,t,kX,fb_1);
+    {31}out(accCh, (evD,evR,t))
+) | (
+    {32}!
+    {33}in(accCh, (e1: bitstring,e2: bitstring,t1: bitstring));
+    {34}in(accCh, (=e1,=e2,t2: bitstring));
+    {35}if (t1 = t2) then
+        0
+    else
+        {36}event TwoWorldsBroken(e1,e2,t1,t2)
+)
+
+--  Process 1 (that is, process 0, with let moved downwards):
+{1}new skD: skey;
+{2}new skR: skey;
+{3}new skI: skey;
+{5}out(c, pk(skD));
+{6}out(c, pk(skR));
+{7}out(c, pk(skI));
+{8}out(c, skR);
+{4}let tH: bitstring = (issuerId,fp(pk(skI)),ssetH,algH,verH) in
+(
+    {9}!
+    {10}let skD_1: skey = skD in
+    {11}out(c, sign((STMT,h(tH)),skD_1))
+) | (
+    {12}!
+    {13}let skR_1: skey = skR in
+    {14}out(c, sign((STMT,h(tH)),skR_1))
+) | (
+    {15}!
+    {16}let skI_1: skey = skI in
+    {18}out(c, sign((POSS,fp(pk(skI_1))),skI_1));
+    {17}let fb: bitstring = fbH in
+    {19}out(c, sign((BYTES,fb),skI_1))
+) | (
+    {20}!
+    {23}in(c, (t: bitstring,label: bitstring,evD: bitstring,evR: bitstring,kX: pkey,ppf: bitstring,sg: bitstring,fb_1: bitstring));
+    {21}let pkD: pkey = pk(skD) in
+    {24}let (=STMT,=h(t)) = checksign(evD,pkD) in
+    {22}let pkR: pkey = pk(skR) in
+    {25}let (=STMT,=h(t)) = checksign(evR,pkR) in
+    {26}let (id: bitstring,kfpr: bitstring,ss: bitstring,alg: bitstring,ver: bitstring) = t in
+    {27}if (fp(kX) = kfpr) then
+    {28}let (=POSS,=fp(kX)) = checksign(ppf,kX) in
+    {29}let (=BYTES,=fb_1) = checksign(sg,kX) in
+    {30}event Accept(evD,evR,t,kX,fb_1);
+    {31}out(accCh, (evD,evR,t))
+) | (
+    {32}!
+    {33}in(accCh, (e1: bitstring,e2: bitstring,t1: bitstring));
+    {34}in(accCh, (=e1,=e2,t2: bitstring));
+    {35}if (t1 = t2) then
+        0
+    else
+        {36}event TwoWorldsBroken(e1,e2,t1,t2)
+)
+
+-- Query not event(TwoWorldsBroken(evD_1,evR_1,t1_1,t2_1)) in process 1.
+Translating the process into Horn clauses...
+Completing...
+Starting query not event(TwoWorldsBroken(evD_1,evR_1,t1_1,t2_1))
+RESULT not event(TwoWorldsBroken(evD_1,evR_1,t1_1,t2_1)) is true.
+
+--------------------------------------------------------------
+Verification summary:
+
+Query not event(TwoWorldsBroken(evD_1,evR_1,t1_1,t2_1)) is true.
+
+--------------------------------------------------------------
+

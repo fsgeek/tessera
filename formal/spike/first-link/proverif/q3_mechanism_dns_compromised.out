@@ -1,0 +1,96 @@
+Process 0 (that is, the initial process):
+{1}new skD: skey;
+{2}new skR: skey;
+{3}new skI: skey;
+{4}let tH: bitstring = (issuerId,fp(pk(skI)),ssetH,algH,verH) in
+{5}out(c, pk(skD));
+{6}out(c, pk(skR));
+{7}out(c, pk(skI));
+{8}out(c, skD);
+(
+    {9}!
+    {10}let skD_1: skey = skD in
+    {11}event AuthorityPublishedDNS(tH);
+    {12}out(c, sign((STMT,h(tH)),skD_1))
+) | (
+    {13}!
+    {14}let skR_1: skey = skR in
+    {15}event AuthorityPublishedRepo(tH);
+    {16}out(c, sign((STMT,h(tH)),skR_1))
+) | (
+    {17}!
+    {18}let skI_1: skey = skI in
+    {19}let fb: bitstring = fbH in
+    {20}event IssuerPossession(pk(skI_1));
+    {21}out(c, sign((POSS,fp(pk(skI_1))),skI_1));
+    {22}event IssuerSigned(pk(skI_1),fb);
+    {23}out(c, sign((BYTES,fb),skI_1))
+) | (
+    {24}!
+    {25}let pkD: pkey = pk(skD) in
+    {26}let pkR: pkey = pk(skR) in
+    {27}in(c, (t: bitstring,label: bitstring,evD: bitstring,evR: bitstring,kX: pkey,ppf: bitstring,sg: bitstring,fb_1: bitstring));
+    {28}let (=STMT,=h(t)) = checksign(evD,pkD) in
+    {29}let (=STMT,=h(t)) = checksign(evR,pkR) in
+    {30}let (id: bitstring,kfpr: bitstring,ss: bitstring,alg: bitstring,ver: bitstring) = t in
+    {31}if (fp(kX) = kfpr) then
+    {32}let (=POSS,=fp(kX)) = checksign(ppf,kX) in
+    {33}let (=BYTES,=fb_1) = checksign(sg,kX) in
+    {34}event Accept(evD,evR,t,kX,fb_1)
+)
+
+--  Process 1 (that is, process 0, with let moved downwards):
+{1}new skD: skey;
+{2}new skR: skey;
+{3}new skI: skey;
+{5}out(c, pk(skD));
+{6}out(c, pk(skR));
+{7}out(c, pk(skI));
+{8}out(c, skD);
+{4}let tH: bitstring = (issuerId,fp(pk(skI)),ssetH,algH,verH) in
+(
+    {9}!
+    {11}event AuthorityPublishedDNS(tH);
+    {10}let skD_1: skey = skD in
+    {12}out(c, sign((STMT,h(tH)),skD_1))
+) | (
+    {13}!
+    {15}event AuthorityPublishedRepo(tH);
+    {14}let skR_1: skey = skR in
+    {16}out(c, sign((STMT,h(tH)),skR_1))
+) | (
+    {17}!
+    {18}let skI_1: skey = skI in
+    {20}event IssuerPossession(pk(skI_1));
+    {21}out(c, sign((POSS,fp(pk(skI_1))),skI_1));
+    {19}let fb: bitstring = fbH in
+    {22}event IssuerSigned(pk(skI_1),fb);
+    {23}out(c, sign((BYTES,fb),skI_1))
+) | (
+    {24}!
+    {27}in(c, (t: bitstring,label: bitstring,evD: bitstring,evR: bitstring,kX: pkey,ppf: bitstring,sg: bitstring,fb_1: bitstring));
+    {25}let pkD: pkey = pk(skD) in
+    {28}let (=STMT,=h(t)) = checksign(evD,pkD) in
+    {26}let pkR: pkey = pk(skR) in
+    {29}let (=STMT,=h(t)) = checksign(evR,pkR) in
+    {30}let (id: bitstring,kfpr: bitstring,ss: bitstring,alg: bitstring,ver: bitstring) = t in
+    {31}if (fp(kX) = kfpr) then
+    {32}let (=POSS,=fp(kX)) = checksign(ppf,kX) in
+    {33}let (=BYTES,=fb_1) = checksign(sg,kX) in
+    {34}event Accept(evD,evR,t,kX,fb_1)
+)
+
+-- Query event(Accept(evD_1,evR_1,t_1,k,fb_2)) ==> (event(AuthorityPublishedDNS(t_1)) || event(AuthorityPublishedRepo(t_1))) && event(IssuerPossession(k)) && event(IssuerSigned(k,fb_2)) in process 1.
+Translating the process into Horn clauses...
+Completing...
+Starting query event(Accept(evD_1,evR_1,t_1,k,fb_2)) ==> (event(AuthorityPublishedDNS(t_1)) || event(AuthorityPublishedRepo(t_1))) && event(IssuerPossession(k)) && event(IssuerSigned(k,fb_2))
+goal reachable: b-event(AuthorityPublishedRepo((issuerId[],fp(pk(skI[])),ssetH[],algH[],verH[]))) && b-event(IssuerSigned(pk(skI[]),fbH[])) && b-event(IssuerPossession(pk(skI[]))) -> event(Accept(sign((STMT,h((issuerId[],fp(pk(skI[])),ssetH[],algH[],verH[]))),skD[]),sign((STMT,h((issuerId[],fp(pk(skI[])),ssetH[],algH[],verH[]))),skR[]),(issuerId[],fp(pk(skI[])),ssetH[],algH[],verH[]),pk(skI[]),fbH[]))
+RESULT event(Accept(evD_1,evR_1,t_1,k,fb_2)) ==> (event(AuthorityPublishedDNS(t_1)) || event(AuthorityPublishedRepo(t_1))) && event(IssuerPossession(k)) && event(IssuerSigned(k,fb_2)) is true.
+
+--------------------------------------------------------------
+Verification summary:
+
+Query event(Accept(evD_1,evR_1,t_1,k,fb_2)) ==> (event(AuthorityPublishedDNS(t_1)) || event(AuthorityPublishedRepo(t_1))) && event(IssuerPossession(k)) && event(IssuerSigned(k,fb_2)) is true.
+
+--------------------------------------------------------------
+

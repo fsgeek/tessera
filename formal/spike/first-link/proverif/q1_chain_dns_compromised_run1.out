@@ -1,0 +1,220 @@
+Process 0 (that is, the initial process):
+{1}new skD: skey;
+{2}new skR: skey;
+{3}new skI: skey;
+{4}let tH: bitstring = (issuerId,fp(pk(skI)),ssetH,algH,verH) in
+{5}out(c, pk(skD));
+{6}out(c, pk(skR));
+{7}out(c, pk(skI));
+{8}out(c, skD);
+(
+    {9}!
+    {10}let skD_1: skey = skD in
+    {11}event AuthorityPublishedDNS(tH);
+    {12}out(c, sign((STMT,tH),skD_1))
+) | (
+    {13}!
+    {14}let skR_1: skey = skR in
+    {15}event AuthorityPublishedRepo(tH);
+    {16}out(c, sign((STMT,tH),skR_1))
+) | (
+    {17}!
+    {18}let skI_1: skey = skI in
+    {19}let fb: bitstring = fbH in
+    {20}event IssuerPossession(pk(skI_1));
+    {21}out(c, sign((POSS,fp(pk(skI_1))),skI_1));
+    {22}event IssuerSigned(pk(skI_1),fb);
+    {23}out(c, sign((BYTES,fb),skI_1))
+) | (
+    {24}!
+    {25}let pkD: pkey = pk(skD) in
+    {26}let pkR: pkey = pk(skR) in
+    {27}in(c, (t: bitstring,label: bitstring,evD: bitstring,evR: bitstring,kX: pkey,ppf: bitstring,sg: bitstring,fb_1: bitstring));
+    {28}let (=STMT,=t) = checksign(evD,pkD) in
+    {29}let (=STMT,=t) = checksign(evR,pkR) in
+    {30}let (id: bitstring,kfpr: bitstring,ss: bitstring,alg: bitstring,ver: bitstring) = t in
+    {31}if (fp(kX) = kfpr) then
+    {32}let (=POSS,=fp(kX)) = checksign(ppf,kX) in
+    {33}let (=BYTES,=fb_1) = checksign(sg,kX) in
+    {34}event Accept(evD,evR,t,kX,fb_1)
+)
+
+--  Process 1 (that is, process 0, with let moved downwards):
+{1}new skD: skey;
+{2}new skR: skey;
+{3}new skI: skey;
+{5}out(c, pk(skD));
+{6}out(c, pk(skR));
+{7}out(c, pk(skI));
+{8}out(c, skD);
+{4}let tH: bitstring = (issuerId,fp(pk(skI)),ssetH,algH,verH) in
+(
+    {9}!
+    {11}event AuthorityPublishedDNS(tH);
+    {10}let skD_1: skey = skD in
+    {12}out(c, sign((STMT,tH),skD_1))
+) | (
+    {13}!
+    {15}event AuthorityPublishedRepo(tH);
+    {14}let skR_1: skey = skR in
+    {16}out(c, sign((STMT,tH),skR_1))
+) | (
+    {17}!
+    {18}let skI_1: skey = skI in
+    {20}event IssuerPossession(pk(skI_1));
+    {21}out(c, sign((POSS,fp(pk(skI_1))),skI_1));
+    {19}let fb: bitstring = fbH in
+    {22}event IssuerSigned(pk(skI_1),fb);
+    {23}out(c, sign((BYTES,fb),skI_1))
+) | (
+    {24}!
+    {27}in(c, (t: bitstring,label: bitstring,evD: bitstring,evR: bitstring,kX: pkey,ppf: bitstring,sg: bitstring,fb_1: bitstring));
+    {25}let pkD: pkey = pk(skD) in
+    {28}let (=STMT,=t) = checksign(evD,pkD) in
+    {26}let pkR: pkey = pk(skR) in
+    {29}let (=STMT,=t) = checksign(evR,pkR) in
+    {30}let (id: bitstring,kfpr: bitstring,ss: bitstring,alg: bitstring,ver: bitstring) = t in
+    {31}if (fp(kX) = kfpr) then
+    {32}let (=POSS,=fp(kX)) = checksign(ppf,kX) in
+    {33}let (=BYTES,=fb_1) = checksign(sg,kX) in
+    {34}event Accept(evD,evR,t,kX,fb_1)
+)
+
+-- Query event(Accept(evD_1,evR_1,t_1,k,fb_2)) ==> event(AuthorityPublishedDNS(t_1)) && event(AuthorityPublishedRepo(t_1)) && event(IssuerPossession(k)) && event(IssuerSigned(k,fb_2)) in process 1.
+Translating the process into Horn clauses...
+Completing...
+Starting query event(Accept(evD_1,evR_1,t_1,k,fb_2)) ==> event(AuthorityPublishedDNS(t_1)) && event(AuthorityPublishedRepo(t_1)) && event(IssuerPossession(k)) && event(IssuerSigned(k,fb_2))
+goal reachable: b-event(AuthorityPublishedRepo((issuerId[],fp(pk(skI[])),ssetH[],algH[],verH[]))) && b-event(IssuerSigned(pk(skI[]),fbH[])) && b-event(IssuerPossession(pk(skI[]))) -> event(Accept(sign((STMT,(issuerId[],fp(pk(skI[])),ssetH[],algH[],verH[])),skD[]),sign((STMT,(issuerId[],fp(pk(skI[])),ssetH[],algH[],verH[])),skR[]),(issuerId[],fp(pk(skI[])),ssetH[],algH[],verH[]),pk(skI[]),fbH[]))
+
+Derivation:
+
+1. The attacker initially knows fbH[].
+attacker(fbH[]).
+
+2. The event IssuerPossession(pk(skI[])) may be executed at {20}.
+The event IssuerSigned(pk(skI[]),fbH[]) may be executed at {22}.
+So the message sign((BYTES,fbH[]),skI[]) may be sent to the attacker at output {23}.
+attacker(sign((BYTES,fbH[]),skI[])).
+
+3. The event IssuerPossession(pk(skI[])) may be executed at {20}.
+So the message sign((POSS,fp(pk(skI[]))),skI[]) may be sent to the attacker at output {21}.
+attacker(sign((POSS,fp(pk(skI[]))),skI[])).
+
+4. The message pk(skI[]) may be sent to the attacker at output {7}.
+attacker(pk(skI[])).
+
+5. The event AuthorityPublishedRepo((issuerId[],fp(pk(skI[])),ssetH[],algH[],verH[])) may be executed at {15}.
+So the message sign((STMT,(issuerId[],fp(pk(skI[])),ssetH[],algH[],verH[])),skR[]) may be sent to the attacker at output {16}.
+attacker(sign((STMT,(issuerId[],fp(pk(skI[])),ssetH[],algH[],verH[])),skR[])).
+
+6. The message skD[] may be sent to the attacker at output {8}.
+attacker(skD[]).
+
+7. The attacker initially knows verH[].
+attacker(verH[]).
+
+8. The attacker initially knows algH[].
+attacker(algH[]).
+
+9. The attacker initially knows ssetH[].
+attacker(ssetH[]).
+
+10. By 4, the attacker may know pk(skI[]).
+Using the function fp the attacker may obtain fp(pk(skI[])).
+attacker(fp(pk(skI[]))).
+
+11. The attacker initially knows issuerId[].
+attacker(issuerId[]).
+
+12. By 11, the attacker may know issuerId[].
+By 10, the attacker may know fp(pk(skI[])).
+By 9, the attacker may know ssetH[].
+By 8, the attacker may know algH[].
+By 7, the attacker may know verH[].
+Using the function 5-tuple the attacker may obtain (issuerId[],fp(pk(skI[])),ssetH[],algH[],verH[]).
+attacker((issuerId[],fp(pk(skI[])),ssetH[],algH[],verH[])).
+
+13. Using the function STMT the attacker may obtain STMT.
+attacker(STMT).
+
+14. By 13, the attacker may know STMT.
+By 12, the attacker may know (issuerId[],fp(pk(skI[])),ssetH[],algH[],verH[]).
+Using the function 2-tuple the attacker may obtain (STMT,(issuerId[],fp(pk(skI[])),ssetH[],algH[],verH[])).
+attacker((STMT,(issuerId[],fp(pk(skI[])),ssetH[],algH[],verH[]))).
+
+15. By 14, the attacker may know (STMT,(issuerId[],fp(pk(skI[])),ssetH[],algH[],verH[])).
+By 6, the attacker may know skD[].
+Using the function sign the attacker may obtain sign((STMT,(issuerId[],fp(pk(skI[])),ssetH[],algH[],verH[])),skD[]).
+attacker(sign((STMT,(issuerId[],fp(pk(skI[])),ssetH[],algH[],verH[])),skD[])).
+
+16. The attacker has some term label_1.
+attacker(label_1).
+
+17. By 12, the attacker may know (issuerId[],fp(pk(skI[])),ssetH[],algH[],verH[]).
+By 16, the attacker may know label_1.
+By 15, the attacker may know sign((STMT,(issuerId[],fp(pk(skI[])),ssetH[],algH[],verH[])),skD[]).
+By 5, the attacker may know sign((STMT,(issuerId[],fp(pk(skI[])),ssetH[],algH[],verH[])),skR[]).
+By 4, the attacker may know pk(skI[]).
+By 3, the attacker may know sign((POSS,fp(pk(skI[]))),skI[]).
+By 2, the attacker may know sign((BYTES,fbH[]),skI[]).
+By 1, the attacker may know fbH[].
+Using the function 8-tuple the attacker may obtain ((issuerId[],fp(pk(skI[])),ssetH[],algH[],verH[]),label_1,sign((STMT,(issuerId[],fp(pk(skI[])),ssetH[],algH[],verH[])),skD[]),sign((STMT,(issuerId[],fp(pk(skI[])),ssetH[],algH[],verH[])),skR[]),pk(skI[]),sign((POSS,fp(pk(skI[]))),skI[]),sign((BYTES,fbH[]),skI[]),fbH[]).
+attacker(((issuerId[],fp(pk(skI[])),ssetH[],algH[],verH[]),label_1,sign((STMT,(issuerId[],fp(pk(skI[])),ssetH[],algH[],verH[])),skD[]),sign((STMT,(issuerId[],fp(pk(skI[])),ssetH[],algH[],verH[])),skR[]),pk(skI[]),sign((POSS,fp(pk(skI[]))),skI[]),sign((BYTES,fbH[]),skI[]),fbH[])).
+
+18. The message ((issuerId[],fp(pk(skI[])),ssetH[],algH[],verH[]),label_1,sign((STMT,(issuerId[],fp(pk(skI[])),ssetH[],algH[],verH[])),skD[]),sign((STMT,(issuerId[],fp(pk(skI[])),ssetH[],algH[],verH[])),skR[]),pk(skI[]),sign((POSS,fp(pk(skI[]))),skI[]),sign((BYTES,fbH[]),skI[]),fbH[]) that the attacker may have by 17 may be received at input {27}.
+So event Accept(sign((STMT,(issuerId[],fp(pk(skI[])),ssetH[],algH[],verH[])),skD[]),sign((STMT,(issuerId[],fp(pk(skI[])),ssetH[],algH[],verH[])),skR[]),(issuerId[],fp(pk(skI[])),ssetH[],algH[],verH[]),pk(skI[]),fbH[]) may be executed at {34}.
+event(Accept(sign((STMT,(issuerId[],fp(pk(skI[])),ssetH[],algH[],verH[])),skD[]),sign((STMT,(issuerId[],fp(pk(skI[])),ssetH[],algH[],verH[])),skR[]),(issuerId[],fp(pk(skI[])),ssetH[],algH[],verH[]),pk(skI[]),fbH[])).
+
+19. By 18, event(Accept(sign((STMT,(issuerId[],fp(pk(skI[])),ssetH[],algH[],verH[])),skD[]),sign((STMT,(issuerId[],fp(pk(skI[])),ssetH[],algH[],verH[])),skR[]),(issuerId[],fp(pk(skI[])),ssetH[],algH[],verH[]),pk(skI[]),fbH[])).
+The goal is reached, represented in the following fact:
+event(Accept(sign((STMT,(issuerId[],fp(pk(skI[])),ssetH[],algH[],verH[])),skD[]),sign((STMT,(issuerId[],fp(pk(skI[])),ssetH[],algH[],verH[])),skR[]),(issuerId[],fp(pk(skI[])),ssetH[],algH[],verH[]),pk(skI[]),fbH[])).
+
+
+A more detailed output of the traces is available with
+  set traceDisplay = long.
+
+new skD: skey creating skD_2 at {1}
+
+new skR: skey creating skR_2 at {2}
+
+new skI: skey creating skI_2 at {3}
+
+out(c, ~M) with ~M = pk(skD_2) at {5}
+
+out(c, ~M_1) with ~M_1 = pk(skR_2) at {6}
+
+out(c, ~M_2) with ~M_2 = pk(skI_2) at {7}
+
+out(c, ~M_3) with ~M_3 = skD_2 at {8}
+
+event IssuerPossession(pk(skI_2)) at {20} in copy a
+
+out(c, ~M_4) with ~M_4 = sign((POSS,fp(pk(skI_2))),skI_2) at {21} in copy a
+
+event IssuerSigned(pk(skI_2),fbH) at {22} in copy a
+
+out(c, ~M_5) with ~M_5 = sign((BYTES,fbH),skI_2) at {23} in copy a
+
+event IssuerPossession(pk(skI_2)) at {20} in copy a_1
+
+out(c, ~M_6) with ~M_6 = sign((POSS,fp(pk(skI_2))),skI_2) at {21} in copy a_1
+
+event AuthorityPublishedRepo((issuerId,fp(pk(skI_2)),ssetH,algH,verH)) at {15} in copy a_2
+
+out(c, ~M_7) with ~M_7 = sign((STMT,(issuerId,fp(pk(skI_2)),ssetH,algH,verH)),skR_2) at {16} in copy a_2
+
+in(c, ((issuerId,fp(~M_2),ssetH,algH,verH),a_3,sign((STMT,(issuerId,fp(~M_2),ssetH,algH,verH)),~M_3),~M_7,~M_2,~M_4,~M_5,fbH)) with fp(~M_2) = fp(pk(skI_2)), sign((STMT,(issuerId,fp(~M_2),ssetH,algH,verH)),~M_3) = sign((STMT,(issuerId,fp(pk(skI_2)),ssetH,algH,verH)),skD_2), ~M_7 = sign((STMT,(issuerId,fp(pk(skI_2)),ssetH,algH,verH)),skR_2), ~M_2 = pk(skI_2), ~M_4 = sign((POSS,fp(pk(skI_2))),skI_2), ~M_5 = sign((BYTES,fbH),skI_2) at {27} in copy a_4
+
+event Accept(sign((STMT,(issuerId,fp(pk(skI_2)),ssetH,algH,verH)),skD_2),sign((STMT,(issuerId,fp(pk(skI_2)),ssetH,algH,verH)),skR_2),(issuerId,fp(pk(skI_2)),ssetH,algH,verH),pk(skI_2),fbH) at {34} in copy a_4 (goal)
+
+The event Accept(sign((STMT,(issuerId,fp(pk(skI_2)),ssetH,algH,verH)),skD_2),sign((STMT,(issuerId,fp(pk(skI_2)),ssetH,algH,verH)),skR_2),(issuerId,fp(pk(skI_2)),ssetH,algH,verH),pk(skI_2),fbH) is executed at {34} in copy a_4.
+A trace has been found.
+RESULT event(Accept(evD_1,evR_1,t_1,k,fb_2)) ==> event(AuthorityPublishedDNS(t_1)) && event(AuthorityPublishedRepo(t_1)) && event(IssuerPossession(k)) && event(IssuerSigned(k,fb_2)) is false.
+
+--------------------------------------------------------------
+Verification summary:
+
+Query event(Accept(evD_1,evR_1,t_1,k,fb_2)) ==> event(AuthorityPublishedDNS(t_1)) && event(AuthorityPublishedRepo(t_1)) && event(IssuerPossession(k)) && event(IssuerSigned(k,fb_2)) is false.
+
+--------------------------------------------------------------
+
