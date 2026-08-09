@@ -1,8 +1,10 @@
 # First-link mechanism spike — pre-registration
 
-Status: DRAFT (clerk-drafted 2026-08-08 from A3 §A3.2.1/§A3.3 and the
-four-model panel; author signature required before any spike work
-begins — same discipline as SPIKE.md, registered before evidence)
+Status: ADOPTED (clerk-drafted 2026-08-08 from A3 §A3.2.1/§A3.3 and
+the four-model panel; author-signed at commit `8ae4720`, OTS-stamped,
+2026-08-09 — registered before evidence, per the SPIKE.md discipline.
+A prior version of this line said DRAFT after the signing commit; the
+label lagged the record and the record governs.)
 
 ## Purpose
 
@@ -16,8 +18,7 @@ left open: digest publication, authorized tuple, or another
 construction) *after* evidence, per the §A3.2.1 override. The drafted
 capstone ledger interface is the spike's scaffolding — one artifact.
 
-## Carried obligations (already registered in A3 §A3.3/§A3.9 — not
-new, restated here so this document is self-contained)
+## Carried obligations (already registered in A3 §A3.3/§A3.9 — not new, restated here so this document is self-contained)
 
 - Representative complexity first: the §A3.2 witness chain, the
   structural worst case, ablating toward the break point on failure.
@@ -29,8 +30,7 @@ new, restated here so this document is self-contained)
 - The transcription-pattern capstone remains a non-binding
   implementation candidate, subject to this spike.
 
-## Panel-added exit criteria (2026-08-08 four-model panel; sources in
-`docs/reviews/2026-08-08-A3-panel-disposition.md` §3)
+## Panel-added exit criteria (2026-08-08 four-model panel; sources in `docs/reviews/2026-08-08-A3-panel-disposition.md` §3)
 
 1. **Authority-relevance map (Kimi 3).** A registered enumeration of
    which manifest fields are authority-relevant (e.g. key
@@ -64,14 +64,16 @@ Optional (DeepSeek suggestion 1 increment): predictions may carry
 numeric probabilities; qualitative predictions satisfy the registered
 floor.
 
-## Pending author ruling, tracked here so the spike scope is honest
+## Related registered obligation (ruled 2026-08-09; a prior version of this section said "pending author ruling" — the label lagged the record)
 
 - **Kimi 2 — integrated adversarial lifecycle model** (issuance →
   wrapping → supersession → refusal → verification → tending, with a
-  standing-transplant broken companion). If adopted as a Band 0 exit
-  obligation, it is scheduled after the per-property suite, not
-  inside this spike; recorded here because its adversary and ledger
-  terms should be chosen compatibly from the start.
+  standing-transplant broken companion). REGISTERED in A3 §A3.9 at
+  `8ae4720`: mandatory, triggered on this spike's completion, green —
+  or timeout disposed by signed amendment — before the H1a
+  crypto-core freeze. Not part of this spike's Q-ladder; recorded
+  here because its adversary and ledger terms should be chosen
+  compatibly from the start.
 
 ## Artifacts this spike must leave behind
 
