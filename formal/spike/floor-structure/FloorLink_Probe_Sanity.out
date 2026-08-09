@@ -1,0 +1,672 @@
+TLC2 Version 2026.07.31.184830 (rev: 30cc360)
+Warning: Please run the Java VM, which executes TLC with a throughput optimized garbage collector, by passing the "-XX:+UseParallelGC" property.
+(Use the -nowarning option to disable this warning.)
+Running breadth-first search Model-Checking with fp 12 and seed 6605286194543705062 with 1 worker on 12 cores with 7952MB heap and 64MB offheap memory [pid: 599722] (Linux 6.8.0-136-generic amd64, Ubuntu 21.0.11 64bit, MSBDiskFPSet, DiskStateQueue).
+Parsing file /home/tony/projects/tessera/formal/spike/floor-structure/FloorLink_Probe.tla
+Semantic processing of module FloorLink_Probe
+Linting of module FloorLink_Probe
+Starting... (2026-08-09 19:30:18)
+Computing initial states...
+Error: Invariant LinkedUnsatisfiable is violated by the initial state:
+/\ accStmt = s1
+/\ accKey = k1
+/\ possKey = k1
+/\ evidences = {[stmt |-> s1, fp |-> k1]}
+
+Computed 2 initial states...
+Error: Invariant CardNeverAcceptsForeignOnly is violated by the initial state:
+/\ accStmt = s1
+/\ accKey = k1
+/\ possKey = k1
+/\ evidences = {[stmt |-> s2, fp |-> k1]}
+
+Computed 4 initial states...
+Error: Invariant CardNeverAcceptsForeignOnly is violated by the initial state:
+/\ accStmt = s1
+/\ accKey = k1
+/\ possKey = k1
+/\ evidences = {[stmt |-> s2, fp |-> k2]}
+
+Error: Invariant LinkedUnsatisfiable is violated by the initial state:
+/\ accStmt = s1
+/\ accKey = k1
+/\ possKey = k1
+/\ evidences = {[stmt |-> s1, fp |-> k1], [stmt |-> s1, fp |-> k2]}
+
+Error: Invariant LinkedUnsatisfiable is violated by the initial state:
+/\ accStmt = s1
+/\ accKey = k1
+/\ possKey = k1
+/\ evidences = {[stmt |-> s1, fp |-> k1], [stmt |-> s2, fp |-> k1]}
+
+Error: Invariant LinkedUnsatisfiable is violated by the initial state:
+/\ accStmt = s1
+/\ accKey = k1
+/\ possKey = k1
+/\ evidences = {[stmt |-> s1, fp |-> k1], [stmt |-> s2, fp |-> k2]}
+
+Computed 8 initial states...
+Error: Invariant RelevantNeverAcceptsOpenChain is violated by the initial state:
+/\ accStmt = s1
+/\ accKey = k1
+/\ possKey = k1
+/\ evidences = {[stmt |-> s1, fp |-> k2], [stmt |-> s2, fp |-> k1]}
+
+Error: Invariant CardNeverAcceptsForeignOnly is violated by the initial state:
+/\ accStmt = s1
+/\ accKey = k1
+/\ possKey = k1
+/\ evidences = {[stmt |-> s2, fp |-> k1], [stmt |-> s2, fp |-> k2]}
+
+Error: Invariant LinkedUnsatisfiable is violated by the initial state:
+/\ accStmt = s1
+/\ accKey = k1
+/\ possKey = k1
+/\ evidences = {[stmt |-> s1, fp |-> k1], [stmt |-> s1, fp |-> k2], [stmt |-> s2, fp |-> k1]}
+
+Error: Invariant LinkedUnsatisfiable is violated by the initial state:
+/\ accStmt = s1
+/\ accKey = k1
+/\ possKey = k1
+/\ evidences = {[stmt |-> s1, fp |-> k1], [stmt |-> s1, fp |-> k2], [stmt |-> s2, fp |-> k2]}
+
+Error: Invariant LinkedUnsatisfiable is violated by the initial state:
+/\ accStmt = s1
+/\ accKey = k1
+/\ possKey = k1
+/\ evidences = {[stmt |-> s1, fp |-> k1], [stmt |-> s2, fp |-> k1], [stmt |-> s2, fp |-> k2]}
+
+Error: Invariant RelevantNeverAcceptsOpenChain is violated by the initial state:
+/\ accStmt = s1
+/\ accKey = k1
+/\ possKey = k1
+/\ evidences = {[stmt |-> s1, fp |-> k2], [stmt |-> s2, fp |-> k1], [stmt |-> s2, fp |-> k2]}
+
+Error: Invariant LinkedUnsatisfiable is violated by the initial state:
+/\ accStmt = s1
+/\ accKey = k1
+/\ possKey = k1
+/\ evidences = { [stmt |-> s1, fp |-> k1],
+  [stmt |-> s1, fp |-> k2],
+  [stmt |-> s2, fp |-> k1],
+  [stmt |-> s2, fp |-> k2] }
+
+Computed 16 initial states...
+Error: Invariant RelevantNeverAcceptsForeignPossession is violated by the initial state:
+/\ accStmt = s1
+/\ accKey = k1
+/\ possKey = k2
+/\ evidences = {[stmt |-> s1, fp |-> k1]}
+
+Error: Invariant CardNeverAcceptsForeignOnly is violated by the initial state:
+/\ accStmt = s1
+/\ accKey = k1
+/\ possKey = k2
+/\ evidences = {[stmt |-> s2, fp |-> k1]}
+
+Error: Invariant CardNeverAcceptsForeignOnly is violated by the initial state:
+/\ accStmt = s1
+/\ accKey = k1
+/\ possKey = k2
+/\ evidences = {[stmt |-> s2, fp |-> k2]}
+
+Error: Invariant RelevantNeverAcceptsForeignPossession is violated by the initial state:
+/\ accStmt = s1
+/\ accKey = k1
+/\ possKey = k2
+/\ evidences = {[stmt |-> s1, fp |-> k1], [stmt |-> s1, fp |-> k2]}
+
+Error: Invariant RelevantNeverAcceptsForeignPossession is violated by the initial state:
+/\ accStmt = s1
+/\ accKey = k1
+/\ possKey = k2
+/\ evidences = {[stmt |-> s1, fp |-> k1], [stmt |-> s2, fp |-> k1]}
+
+Error: Invariant RelevantNeverAcceptsForeignPossession is violated by the initial state:
+/\ accStmt = s1
+/\ accKey = k1
+/\ possKey = k2
+/\ evidences = {[stmt |-> s1, fp |-> k1], [stmt |-> s2, fp |-> k2]}
+
+Error: Invariant RelevantNeverAcceptsOpenChain is violated by the initial state:
+/\ accStmt = s1
+/\ accKey = k1
+/\ possKey = k2
+/\ evidences = {[stmt |-> s1, fp |-> k2], [stmt |-> s2, fp |-> k1]}
+
+Error: Invariant CardNeverAcceptsForeignOnly is violated by the initial state:
+/\ accStmt = s1
+/\ accKey = k1
+/\ possKey = k2
+/\ evidences = {[stmt |-> s2, fp |-> k1], [stmt |-> s2, fp |-> k2]}
+
+Error: Invariant RelevantNeverAcceptsForeignPossession is violated by the initial state:
+/\ accStmt = s1
+/\ accKey = k1
+/\ possKey = k2
+/\ evidences = {[stmt |-> s1, fp |-> k1], [stmt |-> s1, fp |-> k2], [stmt |-> s2, fp |-> k1]}
+
+Error: Invariant RelevantNeverAcceptsForeignPossession is violated by the initial state:
+/\ accStmt = s1
+/\ accKey = k1
+/\ possKey = k2
+/\ evidences = {[stmt |-> s1, fp |-> k1], [stmt |-> s1, fp |-> k2], [stmt |-> s2, fp |-> k2]}
+
+Error: Invariant RelevantNeverAcceptsForeignPossession is violated by the initial state:
+/\ accStmt = s1
+/\ accKey = k1
+/\ possKey = k2
+/\ evidences = {[stmt |-> s1, fp |-> k1], [stmt |-> s2, fp |-> k1], [stmt |-> s2, fp |-> k2]}
+
+Error: Invariant RelevantNeverAcceptsOpenChain is violated by the initial state:
+/\ accStmt = s1
+/\ accKey = k1
+/\ possKey = k2
+/\ evidences = {[stmt |-> s1, fp |-> k2], [stmt |-> s2, fp |-> k1], [stmt |-> s2, fp |-> k2]}
+
+Error: Invariant RelevantNeverAcceptsForeignPossession is violated by the initial state:
+/\ accStmt = s1
+/\ accKey = k1
+/\ possKey = k2
+/\ evidences = { [stmt |-> s1, fp |-> k1],
+  [stmt |-> s1, fp |-> k2],
+  [stmt |-> s2, fp |-> k1],
+  [stmt |-> s2, fp |-> k2] }
+
+Computed 32 initial states...
+Error: Invariant RelevantNeverAcceptsForeignPossession is violated by the initial state:
+/\ accStmt = s1
+/\ accKey = k2
+/\ possKey = k1
+/\ evidences = {[stmt |-> s1, fp |-> k2]}
+
+Error: Invariant CardNeverAcceptsForeignOnly is violated by the initial state:
+/\ accStmt = s1
+/\ accKey = k2
+/\ possKey = k1
+/\ evidences = {[stmt |-> s2, fp |-> k1]}
+
+Error: Invariant CardNeverAcceptsForeignOnly is violated by the initial state:
+/\ accStmt = s1
+/\ accKey = k2
+/\ possKey = k1
+/\ evidences = {[stmt |-> s2, fp |-> k2]}
+
+Error: Invariant RelevantNeverAcceptsForeignPossession is violated by the initial state:
+/\ accStmt = s1
+/\ accKey = k2
+/\ possKey = k1
+/\ evidences = {[stmt |-> s1, fp |-> k1], [stmt |-> s1, fp |-> k2]}
+
+Error: Invariant RelevantNeverAcceptsOpenChain is violated by the initial state:
+/\ accStmt = s1
+/\ accKey = k2
+/\ possKey = k1
+/\ evidences = {[stmt |-> s1, fp |-> k1], [stmt |-> s2, fp |-> k2]}
+
+Error: Invariant RelevantNeverAcceptsForeignPossession is violated by the initial state:
+/\ accStmt = s1
+/\ accKey = k2
+/\ possKey = k1
+/\ evidences = {[stmt |-> s1, fp |-> k2], [stmt |-> s2, fp |-> k1]}
+
+Error: Invariant RelevantNeverAcceptsForeignPossession is violated by the initial state:
+/\ accStmt = s1
+/\ accKey = k2
+/\ possKey = k1
+/\ evidences = {[stmt |-> s1, fp |-> k2], [stmt |-> s2, fp |-> k2]}
+
+Error: Invariant CardNeverAcceptsForeignOnly is violated by the initial state:
+/\ accStmt = s1
+/\ accKey = k2
+/\ possKey = k1
+/\ evidences = {[stmt |-> s2, fp |-> k1], [stmt |-> s2, fp |-> k2]}
+
+Error: Invariant RelevantNeverAcceptsForeignPossession is violated by the initial state:
+/\ accStmt = s1
+/\ accKey = k2
+/\ possKey = k1
+/\ evidences = {[stmt |-> s1, fp |-> k1], [stmt |-> s1, fp |-> k2], [stmt |-> s2, fp |-> k1]}
+
+Error: Invariant RelevantNeverAcceptsForeignPossession is violated by the initial state:
+/\ accStmt = s1
+/\ accKey = k2
+/\ possKey = k1
+/\ evidences = {[stmt |-> s1, fp |-> k1], [stmt |-> s1, fp |-> k2], [stmt |-> s2, fp |-> k2]}
+
+Error: Invariant RelevantNeverAcceptsOpenChain is violated by the initial state:
+/\ accStmt = s1
+/\ accKey = k2
+/\ possKey = k1
+/\ evidences = {[stmt |-> s1, fp |-> k1], [stmt |-> s2, fp |-> k1], [stmt |-> s2, fp |-> k2]}
+
+Error: Invariant RelevantNeverAcceptsForeignPossession is violated by the initial state:
+/\ accStmt = s1
+/\ accKey = k2
+/\ possKey = k1
+/\ evidences = {[stmt |-> s1, fp |-> k2], [stmt |-> s2, fp |-> k1], [stmt |-> s2, fp |-> k2]}
+
+Error: Invariant RelevantNeverAcceptsForeignPossession is violated by the initial state:
+/\ accStmt = s1
+/\ accKey = k2
+/\ possKey = k1
+/\ evidences = { [stmt |-> s1, fp |-> k1],
+  [stmt |-> s1, fp |-> k2],
+  [stmt |-> s2, fp |-> k1],
+  [stmt |-> s2, fp |-> k2] }
+
+Error: Invariant LinkedUnsatisfiable is violated by the initial state:
+/\ accStmt = s1
+/\ accKey = k2
+/\ possKey = k2
+/\ evidences = {[stmt |-> s1, fp |-> k2]}
+
+Error: Invariant CardNeverAcceptsForeignOnly is violated by the initial state:
+/\ accStmt = s1
+/\ accKey = k2
+/\ possKey = k2
+/\ evidences = {[stmt |-> s2, fp |-> k1]}
+
+Error: Invariant CardNeverAcceptsForeignOnly is violated by the initial state:
+/\ accStmt = s1
+/\ accKey = k2
+/\ possKey = k2
+/\ evidences = {[stmt |-> s2, fp |-> k2]}
+
+Error: Invariant LinkedUnsatisfiable is violated by the initial state:
+/\ accStmt = s1
+/\ accKey = k2
+/\ possKey = k2
+/\ evidences = {[stmt |-> s1, fp |-> k1], [stmt |-> s1, fp |-> k2]}
+
+Error: Invariant RelevantNeverAcceptsOpenChain is violated by the initial state:
+/\ accStmt = s1
+/\ accKey = k2
+/\ possKey = k2
+/\ evidences = {[stmt |-> s1, fp |-> k1], [stmt |-> s2, fp |-> k2]}
+
+Error: Invariant LinkedUnsatisfiable is violated by the initial state:
+/\ accStmt = s1
+/\ accKey = k2
+/\ possKey = k2
+/\ evidences = {[stmt |-> s1, fp |-> k2], [stmt |-> s2, fp |-> k1]}
+
+Error: Invariant LinkedUnsatisfiable is violated by the initial state:
+/\ accStmt = s1
+/\ accKey = k2
+/\ possKey = k2
+/\ evidences = {[stmt |-> s1, fp |-> k2], [stmt |-> s2, fp |-> k2]}
+
+Error: Invariant CardNeverAcceptsForeignOnly is violated by the initial state:
+/\ accStmt = s1
+/\ accKey = k2
+/\ possKey = k2
+/\ evidences = {[stmt |-> s2, fp |-> k1], [stmt |-> s2, fp |-> k2]}
+
+Error: Invariant LinkedUnsatisfiable is violated by the initial state:
+/\ accStmt = s1
+/\ accKey = k2
+/\ possKey = k2
+/\ evidences = {[stmt |-> s1, fp |-> k1], [stmt |-> s1, fp |-> k2], [stmt |-> s2, fp |-> k1]}
+
+Error: Invariant LinkedUnsatisfiable is violated by the initial state:
+/\ accStmt = s1
+/\ accKey = k2
+/\ possKey = k2
+/\ evidences = {[stmt |-> s1, fp |-> k1], [stmt |-> s1, fp |-> k2], [stmt |-> s2, fp |-> k2]}
+
+Error: Invariant RelevantNeverAcceptsOpenChain is violated by the initial state:
+/\ accStmt = s1
+/\ accKey = k2
+/\ possKey = k2
+/\ evidences = {[stmt |-> s1, fp |-> k1], [stmt |-> s2, fp |-> k1], [stmt |-> s2, fp |-> k2]}
+
+Error: Invariant LinkedUnsatisfiable is violated by the initial state:
+/\ accStmt = s1
+/\ accKey = k2
+/\ possKey = k2
+/\ evidences = {[stmt |-> s1, fp |-> k2], [stmt |-> s2, fp |-> k1], [stmt |-> s2, fp |-> k2]}
+
+Error: Invariant LinkedUnsatisfiable is violated by the initial state:
+/\ accStmt = s1
+/\ accKey = k2
+/\ possKey = k2
+/\ evidences = { [stmt |-> s1, fp |-> k1],
+  [stmt |-> s1, fp |-> k2],
+  [stmt |-> s2, fp |-> k1],
+  [stmt |-> s2, fp |-> k2] }
+
+Computed 64 initial states...
+Error: Invariant CardNeverAcceptsForeignOnly is violated by the initial state:
+/\ accStmt = s2
+/\ accKey = k1
+/\ possKey = k1
+/\ evidences = {[stmt |-> s1, fp |-> k1]}
+
+Error: Invariant CardNeverAcceptsForeignOnly is violated by the initial state:
+/\ accStmt = s2
+/\ accKey = k1
+/\ possKey = k1
+/\ evidences = {[stmt |-> s1, fp |-> k2]}
+
+Error: Invariant LinkedUnsatisfiable is violated by the initial state:
+/\ accStmt = s2
+/\ accKey = k1
+/\ possKey = k1
+/\ evidences = {[stmt |-> s2, fp |-> k1]}
+
+Error: Invariant CardNeverAcceptsForeignOnly is violated by the initial state:
+/\ accStmt = s2
+/\ accKey = k1
+/\ possKey = k1
+/\ evidences = {[stmt |-> s1, fp |-> k1], [stmt |-> s1, fp |-> k2]}
+
+Error: Invariant LinkedUnsatisfiable is violated by the initial state:
+/\ accStmt = s2
+/\ accKey = k1
+/\ possKey = k1
+/\ evidences = {[stmt |-> s1, fp |-> k1], [stmt |-> s2, fp |-> k1]}
+
+Error: Invariant RelevantNeverAcceptsOpenChain is violated by the initial state:
+/\ accStmt = s2
+/\ accKey = k1
+/\ possKey = k1
+/\ evidences = {[stmt |-> s1, fp |-> k1], [stmt |-> s2, fp |-> k2]}
+
+Error: Invariant LinkedUnsatisfiable is violated by the initial state:
+/\ accStmt = s2
+/\ accKey = k1
+/\ possKey = k1
+/\ evidences = {[stmt |-> s1, fp |-> k2], [stmt |-> s2, fp |-> k1]}
+
+Error: Invariant LinkedUnsatisfiable is violated by the initial state:
+/\ accStmt = s2
+/\ accKey = k1
+/\ possKey = k1
+/\ evidences = {[stmt |-> s2, fp |-> k1], [stmt |-> s2, fp |-> k2]}
+
+Error: Invariant LinkedUnsatisfiable is violated by the initial state:
+/\ accStmt = s2
+/\ accKey = k1
+/\ possKey = k1
+/\ evidences = {[stmt |-> s1, fp |-> k1], [stmt |-> s1, fp |-> k2], [stmt |-> s2, fp |-> k1]}
+
+Error: Invariant RelevantNeverAcceptsOpenChain is violated by the initial state:
+/\ accStmt = s2
+/\ accKey = k1
+/\ possKey = k1
+/\ evidences = {[stmt |-> s1, fp |-> k1], [stmt |-> s1, fp |-> k2], [stmt |-> s2, fp |-> k2]}
+
+Error: Invariant LinkedUnsatisfiable is violated by the initial state:
+/\ accStmt = s2
+/\ accKey = k1
+/\ possKey = k1
+/\ evidences = {[stmt |-> s1, fp |-> k1], [stmt |-> s2, fp |-> k1], [stmt |-> s2, fp |-> k2]}
+
+Error: Invariant LinkedUnsatisfiable is violated by the initial state:
+/\ accStmt = s2
+/\ accKey = k1
+/\ possKey = k1
+/\ evidences = {[stmt |-> s1, fp |-> k2], [stmt |-> s2, fp |-> k1], [stmt |-> s2, fp |-> k2]}
+
+Error: Invariant LinkedUnsatisfiable is violated by the initial state:
+/\ accStmt = s2
+/\ accKey = k1
+/\ possKey = k1
+/\ evidences = { [stmt |-> s1, fp |-> k1],
+  [stmt |-> s1, fp |-> k2],
+  [stmt |-> s2, fp |-> k1],
+  [stmt |-> s2, fp |-> k2] }
+
+Error: Invariant CardNeverAcceptsForeignOnly is violated by the initial state:
+/\ accStmt = s2
+/\ accKey = k1
+/\ possKey = k2
+/\ evidences = {[stmt |-> s1, fp |-> k1]}
+
+Error: Invariant CardNeverAcceptsForeignOnly is violated by the initial state:
+/\ accStmt = s2
+/\ accKey = k1
+/\ possKey = k2
+/\ evidences = {[stmt |-> s1, fp |-> k2]}
+
+Error: Invariant RelevantNeverAcceptsForeignPossession is violated by the initial state:
+/\ accStmt = s2
+/\ accKey = k1
+/\ possKey = k2
+/\ evidences = {[stmt |-> s2, fp |-> k1]}
+
+Error: Invariant CardNeverAcceptsForeignOnly is violated by the initial state:
+/\ accStmt = s2
+/\ accKey = k1
+/\ possKey = k2
+/\ evidences = {[stmt |-> s1, fp |-> k1], [stmt |-> s1, fp |-> k2]}
+
+Error: Invariant RelevantNeverAcceptsForeignPossession is violated by the initial state:
+/\ accStmt = s2
+/\ accKey = k1
+/\ possKey = k2
+/\ evidences = {[stmt |-> s1, fp |-> k1], [stmt |-> s2, fp |-> k1]}
+
+Error: Invariant RelevantNeverAcceptsOpenChain is violated by the initial state:
+/\ accStmt = s2
+/\ accKey = k1
+/\ possKey = k2
+/\ evidences = {[stmt |-> s1, fp |-> k1], [stmt |-> s2, fp |-> k2]}
+
+Error: Invariant RelevantNeverAcceptsForeignPossession is violated by the initial state:
+/\ accStmt = s2
+/\ accKey = k1
+/\ possKey = k2
+/\ evidences = {[stmt |-> s1, fp |-> k2], [stmt |-> s2, fp |-> k1]}
+
+Error: Invariant RelevantNeverAcceptsForeignPossession is violated by the initial state:
+/\ accStmt = s2
+/\ accKey = k1
+/\ possKey = k2
+/\ evidences = {[stmt |-> s2, fp |-> k1], [stmt |-> s2, fp |-> k2]}
+
+Error: Invariant RelevantNeverAcceptsForeignPossession is violated by the initial state:
+/\ accStmt = s2
+/\ accKey = k1
+/\ possKey = k2
+/\ evidences = {[stmt |-> s1, fp |-> k1], [stmt |-> s1, fp |-> k2], [stmt |-> s2, fp |-> k1]}
+
+Error: Invariant RelevantNeverAcceptsOpenChain is violated by the initial state:
+/\ accStmt = s2
+/\ accKey = k1
+/\ possKey = k2
+/\ evidences = {[stmt |-> s1, fp |-> k1], [stmt |-> s1, fp |-> k2], [stmt |-> s2, fp |-> k2]}
+
+Error: Invariant RelevantNeverAcceptsForeignPossession is violated by the initial state:
+/\ accStmt = s2
+/\ accKey = k1
+/\ possKey = k2
+/\ evidences = {[stmt |-> s1, fp |-> k1], [stmt |-> s2, fp |-> k1], [stmt |-> s2, fp |-> k2]}
+
+Error: Invariant RelevantNeverAcceptsForeignPossession is violated by the initial state:
+/\ accStmt = s2
+/\ accKey = k1
+/\ possKey = k2
+/\ evidences = {[stmt |-> s1, fp |-> k2], [stmt |-> s2, fp |-> k1], [stmt |-> s2, fp |-> k2]}
+
+Error: Invariant RelevantNeverAcceptsForeignPossession is violated by the initial state:
+/\ accStmt = s2
+/\ accKey = k1
+/\ possKey = k2
+/\ evidences = { [stmt |-> s1, fp |-> k1],
+  [stmt |-> s1, fp |-> k2],
+  [stmt |-> s2, fp |-> k1],
+  [stmt |-> s2, fp |-> k2] }
+
+Error: Invariant CardNeverAcceptsForeignOnly is violated by the initial state:
+/\ accStmt = s2
+/\ accKey = k2
+/\ possKey = k1
+/\ evidences = {[stmt |-> s1, fp |-> k1]}
+
+Error: Invariant CardNeverAcceptsForeignOnly is violated by the initial state:
+/\ accStmt = s2
+/\ accKey = k2
+/\ possKey = k1
+/\ evidences = {[stmt |-> s1, fp |-> k2]}
+
+Error: Invariant RelevantNeverAcceptsForeignPossession is violated by the initial state:
+/\ accStmt = s2
+/\ accKey = k2
+/\ possKey = k1
+/\ evidences = {[stmt |-> s2, fp |-> k2]}
+
+Error: Invariant CardNeverAcceptsForeignOnly is violated by the initial state:
+/\ accStmt = s2
+/\ accKey = k2
+/\ possKey = k1
+/\ evidences = {[stmt |-> s1, fp |-> k1], [stmt |-> s1, fp |-> k2]}
+
+Error: Invariant RelevantNeverAcceptsForeignPossession is violated by the initial state:
+/\ accStmt = s2
+/\ accKey = k2
+/\ possKey = k1
+/\ evidences = {[stmt |-> s1, fp |-> k1], [stmt |-> s2, fp |-> k2]}
+
+Error: Invariant RelevantNeverAcceptsOpenChain is violated by the initial state:
+/\ accStmt = s2
+/\ accKey = k2
+/\ possKey = k1
+/\ evidences = {[stmt |-> s1, fp |-> k2], [stmt |-> s2, fp |-> k1]}
+
+Error: Invariant RelevantNeverAcceptsForeignPossession is violated by the initial state:
+/\ accStmt = s2
+/\ accKey = k2
+/\ possKey = k1
+/\ evidences = {[stmt |-> s1, fp |-> k2], [stmt |-> s2, fp |-> k2]}
+
+Error: Invariant RelevantNeverAcceptsForeignPossession is violated by the initial state:
+/\ accStmt = s2
+/\ accKey = k2
+/\ possKey = k1
+/\ evidences = {[stmt |-> s2, fp |-> k1], [stmt |-> s2, fp |-> k2]}
+
+Error: Invariant RelevantNeverAcceptsOpenChain is violated by the initial state:
+/\ accStmt = s2
+/\ accKey = k2
+/\ possKey = k1
+/\ evidences = {[stmt |-> s1, fp |-> k1], [stmt |-> s1, fp |-> k2], [stmt |-> s2, fp |-> k1]}
+
+Error: Invariant RelevantNeverAcceptsForeignPossession is violated by the initial state:
+/\ accStmt = s2
+/\ accKey = k2
+/\ possKey = k1
+/\ evidences = {[stmt |-> s1, fp |-> k1], [stmt |-> s1, fp |-> k2], [stmt |-> s2, fp |-> k2]}
+
+Error: Invariant RelevantNeverAcceptsForeignPossession is violated by the initial state:
+/\ accStmt = s2
+/\ accKey = k2
+/\ possKey = k1
+/\ evidences = {[stmt |-> s1, fp |-> k1], [stmt |-> s2, fp |-> k1], [stmt |-> s2, fp |-> k2]}
+
+Error: Invariant RelevantNeverAcceptsForeignPossession is violated by the initial state:
+/\ accStmt = s2
+/\ accKey = k2
+/\ possKey = k1
+/\ evidences = {[stmt |-> s1, fp |-> k2], [stmt |-> s2, fp |-> k1], [stmt |-> s2, fp |-> k2]}
+
+Error: Invariant RelevantNeverAcceptsForeignPossession is violated by the initial state:
+/\ accStmt = s2
+/\ accKey = k2
+/\ possKey = k1
+/\ evidences = { [stmt |-> s1, fp |-> k1],
+  [stmt |-> s1, fp |-> k2],
+  [stmt |-> s2, fp |-> k1],
+  [stmt |-> s2, fp |-> k2] }
+
+Error: Invariant CardNeverAcceptsForeignOnly is violated by the initial state:
+/\ accStmt = s2
+/\ accKey = k2
+/\ possKey = k2
+/\ evidences = {[stmt |-> s1, fp |-> k1]}
+
+Error: Invariant CardNeverAcceptsForeignOnly is violated by the initial state:
+/\ accStmt = s2
+/\ accKey = k2
+/\ possKey = k2
+/\ evidences = {[stmt |-> s1, fp |-> k2]}
+
+Error: Invariant LinkedUnsatisfiable is violated by the initial state:
+/\ accStmt = s2
+/\ accKey = k2
+/\ possKey = k2
+/\ evidences = {[stmt |-> s2, fp |-> k2]}
+
+Error: Invariant CardNeverAcceptsForeignOnly is violated by the initial state:
+/\ accStmt = s2
+/\ accKey = k2
+/\ possKey = k2
+/\ evidences = {[stmt |-> s1, fp |-> k1], [stmt |-> s1, fp |-> k2]}
+
+Error: Invariant LinkedUnsatisfiable is violated by the initial state:
+/\ accStmt = s2
+/\ accKey = k2
+/\ possKey = k2
+/\ evidences = {[stmt |-> s1, fp |-> k1], [stmt |-> s2, fp |-> k2]}
+
+Error: Invariant RelevantNeverAcceptsOpenChain is violated by the initial state:
+/\ accStmt = s2
+/\ accKey = k2
+/\ possKey = k2
+/\ evidences = {[stmt |-> s1, fp |-> k2], [stmt |-> s2, fp |-> k1]}
+
+Error: Invariant LinkedUnsatisfiable is violated by the initial state:
+/\ accStmt = s2
+/\ accKey = k2
+/\ possKey = k2
+/\ evidences = {[stmt |-> s1, fp |-> k2], [stmt |-> s2, fp |-> k2]}
+
+Error: Invariant LinkedUnsatisfiable is violated by the initial state:
+/\ accStmt = s2
+/\ accKey = k2
+/\ possKey = k2
+/\ evidences = {[stmt |-> s2, fp |-> k1], [stmt |-> s2, fp |-> k2]}
+
+Error: Invariant RelevantNeverAcceptsOpenChain is violated by the initial state:
+/\ accStmt = s2
+/\ accKey = k2
+/\ possKey = k2
+/\ evidences = {[stmt |-> s1, fp |-> k1], [stmt |-> s1, fp |-> k2], [stmt |-> s2, fp |-> k1]}
+
+Error: Invariant LinkedUnsatisfiable is violated by the initial state:
+/\ accStmt = s2
+/\ accKey = k2
+/\ possKey = k2
+/\ evidences = {[stmt |-> s1, fp |-> k1], [stmt |-> s1, fp |-> k2], [stmt |-> s2, fp |-> k2]}
+
+Error: Invariant LinkedUnsatisfiable is violated by the initial state:
+/\ accStmt = s2
+/\ accKey = k2
+/\ possKey = k2
+/\ evidences = {[stmt |-> s1, fp |-> k1], [stmt |-> s2, fp |-> k1], [stmt |-> s2, fp |-> k2]}
+
+Error: Invariant LinkedUnsatisfiable is violated by the initial state:
+/\ accStmt = s2
+/\ accKey = k2
+/\ possKey = k2
+/\ evidences = {[stmt |-> s1, fp |-> k2], [stmt |-> s2, fp |-> k1], [stmt |-> s2, fp |-> k2]}
+
+Error: Invariant LinkedUnsatisfiable is violated by the initial state:
+/\ accStmt = s2
+/\ accKey = k2
+/\ possKey = k2
+/\ evidences = { [stmt |-> s1, fp |-> k1],
+  [stmt |-> s1, fp |-> k2],
+  [stmt |-> s2, fp |-> k1],
+  [stmt |-> s2, fp |-> k2] }
+
+Finished computing initial states: 128 distinct states generated at 2026-08-09 19:30:18.
+Model checking completed. No error has been found.
+  Estimates of the probability that TLC did not check all reachable states
+  because two distinct states had the same fingerprint:
+  calculated (optimistic):  val = 8.9E-16
+256 states generated, 128 distinct states found, 0 states left on queue.
+The depth of the complete state graph search is 1.
+The average outdegree of the complete state graph is 0 (minimum is 0, the maximum 0 and the 95th percentile is 0).
+Finished in 00s at (2026-08-09 19:30:18)
