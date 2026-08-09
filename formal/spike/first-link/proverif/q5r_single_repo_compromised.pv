@@ -1,0 +1,85 @@
+(* ==================================================================== *)
+(* Q5a — single-evidence chain correspondence, REPO-ONLY acceptance,     *)
+(* accepted channel COMPROMISED (skRepo leaked). (PREDICTIONS-ADDENDUM-1.md, ratified;       *)
+(* degraded-mode VALID_DEGRADED path: the verifier consumes repository         *)
+(* evidence alone; the DNS publisher still runs, unused.)        *)
+(* Mechanism intact: both channels' evidence formats bind h(t).         *)
+(*                                                                      *)
+(* Registered prediction: holds (p~0.7); violation, trace inspection    *)
+(* required (p~0.2); timeout (p~0.1). Timebox 15 min.                   *)
+(* Single-evidence conclusion: the accepted channel published this      *)
+(* exact tuple — no disjunction available; the second channel was       *)
+(* waived, which is the point.                                          *)
+(* Run: proverif q5r_single_repo_compromised.pv                                *)
+(* ==================================================================== *)
+
+free c: channel.
+
+type skey.
+type pkey.
+fun pk(skey): pkey.
+
+fun sign(bitstring, skey): bitstring.
+reduc forall m: bitstring, k: skey; checksign(sign(m, k), pk(k)) = m.
+fun fp(pkey): bitstring.
+fun h(bitstring): bitstring.
+
+const STMT: bitstring.
+const POSS: bitstring.
+const BYTES: bitstring.
+
+free issuerId: bitstring.
+free ssetH: bitstring.
+free algH: bitstring.
+free verH: bitstring.
+free fbH: bitstring.
+
+event AuthorityPublishedDNS(bitstring).
+event AuthorityPublishedRepo(bitstring).
+event IssuerPossession(pkey).
+event IssuerSigned(pkey, bitstring).
+event AcceptS(bitstring, bitstring, pkey, bitstring).
+  (* accepted single evidence object, tuple, key, bytes *)
+
+query t: bitstring, k: pkey, fb: bitstring, ev: bitstring;
+  event(AcceptS(ev, t, k, fb)) ==>
+    ( event(AuthorityPublishedRepo(t))
+   && event(IssuerPossession(k))
+   && event(IssuerSigned(k, fb)) ).
+
+let AuthorityDNS(skD: skey, t: bitstring) =
+  event AuthorityPublishedDNS(t);
+  out(c, sign((STMT, h(t)), skD)).
+
+let AuthorityRepo(skR: skey, t: bitstring) =
+  event AuthorityPublishedRepo(t);
+  out(c, sign((STMT, h(t)), skR)).
+
+let Issuer(skI: skey, fb: bitstring) =
+  event IssuerPossession(pk(skI));
+  out(c, sign((POSS, fp(pk(skI))), skI));
+  event IssuerSigned(pk(skI), fb);
+  out(c, sign((BYTES, fb), skI)).
+
+let VerifierS(pkA: pkey) =
+  in(c, (t: bitstring, label: bitstring, ev: bitstring,
+         kX: pkey, ppf: bitstring, sg: bitstring, fb: bitstring));
+  (* degraded first link: the SOLE accepted evidence binds h(t) *)
+  let (=STMT, =h(t)) = checksign(ev, pkA) in
+  let (id: bitstring, kfpr: bitstring, ss: bitstring, alg: bitstring,
+       ver: bitstring) = t in
+  if fp(kX) = kfpr then
+  let (=POSS, =fp(kX)) = checksign(ppf, kX) in
+  let (=BYTES, =fb) = checksign(sg, kX) in
+  event AcceptS(ev, t, kX, fb);
+  0.
+
+process
+  new skD: skey; new skR: skey; new skI: skey;
+  let tH = (issuerId, fp(pk(skI)), ssetH, algH, verH) in
+  out(c, pk(skD)); out(c, pk(skR)); out(c, pk(skI));
+  out(c, skR); (* VARIANT: accepted channel compromised *)
+  ( !AuthorityDNS(skD, tH)
+  | !AuthorityRepo(skR, tH)
+  | !Issuer(skI, fbH)
+  | !VerifierS(pk(skR)) )

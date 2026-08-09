@@ -1,0 +1,117 @@
+(* ==================================================================== *)
+(* Q8 — ASYMMETRIC BROKEN COMPANION, mirror of Q7: repository evidence  *)
+(* weakly bound (issuer identity only), DNS evidence strongly bound     *)
+(* (h(t)). (PREDICTIONS-ADDENDUM-1.md, ratified.) DELIBERATELY BROKEN   *)
+(* on the repository side. Both acceptance modes, both judges:          *)
+(*   degraded verifier (repository evidence alone) -> single judge      *)
+(*   strict verifier (full pair)                   -> pair judge        *)
+(* Channels honest: weak binding alone is the attack surface.           *)
+(*                                                                      *)
+(* Registered prediction — the CONTRAST, both halves:                   *)
+(*   TwoWorldsSingle REACHABLE   (p~0.8)                                *)
+(*   TwoWorldsPair   UNREACHABLE (p~0.75; the strong DNS object pins    *)
+(*     the digest, hence the tuple)                                     *)
+(* Timebox 15 min. Run: proverif q8_asym_repoweak.pv                    *)
+(* ==================================================================== *)
+
+free c: channel.
+free accS: channel [private].
+free accP: channel [private].
+
+type skey.
+type pkey.
+fun pk(skey): pkey.
+
+fun sign(bitstring, skey): bitstring.
+reduc forall m: bitstring, k: skey; checksign(sign(m, k), pk(k)) = m.
+fun fp(pkey): bitstring.
+fun h(bitstring): bitstring.
+
+const STMT: bitstring.
+const POSS: bitstring.
+const BYTES: bitstring.
+
+free issuerId: bitstring.
+free ssetH: bitstring.
+free algH: bitstring.
+free verH: bitstring.
+free fbH: bitstring.
+
+event AcceptS(bitstring, bitstring, pkey, bitstring).
+event AcceptP(bitstring, bitstring, bitstring, pkey, bitstring).
+event TwoWorldsSingle(bitstring, bitstring, bitstring).
+event TwoWorldsPair(bitstring, bitstring, bitstring, bitstring).
+
+(* Contrast half 1 — expected REACHABLE (weak repo binding broken) *)
+query ev: bitstring, t1: bitstring, t2: bitstring;
+  event(TwoWorldsSingle(ev, t1, t2)).
+
+(* Contrast half 2 — expected UNREACHABLE (strong DNS object pins t) *)
+query evD: bitstring, evR: bitstring, t1: bitstring, t2: bitstring;
+  event(TwoWorldsPair(evD, evR, t1, t2)).
+
+(* INTACT: DNS binds the exact tuple digest *)
+let AuthorityDNS(skD: skey, t: bitstring) =
+  out(c, sign((STMT, h(t)), skD)).
+
+(* BROKEN: repository binds issuer identity only *)
+let AuthorityRepo(skR: skey, t: bitstring) =
+  let (id: bitstring, kfpr: bitstring, ss: bitstring, alg: bitstring,
+       ver: bitstring) = t in
+  out(c, sign((STMT, id), skR)).
+
+let Issuer(skI: skey, fb: bitstring) =
+  out(c, sign((POSS, fp(pk(skI))), skI));
+  out(c, sign((BYTES, fb), skI)).
+
+(* Degraded mode: repository evidence alone, at its deployed (weak)    *)
+(* binding                                                              *)
+let VerifierS(pkR: pkey) =
+  in(c, (t: bitstring, label: bitstring, ev: bitstring,
+         kX: pkey, ppf: bitstring, sg: bitstring, fb: bitstring));
+  let (id: bitstring, kfpr: bitstring, ss: bitstring, alg: bitstring,
+       ver: bitstring) = t in
+  let (=STMT, =id) = checksign(ev, pkR) in
+  if fp(kX) = kfpr then
+  let (=POSS, =fp(kX)) = checksign(ppf, kX) in
+  let (=BYTES, =fb) = checksign(sg, kX) in
+  event AcceptS(ev, t, kX, fb);
+  out(accS, (ev, t)).
+
+(* Strict mode: both evidences at their deployed bindings *)
+let VerifierP(pkD: pkey, pkR: pkey) =
+  in(c, (t: bitstring, label: bitstring, evD: bitstring, evR: bitstring,
+         kX: pkey, ppf: bitstring, sg: bitstring, fb: bitstring));
+  let (id: bitstring, kfpr: bitstring, ss: bitstring, alg: bitstring,
+       ver: bitstring) = t in
+  let (=STMT, =h(t)) = checksign(evD, pkD) in
+  let (=STMT, =id) = checksign(evR, pkR) in
+  if fp(kX) = kfpr then
+  let (=POSS, =fp(kX)) = checksign(ppf, kX) in
+  let (=BYTES, =fb) = checksign(sg, kX) in
+  event AcceptP(evD, evR, t, kX, fb);
+  out(accP, (evD, evR, t)).
+
+let JudgeS =
+  in(accS, (e1: bitstring, t1: bitstring));
+  in(accS, (=e1, t2: bitstring));
+  if t1 = t2 then 0
+  else event TwoWorldsSingle(e1, t1, t2).
+
+let JudgeP =
+  in(accP, (e1: bitstring, e2: bitstring, t1: bitstring));
+  in(accP, (=e1, =e2, t2: bitstring));
+  if t1 = t2 then 0
+  else event TwoWorldsPair(e1, e2, t1, t2).
+
+process
+  new skD: skey; new skR: skey; new skI: skey;
+  let tH = (issuerId, fp(pk(skI)), ssetH, algH, verH) in
+  out(c, pk(skD)); out(c, pk(skR)); out(c, pk(skI));
+  ( !AuthorityDNS(skD, tH)
+  | !AuthorityRepo(skR, tH)
+  | !Issuer(skI, fbH)
+  | !VerifierS(pk(skR))
+  | !VerifierP(pk(skD), pk(skR))
+  | !JudgeS
+  | !JudgeP )

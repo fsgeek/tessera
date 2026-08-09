@@ -1,0 +1,90 @@
+Process 0 (that is, the initial process):
+{1}new skD: skey;
+{2}new skR: skey;
+{3}new skI: skey;
+{4}let tH: bitstring = (issuerId,fp(pk(skI)),ssetH,algH,verH) in
+{5}out(c, pk(skD));
+{6}out(c, pk(skR));
+{7}out(c, pk(skI));
+(
+    {8}!
+    {9}let skD_1: skey = skD in
+    {10}event AuthorityPublishedDNS(tH);
+    {11}out(c, sign((STMT,h(tH)),skD_1))
+) | (
+    {12}!
+    {13}let skR_1: skey = skR in
+    {14}event AuthorityPublishedRepo(tH);
+    {15}out(c, sign((STMT,h(tH)),skR_1))
+) | (
+    {16}!
+    {17}let skI_1: skey = skI in
+    {18}let fb: bitstring = fbH in
+    {19}event IssuerPossession(pk(skI_1));
+    {20}out(c, sign((POSS,fp(pk(skI_1))),skI_1));
+    {21}event IssuerSigned(pk(skI_1),fb);
+    {22}out(c, sign((BYTES,fb),skI_1))
+) | (
+    {23}!
+    {24}let pkA: pkey = pk(skD) in
+    {25}in(c, (t: bitstring,label: bitstring,ev: bitstring,kX: pkey,ppf: bitstring,sg: bitstring,fb_1: bitstring));
+    {26}let (=STMT,=h(t)) = checksign(ev,pkA) in
+    {27}let (id: bitstring,kfpr: bitstring,ss: bitstring,alg: bitstring,ver: bitstring) = t in
+    {28}if (fp(kX) = kfpr) then
+    {29}let (=POSS,=fp(kX)) = checksign(ppf,kX) in
+    {30}let (=BYTES,=fb_1) = checksign(sg,kX) in
+    {31}event AcceptS(ev,t,kX,fb_1)
+)
+
+--  Process 1 (that is, process 0, with let moved downwards):
+{1}new skD: skey;
+{2}new skR: skey;
+{3}new skI: skey;
+{5}out(c, pk(skD));
+{6}out(c, pk(skR));
+{7}out(c, pk(skI));
+{4}let tH: bitstring = (issuerId,fp(pk(skI)),ssetH,algH,verH) in
+(
+    {8}!
+    {10}event AuthorityPublishedDNS(tH);
+    {9}let skD_1: skey = skD in
+    {11}out(c, sign((STMT,h(tH)),skD_1))
+) | (
+    {12}!
+    {14}event AuthorityPublishedRepo(tH);
+    {13}let skR_1: skey = skR in
+    {15}out(c, sign((STMT,h(tH)),skR_1))
+) | (
+    {16}!
+    {17}let skI_1: skey = skI in
+    {19}event IssuerPossession(pk(skI_1));
+    {20}out(c, sign((POSS,fp(pk(skI_1))),skI_1));
+    {18}let fb: bitstring = fbH in
+    {21}event IssuerSigned(pk(skI_1),fb);
+    {22}out(c, sign((BYTES,fb),skI_1))
+) | (
+    {23}!
+    {25}in(c, (t: bitstring,label: bitstring,ev: bitstring,kX: pkey,ppf: bitstring,sg: bitstring,fb_1: bitstring));
+    {24}let pkA: pkey = pk(skD) in
+    {26}let (=STMT,=h(t)) = checksign(ev,pkA) in
+    {27}let (id: bitstring,kfpr: bitstring,ss: bitstring,alg: bitstring,ver: bitstring) = t in
+    {28}if (fp(kX) = kfpr) then
+    {29}let (=POSS,=fp(kX)) = checksign(ppf,kX) in
+    {30}let (=BYTES,=fb_1) = checksign(sg,kX) in
+    {31}event AcceptS(ev,t,kX,fb_1)
+)
+
+-- Query event(AcceptS(ev_1,t_1,k,fb_2)) ==> event(AuthorityPublishedDNS(t_1)) && event(IssuerPossession(k)) && event(IssuerSigned(k,fb_2)) in process 1.
+Translating the process into Horn clauses...
+Completing...
+Starting query event(AcceptS(ev_1,t_1,k,fb_2)) ==> event(AuthorityPublishedDNS(t_1)) && event(IssuerPossession(k)) && event(IssuerSigned(k,fb_2))
+goal reachable: b-event(AuthorityPublishedDNS((issuerId[],fp(pk(skI[])),ssetH[],algH[],verH[]))) && b-event(IssuerSigned(pk(skI[]),fbH[])) && b-event(IssuerPossession(pk(skI[]))) -> event(AcceptS(sign((STMT,h((issuerId[],fp(pk(skI[])),ssetH[],algH[],verH[]))),skD[]),(issuerId[],fp(pk(skI[])),ssetH[],algH[],verH[]),pk(skI[]),fbH[]))
+RESULT event(AcceptS(ev_1,t_1,k,fb_2)) ==> event(AuthorityPublishedDNS(t_1)) && event(IssuerPossession(k)) && event(IssuerSigned(k,fb_2)) is true.
+
+--------------------------------------------------------------
+Verification summary:
+
+Query event(AcceptS(ev_1,t_1,k,fb_2)) ==> event(AuthorityPublishedDNS(t_1)) && event(IssuerPossession(k)) && event(IssuerSigned(k,fb_2)) is true.
+
+--------------------------------------------------------------
+

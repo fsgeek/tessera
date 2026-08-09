@@ -1,0 +1,80 @@
+(* ==================================================================== *)
+(* Q6b — single-evidence TWO-WORLDS, DNS-only acceptance, mechanism     *)
+(* intact, accepted channel COMPROMISED (skDNS leaked). (PREDICTIONS-ADDENDUM-1.md,         *)
+(* ratified.) Judge holds ONE evidence object fixed while the tuple     *)
+(* varies — no dependence on a second channel's evidence.               *)
+(*                                                                      *)
+(* Registered prediction: TwoWorldsSingle UNREACHABLE (p~0.75); a real  *)
+(* single-evidence attack — mechanism revision (p~0.15); timeout        *)
+(* (p~0.1). Timebox 15 min.                                             *)
+(* Run: proverif q6_single_dns_compromised.pv                                *)
+(* ==================================================================== *)
+
+free c: channel.
+free accS: channel [private].
+
+type skey.
+type pkey.
+fun pk(skey): pkey.
+
+fun sign(bitstring, skey): bitstring.
+reduc forall m: bitstring, k: skey; checksign(sign(m, k), pk(k)) = m.
+fun fp(pkey): bitstring.
+fun h(bitstring): bitstring.
+
+const STMT: bitstring.
+const POSS: bitstring.
+const BYTES: bitstring.
+
+free issuerId: bitstring.
+free ssetH: bitstring.
+free algH: bitstring.
+free verH: bitstring.
+free fbH: bitstring.
+
+event AcceptS(bitstring, bitstring, pkey, bitstring).
+event TwoWorldsSingle(bitstring, bitstring, bitstring).
+  (* one evidence object, tuple1, tuple2 *)
+
+(* Expected UNREACHABLE: one object, one digest, one tuple *)
+query ev: bitstring, t1: bitstring, t2: bitstring;
+  event(TwoWorldsSingle(ev, t1, t2)).
+
+let AuthorityDNS(skD: skey, t: bitstring) =
+  out(c, sign((STMT, h(t)), skD)).
+
+let AuthorityRepo(skR: skey, t: bitstring) =
+  out(c, sign((STMT, h(t)), skR)).
+
+let Issuer(skI: skey, fb: bitstring) =
+  out(c, sign((POSS, fp(pk(skI))), skI));
+  out(c, sign((BYTES, fb), skI)).
+
+let VerifierS(pkA: pkey) =
+  in(c, (t: bitstring, label: bitstring, ev: bitstring,
+         kX: pkey, ppf: bitstring, sg: bitstring, fb: bitstring));
+  let (=STMT, =h(t)) = checksign(ev, pkA) in
+  let (id: bitstring, kfpr: bitstring, ss: bitstring, alg: bitstring,
+       ver: bitstring) = t in
+  if fp(kX) = kfpr then
+  let (=POSS, =fp(kX)) = checksign(ppf, kX) in
+  let (=BYTES, =fb) = checksign(sg, kX) in
+  event AcceptS(ev, t, kX, fb);
+  out(accS, (ev, t)).
+
+let JudgeS =
+  in(accS, (e1: bitstring, t1: bitstring));
+  in(accS, (=e1, t2: bitstring));
+  if t1 = t2 then 0
+  else event TwoWorldsSingle(e1, t1, t2).
+
+process
+  new skD: skey; new skR: skey; new skI: skey;
+  let tH = (issuerId, fp(pk(skI)), ssetH, algH, verH) in
+  out(c, pk(skD)); out(c, pk(skR)); out(c, pk(skI));
+  out(c, skD); (* VARIANT: accepted channel compromised *)
+  ( !AuthorityDNS(skD, tH)
+  | !AuthorityRepo(skR, tH)
+  | !Issuer(skI, fbH)
+  | !VerifierS(pk(skD))
+  | !JudgeS )

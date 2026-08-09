@@ -1,13 +1,13 @@
 # First-link mechanism spike — predictions vs. observed
 
-**Status: NOT FINAL — strict two-channel evidence only.** All eight
-strict-mode runs were independently reproduced by Codex (2026-08-09,
-same ProVerif 2.05, matching outputs), which also identified the
-coverage gap recorded in ledger entry 4: the single-evidence
-(`VALID_DEGRADED`) acceptance path is not discharged by the pair
-results. Registered follow-up: PREDICTIONS-ADDENDUM-1.md (runs open
-on the author's signing commit). This document becomes final when
-the addendum's runs and dispositions are appended.
+**Status: FINAL (query evidence).** All eight strict-mode runs were
+independently reproduced by Codex (2026-08-09, same ProVerif 2.05,
+matching outputs). Codex's review identified the single-evidence
+coverage gap (ledger entry 4); PREDICTIONS-ADDENDUM-1 was registered,
+author-ratified, and its ten runs completed 2026-08-09 — dispositions
+in the addendum section below. Non-query spike-exit items (decision
+document, standing/A2.4 statement) remain and are tracked in
+PREDICTIONS.md/FIRST-LINK-SPIKE.md.
 
 Run date: 2026-08-09. ProVerif 2.05, built from source on this
 machine (opam/OCaml 4.14.2, no-root path — toolchain re-established;
@@ -118,12 +118,65 @@ amendment trigger.
    evidences, single-evidence acceptance is a live verdict path
    requiring its own coverage: see PREDICTIONS-ADDENDUM-1.md.
 
+## Addendum 1 — single-evidence coverage: predictions vs. observed
+
+All ten runs 2026-08-09, each terminating in seconds; no timebox
+approached. Models and `.out` evidence in `proverif/` (q5*, q6*, q7,
+q8).
+
+| Query | Predicted (frozen) | Observed |
+|-------|--------------------|----------|
+| Q5a DNS-only, honest | holds p≈0.7 | **holds** |
+| Q5b DNS-only, compromised | **EXPECTED violation** p≈0.8 (the waiver cost) | **violation, as registered** |
+| Q5r honest | holds p≈0.7 | **holds** |
+| Q5r compromised | expected violation p≈0.8 | **violation, as registered** |
+| Q6 × 4 (single-object two-worlds, mechanism intact, honest+compromised, both channels) | unreachable p≈0.75 each | **unreachable, all four** |
+| Q7 contrast (DNS weak / repo strong) | Single REACHABLE p≈0.8 AND Pair UNREACHABLE p≈0.75 | **exact contrast observed** |
+| Q8 contrast (repo weak / DNS strong) | same | **exact contrast observed** |
+
+**Disposition, Q5b/Q5r-compromised (the registered red):** when the
+sole accepted evidence channel is the compromised one, no provenance
+guarantee survives — now machine-documented, not just stated. This
+is the formal price of waiving the redundant authority channel; it
+maps to the A1.2.1 lattice (the waiver is recorded, the risk is the
+relying party's accepted risk) and enters the relying-party story:
+`VALID_DEGRADED` with a single external evidence means *the
+surviving channel is your provenance root; if it was compromised,
+you have none.* The boundary invariant, by contrast, survived even
+there (Q6 compromised variants unreachable): one object, one digest,
+one tuple — the mechanism's unconditional half.
+
+**Disposition, Q7/Q8 (the contrast):** the pair-judge blind spot now
+exists as machine evidence — TwoWorldsSingle reachable while
+TwoWorldsPair stays unreachable in the same model. The retracted
+RESULTS.md implication ("pair coverage implies single coverage") is
+refuted by executable counterexample, both asymmetry directions.
+
+**Ledger addendum entries:** (5) Q5/Q6 consume the same Layer 2
+digest-collision-resistance residual as Q3/Q4. (6) Q6's unconditional
+result explicitly does NOT depend on the A1.3 "never all" assumption
+— the boundary invariant holds per-object even under full compromise
+of the accepted channel; only provenance (Q5) needs "the accepted
+channel is honest." This split — what the mechanism owes
+unconditionally vs. what honesty assumptions buy — is the addendum's
+core design content, and belongs in the decision document and the
+relying-party story.
+
+**Criterion 0 status (the mechanism-selection gate):** all three
+legs green — strict Q4 unreachable (both variants), Q6 unreachable
+(both channels, both compromise states), Q7/Q8 contrasts fired as
+designed. Transcription binding is eligible for selection.
+
 ## What remains before spike exit (non-query conditions, per the
 frozen registration)
 
 - Mechanism decision document (DECISION.md pattern): scoring
   transcription binding against the seven registered criteria;
-  criterion 0 (the gate) is discharged by Q4 both-variant evidence.
+  criterion 0 (the gate) is discharged on all three legs — strict Q4
+  (both variants), Q6 (both channels, both compromise states), and
+  the Q7/Q8 contrasts — within the checked symbolic abstraction.
+  (This sentence originally cited Q4 alone, written before the
+  addendum; corrected 2026-08-09 per Codex round-2 review.)
   Candidates 2–5 were not required to be modeled (no Q4 failure);
   their comparison is criteria-level and goes in the decision
   document. Author cold read of the correct models precedes
