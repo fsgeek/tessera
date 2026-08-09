@@ -1,4 +1,4 @@
-# Tessera — Phase 0 Pre-Registration, Amendment 3 — DRAFT
+# Tessera — Phase 0 Pre-Registration, Amendment 3 — ADOPTED (2026-08-08)
 
 > **Status: DRAFT — not signed, not in force.** This draft was prepared
 > 2026-08-07 by the AI collaborator (Claude, Fable 5) from the adopted
