@@ -1,5 +1,34 @@
-# First-link mechanism decision: transcription binding
+# First-link mechanism decision: transcription binding — DECIDED
 
+> **STATUS: DECIDED.** The author's decision was entered 2026-08-13 at
+> commit `459aff0` ("Author decision entered in favor of these changes
+> (after many adversarial rounds and detailed reviews.)"), OpenTimestamps-
+> stamped and anchored. That commit discharges item 5 of §"What remains
+> before this document can be signed" — the author's verification that
+> the 2026-08-12 rulings and the five remediation items were incorporated
+> faithfully. No item remains open.
+
+> **Header correction, 2026-08-13 — recorded, not silently applied.**
+> The status block below read `DRAFT … UNSIGNED` at the time of
+> `459aff0` and remained so afterward: the document said it was unsigned
+> while its own commit entered the decision. The staleness was not
+> surfaced to the author until after that commit had been made. He
+> confirmed in session that the header was stale and that the commit
+> message is the ratification — **RULED (author)**, his words: "stale
+> header that wasn't mentioned to me until *after* the commit was done."
+>
+> The discrepancy is written down rather than quietly repaired, for the
+> same reason §"How the decision was made" records its own failures: in
+> a document whose credibility rests on labels tracking provenance
+> exactly, a status label contradicting its commit is an instance of the
+> defect class this record exists to catch, not an untidiness. The
+> failure to report it before the commit was the AI collaborator's.
+>
+> **The stale block is retained verbatim below as history.** It is no
+> longer the status of this document.
+
+> *(Draft status block as it stood at `459aff0`, retained verbatim:)*
+>
 > **STATUS: DRAFT — clerk-drafted 2026-08-12, UNSIGNED; author rulings
 > incorporated for review 2026-08-12.** All seven registered criteria
 > are now scored, including criterion 6 on the author's 2026-08-09 read
@@ -808,9 +837,13 @@ exists), and ecosystem popularity.
    authenticated domain identifiers inside the envelope; map v1
    unchanged; no Q2 rerun for tags alone; exact-form verification with
    no fallback; cross-form substitution routed to P7/P8.
-5. **OPEN — author verification that the 2026-08-12 rulings and all five
-   remediation items were incorporated faithfully.** Until that read,
-   this document remains `DRAFT` and unsigned.
+5. ~~Author verification that the 2026-08-12 rulings and all five
+   remediation items were incorporated faithfully.~~ **DONE
+   2026-08-13** — decision entered at `459aff0`, stamped and anchored.
+   The status header was not updated at that commit and continued to
+   read `DRAFT`/unsigned; corrected 2026-08-13 on the author's
+   statement that the header was stale. See the header correction at
+   the top of this document.
 6. ~~Author ruling on §"Form lifecycle and the reference-verifier
    obligation".~~ **RULED 2026-08-13: DEFERRED.** Plan retained,
    nothing implemented; tracked as band-1 docket item 18. The δ-width
