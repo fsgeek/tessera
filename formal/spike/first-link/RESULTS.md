@@ -94,6 +94,14 @@ amendment trigger.
    for Q3, **collision resistance of the concrete digest** — symbolic
    h is injective by construction; discharged by cited external
    hardness assumptions per prereg §8, never by these models.
+
+   **Documentation correction (2026-08-12; original ledger wording
+   preserved above):** for n = 2, the honest baseline and the two
+   single-channel-compromise variants exhaust the proper subsets. This
+   is finite enumeration, not a quantified result, and does not
+   generalize automatically when channels are added. The cited external
+   hardness assumptions support the Q3 Layer 2 dependency; this model
+   does not discharge it.
 2. **Q2 broken companion.** Mutation: evidence binds issuer identity
    only (proper subset of map v1). Expected failing query: chain
    correspondence + TwoWorldsBroken reachability — both failed/fired

@@ -1,33 +1,70 @@
 # First-link mechanism decision: transcription binding
 
-> **STATUS: DRAFT — clerk-drafted 2026-08-12, UNSIGNED.** All seven
-> registered criteria are now scored, including criterion 6 on the
-> author's 2026-08-09 read (ratified at `15a26dd`). The author review
-> produced findings that **narrow what this spike decides**: the
-> transcription-binding *family* is selected; the digest-versus-direct-
-> tuple form within it is **not** decided here and is disposed
-> explicitly below. Two documentation defects in the model files are
-> listed as remediation and are not blockers to signature.
+> **STATUS: DRAFT — clerk-drafted 2026-08-12, UNSIGNED; author rulings
+> incorporated for review 2026-08-12.** All seven registered criteria
+> are now scored, including criterion 6 on the author's 2026-08-09 read
+> (ratified at `15a26dd`). The author review produced findings that
+> **narrow what this spike decides**: the transcription-binding family
+> is selected, while the envelope permits more than one authenticated
+> binding form. The author ruled on that form boundary and the five
+> documentation remediations in dialogue on 2026-08-12; the
+> required-set ruling followed on 2026-08-13 after a Claude / ChatGPT
+> cross-review. **A second cross-review on 2026-08-13 found that
+> drafted recommendations had been recorded with the grammar of author
+> decisions.** Provenance labels were added in response (see below),
+> the binding-form lifecycle material was demoted to `RECOMMENDED —
+> NOT ADOPTED` and withdrawn from consequences. The author then ruled
+> that material **deferred** on 2026-08-13 — plan retained, nothing
+> implemented, tracked as band-1 docket item 18 — which also moots the
+> custody fork. **One item remains open: the author's verification
+> that all rulings and remediations were incorporated faithfully.**
+> Until that read, this document remains `DRAFT` and unsigned.
 
 Committed per the DECISION.md pattern registered in
 `formal/spike/first-link/PREDICTIONS.md` §"Mechanism selection":
 criteria fixed before evidence, scoring on record, rejected
 alternatives named.
 
+## Provenance labels used in this document
+
+Added 2026-08-13 after a cross-review finding that drafted
+recommendations had acquired the grammar of author decisions. Every
+load-bearing statement below carries exactly one label:
+
+- **RULED (author)** — the author stated the decision himself, in his
+  own words, with his own reasons. Ratification is his.
+- **ADOPTED (author)** — the author endorsed a recommendation put to
+  him. Binding, but the reasoning originated elsewhere and the
+  endorsement is what makes it his.
+- **RECOMMENDED** — drafted and reviewed, **not adopted**. Carries no
+  authority and may not be propagated into consequences.
+- **PROPOSED** — drafted and contested, or drafted and untested.
+
+Absence of a label means unlabelled draft prose, not implicit
+adoption. Apparent convergence between reviewers is not ratification;
+this distinction is the credibility line, and the failure that
+prompted these labels was mine.
+
 ## Proposed decision
 
-**Transcription binding** — authority evidence commits to the exact
-map-v1 authority-relevant tuple — is the first-link mechanism
-discharging the §A3.2.1 boundary invariant.
+**Transcription binding** is the first-link mechanism discharging the
+§A3.2.1 boundary invariant: authority evidence commits to the exact
+versioned map-v1 authority-relevant statement through one or more
+authenticated, domain-separated binding forms declared inside the
+signed envelope.
 
-**Explicitly NOT decided here:** whether that commitment is to the
-tuple directly (`sign((STMT, t), k)`, the Q1 form) or to its digest
-(`sign((STMT, h(t)), k)`, the Q3 form). See §"Undischarged: digest
-versus direct tuple".
+The direct form commits to the canonical authority-statement
+representation; the digest form commits to a declared digest of that
+same representation. Both are permitted protocol forms. An envelope
+carries a **signed, nonempty required set** of binding-form
+identifiers, and a verifier must validate **every** member of that
+set — partial success is not success. The full rule, its verdict
+mapping, and its precedence are in §"Binding-form disposition".
 
-Candidates rejected: digest publication, authorized tuple, separately
-hashed manifest core, and strengthened variants (see §"Rejected
-alternatives").
+Candidates rejected: digest publication, separately hashed manifest
+core, and strengthened variants. **"Authorized tuple" is deferred, not
+rejected** — see §"Rejected alternatives", where the classification and
+its non-blocking status are recorded.
 
 ## How the decision was made (division of labor, honestly)
 
@@ -133,8 +170,12 @@ lookup. Recorded honestly as a construction-level judgment. If Band 1
 introduces a bundle-size budget that pushes transcribed content behind
 a content-addressed reference (band-1 docket item 9), this criterion
 must be re-scored, because the reference reintroduces the external
-dependency the criterion exists to forbid. **This criterion is also
-where the digest/direct-tuple fork bites** — see below.
+dependency the criterion exists to forbid unless the exact referenced
+representation remains obtainable — an obligation with no owner until
+band-1 docket item 17 is answered, and one that "obtainable" was
+quietly carrying. Both binding forms commit to the same
+representation; digest binding additionally depends on the declared
+concrete hash assumptions. See below.
 
 **5. Compatible with standing evidence and A2.4's exactly-one-shipped-
 anchor rule — PASS (ruled 2026-08-12).** Transcription binding operates
@@ -153,7 +194,7 @@ reproduced verbatim in §"Author review"; remediation items listed in
 read were made before that commit, so they do not appear as a diff —
 the ratification, not a diff, is the record of them.
 
-## Undischarged: digest versus direct tuple (author finding 3)
+## Binding-form disposition (author ruling 2026-08-12)
 
 **The finding.** `h` is declared `fun h(bitstring): bitstring` — a free
 constructor with no equations — and is therefore injective in the
@@ -161,45 +202,49 @@ symbolic model. Consequently `h(t) = h(t′) ⟺ t = t′`, and Q3 is
 isomorphic to Q1. **Q3 demonstrates no property Q1 does not.**
 
 **What follows.** The instrument cannot distinguish the two forms in
-either direction. It cannot exhibit the digest form's benefits, which
-are operational rather than security-theoretic (bundle compactness,
-non-disclosure of the tuple), and it cannot exhibit the digest form's
-risks, which it assumes away: serialization and encoding ambiguity,
-concrete collisions, and distinct encodings producing one digest.
+either direction. It cannot exhibit their operational differences,
+and its term algebra supplies injective construction for both the tuple
+and `h`. P8 must supply an unambiguous canonical byte representation
+for **both** forms in the implementation. Digest binding additionally
+depends on the declared concrete hash algorithm's collision and
+second-preimage resistance; the free symbolic constructor does not
+discharge that Layer 2 assumption.
 
-**The dependency nobody recorded.** Those assumed-away risks are
-exactly **P8** (canonicalization injectivity + framing), which is
-`open` in `formal/PROPERTIES.md`. The digest form's real-world
-soundness is therefore conditional on an undischarged property; the
-direct-tuple form is not. No capstone-ledger entry records this. It
-should.
+Tessera records the representation version, binding form, hash
+algorithm where applicable, and the guarantees claimed at issuance.
+It supports algorithm agility but does not promise that an issuance-
+time assumption remains adequate forever. Future examining parties
+decide whether the preserved evidence remains adequate under their
+own policies and stakes. Tessera minimizes dependence on its continued
+operation, goodwill, or existence; it does not promise perpetual
+availability, cryptographic adequacy, or acceptance.
 
-**History.** This is the digest-versus-tuple fork flagged as a blocking
-decision on 2026-08-07. It was not resolved by this spike and could not
-have been — the abstraction that makes the models tractable is the same
-abstraction that erases the distinction.
+**History.** This was the digest-versus-tuple fork flagged as a
+blocking decision on 2026-08-07. It could not be resolved by the
+queries alone — the abstraction that makes the models tractable is the
+same abstraction that erases the operational distinction. The author
+considered four dispositions:
 
-**Disposition options (author's ruling required; not ruled here):**
-
-- **(i) Direct tuple.** Select what Q1 actually proved. Avoids the P8
-  dependency entirely. Cost: bundles carry full authority tuples,
-  which pushes against band-1 docket item 9's size budget.
+- **(i) Direct tuple.** Select only Q1's form. Smaller proof surface,
+  but freezes out a future compact or non-disclosing commitment form.
 - **(ii) Digest.** Take the compactness and non-disclosure benefits,
-  with a capstone-ledger entry making the mechanism's soundness
-  explicitly conditional on P8, and P8 sequenced before any Band 1
-  envelope freeze.
+  add the declared concrete hash dependency to the capstone ledger,
+  and sequence P8 before any Band 1 envelope freeze.
 - **(iii) Defer to Band 1** with the fork named and both forms held
-  open. Weakest option: the format freeze is the irreversible moment,
-  so deferring past it decides by default.
-- **(iv) RECOMMENDED — domain-separate the forms; register one as
-  legal now.** See below. Dominates (i)–(iii): it removes the
-  irreversibility without taking on the P8 dependency today.
+  open. Weakest option: the format freeze would decide by default.
+- **(iv) Domain-separate authenticated forms inside the envelope.**
+  Selected, with the author's correction that the protocol permits
+  both rather than registering only one legal form now.
 
-### (iv) Domain separation, with a single legal form registered
+### Selected: authenticated, domain-separated forms
 
 **The observation that makes this possible (author, 2026-08-12).**
-Anything outside the envelope is unattested testimony; the binding
-form must therefore be inside the signed bytes. It currently is not.
+Anything fixed at attestation time and later used to interpret,
+verify, scope, or evaluate the attestation must be authenticated inside
+the envelope; outside statements are fungible testimony. The artifact-
+derived attestation handle is the narrow exception because its linkage
+is inherent. The binding form therefore belongs inside the signed
+bytes. It currently is not.
 `q1` emits `sign((STMT, t), skD)` and `q3` emits
 `sign((STMT, h(t)), skD)` — **the same domain-separation tag**. The
 file headers list three tags (`STMT`, `POSS`, `BYTES`) separating
@@ -213,35 +258,263 @@ legal, the signed bytes stop saying which form they are.
 non-interchangeable. A digest binding cannot be read as a direct one
 because the tag will not match.
 
-**Why this is not a map v1 change.** The binding form is carried by
-the domain-separation tag, not by an authority-relevant field, so map
-v1 is untouched and the frozen-map divergence rule does not fire. *This
-is a derived conclusion, not a verified one:* the map-freeze rule was
-written before binding-form tags were at issue, and reading it the
-other way reinstates the fresh-companion and Q2 re-run cost. Flagged
-for the author rather than assumed.
+**Map v1 ruling.** Binding-form tags are authenticated verification
+semantics, not authority-relevant identity fields. Distinct tags do
+not change map v1 and do not trigger its divergence rule or a Q2 rerun.
+Cross-form substitution is a separate P7/P8 obligation and must carry
+a negative control before more than one form is implemented.
 
-**What domain separation does NOT close.** It closes *confusion*, not
-*downgrade*. If both forms are legal, an adversary presents whichever
-carries the weaker dependency and the deployment inherits the minimum.
-Legality is therefore a policy and trust-configuration question,
-separate from the cryptographic one:
+### Verifier boundary — the required-set ruling
 
-> **Register the direct-tuple form as the sole legal form now, with the
-> tag namespace reserved.** A second form may be added later without
-> ambiguity, because the tag distinguishing it already exists.
+**ADOPTED 2026-08-13 (author), resolving the singular-versus-set
+defect.** Converged across a Claude / ChatGPT cross-review and put to
+the author, who adopted it ("there's convergence, the ayllu has
+decided"). Labelled ADOPTED rather than RULED because the reasoning
+originated in the cross-review, not with the author; the endorsement is
+what makes it binding. The disagreement is recorded alongside the
+outcome because that is what makes the adoption defensible.
 
-This is the extensibility asymmetry applied one layer down: what must
-be decided before the envelope freeze is *that the form is
-distinguished in the signed bytes*; which forms are legal is freely
-revisable afterwards. Selecting direct-tuple now also avoids taking on
-the P8 dependency at all until measurement justifies it.
+> An envelope carries a signed, nonempty required set of binding-form
+> identifiers. A verifier must successfully validate every required
+> form; partial success is not success. A well-formed identifier that
+> is unknown to the verifier, or known but unsupported, makes the
+> binding assessment `UNVERIFIABLE` with an appropriate reason. A
+> missing, malformed, duplicate, substituted, or inconsistently
+> encoded member — or an empty required set — makes it `INVALID`. P8
+> defines the set's canonical encoding, ordering, uniqueness, and
+> bounds. No inference, negotiation, normalization, or fallback is
+> permitted during verification.
 
-**A collapse worth noting.** Without domain separation, the
-form-confusion risk is itself a P8 question — whether `h(t)` can be
-parsed as a well-formed tuple is encoding ambiguity, the same property
-the digest form already depends on. Domain separation separates the two
-risks; absent it they are one risk.
+**Precedence.** `INVALID` dominates `UNVERIFIABLE`. Where a required
+set contains both an unknown identifier and a malformed member, the
+verdict is `INVALID`: a provable defect settles the artifact
+regardless of what else cannot be evaluated, it is fail-closed in the
+direction P4 already establishes, and without the rule two conforming
+implementations can disagree on the same input — which conformance
+vectors would then be unable to pin.
+
+**Distinct reason codes for the two `UNVERIFIABLE` cases.** *Unknown
+identifier* and *known but unsupported* must not share a reason code.
+The difference is evidence a future examiner may need — the first says
+the artifact uses something this verifier has never heard of, the
+second that the verifier chose not to implement a form it knows.
+
+**Why unknown identifiers are `UNVERIFIABLE` and not `INVALID`.**
+Otherwise a verifier built in 2026 declares every envelope using a
+form registered in 2030 invalid — a false negative against a sound
+artifact, which is the failure `UNVERIFIABLE` exists to prevent.
+Unknown-to-me is not the same fact as malformed. This is the
+extensibility asymmetry: what forms exist is revisable, what the
+envelope can express is not.
+
+**Why P8 must own the set's encoding.** Not signature malleability —
+the signature binds particular bytes, and no re-encoding verifies
+against an old signature. The failure is **semantic identity and
+interoperability**: two byte-distinct envelopes may carry the same
+abstract required set, both validly signed. (An earlier draft called
+this a manufacturing mechanism for A2's equivocation residue. That
+borrowed a stronger threat label than the evidence supports — A2's
+residue turns on receipts with *different declared times*, and encoding
+ambiguity does not by itself produce contradictory authority
+statements.) The harm that is established: artifact identity becomes
+unreliable, and the standing tests S1–S3 turn on identifying *which*
+artifact is the shipped anchor. Canonical encoding, ordering,
+uniqueness, and bounds forecloses it.
+
+**Cost, stated plainly.** `{direct, digest}` requires both and is
+therefore *not* a compact substitute for `{digest}` — it is an
+explicitly stronger and larger construction. The three legal
+configurations each carry a legible price: `{direct}` takes no
+*additional binding-form* hash assumption — the artifact still uses
+hashes and fingerprints elsewhere — `{digest}` takes the additional
+collision and second-preimage assumption in exchange for compactness,
+and `{direct, digest}` takes both forms' guarantees and both forms'
+bytes.
+
+Because the required set is itself signed, removing a member changes
+the signed envelope rather than silently weakening it.
+
+### Form lifecycle and the reference-verifier obligation
+
+> **RULED 2026-08-13 (author): DEFERRED — plan retained, nothing
+> implemented.** Author's reasoning, in his words: *"Every additional
+> complication we add now increases the complexity of the baseline
+> service. I like knowing we have plans for dealing with additional
+> features moving forward — that's the architect within me — but
+> implementing these early needs a real reason and I don't see that
+> right now."* He has also stated he does not intend to retire a form
+> in the foreseeable future.
+>
+> **Everything below is retained as the plan and implements nothing.**
+> It carries no authority over the baseline service. Tracked as band-1
+> docket item 18 so it cannot silently drop.
+>
+> **Why deferral is free rather than merely cheap** (checked, not
+> assumed): the lifecycle is inert until a second binding form is
+> actually implemented, which is separately gated on the P7/P8
+> cross-form substitution negative control; and the extensibility
+> asymmetry's trap does not apply,
+> because legitimacy can ride the key chain — which must be preserved
+> regardless — so **no envelope field is required under any live
+> candidate.** Had one been required, deferral would have been
+> irreversible and this ruling would be wrong.
+>
+> An earlier version of this document propagated this material into
+> §"Consequences if signed" before any ruling existed. That
+> propagation was withdrawn and the withdrawal recorded.
+
+The permission to use two forms creates a fragmentation hazard that is
+interoperability, not security: if implementations may each support a
+different subset, a bundle exists that some verifiers cannot check.
+For a design whose relying party is the product surface, that weakens
+the year-ten story directly.
+
+**Form states.** A binding form is in exactly one state:
+
+- **registered** — identifier and semantics reserved; not permitted in
+  any envelope. Reservation is what makes later addition unambiguous.
+- **issuable** — permitted in the required set of new envelopes, after
+  that form's prerequisites discharge (for more than one implemented
+  form, the P7/P8 cross-form substitution negative control).
+- **retired** — no longer permitted in new envelopes. Retirement
+  forbids new issuance but preserves the form's specification,
+  conformance vectors, registry history, and reference-verifier
+  support for previously issued envelopes. **Retirement does not
+  preserve the form's cryptographic adequacy or require a relying
+  party to accept it** — a form may be retired precisely because its
+  algorithm became unsafe, or because its implementation became unsafe
+  to execute.
+
+**Issuance validity is judged against issuance-time registry state.**
+Whether a form was issuable is not intrinsic to the envelope. A
+present-day verifier must not judge a 2028 artifact using 2035 registry
+state.
+
+> A required-set member that was not issuable under the authenticated
+> registry version applicable at issuance makes the artifact `INVALID`.
+> Subsequent retirement does not retroactively invalidate it.
+
+**The registry epoch must be inside the envelope.** A verifier cannot
+infer which registry version applied by comparing a timestamp against
+registry history — inference is forbidden by the verifier boundary
+above, and the same principle that puts the binding form inside the
+signed bytes applies here: anything later used to interpret the
+attestation must be authenticated within it. An envelope therefore
+declares the registry version or policy epoch it was issued under. A
+declared registry version the verifier does not hold is `UNVERIFIABLE`
+with its own reason code — the verifier lacks the history, the artifact
+is not defective. This creates a dependency on the versioned historical
+trust/registry store of band-1 docket item 8, and makes that store a
+custody subject — band-1 docket item 17.
+
+**Declaration alone permits rollback (cross-review finding,
+2026-08-13).** A declared epoch does not establish that the epoch was
+*applicable*. An issuer — or anyone holding the signing key — could
+emit a newly signed envelope using a **retired** form while declaring
+an older epoch under which that form was still issuable, and a verifier
+checking only the declaration would accept it. Retirement would then
+be unenforceable, which is the whole point of retiring a form whose
+algorithm became unsafe.
+
+> The declared epoch MUST be checked for correspondence with the
+> artifact's **independently established issuance interval**. If the
+> declared epoch is inconsistent with that interval, or the form was
+> not issuable under the epoch that actually applied, the artifact is
+> `INVALID`. If the correspondence cannot be established at all, the
+> result is `UNVERIFIABLE`.
+
+**CORRECTED 2026-08-13 (cross-review).** An earlier draft claimed the
+temporal anchor closes this, on the reasoning that "an artifact whose
+anchor places it after epoch *E* closed cannot truthfully declare *E*."
+**That is false.** OpenTimestamps establishes that an artifact existed
+*no later than* the anchored time — an upper bound. An artifact
+anchored after *E* closed may have existed earlier and been anchored
+late, so a late anchor neither refutes nor corroborates an old
+declaration. The anchor alone supplies the wrong bound.
+
+**The lower bound exists already, and it is not the anchor.** A2.1,
+adopted 2026-07-21 and modeled in `P5c_IssuanceProtocol.tla`,
+`P5P6_TemporalRevocation.tla`, and the bridge, fixes one predicate for
+issuer and verifier:
+
+> `confirmed_at := timestamp(block h+k−1) ≤ declared + δ`
+
+An artifact declaring an issuance time far earlier than its anchor
+fails this predicate: with `declared` in a closed epoch and the block
+timestamp long after, `timestamp > declared + δ` and the artifact is
+already rejected under adopted semantics. **Backdating beyond δ is
+therefore refused by machinery this document need not add.** The epoch
+rule composes with it: the declared epoch must contain the declared
+issuance time, and A2.1 pins the declared issuance time to within δ of
+**the designated chain-time proxy**.
+
+That proxy is not an exact clock, and this document must not imply it
+is. A prior draft said "a chain time no forger can fabricate," which
+overstates: what no forger can do is place bytes in a *past block*
+(P5); the *timestamp* of a block carries latitude, which is why the
+bridge model deliberately treats block timestamps as **skewed and
+non-monotonic**, decoupled from the tick clock
+(`formal/tla/P5cP5P6_Bridge.tla`). The epoch constraint therefore
+inherits A2.1's registered timestamp-skew residuals rather than
+standing on an exact bound.
+
+**Named residual, stated rather than closed.** Backdating *within* δ
+remains possible. A key holder anchoring at most δ after an epoch
+closes can declare a time just inside it and use a form retired at that
+boundary. The exposure is therefore **δ plus A2.1's skew residuals**,
+not a sharp δ-wide wall — with the working default δ = 72h, "roughly
+three days, widened by chain-timestamp latitude," not "exactly 72
+hours." Closing it would require a trustworthy lower bound or an
+ordered issuance record — genuinely new scope, and **not proposed
+here**. The honest statement: retirement is enforceable against honest
+issuers and against backdating beyond that window, and is not
+enforceable against a compromised still-valid signing key operating
+inside it.
+
+Where the anchor's interval is itself unavailable, the epoch check
+degrades to `UNVERIFIABLE` along with everything else depending on it.
+
+**Reference-verifier support is append-only, at the shared binding
+layer.** Every maintained reference-verifier tier must have access to
+the maintained shared implementation of every form that has **ever**
+been issuable. Retirement stops new issuance; it must not orphan
+artifacts issued while the form was live. The obligation sits on the
+shared binding layer rather than on each tier independently — the tiers
+differ in evidentiary depth, not in binding-form parsing, and requiring
+per-tier implementations would be an architectural commitment nothing
+here motivates. Third-party verifiers remain free to implement a subset
+and return `UNVERIFIABLE` with the known-but-unsupported reason code;
+the reference implementation is the escape that keeps every artifact
+checkable by someone.
+
+**The invariant, narrowed so it is actually true and testable.** The
+broad form — *Tessera never emits an envelope its reference verifier
+cannot check* — is defeated by missing external evidence, unavailable
+custody, or unsupported historical runtime dependencies, none of which
+are binding-form properties. The binding-form invariant is:
+
+> Tessera must never issue an envelope whose required binding-form set
+> the maintained reference verifier cannot parse and evaluate when
+> supplied the required evidence.
+
+CI enforcement, required **before** a form becomes issuable:
+
+- positive and negative vectors for each lifecycle state;
+- vectors for every issuable individual form;
+- multi-form required-set vectors before any multi-form issuance;
+- cases for unknown, known-but-unsupported, duplicate, malformed,
+  retired-at-issuance, and registered-but-not-issuable members;
+- every maintained tier passing these through the shared binding layer.
+
+A form transitioning to issuable without its vectors is a build
+failure, not a review finding.
+
+Permitting both forms does not make a direct-form artifact inherit the
+digest form's additional hash assumption: an adversary cannot change
+the authenticated form without invalidating the signature. Relying-
+party policy may nevertheless distinguish the evidentiary adequacy of
+the forms, and the assessment reports which form and dependencies were
+evaluated.
 
 **Not a defect in the spike.** Each model implements exactly one form,
 so no model is wrong. This is a design requirement for implementation
@@ -293,11 +566,13 @@ amend-do-not-rewrite discipline.
 > Suggestion for future improvement: add a plain-language statement in front of
 > each query that says "This model proves..."
 
-## Remediation (documentation defects; not blockers to signature)
+## Remediation (incorporated 2026-08-12; pending author verification)
 
 Verified against the files 2026-08-12. All are prose-versus-code
 mismatches in the model headers or the ledger; none is a model defect,
-and none changes a run result.
+and none changes a run result. The corrections below were incorporated
+after explicit author disposition; the author-review quotation above
+remains verbatim.
 
 1. **Q1 header conflates evidence with publication.** The verifier
    requires *both* channels' evidence to bind the tuple (q1 line 88);
@@ -305,16 +580,22 @@ and none changes a run result.
    line 61). Both are correct and they are about different objects —
    the 2026-08-09 recut made the publication conclusion disjunctive
    because a compromised channel's publication is forgeable-around.
-   The header does not distinguish them. Fix the header, not the model.
+   The header now distinguishes them: strict mode validates both
+   evidence objects, while provenance under proper-subset compromise
+   establishes that at least one uncompromised channel published the
+   accepted statement.
 2. **"Same issuer identity and required-key relation" overclaims.**
-   Only the fingerprint is compared. Restate as a binding claim.
+   Only the fingerprint is independently compared. The headers now
+   state the binding claim and its semantic boundary.
 3. **"Six-node chain" versus five declared events.** Adopt the
-   author's phrasing: a five-event model with two authority
-   publication branches.
+   author's phrasing: five event kinds with two authority-publication
+   branches.
 4. **Capstone ledger entry 1 overclaims the adversary.** Replace "the
    adversary controls any strict subset" with the exhaustive-by-
    enumeration statement for n = 2, and note that it does not
-   generalize to additional authority branches.
+   generalize to additional authority branches. New channels or
+   instances require reassessment; instance count alone does not prove
+   compromise independence.
 5. **Adopt the author's suggestion:** a plain-language "This model
    proves…" statement at the head of every query, and for Q3 an
    explicit statement of what the injective-`h` idealization removes.
@@ -445,14 +726,21 @@ negative and any custodial-record check reports `UNVERIFIABLE`.
   independently obtainable, reintroducing the external dependency.
   **Note:** distinct from the Q3 digest *binding* form, where the
   tuple travels in the bundle and only the commitment is hashed.
-- **Authorized tuple** (the other docketed option). Not distinguishable
-  from transcription binding on criteria 0–4 without modeling; not
-  modeled, because no Q4 failure required it. **Open question raised
-  by author finding 3:** since what Q1 actually proved is direct tuple
-  signing, the distance between "authorized tuple" and the selected
-  family may be smaller than this rejection implies. Resolving it
-  requires the candidate definitions, which are not restated in
-  PREDICTIONS.md at sufficient precision. Flagged, not resolved.
+- **Authorized tuple** — **DEFERRED, NOT REJECTED** (reclassified
+  2026-08-13; an earlier draft listed it as rejected while
+  simultaneously describing it as an unresolved open question, which
+  is a contradiction this section cannot carry). Not modeled, because
+  no Q4 failure required it. Author finding 3 makes the classification
+  live: since what Q1 actually proved is direct tuple signing, the
+  distance between "authorized tuple" and the selected family may be
+  smaller than a rejection implies — they may be the same construction
+  under two names. Resolving it requires the candidate definitions,
+  which PREDICTIONS.md does not restate at sufficient precision.
+  **Classified non-blocking for signature:** criterion 0 is discharged
+  for the selected family regardless of how this resolves, and
+  registration required an alternative to be modeled only on a Q4
+  failure, which did not occur. If it later resolves to "same
+  construction," that is a naming correction, not a mechanism change.
 - **Separately hashed manifest core.** Adds a second object and a
   second binding to audit, against criterion 6, with no criterion-0
   advantage exhibited.
@@ -470,12 +758,38 @@ exists), and ecosystem popularity.
 
 - Transcription binding is the §A3.2.1 first-link mechanism; changing
   it later requires a signed amendment naming the blocker.
-- The digest/direct-tuple form remains open and must be ruled before
-  any Band 1 envelope format freeze.
-- If the digest form is selected, P8 acquires a dependent and must be
-  sequenced before that freeze.
+- Direct and digest are permitted authenticated protocol forms. An
+  envelope carries a signed, nonempty **required set** of form
+  identifiers and a verifier must validate every member; partial
+  success is not success. Every form has a distinct signed domain
+  identifier, exact-form verification, and no inference, negotiation,
+  normalization, or fallback. `INVALID` dominates `UNVERIFIABLE`;
+  unknown and known-but-unsupported forms carry distinct reason codes.
+- P8 additionally defines the required set's canonical encoding,
+  ordering, uniqueness, and bounds — without which two byte-distinct
+  envelopes can carry one abstract set, making artifact identity
+  unreliable and undermining the standing tests, which turn on
+  identifying which artifact is the shipped anchor.
+- *(WITHDRAWN from consequences 2026-08-13.* The binding-form
+  lifecycle, registry-epoch, append-only-support, and CI-gate material
+  **was** `RECOMMENDED — NOT ADOPTED` when it was withdrawn from here,
+  and was **subsequently ruled DEFERRED** the same day — plan retained,
+  nothing implemented, tracked as band-1 docket item 18. Its current
+  state is deferred, not merely unadopted; this paragraph is history.
+  It remains drafted in §"Form lifecycle and the
+  reference-verifier obligation". Recorded as a withdrawal rather than
+  deleted, because the propagation happened and the record should show
+  it.)
+- P8 supplies the canonical encoding used by both forms. Digest binding
+  additionally carries the declared concrete hash-resistance assumption.
+- Map v1 is unchanged; form tags alone require no Q2 rerun. P7/P8 must
+  carry a cross-form substitution negative control before more than one
+  form is implemented.
 - Band-1 docket item 9 (bundle-size budget) interacts with both: it
-  pushes toward the digest form and against criterion 4.
+  may motivate digest binding, but content addressing must not make the
+  exact committed representation unavailable to a future verifier —
+  custody of that representation is band-1 docket item 17, which must
+  be answered before any Band 1 freeze.
 - The Kimi-2 integrated adversarial lifecycle model (A3 §A3.9) is
   triggered on this spike's completion and is mandatory before the H1a
   crypto-core freeze.
@@ -489,15 +803,25 @@ exists), and ecosystem popularity.
 2. ~~Author's ruling on the standing/A2.4 fork.~~ **DONE 2026-08-12:**
    §A3.7.1 stands, no amendment; reason-carrying output required.
 3. ~~Standing test conditions in both forms.~~ **DONE** — S1–S3 above.
-4. **OPEN — author's ruling on the digest/direct-tuple disposition.**
-   Recommended: **(iv)** — domain-separate the binding forms in the
-   signed bytes, register direct-tuple as the sole legal form now,
-   reserve the tag namespace. Two sub-rulings ride on it: (a) whether
-   a tag change escapes the frozen-map divergence rule (drafter says
-   yes, derived not verified — if no, budget a fresh companion and a
-   Q2 re-run); and (b) confirmation that domain separation becomes a
-   registered requirement rather than an implementation note, since
-   nothing else forces it before the envelope freeze.
+4. ~~Author's ruling on the digest/direct-tuple disposition and its two
+   sub-rulings.~~ **DONE 2026-08-12:** both forms permitted with
+   authenticated domain identifiers inside the envelope; map v1
+   unchanged; no Q2 rerun for tags alone; exact-form verification with
+   no fallback; cross-form substitution routed to P7/P8.
+5. **OPEN — author verification that the 2026-08-12 rulings and all five
+   remediation items were incorporated faithfully.** Until that read,
+   this document remains `DRAFT` and unsigned.
+6. ~~Author ruling on §"Form lifecycle and the reference-verifier
+   obligation".~~ **RULED 2026-08-13: DEFERRED.** Plan retained,
+   nothing implemented; tracked as band-1 docket item 18. The δ-width
+   rollback residual needs no acceptance, because nothing implements
+   retirement.
+7. ~~Selection between custody forks (A) and (B).~~ **MOOT under item
+   6's deferral.** That fork asked whether a self-contained-tier
+   verdict judges issuance-time binding-form validity. With **no form
+   lifecycle or issuance-state distinction implemented**, there is no
+   such judgment to make. It revives only if item 18 is taken up.
 
-Remediation items 1–5 are documentation fixes to the model headers and
-ledger; they may be done before or after signature, but not silently.
+**Non-blocking, recorded so it is not mistaken for an oversight:** the
+"authorized tuple" classification (deferred, not rejected) does not
+gate signature — see §"Rejected alternatives" for why.

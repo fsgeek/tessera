@@ -6,14 +6,25 @@
 (* property holds (p~0.7); violation likely-encoding-defect requiring   *)
 (* trace inspection (p~0.2); timeout (p~0.1). Timebox: 15 min.          *)
 (*                                                                      *)
-(* The six-node A3.2 witness chain, strict mode: acceptance requires    *)
+(* This model proves: in this n=2 DNS-compromise variant, strict        *)
+(* acceptance validates both evidence objects and implies that at least*)
+(* one uncompromised publication branch emitted the exact accepted     *)
+(* statement, while the accepted key proves possession and signs the   *)
+(* exact framed bytes.                                                  *)
+(* This model does not prove: honest provenance for both presented     *)
+(* objects; semantic truth or policy sufficiency of bound fields;       *)
+(* real-world referent identity; concrete encoding; implementation     *)
+(* fidelity; or arbitrary-channel generalization.                       *)
+(*                                                                      *)
+(* The five-event A3.2 correspondence, with two authority-publication  *)
+(* branches, requires in strict mode                                    *)
 (* BOTH channels' authority evidence binding the same exact authority   *)
 (* statement (the A1.3 adversary controls a strict subset of channels,  *)
 (* never all — the redundancy is the defense the "never all"            *)
 (* assumption buys). Shared terms crossing the links, per the frozen    *)
 (* registration: same authority statement (NOT the whole manifest —     *)
 (* the non-authoritative label is adversary-controlled and ignored),    *)
-(* same issuer identity and required-key relation (fingerprint match),  *)
+(* the bound authority fields and accepted-key fingerprint match,       *)
 (* same accepted key through possession and signature, same signed      *)
 (* framed bytes.                                                        *)
 (*                                                                      *)
@@ -48,7 +59,7 @@ free algH: bitstring.
 free verH: bitstring.
 free fbH: bitstring.
 
-(* The six-node chain as events *)
+(* Five event kinds, with two authority-publication branches *)
 event AuthorityPublishedDNS(bitstring).
 event AuthorityPublishedRepo(bitstring).
 event IssuerPossession(pkey).

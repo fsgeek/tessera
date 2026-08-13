@@ -12,6 +12,18 @@ Governed by: FIRST-LINK-SPIKE.md (adopted `8ae4720`), A3 §A3.2.1
 (boundary invariant), §A3.3 (three-outcome timebox discipline),
 §A3.9 panel-added exit criteria.
 
+> **Post-run terminology correction (2026-08-12; original predictions
+> preserved below).** The frozen text's "six-node chain" means five
+> declared event kinds with two authority-publication branches. Its
+> "any strict subset" statement is discharged for the current n = 2
+> construction by finite enumeration of the honest baseline and the two
+> single-channel-compromise variants; it is not a quantified result over
+> future channel sets. "Same issuer identity and required-key relation"
+> is a binding claim: only the fingerprint is independently compared
+> with the accepted key. See `DECISION.md` §"Remediation" for the
+> adopted disposition. No prediction, query, or authority-relevance-map
+> field is changed by this correction.
+
 ## Target
 
 The §A3.2 witness chain's first link:
