@@ -51,10 +51,20 @@ Cross-cutting obligations (A1.4, A1.7):
       scoping is named in-module and disposed by amendment discipline,
       never silently. Implementation note (non-binding, subject to the
       mechanism spike below): current candidate is a single capstone
-      model that transcribes the shared library. Obligation text to be
-      registered in Amendment 3 at requirement level.
-- [ ] Capstone mechanism spike (2026-08-07 ruling §2; precedes the
-      suite scaffold): exercise the capstone pattern at representative
+      model that transcribes the shared library. Obligation text
+      registered at requirement level in Amendment 3 §A3.3 (adopted
+      2026-08-09, commit `8ae4720`). The suite itself remains unbuilt;
+      this box closes when the per-property models, ledgers, and
+      capstone exist and are checked.
+- [x] Capstone mechanism spike (2026-08-07 ruling §2; precedes the
+      suite scaffold) — **COMPLETE 2026-08-13**: first-link spike run
+      per its frozen registration (`formal/spike/first-link/`), all
+      queries and negative controls as predicted or with registered
+      branches fired and recut on the record; mechanism decision
+      entered at `459aff0` (transcription binding; DECISION.md status
+      DECIDED, stale-header correction at `33e196e`); form lifecycle
+      DEFERRED (band-1 docket item 18). Original obligation text
+      retained below. Was: exercise the capstone pattern at representative
       complexity — the linked evidence floor chain (2026-07-28
       Ruling 2) — real-first, ablate on break. The drafted
       assumes-from-elsewhere ledger interface (conservation-rule
@@ -102,8 +112,11 @@ Cross-cutting obligations (A1.4, A1.7):
       Surfaced 2026-07-18; "burial delay vanishes" did NOT reproduce
       under Codex non-author check on the fused model, and the bridge
       confirms: the vanishing requires the broken substitution.
-      NON-AUTHOR REVIEW PENDING; disposition to be registered in
-      Amendment 3. See
+      Disposition REGISTERED at Amendment 3 §A3.7.3 (adopted
+      2026-08-09, `8ae4720`) and validated in scope by the cold panel's
+      addendum round (`docs/reviews/2026-08-08-A3-panel-disposition.md`);
+      the bridge broken companion for the exact finding and the
+      conjunct-3 red-bar vector land in the H1a suite per A3. See
       `docs/exploration-2026-07-18-causal-dag-commons.md` §0/§8/§8b.
 - [ ] Agreement-gate falsification reviews run by non-author models;
       artifacts in `docs/reviews/`.
