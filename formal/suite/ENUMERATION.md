@@ -203,6 +203,44 @@ left as written; this note records what a cold read should weigh.
 Neither finding touches `459aff0`, criterion 0, or the selection of
 transcription binding. Both are routed to the author with this note.
 
+## Amendment note 2 — 2026-08-27, same day (clerk; PROPOSED; supersedes note 1 item 2 in part)
+
+Note 1 item 2 diagnosed the spike's possession check as unexercised
+and reached for registration as the missing piece. The author asked
+what the check is *for*; the answer is in the registered record, not
+in the models. A1 §A1.5 item 3 / P10 define proof of possession as the
+**manifest self-signature** — the issuer keys sign the manifest bytes,
+binding the manifest to the keys. The spike encoded possession as a
+signature over the **fingerprint alone** (`sign((POSS, fp(pk)), sk)`),
+which drops the manifest binding; that is why the check was redundant
+in every spike model. With the design's encoding it is load-bearing in
+degraded mode: a sole-channel adversary cannot alter the signer set,
+algorithm, or version around the honest key (scratch runs M7a/M7b in
+the guide's appendix and Correction section). Consequences for this
+enumeration:
+
+- **§1 must record a deliberate divergence from the spike:** the
+  library's possession object is `sign((POSS, <manifest>), sk)`, not
+  `sign((POSS, fp(pk)), sk)`. Absent that record, "extraction, not
+  invention" carries the under-encoding into S-P1/S-P2/S-P7 and the
+  degraded-mode signer-set stripping surface stays open in the suite.
+- **S-P2's companion list gains one entry:** degraded mode, sole
+  channel compromised, honest key retained, one required signer
+  removed from the set — must go red on the correct model's
+  possession-over-manifest check, and the fingerprint-only encoding
+  must be the broken companion that lets it through. This is the A3.2
+  item 3 multi-key case, mechanized.
+- **Note 1 item 2's four S-P3 items stand** for what S-P3 owes (DSKS
+  expressibility, registration); they are not the explanation of M1.
+  M1 is explained by the encoding, and this note is the correction.
+- **Relying-party story:** the Q5b "waiver cost" as narrated in
+  RESULTS.md/DECISION.md is the cost under the spike's encoding.
+  Under the design's encoding it is narrower — impersonation with the
+  adversary's own key remains; tampering with the honest key's
+  parameters does not. The story should state which it is stating.
+
+Still nothing here touches `459aff0` or criterion 0.
+
 ## Open questions routed to the author (none block drafting S-P3)
 
 1. Adoption of this enumeration as the suite's scope (cold read).

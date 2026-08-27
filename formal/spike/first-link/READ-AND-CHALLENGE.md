@@ -472,6 +472,86 @@ decides S-P3's shape.
 
 ---
 
+## Correction to the headline — same day, after the author asked what the check is *for*
+
+The headline above is mechanically right and its diagnosis is
+incomplete. It says the possession check is "not a design bug" and
+points at registration and multi-key manifests as the places
+possession earns its keep. It missed the function the record actually
+assigns to the check, because I reasoned from the spike's encoding
+instead of from the registered text. Original headline left as written.
+
+**What the record says.** A1 §A1.5 item 3 and P10: proof of possession
+is the **manifest self-signature** — the issuer keys sign the *manifest
+bytes*. Two stated functions: the asserted keys "were demonstrably
+held," **and** the self-signature "binds the manifest bytes to the
+asserted keys." The A3.2 chain carries it as "proof of possession by
+that same key."
+
+**What the spike encoded.** `sign((POSS, fp(pk(skI))), skI)` — a
+signature over the key's own *fingerprint*, not over the manifest. That
+keeps the first function and drops the second. With that encoding, the
+verifier's check is redundant with the fingerprint check plus the
+bytes signature (the mechanical fact M1 exhibits). With the *design's*
+encoding it is not.
+
+**The test (appendix M7a/M7b).** Degraded mode, sole channel
+compromised — the Q5b setting. Ask whether the adversary can get a
+tuple accepted that carries the **honest** key's fingerprint but an
+**altered signer set**. With the spike's fingerprint-only proof:
+**reachable** — forge the channel evidence with the leaked key, replay
+the honest possession proof (it says nothing about the tuple), replay
+the honest bytes signature. With possession over the manifest as A1
+specifies: **unreachable** — the adversary cannot produce the honest
+key's signature over a tuple the honest key never signed.
+
+**What this means, stated carefully.**
+
+- The check is **not theater in the design**. Its job is to make the
+  issuer a *second pin* on the authority statement, independent of the
+  channels: a sole-channel adversary can still substitute its *own* key
+  (possession is free to the adversary — A1.3, P10), but cannot alter
+  the signer set, algorithm, or version *around the honest key*. That
+  is exactly the P2-stripping surface in degraded mode, and it is
+  closed by the issuer's signature, not by the channels.
+- The spike **under-encoded** it, and the under-encoding is what made
+  M1 green. Not a defect in any spike result — every registered query
+  is about binding and two-worlds, and none of them depend on this —
+  but the Q5b "waiver cost" as narrated ("no provenance guarantee
+  survives") is the cost of the *spike's* encoding. Under the
+  *design's* encoding the cost is narrower: the adversary can
+  impersonate with its own key, not tamper with the honest one. The
+  relying-party story should state the narrower cost, and should say
+  which encoding it is stating it for.
+- ENUMERATION.md §1 defines the shared theory library as extracted
+  from the spike, with divergence a defect unless recorded. **This
+  divergence must be recorded**, or S-P1/S-P2/S-P7 inherit the weak
+  possession object and the multi-signer stripping surface stays open
+  in the suite. See ENUMERATION.md amendment note 2.
+- The multi-key case (A3.2 item 3: "an existential self-signature by
+  another key in a multi-key manifest does not close the chain") is
+  the same function seen from the other side: each key in the set
+  signs the manifest, so removing one from the set invalidates the
+  others' self-signatures over it. Fingerprint-only possession cannot
+  express that at all.
+
+**What it does to `459aff0`.** Nothing. Criterion 0 is about the
+binding form, and neither encoding of possession touches it. What it
+touches is the suite's theory library and one sentence of the
+relying-party story.
+
+**The lesson for you, which is the point of this file.** I called the
+check unexercised and reached for "registration" as the missing piece
+because that is the textbook role of proof-of-possession. Your record
+had assigned it a different, specific job, in a sentence eleven weeks
+old, and the model's encoding had quietly dropped that job. You asked
+"what is it for?" and the answer was in A1, not in ProVerif. The
+skill this file is trying to teach is not reading ProVerif. It is
+noticing when the model's version of an object is thinner than the
+record's version, and asking which one the green result is about.
+
+---
+
 ## How to use this
 
 Pick one. If you have ten minutes and the tool, do the headline's
@@ -510,8 +590,11 @@ before the runs.
 | M3 | collapse `POSS`/`BYTES` to one tag | red, via possession-proof replayed as bytes signature | red — `Accept(…, pk(skI), fp(pk(skI)))`, `IssuerSigned` absent | domain separation is load-bearing; you see the attack it prevents |
 | M4 | add a second honest issuer `skI2`/`tH2` on the same channel keys | green | green — two derivations, one per issuer | binding holds with channel keys reused; B2's "signs only `tH`" was a convenience, not a dependency |
 | M5 | repo publishes digest form, verifier reads direct form, **same** `STMT` tag; query `Accept` reachability | unreachable | `not event(Accept(…)) is true` | cross-form confusion is unrepresentable in the algebra; a symbolic companion for it cannot go red (C3) |
+| M7a | *(base: `q5_single_dns_compromised.pv`)* spike's fingerprint-only PoP; query: acceptance of `(issuerId, fp(honest key), ssX, algH, verH)` under the honest key | reachable | reachable — channel evidence forged with leaked `skD`, honest PoP and bytes signature replayed | sole-channel adversary alters the honest key's signer set; the check cannot object because the PoP never mentioned the tuple |
+| M7b | same, PoP over the **tuple** per A1.5 item 3 (`sign((POSS, t), skI)`; verifier requires it over the presented `t`) | unreachable | `not event(AcceptS(…)) is true` | the design's possession check is load-bearing in degraded mode; the spike under-encoded it (Correction section) |
 
-Five for five is not a virtue of the guide; it is the expected result
+Eight for eight is not a virtue of the guide; it is the expected result
 of small models with legible structure. The value is not the outcomes.
 It is that you can now reproduce each one and, more usefully, invent
-M6.
+the next. (M7 was invented by the author's question, not by the guide
+— which is how it is supposed to work.)
