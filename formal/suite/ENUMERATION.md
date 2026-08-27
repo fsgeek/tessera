@@ -166,6 +166,43 @@ off the Band 0 gate. P8 proceeds in parallel on its own track ([proof]
 + golden vectors; A3.6 places it before Band 0 exit); S-P2's ledger
 cites it either way.
 
+## Amendment note 1 — 2026-08-27 (clerk; PROPOSED; amend-don't-rewrite)
+
+Two findings from `formal/spike/first-link/READ-AND-CHALLENGE.md`
+(author-side, non-discharging) bear on §2 above. The text above is
+left as written; this note records what a cold read should weigh.
+
+1. **S-P7's cross-form substitution companion cannot go red in
+   ProVerif.** A scratch model with the *shared* `STMT` tag — repository
+   publishes digest form, verifier reads direct form — reports `Accept`
+   unreachable (guide appendix M5): `h(t)` and a five-tuple are distinct
+   constructors and no pattern confuses them, tag or no tag. A symbolic
+   companion for this control is therefore green for a reason unrelated
+   to the tag ruling — the "companion that could not fail" pattern. The
+   control is byte-level and belongs with P8's golden vectors. Proposed
+   disposition: strike it from S-P7's companion list and record it as a
+   P8 vector obligation, leaving DECISION.md's routing ("P7/P8") intact
+   with the P8 half now the operative one.
+
+2. **S-P3 must model registration, not only verification.** In every
+   correct spike model the verifier's possession check is unexercised
+   (guide headline; appendix M1): the `IssuerPossession` conjunct is
+   discharged by the honest issuer firing the event before signing, and
+   the check rejects nothing. What the spike "consumed" from S-P3 was an
+   algebra in which DSKS is unrepresentable plus issuer honesty — not a
+   producer query. For S-P3 to be a producer in the §A3.3 sense it must
+   (a) model the authority channel publishing `fp(k)` only on a
+   possession proof under `k`, with an adversary attempting to register
+   a key it does not hold; (b) carry a companion where registration
+   omits that demand, red on a key-substitution query; (c) extend the
+   signature theory so key substitution is expressible; (d) carry the
+   multi-key manifest case of A3.2 item 3. §2's S-P3 entry above is
+   consistent with this but underspecified; the four items are what
+   "producer for the fingerprint relation" has to mean.
+
+Neither finding touches `459aff0`, criterion 0, or the selection of
+transcription binding. Both are routed to the author with this note.
+
 ## Open questions routed to the author (none block drafting S-P3)
 
 1. Adoption of this enumeration as the suite's scope (cold read).
