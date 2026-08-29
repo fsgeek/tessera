@@ -54,6 +54,12 @@ Committed per the DECISION.md pattern registered in
 criteria fixed before evidence, scoring on record, rejected
 alternatives named.
 
+[Author note 2026-08-29] As per Claude's direction, I am entering the following note:
+
+> Residual, entered by the author 2026-08-29. The first-link decision (459aff0) rests in part on ProVerif results that are at the edge of my understanding at present; for those, I have relied on adversarial review rather than deep personal understanding. "Defend it cold" is read as: defensible with the record in hand, without the AI present — not perfect recall under unscoped questioning, which no one can satisfy and which serves no relying party. Under that reading, the project as a whole is defensible; the symbolic proofs are the named exception. Accepted, not waived. Closes when I have classified the spike's RESULT lines cold, written the Q3 argument for both channel variants without the file open, and reproduced the M1/M7 mutations by hand — at which point the results 459aff0 rests on are mine to defend.
+
+The quotation of my words is correct.
+
 ## Provenance labels used in this document
 
 Added 2026-08-13 after a cross-review finding that drafted
