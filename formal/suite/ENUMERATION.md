@@ -249,3 +249,54 @@ Still nothing here touches `459aff0` or criterion 0.
 3. Confirmation that standing S1–S3 vectors are H1a/P8-track artifacts
    rather than suite obligations (this document's assumption; stated
    in §2 and reversible without rework before S-P7 exists).
+
+## Author dispositions — 2026-08-29 (clerk-entered from the author's words in session; labels per DECISION.md scheme)
+
+**Question 1 — ADOPTED (author), provisionally.** The enumeration,
+with amendment notes 1–2, is the suite's *working scope*. Ratification
+follows the S-P3 draft and the author's cold read of it — the
+first-link pattern (scope confirmed after evidence, not before). The
+author's stated reason for endorsing rather than ruling: the sequence
+is at a level of detail he would need the record to defend, and the
+recommendation was the collaborator's. Nothing in §1–§6 is ratified by
+this entry.
+
+**Question 2 — RULED (author).** Narrowing is acceptable. His words:
+*"it is acceptable, so long as at least one leg covers every claim.
+The real challenge seems to be ensuring that every claim has at least
+one tool verifying its correctness. Clearly, though, in cases where
+they overlap both must support the claim — having disagreement would
+indicate a deeper problem."* Consequences for this enumeration:
+
+- S-P1's symbolic leg proves the binding half ("no acceptance over
+  altered bytes"); P4's TLA+ model owns the verdict partition.
+- §4 gains the join the guide's C2 identified: **`Accept` ↔ P4 verdict
+  partition** — every symbolic path that stops short of `event Accept`
+  must land in `INVALID` or `UNVERIFIABLE` in P4's model, never in a
+  valid verdict. Producer: P4's model and its fail-closed invariants;
+  shared term: the acceptance predicate; cross-formalism, never marked
+  symbolically discharged.
+- The ruling states a general discipline, broader than S-P1: a
+  **claim-level coverage map** — every registered claim names at least
+  one tool leg; where two legs overlap, agreement is itself a checked
+  obligation and disagreement is a red-bar condition. This document
+  records the ruling; where the map lives (PROPERTIES.md cross-cutting
+  list is the natural place) is clerk work pending.
+
+**Question 3 — OPEN; author's direction stated, disposition needs a
+signed instrument.** The author's response questions the registered
+premise rather than choosing among the routed options. His words:
+*"I think this limitation sounded better when proposed than it does
+now. In the real world, no matter what we do up front, we will be
+subject to adversaries that are not bound by our work. Thus, what we
+are building here is our best-effort and pretending that we're going
+to be able to foresee every potential future adversarial attack in
+advance is unrealistic. That doesn't relieve us of our own goal of
+building a robust threat model; it just means being honest that we
+could be underestimating our future adversary."* The "limitation"
+read as panel criterion 4 (standing mechanism modeled in the symbolic
+suite before Band 0 exit; `FIRST-LINK-SPIKE.md`, signed `8ae4720`).
+Relaxing a signed exit criterion is amendment-discipline work, not a
+note in this file; the clerk's reading of the direction and the
+instrument it needs are routed back to the author in session. §2's
+assumption about S1–S3 stands as an assumption until then.
