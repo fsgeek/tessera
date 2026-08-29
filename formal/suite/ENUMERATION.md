@@ -300,3 +300,45 @@ Relaxing a signed exit criterion is amendment-discipline work, not a
 note in this file; the clerk's reading of the direction and the
 instrument it needs are routed back to the author in session. §2's
 assumption about S1–S3 stands as an assumption until then.
+
+**Correction, same day (2026-08-29) — the clerk's reading above was
+wrong; criterion 4 is NOT relaxed.** The author, on being shown the
+reading: *"As I understand it, we are not relaxing this requirement."*
+His gloss on "modeled" — a model that is believed, not guaranteed, to
+be correct — is the project's standing meaning of the word everywhere
+else (checked model plus broken companion, evidence for the checked
+abstraction only), and it is what criterion 4 requires. **RULED
+(author): criterion 4 stands as signed.** The entry above is retained
+as the record of the misreading.
+
+Facts established from the tree in the same session, which the
+author's clarification depends on:
+
+- **No model of the standing-evidence mechanism exists in `formal/`.**
+  The only textual hit ("standing alone", `P5P6_TemporalRevocation.tla`
+  line 182) is unrelated. The author's belief in session that the
+  mechanism had been modeled is not borne out by the tree.
+- **The standing-evidence construction has not been chosen.** A3.7.1
+  registers the invariant and lists candidates — "a terminal lineage
+  record, capability, transparency witness, or another construction
+  may discharge the invariant." DECISION.md's standing section ruled
+  the alone-case (§A3.7.1 stands; verdict "no standing" with a
+  mandatory reason) and registered the S1–S3 test conditions. It did
+  not select a construction; its "selected mechanism" is transcription
+  binding, the first-link mechanism.
+- Therefore criterion 4 is currently **unsatisfied, not relaxed**, and
+  satisfying it needs two things in order: an author selection of the
+  standing-evidence construction (a mechanism decision, DECISION.md
+  pattern — criteria before evidence), then a model of it in this
+  suite under the A1.3 adversary, before Band 0 exit.
+
+Consequences for this enumeration (PROPOSED): §2 gains a fifth model
+slot — **S-STANDING**, construction TBD by author decision — whose
+query is the A3.7.1 invariant (acceptance of a standing claim implies
+verifiable evidence binding issuance identity, attempt lineage, and
+terminal disposition) and whose companion is the transplant attack A3.9
+already names for the Kimi-2 model (standing evidence moved from a
+valid inner artifact onto a forged outer one → red). The S1–S3
+*vectors with reason codes* remain H1a/P8 artifacts; the Q3 assumption
+about vectors was never the problem. The misreading was the clerk's
+conflation of the vectors with the mechanism.
