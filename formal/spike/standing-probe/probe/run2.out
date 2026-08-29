@@ -1,0 +1,89 @@
+
+==============================================================================
+Q1 — baseline: two valid artifacts, no standing mechanism
+==============================================================================
+attempt 1 (abandoned by issuer) alone        verification=VALID_STRICT    standing=ABSENT       reason=NO_TERMINAL_DISPOSITION_EVIDENCE
+attempt 2 (shipped) alone                    verification=VALID_STRICT    standing=ABSENT       reason=NO_TERMINAL_DISPOSITION_EVIDENCE
+fields the verifier read: ['artifact.core.tuple', 'evidence[dns]', 'evidence[repo]', 'artifact.core.pub', 'artifact.core.manifest_sig', 'artifact.core.bytes_sig', 'artifact.anchor_ref', 'chain_view', 'artifact.core.declared', 'standing_evidence']
+core fields that differ between the two artifacts: ['declared']
+  declared: (0, 50)  anchor heights: {'height': 1} {'height': 3}
+does any field say 'shipped'? False
+chain-time check: attempt 1 confirmed_at 55 declared 0 delta 60 -> within window: True
+contrast: attempt 1 with anchor orphaned     verification=INVALID         standing=ABSENT       reason=NO_TERMINAL_DISPOSITION_EVIDENCE  env-reasons=['ANCHOR_ABSENT']
+
+==============================================================================
+Q2 — terminal lineage record: S1 / S2 / S3
+==============================================================================
+TLR body: {
+ "binding": "handle",
+ "lineage": [
+  {
+   "ordinal": 1,
+   "handle": "633dc0882c1cdf366f53c43025f4445f4546229172429bf1d13968b1c5fee326",
+   "anchor_ref": {
+    "height": 1
+   },
+   "disposition": "ABANDONED_ISSUER_TIMEOUT"
+  },
+  {
+   "ordinal": 2,
+   "handle": "2719bdc2850c6133bf074daf8369fcd40c0266591a56443740bb2dea86fce69e",
+   "anchor_ref": {
+    "height": 3
+   },
+   "disposition": "SHIPPED"
+  }
+ ],
+ "terminal": {
+  "disposition": "SHIPPED",
+  "handle": "2719bdc2850c6133bf074daf8369fcd40c0266591a56443740bb2dea86fce69e",
+  "ordinal": 2
+ }
+} ...
+S1: attempt 2 + TLR                          verification=VALID_STRICT    standing=ESTABLISHED  reason=TERMINAL_DISPOSITION_SHOWN
+S2: attempt 1 + TLR                          verification=VALID_STRICT    standing=ABSENT       reason=SUPERSEDED
+S3: attempt 1 alone                          verification=VALID_STRICT    standing=ABSENT       reason=NO_TERMINAL_DISPOSITION_EVIDENCE
+three distinct (standing, reason) outputs: True [('ABSENT', 'NO_TERMINAL_DISPOSITION_EVIDENCE'), ('ABSENT', 'SUPERSEDED'), ('ESTABLISHED', 'TERMINAL_DISPOSITION_SHOWN')]
+S1/S2/S3 verification verdicts unchanged by standing: {'VALID_STRICT'}
+
+==============================================================================
+Q3 — transplant, with and without artifact binding
+==============================================================================
+(a) other content + attempt 2's TLR [handle] verification=VALID_STRICT    standing=ABSENT       reason=STANDING_EVIDENCE_MISMATCH
+(b) wrapper(attempt 1 as #2) + TLR [handle]  verification=VALID_STRICT    standing=ABSENT       reason=SUPERSEDED
+(a) other content + TLR [ordinal, BROKEN]    verification=VALID_STRICT    standing=ESTABLISHED  reason=TERMINAL_DISPOSITION_SHOWN
+(b) wrapper(attempt 1 as #2) + TLR [ordinal, BROKEN] verification=VALID_STRICT    standing=ESTABLISHED  reason=TERMINAL_DISPOSITION_SHOWN
+what 'handle' binds to: sha256 of the signed core (tuple, manifest sig, content hash, bytes sig, declared, pub)
+
+==============================================================================
+Q4 — collapsing negative control (one reason code for S2 and S3)
+==============================================================================
+collapsed verifier, S2                       verification=VALID_STRICT    standing=ABSENT       reason=NO_STANDING
+collapsed verifier, S3                       verification=VALID_STRICT    standing=ABSENT       reason=NO_STANDING
+discrimination check on the collapsed verifier: FAIL (good — control fired)
+discrimination check on the correct verifier: PASS
+
+==============================================================================
+Q5 — equivocation: two TLRs from the same key
+==============================================================================
+attempt 1 + TLR-B (names attempt 1 shipped)  verification=VALID_STRICT    standing=ESTABLISHED  reason=TERMINAL_DISPOSITION_SHOWN
+attempt 2 + TLR-A (names attempt 2 shipped)  verification=VALID_STRICT    standing=ESTABLISHED  reason=TERMINAL_DISPOSITION_SHOWN
+a verifier holding either bundle alone detects the conflict: False (it has no way to see the other TLR)
+
+==============================================================================
+Q6 — what the verifier obtained from outside the bundle
+==============================================================================
+external fetches across Q1–Q3: 0
+inputs the verifier held BEFORE the bundle (trust configuration): ['dns', 'repo'] k, delta
+inputs from the bundle only: ['artifact.anchor_ref', 'artifact.core.bytes_sig', 'artifact.core.declared', 'artifact.core.manifest_sig', 'artifact.core.pub', 'artifact.core.tuple', 'chain_view', 'evidence[dns]', 'evidence[repo]', 'standing_evidence']
+
+==============================================================================
+Q7 — refusal join: TLR with terminal REFUSED vs A3.7.2's portable refusal record
+==============================================================================
+refused lifecycle: attempt 1 + REFUSED TLR   verification=VALID_STRICT    standing=ABSENT       reason=ISSUANCE_REFUSED
+refused lifecycle: attempt 2 + REFUSED TLR   verification=VALID_STRICT    standing=ABSENT       reason=ISSUANCE_REFUSED
+refused lifecycle: attempt 3 + REFUSED TLR   verification=VALID_STRICT    standing=ABSENT       reason=ISSUANCE_REFUSED
+refused lifecycle: attempt 1 alone           verification=VALID_STRICT    standing=ABSENT       reason=NO_TERMINAL_DISPOSITION_EVIDENCE
+TLR(REFUSED) fields: ['binding', 'lineage', 'terminal'] | lineage entry fields: ['anchor_ref', 'disposition', 'handle', 'ordinal']
+A3.7.2 portable refusal record fields (from the amendment text): attempt identity, disposition, disclosable reasons, evidence needed to verify it; plus a non-identifying public commitment value.
+overlap: attempt identity (handle), disposition. TLR lacks: reasons, commitment value. Refusal record lacks: the full attempt lineage with anchor refs.

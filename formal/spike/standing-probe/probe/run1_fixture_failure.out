@@ -1,0 +1,89 @@
+
+==============================================================================
+Q1 — baseline: two valid artifacts, no standing mechanism
+==============================================================================
+attempt 1 (abandoned by issuer) alone        verification=UNVERIFIABLE    standing=ABSENT       reason=NO_TERMINAL_DISPOSITION_EVIDENCE  env-reasons=['EVIDENCE_INVALID:dns', 'EVIDENCE_INVALID:repo', 'NO_AUTHORITY_EVIDENCE']
+attempt 2 (shipped) alone                    verification=UNVERIFIABLE    standing=ABSENT       reason=NO_TERMINAL_DISPOSITION_EVIDENCE  env-reasons=['EVIDENCE_INVALID:dns', 'EVIDENCE_INVALID:repo', 'NO_AUTHORITY_EVIDENCE']
+fields the verifier read: ['artifact.core.tuple', 'evidence[dns]', 'evidence[repo]', 'standing_evidence']
+core fields that differ between the two artifacts: ['declared']
+  declared: (0, 50)  anchor heights: {'height': 1} {'height': 3}
+does any field say 'shipped'? False
+chain-time check: attempt 1 confirmed_at 55 declared 0 delta 60 -> within window: True
+contrast: attempt 1 with anchor orphaned     verification=UNVERIFIABLE    standing=ABSENT       reason=NO_TERMINAL_DISPOSITION_EVIDENCE  env-reasons=['EVIDENCE_INVALID:dns', 'EVIDENCE_INVALID:repo', 'NO_AUTHORITY_EVIDENCE']
+
+==============================================================================
+Q2 — terminal lineage record: S1 / S2 / S3
+==============================================================================
+TLR body: {
+ "binding": "handle",
+ "lineage": [
+  {
+   "ordinal": 1,
+   "handle": "3fdf82a66f5353cf5aef622c61453dacf0e7cc01f33bf625e8b9f806e4f2a829",
+   "anchor_ref": {
+    "height": 1
+   },
+   "disposition": "ABANDONED_ISSUER_TIMEOUT"
+  },
+  {
+   "ordinal": 2,
+   "handle": "279531001ecd883bd85818c421452b899116987e593ae097bfda3835e3b47636",
+   "anchor_ref": {
+    "height": 3
+   },
+   "disposition": "SHIPPED"
+  }
+ ],
+ "terminal": {
+  "disposition": "SHIPPED",
+  "handle": "279531001ecd883bd85818c421452b899116987e593ae097bfda3835e3b47636",
+  "ordinal": 2
+ }
+} ...
+S1: attempt 2 + TLR                          verification=UNVERIFIABLE    standing=UNVERIFIABLE reason=STANDING_EVIDENCE_SIGNATURE_INVALID  env-reasons=['EVIDENCE_INVALID:dns', 'EVIDENCE_INVALID:repo', 'NO_AUTHORITY_EVIDENCE']
+S2: attempt 1 + TLR                          verification=UNVERIFIABLE    standing=UNVERIFIABLE reason=STANDING_EVIDENCE_SIGNATURE_INVALID  env-reasons=['EVIDENCE_INVALID:dns', 'EVIDENCE_INVALID:repo', 'NO_AUTHORITY_EVIDENCE']
+S3: attempt 1 alone                          verification=UNVERIFIABLE    standing=ABSENT       reason=NO_TERMINAL_DISPOSITION_EVIDENCE  env-reasons=['EVIDENCE_INVALID:dns', 'EVIDENCE_INVALID:repo', 'NO_AUTHORITY_EVIDENCE']
+three distinct (standing, reason) outputs: False [('ABSENT', 'NO_TERMINAL_DISPOSITION_EVIDENCE'), ('UNVERIFIABLE', 'STANDING_EVIDENCE_SIGNATURE_INVALID')]
+S1/S2/S3 verification verdicts unchanged by standing: {'UNVERIFIABLE'}
+
+==============================================================================
+Q3 — transplant, with and without artifact binding
+==============================================================================
+(a) other content + attempt 2's TLR [handle] verification=UNVERIFIABLE    standing=UNVERIFIABLE reason=STANDING_EVIDENCE_SIGNATURE_INVALID  env-reasons=['EVIDENCE_INVALID:dns', 'EVIDENCE_INVALID:repo', 'NO_AUTHORITY_EVIDENCE']
+(b) wrapper(attempt 1 as #2) + TLR [handle]  verification=UNVERIFIABLE    standing=UNVERIFIABLE reason=STANDING_EVIDENCE_SIGNATURE_INVALID  env-reasons=['EVIDENCE_INVALID:dns', 'EVIDENCE_INVALID:repo', 'NO_AUTHORITY_EVIDENCE']
+(a) other content + TLR [ordinal, BROKEN]    verification=UNVERIFIABLE    standing=UNVERIFIABLE reason=STANDING_EVIDENCE_SIGNATURE_INVALID  env-reasons=['EVIDENCE_INVALID:dns', 'EVIDENCE_INVALID:repo', 'NO_AUTHORITY_EVIDENCE']
+(b) wrapper(attempt 1 as #2) + TLR [ordinal, BROKEN] verification=UNVERIFIABLE    standing=UNVERIFIABLE reason=STANDING_EVIDENCE_SIGNATURE_INVALID  env-reasons=['EVIDENCE_INVALID:dns', 'EVIDENCE_INVALID:repo', 'NO_AUTHORITY_EVIDENCE']
+what 'handle' binds to: sha256 of the signed core (tuple, manifest sig, content hash, bytes sig, declared, pub)
+
+==============================================================================
+Q4 — collapsing negative control (one reason code for S2 and S3)
+==============================================================================
+collapsed verifier, S2                       verification=UNVERIFIABLE    standing=UNVERIFIABLE reason=STANDING_EVIDENCE_SIGNATURE_INVALID  env-reasons=['EVIDENCE_INVALID:dns', 'EVIDENCE_INVALID:repo', 'NO_AUTHORITY_EVIDENCE']
+collapsed verifier, S3                       verification=UNVERIFIABLE    standing=ABSENT       reason=NO_STANDING  env-reasons=['EVIDENCE_INVALID:dns', 'EVIDENCE_INVALID:repo', 'NO_AUTHORITY_EVIDENCE']
+discrimination check on the collapsed verifier: PASS (bad — control did not fire)
+discrimination check on the correct verifier: PASS
+
+==============================================================================
+Q5 — equivocation: two TLRs from the same key
+==============================================================================
+attempt 1 + TLR-B (names attempt 1 shipped)  verification=UNVERIFIABLE    standing=UNVERIFIABLE reason=STANDING_EVIDENCE_SIGNATURE_INVALID  env-reasons=['EVIDENCE_INVALID:dns', 'EVIDENCE_INVALID:repo', 'NO_AUTHORITY_EVIDENCE']
+attempt 2 + TLR-A (names attempt 2 shipped)  verification=UNVERIFIABLE    standing=UNVERIFIABLE reason=STANDING_EVIDENCE_SIGNATURE_INVALID  env-reasons=['EVIDENCE_INVALID:dns', 'EVIDENCE_INVALID:repo', 'NO_AUTHORITY_EVIDENCE']
+a verifier holding either bundle alone detects the conflict: False (it has no way to see the other TLR)
+
+==============================================================================
+Q6 — what the verifier obtained from outside the bundle
+==============================================================================
+external fetches across Q1–Q3: 0
+inputs the verifier held BEFORE the bundle (trust configuration): ['dns', 'repo'] k, delta
+inputs from the bundle only: ['artifact.core.tuple', 'evidence[dns]', 'evidence[repo]', 'standing_evidence']
+
+==============================================================================
+Q7 — refusal join: TLR with terminal REFUSED vs A3.7.2's portable refusal record
+==============================================================================
+refused lifecycle: attempt 1 + REFUSED TLR   verification=UNVERIFIABLE    standing=UNVERIFIABLE reason=STANDING_EVIDENCE_SIGNATURE_INVALID  env-reasons=['EVIDENCE_INVALID:dns', 'EVIDENCE_INVALID:repo', 'NO_AUTHORITY_EVIDENCE']
+refused lifecycle: attempt 2 + REFUSED TLR   verification=UNVERIFIABLE    standing=UNVERIFIABLE reason=STANDING_EVIDENCE_SIGNATURE_INVALID  env-reasons=['EVIDENCE_INVALID:dns', 'EVIDENCE_INVALID:repo', 'NO_AUTHORITY_EVIDENCE']
+refused lifecycle: attempt 3 + REFUSED TLR   verification=UNVERIFIABLE    standing=UNVERIFIABLE reason=STANDING_EVIDENCE_SIGNATURE_INVALID  env-reasons=['EVIDENCE_INVALID:dns', 'EVIDENCE_INVALID:repo', 'NO_AUTHORITY_EVIDENCE']
+refused lifecycle: attempt 1 alone           verification=UNVERIFIABLE    standing=ABSENT       reason=NO_TERMINAL_DISPOSITION_EVIDENCE  env-reasons=['EVIDENCE_INVALID:dns', 'EVIDENCE_INVALID:repo', 'NO_AUTHORITY_EVIDENCE']
+TLR(REFUSED) fields: ['binding', 'lineage', 'terminal'] | lineage entry fields: ['anchor_ref', 'disposition', 'handle', 'ordinal']
+A3.7.2 portable refusal record fields (from the amendment text): attempt identity, disposition, disclosable reasons, evidence needed to verify it; plus a non-identifying public commitment value.
+overlap: attempt identity (handle), disposition. TLR lacks: reasons, commitment value. Refusal record lacks: the full attempt lineage with anchor refs.
