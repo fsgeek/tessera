@@ -5,6 +5,11 @@ becomes RULED (author) on the author's signing commit.** Until that
 commit this file records a statement the author made and the
 consequences the clerk drew from it; the consequences are PROPOSED.
 
+[Author Note: 2026-08-29]  That's correct - the intent wasn't to prohibit
+test code as part of design, it was to insist the design needed to be
+robust prior to building the production service.  A broader reading is
+unreasonable.
+
 ## What prompted this
 
 The pre-registration says (`docs/phase-0-prereg.md`, Band 0):
