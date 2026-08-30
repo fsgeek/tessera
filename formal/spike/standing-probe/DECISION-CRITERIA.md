@@ -148,17 +148,35 @@ computes: signature under the entitled key; whether the presented
 artifact's identity appears in the lineage; whether it is the terminal
 one. Does not claim: that the issuer has not signed a second,
 contradictory record; anything about attempts absent from the lineage.
+*G0 story:* the record itself is the standing object; it binds all
+three of identity, lineage, and disposition under the entitled key.
+*G4 sentence:* a verifier holding one bundle can establish that
+**this** record, under the entitled key, binds **this** artifact and
+names its disposition; it cannot establish that no second record
+exists.
 
-**Capability.** *(Clerk sketch, 2026-08-30; not prototyped.)* A
-single-purpose token signed by the entitled key at terminal
-disposition, naming the designated artifact's identity and
-disposition, carried with that artifact. Signer: the entitled key.
-Verifier computes: token signature; token identity equals the
-presented artifact's identity; disposition. Carries no lineage — so
-whether S2 (superseded, lineage present) remains distinguishable from
-S3 depends on lineage being supplied some other way, which the
-candidate must specify. Does not claim: anything about other attempts;
-non-equivocation.
+**Capability.** *(Clerk sketch, 2026-08-30, completed 2026-08-30 on
+review; not prototyped.)* A single-purpose token signed by the
+entitled key at terminal disposition, naming the designated artifact's
+identity and disposition, issued **only** to the designated artifact
+and carried with it. Signer: the entitled key. Verifier computes:
+token signature; token identity equals the presented artifact's
+identity; disposition. **By design it carries no lineage** — that is
+what distinguishes it from a TLR; a capability that listed superseded
+identities would be a TLR under another name. Consequently an
+abandoned artifact holds no token, and the verifier cannot tell S2
+(superseded) from S3 (presented alone): both are "no token present."
+This is specified as the candidate's design, not left as a gap, so
+that it is *scored* against G3 rather than excluded as unspecified.
+Does not claim: anything about other attempts; non-equivocation.
+*G0 story:* the token binds identity and disposition under the
+entitled key; it does **not** bind lineage. G0 requires all three; the
+scoring must say whether "binds the attempt lineage" is satisfied by
+a construction that omits lineage on purpose (the clerk's reading: it
+is not). *G4 sentence:* a verifier holding one bundle can establish
+that this token, under the entitled key, designates this artifact; it
+cannot establish that no second token exists, nor that any other
+attempt existed at all.
 
 **Transparency witness.** *(Clerk sketch, 2026-08-30; not
 prototyped.)* An append-only log, operated by Tessera or a third
@@ -172,6 +190,17 @@ the extent the log is consistent — a contradictory second disposition
 requires a second log entry, visible to anyone auditing the log — at
 the price of a trusted, surviving log. Does not claim: log
 availability or honesty beyond what the trust configuration asserts.
+*G0 story:* the standing object is the **log entry**, signed by the
+entitled key and binding identity, lineage, and disposition; the log
+head is a second signer that authenticates *inclusion*, not
+disposition — G0 is satisfied by the entry, and the head is scored
+under G2/C2. *G4 sentence:* a verifier holding one bundle can
+establish that this entry is included under the configured log head;
+it cannot establish log uniqueness — that no second head, or second
+entry under the same head, carries a contradictory disposition —
+unless the trust configuration already asserts a single consistent
+log and the verifier can reach it, which is the consistency query G2
+permits to sit outside the standing report.
 
 **Other.** Must be specified to the same bar — object, signer,
 verifier computation, non-claims — before scoring begins.
