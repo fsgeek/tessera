@@ -598,3 +598,25 @@ of small models with legible structure. The value is not the outcomes.
 It is that you can now reproduce each one and, more usefully, invent
 the next. (M7 was invented by the author's question, not by the guide
 — which is how it is supposed to work.)
+
+---
+
+## Postscript (2026-08-30) — the blind reverse-translation
+
+A method proposed by an outside reviewer and run the same day: a
+different model, given only the seven `.pv` files with every comment
+stripped, wrote back the English claim it believed each query proved.
+Record: `docs/reviews/2026-08-30-blind-query-reverse-translation.md`.
+Two things bear on this guide. First, it reached the headline (M1 —
+the possession check is load-bearing for nothing) by *reading*, not
+by mutation, and reached author finding 3 (`h(t)` ≡ `t`) the same way
+— independent corroboration that the mutations here measured real
+structure. Second, it could not reach the correction: a reader of the
+code alone faithfully reports a redundant check and cannot know the
+design's object was richer than the model's. That is the difference
+between the two audits Band 0 needs — code → English (the blind
+read) and record → code (this guide's correction) — and neither
+substitutes for the other. It also named a gap this guide missed: no
+model registers a reachability query on `Accept`, so vacuity was
+detectable only by the M1b reading skill; now a registered suite
+obligation (ENUMERATION.md amendment note 3).

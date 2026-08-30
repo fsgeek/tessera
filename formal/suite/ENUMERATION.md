@@ -241,6 +241,37 @@ enumeration:
 
 Still nothing here touches `459aff0` or criterion 0.
 
+## Amendment note 3 — 2026-08-30 (clerk; PROPOSED; two additions to §5 discipline)
+
+Source: `docs/reviews/2026-08-30-blind-query-reverse-translation.md`
+— a blind reader (Claude Opus, comment-stripped code only) translated
+the seven first-link models back to English; no divergence from the
+registered claims, and two structural gaps no registered text
+addresses:
+
+1. **A reachability query on the acceptance event is mandatory per
+   model** — `query …; event(Accept(…)).`, expected `not event(…) is
+   false` (reachable) — registered with the model's predictions, as
+   the ProVerif analogue of the TLA+ vacuity witnesses. A model whose
+   verifier never accepts satisfies every correspondence vacuously;
+   the first-link `.out` files show `goal reachable` derivations, but
+   nothing required anyone to look. The absence of a derivation line
+   on a green correspondence is the vacuity tell (guide appendix
+   M1b); this makes it a registered red-bar rather than a reading
+   skill.
+2. **At least two honest values on every axis a query binds** — two
+   issuers, two payloads, two honestly published tuples — so that
+   "with the same `t`/`k`/`fb`" has content beyond matching a
+   one-element set. The spike's models carry one of each; Q4's
+   unreachability in particular is carried by there being only one
+   acceptable record. The guide's M4 (second issuer) was a scratch
+   run; the suite makes it structure.
+
+Not retrofitted to the first-link models: their `.out` files are
+committed evidence and their goal lines are present. Noted for the
+relying-party story: in Q7, the "pair" verifier's weak DNS check pins
+nothing — "pair" there means one strong check plus one inert one.
+
 ## Open questions routed to the author (none block drafting S-P3)
 
 1. Adoption of this enumeration as the suite's scope (cold read).
