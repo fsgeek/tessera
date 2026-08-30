@@ -188,19 +188,46 @@ record.
 
 **Project-level diffs (should-be vs. the record), each checked:**
 
-- **D1 — the forward link.** The author describes a per-attestation
-  generation chain (each attestation signs a value included in the
-  next; compromise becomes visible as a fork) and writes "which I am
-  unclear if it has survived." Checked: the surviving record is the
-  2026-08-12 succession exploration — old-key-attests-new, tombstone,
-  chain-of-custody across *rotations* — which is (a)
-  exploration-level, **not registered**, and (b) at the **key** level,
-  not the per-attestation level the author describes. The author's
-  mental model and the record hold different constructions, and
-  neither is registered. **Routed: register or retire** (candidate
-  for the docket; if registered, its relationship to the TLR's
-  lineage — which already chains attempts within one issuance — must
-  be stated).
+- **D1 — the forward link.** *(Corrected 2026-08-30, same day, after
+  the author supplied the mechanism's purpose — "it constrains
+  something about the next attestation; that's what makes key
+  compromise visible: split brain" — and a wider search found it.)*
+  The scoring as first committed said the author's per-attestation
+  construction had left no registered trace and the nearest relative
+  was key-level. **Wrong on the first half.** The construction
+  survives, per-attestation and in depth, in
+  `docs/exploration-2026-07-19-service-layer-elicitation.md`
+  ("id-of-next", corrected by Codex the same day to **"predeclared
+  successor slot"**), with precisely the author's semantics: the
+  next-ID is public inside the current signed bytes, a *forcing*
+  mechanism — a thief who takes the slot while the issuer still
+  publishes creates two signed instances of one (issuer, slot),
+  *provable equivocation*; a thief who avoids it is rejected as
+  lineage. The note also carries what today's restatement should
+  inherit: (i) the open comparison — a plain
+  sequence+previous-hash rule appears to yield the identical
+  split-brain property, so the UUID "earns its place only if it
+  supplies a separate property," **mechanism explicitly NOT to be
+  registered yet**; (ii) two assumptions that must be registered as
+  assumptions — the legitimate issuer survives to produce the
+  collision, and the two instances must *meet* where an observer sees
+  both; (iii) the synthesis that the in-bytes rule and a transparency
+  overlay as meeting point "each cover the other's weakness"; (iv)
+  KERI pre-rotation as the stronger mechanism for *key* succession,
+  distinct from slot commitment for *issuance* succession; and (v)
+  the 07-18 finding that A1.3's registered adversary has **no
+  chain-continuity or equivocation capability** — the service-layer
+  ledger threat surface is unregistered. Status: exploration tier,
+  Codex-reviewed, verdict "mature enough to begin stage-one
+  registration; NOT mature enough to freeze mechanisms" — and
+  untouched since 2026-07-19. **Routed, reshaped:** not
+  register-or-retire a lost idea, but schedule or defer the row-2
+  registration the 07-19 note already declared next (the
+  four-mechanism × four-trace comparison), and state its relation to
+  the TLR: the TLR chains *attempts within one issuance, backward*;
+  the successor slot chains *issuances across the service's life,
+  forward*. Different rows; the split-brain visibility the author
+  described belongs to the second and is not supplied by the first.
 - **D2 — "SHA-1 (git)":** correct; this repository's git object
   format is `sha1` (verified), and the author's caveat matches the
   record's reliance on OTS-over-commit-hash rather than on SHA-1
