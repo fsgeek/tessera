@@ -85,9 +85,12 @@ mean something if a citation target moves.
   survives; continued availability after handoff is conditional on
   custody. "Custody burden" in C2 means what some party must retain
   under that floor for the candidate's claims to keep holding.
-- **The S-series (first-link `DECISION.md`, exit condition 3).**
-  Three registered standing test conditions with mandatory distinct
-  reason codes: **S1** lineage present, artifact *is* the shipped
+- **The S-series.** Registered in the first-link `DECISION.md` under
+  the heading *"Standing test conditions (registered exit condition
+  3)"* — there, and not in a standing document, because resolving
+  standing was an exit condition of the first-link spike; the
+  executable form is `PROBE.md` Q2/Q4. Three standing test conditions
+  with mandatory distinct reason codes: **S1** lineage present, artifact *is* the shipped
   anchor → standing, `TERMINAL_DISPOSITION_SHOWN`; **S2** lineage
   present, artifact *superseded* → no standing, `SUPERSEDED`; **S3**
   lineage absent, artifact presented alone → no standing,
@@ -183,7 +186,8 @@ report does not, provided G4 states the split. *(A3 §A3.8; §A3.4.)*
 distinct (standing, reason) outputs from the candidate's verifier; the
 collapsing negative control fails against it; and the P4 verdict is
 identical across all three presentations. *(First-link `DECISION.md`
-exit condition 3; A3 §A3.7.1.)*
+§"Standing test conditions (registered exit condition 3)"; `PROBE.md`
+Q2/Q4; A3 §A3.7.1.)*
 
 **G4 — Explicit equivocation boundary.** The candidate states exactly
 what a verifier holding one bundle can and cannot establish when the
@@ -252,9 +256,14 @@ anchor references the verifier never read" is accidental.
 be honest, and how many must survive, for the construction's claims to
 hold — at issuance and over the horizon the survivability floor (§0)
 governs; and what a custodian must retain for the claims to remain
-checkable (band-1 docket item 17: retention and retrieval
-responsibility for anything a verifier must fetch is currently
-unassigned).
+checkable. The sharp question is whether the construction **creates a
+new custody subject** — bytes some party must retain and serve beyond
+the bundle. Evidence carried in the bundle (G2) should create none; a
+construction that depends on a surviving log or registry does, and
+that subject then has no assigned owner (band-1 docket item 17:
+retention and retrieval responsibility for anything a verifier must
+fetch from outside the envelope is currently unassigned). Score the
+construction's own custody demand, not its resemblance to item 17.
 
 **C3 — Failure visibility.** When the construction's assumptions fail
 — key compromise, custodian loss, log unavailability — does a relying
