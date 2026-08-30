@@ -287,12 +287,24 @@ identical across all three presentations. *(First-link `DECISION.md`
 §"Standing test conditions (registered exit condition 3)"; `PROBE.md`
 Q2/Q4; A3 §A3.7.1.)*
 
-**G4 — Explicit equivocation boundary.** The candidate states exactly
-what a verifier holding one bundle can and cannot establish when the
-entitled key has issued contradictory terminal claims for one lineage.
-A candidate is not required to close the A2 residue; it is required to
-name its boundary. A missing or overclaiming boundary statement fails.
-*(A3 §A3.7 item 1, the residue A2.4 leaves open.)*
+**G4 — Explicit equivocation boundary, including in time.** The
+candidate states exactly what a verifier holding one bundle can and
+cannot establish when the entitled key has issued contradictory
+terminal claims for one lineage — **and** when such a claim was signed
+*after* the lineage's anchoring window, by a holder of the entitled
+key at a time when no living authority can revoke it (the service may
+be dead; the key may have leaked years later). Artifacts are
+time-bounded by anchoring (A2.1: declared time within δ of chain
+time); standing evidence is created after the anchor confirms and is
+not bounded by anything unless the candidate binds it — by anchoring
+the evidence itself, by binding it into an anchored object, or by
+stating plainly that it is unbounded. A candidate is not required to
+close the A2 residue or the post-mortem case; it is required to name
+its boundary in both. A missing or overclaiming boundary statement
+fails. *(A3 §A3.7 item 1, the residue A2.4 leaves open; A2.1 temporal
+predicate; §A3.4 floor. Temporal clause added 2026-08-30 on a blind
+project-level review — the criteria as first drafted asked what, not
+when.)*
 
 ---
 
