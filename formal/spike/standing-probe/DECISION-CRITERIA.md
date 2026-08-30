@@ -11,7 +11,12 @@ wording decision is left for the author in the body (R2, marked).
 that built and ran the probe (Claude) has read its results. The
 reviewer that shaped this document's structure (Codex, 2026-08-29) had
 not; the blind reviewer whose findings drove the 2026-08-30 revision
-had not; the author has not. Structure follows Codex's blind draft.
+had not; a third blind reviewer the same day — **a separate Claude
+instance**, blind to results and to this session's context, so its
+review is a same-model check and weaker as an independence test than
+the other two (A1.7's correlated-blind-spot concern), though it found
+the transparency-witness G0 overclaim the other two missed — had not;
+the author has not. Structure follows Codex's blind draft.
 Claude's contributions are: pinning terms to registered text; the
 glossary and restatements below (from registered text only); the
 candidate sketches — of which the terminal-lineage-record sketch is
