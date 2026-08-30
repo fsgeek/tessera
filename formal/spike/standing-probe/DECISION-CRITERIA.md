@@ -52,6 +52,19 @@ mean something if a citation target moves.
   artifacts can exist for one content (the A2 residue).
 - **Terminal disposition.** The lineage's end state as declared by the
   issuer: which attempt shipped, or that issuance was refused.
+- **The A2 residue (equivocation).** Because two cryptographically
+  valid artifacts can exist for one content (above), and because the
+  entitled key that declares which one shipped can sign more than one
+  such declaration, a verifier holding one bundle may be unable to
+  tell that a contradictory declaration exists. Amendment 2 left this
+  open by design; A3 §A3.7.1 confines it without closing it. G4 asks
+  each candidate to say precisely how much of this it leaves open.
+- **Band 0 / Band 0 exit.** The project's formal-foundation phase: the
+  central guarantees are established by machine-checked models before
+  any code intended for the service is written (`docs/phase-0-prereg.md`;
+  scope of "any code" clarified 2026-08-29, `634c2f2`). Band 0 exit is
+  the signed commit that opens implementation; several obligations,
+  including R1 below, must be discharged before it.
 - **Issuance identity.** The identity of one attempt's artifact. G1
   fixes how it is obtained.
 - **Standing evidence.** Whatever object the candidate supplies to let
