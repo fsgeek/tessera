@@ -200,3 +200,27 @@ specification) or disposed with reasons.
     irreversible (an envelope field, a frozen format) is being
     postponed — because that check is what separates this principle
     from procrastination.
+
+19. **Verdict composition along a renewal chain** (candidate, 2026-08-30;
+    surfaced in the author's design walk with a Claude Desktop
+    instance, clerk-entered). Over a long horizon, renewal wraps
+    (A3.4: RFC 4998-style; A3.5: each tending record references the
+    renewal artifact, its predecessor, and a predecessor-link result),
+    so a far-future verification is a walk down a chain of wrappers,
+    each link judged under the standard of its own epoch. The record
+    already forbids an aggregate checkmark (A3.8) and requires per-layer
+    evaluation of wrapped artifacts (A3.2 item 4) — but both were
+    framed for layers inside one bundle at one time, and the S-series
+    and P4 were framed for single artifacts. **Not registered:** (a)
+    that a renewal chain is the A3.2 item 4 per-layer case extended in
+    time, evaluated link by link under each link's epoch — which
+    depends on the registry-epoch material deferred under item 18; (b)
+    what one `UNVERIFIABLE` link means for the links beneath it, given
+    that a relying party's trust is rooted at the newest signer it can
+    verify — the honest candidate rule, consistent with A3.8, is
+    *report per link, never propagate as `INVALID`, and state which
+    links the verifier could reach from its trust root*; (c) where
+    standing sits on a chain: the innermost issuance identity (A3.9's
+    transplant companion already says a wrapper cannot re-scope it).
+    Cheap to specify now; expensive to discover at year ten. Disposition
+    is the author's; nothing here is adopted.
