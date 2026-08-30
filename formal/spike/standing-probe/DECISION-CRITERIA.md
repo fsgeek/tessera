@@ -1,31 +1,40 @@
 # Standing-evidence mechanism decision — criteria and selection rule
 
-**Status: PROPOSED (clerk-drafted 2026-08-29; revised toward
-stand-alone 2026-08-30 on a blind external review). Becomes REGISTERED
+**Status: PROPOSED (drafted by the AI collaborator 2026-08-29; revised toward
+stand-alone 2026-08-30 on a series of blind external reviews). Becomes REGISTERED
 on the author's commit, which affirms that the author had not read
 `RESULTS-PROBE.md` at the time of registration.** Edit before
-committing; the registration is the commit, not this draft. One
-wording decision is left for the author in the body (R2, marked).
+committing; the registration is the commit, not this draft. The one
+wording decision the draft carried (R2) was ruled by the author on
+2026-08-30 and is recorded in the body.
 
 **Provenance, stated because it matters here.** The AI collaborator
 that built and ran the probe (Claude) has read its results. The
 reviewer that shaped this document's structure (Codex, 2026-08-29) had
-not; the blind reviewer whose findings drove the 2026-08-30 revision
-had not; a third blind reviewer the same day — **a separate Claude
-instance**, blind to results and to this session's context, so its
-review is a same-model check and weaker as an independence test than
+not.
+
+On 2026-08-30 the document was iteratively handed to three blind
+reviewers.  The first blind reviewer was Grok, and its feedback
+was incorporated into a committed update.  The second
+blind reviewer was Gemini, and its feedback was also incorporated
+into a separate committed update.  The third blind reviewer,
+**a separate Claude instance** using a different framework,
+blind to results and to this session's context, so its review is
+a same-model check and weaker as an independence test than
 the other two (A1.7's correlated-blind-spot concern), though it found
 the transparency-witness G0 overclaim the other two missed — had not;
-the author has not. Structure follows Codex's blind draft.
-Claude's contributions are: pinning terms to registered text; the
-glossary and restatements below (from registered text only); the
-candidate sketches — of which the terminal-lineage-record sketch is
-**copied from `PROBE.md` §Fixture, frozen before the probe ran**, so
+the author has not. Changes made and captured in a separate commit.
+The structure follows Codex's blind draft. Claude's contributions
+are: pinning terms to registered text; the glossary and restatements
+below (from registered text only); the candidate sketches — of
+which the terminal-lineage-record sketch is **copied from
+`PROBE.md` §Fixture, frozen before the probe ran**, so
 that a non-blind hand did not write it; and one flagged dissent (R2).
 
-"The clerk" throughout means Claude, the AI collaborator acting as
-drafting clerk; "the clerk's reading" is that collaborator's on-record
-opinion and carries no authority.
+Drafting throughout was by Claude, the AI collaborator. Its
+observations carry no authority; every load-bearing statement in this
+file carries a provenance label under the DECISION.md scheme, and an
+unlabeled sentence is draft prose, not an adopted position.
 
 Pattern: `formal/spike/first-link/DECISION.md` — criteria fixed before
 evidence, scoring on record, rejected alternatives named.
@@ -169,6 +178,13 @@ candidate not specified to this bar before scoring is not a candidate.
 Candidates are scored on their design, not on whether a probe
 prototyped them.
 
+**Forward reference.** Candidate sketches are subject to the gates in
+§2. Where a gate fixes a term a sketch left open, the sketch is read
+as amended by that gate, and the sketch says so at the point of
+amendment — the TLR's issuance-identity form is the instance. Nothing
+in a sketch is rewritten silently; a sketch that had to be changed
+after registration carries a dated note, per amend-don't-rewrite.
+
 **Terminal lineage record (TLR).** *(Sketch copied from `PROBE.md`
 §Fixture, frozen 2026-08-29 before the probe ran; one clause
 completed from G1, not from results.)* An issuer-signed object created
@@ -189,30 +205,36 @@ three of identity, lineage, and disposition under the entitled key.
 names its disposition; it cannot establish that no second record
 exists.
 
-**Capability.** *(Clerk sketch, 2026-08-30, completed 2026-08-30 on
-review; not prototyped.)* A single-purpose token signed by the
-entitled key at terminal disposition, naming the designated artifact's
-identity and disposition, issued **only** to the designated artifact
-and carried with it. Signer: the entitled key. Verifier computes:
-token signature; token identity equals the presented artifact's
-identity; disposition. **By design it carries no lineage** — that is
-what distinguishes it from a TLR; a capability that listed superseded
+**Capability — a design-space alternative, expected to fail G0.**
+*(Drafted by the AI collaborator 2026-08-30; reframed the same day on the author's
+read; not prototyped.)* A single-purpose token signed by the entitled
+key at terminal disposition, naming the designated artifact's identity
+and disposition, issued **only** to the designated artifact and
+carried with it. Signer: the entitled key. Verifier computes: token
+signature; token identity equals the presented artifact's identity;
+disposition. **By design it carries no lineage** — that is what
+distinguishes it from a TLR; a capability that listed superseded
 identities would be a TLR under another name. Consequently an
 abandoned artifact holds no token, and the verifier cannot tell S2
 (superseded) from S3 (presented alone): both are "no token present."
-This is specified as the candidate's design, not left as a gap, so
-that it is *scored* against G3 rather than excluded as unspecified.
-Does not claim: anything about other attempts; non-equivocation.
-*G0 story:* the token binds identity and disposition under the
-entitled key; it does **not** bind lineage. G0 requires all three; the
-scoring must say whether "binds the attempt lineage" is satisfied by
-a construction that omits lineage on purpose (the clerk's reading: it
-is not). *G4 sentence:* a verifier holding one bundle can establish
-that this token, under the entitled key, designates this artifact; it
-cannot establish that no second token exists, nor that any other
-attempt existed at all.
 
-**Transparency witness.** *(Clerk sketch, 2026-08-30; not
+This is specified as a design-space alternative, not as a contender.
+Because it omits lineage by design, it is **expected to fail G0**
+(§2), which requires the attempt lineage to be bound, and G3, which
+requires S2 and S3 to be distinguished. It is included to demonstrate
+*why lineage binding is non-optional* — the failure is shown against a
+fully specified construction rather than asserted — and to foreclose
+the objection that an unspecified capability might have passed.
+Scoring records the failure at the gate that catches it; no
+comparative criterion is applied. Does not claim: anything about other
+attempts; non-equivocation. *G0 story:* the token binds identity and
+disposition under the entitled key and does not bind lineage; G0
+requires all three. *G4 sentence:* a verifier holding one bundle can
+establish that this token, under the entitled key, designates this
+artifact; it cannot establish that no second token exists, nor that
+any other attempt existed at all.
+
+**Transparency witness.** *(Drafted by the AI collaborator 2026-08-30; not
 prototyped.)* An append-only log, operated by Tessera or a third
 party, records for each lineage an **entry** signed by the entitled
 key carrying the same three things a TLR carries — the designated
@@ -251,12 +273,24 @@ verifier computation, non-claims — before scoring begins.
 
 ## 2. Gates (mandatory; a candidate failing any gate is ineligible)
 
-**G0 — The A3.7.1 invariant, authenticated.** Standing evidence is
-cryptographically authenticated by the **entitled key** (§0) and binds
-the artifact-derived issuance identity, the attempt lineage, and the
-terminal disposition. A well-formed assertion signed by any other
-party — including a channel, a custodian, or the adversary's own key —
-does not satisfy this gate. *(A3 §A3.7.1; P10; A3 §A3.2 item 3.)*
+**G0 — The A3.7.1 invariant, authenticated.** The component of the
+standing evidence that *carries the terminal-disposition claim* — the
+object the verifier reads the disposition from — is cryptographically
+authenticated by the **entitled key** (§0) and binds the
+artifact-derived issuance identity, the attempt lineage, and the
+terminal disposition. A disposition claim signed by any other party —
+a channel, a custodian, a log operator, or the adversary's own key —
+does not satisfy this gate, and no accompanying signature can
+substitute for the entitled key's. Accompanying signatures by other
+parties over *other* facts (an inclusion proof, a custody
+acknowledgment) neither satisfy nor violate G0; they are scored where
+their fact belongs (G2, C2). A candidate whose standing evidence has
+more than one signer must say in its sketch which component carries
+the disposition claim. *(A3 §A3.7.1; P10; A3 §A3.2 item 3. Wording
+sharpened 2026-08-30 on the author's read: the earlier text could be
+read as failing any multi-signer evidence object, which would have
+failed the transparency witness on its log-head signature rather than
+on any property of its disposition claim.)*
 
 **G1 — Artifact-derived identity.** The issuance identity that standing
 evidence binds is *computed by the verifier from the artifact's signed
@@ -327,28 +361,25 @@ before Band 0 exit. *(`FIRST-LINK-SPIKE.md` at `8ae4720`, criterion 4;
 `formal/suite/ENUMERATION.md` S-STANDING slot.)*
 
 **R2 — Refusal-record consistency.** The candidate's relationship to
-the portable refusal record (§0) is explicit, and — 
+the portable refusal record (§0) is explicit: the two derive a
+lineage's terminal disposition from the same signed fact, so that they
+cannot *honestly* disagree. Dishonest contradiction is equivocation,
+and is governed by G4's boundary statement rather than by this
+property. Whether standing evidence and the refusal record are one
+object or two is not itself preferred.
 
-> **[AUTHOR DECIDES WORDING AT REGISTRATION — delete one]**
->
-> **(a) Codex, blind:** — the two cannot produce contradictory terminal
-> claims without detection.
->
-> **(b) Claude, non-blind dissent:** — the two derive a lineage's
-> terminal disposition from the same signed fact, so that they cannot
-> *honestly* disagree; dishonest contradiction is equivocation and is
-> governed by G4's boundary statement.
->
-> *Dissent rationale:* an entitled key that can equivocate between two
-> standing records can equivocate between a standing record and a
-> refusal record; no offline construction detects that by itself, so
-> (a) either fails every offline candidate or duplicates G4. The
-> blind reviewer of 2026-08-30 concurred that (a) "would have collapsed
-> every offline candidate" and asked that the choice be made in the
-> registering commit, not later.
-
-Whether standing evidence and refusal record are one object or two is
-not itself preferred.
+> **RULED (author), 2026-08-30, at registration.** Two wordings were
+> drafted: (a) Codex, blind — "the two cannot produce contradictory
+> terminal claims without detection"; (b) Claude, non-blind dissent —
+> the wording above. The author asked whether (a) is false for every
+> offline candidate, the TLR included; it is: an entitled key can sign
+> a standing record and a refusal record that contradict, and a
+> verifier holding one bundle cannot detect it, so (a) either fails
+> every candidate G2 admits or is G4 restated as a closure requirement
+> G4 itself disclaims. Three reviewers blind to the probe results
+> (Grok, Gemini, a separate Claude instance) reached the same reading.
+> The author struck (a) and kept (b); the decision is his, on the
+> question he put.
 
 **R3 — Deterministic failure reporting.** Malformed, internally
 inconsistent, mis-signed, non-matching, and absent standing evidence
@@ -387,11 +418,13 @@ construction's own custody demand, not its resemblance to item 17.
 party see `ABSENT`/`UNVERIFIABLE` with a reason, or a false
 `ESTABLISHED`?
 
-**C4 — Author readability, falsifiable.** The author can explain,
-without the implementation or an AI present: what evidence is
+**C4 — Author readability, falsifiable.** The author writes at least
+one paragraph, without AI assistance, explaining: what evidence is
 verified; who could forge or equivocate about it; what an artifact
-presented alone establishes; and what remains unproved. Scored by the
-author writing that paragraph, not by his sense that he could.
+presented alone establishes; and what remains unproved. The paragraph
+is the score: it is compared against the candidate's sketch and G4
+sentence, and the candidate fails C4 if the author cannot write it or
+if what he writes misstates what the construction establishes.
 
 ---
 
@@ -451,7 +484,7 @@ that).
 
 ## 8. Sequence from here
 
-Author edits (including the R2 choice) and commits — registration →
+Author edits and commits — registration →
 author reads `RESULTS-PROBE.md` → collaborator drafts the decision
 document scoring every candidate under §2–§5, labeling evidential
 versus criteria-level scoring per rule 5 → author cold read → decision
