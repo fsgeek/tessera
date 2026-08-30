@@ -76,8 +76,10 @@ mean something if a citation target moves.
 - **Authority tuple / entitled key.** The authority statement the
   external channels publish (map v1: issuer identity, signing-key
   fingerprint(s), required-signer set, algorithm identifiers,
-  statement version — `formal/spike/first-link/PREDICTIONS.md`). The
-  **entitled key** is the issuer key that tuple names — the same key
+  statement version; *non-authoritative* and outside the binding:
+  display labels, optional metadata no check consumes, ordering of
+  equivalent entries — `formal/spike/first-link/PREDICTIONS.md`,
+  frozen at `64c80c8`). The **entitled key** is the issuer key that tuple names — the same key
   whose signature the evidence chain accepts (A3 §A3.2 item 3) and
   which must prove possession by manifest self-signature (A1 §A1.5
   item 3, P10). This document assumes one entitled key per lineage;
@@ -108,9 +110,12 @@ mean something if a citation target moves.
   present, artifact *superseded* → no standing, `SUPERSEDED`; **S3**
   lineage absent, artifact presented alone → no standing,
   `NO_TERMINAL_DISPOSITION_EVIDENCE`. **The collapsing negative
-  control:** a deliberately broken verifier that emits one reason code
-  for S2 and S3 must *fail* a discrimination check; if it passes, the
-  check is not testing what it claims.
+  control, as a test:** build a verifier variant identical to the
+  candidate's except that its S2 and S3 branches return the same
+  reason code; run S2 and S3 through it; assert
+  `reason(S2) ≠ reason(S3)`. On the variant that assertion must
+  **fail**; on the correct verifier it must pass. A control on which
+  the assertion passes is not testing what it claims.
 - **Transplant (A3 §A3.9).** Moving standing evidence from a valid
   artifact onto a different one — the named broken companion for the
   suite's standing model, expected to go red.
@@ -131,10 +136,12 @@ Candidates are scored on their design, not on whether a probe
 prototyped them.
 
 **Terminal lineage record (TLR).** *(Sketch copied from `PROBE.md`
-§Fixture, frozen 2026-08-29 before the probe ran.)* An issuer-signed
-object created at terminal disposition, carrying at minimum: issuance
-identity (a binding to the artifact — the exact form is one of the
-probe's outputs), attempt lineage (attempt identities with anchor
+§Fixture, frozen 2026-08-29 before the probe ran; one clause
+completed from G1, not from results.)* An issuer-signed object created
+at terminal disposition, carrying at minimum: issuance identity — the
+frozen sketch left its form to the probe; **for scoring, the form is
+fixed by G1: a digest of the artifact's signed core, computed by the
+verifier** — attempt lineage (attempt identities with anchor
 references and per-attempt dispositions), and terminal disposition
 (`SHIPPED <attempt>` or `REFUSED`). Signer: the entitled key. Verifier
 computes: signature under the entitled key; whether the presented
@@ -215,7 +222,14 @@ name its boundary. A missing or overclaiming boundary statement fails.
 
 **R1 — Symbolic modelability.** The construction and its transplant
 companion can be written as a ProVerif model over the suite's shared
-theory library under the §0 adversary, of a size the author can read
+theory — as yet unextracted (`formal/suite/ENUMERATION.md` §1), so for
+this decision "the theory" means the first-link spike's declarations:
+a public channel; signature primitives `sign`/`checksign`/`pk` with
+the single equation `checksign(sign(m,k), pk(k)) = m`; an injective
+fingerprint `fp`; an injective digest `h`; domain-separation tags one
+per signed object kind; the map-v1 tuple constructor; and events for
+authority publication, possession, signing, and acceptance — under
+the §0 adversary, of a size the author can read
 (the first-link models — roughly a hundred lines each — are the
 reference), with the companion red on a named query and the correct
 model green. Panel criterion 4 requires the chosen mechanism modeled
