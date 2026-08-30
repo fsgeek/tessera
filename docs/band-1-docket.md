@@ -276,3 +276,37 @@ specification) or disposed with reasons.
     wrappers interleaved with A3.4 renewal wrappers, and must not be
     folded into the renewal wrapper itself. Disposition: no change to
     the record; the correction is to the conversation.
+
+24. **Correlated versus uncorrelated custody; what anchoring standing
+    evidence does and does not buy** (candidate, 2026-08-30; the
+    author's observation that recomputing the 2026 chain, however
+    cheap in 2106, produces a *different* chain inconsistent with every
+    other surviving reference; sharpened by a Kimi review the same day;
+    entered by the AI collaborator with two corrections). (a) An
+    anchor's evidentiary value is the number of independent surviving
+    references it must remain consistent with, not the work to
+    recompute it — a **correlated** custody subject the world maintains
+    for its own reasons, as against an **uncorrelated** one (a
+    project-specific log) that only this project's relying parties
+    have reason to keep. This is a legitimate reading of
+    DECISION-CRITERIA.md C2 *as registered* ("does the construction
+    create a new custody subject?") and may be cited in scoring under
+    that question; it is **not** entered into the criteria, which are
+    frozen at `74ee46e` and whose scorer is non-blind. (b) Anchoring
+    standing evidence bounds *when* each record was made — the G4
+    temporal clause — and so defeats backdated equivocation by a
+    post-mortem key holder. It does **not** make a contemporaneous
+    second record *discoverable*: an OTS anchor is a hash in a Merkle
+    tree, and finding "every record for lineage X" from the chain
+    requires an index the chain does not provide. Kimi's claim that
+    two differently-anchored records "leave a trace a future examiner
+    can discover" overstates this; the trace exists and is not
+    findable without an index, which is the transparency witness
+    again. The honest split: the anchor narrows *when*; only a log
+    narrows *whether*; and the log is the uncorrelated subject of (a).
+    (c) For the relying-party story: the anchor's robustness over 80
+    years rests on the global irreversibility of a reference graph
+    maintained by others, not on Tessera or any single party; if the
+    hash function falls, the reference structure still constrains a
+    forger to consistency with every surviving copy — detectability by
+    global state, not by local cryptography.
