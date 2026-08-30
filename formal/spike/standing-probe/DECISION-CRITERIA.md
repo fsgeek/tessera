@@ -18,8 +18,34 @@ candidate sketches — of which the terminal-lineage-record sketch is
 **copied from `PROBE.md` §Fixture, frozen before the probe ran**, so
 that a non-blind hand did not write it; and one flagged dissent (R2).
 
+"The clerk" throughout means Claude, the AI collaborator acting as
+drafting clerk; "the clerk's reading" is that collaborator's on-record
+opinion and carries no authority.
+
 Pattern: `formal/spike/first-link/DECISION.md` — criteria fixed before
 evidence, scoring on record, rejected alternatives named.
+
+---
+
+## What this document decides, in plain language
+
+**Tessera** is an attestation service: a neutral third party binds a
+package of bytes to a fixed point in time, so that a later reader can
+check that *this* content was presented *then* — without needing
+Tessera to still exist. It issues signed artifacts anchored to a
+public chain; a verifier checks them offline from a bundle.
+
+Because anchoring can be slow, Tessera may anchor the same content
+more than once — abandoning an attempt its own clock judged late and
+reissuing — and a later verifier can end up holding an artifact from
+an abandoned attempt that is nonetheless cryptographically valid. The
+record calls this the A2 residue. The question this document governs
+is: **what evidence lets a verifier tell the artifact Tessera actually
+designated from a valid one it abandoned, and how will Tessera choose
+among the ways of supplying that evidence?** The choice is called the
+standing-evidence mechanism. This file fixes the criteria and the
+selection rule *before* the evidence from a design probe is read, so
+that the choice cannot be fitted to the results after the fact.
 
 ---
 
@@ -88,8 +114,11 @@ mean something if a citation target moves.
   reorders, duplicates signatures; substitutes keys, including after
   seeing valid signatures, and self-signs freely with keys it holds;
   replays valid objects in other contexts and re-frames across P7 type
-  boundaries; crafts manifests and anchors anything; controls any
-  proper subset of the external authority channels, never all.
+  boundaries (P7, wrapper/object-type soundness: presenting a signed
+  object of one kind — an inner attestation, a receipt, a wrapper — as
+  if it were another, so that a signature made for one role is read in
+  a different one); crafts manifests and anchors anything; controls
+  any proper subset of the external authority channels, never all.
 - **Trust configuration (A3 §A3.8).** What the verifier holds before
   seeing a bundle: channel public keys, the depth `k` and window `δ`,
   governing specification and policy. An input, not a fetch.
@@ -180,12 +209,20 @@ attempt existed at all.
 
 **Transparency witness.** *(Clerk sketch, 2026-08-30; not
 prototyped.)* An append-only log, operated by Tessera or a third
-party, records each lineage's terminal disposition under the entitled
-key; standing evidence is an inclusion proof (log signature, Merkle
-path, log head) carried in the bundle. Signers: the entitled key (the
-entry) and the log (the head). Verifier computes: inclusion proof
-against a log key or root in the trust configuration; the entry's
-identity and disposition against the artifact. Closes equivocation to
+party, records for each lineage an **entry** signed by the entitled
+key carrying the same three things a TLR carries — the designated
+artifact's identity, the attempt lineage (identities with
+dispositions), and the terminal disposition — so that the entry *is* a
+TLR published rather than merely carried; standing evidence is that
+entry plus an inclusion proof (Merkle path, signed log head) carried
+in the bundle. Signers: the entitled key (the entry) and the log (the
+head). Verifier computes: the entry's signature under the entitled
+key; whether the presented artifact's identity appears in the entry's
+lineage and is its terminal one; the inclusion proof against a log
+key or root in the trust configuration. *(Corrected 2026-08-30 on
+blind review: an earlier sketch recorded only the terminal
+disposition in the entry while the G0 story claimed lineage was
+bound.)* Closes equivocation to
 the extent the log is consistent — a contradictory second disposition
 requires a second log entry, visible to anyone auditing the log — at
 the price of a trusted, surviving log. Does not claim: log
@@ -220,9 +257,16 @@ does not satisfy this gate. *(A3 §A3.7.1; P10; A3 §A3.2 item 3.)*
 evidence binds is *computed by the verifier from the artifact's signed
 bytes* (a digest of the signed core), never read from a label,
 ordinal, or field presented alongside the artifact. A construction
-whose identity a presenter can re-declare fails; the transplant
-companion (§0) must go red against the correct construction and green
-against this failure. *(A3 §A3.9.)*
+whose identity a presenter can re-declare fails. **The transplant
+companion, as a test:** take standing evidence issued for a valid
+artifact and present it with a *different* artifact — other content,
+or an abandoned attempt relabelled as the designated one. The
+candidate's correct verifier must report standing `ABSENT` with a
+mismatch reason (the transplant is *rejected*); a broken verifier
+built on presenter-declared identity must report `ESTABLISHED` (the
+transplant is *accepted*) — that acceptance is the failure the
+companion exists to exhibit. A candidate whose correct verifier
+accepts the transplant fails G1. *(A3 §A3.9.)*
 
 **G2 — Offline verification.** Standing is evaluable from the bundle
 plus the trust configuration (§0) and nothing else: no lookup, no live
@@ -343,9 +387,11 @@ author writing that paragraph, not by his sense that he could.
 3. If more than one survives, select the least complex (C1, C2)
    construction whose residuals are explicit — **unless** the
    survivors differ materially on security (G4 boundaries) or custody
-   (C2). *Materiality is the author's declaration, not the scorer's.*
-   In that case scoring stops and the choice is put to the author as a
-   named fork, not reduced to a score.
+   (C2). The scorer's duty is to *flag* a candidate material
+   difference and route it; *materiality is the author's declaration,
+   not the scorer's*, made on the cold read. When flagged, scoring
+   stops short of a selection and the choice is put to the author as
+   a named fork, not reduced to a score.
 4. If none survives, no mechanism is selected; the failing criteria
    are recorded, and the outcome is routed to amendment discipline —
    which registered statement must change — never to a relaxed gate.
