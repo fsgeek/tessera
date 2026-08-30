@@ -1,12 +1,28 @@
 # Standing-evidence mechanism decision — criteria and selection rule
 
-**Status: PROPOSED (drafted by the AI collaborator 2026-08-29; revised toward
-stand-alone 2026-08-30 on a series of blind external reviews). Becomes REGISTERED
-on the author's commit, which affirms that the author had not read
-`RESULTS-PROBE.md` at the time of registration.** Edit before
-committing; the registration is the commit, not this draft. The one
-wording decision the draft carried (R2) was ruled by the author on
-2026-08-30 and is recorded in the body.
+> **STATUS: REGISTERED at `74ee46e` (2026-08-30, "Applied another
+> round of edits to clarify the decision framework"), OTS-stamped
+> `c207ed9`.** The author stated in session that this commit is the
+> registration and that he had not read `RESULTS-PROBE.md` at the time
+> of it; the commit message does not carry that affirmation in words,
+> so it is recorded here, on the author's statement, the same day.
+>
+> **Header correction, same day, recorded not silently applied.** The
+> status block below read `PROPOSED` at the registering commit — the
+> same defect class the first-link decision recorded at `459aff0`. The
+> stale block is retained verbatim beneath this note as history; it is
+> no longer the status of this document. Changes from here on follow
+> amend-don't-rewrite: appended, dated, labeled.
+
+> *(Status block as it stood at `74ee46e`, retained verbatim:)*
+>
+> **Status: PROPOSED (drafted by the AI collaborator 2026-08-29; revised toward
+> stand-alone 2026-08-30 on a series of blind external reviews). Becomes REGISTERED
+> on the author's commit, which affirms that the author had not read
+> `RESULTS-PROBE.md` at the time of registration.** Edit before
+> committing; the registration is the commit, not this draft. The one
+> wording decision the draft carried (R2) was ruled by the author on
+> 2026-08-30 and is recorded in the body.
 
 **Provenance, stated because it matters here.** The AI collaborator
 that built and ran the probe (Claude) has read its results. The
