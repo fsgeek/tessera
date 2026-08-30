@@ -224,3 +224,55 @@ specification) or disposed with reasons.
     transplant companion already says a wrapper cannot re-scope it).
     Cheap to specify now; expensive to discover at year ten. Disposition
     is the author's; nothing here is adopted.
+
+20. **Renewal is always cumulative — state it** (candidate, 2026-08-30;
+    author's design walk with a Claude Desktop instance, checked
+    against the record by the clerk). RFC 4998 has two renewal modes:
+    simple timestamp renewal covers only the previous timestamp;
+    hash-tree renewal re-commits the data and all accumulated evidence.
+    Original §4 already builds the cumulative form — "a superseding
+    attestation wraps the original package … the inner attestation's
+    bytes, signatures, and OTS proof are immutable; the wrapper is a
+    new layer with its own time-anchor" — so wrapper N commits to
+    package N−1 including its evidence, by construction. What is not
+    stated: that simple renewal is excluded, and that the reason is the
+    one the walk found — cumulative wrapping stops the hash-transition
+    case being special and stops a broken middle link severing the
+    chain. One registered sentence; no mechanism change.
+
+21. **Completeness rule for wrapper lineage** (candidate, 2026-08-30,
+    same source). A wrap commits to the *full known lineage* of prior
+    wrappers, unfavorable members included, so that pruning by omission
+    becomes discoverable evidence rather than silent loss. Not
+    registered anywhere. Wrapper-level equivocation — two wraps of the
+    same package by one key, each claiming completeness — is the A2
+    residue one level up and should be named with the standing
+    decision's G4 treatment (boundary stated, closure not claimed),
+    never as a closure.
+
+22. **Independence of testimony comes from anchors, not custody**
+    (candidate, 2026-08-30, same source). Original §4 gives each
+    wrapper "its own time-anchor"; what is not stated is the
+    epistemic claim that follows — cumulative depth from one custody
+    line is one thread that merely looks dense, and each epoch's
+    wrapper is independent testimony *only* through its own
+    contemporaneous anchor. A 2106 examiner's forgery-cost estimate
+    rests on the anchors, not on the wrap count. One sentence, near
+    A3.4 claim 3.
+
+23. **Per-prior verdict snapshots — registered AGAINST, in the renewal
+    wrapper; provided for, elsewhere** (2026-08-30; a correction the
+    clerk owes the author's design walk). The walk proposed that each
+    wrap carry a snapshot of the prior links' verdicts, yielding a
+    court-legible density report as a byproduct. Original §4 rules the
+    renewal wrapper out for that role, by author decision: it "commits
+    to the inner package's bytes, not to the inner receipt's
+    verification result at wrap time … because that would be a form of
+    re-evaluation." The role exists, but as A3.8's **optional signed
+    verification report** — "a distinct typed wrapper" whose bounded
+    claim is that an identified evaluator assessed an identified bundle
+    under an identified environment and obtained the enclosed result.
+    So the density report the walk wants is buildable, from A3.8 report
+    wrappers interleaved with A3.4 renewal wrappers, and must not be
+    folded into the renewal wrapper itself. Disposition: no change to
+    the record; the correction is to the conversation.
