@@ -288,18 +288,29 @@ read, per rule 3.
 
 1. **SC‑1 (G4 temporal):** anchor the TLR / bind it into an anchored
    object / declare it unbounded — one sentence per surviving
-   candidate, before the decision is entered.
+   candidate, before the decision is entered. [2026-08-31 Author Note:
+   agreed to anchor the TLR.]
 2. **SC‑2 (R2):** commit that one signing act at terminal disposition
    produces the disposition fact both the standing evidence and the
-   refusal record carry; one object or two stays free.
+   refusal record carry; one object or two stays free. [2026-08-31 Author
+   Note: agree one signing act at terminal dispodiyion produces the
+   disposition fact both the standing evidence and the refual record
+   carry.]
 3. **SC‑3 (S-series):** register `STANDING_EVIDENCE_MALFORMED` and
    the fourth condition S4 (refused-lineage holder,
    `ISSUANCE_REFUSED`), as a dated amendment to the registered S1–S3
-   table.
+   table. [2026-08-31 Author Note: agreed to dated amendment to
+   the registered S1-S3 table.]
 4. **D1:** the forward-link / generation-chain construction —
    register (at key level, per-attestation level, or both, with its
-   relation to TLR lineage stated) or retire.
-5. **The rule-3 selection itself.**
+   relation to TLR lineage stated) or retire. [2026-08-31 Author Note:
+   forward-link/generation-chain construction registration is
+   included, specific approach is subject to specification or substitution
+   for an alternative so long as it addresses the key-compromise
+   threat model - this doesn't prevent key compromise, it makes it
+   legible as any fork leads back to the point of compromise.]
+5. **The rule-3 selection itself.** [2026-08-31 Author Note: The
+   scorer's recommendation is adopted."]
 
 ## What this document is not
 
