@@ -1,5 +1,17 @@
 # Standing-evidence mechanism decision — scoring
 
+**Status correction, 2026-08-31 (collaborator, recording the
+author's in-session statements; author commit pending).** The five
+routed sub-rulings are resolved: sub-rulings 1–4 carry the author's
+dated annotations below; sub-ruling 5 — the rule-3 selection — is
+**ADOPTED (author)**: the terminal lineage record is selected as the
+standing-evidence mechanism (see the dated note at sub-ruling 5).
+Entry of the decision completes when the SC‑1 boundary sentence and
+the SC‑2/SC‑3/D1 amendment texts are drafted and adopted as dated
+amendments, per sub-ruling 1's own "before the decision is entered."
+The registered PROPOSED header is retained below, per
+amend-don't-rewrite.
+
 **Status: PROPOSED — scoring draft, nothing decided.** Scored by the
 AI collaborator per `DECISION-CRITERIA.md` (registered `74ee46e`)
 rules 5–6: the scorer is non-blind (it built and ran the probe and has
@@ -282,7 +294,8 @@ announcer; artifacts do not," and C2 as the criteria's operational
 form of the decoupling thesis.
 
 Materiality and the selection are the author's declaration, on cold
-read, per rule 3.
+read, per rule 3. *(2026-08-31: made — see the dated note at
+sub-ruling 5.)*
 
 ## Sub-rulings routed to the author
 
@@ -309,7 +322,38 @@ read, per rule 3.
    for an alternative so long as it addresses the key-compromise
    threat model - this doesn't prevent key compromise, it makes it
    legible as any fork leads back to the point of compromise.]
-5. **The rule-3 selection itself.** [2026-08-31 Author Note: The
+5. **The rule-3 selection itself.** [2026-08-31 Collaborator note,
+   recording the author's statement in session: **ADOPTED (author)** —
+   the scorer's recommendation is adopted. The terminal lineage
+   record is selected as the standing-evidence mechanism; the
+   log-and-receipt enrichment remains separately registrable per
+   issuance class and never load-bearing. The author's statement:
+   "Item 5 adopted." Before adopting, the author independently
+   probed the recommendation twice in session — the Q7 shape
+   question (resolved: the shape is forced by the standing
+   conditions; the Q7 seam is a factoring defect cured by the SC‑2
+   commitment) and the custody question (resolved: the TLR is
+   carried, not maintained; the service's duty is punctual, not
+   custodial; costs fall on the service's beneficiaries) — and an
+   independent blind re-scoring
+   (`docs/reviews/2026-08-31-blind-standing-scoring.md`) reproduced
+   the flag and the recommendation. The materiality question is
+   closed by adoption without a separate declaration: both rule-3
+   routes — material → merits, immaterial → least-complex default —
+   reach the selected candidate, so the selection is robust to it.
+   Provenance: the recommendation's grounds originated with the
+   scorer; per the provenance scheme this is ADOPTED, not RULED.]
+
+   [2026-08-31 Collaborator addendum to sub-ruling 1, for the SC‑1
+   amendment draft: the anchor branch's price sentences, discussed
+   in session — the holder bears the timestamp-upgrade duty for
+   pending anchor proofs (author: "the right solution"); δ is
+   bounded below by anchor-confirmation latency, so the fabrication
+   window is as wide as the anchoring channel is slow (raised by the
+   collaborator, unobjected; for author review in the draft); the
+   temporal failure outcome joins the SC‑3 amendment; TLR anchoring
+   is a second anchoring event at issuance, and anchor-channel
+   unavailability there is an A2.3-class issuance failure mode.] [2026-08-31 Author Note: The
    scorer's recommendation is adopted."]
 
 ## What this document is not
