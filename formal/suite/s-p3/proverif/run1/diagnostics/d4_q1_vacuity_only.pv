@@ -1,0 +1,126 @@
+(* ==================================================================== *)
+(* S-P3.Q1 — correct model, STRICT mode: sanity and linkage.            *)
+(* Variant: DNS channel COMPROMISED (skD leaked to the adversary).      *)
+(*                                                                      *)
+(* Registered prediction (PREDICTIONS.md, frozen fe1517c): both         *)
+(* queries hold, both variants (p~0.7); violation = encoding defect     *)
+(* needing one recut, trace inspection (p~0.15); timeout (p~0.15).      *)
+(* Timebox: 15 min per variant.                                         *)
+(*                                                                      *)
+(* This model proves: with two required authority channels, one         *)
+(* compromised, an adversary holding the A1.3 item 3 (DSKS)             *)
+(* capability cannot cause an honest issuer's framed bytes to be        *)
+(* accepted under any key but the signer's, nor an honest possession    *)
+(* proof to be accepted for another key; and the spike's first-link     *)
+(* correspondence still holds against the structured frame and          *)
+(* possession-over-manifest.                                            *)
+(* This model does not prove: the P3 claim in degraded mode (Q2);       *)
+(* anything about the verification profile; the frame's byte layout     *)
+(* (P8); semantic validity of issuer identities; or anything about      *)
+(* bytes the adversary signed itself (impersonation, out of scope).     *)
+(*                                                                      *)
+(* Theory: formal/suite/lib/tessera_theory.pvl (D-3 possession over    *)
+(* manifest; D-4 DSKS expressible). First link in the SELECTED form:   *)
+(* transcription binding, evidence = sign((STMT_DIGEST, h(t)), skCh).  *)
+(* Frame: framed(objType, alg, issuerId, kfp, mh, canonVer, payload)   *)
+(* under BYTES — the P3 field list as a transparent constructor.       *)
+(* Fixture per ENUMERATION note 3 (N2): TWO honest issuers, each with  *)
+(* its own manifest, both manifests honestly published; payloads are   *)
+(* adversary-chosen (chosen-message issuers). Vacuity (N1): a          *)
+(* reachability query on the acceptance event is included and must     *)
+(* report reachable. Neither N1 nor the two-issuer fixture was spelled  *)
+(* out in PREDICTIONS.md (frozen fe1517c); both are §5 obligations and *)
+(* their addition is recorded in RESULTS.md as such.                    *)
+(*                                                                      *)
+(* Run: proverif -lib ../../lib/tessera_theory.pvl sp3_q1_strict_dns_compromised.pv *)
+(* ==================================================================== *)
+
+(* --- model-local declarations (library terms are not redeclared) ---- *)
+fun framed(bitstring, bitstring, bitstring, bitstring, bitstring, bitstring, bitstring): bitstring [data].
+  (* objType, alg, issuerId, kfp, manifestHash, canonVer, payload *)
+free objTypeH: bitstring.
+free canonVerH: bitstring.
+free issuerId2: bitstring.        (* second honest issuer's identity (N2) *)
+
+(* judge channels (spike Q4 pattern, ledger entry 4) *)
+free honestCh: channel [private].      (* issuer -> judge : (signer key, framed bytes) *)
+free acceptCh: channel [private].      (* verifier -> judge : (accepted key, id, framed bytes) *)
+free honestPossCh: channel [private].  (* issuer -> judge : (key, possession proof) *)
+free possCh: channel [private].        (* verifier -> judge : (accepted key, possession proof presented) *)
+event Reattributed(pkey, pkey, bitstring).
+  (* accepted key, honest signer key, the honest bytes *)
+event PossessionTransplanted(pkey, bitstring).
+  (* accepted key, the honest issuer's own possession proof it presented *)
+
+
+(* N1 vacuity witness: acceptance must be REACHABLE ("not event(...) is false") *)
+query t: bitstring, k: pkey, fb: bitstring, evD: bitstring, evR: bitstring;
+  event(Accept(evD, evR, t, k, fb)).
+
+let AuthorityDNS(skD: skey, t: bitstring) =
+  event AuthorityPublishedDNS(t);
+  out(c, sign((STMT_DIGEST, h(t)), skD)).
+
+let AuthorityRepo(skR: skey, t: bitstring) =
+  event AuthorityPublishedRepo(t);
+  out(c, sign((STMT_DIGEST, h(t)), skR)).
+
+(* Issuer: manifest m names its own key; possession is over m (D-3);   *)
+(* the framed bytes carry the P3 binding fields; payload chosen by the  *)
+(* adversary.                                                           *)
+let Issuer(skI: skey, id: bitstring, m: bitstring) =
+  in(c, payload: bitstring);
+  event IssuerPossession(pk(skI));
+  let ppf = sign((POSS, m), skI) in
+  out(honestPossCh, (pk(skI), ppf));
+  out(c, ppf);
+  let fb = framed(objTypeH, algH, id, fp(pk(skI)), h(m), canonVerH, payload) in
+  event IssuerSigned(pk(skI), fb);
+  out(honestCh, (pk(skI), fb));
+  out(c, sign((BYTES, fb), skI)).
+
+let Verifier(pkD: pkey, pkR: pkey) =
+  in(c, (t: bitstring, evD: bitstring, evR: bitstring,
+         kX: pkey, ppf: bitstring, sg: bitstring, fb: bitstring));
+  (* first link, strict: both channels' evidence binds this exact tuple *)
+  let (=STMT_DIGEST, =h(t)) = checksign(evD, pkD) in
+  let (=STMT_DIGEST, =h(t)) = checksign(evR, pkR) in
+  let authTuple(id, kfpr, ss, alg, ver) = t in
+  (* the manifest names the accepted key *)
+  if fp(kX) = kfpr then
+  (* possession OVER THE MANIFEST under that key (D-3) *)
+  let (=POSS, =t) = checksign(ppf, kX) in
+  (* accepted signature under that key -> the exact framed bytes *)
+  let (=BYTES, =fb) = checksign(sg, kX) in
+  (* P3 in-bytes binding: alg, issuer identity, key fingerprint, manifest hash *)
+  let framed(ot, =alg, =id, =fp(kX), mh, cv, pl) = fb in
+  if mh = h(t) then
+  event Accept(evD, evR, t, kX, fb);
+  out(possCh, (kX, ppf));
+  out(acceptCh, (kX, id, fb)).
+
+let Judge =
+  in(honestCh, (kH: pkey, fbH: bitstring));
+  in(acceptCh, (kX: pkey, id: bitstring, =fbH));
+  if kX = kH then 0
+  else event Reattributed(kX, kH, fbH).
+
+let PossJudge =
+  in(honestPossCh, (kH: pkey, p: bitstring));
+  in(possCh, (kX: pkey, =p));
+  if kX = kH then 0
+  else event PossessionTransplanted(kX, p).
+
+process
+  new skD: skey; new skR: skey; new skI: skey; new skI2: skey;
+  let m  = authTuple(issuerId,  fp(pk(skI)),  ssetH, algH, verH) in
+  let m2 = authTuple(issuerId2, fp(pk(skI2)), ssetH, algH, verH) in
+  out(c, pk(skD)); out(c, pk(skR)); out(c, pk(skI)); out(c, pk(skI2));
+  out(c, m); out(c, m2);
+  (* VARIANT: DNS channel compromised — its signing key is public *)
+  out(c, skD);
+  ( !AuthorityDNS(skD, m)  | !AuthorityDNS(skD, m2)
+  | !AuthorityRepo(skR, m) | !AuthorityRepo(skR, m2)
+  | !Issuer(skI, issuerId, m) | !Issuer(skI2, issuerId2, m2)
+  | !Verifier(pk(skD), pk(skR))
+  | !Judge | !PossJudge )

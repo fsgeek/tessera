@@ -1,0 +1,134 @@
+(* ==================================================================== *)
+(* S-P3.Q5 — multi-key manifest (A3.2 item 3; note 1 item 2(d)).       *)
+(* Variant: correct model.                                                 *)
+(*                                                                      *)
+(* Registered prediction (PREDICTIONS.md, frozen fe1517c): correct     *)
+(* model holds; companion red on exactly the second signer (p~0.55);   *)
+(* encoding defect (p~0.2); timeout (p~0.25). Timebox: 30 min each.    *)
+(*                                                                      *)
+(* Two required signers A and B on ONE manifest: the tuple's signer-set *)
+(* field carries B's fingerprint (sset = fp(pk(skB))); A's fingerprint  *)
+(* is the tuple's kfp field. Each signature's frame binds ITS OWN       *)
+(* signer's fingerprint; both keys give possession over the manifest.  *)
+(* Degraded mode, sole channel compromised (the P3 hard case). Judges  *)
+(* pair per signer by framed bytes, one judge per ROLE (recut 2).       *)
+(* This model proves: with two required signers on one manifest,        *)
+(* neither signer's honest bytes can be accepted under any key but      *)
+(* its own, in degraded mode with the sole channel compromised, under   *)
+(* DSKS.                                                                *)
+(* Recut note: report outputs asynchronous (see Q1–Q4 headers).        *)
+(* Theory: formal/suite/lib/tessera_theory.pvl. Fixture per note 3     *)
+(* (N2): a second honest manifest with its own two signers; payloads   *)
+(* adversary-chosen; N1 vacuity query on Accept2 included.             *)
+(* Run: proverif -lib ../../lib/tessera_theory.pvl sp3_q5_multikey_correct.pv            *)
+(* ==================================================================== *)
+
+(* --- model-local declarations (library terms are not redeclared) ---- *)
+fun framed(bitstring, bitstring, bitstring, bitstring, bitstring, bitstring, bitstring): bitstring [data].
+  (* objType, alg, issuerId, kfp, manifestHash, canonVer, payload *)
+free objTypeH: bitstring.
+free canonVerH: bitstring.
+free issuerId2: bitstring.
+
+free honestChA: channel [private].     (* signer A -> judge : (signer key, framed bytes) *)
+free honestChB: channel [private].     (* signer B -> judge *)
+free acceptCh: channel [private].      (* verifier -> judge : (accepted key, id, framed bytes) *)
+free honestPossCh: channel [private].
+free possCh: channel [private].
+event ReattributedA(pkey, pkey, bitstring).   (* signer A's honest bytes accepted under another key *)
+event ReattributedB(pkey, pkey, bitstring).   (* signer B's *)
+event PossessionTransplanted(pkey, bitstring).
+event Accept2(bitstring, bitstring, pkey, pkey, bitstring, bitstring).
+  (* evidence, tuple, key A, key B, bytes A, bytes B *)
+
+query kX: pkey, kH: pkey, fb: bitstring;
+  event(ReattributedA(kX, kH, fb)).
+query kX: pkey, kH: pkey, fb: bitstring;
+  event(ReattributedB(kX, kH, fb)).
+query kX: pkey, p: bitstring;
+  event(PossessionTransplanted(kX, p)).
+(* N1 vacuity witness: must be REACHABLE *)
+query ev: bitstring, t: bitstring, kA: pkey, kB: pkey, fa: bitstring, fb: bitstring;
+  event(Accept2(ev, t, kA, kB, fa, fb)).
+
+let AuthorityS(skS: skey, t: bitstring) =
+  event AuthorityPublishedDNS(t);
+  out(c, sign((STMT_DIGEST, h(t)), skS)).
+
+(* One signer of a two-signer manifest m: possession over m; frame     *)
+(* binds this signer's own fingerprint. Both frames bind their signer's fingerprint.                  *)
+let SignerA(sk: skey, id: bitstring, m: bitstring) =
+  in(c, payload: bitstring);
+  event IssuerPossession(pk(sk));
+  let ppf = sign((POSS, m), sk) in
+  ( out(honestPossCh, (pk(sk), ppf))
+  | out(c, ppf);
+  let fb = framed(objTypeH, algH, id, fp(pk(sk)), h(m), canonVerH, payload) in
+  event IssuerSigned(pk(sk), fb);
+  ( out(honestChA, (pk(sk), fb))
+  | out(c, sign((BYTES, fb), sk)) ) ).
+
+let SignerB(sk: skey, id: bitstring, m: bitstring) =
+  in(c, payload: bitstring);
+  event IssuerPossession(pk(sk));
+  let ppf = sign((POSS, m), sk) in
+  ( out(honestPossCh, (pk(sk), ppf))
+  | out(c, ppf);
+  let fb = framed(objTypeH, algH, id, fp(pk(sk)), h(m), canonVerH, payload) in
+  event IssuerSigned(pk(sk), fb);
+  ( out(honestChB, (pk(sk), fb))
+  | out(c, sign((BYTES, fb), sk)) ) ).
+
+let VerifierS(pkS: pkey) =
+  in(c, (t: bitstring, ev: bitstring,
+         kA: pkey, kB: pkey, ppfA: bitstring, ppfB: bitstring,
+         sgA: bitstring, sgB: bitstring, fa: bitstring, fb: bitstring));
+  let (=STMT_DIGEST, =h(t)) = checksign(ev, pkS) in
+  (* signer-set field carries the second required fingerprint *)
+  let authTuple(id, kfprA, kfprB, alg, ver) = t in
+  if fp(kA) = kfprA then
+  if fp(kB) = kfprB then
+  let (=POSS, =t) = checksign(ppfA, kA) in
+  let (=POSS, =t) = checksign(ppfB, kB) in
+  let (=BYTES, =fa) = checksign(sgA, kA) in
+  let (=BYTES, =fb) = checksign(sgB, kB) in
+  let framed(ota, =alg, =id, =fp(kA), mha, cva, pla) = fa in
+  if mha = h(t) then
+  let framed(otb, =alg, =id, =fp(kB), mhb, cvb, plb) = fb in
+  if mhb = h(t) then
+  event Accept2(ev, t, kA, kB, fa, fb);
+  ( out(possCh, (kA, ppfA)) | out(possCh, (kB, ppfB))
+  | out(acceptCh, (kA, id, fa)) | out(acceptCh, (kB, id, fb)) ).
+
+let JudgeA =
+  in(honestChA, (kH: pkey, fbH: bitstring));
+  in(acceptCh, (kX: pkey, id: bitstring, =fbH));
+  if kX = kH then 0
+  else event ReattributedA(kX, kH, fbH).
+
+let JudgeB =
+  in(honestChB, (kH: pkey, fbH: bitstring));
+  in(acceptCh, (kX: pkey, id: bitstring, =fbH));
+  if kX = kH then 0
+  else event ReattributedB(kX, kH, fbH).
+
+let PossJudge =
+  in(honestPossCh, (kH: pkey, p: bitstring));
+  in(possCh, (kX: pkey, =p));
+  if kX = kH then 0
+  else event PossessionTransplanted(kX, p).
+
+process
+  new skS: skey;
+  new skA: skey; new skB: skey; new skA2: skey; new skB2: skey;
+  let m  = authTuple(issuerId,  fp(pk(skA)),  fp(pk(skB)),  algH, verH) in
+  let m2 = authTuple(issuerId2, fp(pk(skA2)), fp(pk(skB2)), algH, verH) in
+  out(c, pk(skS)); out(c, pk(skA)); out(c, pk(skB)); out(c, pk(skA2)); out(c, pk(skB2));
+  out(c, m); out(c, m2);
+  (* DEGRADED MODE, SOLE CHANNEL COMPROMISED: its signing key is public *)
+  out(c, skS);
+  ( !AuthorityS(skS, m) | !AuthorityS(skS, m2)
+  | !SignerA(skA, issuerId, m)  | !SignerB(skB, issuerId, m)
+  | !SignerA(skA2, issuerId2, m2) | !SignerB(skB2, issuerId2, m2)
+  | !VerifierS(pk(skS))
+  | !JudgeA | !JudgeB | !PossJudge )

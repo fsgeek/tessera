@@ -1,0 +1,130 @@
+(* ==================================================================== *)
+(* S-P3.Q3 — BROKEN COMPANION A: frame omits the binding fields.        *)
+(* Variant: degraded, sole channel compromised.                         *)
+(*                                                                      *)
+(* Registered prediction (PREDICTIONS.md, frozen fe1517c): violation    *)
+(* found, trace readable (p~0.75); the DSKS rule needs one encoding     *)
+(* recut to fire (p~0.15, tool finding); timeout (p~0.1). Grok          *)
+(* criterion: no red possible at all = amendment trigger.               *)
+(* Timebox: 15 min.                                                     *)
+(*                                                                      *)
+(* BROKEN COMPANION A. This model exists to go RED on Reattributed:     *)
+(* with no binding fields in the framed bytes (the spike's opaque       *)
+(* bytes made explicit), honest bytes can be accepted under a key       *)
+(* other than their signer's. It discharges nothing.                    *)
+(* Which path ProVerif exhibits (DSKS-derived key vs the second         *)
+(* honest issuer signing an identical unbound frame) is recorded in     *)
+(* RESULTS.md from the trace, not assumed here.                         *)
+(*                                                                      *)
+(* Theory: formal/suite/lib/tessera_theory.pvl (D-3 possession over    *)
+(* manifest; D-4 DSKS expressible). First link in the SELECTED form:   *)
+(* transcription binding, evidence = sign((STMT_DIGEST, h(t)), skCh).  *)
+(* Frame: framed(objType, alg, issuerId, kfp, mh, canonVer, payload)   *)
+(* under BYTES — the P3 field list as a transparent constructor.       *)
+(* Fixture per ENUMERATION note 3 (N2): TWO honest issuers, each with  *)
+(* its own manifest, both manifests honestly published; payloads are   *)
+(* adversary-chosen (chosen-message issuers). Vacuity (N1): a          *)
+(* reachability query on the acceptance event is included and must     *)
+(* report reachable. Neither N1 nor the two-issuer fixture was spelled  *)
+(* out in PREDICTIONS.md (frozen fe1517c); both are §5 obligations and *)
+(* their addition is recorded in RESULTS.md as such.                    *)
+(*                                                                      *)
+(* Run: proverif -lib ../../lib/tessera_theory.pvl sp3_q3_companionA_frame_unbound.pv *)
+(* RECUT 2026-09-04 (encoding, not property; recorded in RESULTS.md):   *)
+(* the judge report outputs on private channels are placed in PARALLEL *)
+(* with each process's continuation. Run 1 used sequential outputs      *)
+(* (spike Q4 pattern); ProVerif's trace reconstruction only unfolds     *)
+(* receivers the derivation mentions, so a private output off the goal  *)
+(* path blocked every trace ("cannot be proved" on Q1's vacuity witness *)
+(* and on companion A). Horn-clause results were unchanged by the recut. *)
+(* ==================================================================== *)
+
+(* --- model-local declarations (library terms are not redeclared) ---- *)
+fun framed(bitstring, bitstring, bitstring, bitstring, bitstring, bitstring, bitstring): bitstring [data].
+  (* objType, alg, issuerId, kfp, manifestHash, canonVer, payload *)
+free objTypeH: bitstring.
+free canonVerH: bitstring.
+free issuerId2: bitstring.        (* second honest issuer's identity (N2) *)
+
+(* judge channels (spike Q4 pattern, ledger entry 4) *)
+free honestCh: channel [private].      (* issuer -> judge : (signer key, framed bytes) *)
+free acceptCh: channel [private].      (* verifier -> judge : (accepted key, id, framed bytes) *)
+free honestPossCh: channel [private].  (* issuer -> judge : (key, possession proof) *)
+free possCh: channel [private].        (* verifier -> judge : (accepted key, possession proof presented) *)
+event Reattributed(pkey, pkey, bitstring).
+  (* accepted key, honest signer key, the honest bytes *)
+event PossessionTransplanted(pkey, bitstring).
+  (* accepted key, the honest issuer's own possession proof it presented *)
+fun framedU(bitstring, bitstring, bitstring, bitstring): bitstring [data].
+  (* BROKEN COMPANION A: objType, alg, canonVer, payload — no issuer identity, *)
+  (* no key fingerprint, no manifest hash (the spike's opaque bytes, explicit) *)
+
+(* re-attribution of honest bytes *)
+query kX: pkey, kH: pkey, fb: bitstring;
+  event(Reattributed(kX, kH, fb)).
+
+let AuthorityS(skS: skey, t: bitstring) =
+  event AuthorityPublishedDNS(t);
+  out(c, sign((STMT_DIGEST, h(t)), skS)).
+
+(* Degraded first link (A3.2 VALID_DEGRADED, never-zero evidences):     *)
+(* the SOLE accepted evidence binds h(t). Event AcceptS is model-local  *)
+(* (spike Q5 shape): evidence, tuple, accepted key, bytes.              *)
+event AcceptS(bitstring, bitstring, pkey, bitstring).
+
+let VerifierS(pkS: pkey) =
+  in(c, (t: bitstring, ev: bitstring,
+         kX: pkey, ppf: bitstring, sg: bitstring, fb: bitstring));
+  let (=STMT_DIGEST, =h(t)) = checksign(ev, pkS) in
+  let authTuple(id, kfpr, ss, alg, ver) = t in
+  if fp(kX) = kfpr then
+  (* possession OVER THE MANIFEST under that key (D-3) *)
+  let (=POSS, =t) = checksign(ppf, kX) in
+  let (=BYTES, =fb) = checksign(sg, kX) in
+  (* BROKEN COMPANION A: no binding fields to check *)
+  let framedU(ot, =alg, cv, pl) = fb in
+  event AcceptS(ev, t, kX, fb);
+  ( out(possCh, (kX, ppf)) | out(acceptCh, (kX, id, fb)) ).
+
+(* N1 vacuity witness: acceptance must be REACHABLE ("not event(...) is false") *)
+query t: bitstring, k: pkey, fb: bitstring, ev: bitstring;
+  event(AcceptS(ev, t, k, fb)).
+
+(* Issuer: manifest m names its own key; possession is over m (D-3);   *)
+(* the framed bytes carry the P3 binding fields; payload chosen by the  *)
+(* adversary.                                                           *)
+let Issuer(skI: skey, id: bitstring, m: bitstring) =
+  in(c, payload: bitstring);
+  event IssuerPossession(pk(skI));
+  let ppf = sign((POSS, m), skI) in
+  ( out(honestPossCh, (pk(skI), ppf))
+  | out(c, ppf);
+  let fb = framedU(objTypeH, algH, canonVerH, payload) in
+  event IssuerSigned(pk(skI), fb);
+  ( out(honestCh, (pk(skI), fb))
+  | out(c, sign((BYTES, fb), skI)) ) ).
+
+let Judge =
+  in(honestCh, (kH: pkey, fbH: bitstring));
+  in(acceptCh, (kX: pkey, id: bitstring, =fbH));
+  if kX = kH then 0
+  else event Reattributed(kX, kH, fbH).
+
+let PossJudge =
+  in(honestPossCh, (kH: pkey, p: bitstring));
+  in(possCh, (kX: pkey, =p));
+  if kX = kH then 0
+  else event PossessionTransplanted(kX, p).
+
+process
+  new skS: skey; new skI: skey; new skI2: skey;
+  let m  = authTuple(issuerId,  fp(pk(skI)),  ssetH, algH, verH) in
+  let m2 = authTuple(issuerId2, fp(pk(skI2)), ssetH, algH, verH) in
+  out(c, pk(skS)); out(c, pk(skI)); out(c, pk(skI2));
+  out(c, m); out(c, m2);
+  (* DEGRADED MODE, SOLE CHANNEL COMPROMISED: its signing key is public *)
+  out(c, skS);
+  ( !AuthorityS(skS, m) | !AuthorityS(skS, m2)
+  | !Issuer(skI, issuerId, m) | !Issuer(skI2, issuerId2, m2)
+  | !VerifierS(pk(skS))
+  | !Judge | !PossJudge )

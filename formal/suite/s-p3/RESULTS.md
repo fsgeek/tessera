@@ -1,0 +1,170 @@
+# S-P3 — key binding (anti-DSKS): results
+
+**Status: PROPOSED — collaborator-drafted 2026-09-04 from the committed
+`.out` files; nothing here is ratified; the author's cold read of the
+correct models precedes any ratification (ENUMERATION §5).** Predictions
+were frozen at `fe1517c` before any model existed. This file records
+predictions against observed outcomes in the registered three-outcome
+vocabulary, the encoding recuts and why, four findings, and the A3.3
+ledger entries S-P3 offers the suite. It does not change
+`formal/PROPERTIES.md`; P3's tracker row is the author's to move.
+
+Tooling: ProVerif 2.05, `-lib formal/suite/lib/tessera_theory.pvl`.
+Models and outputs: `formal/suite/s-p3/proverif/`. Run 1 outputs (before
+the recut) and the reconstruction diagnostics: `proverif/run1/`. Every
+run terminated in ≤ 1 s against boxes of 15–30 min (`ladder.log`).
+
+## Predictions vs observed
+
+| Query | Registered prediction | Observed (final run) | Outcome |
+|---|---|---|---|
+| Q1 strict, DNS compromised | both hold (0.7) | `Reattributed` unreachable; `PossessionTransplanted` unreachable; first-link correspondence **true**; `Accept` reachable (N1) | **termination, as predicted** — after one encoding recut (see §Recuts) |
+| Q1 strict, repo compromised | both hold (0.7) | identical | **as predicted**, same recut |
+| Q2 degraded, sole channel compromised — **the P3 claim** | unreachable (0.6); real attack (0.2); timeout (0.2) | `Reattributed` unreachable; `PossessionTransplanted` unreachable; `AcceptS` reachable | **termination, as predicted** |
+| Q3 companion A: frame unbound | red (0.75); recut (0.15) | `Reattributed` **reachable**, trace found | **red as required** — after the same recut; exhibited path is *not* the DSKS route (Finding 2) |
+| Q4 companion B: possession unnamed | red (0.7); recut (0.2) | `PossessionTransplanted` **reachable**, trace found, derivation through `dsks`; `Reattributed` stays unreachable | **red as required**, no recut needed; the only query whose red *requires* the DSKS capability |
+| Q5 correct, two signers | holds (0.55) | `ReattributedA`, `ReattributedB`, `PossessionTransplanted` all unreachable; `Accept2` reachable | **termination, as predicted** (per-role judges: recut 2) |
+| Q5 companion as registered: B's frame omits its fingerprint | red on B only (0.55) | `ReattributedB` **unreachable** | **prediction MISSED** — a companion that could not fail (Finding 3). Nearest registered bucket: "encoding defect" (0.2); it is not an encoding defect but a redundancy in the field list |
+| Q5 companion 2 (unregistered, added 2026-09-04): B's frame omits all binding fields | — | `ReattributedB` reachable, `ReattributedA` unreachable | red on exactly B; supplies the negative control the registered companion could not |
+
+N1/N2 (ENUMERATION note 3): every model carries a reachability query on
+its acceptance event, all reported reachable; every model carries two
+honest issuers (or two honest two-signer manifests) with adversary-chosen
+payloads. Neither was spelled out in the frozen plan; both are §5
+obligations and were added at model-writing time. Recorded as a plan
+omission, not a prediction change: no registered prediction refers to
+them.
+
+## Recuts (encoding, not property)
+
+**Recut 1 — asynchronous judge reports (all models).** Run 1 returned
+"cannot be proved" on Q1's acceptance witness and on Q3's
+`Reattributed`: ProVerif found derivations (goal reachable) but could
+not rebuild a trace. Horn-clause results were identical before and after.
+Diagnostics (`run1/diagnostics/`, d1–d14): the failure survives a single
+issuer (d1, d7), derivation-simplification settings (d2, d3), a
+vacuity-only query (d4), a disequality judge (d5), and pattern-free judges
+(d10, d11); it disappears when the judges are removed (d6), when the
+possession judge alone is removed (d9), and when the report outputs are
+placed in parallel with their continuations (d13, d14). Cause: ProVerif's
+reconstruction unfolds only the replicated copies its derivation
+mentions; a *synchronous* private-channel output that is off the goal
+path has no receiver in the reconstructed interleaving and blocks the
+trace. The spike's judge pattern had one private output per process and
+never hit this. **Suite note:** report outputs to private-channel judges
+must be `( out(priv, M) | continuation )`, never sequential. Registered
+here for S-P1/S-P2/S-P7 and S-STANDING.
+
+**Recut 2 — per-role judges (Q5 only).** A single `Reattributed` event
+cannot state "red on exactly signer B"; the three Q5 models were recut
+with `honestChA`/`honestChB` and `ReattributedA`/`ReattributedB`.
+Results before the recut (`run1/q5-recut1/`) are consistent with the
+per-role results.
+
+## Findings
+
+**F1 — The P3 [model] claim holds in the hard case.** In degraded mode
+with the sole authority channel compromised, under an adversary that
+holds every key it uses *and* can derive a fresh key verifying any one
+seen signature, the honest issuer's framed bytes are never accepted
+under a key other than the signer's, and an honest possession proof is
+never accepted for another key (Q2). The frame's in-bytes binding and
+possession-over-manifest are what carry it; strict mode (Q1) is carried
+by the cross-channel fingerprint agreement before the frame is even
+inspected.
+
+**F2 — Companion A's red is impersonation colliding with honest bytes,
+not key substitution.** With no binding fields in the frame, the
+adversary's own signature over `framedU(objType, alg, canonVer,
+payload)` under its own key is term-equal to the honest issuer's bytes
+over the same adversary-chosen payload; the judge fires on that
+collision. The DSKS capability was not used. Consequence for the
+relying-party story: under the spike's opaque-bytes shape, "impersonation
+with the adversary's own key" (note 2's admitted degraded-mode cost) and
+"re-attribution of the honest issuer's bytes" are *the same event*;
+the in-bytes binding is what separates them. The story should say so.
+
+**F3 — The P3 field list is redundant, across two Layer-2 assumptions.**
+The registered companion for Q5 — B's frame keeps issuer identity and
+manifest hash but drops its fingerprint — cannot go red: the manifest
+hash pins the tuple, the tuple pins both fingerprints, and the verifier's
+slot check `fp(kB) = kfprB` does the rest. In this abstraction the
+minimal load-bearing binding is the **manifest hash** (with the tuple's
+fingerprint match); issuer identity and fingerprint in the frame add
+nothing against re-attribution. They are not useless: the manifest-hash
+route rests on `h`'s collision resistance and the fingerprint route on
+`fp`'s (both Layer 2, library header); the field list is defense in
+depth across two independent hardness assumptions, and a P8 golden
+vector should exercise each separately. Recorded as a **prediction
+miss** on the registered companion and discharged by an added companion
+that removes all three binding fields (red on B only).
+
+**F4 — Where DSKS actually bites.** Of five queries, only Q4's red
+*requires* the substitution capability: the honest issuer's own manifest
+self-signature, verified under a derived key, is accepted as that key's
+possession when the verifier omits the naming check. This is the
+concrete mechanism behind ENUMERATION note 2's claim that possession
+must be over the manifest *and* checked against the accepted key; the
+spike's fingerprint-only possession would fail Q4's correct form
+trivially (the adversary signs `(POSS, fp(pk(k')))` with `k'` it holds).
+Note also that with the naming check present, DSKS added no attack
+anywhere in this ladder — which is the P3 design working, not the
+capability being weak: the library's D-4 rule is sufficient to exhibit
+the attack when the defence is removed.
+
+## Ledger entries (A3.3 conservation fields) — offered, not entered
+
+1. **Key-binding relation (producer: Q2, `Reattributed` unreachable).**
+   Consumer: S-P1, S-P2, S-P7 (each presupposes whose bytes are whose),
+   S-STANDING (entitled-key check inside the standing path, ENUMERATION
+   note 4). Assumed fact: acceptance of framed bytes under `kX`
+   implies the bytes' committed `(issuerId, kfp)` is `(id, fp(kX))`,
+   and honest bytes are never accepted under a key other than their
+   signer's. Shared terms: accepted key, issuer identity, framed bytes.
+   Adversary at the join: A1.3 with item 3 expressible (D-4), sole
+   channel compromised, possession free. Severing companion: Q3
+   (frame unbound) → `Reattributed` red. Residual Layer 2: `fp`
+   collision resistance and what a fingerprint hashes (P8); `h`
+   idealization for the manifest hash; deterministic signatures
+   (conservative for the judge); frame layout (P8); the verification
+   profile (P3's [assumption] half, H1a).
+2. **Possession binds the manifest to the named key (producer: Q2/Q4
+   correct form, `PossessionTransplanted` unreachable).** Consumer:
+   S-P2's degraded-mode signer-stripping companion (note 2). Assumed
+   fact: an accepted possession proof under `kX` is a signature over
+   the accepted manifest, which names `fp(kX)`. Shared terms: accepted
+   key, manifest. Adversary at the join: as above. Severing companion:
+   Q4 (naming check dropped) → `PossessionTransplanted` red, via
+   `dsks`. Residual: as entry 1.
+3. **Cross-formalism join (not symbolically dischargeable):** nothing in
+   S-P3 assumes anchor validity; no TLA+ join is consumed. Recorded so
+   the capstone does not look for one.
+
+## What S-P3 does not discharge
+
+- P3's [assumption] half (verification profile, H1a evidence).
+- Anything about impersonation with the adversary's own key over its
+  own bytes in degraded mode: reachable by construction, out of scope,
+  and — per F2 — indistinguishable from re-attribution only when the
+  frame is unbound.
+- Frame layout, encoding, or that `framed(...)` is the P8 frame.
+- The DSKS capability's practicality against Ed25519; the rule grants
+  it because A1.3 registers it.
+
+## Status toward discharge (PROPERTIES.md line 12 terms)
+
+Tool passes: yes, all correct models green, all required companions red
+(one via an added companion, recorded). Agreement-gate falsification
+review by non-author models: **not run**. Per-lemma prose mapping: this
+file's F1 and ledger entry 1 are the draft; the author's cold read of
+`sp3_q2_degraded_compromised.pv` against P3's registered sentence is the
+gate. Recommendation (collaborator): P3 → `checked`, not `discharged`,
+on the author's read.
+
+## Review log
+
+- 2026-09-04 — ladder run 1 (sequential judge reports): Q2 green, Q4
+  red, Q1/Q3 "cannot be proved"; diagnostics d1–d14; recut 1; ladder
+  run 2 all as registered except Q5's companion (F3); Q5 recut 2 for
+  per-role judges; companion 2 added and run. Collaborator throughout;
+  no author read yet.
