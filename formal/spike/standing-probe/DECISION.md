@@ -12,6 +12,19 @@ amendments, per sub-ruling 1's own "before the decision is entered."
 The registered PROPOSED header is retained below, per
 amend-don't-rewrite.
 
+**Entered, 2026-09-04 (collaborator, recording the author's dated
+annotations; author commit pending).** The four amendment texts
+(SC-1, SC-2, SC-3, D1) were adopted by the author on 2026-09-04 in
+`AMENDMENTS-2026-08-31.md`, with the D1 slot-location fork ruled
+(payload, per the A3 §1 precedent), and are inserted at their named
+targets as dated amendments: SC-1 in `DECISION-CRITERIA.md` §1, SC-2
+beside R2 below, SC-3 in `formal/spike/first-link/DECISION.md` exit
+condition 3, D1 at sub-ruling 4 below and band-1 docket item 25. The
+standing-evidence mechanism decision — terminal lineage record — is
+thereby **entered**. Unchanged by entry: no property is discharged,
+`PROPERTIES.md` is untouched, and the S-STANDING model remains owed
+before Band 0 exit (panel criterion 4).
+
 **Status: PROPOSED — scoring draft, nothing decided.** Scored by the
 AI collaborator per `DECISION-CRITERIA.md` (registered `74ee46e`)
 rules 5–6: the scorer is non-blind (it built and ran the probe and has
@@ -86,6 +99,20 @@ the author (§Rule 3).
   specification commitment: **one signing act at terminal disposition
   produces the disposition fact both records carry** (whether they are
   then one object or two remains unpreferred, per R2). Routed.
+  > **Dated amendment, 2026-09-04 (SC-2; amend-don't-rewrite).** Adopted by the author 2026-09-04 (annotation in `formal/spike/standing-probe/AMENDMENTS-2026-08-31.md`: "Concur with the three clarifications and one amendment as stated in this document"); branch adopted 2026-08-31 (`4f40021`).
+  >
+  > *Specification commitment (dated, 2026-08-31, per SC-2).* One
+  > signing act at terminal disposition produces the **disposition
+  > fact** — (attempt identity, terminal disposition) — and both
+  > disposition-bearing records are projections of that one signed
+  > fact: the terminal lineage record adds the attempt lineage; the
+  > portable refusal record (A3.7.2) adds the disclosable reasons and
+  > the public commitment value. Whether the projections are one object
+  > or two remains unpreferred, per R2 as registered. Honest
+  > disagreement between the records is thereby structurally
+  > impossible; dishonest contradiction is equivocation and remains
+  > governed by G4's boundary, per the author's registration-day
+  > ruling on R2's wording.
 - **R3 — pass with remediation (evidential) — finding SC‑3.** Distinct
   defined outcomes observed: `TERMINAL_DISPOSITION_SHOWN`,
   `SUPERSEDED`, `NO_TERMINAL_DISPOSITION_EVIDENCE`,
@@ -322,6 +349,32 @@ sub-ruling 5.)*
    for an alternative so long as it addresses the key-compromise
    threat model - this doesn't prevent key compromise, it makes it
    legible as any fork leads back to the point of compromise.]
+
+   > **Dated amendment, 2026-09-04 (D1; amend-don't-rewrite).** Adopted by the author 2026-09-04 (annotation in `formal/spike/standing-probe/AMENDMENTS-2026-08-31.md`: "Concur with the three clarifications and one amendment as stated in this document"); branch adopted 2026-08-31 (`4f40021`).
+   >
+   > *Row-2 registration, scheduled (dated, 2026-08-31, per D1).* The
+   > forward-link / successor-slot construction
+   > (`docs/exploration-2026-07-19-service-layer-elicitation.md`,
+   > "predeclared successor slot") WILL be registered; the mechanism is
+   > not frozen and may be substituted, subject to the author's
+   > criterion: it must make key compromise legible — any fork leads
+   > back to the point of compromise. Relation to the selected
+   > mechanism, stated: the TLR chains **attempts within one issuance,
+   > backward**; the successor slot chains **issuances across the
+   > service's life, forward**. The split-brain visibility the author's
+   > C4 paragraphs describe belongs to row 2 and is not supplied by the
+   > TLR.
+   >
+   > Scheduling anchor — **RULED (author, 2026-09-04)**: the slot rides
+   > inside the canonical payload under P3's obligations, the location A3
+   > §1 pinned for the algorithm identifier, leaving P8's four-field frame
+   > unchanged (author annotation: "concur with proposal to adopt (a)").
+   > Registration — including the 07-19 note's four-mechanism × four-trace
+   > comparison — completes **before format freeze**, the record's named
+   > irreversible moment; P8's golden vectors gain a slot-bearing vector at
+   > registration, without reopening the framing proof. Not gated on, and
+   > does not gate, the S-STANDING model. Carried on the band-1 docket as
+   > item 25.
 5. **The rule-3 selection itself.** [2026-08-31 Collaborator note,
    recording the author's statement in session: **ADOPTED (author)** —
    the scorer's recommendation is adopted. The terminal lineage

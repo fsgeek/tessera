@@ -373,3 +373,32 @@ valid inner artifact onto a forged outer one → red). The S1–S3
 *vectors with reason codes* remain H1a/P8 artifacts; the Q3 assumption
 about vectors was never the problem. The misreading was the clerk's
 conflation of the vectors with the mechanism.
+
+## Amendment note 4 — 2026-09-04 (clerk; PROPOSED; S-STANDING construction now selected; one suite obligation)
+
+Source: the standing-evidence mechanism decision, entered 2026-09-04
+(`formal/spike/standing-probe/DECISION.md`; texts in
+`AMENDMENTS-2026-08-31.md`, adopted by the author 2026-09-04).
+
+1. **S-STANDING construction is no longer TBD.** The terminal lineage
+   record is selected (ADOPTED, author, 2026-08-31; entered
+   2026-09-04). The §2 slot's query is unchanged (the A3.7.1
+   invariant); its companion is unchanged (the Kimi-2 transplant).
+   The model must additionally cover the SC-3 outcomes —
+   `STANDING_EVIDENCE_MALFORMED` (probe finding F1 as a mandatory red
+   vector) and `STANDING_EVIDENCE_TEMPORAL_MISMATCH` (the A2.1
+   predicate applied to the TLR's own anchor, per SC-1) — and the S4
+   row (`ISSUANCE_REFUSED`), with pairwise-distinct reason codes
+   across S2/S3/S4 and a companion collapsing any pair going red.
+2. **Suite obligation carried from the blind re-scoring
+   (`docs/reviews/2026-08-31-blind-standing-scoring.md`):** the
+   entitled-key binding MUST be checked *inside* the standing path in
+   S-STANDING, not only via the envelope path as the probe fixture
+   did, so a bundle whose envelope fails `KEY_FINGERPRINT_MISMATCH`
+   cannot receive a standing report computed against an unentitled
+   key. A companion that establishes the entitled-key link only
+   through the envelope MUST fail.
+
+Criterion 4's first condition (author selection) is now satisfied;
+its second (a model in this suite under the A1.3 adversary, before
+Band 0 exit) remains open.

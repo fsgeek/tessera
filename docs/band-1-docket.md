@@ -310,3 +310,24 @@ specification) or disposed with reasons.
     hash function falls, the reference structure still constrains a
     forger to consistency with every surviving copy — detectability by
     global state, not by local cryptography.
+
+25. **Forward-link / predeclared successor slot — registration
+    scheduled** (entered 2026-09-04 by the AI collaborator from the
+    author's D1 ruling, `formal/spike/standing-probe/DECISION.md`
+    sub-ruling 4; drafting record
+    `formal/spike/standing-probe/AMENDMENTS-2026-08-31.md`). Row 2 of
+    the 07-19 service-layer note ("predeclared successor slot") WILL
+    be registered; the mechanism is not frozen and may be substituted
+    under the author's criterion that key compromise be made legible
+    (any fork leads back to the point of compromise). Relation to the
+    selected standing mechanism: the terminal lineage record chains
+    attempts within one issuance, backward; the slot chains issuances
+    across the service's life, forward. **Location RULED (author,
+    2026-09-04):** inside the canonical payload under P3's
+    obligations, per the A3 §1 precedent, leaving P8's four-field
+    frame unchanged. **Schedule:** registration, including the 07-19
+    note's four-mechanism × four-trace comparison, completes before
+    format freeze; P8's golden vectors gain a slot-bearing vector at
+    registration. Not gated on, and does not gate, the S-STANDING
+    model. This is the only docket item besides 17 with a pre-freeze
+    deadline.

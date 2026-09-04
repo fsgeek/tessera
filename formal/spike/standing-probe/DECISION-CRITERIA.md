@@ -221,6 +221,59 @@ three of identity, lineage, and disposition under the entitled key.
 names its disposition; it cannot establish that no second record
 exists.
 
+> **Dated amendment, 2026-09-04 (SC-1, Target A; amend-don't-rewrite).** Adopted by the author 2026-09-04 (annotation in `formal/spike/standing-probe/AMENDMENTS-2026-08-31.md`: "Concur with the three clarifications and one amendment as stated in this document"); branch adopted 2026-08-31 (`4f40021`).
+>
+> *Temporal boundary (dated amendment, 2026-08-31, per SC-1).* The
+> TLR is anchored: at terminal disposition the issuer submits the
+> TLR's digest to the anchoring channel, and the resulting anchor
+> proof travels in the bundle beside the TLR. The verifier
+> additionally evaluates the registered A2.1 predicate against the
+> TLR's anchor, with the TLR's declared terminal-disposition time in
+> the place of the declared issue time:
+> 
+>     confirmed_at := timestamp(block at height h + k − 1)
+>     confirmed_at ≤ declared_terminal_time + δ
+> 
+> together with the A2.2 anchor-time lower-bound conjunct under ε,
+> under the issuance policy's tolerances (verifier-owns-tolerances
+> applies as in A2.1). This is not a new window: it is the same
+> three-conjunct temporal test the attestation's own anchor passes,
+> applied to a second anchored object. A TLR failing it yields
+> `UNVERIFIABLE` / `STANDING_EVIDENCE_TEMPORAL_MISMATCH`
+> (Amendment 3). Boundary
+> stated in both halves: the anchor bounds **when** standing evidence
+> could have been fabricated — to the [−ε, +δ] window about the
+> declared terminal disposition, per A2.1/A2.2 — and does not narrow **whether** a second,
+> contradictory TLR exists within that window (band-1 docket item
+> 24's own line: anchoring narrows when, not whether). A holder of
+> the entitled key after that window — including after the service's
+> death — can no longer mint standing evidence that verifies.
+>
+> **Dated amendment, 2026-09-04 (SC-1, Target B — the price record).**
+>
+> *Costs, stated plainly.* (i) Anchoring is a second anchoring event
+> per issuance, at terminal disposition, after the shipped attempt's
+> own anchor has confirmed; anchor-channel unavailability at that
+> moment is an issuance failure mode of A2.3's class and must be
+> treated by the refusal machinery, not absorbed silently.
+> (ii) Where the bundle ships before chain confirmation, it carries a
+> pending anchor proof; **the holder bears the upgrade duty** for
+> their own proof (author, 2026-08-31: cost borne by the service's
+> beneficiaries). An un-upgraded proof weakens only that holder's
+> temporal bound, visibly. (iii) **δ is bounded below by
+> anchor-confirmation latency**: the fabrication window is as wide as
+> the anchoring channel is slow, and the service does not control
+> that latency. [Raised by the collaborator 2026-08-31, unobjected;
+> flagged for the author's explicit eyes at adoption.] (iv) **Complete
+> standing evidence is late by construction**: it exists only after
+> the shipped attempt's anchor confirms, terminal disposition is
+> reached, and the TLR's own anchor confirms — two anchor-confirmation
+> latencies in sequence, each bounded by δ, plus the lifecycle wait
+> S on the refusal path. A holder asking for standing evidence
+> before that point receives a pending proof (ii), not a verifiable
+> one. [Added by the collaborator 2026-09-04; a consequence of (i)
+> and A2.1's lifecycle, stated so the cost is visible.]
+
 **Capability — a design-space alternative, expected to fail G0.**
 *(Drafted by the AI collaborator 2026-08-30; reframed the same day on the author's
 read; not prototyped.)* A single-purpose token signed by the entitled
@@ -281,6 +334,15 @@ entry under the same head, carries a contradictory disposition —
 unless the trust configuration already asserts a single consistent
 log and the verifier can reach it, which is the consistency query G2
 permits to sit outside the standing report.
+
+> **Dated amendment, 2026-09-04 (SC-1, Target C; amend-don't-rewrite).** Adopted by the author 2026-09-04 (annotation in `formal/spike/standing-probe/AMENDMENTS-2026-08-31.md`: "Concur with the three clarifications and one amendment as stated in this document"); branch adopted 2026-08-31 (`4f40021`).
+>
+> *Temporal boundary (dated amendment, 2026-08-31, per SC-1).* The
+> signed log head bounds an entry's creation time only if the head is
+> itself anchored or preserved; otherwise the head's date is
+> testimony. Recorded for completeness; the witness was not selected,
+> and this sentence governs only its optional never-load-bearing
+> enrichment role.
 
 **Other.** Must be specified to the same bar — object, signer,
 verifier computation, non-claims — before scoring begins.

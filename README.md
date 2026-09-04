@@ -20,7 +20,7 @@ to refuse.
 
 Tony Mason  
 Initiated 10 June 2026  
-This README reflects the repository as of 30 August 2026 (Band 0 — the formal foundation, H0). Status refreshed by the AI collaborator under the July delegation; the credibility line and reading order are the author's.
+This README reflects the repository as of 4 September 2026 (Band 0 — the formal foundation, H0). Status refreshed by the AI collaborator under the July delegation; the credibility line and reading order are the author's.
 
 ---
 
@@ -52,12 +52,12 @@ The method is as load-bearing as the artifact:
 
 ---
 
-## Current status (30 August 2026)
+## Current status (4 September 2026)
 
 | Layer | Status |
 |-------|--------|
 | Phase 0 pre-registration | Signed and amended (Amendments 1–3 in force; A3 adopted 2026-08-08/09 after a four-model cold panel; the 2026-08-29 author clarification records that "before any code" means code intended for the service) |
-| Band 0 formal models | Active — TLA+ (P4, P5/P6, P5c issuance, bridge, floor-structure probe); ProVerif first-link spike complete, mechanism **decided** 2026-08-13 (transcription binding, `formal/spike/first-link/DECISION.md`); symbolic suite enumerated (PROPOSED, `formal/suite/`); standing-evidence mechanism **undecided** — criteria drafted, design probe run, decision pending (`formal/spike/standing-probe/`) |
+| Band 0 formal models | Active — TLA+ (P4, P5/P6, P5c issuance, bridge, floor-structure probe); ProVerif first-link spike complete, mechanism **decided** 2026-08-13 (transcription binding, `formal/spike/first-link/DECISION.md`); symbolic suite enumerated (PROPOSED, `formal/suite/`); standing-evidence mechanism **decided** 2026-08-31, entered 2026-09-04 (terminal lineage record, anchored; `formal/spike/standing-probe/DECISION.md`); S-STANDING model owed before Band 0 exit |
 | Named residual | The author has recorded (2026-08-29) that the first-link decision rests on symbolic results he cannot yet defend cold; accepted, not waived, with closing conditions |
 | Cloud-independent crypto core | Not yet frozen (gated on Band 0) |
 | LocalStack / AWS vertical slice | Not started |

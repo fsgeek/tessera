@@ -753,6 +753,37 @@ three conditions are evaluated with the standing result reported
 bundle's `VALID_STRICT` unaffected while the standing report is
 negative and any custodial-record check reports `UNVERIFIABLE`.
 
+> **Dated amendment, 2026-09-04 (standing decision, SC-3; amend-don't-rewrite).** Adopted by the author 2026-09-04 (annotation in `formal/spike/standing-probe/AMENDMENTS-2026-08-31.md`: "Concur with the three clarifications and one amendment as stated in this document"); branch adopted 2026-08-31 (`4f40021`). Drafting record:
+> `formal/spike/standing-probe/AMENDMENTS-2026-08-31.md`.
+>
+> *Dated amendment, 2026-08-31 (standing decision, SC-3).* The
+> registered table gains a fourth condition:
+> 
+> | # | Form | Presented with lineage? | Standing verdict | Required reason code |
+> |---|------|--------------------------|------------------|----------------------|
+> | S4 | Lineage-present, lineage's terminal disposition is `REFUSED` | yes | **no standing** | `ISSUANCE_REFUSED` |
+> 
+> (A refused-lineage attempt presented *alone* remains S3: absent
+> evidence is absent evidence.) The discriminating requirement
+> extends: S2, S3, and S4 all return "no standing" and MUST return
+> pairwise distinct reason codes; the negative-control obligation
+> extends to a companion collapsing any pair.
+> 
+> Two defined outcomes are added to the standing report's vocabulary,
+> in the first-link verifier-boundary spirit (no inference, fallback,
+> or normalization):
+> 
+> - **`STANDING_EVIDENCE_MALFORMED`** — internally inconsistent
+>   standing evidence (e.g., a terminal disposition contradicting the
+>   lineage's own entry for that attempt, probe finding F1) yields
+>   `UNVERIFIABLE` with this reason; it never yields `ESTABLISHED`.
+>   The S-series test vectors MUST include the F1 shape, and a broken
+>   companion that accepts it MUST fail.
+> - **`STANDING_EVIDENCE_TEMPORAL_MISMATCH`** — the TLR's anchor
+>   failing the A2.1 predicate against its declared
+>   terminal-disposition time (Amendment 1) yields `UNVERIFIABLE`
+>   with this reason.
+
 ## Rejected alternatives (criteria-level, not evidential)
 
 - **Digest publication** (A3.2.1 docketed option). Deferred, not
