@@ -140,6 +140,30 @@ the attack when the defence is removed.
    S-P3 assumes anchor validity; no TLA+ join is consumed. Recorded so
    the capstone does not look for one.
 
+### Fingerprint binding — what the record must state (reviewer conclusion, 2026-09-04)
+
+From the Codex review's addendum (`docs/reviews/2026-09-04-codex-sp3-q2-review.md`),
+accepted: the fingerprint check is a conjunct, so it cannot enlarge the
+set of substitute keys the verifier accepts; what it adds is a second
+constraint whose strength is an implementation fact. Four statements
+the record owes, each assigned:
+
+1. Exactly what key representation is fingerprinted, with which
+   algorithm and parameters — **P8 golden vectors / H1a profile**.
+2. That acceptance requires the presented key to match the signed
+   fingerprint — **the verifier specification** (modeled here as
+   `fp(kX) = kfpr` and the frame's `=fp(kX)`).
+3. That the symbolic model assumes distinct keys have distinct
+   fingerprints — **library header** (fp idealization), cited by ledger
+   entry 1.
+4. That the implementation instead depends on the difficulty of finding
+   a different key with the target fingerprint, alongside its signature
+   and encoding assumptions — **Layer 2 ledger**, H1a evidence.
+
+Constraint on reading F3: "defense in depth across two independent
+hardness assumptions" is qualitative. No combined or quantified
+security level is claimed or may be derived from it.
+
 ## What S-P3 does not discharge
 
 - P3's [assumption] half (verification profile, H1a evidence).
@@ -150,6 +174,26 @@ the attack when the defence is removed.
 - Frame layout, encoding, or that `framed(...)` is the P8 frame.
 - The DSKS capability's practicality against Ed25519; the rule grants
   it because A1.3 registers it.
+- Semantic validation of what the frame carries (Codex review,
+  2026-09-04): object type and canonicalization version are bound but
+  not checked for support; the algorithm identifier is compared
+  between fields, not used to select among modeled algorithms. Scope
+  limits of the key-binding claim, assigned to P7 (object types) and
+  P8/H1a (versions, algorithm profile).
+- Manifests richer than the bare authority tuple: here signing,
+  hashing, and binding all act on one object; the correspondence for a
+  manifest with non-authoritative fields is P8's and map v1's, not
+  established here.
+
+**The question the cold read answers** (reviewer's phrasing, adopted):
+*Does this model preserve the attack and the defense we intend to
+study, and have we assigned every omitted detail to an explicit
+remaining obligation?*
+
+On companions: they discharge nothing of the property; what they
+supply is evidence that the checking arrangement can detect the
+intended failures — without them a green correct model is
+uninformative.
 
 ## Status toward discharge (PROPERTIES.md line 12 terms)
 
@@ -168,3 +212,9 @@ on the author's read.
   run 2 all as registered except Q5's companion (F3); Q5 recut 2 for
   per-role judges; companion 2 added and run. Collaborator throughout;
   no author read yet.
+- 2026-09-04 — Codex (`gpt-6-astra`, author-dispatched) read Q2, the
+  judge, and the library's signature rules and re-ran Q2: three results
+  match. First non-author replication. Two scope limits added above;
+  review question adopted; record at
+  `docs/reviews/2026-09-04-codex-sp3-q2-review.md`. Author read still
+  pending.

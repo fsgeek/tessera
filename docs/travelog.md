@@ -124,3 +124,97 @@ At the moment we're now at a point where we are getting close to having a real d
 I admit, I am not as good at keeping up this travelog as I had hoped I would be.  The project is complex, complicated, with numerous details that require significant attention.  At the same time, mostly where my concerns are is not at the detail level - some will be wrong, the goal is to make it easy to identify the places where our advance plan is against a world we don't face, but the larger questions seem to get lost.  For example, the issue around forking - one way in which a compromised key might be used - was originally designed in a way that cause the generation of a bidirectional link:  Attestation N would identify a specific value that must be present in the next attestation.  Not the hash of this attestation, but some other sort of identifier.  For example, it might be a value that is computed against a second private key and a distinct algorithm, or just a random value (ideally from entropy.)  The point is that by doing this in Attestation N (and not tied to the signature over Attestation N) a compromised key can become visible because the next entry is forced to use the same identifier.  What it means is that when two instances of Attestation N+1 are presented we can identify the point of key compromise.  This isn't a strong _guarantee_ - one would have to find the two attestations, but it is a visibility characteristic that would make it discoverable.  That seemed to get lost somewhere along the way; I've reintroduced it but it may be something we have to do prospectively.
 
 This has taken far longer than I had anticipated but I have hope that we may be moving towards convergence.
+
+---
+
+It's a bit later in the day.  I've been given my marching orders:
+
+```
+The S-P3 ladder is complete. Every model ran in under a second against boxes of fifteen to thirty minutes. The results record and the models sit untracked in your tree at formal/suite/s-p3/, and the commit is yours.
+
+The claim holds. Q2 is the P3 claim in its hard case: degraded mode, the only authority channel compromised, an adversary holding every key it uses and able to derive a fresh key that verifies any one signature it has seen. Under that adversary, the honest issuer's bytes are never accepted under any key but the signer's, and an honest possession proof is never accepted for another key. Strict mode holds too, and its acceptance witness confirms the verifier is not vacuous. The two-signer model holds per signer.
+
+Both required companions went red, and one of them taught something. Companion B, the possession check without the naming check, goes red through the derived key exactly as planned. That is the only place in the ladder where the substitution capability was needed. Companion A, the unbound frame, goes red without it: the adversary signs the unbound frame with its own key, and because the frame carries nothing identifying, its bytes are term-equal to the honest issuer's bytes over the same payload. So under the spike's opaque-bytes shape, impersonation and re-attribution are the same event. The in-bytes binding is what separates them, which the relying-party story should say.
+
+One registered prediction missed. The Q5 companion as registered, the second signer's frame keeping identity and manifest hash but dropping its fingerprint, could not go red. The manifest hash pins the tuple, the tuple pins both fingerprints, and the slot check does the rest. In this abstraction the manifest hash alone is load-bearing and the identity and fingerprint in the frame are redundant. They are not useless: the two routes rest on two different hardness assumptions, the hash's and the fingerprint's, so the field list is defense in depth, and a golden vector should exercise each separately. I recorded it as a miss and added an unregistered companion that strips all three binding fields, which goes red on the second signer and only the second signer.
+
+Two encoding recuts, one of which is a rule for the rest of the suite. Run 1 returned "cannot be proved" on two queries: derivations existed but no trace could be rebuilt. Fourteen diagnostics narrowed it to the judge encoding. ProVerif's reconstruction only unfolds process copies its derivation mentions, so a synchronous private-channel report that is off the goal path has no receiver and blocks the trace. Report outputs now sit in parallel with their continuations, and the results were unchanged by it. The spike never hit this because its verifier had one private output. The second recut split the Q5 judge per role so "red on exactly B" is a result rather than an inference. Run 1 outputs and all diagnostics are archived beside the final ones.
+
+What the record now needs from you: commit, then a cold read of the Q2 model against P3's registered sentence, which is the agreement gate. The results file recommends P3 move to checked, not discharged, on that read, and leaves the tracker untouched. The agreement-gate falsification by non-author models is still owed and is the next thing I would run once you have read.
+
+The stone is still owed at session end.
+```
+
+One thing I've noticed is that there are a seemingly endless set of "cold reads" that I never intended nor agreed to knowingly.  The real frustration is I now have to go guess at what file is being read for the "cold read of the Q2 model against P3's registered sentence."  My sense is that AI have learned the fine art of assuming the reader has context; it is a good approach for making someone feel they're constantly being tested.
+
+So I fired up codex and was surprised to find that it is now using Astra - GPT-6.  It was able to assist me quickly in understanding the specific point, which is invaluable to me:
+
+```
+The distinction from your earlier concern is important. This model addresses substitution of a different key, not theft of the legitimate signing key. Your forward identifier addresses observable divergence between successors. Q2 contains neither succession nor disclosure of the honest issuer’s private key.
+
+Here is the argument in terms you can inspect without becoming a ProVerif specialist.
+
+The attempted deception
+
+Alice signs an attestation. The attacker obtains those signed bytes and constructs a different key under which her existing signature also verifies. The attacker then supplies a replacement manifest naming that different key.
+
+Ordinary signature verification is deliberately insufficient in this model. The shared signature rules (formal/suite/lib/tessera_theory.pvl:75) explicitly grant that substitution capability. They also let the attacker sign new material with the derived private key.
+
+Furthermore, the attacker controls the sole authority channel accepted in this degraded case. Its endorsements therefore cannot rescue the verifier from the deception.
+
+What the verifier demands
+
+In the verifier process (formal/suite/s-p3/proverif/sp3_q2_degraded_compromised.pv:77), acceptance requires:
+
+Check                                           Plain meaning
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Authority signature covers STMT_DIGEST, h(t)    The authority evidence endorses this particular manifest tuple.
+──────────────────────────────────────────────  ────────────────────────────────────────────────────────────────────────────────
+fp(kX) = kfpr                                   The presented verification key matches the fingerprint named in that manifest.
+──────────────────────────────────────────────  ────────────────────────────────────────────────────────────────────────────────
+Possession signature covers POSS, t             That key verifies a self-signature over this same manifest.
+──────────────────────────────────────────────  ────────────────────────────────────────────────────────────────────────────────
+Attestation signature covers BYTES, fb          That key verifies the presented framed content, with the attestation tag.
+──────────────────────────────────────────────  ────────────────────────────────────────────────────────────────────────────────
+Frame matches alg, id, and fp(kX)               The signed content names the same algorithm, identity, and key fingerprint.
+──────────────────────────────────────────────  ────────────────────────────────────────────────────────────────────────────────
+mh = h(t)                                       The signed content commits to this same manifest.
+
+One small syntax distinction helps: in the frame pattern, =id means require equality with the previously obtained identity. A bare name such as ot means read that field, without imposing an additional equality check.
+
+Why the attack fails
+
+The central argument is short:
+
+1. Alice’s honest framed content contains fp(AliceKey).
+3. In this symbolic model, different keys cannot have equal fingerprints.
+4. Therefore the same honest content cannot be accepted under another key—even when its signature verifies under that key.
+
+Changing the embedded fingerprint would produce different content. It would no longer be the existing message–signature pair the substitution attack was trying to reuse.
+requires the accepted identity to match the identity inside the content.
+
+That is the reasoning to understand and challenge. You do not need to memorize the process syntax.
+
+Where your judgment is needed
+
+Claude’s two suggested abstraction boundaries are real:
+
+- The frame is already perfectly structured. Its fields cannot overlap, parse ambiguously, or acquire different meanings through competing byte decoders. That makes it suitable for examining the binding relationships, but actual encoding and parsing remain P8 obligations.
+- The manifest is reduced to the authority tuple. Here, signing the manifest, hashing the manifest, and binding the authority tuple all concern the same object. A richer implementation must explain how those operations relate when additional fields exist. This model does not establish that correspondence automatically.
+
+There are two further boundaries worth keeping visible:
+defects in this key-binding argument.
+
+- Fingerprints and hashes are collision-free by construction here. The model checks the composition under that assumption; it does not establish the strength of concrete fingerprint or hash algorithms.
+
+I would therefore phrase your review question more concretely than “does the abstraction lie?”:
+
+
+Finally, I would qualify Claude’s “companions discharge nothing.” They do not prove the correct construction secure, but they supply essential evidence that the checking arrangement can detect the intended failures. You need not personally read every trace to understand that evidential role.
+
+My rerun found both attack events unreachable and acceptance reachable—the verifier is not succeeding merely by rejecting everything. That supports this bounded exercise. It does not by itself establish all of P3, the multi-signer case, implementation conformance, or resistance to actual signing-key compromise.
+```
+
+I was able to engage in an in-depth conversation, reach a reasonable conclusion, share that with Claude.
+
+The challenge isn't my understanding of the project at high-level, it is the concern about specific details.  Dig in and things become clearer to me. Buttressing that with the actual proofs that held up under scrutiny tells me that this isn't a _hole_ it is a limitation in what we can guarantee.
