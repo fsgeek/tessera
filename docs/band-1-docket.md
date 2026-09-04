@@ -331,3 +331,12 @@ specification) or disposed with reasons.
     registration. Not gated on, and does not gate, the S-STANDING
     model. This is the only docket item besides 17 with a pre-freeze
     deadline.
+    *Author clarification, 2026-09-04 (in session, recorded by the AI
+    collaborator):* the travelog entry of the same date says the
+    forward identifier is "not tied to the signature over Attestation
+    N"; asked whether that meant *not derived from* N's signature or
+    *not covered by* it, the author ruled: "the forward identifier has
+    to be inside the signed package — otherwise, it isn't tied to the
+    attestation." So: an independent identifier (not a back-hash),
+    carried inside N's signed bytes — consistent with the payload
+    location ruled above.
