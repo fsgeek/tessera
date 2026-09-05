@@ -1,0 +1,17 @@
+
+## A1.3 The adversary model (explicit capabilities)
+
+The Band 0 adversary can, at minimum:
+
+1. **Alter** any bytes of a package, receipt, manifest, or wrapper after
+   issue.
+2. **Strip, reorder, or duplicate** signatures within the signature set.
+3. **Substitute keys** — including choosing keypairs *after* seeing valid
+   signatures (the DSKS capability of P3) — and always self-sign with keys
+   it holds (possession is free to the adversary; see P10).
+4. **Replay** valid packages, receipts, or manifests in other contexts, and
+   re-frame objects across the P7 type boundaries.
+5. **Craft manifests** freely, and anchor anything: anchoring proves
+   existence at a time, not authority (A1.5, A1.6).
+6. **Control any proper subset of the external manifest-authority
+   channels** (P10).

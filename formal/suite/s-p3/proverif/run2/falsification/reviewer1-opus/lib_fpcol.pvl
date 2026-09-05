@@ -1,0 +1,150 @@
+(* ==================================================================== *)
+(* tessera_theory.pvl — shared theory library for the symbolic suite.  *)
+(*                                                                      *)
+(* STATUS: PROPOSED (collaborator, 2026-09-04). Extracted from the      *)
+(* first-link spike models under formal/spike/first-link/proverif/,     *)
+(* per formal/suite/ENUMERATION.md §1: extraction, not invention.       *)
+(* Every divergence from the spike's declarations is recorded below.    *)
+(* A suite model includes this file (proverif -lib) and adds only its   *)
+(* own process structure, events, and queries; redeclaring a library    *)
+(* term is a build failure (ENUMERATION §1).                            *)
+(*                                                                      *)
+(* This library proves nothing. It fixes the vocabulary so that the    *)
+(* suite's ledger entries share terms by construction.                  *)
+(*                                                                      *)
+(* Extraction record (2026-09-04, against all 19 spike .pv files):      *)
+(*   identical in every model: c, skey/pkey/pk, sign/checksign, fp,     *)
+(*     POSS, BYTES, the five honest-world fixture values, and the       *)
+(*     events AuthorityPublishedDNS/Repo, IssuerPossession,             *)
+(*     IssuerSigned (Q4/Q6r/Q7 omit the four producer events because   *)
+(*     they model the adversary's objective only; omission, not         *)
+(*     redefinition).                                                   *)
+(*   h: declared in Q3, Q4, Q5, Q5r, Q6r, Q7; absent from Q1/Q2, which  *)
+(*     bind the tuple directly. Carried here with its idealization.     *)
+(*   Accept: 5-ary in Q1–Q5; the single-evidence models declare their   *)
+(*     own AcceptS (4-ary) / AcceptP; those remain model-local.         *)
+(*   Judge channels (accCh, accS, accP) and TwoWorlds* events are        *)
+(*     model-local by design (private-channel judges); not library.     *)
+(* Divergences from the spike, each deliberate and recorded:            *)
+(*   D-1  STMT is replaced by STMT_DIRECT and STMT_DIGEST, per the      *)
+(*        first-link DECISION.md construction ruling (distinct tags per *)
+(*        binding form). A suite model using the spike's single STMT   *)
+(*        is a build failure.                                           *)
+(*   D-2  The map-v1 authority-relevant tuple gets a named constructor, *)
+(*        authTuple, declared [data] so it is a transparent tuple       *)
+(*        (adversary can build and decompose it) — semantically the     *)
+(*        spike's native 5-tuple, with a name the ledger can cite.      *)
+(*   D-3  Possession is over the MANIFEST, not the fingerprint. The     *)
+(*        spike encoded proof-of-possession as sign((POSS, fp(pk)), sk);*)
+(*        A1 §A1.5 item 3 / P10 define it as the manifest self-         *)
+(*        signature, sign((POSS, <manifest>), sk). ENUMERATION note 2   *)
+(*        requires this file to record the divergence so the suite      *)
+(*        does not inherit the under-encoding (guide M7a/M7b). The      *)
+(*        library fixes the TAG; each model's possession object MUST    *)
+(*        be over its manifest term, and a model signing POSS over a    *)
+(*        fingerprint alone is a broken companion by definition.        *)
+(*   D-4  Key substitution (DSKS) is EXPRESSIBLE. The spike's signature *)
+(*        algebra made A1.3 item 3 unrepresentable (guide A2; note 1    *)
+(*        item 2(c)). This library adds an adversary-available          *)
+(*        constructor dsks(s, r) yielding a fresh private key whose     *)
+(*        public key verifies the one seen signature s. See the         *)
+(*        signature section for exactly what this does and does not     *)
+(*        grant. Every suite query therefore holds, if it holds, under  *)
+(*        an adversary with the registered DSKS capability.             *)
+(* ==================================================================== *)
+
+(* --- public channel ------------------------------------------------- *)
+free c: channel.
+
+(* --- signature primitives ------------------------------------------- *)
+(* Dolev–Yao signatures, deterministic, with message recovery, PLUS the  *)
+(* registered A1.3 item 3 capability (D-4): from any ONE seen signature  *)
+(* s = sign(m, k) and a fresh value r, the adversary derives a private   *)
+(* key dsks(s, r) it holds, whose public key verifies s to the same m.   *)
+(* What this grants: choosing a keypair AFTER seeing a valid signature   *)
+(* so that the existing message–signature pair verifies under it (the   *)
+(* registered P3 threat, exclusive-ownership failure).                   *)
+(* What it does not grant: forging a signature under a key the          *)
+(* adversary does not hold; making a derived key verify any OTHER        *)
+(* signature by k; key recovery. A derived key signs freely (possession  *)
+(* is free to the adversary, P10).                                       *)
+(* Modeled as a second rewrite rule tried when the honest rule does not  *)
+(* apply. Signatures are deterministic here: the judge pattern equates   *)
+(* more evidence than a byte-level judge would, so unreachability in the *)
+(* model is conservative for the real judge (guide A2).                  *)
+type skey.
+type pkey.
+fun pk(skey): pkey.
+fun sign(bitstring, skey): bitstring.
+fun dsks(bitstring, bitstring): skey.
+fun checksign(bitstring, pkey): bitstring
+  reduc forall m: bitstring, k: skey;
+          checksign(sign(m, k), pk(k)) = m
+  otherwise forall m: bitstring, k: skey, r: bitstring;
+          checksign(sign(m, k), pk(dsks(sign(m, k), r))) = m.
+
+(* --- key fingerprint -------------------------------------------------- *)
+(* IDEALIZATION (guide READ-AND-CHALLENGE A1 — the spike ledger named   *)
+(* h's residual and not fp's; this header closes that gap): fp is a     *)
+(* free constructor — injective, no collisions, no preimages. A model    *)
+(* check `fp(kX) = kfpr` is therefore equivalent to `kX = the key whose  *)
+(* fingerprint was published`. In the implementation it is a byte        *)
+(* comparison whose strength is the fingerprint function's collision     *)
+(* resistance and the P8 question of what bytes a fingerprint hashes.    *)
+(* Layer 2 residual; every ledger entry that consumes a fingerprint      *)
+(* match must cite it. What a concrete fingerprint hashes is P8's        *)
+(* business (spike fixture note).                                        *)
+fun fp(pkey): bitstring.
+fun kcol(pkey, bitstring): pkey.
+equation forall k: pkey, r: bitstring; fp(kcol(k, r)) = fp(k).
+
+(* --- hash ------------------------------------------------------------- *)
+(* IDEALIZATION (must be cited by every consumer ledger entry, spike     *)
+(* ledger entry 1/3 residual, DECISION.md remediation 5): h is a free    *)
+(* constructor — injective by construction, no collisions, no            *)
+(* preimages, no length or encoding structure. This erases (a) concrete *)
+(* collision behavior — collision resistance of the real digest is a    *)
+(* Layer 2 assumption discharged by cited external hardness results,    *)
+(* never by a model including this file; and (b) encoding ambiguity —   *)
+(* two byte-strings canonicalizing to one input, which is P8's          *)
+(* injectivity obligation, not this library's. Any query whose truth    *)
+(* depends on h being hard to invert or collide is proving a symbolic   *)
+(* fact about a perfect hash, and its ledger entry must say so.         *)
+fun h(bitstring): bitstring.
+
+(* --- domain-separation tags ------------------------------------------ *)
+(* One tag per signed-object kind; a signature over one kind never       *)
+(* parses as another. STMT_DIRECT / STMT_DIGEST distinguish the two     *)
+(* authority binding forms (D-1). POSS: manifest possession self-       *)
+(* signature. BYTES: attestation signature over the framed bytes.       *)
+const STMT_DIRECT: bitstring.
+const STMT_DIGEST: bitstring.
+const POSS: bitstring.
+const BYTES: bitstring.
+
+(* --- map-v1 authority-relevant tuple (D-2) ---------------------------- *)
+(* (issuer identity, key fingerprint, signer-set, algorithm id,         *)
+(*  statement version). Anchor identity excluded by citation (A3.1      *)
+(* coverage map: anchor identity -> A2.4). Binding-form tags are NOT    *)
+(* tuple fields (first-link DECISION.md map-v1 ruling).                 *)
+fun authTuple(bitstring, bitstring, bitstring, bitstring, bitstring): bitstring [data].
+
+(* --- honest-world fixture values -------------------------------------- *)
+(* Public: the adversary knows the honest statement and may replay or    *)
+(* recombine it (spike convention, identical in all 19 models).          *)
+free issuerId: bitstring.
+free ssetH: bitstring.
+free algH: bitstring.
+free verH: bitstring.
+free fbH: bitstring.
+
+(* --- the five event kinds, two authority-publication branches -------- *)
+(* The author's ratified phrasing (ENUMERATION §1). Accept's arity is   *)
+(* the strict two-channel form; single-evidence and judge variants are  *)
+(* declared by the models that need them.                               *)
+event AuthorityPublishedDNS(bitstring).
+event AuthorityPublishedRepo(bitstring).
+event IssuerPossession(pkey).
+event IssuerSigned(pkey, bitstring).
+event Accept(bitstring, bitstring, bitstring, pkey, bitstring).
+  (* evidenceDNS, evidenceRepo, authority tuple, accepted key, bytes *)

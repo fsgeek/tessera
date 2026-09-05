@@ -21,6 +21,22 @@
 (* (N2): a second honest manifest with its own two signers; payloads   *)
 (* adversary-chosen; N1 vacuity query on Accept2 included.             *)
 (* Run: proverif -lib ../../lib/tessera_theory.pvl sp3_q5_multikey_correct.pv            *)
+(* RECUT 3, 2026-09-05, after two blind falsification reviews (see        *)
+(* RESULTS.md and docs/reviews/2026-09-05-blind-falsification-sp3-q2.md): *)
+(* (a) the N1 witness is now HONEST-flow acceptance — the judge emits      *)
+(*     HonestAccepted when the accepted key IS the signer's; a bare         *)
+(*     acceptance witness was satisfiable by impersonation alone;           *)
+(* (b) judge locals renamed (fbHon) to stop shadowing the library's fbH;    *)
+(* (c) header claims narrowed: what these queries discharge is the          *)
+(*     key-fingerprint binding (redundantly, manifest-hash) under a perfect  *)
+(*     fingerprint; the result does not depend on signature security at    *)
+(*     all — it holds even under total exclusive-ownership failure; the     *)
+(*     authority-evidence check is inert here by construction (the sole     *)
+(*     channel key is public); possession-not-transplanted is an A1.5/P10  *)
+(*     result carried in S-P3, not a P3 result; identity, algorithm,        *)
+(*     object type, canonicalization version and domain tags are included   *)
+(*     in the signed bytes but unexercised by these two queries.            *)
+(* Results were unchanged by (a) and (b).                                   *)
 (* ==================================================================== *)
 
 (* --- model-local declarations (library terms are not redeclared) ---- *)
@@ -38,6 +54,8 @@ free possCh: channel [private].
 event ReattributedA(pkey, pkey, bitstring).   (* signer A's honest bytes accepted under another key *)
 event ReattributedB(pkey, pkey, bitstring).   (* signer B's *)
 event PossessionTransplanted(pkey, bitstring).
+event HonestAccepted(pkey, bitstring).
+  (* N1 witness (recut 3): honest bytes accepted under their signer's key *)
 event Accept2(bitstring, bitstring, pkey, pkey, bitstring, bitstring).
   (* evidence, tuple, key A, key B, bytes A, bytes B *)
 
@@ -47,6 +65,9 @@ query kX: pkey, kH: pkey, fb: bitstring;
   event(ReattributedB(kX, kH, fb)).
 query kX: pkey, p: bitstring;
   event(PossessionTransplanted(kX, p)).
+(* N1 honest-flow witness: must be REACHABLE *)
+query k: pkey, fb: bitstring;
+  event(HonestAccepted(k, fb)).
 (* N1 vacuity witness: must be REACHABLE *)
 query ev: bitstring, t: bitstring, kA: pkey, kB: pkey, fa: bitstring, fb: bitstring;
   event(Accept2(ev, t, kA, kB, fa, fb)).
@@ -101,16 +122,16 @@ let VerifierS(pkS: pkey) =
   | out(acceptCh, (kA, id, fa)) | out(acceptCh, (kB, id, fb)) ).
 
 let JudgeA =
-  in(honestChA, (kH: pkey, fbH: bitstring));
-  in(acceptCh, (kX: pkey, id: bitstring, =fbH));
-  if kX = kH then 0
-  else event ReattributedA(kX, kH, fbH).
+  in(honestChA, (kH: pkey, fbHon: bitstring));
+  in(acceptCh, (kX: pkey, id: bitstring, =fbHon));
+  if kX = kH then event HonestAccepted(kX, fbHon)
+  else event ReattributedA(kX, kH, fbHon).
 
 let JudgeB =
-  in(honestChB, (kH: pkey, fbH: bitstring));
-  in(acceptCh, (kX: pkey, id: bitstring, =fbH));
-  if kX = kH then 0
-  else event ReattributedB(kX, kH, fbH).
+  in(honestChB, (kH: pkey, fbHon: bitstring));
+  in(acceptCh, (kX: pkey, id: bitstring, =fbHon));
+  if kX = kH then event HonestAccepted(kX, fbHon)
+  else event ReattributedB(kX, kH, fbHon).
 
 let PossJudge =
   in(honestPossCh, (kH: pkey, p: bitstring));

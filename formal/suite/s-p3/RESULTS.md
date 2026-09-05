@@ -61,6 +61,17 @@ with `honestChA`/`honestChB` and `ReattributedA`/`ReattributedB`.
 Results before the recut (`run1/q5-recut1/`) are consistent with the
 per-role results.
 
+**Recut 3 — honest-flow witness, shadowing fix, header narrowing (all
+models), 2026-09-05.** After the two blind falsification reviews
+(`docs/reviews/2026-09-05-blind-falsification-sp3-q2.md`): (a) the N1
+witness is now `HonestAccepted(k, fb)`, emitted by the judge when the
+accepted key *is* the signer's — the bare acceptance witness was
+satisfiable by impersonation alone; reachable in all eight models;
+(b) judge locals renamed so the library's `fbH` is no longer shadowed
+(no ProVerif warnings remain); (c) every header's "This model proves"
+narrowed to what the queries discharge (F5–F8 below). No result
+changed. Run-2 outputs archived under `run2/`.
+
 ## Findings
 
 **F1 — The P3 [model] claim holds in the hard case.** In degraded mode
@@ -79,8 +90,10 @@ adversary's own signature over `framedU(objType, alg, canonVer,
 payload)` under its own key is term-equal to the honest issuer's bytes
 over the same adversary-chosen payload; the judge fires on that
 collision. The DSKS capability was not used. Consequence for the
-relying-party story: under the spike's opaque-bytes shape, "impersonation
-with the adversary's own key" (note 2's admitted degraded-mode cost) and
+relying-party story: under the spike's opaque-bytes shape, impersonation
+(note 2's admitted degraded-mode cost — adversary-authored bytes
+*claiming an honest identity*, under the adversary's own key, accepted
+because the sole compromised channel vouches for that key) and
 "re-attribution of the honest issuer's bytes" are *the same event*;
 the in-bytes binding is what separates them. The story should say so.
 
@@ -112,6 +125,61 @@ anywhere in this ladder — which is the P3 design working, not the
 capability being weak: the library's D-4 rule is sufficient to exhibit
 the attack when the defence is removed.
 
+**F5 — The result does not depend on signature security; it depends on
+fingerprint injectivity.** (Blind review, both reviewers.) Removing the
+attestation-signature check, or replacing the library's signature
+theory with *total* exclusive-ownership failure (any key verifies any
+signature), leaves both Q2 queries unreachable; `dsks` appears nowhere
+in the baseline derivation. Two fingerprint-collision theories make one
+or both reachable. So the honest sentence for what Q2 discharges is:
+*under a perfect fingerprint, key substitution cannot move an
+acceptance of honest bytes to another key.* This is a stronger result
+than the header first claimed (it holds under a stronger adversary),
+and a narrower one (its whole load is the `fp` idealization, Layer 2).
+DSKS bites the moment the tuple-fingerprint check is removed, which is
+F4 with the load located.
+
+**F6 — The compromised sole channel is the adversary's condition, not
+something the checks defend against.** Removing the authority-evidence
+check changes nothing, because the channel key is public by
+construction. The fixture is strictly stronger than A1.3 item 6 (which
+licenses a *proper* subset of channels) in the conservative direction.
+Q2's header now says so.
+
+**F7 — Five of P3's seven fields are included but unexercised by these
+queries.** Issuer identity, algorithm identifier, object type,
+canonicalization version, and the domain tag can be unbound or removed
+without changing either result; key fingerprint and (redundantly)
+manifest hash are the only load-bearing fields — which sharpens F3.
+P3's text requires inclusion; their *checks* belong to other
+properties: object type → P7; canonicalization version and algorithm
+profile → P8/H1a; algorithm identifier → the A3 §1 identifier-binding
+invariant; identity → F8. The attestation-signature check itself is
+unexercised by re-attribution and is exercised by an *authorship*
+correspondence (accepted under an honest key ⇒ that key signed those
+bytes) — S-P1's integrity claim, carried there as a consumer
+obligation; Q1's strict-mode first-link correspondence exercises it
+already.
+
+**F8 — Key-based judge, identity-based sentence.** Reviewer 1 observed
+that P3's opening sentence speaks of *issuer identity* while the judge
+compares keys, and exhibited an adversary key accepted under an honest
+identity with adversary-authored bytes. Disposition (reasoned in the
+review record, item 6): the binding P3 states — signature to the
+identity *committed in the signed bytes* — holds in that trace; what
+is forged is the identity→key *authority*, which is P10 / the first
+link, and in degraded mode with the sole channel compromised is the
+registered waiver cost (Q5b). P3's registered threat is re-attribution
+of an existing signature. If the author reads P3's sentence more
+broadly, that is a ruling on P3's scope, not a model defect. Flagged.
+
+**Dependency statement (both reviewers, consistent):** the frame's
+fingerprint field alone suffices against re-attribution; the tuple
+fingerprint match and the manifest-hash check together compensate for
+its absence, and neither alone does; the tuple fingerprint match and
+possession-over-manifest are jointly necessary and individually
+insufficient against possession transplant.
+
 ## Ledger entries (A3.3 conservation fields) — offered, not entered
 
 1. **Key-binding relation (producer: Q2, `Reattributed` unreachable).**
@@ -129,7 +197,10 @@ the attack when the defence is removed.
    (conservative for the judge); frame layout (P8); the verification
    profile (P3's [assumption] half, H1a).
 2. **Possession binds the manifest to the named key (producer: Q2/Q4
-   correct form, `PossessionTransplanted` unreachable).** Consumer:
+   correct form, `PossessionTransplanted` unreachable) — an A1.5/P10
+   result carried in S-P3** (ENUMERATION §2's "producer for the
+   fingerprint relation" scope is wider than P3's registered text;
+   blind review item 8).** Consumer:
    S-P2's degraded-mode signer-stripping companion (note 2). Assumed
    fact: an accepted possession proof under `kX` is a signature over
    the accepted manifest, which names `fp(kX)`. Shared terms: accepted
@@ -185,6 +256,14 @@ security level is claimed or may be derived from it.
   manifest with non-authoritative fields is P8's and map v1's, not
   established here.
 
+**Suite rules from S-P3** (carried to S-P1, S-P2, S-P7, S-STANDING):
+report outputs to private-channel judges are parallel with their
+continuations (recut 1); the N1 witness is honest-flow acceptance
+emitted by the judge, never bare acceptance (recut 3); judge locals
+never shadow library names; each model's header names which of its
+checks are load-bearing for its queries and which are carried for
+other properties (F7).
+
 **The question the cold read answers** (reviewer's phrasing, adopted):
 *Does this model preserve the attack and the defense we intend to
 study, and have we assigned every omitted detail to an explicit
@@ -199,11 +278,14 @@ uninformative.
 
 Tool passes: yes, all correct models green, all required companions red
 (one via an added companion, recorded). Agreement-gate falsification
-review by non-author models: **not run**. Per-lemma prose mapping: this
+review by non-author models: **run, two models, 2026-09-05** — no query,
+prediction, or verdict changed; the model's self-description was
+narrowed (F5–F8), one witness made honest, one warning removed. Per-lemma prose mapping: this
 file's F1 and ledger entry 1 are the draft; the author's cold read of
 `sp3_q2_degraded_compromised.pv` against P3's registered sentence is the
-gate. Recommendation (collaborator): P3 → `checked`, not `discharged`,
-on the author's read.
+gate. Recommendation (collaborator): P3 → `checked` on the author's read of
+the corrected Q2 header against P3's sentence; `discharged` waits on
+the [assumption] half (H1a) regardless.
 
 ## Review log
 
@@ -218,3 +300,19 @@ on the author's read.
   review question adopted; record at
   `docs/reviews/2026-09-04-codex-sp3-q2-review.md`. Author read still
   pending.
+- 2026-09-05 — two blind falsification reviews (Claude Opus 5, Claude
+  Sonnet 5; jailed to the model, the library, P3's text, A1.3); 45
+  mutation/attack/probe files archived under `run2/falsification/`;
+  twelve consolidated findings dispositioned in
+  `docs/reviews/2026-09-05-blind-falsification-sp3-q2.md`; recut 3
+  applied and the ladder re-run, no result changed. Author read still
+  pending.
+- 2026-09-05 — **Author read (agreement gate, P3 [model] half): PASSED.**
+  The author read `sp3_q2_degraded_compromised.pv` lines 41–56 (recut-3
+  header) and 98–130 (verifier) against P3's registered sentence and
+  said: "I agree that the narrowed header says what that verifier
+  does, no more." `formal/PROPERTIES.md` P3 row moved `open` →
+  `checked` with this file as artifact; `discharged` waits on the
+  [assumption] half. Recorded by the collaborator in the author's
+  words; the commit is the author's.
+

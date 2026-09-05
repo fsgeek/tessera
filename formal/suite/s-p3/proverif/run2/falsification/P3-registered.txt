@@ -1,0 +1,23 @@
+- **P3 — Key binding (anti-substitution).** Acceptance binds each
+  signature to the issuer identity committed in the signed bytes. The
+  adversary model (A1.3) explicitly includes key-substitution attacks
+  (DSKS / exclusive-ownership failures: constructing a different keypair
+  under which an existing message–signature pair verifies, then
+  re-presenting the package under a substituted manifest). Idealized
+  signatures assume this binding by fiat; Ed25519 signature verification
+  alone does not provide protocol-level issuer binding or exclusive
+  ownership — the verification equation is not, by itself, the
+  issuer-binding protocol. Discharge is split:
+  - the binding of identity into signed bytes — the signed bytes include,
+    at minimum: domain-separation tag, object type (per P7's enumeration),
+    algorithm identifier, issuer identity, key fingerprint, manifest hash,
+    and canonicalization version — is **[model]**;
+  - the implementation's **verification profile** is **[assumption]**,
+    named in Layer 2 and discharged as H1a evidence: exact library and
+    version, accepted signature encodings, public-key validation behavior,
+    low-order-point handling, cofactor equation variant, and negative test
+    vectors for each, all recorded in the repository.
+
+  This property may not fall between the layers.
+
+- **P4 — Fail-closed state logic.** The verifier's four states partition

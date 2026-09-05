@@ -38,6 +38,22 @@
 (* receivers the derivation mentions, so a private output off the goal  *)
 (* path blocked every trace ("cannot be proved" on Q1's vacuity witness *)
 (* and on companion A). Horn-clause results were unchanged by the recut. *)
+(* RECUT 3, 2026-09-05, after two blind falsification reviews (see        *)
+(* RESULTS.md and docs/reviews/2026-09-05-blind-falsification-sp3-q2.md): *)
+(* (a) the N1 witness is now HONEST-flow acceptance — the judge emits      *)
+(*     HonestAccepted when the accepted key IS the signer's; a bare         *)
+(*     acceptance witness was satisfiable by impersonation alone;           *)
+(* (b) judge locals renamed (fbHon) to stop shadowing the library's fbH;    *)
+(* (c) header claims narrowed: what these queries discharge is the          *)
+(*     key-fingerprint binding (redundantly, manifest-hash) under a perfect  *)
+(*     fingerprint; the result does not depend on signature security at    *)
+(*     all — it holds even under total exclusive-ownership failure; the     *)
+(*     authority-evidence check is inert here by construction (the sole     *)
+(*     channel key is public); possession-not-transplanted is an A1.5/P10  *)
+(*     result carried in S-P3, not a P3 result; identity, algorithm,        *)
+(*     object type, canonicalization version and domain tags are included   *)
+(*     in the signed bytes but unexercised by these two queries.            *)
+(* Results were unchanged by (a) and (b).                                   *)
 (* ==================================================================== *)
 
 (* --- model-local declarations (library terms are not redeclared) ---- *)
@@ -55,6 +71,8 @@ free possCh: channel [private].        (* verifier -> judge : (accepted key, pos
 event Reattributed(pkey, pkey, bitstring).
   (* accepted key, honest signer key, the honest bytes *)
 event PossessionTransplanted(pkey, bitstring).
+event HonestAccepted(pkey, bitstring).
+  (* N1 witness (recut 3): honest bytes accepted under their signer's key *)
   (* accepted key, the honest issuer's own possession proof it presented *)
 
 (* re-attribution of honest bytes *)
@@ -64,6 +82,9 @@ query kX: pkey, kH: pkey, fb: bitstring;
 (* possession-proof transplant *)
 query kX: pkey, p: bitstring;
   event(PossessionTransplanted(kX, p)).
+(* N1 honest-flow witness: must be REACHABLE *)
+query k: pkey, fb: bitstring;
+  event(HonestAccepted(k, fb)).
 
 let AuthorityS(skS: skey, t: bitstring) =
   event AuthorityPublishedDNS(t);
@@ -108,10 +129,10 @@ let Issuer(skI: skey, id: bitstring, m: bitstring) =
   | out(c, sign((BYTES, fb), skI)) ) ).
 
 let Judge =
-  in(honestCh, (kH: pkey, fbH: bitstring));
-  in(acceptCh, (kX: pkey, id: bitstring, =fbH));
-  if kX = kH then 0
-  else event Reattributed(kX, kH, fbH).
+  in(honestCh, (kH: pkey, fbHon: bitstring));
+  in(acceptCh, (kX: pkey, id: bitstring, =fbHon));
+  if kX = kH then event HonestAccepted(kX, fbHon)
+  else event Reattributed(kX, kH, fbHon).
 
 let PossJudge =
   in(honestPossCh, (kH: pkey, p: bitstring));

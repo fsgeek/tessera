@@ -18,7 +18,7 @@ requires a signed amendment.
 |------|------------------------------------|----------------|--------------------| -------|----------|
 | P1   | Integrity (headline)               | [model]        | TLA+ and ProVerif  | open   | —        |
 | P2   | Signature-set completeness         | [model]        | TLA+ and ProVerif  | open   | —        |
-| P3   | Key binding (anti-DSKS)            | [model]+[assum]| ProVerif; H1a prof.| open   | —        |
+| P3   | Key binding (anti-DSKS)            | [model]+[assum]| ProVerif; H1a prof.| checked| `formal/suite/s-p3/` ([model] half; [assum] half open, H1a) |
 | P4   | Fail-closed state logic            | [model]        | TLA+               | checked| `formal/tla/P4_VerifierStates.tla` |
 | P5   | Temporal soundness (verifier side) | [model]+[assum]| TLA+               | checked| `formal/tla/P5P6_TemporalRevocation.tla` |
 | P5c  | Issuance corollary (depth k, reissue)| [model]      | TLA+               | checked| `formal/tla/P5c_IssuanceProtocol.tla` |
@@ -118,7 +118,14 @@ Cross-cutting obligations (A1.4, A1.7):
       the bridge broken companion for the exact finding and the
       conjunct-3 red-bar vector land in the H1a suite per A3. See
       `docs/exploration-2026-07-18-causal-dag-commons.md` §0/§8/§8b.
-- [ ] Agreement-gate falsification reviews run by non-author models;
+- [ ] Agreement-gate falsification reviews run by non-author models
+      — P3 [model] half: run 2026-09-05 (two non-author models, blind,
+      `docs/reviews/2026-09-05-blind-falsification-sp3-q2.md`); author
+      read of the corrected Q2 header against P3's sentence passed the
+      same day ("the narrowed header says what that verifier does, no
+      more"). Row moved `open` → `checked`; `discharged` waits on the
+      [assumption] half (verification profile, H1a evidence). Other
+      properties: not yet run.;
       artifacts in `docs/reviews/`.
 - [ ] Conformance vectors extracted from checked traces (feeds H1a).
 - [ ] Informal written proof (defend-it-cold) in repository.
