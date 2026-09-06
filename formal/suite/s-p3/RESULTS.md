@@ -173,6 +173,24 @@ registered waiver cost (Q5b). P3's registered threat is re-attribution
 of an existing signature. If the author reads P3's sentence more
 broadly, that is a ruling on P3's scope, not a model defect. Flagged.
 
+> **RULED (author), 2026-09-05 (clerk-entered from the author's words in
+> session; commit is the author's).** The narrow reading stands: P3's
+> threat is re-attribution of an existing signature; fresh-signature
+> impersonation under a usurped identity, with the sole channel
+> compromised, is the degraded-mode cost handed to the verifier, not a
+> P3 defect. The author's reason, in his words: *"the point of degraded
+> service is to give a verifier the data they need to decide whether or
+> not to trust the attestation. Tessera is not deciding, the third party
+> trying to use the attestation is. For example, if the issue is that in
+> 80 years there is some degradation of what can be verified, this is
+> not proof of tampering, it is evidence that tampering was possible.
+> The ultimate decision maker will need to weigh that evidence in
+> reaching their own decision. We cannot make that for them and we
+> shouldn't be telling them how to do so (because Tessera might not
+> exist in 80 years as an ongoing service offering.)"* Consequence for
+> the relying-party story: degraded-mode verdicts carry the evidence of
+> what could not be excluded; they do not carry Tessera's judgment of it.
+
 **Dependency statement (both reviewers, consistent):** the frame's
 fingerprint field alone suffices against re-attribution; the tuple
 fingerprint match and the manifest-hash check together compensate for

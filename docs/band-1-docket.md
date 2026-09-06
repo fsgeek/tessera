@@ -340,3 +340,128 @@ specification) or disposed with reasons.
     attestation." So: an independent identifier (not a back-hash),
     carried inside N's signed bytes — consistent with the payload
     location ruled above.
+
+26. **Issuer signing-key lifetime and rotation policy — candidate;
+    not registered anywhere in the record** (entered 2026-09-05 by the
+    AI collaborator from the author's walk-through of
+    `formal/spike/first-link/proverif/q3_mechanism_dns_compromised.pv`).
+    The author's concern, in his words: *"key lifetime becomes a
+    safeguard against someone surreptitiously taking over the service
+    and pretending to be Tessera."* Facts established from the tree
+    the same day: every symbolic model leaks channel keys only and
+    never the issuer key, so an adversary holding the issuer key is
+    indistinguishable from the issuer in every model; the mechanism
+    that would make a bounded key lifetime bite is the temporal anchor
+    plus the P5/P6 validity-at-anchored-time logic (TLA+); "lifecycle"
+    in the record means binding-form lifecycle (item 18) and
+    "rotation" in A3.5 means challenge-vector rotation. No declared
+    maximum validity window for the issuer key, no rotation cadence,
+    and no verifier behaviour at the window boundary is registered.
+    Relation to item 25: the forward-link slot makes a fork legible
+    after the fact; a lifetime policy bounds the window in which a
+    stolen or inherited key can issue at all. Candidate for
+    registration before format freeze if the window or boundary
+    behaviour affects the bundle's fields; otherwise Band 1 policy.
+    *Author addition, 2026-09-06 (in session, recorded by the AI
+    collaborator):* rotation must be designed, not only lifetime. His
+    words: *"we might want to insist that keys can only be replaced
+    within some time band of expiration and then require the
+    expiration bands not overlap between the authorities."* So two
+    candidate rules: (i) a replacement key is accepted only inside a
+    declared band before the current key's expiry; (ii) the authority
+    channels' expiry bands are staggered so that no instant has more
+    than one channel in rotation, which keeps A1.3 item 6's
+    "proper subset" condition true across a rotation — that rationale
+    is the collaborator's reconstruction, not the author's stated
+    reason. Unexplored; interacts with the first link (which manifest
+    a rotated channel key endorses) and with P5/P6's
+    validity-at-anchored-time logic.
+    *Collaborator objections, same day, so the rules are not read as
+    agreed:* (i) forbids emergency retirement after a discovered
+    compromise, and any exception path is the attack surface again;
+    the defensible form is weaker — an out-of-band rotation is a
+    detection signal a verifier treats as degradation. (ii) helps only
+    if the stable channel vouches for the rotating one (a
+    cross-endorsement mechanism not yet decided); under per-channel
+    chaining a thief of the old key rotates alone regardless; and
+    DNSSEC rollover timing is partly the registrar's and parent zone's,
+    so the band may be unenforceable for that channel. What stands
+    without objection: rotation is the moment a channel's trust root
+    is replaced and therefore the most attractive moment for a holder
+    of a stolen key; that threat is absent from A1.3 and should be
+    registered.
+    *Author's reason, 2026-09-06, in his words (supplied after the
+    objections):* *"The presumption with authority keys is that they
+    are different channels, with separate governance. By staggering
+    rotation periods it makes it more difficult for a single entity to
+    compromise them in a way that is not detectable. Governments could
+    likely do it, but then that could turn into a choice of domains to
+    use … pick the US, China, and Brazil, for example — anything that
+    requires all three to agree is socio-politically resistant to
+    compromise."* *Collaborator revision of objection (ii), same day:*
+    the objection was too strong. The strict verifier's requirement
+    that both channels endorse the same manifest is already the
+    cross-check; staggering then forces an attacker to hold one
+    channel from its window until the other's, during which the
+    channels disagree and strict verification fails visibly. The
+    condition the argument needs is narrower than a new endorsement
+    mechanism: **channel-key rotation must itself be a visible,
+    endorsed object** (a rotation of A recorded in the manifest
+    lineage and endorsed by B), and verifiers must check key history,
+    not only the current key. A quiet DNSSEC rollover B never sees
+    gives staggering nothing to work with. Two facts for the
+    governance premise: (1) the current channels — a `.com` zone
+    (Verisign, US) and a GitHub repository (US) — are organisationally
+    distinct but under one jurisdiction, so the multi-government
+    property the author describes is not held by the present channel
+    choice; achieving it is a channel-selection policy (a `.br` or
+    `.cn` zone, a non-US forge) exposed in the verifier's trust
+    configuration, and it extends item 24's correlated-custody
+    argument from anchors to authority channels. (2) The temporal
+    anchor is what makes governance diversity hold over 80 years:
+    later collusion cannot backdate, so the resistance need only be
+    true at issuance.
+    *Author, 2026-09-06, same session:* the channels are generalised —
+    "DNS" means any domain, "repository" means any public repository
+    source; multiple authority-key services are permitted (A1.3 item 6
+    is already n-ary; the models are the n = 2 instance and say so).
+    Carried caveats: channel count is not strength — an inert check
+    adds nothing (spike Q7/Q8) — and each added channel raises the
+    frequency of degraded verdicts. The author names the attestation
+    company itself as the weak spot, since it holds the accounts on
+    every channel plus the issuer key: correlated custody at the
+    account layer. His qualifier, "change of control for companies is
+    generally visible," holds for legal change of control (defended by
+    the anchor: no backdating) and not for compromise of control
+    (credential theft, insider), which no model here distinguishes
+    from Tessera; only equivocation visibility (item 25) and a public
+    log (the transparency witness, set aside 2026-08-31; item 24(b))
+    address it. Recorded as reopening the case for a log, not as a
+    mechanism decision.
+
+27. **Third-party log buildability — a format-freeze constraint**
+    (candidate, 2026-09-06; entered by the AI collaborator from the
+    author's words in session). The author: *"nothing says we cannot
+    add a separate log outside Tessera; what it suggests is that we
+    need to have a mechanism to permit someone to build such a log if
+    they decide it has value to do so … the design is a floor, not a
+    ceiling."* This dissolves the item 24 / 2026-08-31 objection to a
+    transparency witness: the objection was to Tessera as the custody
+    subject that must survive to keep a log, not to logs. A log kept by
+    a party who has decided it is worth keeping is a correlated subject.
+    What buildability already has: stateless verification (P9), the
+    forward identifier in the payload (item 25) making forks visible to
+    any holder of both successors, the canonical format (P8), and the
+    anchor bounding when each entry was made. What it lacks: a
+    registered statement that third-party logs are an intended
+    consumer, so that the format freeze preserves the fields a log
+    builder needs — issuer identity, the forward identifier, anchor
+    evidence, and a stable indexing key — even where no relying party
+    needs them. Pre-freeze, alongside items 17 and 25. Relation to
+    outward work: SCITT separates issuers from transparency services
+    (`docs/exploration-2026-08-12-outward-verification-scitt-ccf.md`);
+    under this item Tessera is an issuer whose artifacts are loggable
+    by a transparency service it never heard of. Key-rotation policy
+    (item 26) is explicitly deferred from the current round by the
+    author, same session.
+

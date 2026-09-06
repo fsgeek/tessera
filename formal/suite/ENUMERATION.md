@@ -272,6 +272,94 @@ committed evidence and their goal lines are present. Noted for the
 relying-party story: in Q7, the "pair" verifier's weak DNS check pins
 nothing — "pair" there means one strong check plus one inert one.
 
+## Amendment note 5 — 2026-09-05, revised 2026-09-06 (clerk; PROPOSED; reading aids as reviewed testimony, not an exit gate)
+
+Source: the author's walk-through of the first-link Q3 model in
+session (2026-09-05) and his reframing of the exit gate: *"Perhaps the
+right way to think of the exit gate isn't one of testing, but one of
+ensuring that I understand the project sufficiently. The ProVerif
+proofs are useful, but perhaps they can be annotated so one need not
+be an expert to understand that. That makes them more auditable by
+others."* Refined by the author 2026-09-06: *"so long as the proof can
+survive cross model family scrutiny we can accept the proof as-is and
+consider descriptive names and comments as being guides for
+non-experts — testimony that is subject to review but is not a gate
+for exit."*
+
+Proposed §5 additions, two, with different standing:
+
+1. **Gate (proof).** A model's queries are accepted when the model
+   survives falsification review by at least one reviewer from a
+   different model family than the model's author (the S-P3 pattern:
+   the 2026-09-04 Codex review satisfies this for Q2; the two
+   same-family blind reviews of 2026-09-05 are additional, not
+   substitutes). Future dispatches go cross-family first.
+2. **Testimony (reading aids), reviewed, not gating.** Every model
+   carries (a) the tool's typing convention (all tuples are
+   `bitstring`; shape lives in construction and pattern matches, never
+   in declarations); (b) a cast list mapping each name to its design
+   object, where it is built and where it is consumed; (c) the claim,
+   the adversary, and the boundary in plain language a relying party
+   could use. These are guides for non-expert readers, including the
+   author. Their review instrument is a **lower-ceiling reader probe**
+   (author's suggestion 2026-09-06): a small model (e.g. Haiku) is asked
+   to state claim, adversary, and boundary twice — once from the
+   comment-stripped code, once from the annotated model. The aids are
+   doing work only if the second answer is right and the first is not;
+   if both are right the probe does not discriminate and a weaker
+   reader is needed; if the second is wrong the aid is defective.
+   Results are recorded beside the model. A failed probe is a defect
+   in the aid, never a verdict on the proof, and does not block exit.
+
+**Precedent (author-supplied 2026-09-06; read by the collaborator the
+same day, `docs/references/anthropic-2026-formalizing-flt-in-lean.pdf`,
+"Formalizing Fermat's Last Theorem in Lean", Anthropic, run of
+2026-08-07 to 08-17).** Three points carry over:
+
+- *Correctness and form are separated, and checked by different
+  instruments.* The proof was accepted on the Lean kernel, an
+  independent kernel reimplementation (nanoda), and a comparator tool
+  confirming that the statement proved is exactly the reference
+  statement with no extra axioms. Claude's own assessment: "Both
+  developments are checked by the same Lean kernel … so correctness is
+  not the difference. The difference is form." Tessera's analogues:
+  ProVerif termination is the kernel; cross-family falsification is
+  the independent checker; the blind reverse-translation against the
+  registered property text is the comparator (the agreement gate).
+- *Readability is a stated, separate deficiency, not a gate on
+  truth.* "Not readable as mathematics. It was published without
+  comments … docs/verification.md says the tree 'has not been refereed
+  as mathematics'." The repository carries a `PROOF-PATH.md` "stating
+  how strong each named result is as proved" — the per-model "This
+  model proves / does not prove" header, collected. Item 2 above is
+  that document's form for this suite.
+- *The precise-caveat discipline.* At the moment of closure an agent
+  wrote "what 'Proved on prove2me' means; what's been checked, what
+  hasn't; what the statement is; what is assumed" — the four-part
+  statement item 2(c) requires of every model.
+
+One point cuts the other way and is recorded so it is not lost:
+Mathlib's contribution policy, quoted in the same document, "requires
+disclosing LLM use and says 'it is essential that you understand all
+the content written by an AI'", and by Claude's own account the FLT
+proof would fail that policy as it stands. Tessera's README credibility
+line is that policy. This note's resolution — correctness gated by
+checkers, understanding produced by reviewed aids — is the middle
+position; it does not claim the proofs are understood by the author
+merely because they are checked.
+
+Relation to the pre-registration §8 third clause ("the informal
+written proof — the author's defend-it-cold account — is in the
+repository"): under this note the collection of (c) statements *is*
+that account's form, so the artifact must exist for exit; its
+sufficiency for non-expert readers is reviewed by the probe but not
+gated. **This reading is routed to the author**: if he reads clause 3
+as requiring more than the collection of plain-language statements,
+that is a ruling on the gate, not on this note. Retrofit of (a)–(c) to
+the first-link spike models is owed under the corrected residual in
+`formal/spike/first-link/DECISION.md` (adopted 2026-09-06); S-P3's
+eight models are owed the same, on the same non-gating terms.
+
 ## Open questions routed to the author (none block drafting S-P3)
 
 1. Adoption of this enumeration as the suite's scope (cold read).

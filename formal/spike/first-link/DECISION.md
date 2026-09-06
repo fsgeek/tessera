@@ -60,6 +60,68 @@ alternatives named.
 
 The quotation of my words is correct.
 
+> **Correction to the closing conditions — PROPOSED 2026-09-05;
+> ADOPTED (author) 2026-09-06, in session ("accepted as-is"); commit is
+> the author's.** The three closing conditions above ("classified the
+> spike's RESULT lines cold", "written the Q3 argument … without the
+> file open", "reproduced the M1/M7 mutations by hand") were drafted by
+> the AI collaborator on 2026-08-29 and entered by the author as a fair
+> representation of what he had said; the record of that session shows
+> the conditions themselves were not the author's words. They also
+> contradict the reading of "defend it cold" stated in the same
+> paragraph ("defensible with the record in hand"): they demand
+> reproduction from memory of labelled artifacts, which the author on
+> 2026-09-05 called "a pattern recognition exercise, not a cognitive
+> one … requiring I memorize a set of labels." The author's standard,
+> in his words: *"What I thought I was agreeing to do was to be able to
+> explain why certain things were done when you ask me about the
+> certain thing."* Proposed replacement for the closing sentence:
+>
+> > Closes when, for each symbolic result the decision rests on, the
+> > author has stated with the record open and without the AI present
+> > the claim, the adversary, and the boundary of what the result does
+> > not show, and a non-author model has checked that statement against
+> > the model. Under the author's 2026-09-05 clarification, the ability
+> > to write or reproduce the ProVerif artifacts is not a condition; the
+> > gate of §8 of the pre-registration ("the author's defend-it-cold
+> > account") is discharged by the collection of those statements.
+>
+> What the residual is, restated from the 2026-09-05 walk-through of
+> Q3 (the author inferred the adversary, the boundary, the strict-mode
+> guarantee, and a record gap correctly; he misread the tuple `t`
+> twice because the model names it by one letter and defines its shape
+> only by usage): the symbolic models were not written to be read by
+> their author. The closing condition is that they become so, which
+> means each model carries a reading aid: the tool's typing convention
+> (all tuples are bitstrings; shape lives in construction and pattern
+> matches), and a cast list mapping every name to its design object,
+> where it is built, and where it is consumed.
+>
+> **Scope of "defend it cold" — RULED (author), 2026-09-06, in
+> session; recorded by the AI collaborator in his words.** *"The
+> original 'defend cold' was not understood by me to apply to every
+> element: I thought it was the project, the core decisions of the
+> project, and what the project can and cannot do."* And: *"I can defend
+> the project, without needing to defend each individual component of
+> the system."* Making per-proof fluency a gate is, in his ruling, "the
+> wrong decision for the project itself." Consequence: the README
+> credibility line ("every load-bearing decision … defensible by the
+> author without the AI in the room") is read as it is written — about
+> decisions, not proofs. The per-model author read remains (§8 clause 2,
+> "author and AI each independently judge the model faithful to the
+> claim") and is performed from the model's plain-language statement and
+> the cross-family comparator, not from the tool text; that this is how
+> clause 2 is satisfied is stated here so no reader infers the author
+> read the ProVerif cold. Observed value of the reads, in the author's
+> words: each walk-through surfaces design questions the abstraction
+> did not (2026-09-05: key lifetime; 2026-09-06: rotation bands, docket
+> item 26) — the read is design elicitation, the READ-AND-CHALLENGE
+> pattern of 2026-08-27, not an examination.
+>
+> Nothing above changes the residual's acceptance, the 459aff0
+> selection, or any property status. If entered, the original closing
+> sentence is retained as written per amend-don't-rewrite.
+
 ## Provenance labels used in this document
 
 Added 2026-08-13 after a cross-review finding that drafted
