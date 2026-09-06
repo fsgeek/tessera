@@ -1,0 +1,18 @@
+- **P10 — Manifest authority (external evidence plus possession).** The
+  issuer-key manifest carries **two independent, archived, time-anchored
+  authority-publication evidences** — the DNSSEC snapshot and the anchored
+  repository publication (A1.5) — **plus** a manifest self-signature by the
+  issuer keys. The self-signature proves *possession* and binds the
+  manifest bytes to the asserted keys; it is **not authority evidence and
+  is never counted as an authority channel** — an adversary substituting
+  their own key self-signs trivially. `VALID_STRICT` requires **all**
+  external authority evidences to validate, plus proof-of-possession.
+  Property: an adversary controlling any proper subset of the external
+  authority channels cannot cause a manifest asserting a non-authorized
+  key to satisfy the `VALID_STRICT` evidence requirement. Missing or
+  partially-validating evidence degrades by A1.2.1's explicit-policy
+  logic, naming which authority evidence was waived and why — never
+  silently. **[model]**
+
+**Change discipline.** This list may be amended before Band 0 exit only by
+a further signed, dated amendment stating what changed and why — the same

@@ -124,8 +124,24 @@ Cross-cutting obligations (A1.4, A1.7):
       read of the corrected Q2 header against P3's sentence passed the
       same day ("the narrowed header says what that verifier does, no
       more"). Row moved `open` → `checked`; `discharged` waits on the
-      [assumption] half (verification profile, H1a evidence). Other
-      properties: not yet run.;
+      [assumption] half (verification profile, H1a evidence).
+      — P4, P5, P5c, P6 (TLA+): cross-family review run 2026-09-06
+      (Codex gpt-6-astra, one run per module, jailed by content;
+      `docs/reviews/2026-09-06-codex-tla-falsification-p4-p5p6-p5c.md`,
+      inputs under `formal/tla/falsification-2026-09-06/`). No
+      invariant or status changed; three registered-text precision
+      items ROUTED to the author (P4 fail-vs-unperformable precedence
+      ratification; "required" qualifier on P4's unperformable
+      sentence; qualifier on Amendment 1's revocation-after-anchor
+      sentence); header/comment fixes and two mechanical additions
+      owed by the collaborator. **Correction to this file's P5c entry
+      below:** the `RefusalBuriedAnchorUnreachable` witness fires at
+      `MaxTime = 12` (re-run confirmed, 21 violations), so "+DepthK
+      headroom = 14 exercises post-refusal burial" is not what that
+      witness guards — it does not encode chronology; recut owed.
+      Author reads of the plain-language statements: not yet
+      possible (reading aids for these modules not yet written).
+      Other properties: not yet run;
       artifacts in `docs/reviews/`.
 - [ ] Conformance vectors extracted from checked traces (feeds H1a).
 - [ ] Informal written proof (defend-it-cold) in repository.

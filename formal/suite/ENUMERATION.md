@@ -360,6 +360,27 @@ the first-link spike models is owed under the corrected residual in
 `formal/spike/first-link/DECISION.md` (adopted 2026-09-06); S-P3's
 eight models are owed the same, on the same non-gating terms.
 
+## Amendment note 6 — 2026-09-06 (clerk; PROPOSED; two corrections to §2 from the S-P1/S-P2 drafts)
+
+1. **S-P1 does not consume S-P3's key-binding relation.** §2's S-P1
+   entry ("Expected ledger: consumes key-binding from S-P3") is
+   corrected: S-P3's `Reattributed` (honest bytes ⇒ signer's key) and
+   S-P1's headline (honest key ⇒ signed bytes) are complementary
+   axes; severing S-P3's link fails no S-P1 query, so an A3.3
+   cross-model entry would record another model's failing query.
+   The two are composed at the capstone, which must carry both.
+   A restated bytes-keyed query in S-P1 would prove nothing S-P3 has
+   not (`formal/suite/s-p1/PREDICTIONS.md`, ledger entry 1).
+2. **Note 2's S-P2 companion is satisfied by the C2 configuration.**
+   The companion as literally specified (C1: fingerprint-only
+   possession, frame's redundant set-pin retained) is predicted
+   green because the frame pins the set; C2 (same encoding fault,
+   set-pin removed) is the red companion; C1 is recorded as the
+   redundancy finding, in S-P3 F3's pattern
+   (`formal/suite/s-p2/PREDICTIONS.md`, Q5).
+
+Both are dispositions listed for veto in `ROUTED-2026-09-06.md` §B.
+
 ## Open questions routed to the author (none block drafting S-P3)
 
 1. Adoption of this enumeration as the suite's scope (cold read).

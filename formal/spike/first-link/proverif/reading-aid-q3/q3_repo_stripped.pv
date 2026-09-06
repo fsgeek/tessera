@@ -1,0 +1,59 @@
+
+free c: channel.
+type skey.
+type pkey.
+fun pk(skey): pkey.
+fun sign(bitstring, skey): bitstring.
+reduc forall m: bitstring, k: skey; checksign(sign(m, k), pk(k)) = m.
+fun fp(pkey): bitstring.
+fun h(bitstring): bitstring.
+const STMT: bitstring.
+const POSS: bitstring.
+const BYTES: bitstring.
+free issuerId: bitstring.
+free ssetH: bitstring.
+free algH: bitstring.
+free verH: bitstring.
+free fbH: bitstring.
+event AuthorityPublishedDNS(bitstring).
+event AuthorityPublishedRepo(bitstring).
+event IssuerPossession(pkey).
+event IssuerSigned(pkey, bitstring).
+event Accept(bitstring, bitstring, bitstring, pkey, bitstring).
+query t: bitstring, k: pkey, fb: bitstring, evD: bitstring, evR: bitstring;
+  event(Accept(evD, evR, t, k, fb)) ==>
+    ( (event(AuthorityPublishedDNS(t)) || event(AuthorityPublishedRepo(t)))
+   && event(IssuerPossession(k))
+   && event(IssuerSigned(k, fb)) ).
+let AuthorityDNS(skD: skey, t: bitstring) =
+  event AuthorityPublishedDNS(t);
+  out(c, sign((STMT, h(t)), skD)).
+let AuthorityRepo(skR: skey, t: bitstring) =
+  event AuthorityPublishedRepo(t);
+  out(c, sign((STMT, h(t)), skR)).
+let Issuer(skI: skey, fb: bitstring) =
+  event IssuerPossession(pk(skI));
+  out(c, sign((POSS, fp(pk(skI))), skI));
+  event IssuerSigned(pk(skI), fb);
+  out(c, sign((BYTES, fb), skI)).
+let Verifier(pkD: pkey, pkR: pkey) =
+  in(c, (t: bitstring, label: bitstring, evD: bitstring, evR: bitstring,
+         kX: pkey, ppf: bitstring, sg: bitstring, fb: bitstring));
+  let (=STMT, =h(t)) = checksign(evD, pkD) in
+  let (=STMT, =h(t)) = checksign(evR, pkR) in
+  let (id: bitstring, kfpr: bitstring, ss: bitstring, alg: bitstring,
+       ver: bitstring) = t in
+  if fp(kX) = kfpr then
+  let (=POSS, =fp(kX)) = checksign(ppf, kX) in
+  let (=BYTES, =fb) = checksign(sg, kX) in
+  event Accept(evD, evR, t, kX, fb);
+  0.
+process
+  new skD: skey; new skR: skey; new skI: skey;
+  let tH = (issuerId, fp(pk(skI)), ssetH, algH, verH) in
+  out(c, pk(skD)); out(c, pk(skR)); out(c, pk(skI));
+  out(c, skR);
+  ( !AuthorityDNS(skD, tH)
+  | !AuthorityRepo(skR, tH)
+  | !Issuer(skI, fbH)
+  | !Verifier(pk(skD), pk(skR)) )
