@@ -464,4 +464,22 @@ specification) or disposed with reasons.
     by a transparency service it never heard of. Key-rotation policy
     (item 26) is explicitly deferred from the current round by the
     author, same session.
+    *Correction, same day (collaborator):* no field is known to be
+    missing. The four named are present or scheduled (identity and
+    manifest hash in the signed frame; forward identifier in the
+    payload per item 25; anchor evidence in the bundle; the
+    attestation's own digest as index key). Item 27 is a
+    **preservation** constraint at freeze, not an addition. Scope:
+    what is loggable is what is presented — attestations are delivered
+    to requesters, not published — so a third-party log's coverage is
+    whatever the world shows it (item 24(b)).
+    *Vocabulary, RULED (author) 2026-09-06 in substance:* the
+    **verifier** is P9's pure function — bundle plus declared policy
+    in, verdict out; *"if the verifier requires anything from an
+    optional service, it is fundamentally broken."* The
+    **adjudicator** (the relying party) decides trust using the
+    verdict plus anything else, including any log anyone built, and
+    *"is not prohibited from using that log as part of its own
+    verification."* The relying-party story defines both terms; an
+    enumeration API may feed a log and may never feed a verdict.
 
