@@ -665,3 +665,77 @@ pattern (2026-09-05 read, recorded in S-P3 RESULTS.md).
   tuple-term wording, review citations, the P4 fact and routed
   question 2. No prediction was changed except by adding buckets and
   redistributing probability within a query.
+
+---
+
+## Post-freeze addendum 1 — 2026-09-12: common attested content (Amendment 5 §A5.4; ROUTED C8, ADOPTED (author) reading (a))
+
+**Status: PROPOSED, registered before any model change or run; the
+commit is the author's.** This is a post-freeze addition, not a
+refinement: no registered query, prediction, judge or companion
+above is altered. (*The status line at the head of this file still
+reads "Not frozen; no model exists and nothing has been run." That
+line is stale: it was committed unchanged in `5188e7a`, this file's
+signing and freeze commit — the same pattern the author resolved for
+Amendment 4 at ROUTED C1. It is retained per amend-don't-rewrite;
+"post-freeze" below means after `5188e7a`.*) The predictions frozen at
+`5188e7a` stand and are
+re-run unchanged; the ladder outcomes in `RESULTS.md` for Q1–Q5 must
+be identical after the change below, and any difference is a
+divergence to be recorded, never absorbed.
+
+**What is registered.** For the n = 2 branch (`Verifier2S`), the
+three non-fingerprint frame fields not already pinned through the
+shared tuple — object type, canonicalization version, payload — must
+be equal across the two signer slots. The verifier gains three
+equalities (`ota = otb`, `cva = cvb`, `pla = plb`, or the pattern
+equivalent); the existing `=alg`, `=id`, `= h(t)` matches already
+carry the other three. Each signer's frame keeps its own `=fp(kX)`.
+
+**New judge (encoding registered here).** No existing report carries
+both frames of one acceptance: `acceptCh` delivers `(kA, id, fa)` and
+`(kB, id, fb)` as two separate messages, and a judge that paired two
+such messages could pair frames from *different* acceptances — which
+would make `Spliced` reachable in the correct model as a judge defect,
+not a finding. So `Verifier2S` gains **one new private report
+channel**, `contentCh`, carrying `(t, fa, fb)` from the single
+`Accept2S` point, in parallel with the existing report outputs (the
+S-P3 recut-1 idiom). `ContentJudge` reads `contentCh`, destructures
+both frames, and emits `event Spliced(t, fa, fb)` when any of the
+three fields differs between them; emits nothing otherwise. The judge
+is instrumentation on the acceptance report, not a verifier check; the
+existing `setCh`/`slotCh`/`acceptCh` reports and their judges are
+untouched, and `Verifier1S` is untouched. `HonestComplete(M2, verified2(kA, kB))` (existing
+N1 witness) remains the vacuity guard: the honest two-signer flow
+with one payload must still be accepted.
+
+**Query Q6 (correct model, `sp2_q2_degraded_compromised.pv` amended
+in place, degraded mode, sole channel compromised):**
+`event(Spliced(t, fa, fb))` unreachable; all Q2 results and witnesses
+unchanged. Prediction: unreachable, terminating, Q2 lines unchanged
+(0.80); unexpectedly reachable = a model defect in the new equalities
+or a fixture path this plan missed (0.08); Q2 results changed by the
+addition = divergence, recorded (0.07); timeout (0.05). Box 15 min.
+
+**Companion Q6-C (`sp2_q6_companion_content_unchecked.pv`): the three
+equalities removed — the verifier as it stood before this addendum.**
+`Spliced` reachable. Predicted trace shape: honest signers A2 and B2
+of manifest `m2`, each fed a different adversary-chosen payload, both
+frames presented under one tuple, `Accept2S` fires. Prediction:
+reachable with exactly that shape, no cryptographic step (0.85);
+recut needed to rebuild the trace (0.08); companion green = the plan
+is wrong about where the load sits (0.04); timeout (0.03). Box 15
+min. Red must be on exactly `Spliced`: `Stripped`, `SignerForged`,
+`SetAltered`, `Reattributed` stay unreachable in the companion.
+
+**Header change registered.** The Q2 claim block gains one sentence
+under "This model proves": that for required sets of two, the
+accepted frames agree on object type, canonicalization version and
+payload (Amendment 5 §A5.4); and one under "does not prove": nothing
+about the encoding or ordering of the equal fields (P8).
+
+**Ledger.** Produced entry 1's restated plan sentence ("a signature
+over the exact framed bytes from every signer") is now read with
+§A5.4's meaning: every signer's frame over the same content, in its
+own frame. No ledger entry is altered here; `RESULTS.md` records the
+reading when the run is recorded.

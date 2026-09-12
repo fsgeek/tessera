@@ -432,3 +432,20 @@ taxonomy of all the ways a verifier can be stateful.
   already recommended in the entry above; no file change. No module,
   cfg, or `.out` touched; PROBE.md untouched; no prediction, outcome, or
   finding changes.
+
+## Addendum — 2026-09-12 (collaborator, recording Amendment 5)
+
+Amendment 5 (`docs/phase-0-prereg-amendment-5.md`, adopted by the
+author 2026-09-12) dispositions F2, F3, F4 above via §A5.1. Recorded
+here per amend-don't-rewrite; the F2–F4 text above is unchanged.
+
+§A4.1(ii) is rewritten: the vector carries the **expected verdict**
+determined by bundle and declared policy; each machine's verdict is
+compared to *that*, not only to the other machine's (discharges F3);
+one case presents the same bundle twice on one machine and requires
+the same verdict both times (discharges F4); and the "consults any
+optional service" clause is discharged by the inspection leg (i)
+together with one case in which the optional service is reachable and
+contradicts the bundle, not by the two-machine run alone (discharges
+F2). P9's discharge label is unchanged: **[inspection + vector]**.
+Routing options 2 and 3 above are adopted; option 1 is superseded.

@@ -22,6 +22,14 @@ implement, registered the general degraded-mode principle (§A4.6), and
 commissioned non-discharging TLA+ probes of P9 and P10 whose green
 results are never cited here.
 
+**Amendment 5 (adopted 2026-09-12; in force on the author's commit of
+`docs/phase-0-prereg-amendment-5.md`)** moves no row. It registers
+P4's reading of waived-but-failing evidence (§A5.2), the
+degraded-verdict record content (§A5.3), the P9 vector's required
+cases (§A5.1), three verifier checks for P2, P7 and standing with
+post-freeze symbolic queries and companions registered before any run
+(§A5.4–§A5.6), and the boundary of A4.6 (§A5.7).
+
 | Prop | Short name                         | Discharge      | Tool (A1.4)        | Status | Artifact |
 |------|------------------------------------|----------------|--------------------| -------|----------|
 | P1   | Integrity (headline)               | [model]        | TLA+ and ProVerif  | open   | —        |

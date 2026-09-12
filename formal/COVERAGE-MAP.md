@@ -53,3 +53,30 @@ Abbreviations: A1 = `docs/phase-0-prereg-amendment-1.md`; A2 = `…-amendment-2.
 ## Amendment notes (appended; the rows above are unchanged)
 
 1. **2026-09-06 — row 8 (P7, type tag / wrapper): open coverage cell added — package completeness / self-containment.** PROPOSED — produced by the AI collaborator; not adopted; the commit is the author's. Source: the cross-family falsification review of the S-P7 suite models (`docs/reviews/2026-09-06-codex-suite-falsification-s-p1-s-p2-s-p7-s-standing.md`, S-P7 item 21, disposition Boundary, "recorded as an open coverage cell"). Fact: in every S-P7 model the wrapper's embedded pair `wrap(cvInner, (innerBytes, innerSig))` carries the inner *bytes and signature* only; the inner manifest, authority evidence and possession proof are supplied to the verifier by the presenter outside the embedded pair (`formal/suite/s-p7/proverif/sp7_q2_degraded_compromised.pv` lines 272–273, 279), and no S-P7 query states package completeness. So P7's registered sentence "hash-only commitment is rejected: the inner bytes must travel inside the bundle, or P9's self-containment fails" (A1 §A1.2 P7) is exercised symbolically for the bytes and signature (the reviewer's hash-only attack is unreachable) and **not** for the rest of the inner package. Placement: an **OPEN** cell on row 8 (and, by the row-10 join sentence "P7's 'inner bytes travel inside the bundle, or P9's self-containment fails' joins here", on row 10) — bundle completeness is a P8/H1a *format* obligation, not a symbolic one; no tool leg is assigned by this note. Row 8's "Symbolic leg: none — S-P7 enumerated" is not rewritten here: the S-P7 ladder (twelve models, `formal/suite/s-p7/`, PROPOSED, uncommitted as of this note) exists in the tree, and its RESULTS.md "What S-P7 does not discharge" carries this cell with the same wording; moving the leg cell and the TRK status is the author's, on the author read that `formal/suite/s-p7/RESULTS.md` "Status toward discharge" asks for. No status was changed.
+
+2. **Amendment 5 — 2026-09-12 (collaborator).** PROPOSED — produced by
+   the AI collaborator, recording Amendment 5
+   (`docs/phase-0-prereg-amendment-5.md`, adopted by the author
+   2026-09-12); no row above is edited or moved. Row-level facts:
+   - **Row 2 (P2)** gains the §A5.4 common-content check (a
+     multi-signer frame's six non-fingerprint fields equal across
+     slots): registered as post-freeze query Q6 plus a splicing
+     companion in `formal/suite/s-p2/PREDICTIONS.md`; not yet run.
+   - **Row 4 (P4)** — §A5.2 confirms `ExactDegraded` is unchanged (the
+     registered reading is P4's, as modelled); §A5.7 bounds A4.6's
+     degraded-mode principle.
+   - **Row 8 (P7)** gains the §A5.5 wrapper inner-canonicalization-
+     version check: registered as post-freeze query Q7 plus a
+     lying-wrapper companion in `formal/suite/s-p7/PREDICTIONS.md`;
+     not yet run.
+   - **Row 10 (P9)** — §A5.1 repairs the A4.1(ii) vector's blind spots
+     F2–F4 (`formal/spike/tla-probes/P9/RESULTS-PROBE.md`).
+   - **Row 11 (P10)** — §A5.2 registers P4's reading of the
+     waived-but-failing evidence fork R1/§C3 exposed
+     (`formal/spike/tla-probes/P10/RESULTS-PROBE.md`); §A5.3 registers
+     the degraded-verdict record content.
+   - **Row 13 (standing)** gains the §A5.6 tuple-binding check (the
+     presented authority tuple must equal the tuple embedded in the
+     core): registered as post-freeze query SS.Q6 plus an alias
+     companion in `formal/suite/s-standing/PREDICTIONS.md`; not yet
+     run.

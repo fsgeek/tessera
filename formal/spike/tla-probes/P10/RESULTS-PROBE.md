@@ -555,3 +555,28 @@ divergences and the run-5 predictions.
   No author read; the skeptic's review is the first review of this
   directory. R1 (as amended) and R2 remain routed to the author,
   undecided here.
+
+## Addendum 3 — 2026-09-12 (collaborator, recording Amendment 5)
+
+Amendment 5 (`docs/phase-0-prereg-amendment-5.md`, adopted by the
+author 2026-09-12) dispositions R1 and R2 above. Recorded here per
+amend-don't-rewrite; the R1/R2 text above is unchanged.
+
+**R1 (and §C3's wider set) registered — §A5.2.** The fork is P4's
+reading: A3 §A3.2 item 2's second sentence gains "required" —
+"**Required** evidence that is present and whose validation is
+performed but fails yields `INVALID`." Waived evidence is evaluated
+and its condition recorded (§A5.3 below) and never determines the
+verdict. The `_A32Reading` module is the recorded rejected
+alternative — kept in this directory as evidence of the fork, cited
+by no tracker row. P4's `ExactDegraded` invariant is confirmed
+unchanged.
+
+**R2 registered — §A5.3.** Both "why"s are recorded: for each waived
+check, the policy that authorized the waiver, and the verifier's
+observation of the waived evidence — at least the six values this
+probe needed (absent, unperformable, invalid, anchor-late,
+names-other-key, would-pass). Evaluation is bounded by the bundle and
+the declared inputs (P9); inability to evaluate is itself one of the
+recorded observations, never a reason to consult anything. The record
+format is an H1a obligation, entered on the band-1 docket.

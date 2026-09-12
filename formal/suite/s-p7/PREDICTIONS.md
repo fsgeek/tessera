@@ -631,3 +631,88 @@ never marked symbolically discharged.
   cell recorded as open; P7 elision marked; S1–S3/S4 citation split;
   Q6a's honest-only trace shape admitted. Still no model, no run, no
   author read.
+
+---
+
+## Post-freeze addendum 1 — 2026-09-12: the recorded inner canonicalization version must be true (Amendment 5 §A5.5; ROUTED C9, ADOPTED (author))
+
+**Status: PROPOSED, registered before any model change or run; the
+commit is the author's.** Post-freeze addition, not a refinement: no
+registered query, prediction, judge or companion above is altered; the
+Q1–Q6 ladder outcomes in `RESULTS.md` must be identical after the
+change, and any difference is a recorded divergence. (*The status line
+at the head of this file still reads "No model exists and nothing has
+been run." That line is stale: it was committed unchanged in
+`5188e7a`, this file's signing and freeze commit — the pattern the
+author resolved for Amendment 4 at ROUTED C1. Retained per
+amend-don't-rewrite; "post-freeze" means after `5188e7a`.*)
+
+**What is registered.** In `VerifierWrapped`, the wrapper's recorded
+inner canonicalization version (`cvIw`, the first component of
+`wrap(cvIw, (fbI, sgI))`) must equal the inner frame's own
+canonicalization-version field (`cvI` in
+`framed(=OT_ATTEST, …, cvI, plI) = fbI` inside `InnerCheck`). The
+verifier gains that one equality on the wrapped path.
+
+**Where the equality goes (registered, because the obvious placement
+would change the base path).** `cvI` is bound inside `InnerCheck`,
+which both paths invoke; `cvIw` is bound in `VerifierWrapped`. Passing
+`cvIw` into `InnerCheck` as a parameter would change `InnerCheck` and
+therefore `VerifierBase`. Instead the equality is checked **inside
+`VerifierWrapped`**, where `fbI` is already in scope from the `wrap()`
+pattern, by re-destructuring `fbI` with `=cvIw` in the
+canonicalization-version position before the `InnerCheck` call.
+`InnerCheck`, `VerifierBase` and the base path are byte-unchanged.
+
+**New judge (encoding registered here).** `VerifierWrapped` gains one
+new private report channel, `versionCh`, carrying `(fbW, cvIw, fbI)`
+in parallel with the existing reports (S-P3 recut-1 idiom); a new
+channel rather than a second reader on `scopeCh`, so `ScopeJudge`'s
+pairing is untouched. The report is emitted **after** the new equality
+guard, as `typeCh`/`scopeCh`/`sigCh` are emitted after the checks they
+instrument; `VersionLied` is therefore unreachable in the correct
+model by construction, and the companion — which removes the guard, so
+the report reaches the judge with the two versions unequal — is what
+shows the judge fires at all. `VersionJudge`
+reads `versionCh`, destructures `fbI` for its `cvI`, and emits
+`event VersionLied(fbW, cvIw, cvI)` when the recorded and actual inner
+versions differ. Instrumentation on the acceptance report, not a
+verifier check. The existing wrapped-path
+N1 witness stays the vacuity guard: an honest wrapper recording the
+true inner version must still be accepted.
+
+**Query Q7 (correct model, `sp7_q2_degraded_compromised.pv` amended
+in place):** `VersionLied` unreachable; Q2's three results and
+witnesses unchanged. Prediction: unreachable, terminating, Q2 lines
+unchanged (0.80); unexpectedly reachable = defect in the new equality
+(0.07); Q2 changed by the addition = divergence, recorded (0.08);
+timeout (0.05). Box 15 min.
+
+**Companion Q7-C (`sp7_q7_companion_version_unchecked.pv`): the
+equality removed — the wrapped path as it stood.** `VersionLied`
+reachable. Predicted trace shape: an **honest** `Wrapper` process
+(`skW1`/`skW2`/`skI1`) — whose inner blob is adversary-chosen input,
+`in(c, (cvIw, fbIn, sgIn))`, not an adversary-controlled process —
+receives an honest inner `(fbI, sgI)` off the public channel together
+with an adversary-chosen `cvIw ≠ cvI`, frames and signs the wrapper
+honestly, and `VerifierWrapped` accepts. (A second shape exists and is
+not the registered one: the adversary is itself an authorized wrapper
+issuer here — the sole channel key is public — and can mint the whole
+wrapper. The honest-wrapper shape is registered because it shows the
+lie is accepted with no compromised wrapper at all.) Prediction: reachable
+with that shape, no cryptographic step (0.85); recut (0.08); companion
+green (0.04); timeout (0.03). Box 15 min. Red on exactly
+`VersionLied`: `Rescoped`, `InnerSigTransplanted`, `TypeConfused`
+stay unreachable.
+
+**Boundary registered with it.** This check compares two fields for
+equality. It does not establish that either version is supported or
+that the inner bytes were produced under it (P8/H1a, as the header
+already says of the version fields). The Q4 re-serialization
+companions are a different question (whether the outer pass touches
+the inner bytes) and are untouched.
+
+**Header change registered.** The Q2 claim block gains, under "This
+model proves", that the wrapper's recorded inner version equals the
+inner frame's; under "does not prove", support or correctness of
+either version (P8/H1a).

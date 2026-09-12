@@ -59,6 +59,19 @@ specification) or disposed with reasons.
     implementation in a frozen-semantics language, not prose+vectors
     alone. Interacts with the §A3.4 Designated Community claim — may
     warrant registration rather than quiet build-phase adoption.
+28. **Degraded-verdict record format** (Amendment 5 §A5.3). For each
+    waived check, the record states both the policy that authorized
+    the waiver and the verifier's observation of the waived evidence —
+    at least six values: absent, unperformable, invalid, anchor-late,
+    names-other-key, would-pass. H1a obligation.
+29. **Three verifier checks pending their symbolic legs** (Amendment 5
+    §A5.4–§A5.6). Multi-signer common content — the six non-fingerprint
+    frame fields equal across signer slots, three already carried by
+    the shared manifest tuple, three new; the wrapper's recorded inner
+    canonicalization version checked against the inner frame's own; the
+    standing path pins the presented authority tuple to the tuple
+    embedded in the core. H1a reference-verifier obligations, entered
+    once their symbolic legs run.
 
 ## Surfaces / conformance
 
@@ -70,6 +83,12 @@ specification) or disposed with reasons.
     2). Whether Tessera-controlled surfaces may emit only the
     attested report (A3.8) when a result will be relayed. Policy
     decision; register if adopted.
+30. **P9 conformance vector cases** (Amendment 5 §A5.1). The H1a
+    vector carries the expected verdict determined by bundle and
+    declared policy, with each machine's verdict compared to it; one
+    case presents the same bundle twice on one machine; one case has
+    the optional service reachable and contradicting the bundle. H1a
+    obligation.
 
 ## Tending / custody
 

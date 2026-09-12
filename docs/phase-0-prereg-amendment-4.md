@@ -2,6 +2,8 @@
 
 > **Status correction, 2026-09-06 (collaborator, recording the record; the author's explicit confirmation is requested in the next batched read).** The author committed this document unchanged at `5188e7a` ("Address outstanding issues, clarify unclear text, commission a (non-blocking) TLA+ probe"), OTS-stamped at `5dfd82b`. The suite library's D-6 entry, the tracker's P9/P10 rows, and the S-STANDING models read that commit as the signing act (S-STANDING RESULTS.md, routed item 1). The stale DRAFT line is retained below per amend-don't-rewrite.
 >
+> **Confirmed by the author 2026-09-12 (ROUTED C1, "C1-C4 as recommended"): `5188e7a` is this amendment's signing commit; in force since. Recorded in Amendment 5 §A5.0.**
+>
 > **Status: DRAFT — adopted in session, not yet signed.** Every ruling
 > below was made by the author on 2026-09-06 in dialogue, answering the
 > eight items batched in `formal/suite/ROUTED-2026-09-06.md`; this text

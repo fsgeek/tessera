@@ -699,3 +699,94 @@ what the queries discharged (S-P3 recut-3 discipline):
   not N1; Q1 probabilities rebalanced to 1.0; companion channel
   variants named; Q4's fixture rearrangement registered as an
   exception; RESULTS-PROBE F1 quoted in full. Still not frozen.
+
+---
+
+## Post-freeze addendum 1 — 2026-09-12: standing binds to the tuple in the core (Amendment 5 §A5.6; ROUTED C10, ADOPTED (author))
+
+**Status: PROPOSED, registered before any model change or run; the
+commit is the author's.** Post-freeze addition, not a refinement: no
+registered query, prediction, judge or companion above is altered; the
+SS.Q1–Q5 ladder outcomes in `RESULTS.md` must be identical after the
+change, and any difference is a recorded divergence. (*The status line
+at the head of this file still reads "Not frozen; no model exists and
+nothing has been run." That line is stale: it was committed unchanged
+in `5188e7a`, this file's signing and freeze commit — the pattern the
+author resolved for Amendment 4 at ROUTED C1. Retained per
+amend-don't-rewrite; "post-freeze" means after `5188e7a`.*)
+
+**What is registered.** The standing path (the verifier process that
+derives `aid = h(core)` and computes the standing report) must check
+that the presented authority tuple `t` equals the tuple embedded in
+the core it derives the identity from: `let attemptCore(=t, …) = core`
+(or the pattern equivalent) on the standing path, as the envelope path
+already does. Note 4 item 2's principle — bind to what the verifier
+holds, not to what the presenter names — applied to the tuple as it
+is already applied to the key.
+
+**Fixture extension (N2 on the new axis).** One honestly enrolled
+**alias** tuple: `mAlias = authTuple(issuerIdAlias, fp(pk(skH1)), …)`
+— the same key as `m`, a different identity — evidenced by both
+channels exactly as `m` is, and published. The honest issuer H1 signs
+its TLR under `m` only. No other fixture change.
+
+**New judge (encoding registered here) — and the report channel it
+needs.** The existing report channel `estCh` carries `(kX, t, aid)`
+only; the core is **not** on it, and `Established` is an event, which
+no judge can read. So the standing path gains **one new private report
+channel**, `aliasCh`, carrying `(kX, t, core, aid)`, emitted at the
+`ESTABLISHED` branch in parallel with the `estCh` report (S-P3 recut-1
+idiom). `estCh`, `reasonCh`, `Judge` and `ReasonJudge` are untouched,
+so SS.Q1 (iii) and (iv) cannot move on the judge's account.
+`AliasJudge` reads `aliasCh`, destructures the core, and emits
+`event Aliased(kX, t, tCore, aid)` when `t ≠ tCore` where
+`attemptCore(tCore, …) = core`; it emits nothing when the core is not
+an `attemptCore` term. Instrumentation, not a verifier check.
+`HonestStandingEstablished` stays the vacuity guard.
+
+**Where the tuple pin goes (registered).** The `let attemptCore(=t, …)
+= core` pattern is placed **after** the `se = noTLR` test and the
+`withTLR` / entitled-key / TLR-signature branches, immediately before
+the lineage lookup, so that no `ABSENT` or `UNVERIFIABLE` reason-code
+branch acquires a new precondition. The five vocabulary-liveness
+witnesses and B9 therefore keep the traces they have: `SUPERSEDED`,
+`NO_TERMINAL_DISPOSITION_EVIDENCE`, `ISSUANCE_REFUSED` and the
+`UNVERIFIABLE` codes are all decided before the pin, and
+`STANDING_EVIDENCE_MISMATCH` stays reachable through a well-formed
+`attemptCore(t, …)` whose derived identity is absent from the lineage
+(`attemptCore` is a public `[data]` constructor, so the adversary can
+build one). What the pin does remove is the A7 wrapper-shaped core
+(`wrapCore`) from the standing path of the **correct** model: such a
+presentation now produces no report at all rather than a mismatch
+report. No registered witness needs it, and SS.Q2's companion — which
+is where the A7 wrapper transplant is registered and exercised — is
+untouched.
+
+**Query SS.Q6 (correct model, `ss_q1_strict_dns_compromised.pv`
+amended in place; also applied to the repo-compromised and degraded
+variants so the ladder stays uniform):** `Aliased` unreachable; SS.Q1
+(i)–(iv), the five vocabulary witnesses and B9 unchanged. Prediction:
+unreachable, terminating, SS.Q1 lines unchanged (0.75); the alias
+fixture changes an SS.Q1 result = divergence, recorded, most plausibly
+(i) since it is fixture-bound (0.10); unexpectedly reachable = defect
+in the new pattern (0.05); timeout (0.10). Box 30 min.
+
+**Companion SS.Q6-C (`ss_q6_companion_alias_unchecked.pv`): the
+tuple check removed on the standing path, alias fixture present.**
+`Aliased` reachable. Predicted trace shape: H1's honest core under `m`
+with H1's honest TLR, presented with `mAlias` and its honest evidence;
+the standing path binds `pk(skH1)` to `mAlias`, derives `aid` from the
+core, finds it designated in H1's TLR, reports `ESTABLISHED` against
+`mAlias`. Prediction: reachable with that shape (0.80); recut (0.10);
+companion green (0.05); timeout (0.05). Box 30 min. Red on exactly
+`Aliased`: `StandingUnentitled` and `ReasonCollapsed` stay
+unreachable; `Established ==> Designated` per honest key still holds
+in the companion (the key is honest and did designate the identity —
+that is the point: the key-level correspondence cannot see the alias).
+
+**Header change registered.** The Q1 claim block gains, under "This
+model proves", that an `ESTABLISHED` report is computed only against
+the authority tuple embedded in the core whose identity it designates;
+under "does not prove", anything about two identities legitimately
+sharing one key beyond their having separate lineages (Amendment 5
+§A5.6).
