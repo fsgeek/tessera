@@ -662,3 +662,149 @@ is the candidate for it.
   annotated. Item 18 (ROUTED C9) is not applied here — `RESULTS.md`
   carries the pending line; §9 item 6 already says the version record
   is unverified. No `file:line` citation in this document changed.
+
+---
+
+## Post-freeze addendum 1 — reading aid, 2026-09-12
+
+*(APPENDED. No sentence, table row or `file:line` citation above this
+line is edited. Everything above cites the Q2 model as it stood before
+2026-09-12; `RESULTS.md`, "Post-freeze addendum 1 — results,
+2026-09-12", carries the line-shift table that re-finds those
+citations. Subject: Amendment 5 §A5.5, `PREDICTIONS.md` "Post-freeze
+addendum 1" — **Q7** in `sp7_q2_degraded_compromised.pv` as amended,
+and **Q7-C**, `sp7_q7_companion_version_unchecked.pv`. Style follows
+§1 and §3.)*
+
+### 11a. Cast — the four new entries (amended Q2 model)
+
+| Name | What it is in the design | Built | Consumed |
+|---|---|---|---|
+| `versionCh` | a **ninth** judge channel: verifier → version judge, `(wrapper bytes, the version the wrapper RECORDED, the inner framed bytes)`. A new channel, not a second reader on `scopeCh`, so `ScopeJudge`'s pairing (§0.2) is untouched | 190 | out 333; in 365 |
+| `VersionLied(fbW, cvIw, cvI)` | the judge event: this wrapper was accepted recording inner version `cvIw` over an inner frame whose own version is `cvI` | 209 | fired 367; queried 232 |
+| `VersionJudge` | the ninth judge. Reads `versionCh`, re-reads the inner frame for its own `canonVer`, fires when the two differ. **Instrumentation on the acceptance report, not a verifier check** — it pairs with nothing honest, unlike `TypeJudge`/`Judge`/`ScopeJudge`/`SigJudge`, which each pair a verifier report with an honest signer's report | 364–367 | 386 |
+| `otIv`, `algIv`, `idIv`, `kfpIv`, `mhIv`, `plIv` | throwaway names for the inner frame's other six fields, bound only so the seventh position can carry `=cvIw`. Never used | 330 | nowhere |
+
+`cvIw` itself is no longer in the "never used" list of §1a's frame-field
+row: read at 324 (the unwrap), matched at 330, reported at 333. `cvI`
+and `cvW` are still never compared on the base path, and the inner
+frame's own version is still never checked for support (P8/H1a).
+
+### 11b. The check — one new row for `VerifierWrapped`
+
+| Line | Check | Plain meaning | Status |
+|---|---|---|---|
+| **330** | `let framed(otIv, algIv, idIv, kfpIv, mhIv, =cvIw, plIv) = fbI` | **the version the wrapper wrote down for its inner object is the version that object's own frame declares** — a lying record is rejected | **LOAD-BEARING for `VersionLied`** (Q7-C = this line removed: red). Nothing else in the model compares the two; the sole route |
+
+Where it sits, and why there: `cvIw` is bound in `VerifierWrapped` (324,
+out of the `wrap()` pattern) and `cvI` inside `InnerCheck` (298).
+Passing `cvIw` into `InnerCheck` would change `InnerCheck`, which the
+**base** path also runs — so the equality is checked in
+`VerifierWrapped` instead, by re-destructuring the `fbI` already in
+scope. `InnerCheck` (285–304) and `VerifierBase` (306–309) are
+byte-unchanged, and §1b's `InnerCheck` table is still exactly right
+about the base path. The guard sits after `if mhW = h(tW)` (325) and
+before `event AcceptOuter` (331): a mismatch is a rejection, not a
+silent report. The report at 333 is emitted **after** the guard, beside
+`out(typeCh, …)` (332) and the `InnerCheck` call (334) — the recut-1
+rule of §0.2, unchanged.
+
+### 11c. Results
+
+`sp7_q2_degraded_compromised.out` — Q7 and the six carried queries:
+
+| Query | `.out` line | Result |
+|---|---|---|
+| `TypeConfused` | 527 | unreachable — C1 |
+| `Rescoped` | 540 | unreachable — the C2 claim |
+| `InnerSigTransplanted` | 553 | unreachable |
+| `Reattributed` | 566 | unreachable |
+| `HonestWrappedAccepted` | 865 | reachable (trace 579) |
+| `HonestAccepted` | 1061 | reachable (trace 878) |
+| **`VersionLied`** | **1074** | **unreachable — the new claim** |
+
+`sp7_q7_companion_version_unchecked.out` — `TypeConfused` 525,
+`Rescoped` 538, `InnerSigTransplanted` 551, `Reattributed` 564 all
+unreachable; `HonestWrappedAccepted` 866 and `HonestAccepted` 1062
+reachable; **`VersionLied` reachable, 1301 (trace 1075)**. Red on
+exactly `VersionLied`, as registered.
+
+### 11d. Q7-C — why the attack succeeds (trace at 1075)
+
+- **Difference from the amended Q2:** one guard. Line 330 is absent
+  (its place holds a `MUTATION` comment, 222–227 of the companion);
+  `versionCh` and `VersionJudge` are still there. Everything else is
+  the amended Q2 model: offset **−104** from it through
+  `if mhW = h(tW)` (amended Q2 325 = companion 221), and **−103** from
+  `event AcceptOuter` (amended Q2 331 = companion 228) to the end — the
+  five-line guard-plus-comment is replaced by a six-line `MUTATION`
+  comment.
+- **The trace.** The adversary holds `skS` (the degraded-mode
+  `out(c, skS)`, 379, shown as `{19}`), so it is an authorized wrapper
+  issuer for any key it likes. It picks its own `k`, builds a manifest
+  `authTuple(idW_6, fp(pk(k)), …)`, mints channel evidence for it under
+  `skS`, self-signs possession, frames
+  `wrap(cvRec, (framed(…, cvAct, …), sgI_4))` as `OT_WRAPPER` and signs
+  it with `k` — with `cvRec ≠ cvAct`. It presents the package at the
+  wrapped path's input `{135}`; every outer check passes because it
+  built every part consistently; `AcceptOuter` fires `{143}`, the
+  report goes out on `versionCh` `{145}`, `VersionJudge` reads it
+  `{183}` and fires `VersionLied` at `{186}`. No `dsks`, no forgery.
+- **Whose objects are in that trace — the thing to notice.** *None* of
+  them are honest. The registered trace shape was an **honest** wrapper
+  (`skW1`, `skW2` or `skI1`-as-wrapper) handed an honest inner
+  `(fbI, sgI)` with an adversary-chosen `cvIw ≠ cvI` — the shape that
+  shows the lie is accepted *with no compromised wrapper at all*.
+  ProVerif reports the cheapest witness, and the cheapest one here is
+  the adversary minting the whole thing, inner object included: unlike
+  `ScopeJudge` and `SigJudge`, `VersionJudge` pairs with no honest
+  report, so nothing in the query forces an honest participant. Same
+  situation as §7's Q6a, one step further. The registered shape is not
+  refuted — it is simply not the one exhibited, and no model was built
+  to exhibit it. `RESULTS.md` records it as an open cell.
+- **Boundary.** A companion; discharges nothing. It shows the version
+  judge fires at all, so Q7's green at `.out` 1074 is the new equality
+  doing work rather than a query that could never go red. It says
+  nothing about whether either version is *supported*, or whether the
+  inner bytes were produced under the version claimed — that is still
+  P8/H1a, exactly as §9 item 6 and the Q2 header say of the version
+  fields. What is now narrowed is only this: on the wrapped path the
+  recorded inner version is no longer "presence only", it must match.
+
+### 11e. Review log (this section)
+
+- 2026-09-12 — written by the AI collaborator from the amended `.pv`,
+  the two `.out` files and `ladder.log` after the runs. Not read by the
+  author; no falsification review of the amended model or the
+  companion. The trace-shape gap in §11d is the first thing a reviewer
+  should attack.
+
+## Cross-family review 2026-09-12 — dispositions applied
+
+Amend-don't-rewrite: the row corrected below is left as written above;
+this section is the correction of record.
+
+**1 — line 207, the `fp(kW) = kfprW` row.** It reads:
+
+> **CARRIED** (not ablated singly; the wrapper's authorship is S-P3
+> entry 1, consumed)
+
+The author's ROUTED C5 read (`formal/suite/READ-C5-2026-09-12.md`,
+"Author's answers", block 3) returned **NO** on that attribution: S-P3
+ledger entry 1 is the **key-binding** relation, not authorship;
+authorship is S-P1's, assigned there by S-P3 F7. Correct row text:
+**CARRIED (not ablated singly; the wrapper's KEY BINDING is S-P3
+entry 1, consumed; its AUTHORSHIP is S-P1's, per S-P3 F7)**. The
+corresponding model comment, line 55 of
+`proverif/sp7_q2_degraded_compromised.pv`, was repaired in place the
+same day (same line count, dated `CORRECTION` marker); see the "Author
+read — 2026-09-12 (ROUTED C5)" section of `RESULTS.md`.
+
+**2 — line citations still resolve.** Three further comment-only,
+same-line-count header repairs were applied to
+`sp7_q2_degraded_compromised.pv` on 2026-09-12 from the cross-family
+review (lines 144–145 and 154–155; see `RESULTS.md`, "Cross-family
+review 2026-09-12 — dispositions applied"). No body line moved, the
+`.out` is byte-identical after every one of them
+(`proverif/ladder.log`), and every `.pv` line number in §§0–11 of this
+file still resolves.

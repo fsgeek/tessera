@@ -832,3 +832,242 @@ aid, never a verdict on the proofs, and does not block exit.
   original numbers: they record what was checked against the text of
   the day, and renumbering them would falsify that record. No reader
   probe; no author read.
+
+---
+
+## Post-freeze addendum 1 — results, 2026-09-12: SS.Q6 and SS.Q6-C
+
+**STATUS: PROPOSED — 2026-09-12 — the AI collaborator's; not adopted.**
+APPENDED, in this file's style; §§0–9 above are unchanged. Line numbers
+in §§0–8 refer to the **pre-addendum** `.pv` text and were not fixed;
+`RESULTS.md` §A1.8 carries the shift table. Everything below cites the
+**post-addendum** text. Registered in `PREDICTIONS.md`, "Post-freeze
+addendum 1 — 2026-09-12" (Amendment 5 §A5.6, ADOPTED (author); ROUTED
+C10). Full results: `RESULTS.md` §"Post-freeze addendum 1 — results".
+
+### 10. The question §A5.6 asks
+
+The standing path has always bound the **key**: the TLR key must be the
+key the evidenced authority tuple names (`fp(kT) = kfpr`, §1b). It never
+bound the **tuple**. So a core issued under identity A, with A's honest
+terminal lineage record, could be presented under a second honest tuple
+naming the same key as identity B, and the standing path — which derives
+`aid = h(core)` from the core it holds but reads the tuple from the
+presenter — would report `ESTABLISHED` against B. The envelope path
+already pins the tuple (`let attemptCore(=t, …) = core`, §1b's
+`EnvelopePath`); `ENUMERATION.md` note 4 item 2 says the standing path
+may rely on nothing the envelope path established, so it must do the
+same check itself.
+
+### 10a. Cast — differences from §1
+
+Three additions to all three correct models and to the new companion.
+Nothing is removed and no existing query changes.
+
+| New name | Where (DNS `.pv`) | What it is |
+|---|---|---|
+| `issuerIdAlias` | 144 | a public free name: the alias identity |
+| `mAlias = authTuple(issuerIdAlias, fp(pk(skH1)), ssetH, algH, verH)` | 446 | the **alias tuple** — H1's key, a different identity. Evidenced by **both** authority channels exactly as `m` is (451–452), and published (448). **No issuer runs under it**: H1 signs its TLR under `m` only, so the alias has an enrolment but no lineage |
+| `aliasCh` | 197 | a fourth private report channel. `estCh` carries `(kX, t, aid)` and **not** the core, and `Established` is an event no judge can read — so the alias judge needed a channel of its own |
+| `event Aliased(pkey, bitstring, bitstring, bitstring)` | 212 | key, presented tuple, the core's embedded tuple, derived identity |
+| `AliasJudge` | 434–437 (companion 351–354) | reads `aliasCh`, destructures the core, fires when the two tuples differ. **Instrumentation, not a verifier check** — it observes the report, it does not gate it. Emits nothing when the core is not an `attemptCore` (the `let` has no `else`) |
+
+`estCh`, `reasonCh`, `designCh`, `Judge` and `ReasonJudge` are
+untouched, which is why §1's (iii) and B9 cannot move on the judges'
+account.
+
+### 10b. The standing path's one new check (DNS `.pv:373–387`)
+
+| Line | What | Effect |
+|---|---|---|
+| 382 | `let attemptCore(=t, ppfS, sgS, declS) = core in` — **the tuple pin**, no `else` | the presented tuple must be the tuple inside the core the identity is derived from |
+| 335–338 | `( out(estCh, (kT, t, aid)) \| out(aliasCh, (kT, t, core, aid)) )` | the alias report is emitted **in parallel** with the existing `estCh` report, so neither blocks the other (the S-P3 recut-1 idiom); `StandingDecide` gained a `core` parameter (325) to carry it |
+
+**Where the pin sits, and why it matters.** After `se = noTLR` (S3),
+after `withTLR` destructuring, after `fp(kT) = kfpr` (the entitled-key
+test), after `kT = kX`, after the TLR signature check, after the anchor
+proof — and **immediately before** `let d = lookup2(aid, lin)` (384).
+Every `ABSENT` and `UNVERIFIABLE` reason code is therefore decided
+*before* the pin, so no reason-code branch acquires a new precondition
+and the five vocabulary witnesses keep the traces they had. Had the pin
+gone earlier — say, next to the evidence checks — S3, the two
+`SIGNATURE_INVALID` branches and `TEMPORAL_MISMATCH` would all have
+become unreachable for a malformed core, and B9's `PATH_S3` emission
+with them.
+
+**What the pin removes.** Because it has no `else`, a presented core
+that is not an `attemptCore` over `t` now produces **no report at all**.
+That deletes the A7 wrapper-shaped core (`wrapCore`, §4) from the
+**correct** model's standing path: it used to arrive as
+`ABSENT / STANDING_EVIDENCE_MISMATCH`, and now arrives as silence. No
+registered witness needed that route (see 10d), and §4's companion —
+where the A7 transplant is registered and exercised — is untouched, its
+`.out` byte-identical.
+
+### 10c. SS.Q6 — results in the three correct models
+
+| Query | DNS `.out` | repo `.out` | deg `.out` | Result |
+|---|---|---|---|---|
+| `Aliased` | **2007** | **2007** | **1821** | **unreachable** — `RESULT not event(Aliased(kX_3,t_3,tc,aid_2)) is true.` |
+| (i), (ii)×2, (iii), N1, five witnesses, B9 | see `RESULTS.md` §A1.6, §A1.8 | | | **every RESULT line text-identical to the archived pre-addendum `.out`** |
+
+Registered prediction: unreachable, terminating, SS.Q1 lines unchanged
+(p≈0.75). That is what happened, in all three, in 0–1 s against a
+30-minute box. The alias fixture did not move any SS.Q1 result — the
+registered p≈0.10 divergence branch did not fire.
+
+### 10d. What the pin did to the MISMATCH witness (the interesting part)
+
+`ABSENT / STANDING_EVIDENCE_MISMATCH` is still reachable, but by a
+different route, and the addendum predicted the route at registration.
+
+| | Pre-addendum | Post-addendum |
+|---|---|---|
+| the core in the bundle | `a_4` — an **opaque adversary term**, any bitstring at all (`pre-addendum-…/ss_q1_strict_dns_compromised.out:1921`) | `attemptCore(authTuple(issuerId2, fp(pk(skH2)), ssetH, algH, verH), a_4, a_5, a_6)` — a **well-formed core carrying the presented tuple**, with adversary-chosen possession proof, attestation signature and declared time (`.out:1987`) |
+| the report | `…, h(a_4)` (`.out:1923`) | `…, h(attemptCore(…))` (`.out:1989`) |
+| RESULT | `is false` (reachable) at 1927 | `is false` (reachable) at 1993 |
+
+The witness survives because `attemptCore` is a public `[data]`
+constructor: the adversary can build one over the honest tuple whose
+derived identity is in no lineage. The pin narrows *how* a mismatch can
+be presented; it does not remove the vocabulary.
+
+### 11. Q6-C — `ss_q6_companion_alias_unchecked.pv` (companion E: the tuple pin absent)
+
+### 11a. Cast — differences from §10
+
+None. Same declarations, same queries, same fixture including `mAlias`,
+same judges, same envelope path. Built from the **strict
+DNS-compromised** variant (the registered base) by removing exactly one
+check: a body diff against the amended DNS model is **one hunk**, the
+pin block.
+
+### 11b. The standing path — difference from §10
+
+| Line | §10 has | Q6-C has | Effect |
+|---|---|---|---|
+| 293–304 | `let attemptCore(=t, ppfS, sgS, declS) = core in ( let d = lookup2(aid, lin) in …` (DNS 373–387) | **no pin** — straight to `let d = lookup2(aid, lin) in …` (301) | the standing path binds the **key** to the presented tuple and never the presented tuple to the core's embedded one |
+
+Everything else is §10's text: evidence 275–276, entitled key 286,
+`kT = kX` 288, TLR signature 290, anchor 292, terminal decision
+(`StandingDecide`) 245–266.
+
+### 11c. Results (`ss_q6_companion_alias_unchecked.out`)
+
+| Query | `.out` line | Result | The trace |
+|---|---|---|---|
+| `Aliased` | **2308** | **reachable — the discriminating red** | 2292: H1's honest `ShipIssuer` designates `h(core)` where `core = attemptCore(m, …)`; 2294: H1 releases its honest TLR under `skH1`, terminal `TERM_SHIPPED(h(core))`; 2296: the bundle presents **`mAlias`** with **honest** DNS and repo evidence (`skD_4`, `skR_4`), key `pk(skH1)`, **H1's core under `m`**, H1's honest TLR; 2298: `Established(pk(skH1), mAlias, h(core))`; 2302: `out(aliasCh, …)` carries the core; 2304: the judge sees `mAlias ≠ m` inside the core and fires |
+| (i) unrestricted | 505 | **true** | no adversary key is needed or used |
+| (ii) `pk(skH1)` / `pk(skH2)` | 519 / 530 | **true** | see 11d |
+| (iii) `StandingUnentitled` | 537 | unreachable | `mAlias` names H1's own key: `fp(pk(skH1)) = kfpr` holds, so the entitled-key judge is silent |
+| N1 | 836 | reachable | |
+| five witnesses | 1123, 1408, 1536, 1819, 1997 | reachable | |
+| B9 | 2004 | unreachable | no reason-code branch is touched |
+
+Red on **exactly one** query, as registered. Predicted p≈0.80 for
+"reachable with that shape"; the trace matches the registered shape
+element for element (`RESULTS.md` §A1.5), so the p≈0.10 recut branch and
+the p≈0.05 "companion cannot fail" branch did not fire.
+
+### 11d. Why the attack succeeds, and its boundary
+
+Nothing in this trace is dishonest except the *pairing*. The key is
+honest. The core is honest. The TLR is honest. Both authority channels
+published `mAlias` honestly — the alias is a real enrolment, not a
+forgery; that is the point of §A5.6, which is about an issuer holding
+two identities on one key, not about an attacker. What the adversary
+supplies is only the **bundle**: it hands the verifier H1's core from
+lineage A together with H1's tuple for identity B, and the unpinned
+standing path reports `ESTABLISHED` against B for an artifact B never
+issued.
+
+**Why the per-honest-key correspondence still holds** (519, 530), and
+why that is the companion's point rather than its weakness: the
+correspondence asks whether the key against which `ESTABLISHED` was
+computed designated that identity. It did — `pk(skH1)` signed a TLR
+whose terminal disposition names `h(core)`. The correspondence is
+key-level and cannot see which *tuple* the report was computed against.
+That is exactly why §A5.6 needed a **new** query (`Aliased`, tuple-level)
+rather than a new trace of an existing one; a family that only ever
+asked the key-level question would never have found this.
+
+**What distinguishes this red from §5's (Q3):** in Q3 the tuple is
+honest and the **key** is not entitled to it, so `StandingUnentitled`
+fires; here the key *is* entitled to the tuple and it is the
+**identity** that is wrong, so `StandingUnentitled` is silent (537) and
+only `Aliased` fires. Two different failures, two different judges.
+
+**Boundary:** evidence only against the amended correct model, and only
+that the pin is load-bearing for `Aliased`. It says nothing about
+whether an issuer holding two identities on one key should keep one
+terminal lineage record or two — §A5.6 explicitly leaves that open, and
+a single TLR under that key may still name cores from both.
+
+### 11e. Read and never used
+
+As §1e, plus: the alias judge reads the core off `aliasCh` and never
+acts on it — no report depends on `Aliased`. In all four models
+`ppfS`/`sgS`/`declS` (the pin's other three fields) and
+`ppfA`/`sgA`/`declA` (the judge's) are bound and never used; only the
+tuple field is compared.
+
+### 12. Probe status (addendum)
+
+Unchanged from §9: no lower-ceiling reader probe has been run, now for
+eight models rather than seven. No cross-family falsification review of
+the pin, the alias fixture, `AliasJudge` or the companion — the archived
+2026-09-06 Codex review predates them and its single-removal matrix does
+not cover the pin. No author read.
+
+### Review log (addendum)
+
+- 2026-09-12 — §§10–12 drafted by the AI collaborator from the amended
+  `.pv` files and the fresh `.out` files, after the whole-ladder re-run.
+  Every `.pv` citation here was read from `grep -n` over the
+  post-addendum files; every `.out` citation from `grep -n`/`awk` over
+  the fresh outputs; the pre-addendum `.out` citations in §10d from
+  `proverif/pre-addendum-2026-09-12/`. §§0–9 were **not** renumbered:
+  they record what was checked against the text of their day, and the
+  shift table in `RESULTS.md` §A1.8 is how a reader follows them
+  forward. No reader probe; no cross-family review; no author read.
+
+## Cross-family review 2026-09-12 — dispositions applied
+
+Amend-don't-rewrite: the sentences corrected below are left as written
+above; this section is the correction of record. Full dispositions and
+evidence are in `RESULTS.md`, "Cross-family review 2026-09-12 —
+dispositions applied"; the review itself is
+`docs/reviews/2026-09-12-codex-falsification-amendment-5-checks.md`.
+
+**1 — line 891.** It reads:
+
+> *before* the pin, so no reason-code branch acquires a new
+> precondition
+
+That rationale is false as written. Correct text: **the aggregate
+vocabulary witnesses (S1–S4 and `STANDING_EVIDENCE_MISMATCH`,
+quantified over free variables) acquire no new precondition and all
+stay reachable; but for an ALIAS presentation the lineage-derived
+reports `SUPERSEDED`, `ISSUANCE_REFUSED` and
+`STANDING_EVIDENCE_MISMATCH` do acquire the pin as a precondition** —
+`falsification-2026-09-12/scratch/alias_reasons_correct.out:2015,2023`
+(unreachable) against `alias_reasons_companion.out:2604,2898`
+(reachable). A checked consequence of the registered placement, not a
+defect.
+
+**2 — line 899.** It reads:
+
+> that is not an `attemptCore` over `t` now produces **no report at
+> all**.
+
+Falsified by
+`falsification-2026-09-12/scratch/wrap_routes.out:1944`, where the
+`noTLR` branch still reports over a `wrapCore` core. Correct text:
+**produces no lineage-derived report (no mismatch, supersession or
+refusal report); the no-TLR report is unaffected.**
+
+**3 — line citations still resolve.** The three correct models' header
+and pin-comment repairs of 2026-09-12 are comment-only and same line
+count, and each model's `.out` is byte-identical after them
+(`proverif/ladder.log`, last three lines), so every `.pv` line number
+in §§0–10 of this file still resolves.

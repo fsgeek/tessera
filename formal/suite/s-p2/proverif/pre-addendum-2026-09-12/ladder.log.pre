@@ -1,0 +1,16 @@
+sp2_q1_strict_dns_compromised rc=0 seconds=0 box=900
+sp2_q1_strict_repo_compromised rc=0 seconds=0 box=900
+sp2_q2_degraded_compromised rc=0 seconds=0 box=1800
+sp2_q3_companion_cardinality_ignored rc=0 seconds=0 box=900
+sp2_q4_companion_slot_unbound rc=0 seconds=1 box=900
+sp2_q5_c1_fponly_frame_mh rc=0 seconds=0 box=1200
+sp2_q5_c2_fponly_frame_nomh rc=0 seconds=0 box=1200
+sp2_q5_c3_manifestposs_frame_nomh rc=0 seconds=0 box=1200
+DONE
+# recut 2026-09-06 (header/comment only, after the S-P2 skeptic review; model bodies unchanged; both .out byte-identical to the pre-edit run):
+sp2_q1_strict_dns_compromised rc=0 seconds=0 box=900 recut=header-only-2026-09-06 out=identical
+sp2_q1_strict_repo_compromised rc=0 seconds=0 box=900 recut=header-only-2026-09-06 out=identical
+# re-run 2026-09-06 (cross-family falsification review; header/footer comment-only, model bodies byte-identical to the reviewer's baselines; all three .out byte-identical to the pre-edit run, same RESULT lines at the same line numbers):
+sp2_q1_strict_dns_compromised rc=0 seconds=0 box=900 recut=comment-only-crossfamily-2026-09-06 out=identical
+sp2_q1_strict_repo_compromised rc=0 seconds=0 box=900 recut=comment-only-crossfamily-2026-09-06 out=identical
+sp2_q2_degraded_compromised rc=0 seconds=0 box=1800 recut=comment-only-crossfamily-2026-09-06 out=identical

@@ -619,3 +619,154 @@ rests on `h` injectivity.
   2026-09-06 from d7–d11; the .pv change is comment-only. The general
   lesson is the one S-P3 F7 already states — a header names what its
   queries discharge, and a mechanism claim needs its ablation.
+
+---
+
+## 10. Post-freeze addendum 1 — Q6 and Q6-C (common attested content), 2026-09-12
+
+> **STATUS: PROPOSED — 2026-09-12 — produced by the AI collaborator;
+> not adopted; the commit is the author's.** Appended, not edited in:
+> no sentence above this line is changed. This section reads the
+> post-freeze addendum registered at the end of `PREDICTIONS.md`
+> (Amendment 5 §A5.4; ROUTED C8, ADOPTED (author) reading (a)) and the
+> run recorded in `RESULTS.md`, "Post-freeze addendum 1 — results,
+> 2026-09-12".
+>
+> **Line citations above are now stale for Q2 and must be shifted.**
+> Unlike the 2026-09-06 corrections, this one changed the Q2 model's
+> **body**, so its `.pv` grew from 291 to 342 lines and its `.out` line
+> numbers moved. Q2 `.pv` header citations into 14–50 (§1d's Claim
+> 14–27 and Boundary 28–38, §9's load-bearing 39–47) are **unchanged**
+> — the addendum block was placed after line 50, at 51–70. Every Q2
+> **body** citation in §1a, §1b, §0.2 and §1e shifts: +20 for old lines
+> 51–132, +33 for 133–191, +39 for 192–195, +40 for 196–233, +51 for
+> 234–291. §1c's `.out` lines shift too: 354→378, 360→384, 366→390,
+> 372→397, 536→561, 756→778, 987→1007. The full table, segment by
+> segment, is in `RESULTS.md`'s addendum section under "Line-shift
+> table"; the old citations are **not** corrected in place. The seven
+> other models' `.pv` and `.out` files are untouched and byte-identical,
+> so every citation into Q1d, Q1r, Q3, Q4, C1, C2 and C3 still resolves
+> as written.
+
+| Short name | File | Kind |
+|---|---|---|
+| Q6 | `sp2_q2_degraded_compromised.pv` (amended in place) | correct, degraded, sole channel leaked — **the P2 claim, now including common attested content** |
+| Q6-C | `sp2_q6_companion_content_unchecked.pv` | broken companion: the three common-content equalities removed (the verifier as it stood) |
+
+### 10a. What was added, in one paragraph
+
+Two honest signers of one manifest each sign their **own** frame — each
+frame carries that signer's own key fingerprint, so the two frames can
+never be byte-equal (that is the "framing fork" Amendment 5 §A5.4
+settles, reading (a)). Six of the seven frame fields are supposed to be
+the same in both: object type, algorithm, identity, manifest hash,
+canonicalization version, payload. Three of those six were already
+pinned, because both frames are matched against the *same* shared
+tuple — `=alg` and `=id` come from `t`, and `mh = h(t)` is checked for
+each frame. The other three were only *read*, never compared: `ota`
+vs `otb`, `cva` vs `cvb`, `pla` vs `plb`. So A2 could attest to one
+payload and B2 to another, under one manifest, and the verifier
+accepted. The addendum adds the three missing comparisons, plus one
+piece of **instrumentation** that lets a judge see the failure at all.
+
+### 10b. Cast — the three new names (added to §1a)
+
+Line numbers are Q6's (`sp2_q2_degraded_compromised.pv` as amended);
+Q6-C's are given in parentheses where they differ.
+
+| Name | What it is in the design | Built | Consumed |
+|---|---|---|---|
+| `contentCh` | a **private** judge channel (§0.2), the only report that carries **both** frames of **one** acceptance — needed because `acceptCh` delivers `(kA, id, fa)` and `(kB, id, fb)` as two separate messages, so a judge pairing two `acceptCh` messages could pair frames from two *different* acceptances and fire on a difference that no single acceptance ever contained | 157 (105) | out 235 (180), at the single `Accept2S` point and in parallel with the other reports (the S-P3 recut-1 idiom); in 280 (225) |
+| `Spliced` | the new threat: **one** acceptance whose two frames attest different content | 160 (108) | fired 284 (229); queried 164–165 (112–113) |
+| `ContentJudge` | the judge: reads the one two-frame report, destructures both frames, fires `Spliced` when object type, canonicalization version or payload differs between them; emits nothing otherwise. **Instrumentation on the acceptance report, not a verifier check** — no verifier line depends on it, exactly as `MemberJudge`'s `SetAltered` is instrumentation (§1d, cross-family review item 13) | 275–284 (220–229) | 299 (244) |
+
+`Verifier1S`, `setCh`, `slotCh`, `acceptCh`, `SetJudge`, `MemberJudge`,
+the carried S-P3 `Judge`, the fixture, the library and every
+pre-existing query are **untouched**; the judge locals are `…J`-suffixed
+so they shadow no library name (the S-P3 rule).
+
+### 10c. The three new checks (added to §1b, n = 2 branch only)
+
+Status column source: **Q6-C** (all three removed at once → `Spliced`
+red) and **d12** (Q6-C plus the registered instance named literally →
+that instance reachable); `RESULTS.md` addendum section, F9. They sit
+after both frames are destructured (221, 223) and after both
+manifest-hash checks pass (222, 224), so every field they compare has
+already been shown to belong to a frame signed by the key the signed
+set names for that slot.
+
+| Line (n=1 / n=2) | Check | Plain meaning | Status |
+|---|---|---|---|
+| — / 228 | `if ota = otb` | both signers framed the same **kind of object** | **LOAD-BEARING for `Spliced`, jointly with 229 and 230** (Q6-C: all three absent, red; Q6: present, green). Not separately ablated: the three are registered and severed as one group |
+| — / 229 | `if cva = cvb` | both signers used the same **canonicalization version** | as above |
+| — / 230 | `if pla = plb` | both signers attested to the same **payload** — the field the exhibited attack moves | as above |
+| — / 235 | `out(contentCh, (t, fa, fb))` | the one report that carries both frames | encoding (S-P3 recut-1 idiom), not a check |
+
+Note what the three do **not** do, and why §1b's "`ot`, `cv`, `pl`:
+read, never checked" row (167 / 188, 190 in the old numbering; 221 /
+223 in the new) is still true as written for the n = 1 branch and for
+each frame *individually*: nothing compares a frame's object type,
+canonicalization version or payload against any **externally fixed**
+value. Q4's trace still has them adversary-chosen; what the addendum
+adds is only that the two slots must choose the **same** ones. Object
+type against a *required* type is still S-P7's check (cross-family
+review item 15), and the byte-level encoding and ordering of these now-
+equal fields is still P8's (`RESULTS.md` addendum, Ledger).
+
+### 10d. Results (`.out`)
+
+| Query | Q6 `.out` line | Q6 result | Q6-C `.out` line | Q6-C result |
+|---|---|---|---|---|
+| `Stripped` | 378 | unreachable | 372 | unreachable |
+| `SignerForged` | 384 | unreachable | 379 | unreachable |
+| `SetAltered` | 390 | unreachable | 386 | unreachable |
+| `Reattributed` | 397 | unreachable | 393 | unreachable |
+| `HonestComplete(M1, verified1(k1))` | 561 | **reachable** | 558 | **reachable** |
+| `HonestComplete(M2, verified2(k1, k2))` | 778 | **reachable** | 779 | **reachable** |
+| `HonestAccepted` | 1007 | reachable | 1011 | reachable |
+| **`Spliced`** | **1013** | **unreachable** | **1213** | **reachable** (trace 1187–1211) |
+
+The companion is red on **exactly** `Spliced` and green on everything
+else, which is what the addendum required; the amended correct model
+reproduces all seven of Q2's results unchanged in text (`RESULTS.md`
+addendum, "The eight-model comparison").
+
+### 10e. Claim and boundary (plain language)
+
+**Claim added (Q6 header 51–70).** A relying party who runs these
+checks, in degraded mode with the sole authority channel in the
+adversary's hands, will not accept a two-signer package in which the
+two signers attested to **different content**: the two frames must
+agree on object type, canonicalization version and payload, and each
+still carries its own key's fingerprint. "All required signers signed
+the same thing, each in its own wrapper" is now something the model
+shows, not something the plan assumed.
+
+**What Q6-C shows, and the one thing to hold onto about its trace.**
+Without the three equalities, a two-signer acceptance can carry two
+different payloads and nothing else in the model notices — not
+`Stripped` (the set is complete), not `SignerForged` (each slot's key
+is the one the signed set names), not `SetAltered` (each signer
+self-signed this very manifest), not `Reattributed` (each frame binds
+its own signer's fingerprint). Every existing check passes and the
+content is still spliced. The trace ProVerif *exhibited* is the
+cheapest one — the adversary's own manifest with two of its own keys,
+which is the registered degraded-mode impersonation cost (A4 §A4.6)
+happening to carry the splice — **not** the honest-A2-and-B2 shape the
+plan named. That the honest shape is also reachable had to be checked
+separately, and was: unregistered diagnostic
+`diagnostics/d12_q6c_registered_witness.pv` names it literally and finds
+it (`.out` 1428; trace 1362–1426 — honest A2 takes one payload, honest
+B2 takes a different one, both under `m2`, one tuple, `Accept2S`,
+`Spliced`). The same thing happened to C2 (F3), and it is worth a
+reader's attention: **an exhibited trace is one witness, not the
+boundary of the attack surface.**
+
+**Boundary.** Nothing here is about the encoding or ordering of the
+now-equal fields (P8): `ota = otb` is *term* equality standing in for
+byte equality, under the same idealization as `h` and `fp` (§0.1,
+`RESULTS.md` Consumed entry 3). Nothing here is about required sets of
+more than two — the equalities live only in the n = 2 branch, because
+there is no second slot to compare against in the n = 1 branch. And
+`ContentJudge` is instrumentation: it reports on what the verifier
+accepted and changes nothing the verifier does.

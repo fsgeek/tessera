@@ -52,7 +52,7 @@
 (*     wrap() term is accepted as a wrapper).                           *)
 (* Carried, not load-bearing here (each removed alone leaves every     *)
 (* query unchanged): the outer signature and outer fingerprint checks   *)
-(* (a13 — the wrapper's authorship is S-P3 entry 1, consumed); inner   *)
+(* (a13 — the wrapper's KEY BINDING is S-P3 entry 1, consumed; its AUTHORSHIP is S-P1's, per S-P3 F7 [CORRECTION 2026-09-12, author C5 read: was "the wrapper's authorship is S-P3 entry 1" — a misattribution; entry 1 is the key-binding relation, not authorship]); inner   *)
 (* and outer authority evidence (a12 — inert, sole channel key public, *)
 (* S-P3 F6); inner and outer possession over the manifest (a08 — S-P3  *)
 (* entry 2); the manifest-hash check alone (a04 — key pinned by =fp(kI), identity by =idI or     *)
@@ -125,6 +125,41 @@
 (* Run: proverif -lib ../../lib/tessera_theory.pvl sp7_q2_degraded_compromised.pv *)
 (* ==================================================================== *)
 
+(* ==================================================================== *)
+(* ADDENDUM 2026-09-12 (Amendment 5 §A5.5; PREDICTIONS.md "Post-freeze  *)
+(* addendum 1 — 2026-09-12"; ROUTED C9, ADOPTED (author)). The          *)
+(* registered header change, added here WITHOUT editing any sentence of *)
+(* the claim block above.                                               *)
+(*                                                                      *)
+(* This model ALSO proves: on the wrapped path the wrapper's recorded   *)
+(* inner canonicalization version — cvIw, the first component of        *)
+(* wrap(cvIw, (fbI, sgI)) — equals the inner frame's own                *)
+(* canonicalization-version field (VersionLied unreachable, query Q7).  *)
+(*                                                                      *)
+(* This model does NOT prove: that either canonicalization version is   *)
+(* supported, or that the inner bytes were produced under it (P8/H1a).  *)
+(* The check compares two fields for equality and nothing more. The     *)
+(* "carried, not load-bearing" line above — the version fields          *)
+(* "checked only for presence, never for consistency or support" —      *)
+(* stands as written for cvW and for the base path; on the WRAPPED path it does NOT stand as written for cvI, which this addendum now compares with cvIw through the same frame field. [CORRECTION 2026-09-12, cross-family review item 7: the pre-review text read "stands as written for cvI, cvW and the base path, and is narrowed by *)
+(* this addendum for cvIw on the wrapped path only" — inaccurate for wrapped-path cvI, since the new guard re-destructures fbI in its canonicalization-version position, so the narrowing reaches cvI as well as cvIw.] *)
+(*                                                                      *)
+(* Encoding (registered in the addendum, because the obvious placement  *)
+(* would change the base path): the equality is checked INSIDE          *)
+(* VerifierWrapped, where fbI is already in scope from the wrap()       *)
+(* pattern, by re-destructuring fbI with =cvIw in the                   *)
+(* canonicalization-version position, before the InnerCheck call.       *)
+(* InnerCheck, VerifierBase and the base path are byte-unchanged. One   *)
+(* new private report channel versionCh carries (fbW, cvIw, fbI) in     *)
+(* parallel with the existing reports (S-P3 recut-1 idiom), emitted AFTER the new guard AND AFTER the AcceptOuter event, concurrently with InnerCheck — so what the report establishes is OUTER acceptance, not a completed inner acceptance. [CORRECTION 2026-09-12, cross-family review item 3: the pre-review text read "emitted *)
+(* AFTER the new guard" without saying which acceptance the report evidences; InnerCheck runs in parallel with versionCh and need not complete.] VersionJudge reads it, destructures fbI for its *)
+(* cvI, and fires VersionLied(fbW, cvIw, cvI) when the recorded and     *)
+(* actual inner versions differ. VersionLied is therefore unreachable   *)
+(* here by construction; the companion                                  *)
+(* sp7_q7_companion_version_unchecked.pv, which removes the equality,   *)
+(* is what shows the judge fires at all.                                *)
+(* ==================================================================== *)
+
 (* --- model-local declarations (library terms are not redeclared) ---- *)
 fun framed(bitstring, bitstring, bitstring, bitstring, bitstring, bitstring, bitstring): bitstring [data].
   (* objType, alg, issuerId, kfp, manifestHash, canonVer, payload *)
@@ -150,6 +185,9 @@ free honestInnerCh: channel [private].  (* attester-> scope judge: (signer key, 
 free scopeCh: channel [private].        (* verifier-> scope judge: (ctx, attributed key, attributed id, framed bytes) *)
 free honestSigCh: channel [private].    (* attester-> sig judge  : (signer key, signature term) *)
 free sigCh: channel [private].          (* verifier-> sig judge  : (ctx, attributed key, signature term verified) *)
+(* ADDENDUM 2026-09-12 (A5.5): a NEW channel, not a second reader on    *)
+(* scopeCh, so ScopeJudge's pairing is untouched.                       *)
+free versionCh: channel [private].      (* verifier-> version judge: (wrapper bytes, recorded inner version, inner framed bytes) *)
 
 event AcceptInner(bitstring, pkey, bitstring, bitstring).
   (* ctx, attributed key, attributed id, inner framed bytes *)
@@ -167,6 +205,9 @@ event Reattributed(pkey, pkey, bitstring).
   (* S-P3 transcribed: accepted key, honest signer key, the honest bytes *)
 event HonestAccepted(pkey, bitstring).
   (* N1 witness (base path): honest bytes accepted under their signer's key *)
+(* ADDENDUM 2026-09-12 (A5.5) *)
+event VersionLied(bitstring, bitstring, bitstring).
+  (* wrapper framed bytes, the version the wrapper RECORDED, the inner frame's ACTUAL version *)
 
 (* C1: type soundness — must be UNREACHABLE *)
 query otS: bitstring, otA: bitstring, fb: bitstring;
@@ -186,6 +227,10 @@ query kH: pkey, fb: bitstring, kW: pkey;
 (* N1 base-path honest-flow witness — must be REACHABLE *)
 query k: pkey, fb: bitstring;
   event(HonestAccepted(k, fb)).
+(* ADDENDUM 2026-09-12 (A5.5) — Q7: the wrapper's recorded inner        *)
+(* canonicalization version is true — must be UNREACHABLE               *)
+query fbWq: bitstring, cvRec: bitstring, cvAct: bitstring;
+  event(VersionLied(fbWq, cvRec, cvAct)).
 
 (* --- the sole authority channel (degraded; its key is public below) --- *)
 (* Fires the library's DNS branch event, as S-P3 did; nothing queries    *)
@@ -278,8 +323,14 @@ let VerifierWrapped(pkS: pkey) =
   let (=BYTES, =fbW) = checksign(sgW, kW) in
   let framed(=OT_WRAPPER, =algW, =idW, =fp(kW), mhW, cvW, wrap(cvIw: bitstring, (fbI: bitstring, sgI: bitstring))) = fbW in
   if mhW = h(tW) then
+  (* ADDENDUM 2026-09-12 (A5.5): the wrapper's RECORDED inner version must *)
+  (* be the inner frame's OWN canonicalization version. Checked here, by   *)
+  (* re-destructuring fbI with =cvIw in that position — InnerCheck and     *)
+  (* therefore VerifierBase are untouched. Rejection on mismatch.          *)
+  let framed(otIv, algIv, idIv, kfpIv, mhIv, =cvIw, plIv) = fbI in
   event AcceptOuter(kW, idW, fbW);
   ( out(typeCh, (OT_WRAPPER, fbW))
+  | out(versionCh, (fbW, cvIw, fbI))   (* ADDENDUM 2026-09-12 (A5.5): after the guard *)
   | InnerCheck(pkS, wctx(kW, idW, fbW), tI, evI, kI, ppfI, sgI, fbI) ).
 
 (* --- judges ------------------------------------------------------------ *)
@@ -306,6 +357,15 @@ let SigJudge =
   in(sigCh, (wctx(kW: pkey, idW: bitstring, fbW: bitstring), kIrep: pkey, =sgH));
   if kIrep = kH then 0 else event InnerSigTransplanted(kIrep, sgH).
 
+(* ADDENDUM 2026-09-12 (A5.5): instrumentation on the acceptance report,  *)
+(* not a verifier check. Reads versionCh, destructures the inner frame    *)
+(* for its own canonicalization version, and fires when the wrapper's     *)
+(* recorded version differs from it.                                      *)
+let VersionJudge =
+  in(versionCh, (fbWv: bitstring, cvIwv: bitstring, fbIv: bitstring));
+  let framed(otJv, algJv, idJv, kfpJv, mhJv, cvI, plJv) = fbIv in
+  if cvIwv = cvI then 0 else event VersionLied(fbWv, cvIwv, cvI).
+
 process
   new skS: skey; new skI1: skey; new skI2: skey; new skW1: skey; new skW2: skey;
   let mI1 = authTuple(issuerId,  fp(pk(skI1)), ssetH, algH, verH) in
@@ -322,4 +382,5 @@ process
   | !Attester(skI2, issuerId2, mI2, cvB) | !OtherSigner(skI2, issuerId2, mI2, OT_REVIEWREC, cvA)
   | !Wrapper(skW1, idW1, mW1, cvB) | !Wrapper(skW2, idW2, mW2, cvA)
   | !VerifierBase(pk(skS)) | !VerifierWrapped(pk(skS))
-  | !Judge | !TypeJudge | !ScopeJudge | !SigJudge )
+  | !Judge | !TypeJudge | !ScopeJudge | !SigJudge
+  | !VersionJudge )   (* ADDENDUM 2026-09-12 (A5.5) *)

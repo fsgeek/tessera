@@ -1,0 +1,64 @@
+Command for each run: proverif -lib formal/suite/lib/tessera_theory.pvl <path.pv>; first batch had timeout 900.
+All listed .pv files and matching .out files retained; no run output overwritten.
+literal_correct_control.pv: rc=0; RESULT_count=9
+literal_correct_control.out:519: RESULT not event(TypeConfused(otS_1,otA_1,fb)) is true.
+literal_correct_control.out:532: RESULT not event(Rescoped(kX_1,idX_1,kH_3,idH_1,fb)) is true.
+literal_correct_control.out:545: RESULT not event(InnerSigTransplanted(kX_1,s)) is true.
+literal_correct_control.out:558: RESULT not event(Reattributed(kX_1,kH_3,fb)) is true.
+literal_correct_control.out:849: RESULT not event(HonestWrappedAccepted(kH_3,fb,kW_3)) is false.
+literal_correct_control.out:1037: RESULT not event(HonestAccepted(k,fb)) is false.
+literal_correct_control.out:1050: RESULT not event(VersionLied(fbWq,cvRec,cvAct)) is true.
+literal_correct_control.out:1063: RESULT not event(VersionLied(framed(OT_WRAPPER,algH[],idW1[],fp(pk(skW1[])),h(authTuple(idW1[],fp(pk(skW1[])),ssetH[],algH[],verH[])),cvB[],wrap(cvB[],(framed(OT_ATTEST,algH[],issuerId[],fp(pk(skI1[])),h(authTuple(issuerId[],fp(pk(skI1[])),ssetH[],algH[],verH[])),cvA[],reviewPayload[]),sign((BYTES,framed(OT_ATTEST,algH[],issuerId[],fp(pk(skI1[])),h(authTuple(issuerId[],fp(pk(skI1[])),ssetH[],algH[],verH[])),cvA[],reviewPayload[])),skI1[])))),cvB[],cvA[])) is true.
+literal_correct_control.out:1078: RESULT not event(AcceptInner(wctx(pk(skW1[]),idW1[],framed(OT_WRAPPER,algH[],idW1[],fp(pk(skW1[])),h(authTuple(idW1[],fp(pk(skW1[])),ssetH[],algH[],verH[])),cvB[],wrap(cvB[],(framed(OT_ATTEST,algH[],issuerId[],fp(pk(skI1[])),h(authTuple(issuerId[],fp(pk(skI1[])),ssetH[],algH[],verH[])),cvA[],reviewPayload[]),sign((BYTES,framed(OT_ATTEST,algH[],issuerId[],fp(pk(skI1[])),h(authTuple(issuerId[],fp(pk(skI1[])),ssetH[],algH[],verH[])),cvA[],reviewPayload[])),skI1[]))))),pk(skI1[]),issuerId[],framed(OT_ATTEST,algH[],issuerId[],fp(pk(skI1[])),h(authTuple(issuerId[],fp(pk(skI1[])),ssetH[],algH[],verH[])),cvA[],reviewPayload[]))) is true.
+literal_honest_wrapper.pv: rc=0; RESULT_count=9
+literal_honest_wrapper.out:517: RESULT not event(TypeConfused(otS_1,otA_1,fb)) is true.
+literal_honest_wrapper.out:530: RESULT not event(Rescoped(kX_1,idX_1,kH_3,idH_1,fb)) is true.
+literal_honest_wrapper.out:543: RESULT not event(InnerSigTransplanted(kX_1,s)) is true.
+literal_honest_wrapper.out:556: RESULT not event(Reattributed(kX_1,kH_3,fb)) is true.
+literal_honest_wrapper.out:850: RESULT not event(HonestWrappedAccepted(kH_3,fb,kW_3)) is false.
+literal_honest_wrapper.out:1038: RESULT not event(HonestAccepted(k,fb)) is false.
+literal_honest_wrapper.out:1269: RESULT not event(VersionLied(fbWq,cvRec,cvAct)) is false.
+literal_honest_wrapper.out:1537: RESULT not event(VersionLied(framed(OT_WRAPPER,algH[],idW1[],fp(pk(skW1[])),h(authTuple(idW1[],fp(pk(skW1[])),ssetH[],algH[],verH[])),cvB[],wrap(cvB[],(framed(OT_ATTEST,algH[],issuerId[],fp(pk(skI1[])),h(authTuple(issuerId[],fp(pk(skI1[])),ssetH[],algH[],verH[])),cvA[],reviewPayload[]),sign((BYTES,framed(OT_ATTEST,algH[],issuerId[],fp(pk(skI1[])),h(authTuple(issuerId[],fp(pk(skI1[])),ssetH[],algH[],verH[])),cvA[],reviewPayload[])),skI1[])))),cvB[],cvA[])) is false.
+literal_honest_wrapper.out:1815: RESULT not event(AcceptInner(wctx(pk(skW1[]),idW1[],framed(OT_WRAPPER,algH[],idW1[],fp(pk(skW1[])),h(authTuple(idW1[],fp(pk(skW1[])),ssetH[],algH[],verH[])),cvB[],wrap(cvB[],(framed(OT_ATTEST,algH[],issuerId[],fp(pk(skI1[])),h(authTuple(issuerId[],fp(pk(skI1[])),ssetH[],algH[],verH[])),cvA[],reviewPayload[]),sign((BYTES,framed(OT_ATTEST,algH[],issuerId[],fp(pk(skI1[])),h(authTuple(issuerId[],fp(pk(skI1[])),ssetH[],algH[],verH[])),cvA[],reviewPayload[])),skI1[]))))),pk(skI1[]),issuerId[],framed(OT_ATTEST,algH[],issuerId[],fp(pk(skI1[])),h(authTuple(issuerId[],fp(pk(skI1[])),ssetH[],algH[],verH[])),cvA[],reviewPayload[]))) is false.
+no_version.pv: rc=0; RESULT_count=7
+no_version.out:527: RESULT not event(TypeConfused(otS_1,otA_1,fb)) is true.
+no_version.out:540: RESULT not event(Rescoped(kX_1,idX_1,kH_3,idH_1,fb)) is true.
+no_version.out:553: RESULT not event(InnerSigTransplanted(kX_1,s)) is true.
+no_version.out:566: RESULT not event(Reattributed(kX_1,kH_3,fb)) is true.
+no_version.out:868: RESULT not event(HonestWrappedAccepted(kH_3,fb,kW_3)) is false.
+no_version.out:1064: RESULT not event(HonestAccepted(k,fb)) is false.
+no_version.out:1303: RESULT not event(VersionLied(fbWq,cvRec,cvAct)) is false.
+outer_vs_inner.pv: rc=2; RESULT_count=0
+File "formal/suite/s-p7/proverif/falsification-2026-09-12/scratch/outer_vs_inner.pv", line 400, characters 23-24:
+Error: Unterminated comment.
+outer_vs_inner_v2.pv: rc=0; RESULT_count=9
+outer_vs_inner_v2.out:551: RESULT not event(TypeConfused(otS_1,otA_1,fb)) is true.
+outer_vs_inner_v2.out:564: RESULT not event(Rescoped(kX_1,idX_1,kH_3,idH_1,fb)) is true.
+outer_vs_inner_v2.out:577: RESULT not event(InnerSigTransplanted(kX_1,s)) is true.
+outer_vs_inner_v2.out:590: RESULT not event(Reattributed(kX_1,kH_3,fb)) is true.
+outer_vs_inner_v2.out:889: RESULT not event(HonestWrappedAccepted(kH_3,fb,kW_3)) is false.
+outer_vs_inner_v2.out:1085: RESULT not event(HonestAccepted(k,fb)) is false.
+outer_vs_inner_v2.out:1098: RESULT not event(VersionLied(fbWq,cvRec,cvAct)) is true.
+outer_vs_inner_v2.out:1353: RESULT not event(OuterNonAttestation) is false.
+outer_vs_inner_v2.out:1366: RESULT not event(InnerNonAttestation) is true.
+production_version.pv: rc=2; RESULT_count=0
+File "formal/suite/s-p7/proverif/falsification-2026-09-12/scratch/production_version.pv", line 410, characters 23-24:
+Error: Unterminated comment.
+production_version_v2.pv: rc=0; RESULT_count=8
+production_version_v2.out:586: RESULT not event(TypeConfused(otS_1,otA_1,fb)) is true.
+production_version_v2.out:600: RESULT not event(Rescoped(kX_1,idX_1,kH_3,idH_1,fb)) is true.
+production_version_v2.out:614: RESULT not event(InnerSigTransplanted(kX_1,s)) is true.
+production_version_v2.out:628: RESULT not event(Reattributed(kX_1,kH_3,fb)) is true.
+production_version_v2.out:928: RESULT not event(HonestWrappedAccepted(kH_3,fb,kW_3)) is false.
+production_version_v2.out:1125: RESULT not event(HonestAccepted(k,fb)) is false.
+production_version_v2.out:1139: RESULT not event(VersionLied(fbWq,cvRec,cvAct)) is true.
+production_version_v2.out:1376: RESULT not event(DeclaredNotProduced) is false.
+production_version_v3.pv: rc=0; RESULT_count=8
+production_version_v3.out:584: RESULT not event(TypeConfused(otS_1,otA_1,fb)) is true.
+production_version_v3.out:598: RESULT not event(Rescoped(kX_1,idX_1,kH_3,idH_1,fb)) is true.
+production_version_v3.out:612: RESULT not event(InnerSigTransplanted(kX_1,s)) is true.
+production_version_v3.out:626: RESULT not event(Reattributed(kX_1,kH_3,fb)) is true.
+production_version_v3.out:924: RESULT not event(HonestWrappedAccepted(kH_3,fb,kW_3)) is false.
+production_version_v3.out:1119: RESULT not event(HonestAccepted(k,fb)) is false.
+production_version_v3.out:1133: RESULT not event(VersionLied(fbWq,cvRec,cvAct)) is true.
+production_version_v3.out:1368: RESULT not event(DeclaredNotProduced) is false.

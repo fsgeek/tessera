@@ -25,7 +25,7 @@
 (* This model does not prove: the verdict partition (P4, TLA+); that   *)
 (* acceptance is fresh or context-bound (replay is permitted, §A3.1    *)
 (* item 1); that the accepted key is an honest issuer's (P10 / the     *)
-(* first link — in degraded-compromised mode it is not, and the        *)
+(* first link — in degraded-compromised mode it need not be [CORRECTION 2026-09-12, author C5 read: was "it is not", too strong — honest-key acceptance stays reachable, N1 HonestAccepted .out:396] — and the *)
 (* unrestricted contrast query (ii) is registered red); re-attribution *)
 (* of honest bytes to another key (S-P3, complementary — composed at   *)
 (* the capstone, not consumed here); the multi-signer set (S-P2);      *)

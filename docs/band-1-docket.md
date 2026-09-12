@@ -90,6 +90,28 @@ specification) or disposed with reasons.
     the optional service reachable and contradicting the bundle. H1a
     obligation.
 
+32. **P7 verdict-independence vector** (Amendment 6 §A6.1). A wrapped
+    bundle's inner verdict equals the same inner bundle's standalone
+    verdict, under each of the four P4 verdict values; a re-serializing
+    wrapper is the red bar. H1a obligation.
+
+31. **Implementation specification — the current contract, derived from
+    the adopted artifacts** (proposed 2026-09-12 by the AI collaborator,
+    after a Codex assessment the author shared the same day; the author's
+    words: *"when an implementation plan is needed, the travelog of how
+    we got there is not of interest until some flaw is discovered, or
+    there is some need to enhance or amend functionality"*). One
+    document stating, per verifier behaviour, what it consumes, what it
+    checks, what it reports, and what it leaves to the adjudicator;
+    interfaces, invariants, failure behaviour, and outstanding
+    obligations; unresolved decisions visibly marked; every requirement
+    linked to the amendment, ruling or model that justifies it. Any
+    contradiction found while consolidating is returned as a routed
+    question, never resolved by the writer. Wider than the A3 §A3.1.4
+    relying-party story (which it contains). Sequenced as a Band 0 exit
+    companion, not a Band 1 item: writing it is the cheapest test of
+    whether the record composes. Not yet begun.
+
 ## Tending / custody
 
 13. **Tending visibility deadlines** (DeepSeek suggestion 2).

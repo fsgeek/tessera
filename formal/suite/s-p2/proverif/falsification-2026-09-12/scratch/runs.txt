@@ -1,0 +1,57 @@
+Command for each run: proverif -lib formal/suite/lib/tessera_theory.pvl <path.pv>; first batch had timeout 900.
+All listed .pv files and matching .out files retained; no run output overwritten.
+field_attacks.pv: rc=0; RESULT_count=13
+field_attacks.out:426: RESULT not event(Stripped(t_2,v)) is true.
+field_attacks.out:432: RESULT not event(SignerForged(t_2,k)) is true.
+field_attacks.out:438: RESULT not event(SetAltered(kH_2,m,t_2)) is true.
+field_attacks.out:445: RESULT not event(Reattributed(kX_1,kH_2,fb_4)) is true.
+field_attacks.out:609: RESULT not event(HonestComplete(authTuple(issuerId[],fp(pk(skA1[])),signers0,algH[],verH[]),verified1(k1))) is false.
+field_attacks.out:826: RESULT not event(HonestComplete(authTuple(issuerId2[],fp(pk(skA2[])),signers1(fp(pk(skB2[]))),algH[],verH[]),verified2(k1,k2))) is false.
+field_attacks.out:1055: RESULT not event(HonestAccepted(k,fb_4)) is false.
+field_attacks.out:1061: RESULT not event(Spliced(t_2,fa_2,fb_4)) is true.
+field_attacks.out:1273: RESULT not event(FrameDifference) is false.
+field_attacks.out:1279: RESULT not event(WrongFingerprint) is true.
+field_attacks.out:1285: RESULT not event(ManifestDifference) is true.
+field_attacks.out:1524: RESULT not event(NestedPayload) is false.
+field_attacks.out:1530: RESULT not event(NestedDifference) is true.
+no_payload.pv: rc=0; RESULT_count=8
+no_payload.out:376: RESULT not event(Stripped(t_2,v)) is true.
+no_payload.out:382: RESULT not event(SignerForged(t_2,k)) is true.
+no_payload.out:388: RESULT not event(SetAltered(kH_2,m,t_2)) is true.
+no_payload.out:395: RESULT not event(Reattributed(kX_1,kH_2,fb_4)) is true.
+no_payload.out:559: RESULT not event(HonestComplete(authTuple(issuerId[],fp(pk(skA1[])),signers0,algH[],verH[]),verified1(k1))) is false.
+no_payload.out:779: RESULT not event(HonestComplete(authTuple(issuerId2[],fp(pk(skA2[])),signers1(fp(pk(skB2[]))),algH[],verH[]),verified2(k1,k2))) is false.
+no_payload.out:1011: RESULT not event(HonestAccepted(k,fb_4)) is false.
+no_payload.out:1213: RESULT not event(Spliced(t_2,fa_2,fb_4)) is false.
+no_type.pv: rc=0; RESULT_count=8
+no_type.out:377: RESULT not event(Stripped(t_2,v)) is true.
+no_type.out:384: RESULT not event(SignerForged(t_2,k)) is true.
+no_type.out:391: RESULT not event(SetAltered(kH_2,m,t_2)) is true.
+no_type.out:398: RESULT not event(Reattributed(kX_1,kH_2,fb_4)) is true.
+no_type.out:563: RESULT not event(HonestComplete(authTuple(issuerId[],fp(pk(skA1[])),signers0,algH[],verH[]),verified1(k1))) is false.
+no_type.out:781: RESULT not event(HonestComplete(authTuple(issuerId2[],fp(pk(skA2[])),signers1(fp(pk(skB2[]))),algH[],verH[]),verified2(k1,k2))) is false.
+no_type.out:1010: RESULT not event(HonestAccepted(k,fb_4)) is false.
+no_type.out:1213: RESULT not event(Spliced(t_2,fa_2,fb_4)) is false.
+no_version.pv: rc=0; RESULT_count=8
+no_version.out:377: RESULT not event(Stripped(t_2,v)) is true.
+no_version.out:384: RESULT not event(SignerForged(t_2,k)) is true.
+no_version.out:391: RESULT not event(SetAltered(kH_2,m,t_2)) is true.
+no_version.out:398: RESULT not event(Reattributed(kX_1,kH_2,fb_4)) is true.
+no_version.out:563: RESULT not event(HonestComplete(authTuple(issuerId[],fp(pk(skA1[])),signers0,algH[],verH[]),verified1(k1))) is false.
+no_version.out:781: RESULT not event(HonestComplete(authTuple(issuerId2[],fp(pk(skA2[])),signers1(fp(pk(skB2[]))),algH[],verH[]),verified2(k1,k2))) is false.
+no_version.out:1010: RESULT not event(HonestAccepted(k,fb_4)) is false.
+no_version.out:1213: RESULT not event(Spliced(t_2,fa_2,fb_4)) is false.
+second_manifest.pv: rc=0; RESULT_count=13
+second_manifest.out:517: RESULT not event(Stripped(t_2,v)) is true.
+second_manifest.out:524: RESULT not event(SignerForged(t_2,k)) is true.
+second_manifest.out:766: RESULT not event(SetAltered(kH_2,m,t_2)) is false.
+second_manifest.out:773: RESULT not event(Reattributed(kX_1,kH_2,fb_6)) is true.
+second_manifest.out:940: RESULT not event(HonestComplete(authTuple(issuerId[],fp(pk(skA1[])),signers0,algH[],verH[]),verified1(k1))) is false.
+second_manifest.out:1167: RESULT not event(HonestComplete(authTuple(issuerId2[],fp(pk(skA2[])),signers1(fp(pk(skB2[]))),algH[],verH[]),verified2(k1,k2))) is false.
+second_manifest.out:1405: RESULT not event(HonestAccepted(k,fb_6)) is false.
+second_manifest.out:1412: RESULT not event(Spliced(t_2,fa_2,fb_6)) is true.
+second_manifest.out:1634: RESULT not event(FrameDifference) is false.
+second_manifest.out:1641: RESULT not event(WrongFingerprint) is true.
+second_manifest.out:1648: RESULT not event(ManifestDifference) is true.
+second_manifest.out:1897: RESULT not event(NestedPayload) is false.
+second_manifest.out:1904: RESULT not event(NestedDifference) is true.

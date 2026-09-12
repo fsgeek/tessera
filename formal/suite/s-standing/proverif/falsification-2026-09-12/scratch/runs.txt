@@ -1,0 +1,116 @@
+Command for each run: proverif -lib formal/suite/lib/tessera_theory.pvl <path.pv>; first batch had timeout 900.
+All listed .pv files and matching .out files retained; no run output overwritten.
+alias_reasons_companion.pv: rc=0; RESULT_count=14
+alias_reasons_companion.out:505: RESULT event(Established(kX_3,t_3,aid_2)) ==> event(Designated(kX_3,aid_2)) is true.
+alias_reasons_companion.out:519: RESULT event(Established(pk(skH1[]),t_3,aid_2)) ==> event(Designated(pk(skH1[]),aid_2)) is true.
+alias_reasons_companion.out:530: RESULT event(Established(pk(skH2[]),t_3,aid_2)) ==> event(Designated(pk(skH2[]),aid_2)) is true.
+alias_reasons_companion.out:537: RESULT not event(StandingUnentitled(kX_3,t_3)) is true.
+alias_reasons_companion.out:836: RESULT not event(HonestStandingEstablished(k,aid_2)) is false.
+alias_reasons_companion.out:1123: RESULT not event(StandingReport(ESTABLISHED,TERMINAL_DISPOSITION_SHOWN,k,t_3,a)) is false.
+alias_reasons_companion.out:1408: RESULT not event(StandingReport(ABSENT,SUPERSEDED,k,t_3,a)) is false.
+alias_reasons_companion.out:1536: RESULT not event(StandingReport(ABSENT,NO_TERMINAL_DISPOSITION_EVIDENCE,k,t_3,a)) is false.
+alias_reasons_companion.out:1819: RESULT not event(StandingReport(ABSENT,ISSUANCE_REFUSED,k,t_3,a)) is false.
+alias_reasons_companion.out:1997: RESULT not event(StandingReport(ABSENT,STANDING_EVIDENCE_MISMATCH,k,t_3,a)) is false.
+alias_reasons_companion.out:2004: RESULT not event(ReasonCollapsed(p1_5,p2_5,r)) is true.
+alias_reasons_companion.out:2308: RESULT not event(Aliased(kX_3,t_3,tc,aid_2)) is false.
+alias_reasons_companion.out:2604: RESULT not event(StandingReport(ABSENT,SUPERSEDED,pk(skH1[]),authTuple(issuerIdAlias[],fp(pk(skH1[])),ssetH[],algH[],verH[]),h(attemptCore(authTuple(issuerId[],fp(pk(skH1[])),ssetH[],algH[],verH[]),pp,sg_1,dc)))) is false.
+alias_reasons_companion.out:2898: RESULT not event(StandingReport(ABSENT,ISSUANCE_REFUSED,pk(skH1[]),authTuple(issuerIdAlias[],fp(pk(skH1[])),ssetH[],algH[],verH[]),h(attemptCore(authTuple(issuerId[],fp(pk(skH1[])),ssetH[],algH[],verH[]),pp,sg_1,dc)))) is false.
+alias_reasons_correct.pv: rc=0; RESULT_count=14
+alias_reasons_correct.out:503: RESULT event(Established(kX_3,t_3,aid_2)) ==> event(Designated(kX_3,aid_2)) is true.
+alias_reasons_correct.out:513: RESULT event(Established(pk(skH1[]),t_3,aid_2)) ==> event(Designated(pk(skH1[]),aid_2)) is true.
+alias_reasons_correct.out:523: RESULT event(Established(pk(skH2[]),t_3,aid_2)) ==> event(Designated(pk(skH2[]),aid_2)) is true.
+alias_reasons_correct.out:530: RESULT not event(StandingUnentitled(kX_3,t_3)) is true.
+alias_reasons_correct.out:829: RESULT not event(HonestStandingEstablished(k,aid_2)) is false.
+alias_reasons_correct.out:1114: RESULT not event(StandingReport(ESTABLISHED,TERMINAL_DISPOSITION_SHOWN,k,t_3,a)) is false.
+alias_reasons_correct.out:1397: RESULT not event(StandingReport(ABSENT,SUPERSEDED,k,t_3,a)) is false.
+alias_reasons_correct.out:1523: RESULT not event(StandingReport(ABSENT,NO_TERMINAL_DISPOSITION_EVIDENCE,k,t_3,a)) is false.
+alias_reasons_correct.out:1804: RESULT not event(StandingReport(ABSENT,ISSUANCE_REFUSED,k,t_3,a)) is false.
+alias_reasons_correct.out:1993: RESULT not event(StandingReport(ABSENT,STANDING_EVIDENCE_MISMATCH,k,t_3,a)) is false.
+alias_reasons_correct.out:2000: RESULT not event(ReasonCollapsed(p1_5,p2_5,r)) is true.
+alias_reasons_correct.out:2007: RESULT not event(Aliased(kX_3,t_3,tc,aid_2)) is true.
+alias_reasons_correct.out:2015: RESULT not event(StandingReport(ABSENT,SUPERSEDED,pk(skH1[]),authTuple(issuerIdAlias[],fp(pk(skH1[])),ssetH[],algH[],verH[]),h(attemptCore(authTuple(issuerId[],fp(pk(skH1[])),ssetH[],algH[],verH[]),pp,sg_1,dc)))) is true.
+alias_reasons_correct.out:2023: RESULT not event(StandingReport(ABSENT,ISSUANCE_REFUSED,pk(skH1[]),authTuple(issuerIdAlias[],fp(pk(skH1[])),ssetH[],algH[],verH[]),h(attemptCore(authTuple(issuerId[],fp(pk(skH1[])),ssetH[],algH[],verH[]),pp,sg_1,dc)))) is true.
+minted_core.pv: rc=0; RESULT_count=14
+minted_core.out:666: RESULT event(Established(kX_3,t_3,aid_2)) ==> event(Designated(kX_3,aid_2)) is false.
+minted_core.out:675: RESULT event(Established(pk(skH1[]),t_3,aid_2)) ==> event(Designated(pk(skH1[]),aid_2)) is true.
+minted_core.out:684: RESULT event(Established(pk(skH2[]),t_3,aid_2)) ==> event(Designated(pk(skH2[]),aid_2)) is true.
+minted_core.out:690: RESULT not event(StandingUnentitled(kX_3,t_3)) is true.
+minted_core.out:976: RESULT not event(HonestStandingEstablished(k,aid_2)) is false.
+minted_core.out:1171: RESULT not event(StandingReport(ESTABLISHED,TERMINAL_DISPOSITION_SHOWN,k,t_3,a)) is false.
+minted_core.out:1367: RESULT not event(StandingReport(ABSENT,SUPERSEDED,k,t_3,a)) is false.
+minted_core.out:1476: RESULT not event(StandingReport(ABSENT,NO_TERMINAL_DISPOSITION_EVIDENCE,k,t_3,a)) is false.
+minted_core.out:1668: RESULT not event(StandingReport(ABSENT,ISSUANCE_REFUSED,k,t_3,a)) is false.
+minted_core.out:1835: RESULT not event(StandingReport(ABSENT,STANDING_EVIDENCE_MISMATCH,k,t_3,a)) is false.
+minted_core.out:1841: RESULT not event(ReasonCollapsed(p1_5,p2_5,r)) is true.
+minted_core.out:1847: RESULT not event(Aliased(kX_3,t_3,tc_1,aid_2)) is true.
+minted_core.out:1853: RESULT not event(EmbeddedAlias) is true.
+minted_core.out:2097: RESULT not event(SignatureIdentityMismatch) is false.
+no_pin_degraded.pv: rc=0; RESULT_count=12
+no_pin_degraded.out:644: RESULT event(Established(kX_3,t_3,aid_2)) ==> event(Designated(kX_3,aid_2)) is false.
+no_pin_degraded.out:654: RESULT event(Established(pk(skH1[]),t_3,aid_2)) ==> event(Designated(pk(skH1[]),aid_2)) is true.
+no_pin_degraded.out:664: RESULT event(Established(pk(skH2[]),t_3,aid_2)) ==> event(Designated(pk(skH2[]),aid_2)) is true.
+no_pin_degraded.out:671: RESULT not event(StandingUnentitled(kX_3,t_3)) is true.
+no_pin_degraded.out:978: RESULT not event(HonestStandingEstablished(k,aid_2)) is false.
+no_pin_degraded.out:1177: RESULT not event(StandingReport(ESTABLISHED,TERMINAL_DISPOSITION_SHOWN,k,t_3,a)) is false.
+no_pin_degraded.out:1377: RESULT not event(StandingReport(ABSENT,SUPERSEDED,k,t_3,a)) is false.
+no_pin_degraded.out:1487: RESULT not event(StandingReport(ABSENT,NO_TERMINAL_DISPOSITION_EVIDENCE,k,t_3,a)) is false.
+no_pin_degraded.out:1683: RESULT not event(StandingReport(ABSENT,ISSUANCE_REFUSED,k,t_3,a)) is false.
+no_pin_degraded.out:1854: RESULT not event(StandingReport(ABSENT,STANDING_EVIDENCE_MISMATCH,k,t_3,a)) is false.
+no_pin_degraded.out:1861: RESULT not event(ReasonCollapsed(p1_5,p2_5,r)) is true.
+no_pin_degraded.out:2068: RESULT not event(Aliased(kX_3,t_3,tc,aid_2)) is false.
+no_pin_dns.pv: rc=0; RESULT_count=12
+no_pin_dns.out:507: RESULT event(Established(kX_3,t_3,aid_2)) ==> event(Designated(kX_3,aid_2)) is true.
+no_pin_dns.out:521: RESULT event(Established(pk(skH1[]),t_3,aid_2)) ==> event(Designated(pk(skH1[]),aid_2)) is true.
+no_pin_dns.out:532: RESULT event(Established(pk(skH2[]),t_3,aid_2)) ==> event(Designated(pk(skH2[]),aid_2)) is true.
+no_pin_dns.out:539: RESULT not event(StandingUnentitled(kX_3,t_3)) is true.
+no_pin_dns.out:838: RESULT not event(HonestStandingEstablished(k,aid_2)) is false.
+no_pin_dns.out:1125: RESULT not event(StandingReport(ESTABLISHED,TERMINAL_DISPOSITION_SHOWN,k,t_3,a)) is false.
+no_pin_dns.out:1410: RESULT not event(StandingReport(ABSENT,SUPERSEDED,k,t_3,a)) is false.
+no_pin_dns.out:1538: RESULT not event(StandingReport(ABSENT,NO_TERMINAL_DISPOSITION_EVIDENCE,k,t_3,a)) is false.
+no_pin_dns.out:1821: RESULT not event(StandingReport(ABSENT,ISSUANCE_REFUSED,k,t_3,a)) is false.
+no_pin_dns.out:2015: RESULT not event(StandingReport(ABSENT,STANDING_EVIDENCE_MISMATCH,k,t_3,a)) is false.
+no_pin_dns.out:2022: RESULT not event(ReasonCollapsed(p1_5,p2_5,r)) is true.
+no_pin_dns.out:2326: RESULT not event(Aliased(kX_3,t_3,tc,aid_2)) is false.
+no_pin_repo.pv: rc=0; RESULT_count=12
+no_pin_repo.out:507: RESULT event(Established(kX_3,t_3,aid_2)) ==> event(Designated(kX_3,aid_2)) is true.
+no_pin_repo.out:521: RESULT event(Established(pk(skH1[]),t_3,aid_2)) ==> event(Designated(pk(skH1[]),aid_2)) is true.
+no_pin_repo.out:532: RESULT event(Established(pk(skH2[]),t_3,aid_2)) ==> event(Designated(pk(skH2[]),aid_2)) is true.
+no_pin_repo.out:539: RESULT not event(StandingUnentitled(kX_3,t_3)) is true.
+no_pin_repo.out:838: RESULT not event(HonestStandingEstablished(k,aid_2)) is false.
+no_pin_repo.out:1125: RESULT not event(StandingReport(ESTABLISHED,TERMINAL_DISPOSITION_SHOWN,k,t_3,a)) is false.
+no_pin_repo.out:1410: RESULT not event(StandingReport(ABSENT,SUPERSEDED,k,t_3,a)) is false.
+no_pin_repo.out:1538: RESULT not event(StandingReport(ABSENT,NO_TERMINAL_DISPOSITION_EVIDENCE,k,t_3,a)) is false.
+no_pin_repo.out:1821: RESULT not event(StandingReport(ABSENT,ISSUANCE_REFUSED,k,t_3,a)) is false.
+no_pin_repo.out:2015: RESULT not event(StandingReport(ABSENT,STANDING_EVIDENCE_MISMATCH,k,t_3,a)) is false.
+no_pin_repo.out:2022: RESULT not event(ReasonCollapsed(p1_5,p2_5,r)) is true.
+no_pin_repo.out:2326: RESULT not event(Aliased(kX_3,t_3,tc,aid_2)) is false.
+wrap_routes.pv: rc=0; RESULT_count=15
+wrap_routes.out:640: RESULT event(Established(kX_3,t_3,aid_2)) ==> event(Designated(kX_3,aid_2)) is false.
+wrap_routes.out:649: RESULT event(Established(pk(skH1[]),t_3,aid_2)) ==> event(Designated(pk(skH1[]),aid_2)) is true.
+wrap_routes.out:658: RESULT event(Established(pk(skH2[]),t_3,aid_2)) ==> event(Designated(pk(skH2[]),aid_2)) is true.
+wrap_routes.out:664: RESULT not event(StandingUnentitled(kX_3,t_3)) is true.
+wrap_routes.out:950: RESULT not event(HonestStandingEstablished(k,aid_2)) is false.
+wrap_routes.out:1145: RESULT not event(StandingReport(ESTABLISHED,TERMINAL_DISPOSITION_SHOWN,k,t_3,a)) is false.
+wrap_routes.out:1341: RESULT not event(StandingReport(ABSENT,SUPERSEDED,k,t_3,a)) is false.
+wrap_routes.out:1450: RESULT not event(StandingReport(ABSENT,NO_TERMINAL_DISPOSITION_EVIDENCE,k,t_3,a)) is false.
+wrap_routes.out:1642: RESULT not event(StandingReport(ABSENT,ISSUANCE_REFUSED,k,t_3,a)) is false.
+wrap_routes.out:1809: RESULT not event(StandingReport(ABSENT,STANDING_EVIDENCE_MISMATCH,k,t_3,a)) is false.
+wrap_routes.out:1815: RESULT not event(ReasonCollapsed(p1_5,p2_5,r)) is true.
+wrap_routes.out:1821: RESULT not event(Aliased(kX_3,t_3,tc,aid_2)) is true.
+wrap_routes.out:1827: RESULT not event(Established(k,t_3,h(wrapCore(x,y)))) is true.
+wrap_routes.out:1944: RESULT not event(StandingReport(ABSENT,NO_TERMINAL_DISPOSITION_EVIDENCE,k,t_3,h(wrapCore(x,y)))) is false.
+wrap_routes.out:1951: RESULT not event(StandingReport(ABSENT,STANDING_EVIDENCE_MISMATCH,k,t_3,h(wrapCore(x,y)))) is true.
+literal_alias_honest_channels.pv: rc=0; RESULT_count=13
+literal_alias_honest_channels.out:502: RESULT event(Established(kX_3,t_3,aid_2)) ==> event(Designated(kX_3,aid_2)) is true.
+literal_alias_honest_channels.out:515: RESULT event(Established(pk(skH1[]),t_3,aid_2)) ==> event(Designated(pk(skH1[]),aid_2)) is true.
+literal_alias_honest_channels.out:525: RESULT event(Established(pk(skH2[]),t_3,aid_2)) ==> event(Designated(pk(skH2[]),aid_2)) is true.
+literal_alias_honest_channels.out:532: RESULT not event(StandingUnentitled(kX_3,t_3)) is true.
+literal_alias_honest_channels.out:816: RESULT not event(HonestStandingEstablished(k,aid_2)) is false.
+literal_alias_honest_channels.out:1087: RESULT not event(StandingReport(ESTABLISHED,TERMINAL_DISPOSITION_SHOWN,k,t_3,a)) is false.
+literal_alias_honest_channels.out:1356: RESULT not event(StandingReport(ABSENT,SUPERSEDED,k,t_3,a)) is false.
+literal_alias_honest_channels.out:1468: RESULT not event(StandingReport(ABSENT,NO_TERMINAL_DISPOSITION_EVIDENCE,k,t_3,a)) is false.
+literal_alias_honest_channels.out:1735: RESULT not event(StandingReport(ABSENT,ISSUANCE_REFUSED,k,t_3,a)) is false.
+literal_alias_honest_channels.out:1897: RESULT not event(StandingReport(ABSENT,STANDING_EVIDENCE_MISMATCH,k,t_3,a)) is false.
+literal_alias_honest_channels.out:1904: RESULT not event(ReasonCollapsed(p1_5,p2_5,r)) is true.
+literal_alias_honest_channels.out:2193: RESULT not event(Aliased(kX_3,t_3,tc,aid_2)) is false.
+literal_alias_honest_channels.out:2482: RESULT not event(Aliased(pk(skH1[]),authTuple(issuerIdAlias[],fp(pk(skH1[])),ssetH[],algH[],verH[]),authTuple(issuerId[],fp(pk(skH1[])),ssetH[],algH[],verH[]),h(attemptCore(authTuple(issuerId[],fp(pk(skH1[])),ssetH[],algH[],verH[]),sign((POSS,authTuple(issuerId[],fp(pk(skH1[])),ssetH[],algH[],verH[])),skH1[]),sign((BYTES,framed(OT_ATTEST,algH[],issuerId[],fp(pk(skH1[])),h(authTuple(issuerId[],fp(pk(skH1[])),ssetH[],algH[],verH[])),canonVerH[],pReview)),skH1[]),dReview)))) is false.

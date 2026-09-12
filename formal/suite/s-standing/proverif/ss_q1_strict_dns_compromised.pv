@@ -58,6 +58,37 @@
 (* unreachable attack; P8 injectivity, library h/fp idealization); and  *)
 (* anything about verdict values, waivers or policy inputs (P4).        *)
 (*                                                                      *)
+(* ADDENDUM 2026-09-12 (Amendment 5 §A5.6) — registered in              *)
+(* PREDICTIONS.md "Post-freeze addendum 1 — 2026-09-12"; ROUTED C10,    *)
+(* ADOPTED (author). Registered query SS.Q6: event Aliased is           *)
+(* UNREACHABLE; SS.Q1 (i)-(iv), the five vocabulary witnesses and B9    *)
+(* unchanged. Prediction: unreachable, terminating, SS.Q1 lines         *)
+(* unchanged (0.75); the alias fixture changes an SS.Q1 result =        *)
+(* divergence, most plausibly (i) (0.10); unexpectedly reachable =      *)
+(* defect in the new pattern (0.05); timeout (0.10). Box 30 min.        *)
+(* Companion: ss_q6_companion_alias_unchecked.pv (pin removed,          *)
+(* fixture kept).                                                       *)
+(*                                                                      *)
+(* This model ALSO proves: an ESTABLISHED report is computed only       *)
+(* against the authority tuple embedded in the core whose identity      *)
+(* it designates. BOUNDARY [CORRECTION 2026-09-12, cross-family review item 1]: the pin does MORE than gate ESTABLISHED alone — it is placed before the lineage lookup, so the lookup itself and the supersession (S2), refusal (S4), malformed and mismatch branches downstream of it are all conditioned on it (see the pin comment in the standing path below). *)
+(* This model ALSO does not prove: anything about two identities legitimately sharing one key; in particular it does NOT decide whether an issuer holding two identities on one key keeps one terminal lineage record or two — a single TLR under that key may still name cores from both (Amendment 5 §A5.6). *)
+(* [CORRECTION 2026-09-12, cross-family review item 8, citing Amendment 5 §A5.6 as signed: the pre-review text read "beyond their having separate lineages (Amendment 5 §A5.6)", which asserts a lineage policy §A5.6 expressly leaves undecided. That sentence is the one registered verbatim in the frozen *)
+(* PREDICTIONS.md "Header change registered" paragraph; the frozen plan and the signed amendment diverge there and the amendment governs. Comment-only; no verifier line changes. The divergence is recorded in RESULTS.md.] *)
+(*                                                                      *)
+(* Fixture extension (N2 on the new axis): one honestly enrolled        *)
+(* ALIAS tuple mAlias = authTuple(issuerIdAlias, fp(pk(skH1)),          *)
+(* ssetH, algH, verH) — the same key as m, a different identity —       *)
+(* evidenced by both channels exactly as m is, and published. H1        *)
+(* signs its TLR under m only. No other fixture change.                 *)
+(*                                                                      *)
+(* Consequence recorded AT REGISTRATION: the pin removes the A7         *)
+(* wrapper-shaped core (wrapCore) from THIS model's standing path —     *)
+(* such a presentation now produces no LINEAGE-DERIVED report (no mismatch, supersession or refusal report); the no-TLR report is unaffected. [CORRECTION 2026-09-12, cross-family review item 9: the pre-review text read "such a presentation now produces no report at all rather than a *)
+(* mismatch report", falsified by falsification-2026-09-12/scratch/wrap_routes.out:1944, where the noTLR branch still reports over a wrapCore core.] No registered witness needs it, and SS.Q2's *)
+(* companion, where the A7 wrapper transplant is registered and         *)
+(* exercised, is untouched.                                             *)
+(*                                                                      *)
 (* LOAD-BEARING checks — CORRECTION 2026-09-06 (cross-family review     *)
 (* items 4 and 25; reviewer single-removal matrix, falsification-       *)
 (* 2026-09-06/scratch/dependency-index.txt, line numbers cited): the    *)
@@ -108,6 +139,9 @@
 fun framed(bitstring, bitstring, bitstring, bitstring, bitstring, bitstring, bitstring): bitstring [data].
 free canonVerH: bitstring.
 free issuerId2: bitstring.          (* second honest issuer's identity (N2) *)
+(* ADDENDUM 2026-09-12 (Amendment 5 §A5.6): alias identity — the second     *)
+(* honestly enrolled tuple over H1's key (N2 on the new axis).              *)
+free issuerIdAlias: bitstring.
 
 (* honest issuer keys: private free names so queries can name their public keys *)
 free skH1: skey [private].
@@ -156,6 +190,11 @@ const PATH_S4: bitstring.
 free designCh: channel [private].   (* issuer -> judge : (key, shipped attempt identity) *)
 free estCh: channel [private].      (* standing path -> judge : (key, evidenced tuple, identity) *)
 free reasonCh: channel [private].   (* standing path -> reason judge : (branch, reason code) *)
+(* ADDENDUM 2026-09-12 (Amendment 5 §A5.6): estCh carries (kX, t, aid) and  *)
+(* NOT the core, and Established is an event no judge can read; so the       *)
+(* ESTABLISHED branch gains one more private report channel carrying the     *)
+(* core. estCh, reasonCh, Judge and ReasonJudge are untouched.               *)
+free aliasCh: channel [private].    (* standing path -> alias judge : (key, tuple, core, identity) *)
 
 event Designated(pkey, bitstring).
   (* honest issuer holding this key designated this DERIVED identity as shipped, before releasing the TLR *)
@@ -169,6 +208,10 @@ event HonestStandingEstablished(pkey, bitstring).
   (* judge: N1 witness — ESTABLISHED under an entitled key for an identity that key's holder designated *)
 event ReasonCollapsed(bitstring, bitstring, bitstring).
   (* reason judge: two different no-standing branches emitted the same reason code (B9) *)
+(* ADDENDUM 2026-09-12 (Amendment 5 §A5.6) *)
+event Aliased(pkey, bitstring, bitstring, bitstring).
+  (* alias judge: ESTABLISHED reported against a tuple that is not the tuple embedded *)
+  (* in the core the identity was derived from: key, presented tuple, core's tuple, identity *)
 
 (* --- queries ---------------------------------------------------------- *)
 
@@ -205,6 +248,11 @@ query k: pkey, t: bitstring, a: bitstring;
 (* B9: reason-code discrimination — two distinct no-standing branches with one code: must be UNREACHABLE *)
 query p1: bitstring, p2: bitstring, r: bitstring;
   event(ReasonCollapsed(p1, p2, r)).
+
+(* SS.Q6 (ADDENDUM 2026-09-12, Amendment 5 §A5.6): standing binds to the tuple in
+   the core — must be UNREACHABLE in the correct model; red on the alias companion. *)
+query kX: pkey, t: bitstring, tc: bitstring, aid: bitstring;
+  event(Aliased(kX, t, tc, aid)).
 
 (* --- authority channels (first link, selected form: transcription binding, digest) --- *)
 let AuthorityDNS(skD: skey, t: bitstring) =
@@ -274,7 +322,7 @@ fun lookup2(bitstring, bitstring): bitstring
 
 (* Terminal decision once the derived identity aid is found in the        *)
 (* lineage with per-entry disposition d.                                  *)
-let StandingDecide(kT: pkey, t: bitstring, aid: bitstring, d: bitstring, terminal: bitstring) =
+let StandingDecide(kT: pkey, t: bitstring, core: bitstring, aid: bitstring, d: bitstring, terminal: bitstring) =
   if terminal = TERM_REFUSED then
     ( event StandingReport(ABSENT, ISSUANCE_REFUSED, kT, t, aid);          (* S4 *)
       out(reasonCh, (PATH_S4, ISSUANCE_REFUSED)) )
@@ -284,7 +332,10 @@ let StandingDecide(kT: pkey, t: bitstring, aid: bitstring, d: bitstring, termina
           ( if d = DISP_SHIPPED then
               ( event Established(kT, t, aid);
                 event StandingReport(ESTABLISHED, TERMINAL_DISPOSITION_SHOWN, kT, t, aid);  (* S1 *)
-                out(estCh, (kT, t, aid)) )
+                (* ADDENDUM 2026-09-12: the alias report is emitted in parallel with the
+                   existing estCh report (S-P3 recut-1 idiom), so neither blocks the other *)
+                ( out(estCh, (kT, t, aid))
+                | out(aliasCh, (kT, t, core, aid)) ) )
             else
               (* carried: well-formedness (SC-3 / probe F1) *)
               event StandingReport(UNVERIFIABLE, STANDING_EVIDENCE_MALFORMED, kT, t, aid) )
@@ -319,11 +370,21 @@ let StandingPath(pkD: pkey, pkR: pkey) =
           let (=TLR, (lin: bitstring, terminal: bitstring, declT: bitstring)) = checksign(tlrSig, kT) in
             ( (* carried: the anchor proof presented is over the TLR presented (C-2 content) *)
               let anchorProof(=h(tlrSig)) = ap in
-                ( (* the derived identity is looked up in the lineage; absent -> mismatch *)
-                  let d = lookup2(aid, lin) in
-                    StandingDecide(kT, t, aid, d, terminal)
-                  else
-                    event StandingReport(ABSENT, STANDING_EVIDENCE_MISMATCH, kT, t, aid) )
+                ( (* ADDENDUM 2026-09-12 (Amendment 5 §A5.6) — THE TUPLE PIN. The presented
+                     tuple must be the tuple embedded in the core the identity is derived
+                     from, as the envelope path already checks: bind to what the verifier
+                     holds, not to what the presenter names (ENUMERATION note 4 item 2).
+                     Placed AFTER the se = noTLR test and the withTLR / entitled-key /
+                     TLR-signature branches and immediately before the lineage lookup, so
+                     no ABSENT or UNVERIFIABLE reason-code branch acquires a new precondition. [CORRECTION 2026-09-12, cross-family review item 10: false as written. The AGGREGATE vocabulary witnesses S1-S4 and STANDING_EVIDENCE_MISMATCH, quantified over free variables, are unaffected and stay reachable; but for an ALIAS presentation the
+                     lineage-derived reports SUPERSEDED, ISSUANCE_REFUSED and STANDING_EVIDENCE_MISMATCH DO acquire the pin as a new precondition — literal alias presentations that yielded them before now yield nothing: falsification-2026-09-12/scratch/alias_reasons_correct.out:2015,2023 against alias_reasons_companion.out:2604,2898. A checked consequence of the registered placement, not a defect.]
+                     No else branch: a core that is not an attemptCore over t now yields no lineage-derived report rather than a mismatch report; the noTLR report is unaffected (scratch/wrap_routes.out:1944). *)
+                  let attemptCore(=t, ppfS, sgS, declS) = core in
+                  ( (* the derived identity is looked up in the lineage; absent -> mismatch *)
+                    let d = lookup2(aid, lin) in
+                      StandingDecide(kT, t, core, aid, d, terminal)
+                    else
+                      event StandingReport(ABSENT, STANDING_EVIDENCE_MISMATCH, kT, t, aid) ) )
               else
                 event StandingReport(UNVERIFIABLE, STANDING_EVIDENCE_TEMPORAL_MISMATCH, kT, t, aid) )
           else
@@ -365,17 +426,31 @@ let ReasonJudge =
   in(reasonCh, (p2: bitstring, =r1));
   if p1 <> p2 then event ReasonCollapsed(p1, p2, r1).
 
+(* ADDENDUM 2026-09-12 (Amendment 5 §A5.6). Alias judge: INSTRUMENTATION, not a
+   verifier check. It reads the ESTABLISHED report's core off aliasCh, destructures
+   it, and fires when the tuple reported against is not the tuple embedded in that
+   core. It emits nothing when the core is not an attemptCore term (the let has no
+   else branch). Locals named apart from the library's names. *)
+let AliasJudge =
+  in(aliasCh, (kXA: pkey, tA: bitstring, coreA: bitstring, aidA: bitstring));
+  let attemptCore(tCoreA, ppfA, sgA, declA) = coreA in
+  if tA <> tCoreA then event Aliased(kXA, tA, tCoreA, aidA).
+
 process
   new skD: skey; new skR: skey;
   let m  = authTuple(issuerId,  fp(pk(skH1)), ssetH, algH, verH) in
   let m2 = authTuple(issuerId2, fp(pk(skH2)), ssetH, algH, verH) in
+  (* ADDENDUM 2026-09-12 (Amendment 5 §A5.6): the ALIAS tuple — H1's key under a
+     second, honestly enrolled identity, evidenced by both authority channels exactly as m
+     is, and published. NO issuer runs under it: H1 signs its TLR under m only. *)
+  let mAlias = authTuple(issuerIdAlias, fp(pk(skH1)), ssetH, algH, verH) in
   out(c, pk(skD)); out(c, pk(skR)); out(c, pk(skH1)); out(c, pk(skH2));
-  out(c, m); out(c, m2);
+  out(c, m); out(c, m2); out(c, mAlias);
   (* VARIANT: DNS channel compromised — its signing key is public *)
   out(c, skD);
-  ( !AuthorityDNS(skD, m)  | !AuthorityDNS(skD, m2)
-  | !AuthorityRepo(skR, m) | !AuthorityRepo(skR, m2)
+  ( !AuthorityDNS(skD, m)  | !AuthorityDNS(skD, m2)  | !AuthorityDNS(skD, mAlias)
+  | !AuthorityRepo(skR, m) | !AuthorityRepo(skR, m2) | !AuthorityRepo(skR, mAlias)
   | !ShipIssuer(skH1, issuerId, m)   | !RefuseIssuer(skH1, issuerId, m)
   | !ShipIssuer(skH2, issuerId2, m2) | !RefuseIssuer(skH2, issuerId2, m2)
   | !StandingPath(pk(skD), pk(skR)) | !EnvelopePath(pk(skD), pk(skR))
-  | !Judge | !ReasonJudge )
+  | !Judge | !ReasonJudge | !AliasJudge )

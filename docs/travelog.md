@@ -218,3 +218,68 @@ My rerun found both attack events unreachable and acceptance reachable—the ver
 I was able to engage in an in-depth conversation, reach a reasonable conclusion, share that with Claude.
 
 The challenge isn't my understanding of the project at high-level, it is the concern about specific details.  Dig in and things become clearer to me. Buttressing that with the actual proofs that held up under scrutiny tells me that this isn't a _hole_ it is a limitation in what we can guarantee.
+
+## September 12, 2026
+
+I haven't done a good job of keeping this up to date.  Last week we exhausted the subscription weekly quota due to injudicious use of Fable for a large heavy workflow, which interfered with ongoing work.  We've switched to using task-appropriate models and that seems to be using the subscription quota far more efficiently than before (at present we are sitting at 12% for weekly quota and 11% for the Fable quota, which is capped at half the weekly quota).
+
+Today has been going over everything, reviewing, revising, pressure testing.  The work is slow going because decisions are presented with historical context - useful, but making parsing it more complex.  One task that arose as a result of this is to build a "clean" design spec that can point at other artifacts but should be a complete, stand-alone document describing the design, with the why and graphic detail about how we got there kept separately.
+
+
+
+B
+B
+B
+B
+B
+B
+B
+B
+B
+B
+B
+B
+B
+B
+B
+B
+B
+B
+B
+B
+B
+B
+B
+B
+B
+A
+A
+A
+A
+A
+A
+A
+A
+A
+A
+A
+A
+A
+A
+A
+B
+B
+B
+B
+B
+B
+B
+B
+B
+B
+B
+B
+B
+B
+B
+I haven't done a great job of maintaining this, have I.  Last week we bumped into the token cap for the subscription, largely due to injudicious use of Fable model for everything in heavy workflows.   Since then we have switched to a more balanced approach and I 

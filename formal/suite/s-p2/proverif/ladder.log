@@ -2,11 +2,14 @@ sp2_q1_strict_dns_compromised rc=0 seconds=0 box=900
 sp2_q1_strict_repo_compromised rc=0 seconds=0 box=900
 sp2_q2_degraded_compromised rc=0 seconds=0 box=1800
 sp2_q3_companion_cardinality_ignored rc=0 seconds=0 box=900
-sp2_q4_companion_slot_unbound rc=0 seconds=1 box=900
+sp2_q4_companion_slot_unbound rc=0 seconds=0 box=900
 sp2_q5_c1_fponly_frame_mh rc=0 seconds=0 box=1200
 sp2_q5_c2_fponly_frame_nomh rc=0 seconds=0 box=1200
 sp2_q5_c3_manifestposs_frame_nomh rc=0 seconds=0 box=1200
+sp2_q2_degraded_compromised rc=0 seconds=1 box=900
+sp2_q6_companion_content_unchecked rc=0 seconds=0 box=900
 DONE
+# --- history carried forward (run_ladder.sh truncates this file; the notes below were appended by hand after earlier runs and are restored verbatim from pre-addendum-2026-09-12/ladder.log.pre) ---
 # recut 2026-09-06 (header/comment only, after the S-P2 skeptic review; model bodies unchanged; both .out byte-identical to the pre-edit run):
 sp2_q1_strict_dns_compromised rc=0 seconds=0 box=900 recut=header-only-2026-09-06 out=identical
 sp2_q1_strict_repo_compromised rc=0 seconds=0 box=900 recut=header-only-2026-09-06 out=identical
@@ -14,3 +17,4 @@ sp2_q1_strict_repo_compromised rc=0 seconds=0 box=900 recut=header-only-2026-09-
 sp2_q1_strict_dns_compromised rc=0 seconds=0 box=900 recut=comment-only-crossfamily-2026-09-06 out=identical
 sp2_q1_strict_repo_compromised rc=0 seconds=0 box=900 recut=comment-only-crossfamily-2026-09-06 out=identical
 sp2_q2_degraded_compromised rc=0 seconds=0 box=1800 recut=comment-only-crossfamily-2026-09-06 out=identical
+# post-freeze addendum 1 2026-09-12 (Amendment 5 §A5.4): the whole ladder was re-run after the Q2 BODY change (three equalities, contentCh, ContentJudge, Spliced) and with two appended entries — Q6 (the amended Q2 model, its own 900 s box, line 9 above) and Q6-C (sp2_q6_companion_content_unchecked, 900 s, line 10). The seven models whose .pv was not touched are BYTE-IDENTICAL to pre-addendum-2026-09-12/*.out; Q2's seven pre-existing RESULT lines are identical in text and moved to .out 378/384/390/397/561/778/1007 (were 354/360/366/372/536/756/987). Unregistered diagnostic d12 (diagnostics/) run the same day.

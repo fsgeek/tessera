@@ -20,6 +20,16 @@ run sp7_q4_control_opaque_twoversion     900  "(UNREGISTERED added control: opaq
 run sp7_q4_probe_degraded_twoversion     900  "(UNREGISTERED probe: mutated wrapper, degraded mode)"
 run sp7_q6a_companion_identity_outermost 900  "(Q6a companion; required red: Rescoped)"
 run sp7_q6b_companion_key_outermost      900  "(Q6b companion; required red: Rescoped AND InnerSigTransplanted)"
+# --- Post-freeze addendum 1 — 2026-09-12 (Amendment 5 §A5.5; PREDICTIONS.md
+# "Post-freeze addendum 1"). Registered boxes: Q7 15 min, Q7-C 15 min.
+# Q7 is a QUERY on the amended Q2 model file, not a new model: the line below
+# re-runs sp7_q2_degraded_compromised.pv under the REGISTERED Q7 box (900 s,
+# tighter than Q2's own 1800 s, so the tighter box governs the surviving .out).
+# ProVerif is deterministic here; the .out this second run writes is byte-identical
+# to the one the Q2 line above wrote (verified 2026-09-12, RESULTS.md addendum).
+# Placed before Q5/Q5c to keep the ordering rule at the head of this file.
+run sp7_q2_degraded_compromised           900 "(Q7, A5.5 addendum: VersionLied unreachable; re-run of the Q2 model under the registered Q7 box)"
+run sp7_q7_companion_version_unchecked    900 "(Q7-C companion; required red: VersionLied only)"
 run sp7_q5_depth2_correct                2700 "(Q5 correct, depth 2)"
 run sp7_q5c_companion_one_level_in       2700 "(Q5c companion; required red: RescopedD2 only)"
 echo DONE >> ladder.log

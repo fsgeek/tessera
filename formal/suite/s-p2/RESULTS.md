@@ -598,3 +598,328 @@ identical sentence in this file's Produced ledger entry 1 (line 288),
 which restates the plan's wording for consumers (the capstone, S-P1,
 S-P7); both copies stand or are corrected together. Nothing has been
 changed in either on the collaborator's own motion.
+
+---
+
+## Post-freeze addendum 1 — results, 2026-09-12
+
+**STATUS: PROPOSED — 2026-09-12 — produced by the AI collaborator; not
+adopted; the commit is the author's.** This section is appended, not
+edited in: no sentence above it is changed. It records the run of the
+addendum registered at the end of `PREDICTIONS.md` ("Post-freeze
+addendum 1 — 2026-09-12: common attested content", Amendment 5 §A5.4,
+ROUTED C8, ADOPTED (author) reading (a)). Tooling as above (ProVerif
+2.05, `-lib formal/suite/lib/tessera_theory.pvl`); the whole ladder —
+now ten entries — was re-run by `run_ladder.sh` in one pass
+(`ladder.log`, entries 1–10 plus the restored history block). Every
+run terminated in ≤ 1 s against 900–1800 s boxes; no `.out` contains
+"cannot be proved"; no warnings; no recut.
+
+### What changed in the model
+
+`sp2_q2_degraded_compromised.pv` gained the registered encoding, and
+nothing else:
+
+- **Three equalities in `Verifier2S`** (lines 228, 229, 230, under the
+  marked comment at 225–227), placed after both frames are
+  destructured and both manifest-hash checks pass: `if ota = otb then`,
+  `if cva = cvb then`, `if pla = plb then`. Each signer's frame keeps
+  its own `=fp(kX)` (221, 223). `Verifier1S` is untouched.
+- **One new private report channel** `contentCh` (157), declared like
+  the other report channels, emitted **at the single `Accept2S` point**
+  in parallel with the existing reports (235, inside the report block
+  232–235). `setCh`, `slotCh` and `acceptCh` and their outputs are
+  untouched.
+- **`event Spliced(bitstring, bitstring, bitstring)`** (160) and the
+  registered query (164–165, the file's two-line query style):
+  `query t: bitstring, fa: bitstring, fb: bitstring; event(Spliced(t,
+  fa, fb)).` Every pre-existing query is carried **verbatim** and in
+  its original order; the new one is appended after them.
+- **`ContentJudge`** (275–284): reads `contentCh`, destructures both
+  frames, fires `Spliced(tJ, faJ, fbJ)` when any of object type,
+  canonicalization version or payload differs, and emits nothing
+  otherwise. Judge locals are `…J`-suffixed (no library-name
+  shadowing, the S-P3 rule). Added to the process at 299.
+- **Header**: an `ADDENDUM 2026-09-12 (Amendment 5 §A5.4)` comment
+  block at **51–70**, placed immediately after the existing claim
+  block and before the `CORRECTION 2026-09-06` marker, carrying the
+  two registered sentences — added to "This model proves": for
+  required sets of two, the accepted frames agree on object type,
+  canonicalization version and payload (Amendment 5 §A5.4); added to
+  "This model does not prove": nothing about the encoding or ordering
+  of the equal fields (P8). The block is not interleaved with the
+  existing text, and the CORRECTION RECORD footer stays where it is
+  (now 301–342).
+
+`sp2_q6_companion_content_unchecked.pv` (new, 244 lines) is that file
+with the three equalities **absent** — the n = 2 verifier exactly as it
+stood — marked `MUTATION (Q6-C)` at 173–175, its own claim block at
+1–41, and no CORRECTION RECORD footer (the other five companions carry
+none either). Its body is otherwise line-for-line the amended Q2 body:
+`diff` of amended Q2 94–299 against companion 43–244 shows exactly the
+six-line-for-three-line mutation hunk and nothing else.
+
+`run_ladder.sh` gained two entries after Q5-C3: `run
+sp2_q2_degraded_compromised 900` (Q6 **is** the amended Q2 model; it is
+re-run under its own registered 15-minute box and rewrites the same
+`.out`) and `run sp2_q6_companion_content_unchecked 900` last.
+
+### Predictions vs observed
+
+| Query | Model | Registered prediction (p) | Observed | Outcome / branch fired |
+|---|---|---|---|---|
+| Q6 common attested content, correct model, degraded, sole channel compromised | `sp2_q2_degraded_compromised` (amended in place) | `Spliced` unreachable, terminating, Q2 lines unchanged (0.80); unexpectedly reachable = model defect (0.08); Q2 results changed = divergence (0.07); timeout (0.05) | `Spliced` **unreachable** (`.out` 1013); `Stripped`, `SignerForged`, `SetAltered`, `Reattributed` unreachable (378, 384, 390, 397); both N1 witnesses reachable (561, 778); carried `HonestAccepted` reachable (1007); `rc=0`, 1 s against a 900 s box | **unreachable, terminating, Q2 results unchanged — as predicted** (0.80 branch) |
+| Q6-C content-splicing companion | `sp2_q6_companion_content_unchecked` | `Spliced` reachable with exactly the registered shape, no cryptographic step (0.85); recut needed (0.08); companion green (0.04); timeout (0.03) | `Spliced` **reachable** (`.out` 1213; goal 1017, derivation 1019–1181, trace 1187–1211); `Stripped`, `SignerForged`, `SetAltered`, `Reattributed` unreachable (372, 379, 386, 393); witnesses reachable (558, 779, 1011); `rc=0`, 0 s against a 900 s box | **violation as required** (0.85 branch); red on exactly `Spliced`; **no recut** — but the *exhibited* instance is not the plan's named instance (F9 below), so the "exactly that shape" half of the 0.85 branch is qualified, not claimed |
+
+### RESULT lines, verbatim
+
+Q6 — `proverif/sp2_q2_degraded_compromised.out`:
+
+```
+378:RESULT not event(Stripped(t_2,v)) is true.
+384:RESULT not event(SignerForged(t_2,k)) is true.
+390:RESULT not event(SetAltered(kH_2,m,t_2)) is true.
+397:RESULT not event(Reattributed(kX_1,kH_2,fb_4)) is true.
+561:RESULT not event(HonestComplete(authTuple(issuerId[],fp(pk(skA1[])),signers0,algH[],verH[]),verified1(k1))) is false.
+778:RESULT not event(HonestComplete(authTuple(issuerId2[],fp(pk(skA2[])),signers1(fp(pk(skB2[]))),algH[],verH[]),verified2(k1,k2))) is false.
+1007:RESULT not event(HonestAccepted(k,fb_4)) is false.
+1013:RESULT not event(Spliced(t_2,fa_2,fb_4)) is true.
+```
+
+Q6-C — `proverif/sp2_q6_companion_content_unchecked.out`:
+
+```
+372:RESULT not event(Stripped(t_2,v)) is true.
+379:RESULT not event(SignerForged(t_2,k)) is true.
+386:RESULT not event(SetAltered(kH_2,m,t_2)) is true.
+393:RESULT not event(Reattributed(kX_1,kH_2,fb_4)) is true.
+558:RESULT not event(HonestComplete(authTuple(issuerId[],fp(pk(skA1[])),signers0,algH[],verH[]),verified1(k1))) is false.
+779:RESULT not event(HonestComplete(authTuple(issuerId2[],fp(pk(skA2[])),signers1(fp(pk(skB2[]))),algH[],verH[]),verified2(k1,k2))) is false.
+1011:RESULT not event(HonestAccepted(k,fb_4)) is false.
+1213:RESULT not event(Spliced(t_2,fa_2,fb_4)) is false.
+```
+
+### The companion's trace, against the registered shape
+
+The registered prediction named the trace: *honest signers A2 and B2 of
+manifest `m2`, each fed a different adversary-chosen payload, both
+frames presented under one tuple, `Accept2S` fires.* The exhibited
+trace (`.out` 1187–1211) has the right **structure** and the wrong
+**instance**. Structure: one adversary input to the n = 2 branch at
+`{75}` carrying one tuple, two keys, two possession proofs over that
+tuple, two attestation signatures and two frames; both frames carry the
+same object type and canonicalization version and the **same manifest
+hash** `h(t)`, and differ only in the payload field; `event Accept2S`
+fires once at `{88}` (1205), the single `contentCh` report goes out at
+`{94}` and is received at `{124}` (1207), and `event Spliced` fires at
+`{128}` (1209). The only cryptographic step in the whole trace is the
+channel evidence forged with the leaked `skS` published at `{10}`
+(1201) — no `dsks`, no forgery, nothing the Dolev–Yao attacker does not
+already hold. Instance: the tuple is `authTuple(a, fp(pk(a_1)),
+signers1(fp(pk(a_2))), a_3, a_4)` and both slots are filled by
+**adversary-generated keys** `a_1`, `a_2`, not by the honest `skA2` and
+`skB2` — ProVerif exhibited the cheapest witness, which is the
+registered degraded-mode impersonation cost (A4 §A4.6) carrying the
+splice, rather than the honest-signer splice the plan named.
+
+**F9 — the registered instance is reachable too; ProVerif exhibited a
+cheaper one.** Recorded, not absorbed: this is the same shape as F3
+(Q5-C2's exhibited witness differed from the plan's named witness), and
+it is handled the same way, by an unregistered diagnostic rather than
+by changing anything registered. **d12**
+(`proverif/diagnostics/d12_q6c_registered_witness.pv`, box 900 s,
+`diagnostics.log`) is Q6-C plus one extra query naming the registered
+instance literally — `Spliced(m2, framed(OT_ATTEST, algH, issuerId2,
+fp(pk(skA2)), h(m2), canonVerH, pla), framed(OT_ATTEST, algH,
+issuerId2, fp(pk(skB2)), h(m2), canonVerH, plb))`. It is **reachable**:
+
+```
+1428:RESULT not event(Spliced(authTuple(issuerId2[],fp(pk(skA2[])),signers1(fp(pk(skB2[]))),algH[],verH[]),framed(OT_ATTEST,algH[],issuerId2[],fp(pk(skA2[])),h(authTuple(issuerId2[],fp(pk(skA2[])),signers1(fp(pk(skB2[]))),algH[],verH[])),canonVerH[],pla_2),framed(OT_ATTEST,algH[],issuerId2[],fp(pk(skB2[])),h(authTuple(issuerId2[],fp(pk(skA2[])),signers1(fp(pk(skB2[]))),algH[],verH[])),canonVerH[],plb_1))) is false.
+```
+
+Its trace (d12 `.out` 1362–1426; query 1214, derivation 1221–1356) is
+exactly the registered shape: honest A2 takes payload `a_2` at `{38}`,
+self-signs `m2` and frames and signs those bytes (1388–1396); honest
+B2 takes a *different* payload `a_6` at `{50}` and does the same
+(1408–1416); the adversary forges the channel evidence for `m2` with
+the leaked `skS` and presents both honest possession proofs, both
+honest attestation signatures and both honest frames in one input at
+`{75}` (1418); `Accept2S` fires (1420), the one `contentCh` report is
+read (1422), and `Spliced(m2, fa, fb)` fires (1424). No cryptographic
+step: every honest signature is replayed as the honest signer
+published it. So the registered shape is present in Q6-C and is what
+the amended verifier's three equalities close; d12 is an unregistered
+diagnostic and is evidence about the trace, never about a registered
+query.
+
+Because Spliced is unreachable in Q6 with the honest instance reachable
+in Q6-C, the three equalities are **load-bearing for `Spliced`** and
+that is the severing pair the addendum registered. Nothing else in
+Q6-C's result set moved, so the equalities are also shown not to be
+load-bearing for any other query.
+
+### The eight-model comparison
+
+Required by the addendum: "the ladder outcomes in `RESULTS.md` for
+Q1–Q5 must be identical after the change below, and any difference is a
+divergence to be recorded, never absorbed." The eight pre-existing
+`.out` files were copied to `proverif/pre-addendum-2026-09-12/`
+(together with `ladder.log.pre`) **before** the run, so the comparison
+is on the record.
+
+- **Seven models byte-identical** (`cmp`): `sp2_q1_strict_dns_compromised`,
+  `sp2_q1_strict_repo_compromised`, `sp2_q3_companion_cardinality_ignored`,
+  `sp2_q4_companion_slot_unbound`, `sp2_q5_c1_fponly_frame_mh`,
+  `sp2_q5_c2_fponly_frame_nomh`, `sp2_q5_c3_manifestposs_frame_nomh`.
+  Their `.pv` files were not touched. Every `.out` line citation into
+  them anywhere in this file and in `READING-AIDS.md` still resolves
+  unchanged.
+- **Q2's seven pre-existing RESULT lines are identical in text**
+  (`diff` of the RESULT lines with line numbers stripped: empty) and
+  moved in the `.out` because the model file grew: 354→378, 360→384,
+  366→390, 372→397, 536→561, 756→778, 987→1007. The eighth RESULT line
+  (1013, `Spliced`) is the new one. Every `.out` line citation to Q2 in
+  the "Ladder outcomes" table above, in the F-findings and in
+  `READING-AIDS.md` §1c must be read against the new numbers; the old
+  numbers are not corrected in place.
+- **No divergence.** No registered query, prediction, companion,
+  fixture, timebox or judge above this section changed; nothing was
+  absorbed.
+
+### Line-shift table (Q2 model body and header)
+
+The Q2 `.pv` went from 291 to 342 lines. `RESULTS.md`, `READING-AIDS.md`
+and the archived Codex review (`G.pv:N`) cite its **body** line
+numbers; those citations are **not** corrected in place. Resolve any
+pre-2026-09-12 citation `N` into
+`sp2_q2_degraded_compromised.pv` with this table (verified line by line
+against `git show HEAD:…/sp2_q2_degraded_compromised.pv`):
+
+| Old lines | Shift | New lines | What the segment is |
+|---|---|---|---|
+| 1–50 | **+0** | 1–50 | STATUS, prediction, claim / does-not-prove / load-bearing / carried block — **every existing header citation into 14–27, 28–38, 39–47, 48–50 is unchanged** |
+| — | — | 51–70 | **new**: the `ADDENDUM 2026-09-12` header block (20 lines) |
+| 51–132 | **+20** | 71–152 | `CORRECTION 2026-09-06` marker (51→71), Theory (54→74), Fixture N2 (62→82), Encoding idioms (68→88), Run (72→92), declarations, events, and all seven existing queries (112–132 → 132–152) |
+| — | — | 153–165 | **new**: the addendum declaration block (13 lines: `contentCh` 157, `event Spliced` 160, the `Spliced` query 164–165) |
+| 133–191 | **+33** | 166–224 | `AuthorityS` (134→167), `Registrar` (139–140→172–173), `Signer` (146–155→179–188), `Verifier1S` (158–172→191–205), `Verifier2S` head through `if mhb = h(t)` (175–191→208–224) |
+| — | — | 225–230 | **new**: the three equalities and their comment (6 lines) |
+| 192–195 | **+39** | 231–234 | `event Accept2S` (192→231) and the first three report outputs |
+| — | — | 235 | **new**: `\| out(contentCh, (t, fa, fb)) ).` — old line 195 was split, its closing `).` now sits here |
+| 196–233 | **+40** | 236–273 | `SetJudge` (201–214→241–254), `MemberJudge` (220–226→260–266), `Judge` (229–233→269–273) |
+| — | — | 274–284 | **new**: `ContentJudge` and its comment (11 lines) |
+| 234–291 | **+51** | 285–342 | `process` (235→286), the parallel composition (248→299, edited in place to add `\| !ContentJudge`), and the CORRECTION RECORD footer (250–291→301–342) |
+
+Two lines were edited in place rather than shifted: old 195 (the third
+report line, split to carry `contentCh`) and old 248 (the process's
+parallel composition, which gained `| !ContentJudge`). The CORRECTION
+RECORD footer's own internal citations (to body lines 146–155, 165,
+166, 167, 168, 184–191, 220–226, 245–246) are citations *into this
+file* and are subject to the same table; they were **not** rewritten,
+per amend-don't-rewrite.
+
+`ladder.log` is truncated by `run_ladder.sh` on every run, so the
+hand-appended history from 2026-09-06 (the two `recut=` blocks) was
+restored verbatim from `pre-addendum-2026-09-12/ladder.log.pre` under a
+marked "history carried forward" line, followed by a dated note for
+this run.
+
+### Ledger
+
+**Produced entry 1 is now read with §A5.4's meaning.** Its restated
+plan sentence — "acceptance for manifest `m` implies a signature over
+the exact framed bytes from every signer `m`'s signed set names, each
+under that signer's own key, for |set| ≤ 2" (this file's Produced entry
+1, line 288) — is read as Amendment 5 §A5.4 registers it: **every
+required signer's frame over the same content, in its own frame.** The
+six non-fingerprint fields agree across signer slots; only the
+key-fingerprint field differs. Three of the six (algorithm, identity,
+manifest hash) are carried by the shared tuple and were already pinned;
+the other three (object type, canonicalization version, payload) are
+what the verifier now checks. **No ledger entry is altered here** — not
+Produced entry 1, not the `PREDICTIONS.md` copy of the same sentence,
+neither of which the collaborator touches; this paragraph records the
+reading, as the addendum's "Ledger" paragraph asks. The severing
+companion for the common-content half of entry 1 is Q6-C; the residual
+Layer-2 items are unchanged, plus one addition: the equalities are term
+equality standing in for byte equality (the `h`/`fp` idealization note
+of Consumed entry 3), so "same content" here means *same term*, and P8
+still owes the encoding and ordering of the equal fields.
+
+The "**Pending author ruling (ROUTED C8)**" paragraph at the end of the
+review log above is **not edited**. It is now historically superseded
+by the author's ruling recorded in Amendment 5 §A5.4 (ADOPTED (author),
+reading (a)), and the fork it describes is resolved in favour of the
+first limb: the verifier gained the equality across signer slots and
+S-P2 gained a splicing companion, "both recorded as a post-freeze,
+unregistered addition" — which is what this section is. The second
+limb (correcting the plan's exported sentence to per-slot frames) is
+therefore not taken, and neither copy of the sentence is corrected.
+
+### Status toward discharge — **unchanged**
+
+**This section changes nothing about the tracker row.** P2's row stays
+`open`, exactly as the "Status toward discharge" section above leaves
+it. That section's recommendation — that the row stays `open` until the
+author has read the narrowed headers (ROUTED C5) and ruled on ROUTED
+C8 — is now half discharged and half not: ROUTED C8 **is** ruled
+(Amendment 5 §A5.4, reading (a)), and this addendum implements the
+ruling; the **author's C5 read is still owed** (the request is
+`formal/suite/READ-C5-2026-09-12.md`), and the addendum has just added
+a block to the Q2 header — the 51–70 block — which was not in the text
+the C5 read was requested against. Tool passes are still yes on every
+registered query, both N1 witnesses are still reachable in every model,
+every companion is still red on exactly its named query, and Q6-C joins
+them. None of that moves the row: the row is the author's, `checked`
+still additionally needs the TLA+ leg's agreement per B2's analogue,
+and the cross-family falsification review has not been re-run against
+the amended model (it reviewed the pre-addendum body; the three
+equalities, `contentCh`, `ContentJudge` and `Spliced` are unreviewed by
+a non-author model). Recorded as an open obligation, not as a finding.
+
+## Cross-family review 2026-09-12 — dispositions applied
+
+Source: `docs/reviews/2026-09-12-codex-falsification-amendment-5-checks.md`
+(OpenAI Codex CLI, `gpt-6-astra`, non-author; scratch under
+`proverif/falsification-2026-09-12/scratch/`). **No S-P2 file was
+changed by this pass**; the review found no overclaim in this family.
+The open obligation recorded at the end of the section above — that
+the cross-family falsification review had not been run against the
+amended model — is hereby **discharged**.
+
+**1 — no overclaim in the Q2/Q6 header.** Checked: the ADDENDUM block's
+bounded term-equality claim and its explicit encoding exclusion
+(`sp2_q2_degraded_compromised.pv:54–59`) say no more than the verifier
+does, and this file's §on the companion distinguishes the generic
+attacker-key trace from the honest-instance diagnostic
+(`RESULTS.md:704–752`; `proverif/diagnostics/d12_q6c_registered_witness.out:1428`).
+No change.
+
+**2 — the three new equalities are individually load-bearing, and the
+witnesses are intact.** Confirmed from the reviewer's single-removal
+matrix: removing `ota = otb`, `cva = cvb` or `pla = plb` alone each
+turns exactly one query — `Spliced` — red, with every pre-existing
+polarity unchanged (`falsification-2026-09-12/scratch/matrix.txt:1–3`;
+`no_type.out:1213`, `no_version.out:1213`, `no_payload.out:1213`). The
+committed witnesses M1, M2 and the carried honest acceptance stay
+reachable (`sp2_q2_degraded_compromised.out:561,778,1007`), and the
+companion is red on `Spliced` only (`sp2_q6_companion_content_unchecked.out:1213`,
+with `Stripped`/`SignerForged`/`SetAltered`/`Reattributed` green at
+`:372,379,386,393`). Attacks that keep the verifier intact did not
+break it: wrong slot fingerprints, nested-payload difference and
+unequal accepted manifest hashes are all unreachable
+(`field_attacks.out:1279,1530`; `second_manifest.out:1648,1412`).
+Confirmations; no change.
+
+**3 — the reviewer's verdict on the §A5.4 reading (a), noted.** The
+reviewer's design reading, recorded here as a note and **not** as an
+action: reading (a) is coherent as agreement on *one* canonical
+representation, and it deliberately **rejects mixed-version bundles** —
+a relying party presenting A's version-V frame beside B's frame
+re-canonicalized under V′ is rejected by the new version equality
+(`sp2_q2_degraded_compromised.pv:229–230`), or earlier by the signature
+check if B's bytes were altered under B's old signature (`:219–220`).
+Any policy that would *accept* cross-version semantic equivalence would
+need its own registered design decision: Amendment 5 §A5.4 does not
+grant it, and the P8 exclusion carried in the header
+(`.pv:58–59`) is an exclusion of encoding and ordering obligations, not
+an authorization to accept them as equivalent. **No action.**

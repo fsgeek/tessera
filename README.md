@@ -20,7 +20,7 @@ to refuse.
 
 Tony Mason  
 Initiated 10 June 2026  
-This README reflects the repository as of 4 September 2026 (Band 0 — the formal foundation, H0). Status refreshed by the AI collaborator under the July delegation; the credibility line and reading order are the author's.
+This README reflects the repository as of 12 September 2026 (Band 0 — the formal foundation, H0). Status refreshed by the AI collaborator under the July delegation; the credibility line and reading order are the author's.
 
 ---
 
@@ -52,12 +52,12 @@ The method is as load-bearing as the artifact:
 
 ---
 
-## Current status (4 September 2026)
+## Current status (12 September 2026)
 
 | Layer | Status |
 |-------|--------|
-| Phase 0 pre-registration | Signed and amended (Amendments 1–3 in force; A3 adopted 2026-08-08/09 after a four-model cold panel; the 2026-08-29 author clarification records that "before any code" means code intended for the service) |
-| Band 0 formal models | Active — TLA+ (P4, P5/P6, P5c issuance, bridge, floor-structure probe); ProVerif first-link spike complete, mechanism **decided** 2026-08-13 (transcription binding, `formal/spike/first-link/DECISION.md`); symbolic suite enumerated (PROPOSED, `formal/suite/`); standing-evidence mechanism **decided** 2026-08-31, entered 2026-09-04 (terminal lineage record, anchored; `formal/spike/standing-probe/DECISION.md`); S-STANDING model owed before Band 0 exit |
+| Phase 0 pre-registration | Signed and amended (Amendments 1–6 in force; A3 adopted 2026-08-08/09 after a four-model cold panel; A4 signed 2026-09-06 at `5188e7a`, precision repairs and discharge paths; A5 signed 2026-09-12 at `504e662`, the probe and cross-family findings: three verifier obligations, the waived-evidence reading, the §A4.6 boundary; A6 adopted 2026-09-12, P7's discharge path, signed at the commit carrying it; the 2026-08-29 author clarification records that "before any code" means code intended for the service) |
+| Band 0 formal models | Active — TLA+ (P4, P5/P6, P5c issuance, bridge, floor-structure probe; non-discharging P9/P10 probes); ProVerif first-link spike complete, mechanism **decided** 2026-08-13 (`formal/spike/first-link/DECISION.md`); symbolic suite **built and run**: S-P3, S-P1, S-P2, S-P7, S-STANDING (`formal/suite/`), each cross-family reviewed by a non-author model, headers read by the author 2026-09-12; tracker: P1–P7 and P10 `checked` (P7 on Amendment 6), P8 and P9 open, standing row added `open` (Band 0 exit gated on it); capstone composition and P8 not begun |
 | Named residual | The author has recorded (2026-08-29) that the first-link decision rests on symbolic results he cannot yet defend cold; accepted, not waived, with closing conditions |
 | Cloud-independent crypto core | Not yet frozen (gated on Band 0) |
 | LocalStack / AWS vertical slice | Not started |

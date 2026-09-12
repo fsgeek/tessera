@@ -17,4 +17,10 @@ run sp2_q4_companion_slot_unbound 900
 run sp2_q5_c1_fponly_frame_mh 1200
 run sp2_q5_c2_fponly_frame_nomh 1200
 run sp2_q5_c3_manifestposs_frame_nomh 1200
+# Post-freeze addendum 1 (2026-09-12, Amendment 5 §A5.4; PREDICTIONS.md).
+# Q6 is the AMENDED Q2 model itself (the three equalities, contentCh, ContentJudge,
+# Spliced): re-run here under Q6's own registered 15-min box; it writes the same .out.
+run sp2_q2_degraded_compromised 900
+# Q6-C, the content-splicing companion, last.
+run sp2_q6_companion_content_unchecked 900
 echo DONE >> ladder.log

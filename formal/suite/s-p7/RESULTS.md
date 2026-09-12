@@ -906,3 +906,383 @@ been changed pending the ruling.
   if written, it belongs there as a dated PROPOSED appended amendment
   note in the COVERAGE-MAP row-8 pattern, never as a rewrite. Still no
   author read.
+
+---
+
+## Post-freeze addendum 1 — results, 2026-09-12
+
+**STATUS: PROPOSED — 2026-09-12 — produced by the AI collaborator; not
+adopted; the commit is the author's.** This section is APPENDED: no
+sentence above it is edited, and no registered prediction, query,
+judge, companion or verdict above is altered. It records the runs of
+the two queries registered in `PREDICTIONS.md`, "Post-freeze addendum 1
+— 2026-09-12" (Amendment 5 §A5.5; ROUTED C9, ADOPTED (author)): **Q7**,
+on `sp7_q2_degraded_compromised.pv` amended in place, and **Q7-C**, the
+new companion `sp7_q7_companion_version_unchecked.pv`. Tooling and
+library unchanged (ProVerif 2.05, `-lib
+formal/suite/lib/tessera_theory.pvl`; the library was not touched).
+The pre-change `.out` files and the pre-change `ladder.log` are
+archived verbatim under `proverif/pre-addendum-2026-09-12/`.
+
+### What was changed in the model
+
+`sp7_q2_degraded_compromised.pv`, exactly the registered encoding:
+
+1. `versionCh` declared (`.pv` 188–190) — a **new** private channel, not
+   a second reader on `scopeCh`, so `ScopeJudge`'s pairing is untouched.
+2. `event VersionLied(bitstring, bitstring, bitstring)` (`.pv` 208–210)
+   — wrapper bytes, recorded inner version, actual inner version.
+3. Query Q7 (`.pv` 230–233), appended **after** the six existing
+   queries, which are byte-unchanged and keep their order.
+4. The equality, **inside `VerifierWrapped`** (`.pv` 326–330): after
+   `if mhW = h(tW) then` (325) and before `event AcceptOuter` (331),
+   `let framed(otIv, algIv, idIv, kfpIv, mhIv, =cvIw, plIv) = fbI in`
+   — `fbI` re-destructured from the `wrap()` pattern already in scope at
+   324, with `=cvIw` in the canonicalization-version position.
+   Rejection on mismatch, per §A5.5. **`InnerCheck` (`.pv` 291–304),
+   `VerifierBase` (307–309) and the base path are byte-unchanged.**
+5. `out(versionCh, (fbW, cvIw, fbI))` (`.pv` 333), in the parallel
+   block with `out(typeCh, …)` and the `InnerCheck` call, i.e. **after**
+   the new guard (S-P3 recut-1 idiom).
+6. `VersionJudge` (`.pv` 360–367) and `| !VersionJudge` (386).
+
+`sp7_q7_companion_version_unchecked.pv` is that model with item 4
+absent (its four comment lines replaced by a `MUTATION` marker at
+`.pv` 222–227) and its own companion header (1–57); everything else,
+`versionCh` and `VersionJudge` included, is line-for-line the amended
+Q2 model.
+
+### Header change (registered)
+
+The Q2 claim block (`.pv` 1–126) is **unedited**, CORRECTION lines and
+all. The two registered sentences were added as a separately marked
+block at `.pv` 128–161, opening `ADDENDUM 2026-09-12 (Amendment 5
+§A5.5…)` and placed immediately after it: under *This model ALSO
+proves*, that on the wrapped path the wrapper's recorded inner
+canonicalization version equals the inner frame's own; under *does NOT
+prove*, that either version is supported or that the inner bytes were
+produced under it (P8/H1a). The block also records that the existing
+"carried, not load-bearing … checked only for presence" line (`.pv`
+60–62) stands as written for `cvI`, `cvW` and the base path and is
+narrowed by the addendum for `cvIw` on the wrapped path only.
+
+### Predictions vs observed
+
+| Query | Registered prediction (`PREDICTIONS.md` addendum) | Observed | Outcome / branch fired |
+|---|---|---|---|
+| **Q7** — `VersionLied` unreachable in the amended Q2 model; Q2's three results and witnesses unchanged | unreachable, terminating, Q2 lines unchanged (**0.80**); unexpectedly reachable = defect in the new equality (0.07); Q2 changed by the addition = divergence (0.08); timeout (0.05). Box 15 min | `VersionLied` **unreachable** (`.out` 1074); `TypeConfused` 527, `Rescoped` 540, `InnerSigTransplanted` 553, `Reattributed` 566 all unreachable; `HonestWrappedAccepted` reachable (579, 865), `HonestAccepted` reachable (878, 1061). 1 s against a 900 s box | **termination, as predicted — the 0.80 branch.** Every pre-existing RESULT line text-identical (see "Comparison") |
+| **Q7-C** — the equality removed | reachable **with the registered honest-wrapper shape**, no cryptographic step (**0.85**); recut (0.08); companion green (0.04); timeout (0.03). Box 15 min. Red on exactly `VersionLied` | `VersionLied` **reachable** (1075, 1301); `TypeConfused` 525, `Rescoped` 538, `InnerSigTransplanted` 551, `Reattributed` 564 unreachable; `HonestWrappedAccepted` (577, 866) and `HonestAccepted` (879, 1062) reachable. 1 s against a 900 s box | **red on exactly `VersionLied`, as required, and no cryptographic step — but the exhibited trace is the UNREGISTERED second shape, not the registered one.** Reachability and the red/green pattern are as the 0.85 branch predicts; the *shape* clause of that branch did not land. Recorded, not absorbed (below) |
+
+No `exit 124`; no TIMEOUT outcome anywhere in the ladder; no ProVerif
+warning in either `.out`.
+
+### Verbatim RESULT lines
+
+`proverif/sp7_q2_degraded_compromised.out` (Q7 is the last):
+
+```
+527:RESULT not event(TypeConfused(otS_1,otA_1,fb)) is true.
+540:RESULT not event(Rescoped(kX_1,idX_1,kH_3,idH_1,fb)) is true.
+553:RESULT not event(InnerSigTransplanted(kX_1,s)) is true.
+566:RESULT not event(Reattributed(kX_1,kH_3,fb)) is true.
+865:RESULT not event(HonestWrappedAccepted(kH_3,fb,kW_3)) is false.
+1061:RESULT not event(HonestAccepted(k,fb)) is false.
+1074:RESULT not event(VersionLied(fbWq,cvRec,cvAct)) is true.
+```
+
+`proverif/sp7_q7_companion_version_unchecked.out`:
+
+```
+525:RESULT not event(TypeConfused(otS_1,otA_1,fb)) is true.
+538:RESULT not event(Rescoped(kX_1,idX_1,kH_3,idH_1,fb)) is true.
+551:RESULT not event(InnerSigTransplanted(kX_1,s)) is true.
+564:RESULT not event(Reattributed(kX_1,kH_3,fb)) is true.
+866:RESULT not event(HonestWrappedAccepted(kH_3,fb,kW_3)) is false.
+1062:RESULT not event(HonestAccepted(k,fb)) is false.
+1301:RESULT not event(VersionLied(fbWq,cvRec,cvAct)) is false.
+```
+
+### The companion trace, checked against the registered shape
+
+**It is the unregistered second shape, not the registered one.** The
+registered shape is an *honest* `Wrapper` process (`skW1`, `skW2` or
+`skI1`-as-wrapper) handed an honest inner `(fbI, sgI)` off the public
+channel together with an adversary-chosen `cvIw ≠ cvI`, framing and
+signing honestly, and `VerifierWrapped` accepting. What ProVerif
+exhibited (`.out` 1075–1300) is the second shape the registration
+named and set aside: the adversary mints the **whole** wrapper. Reading
+the derivation: `attacker(k)` is a hypothesis (step 21), the wrapper
+frame is `framed(OT_WRAPPER, algW_1, idW_6, fp(pk(k)), h(authTuple(idW_6,
+fp(pk(k)), …)), cvW_4, wrap(cvRec, (framed(otJv_1, …, cvAct, plJv_1),
+sgI_4)))` built by the attacker (step 28) and signed under its own `k`
+(step 31); the possession proof is its own self-signature (34); the
+channel evidence is minted with the public `skS[]` (35–38, the
+degraded-mode `out(c, skS)` at `.pv` 379, shown in the trace as `{19}`);
+the package is delivered to `VerifierWrapped`'s input `{135}`,
+`AcceptOuter` fires at `{143}`, `versionCh` is written at `{145}` and
+read by `VersionJudge` at `{183}`, and `VersionLied` fires at `{186}`
+under `cvRec ≠ cvAct`. **No honest process appears in the trace at
+all** — not only is the wrapper the adversary's, the inner frame and
+its signature `sgI_4` are attacker terms too, because `VersionJudge` is
+instrumentation on the acceptance report and pairs with nothing honest.
+The derivation uses no `dsks` step and no signature forgery, so the
+"no cryptographic step" half of the 0.85 branch holds.
+
+This is the **Q6a precedent** ("the exhibited trace is the
+adversary-wrapper one, not the honest-only one the registration
+admitted"), one step further: here the honest *inner* is absent too.
+What the companion establishes is exactly what the addendum asked of
+it — that `VersionJudge` fires at all, so Q7's green is the new
+equality doing work and not a vacuous query. What it does **not**
+establish, and what the registered shape would have established, is
+that the lie is accepted **with no compromised wrapper at all**. That
+stronger statement is **not refuted** by this trace — ProVerif reports
+one witness, the cheapest, and says nothing about the others — it is
+simply **not exhibited**, and no model has been built to exhibit it
+(building one would be an unregistered addition). Recorded as an open
+cell of this addendum, not repaired.
+
+### Comparison against the archived pre-change outputs
+
+Every pre-existing model was re-run through the whole ladder after the
+body change and compared against `proverif/pre-addendum-2026-09-12/`:
+
+- **Eleven of the twelve pre-existing `.out` files are byte-identical**
+  to their archived copies (`cmp`): both Q1 runs, Q3, both Q4
+  companions, the two unregistered Q4 runs, Q6a, Q6b, Q5 and Q5c.
+- `sp7_q2_degraded_compromised.out` differs, as it must: its **six
+  pre-existing RESULT lines are text-identical** to the archived ones
+  (`diff` of the `RESULT` lines reports a single addition, `6a7 >
+  RESULT not event(VersionLied(fbWq,cvRec,cvAct)) is true.`); line
+  numbers shifted (table below).
+
+**No divergence.** Every frozen Q1–Q6 outcome is re-established; the
+addendum's own requirement — "the Q1–Q6 ladder outcomes in `RESULTS.md`
+must be identical after the change" — is met.
+
+### Line-shift table
+
+`PREDICTIONS.md`, this file above, `READING-AIDS.md`, the ablation
+record and the archived Codex review cite **body** line numbers of the
+Q2 model and `.out` line numbers of its output. Those citations are
+**left as written** (amend-don't-rewrite; no old citation is fixed).
+This table is how a reader re-finds them.
+
+`sp7_q2_degraded_compromised.pv`, old (freeze) → new:
+
+| Region | Old lines | New lines | Shift |
+|---|---|---|---|
+| Header claim block (unedited) | 1–126 | 1–126 | 0 |
+| *(new)* ADDENDUM header block | — | 128–161 | — |
+| Model-local declarations, free names | 128–142 | 163–177 | **+35** |
+| Judge channel declarations | 144–152 | 179–187 | **+35** |
+| *(new)* `versionCh` | — | 188–190 | — |
+| Event declarations | 154–169 | 192–207 | **+38** |
+| *(new)* `event VersionLied` | — | 208–210 | — |
+| Queries (six, unchanged, same order) | 171–188 | 212–229 | **+41** |
+| *(new)* query Q7 | — | 230–233 | — |
+| `AuthorityS` … `OtherSigner` | 190–238 | 235–283 | **+45** |
+| `InnerCheck` (**byte-unchanged**) | 240–259 | 285–304 | **+45** |
+| `VerifierBase` (**byte-unchanged**) | 261–264 | 306–309 | **+45** |
+| `VerifierWrapped`, down to `if mhW = h(tW)` | 266–280 | 311–325 | **+45** |
+| *(new)* the A5.5 equality + its comment | — | 326–330 | — |
+| `event AcceptOuter`; `out(typeCh, …)` | 281–282 | 331–332 | **+50** |
+| *(new)* `out(versionCh, …)` | — | 333 | — |
+| `InnerCheck` call in the wrapped path | 283 | 334 | **+51** |
+| `TypeJudge`, `Judge`, `ScopeJudge`, `SigJudge` | 285–307 | 336–358 | **+51** |
+| *(new)* `VersionJudge` | — | 360–367 | — |
+| `process` block | 309–325 | 369–386 | **+60** (last line +61: `!VersionJudge` added) |
+
+Frequently cited single lines: `InnerCheck`'s inner-frame read 253 →
+**298**; its manifest-hash check 254 → **299**; the slot check 250 →
+**295**; the inner signature check 252 → **297**; `VerifierWrapped`'s
+unwrap 279 → **324**; `AcceptOuter` 281 → **331**; the `Wrapper`
+process's adversary-chosen input 218 → **263**; `out(c, skS)` 319 →
+**379**. The suggested author read of "lines 13–83 and 246–283" (the
+"Status toward discharge" section above) is now **13–83 and 291–334**.
+
+`sp7_q2_degraded_compromised.out`, old → new:
+
+| Cited item | Old `.out` | New `.out` |
+|---|---|---|
+| `TypeConfused` RESULT | 505 | **527** |
+| `Rescoped` RESULT | 518 | **540** |
+| `InnerSigTransplanted` RESULT | 531 | **553** |
+| `Reattributed` RESULT | 544 | **566** |
+| `HonestWrappedAccepted` `goal reachable` | 557 | **579** |
+| `HonestWrappedAccepted` RESULT | 846 | **865** |
+| `HonestAccepted` `goal reachable` | 859 | **878** |
+| `HonestAccepted` RESULT | 1042 | **1061** |
+| `VersionLied` RESULT | — | **1074** |
+
+### Runner and run record
+
+`run_ladder.sh` gained two lines, placed **before** the Q5/Q5c pair so
+the ordering rule at the head of that file ("Q5 and Q5c last") still
+holds. Q7 is a *query* on the Q2 model file, not a new model: the Q7
+line re-runs `sp7_q2_degraded_compromised.pv` under the **registered Q7
+box of 900 s**, which is tighter than Q2's own 1800 s box, so the box
+that governs the surviving `.out` is the registered one. ProVerif is
+deterministic on this model — a third independent run of the same file
+was compared with `cmp` against the ladder's output and is
+byte-identical — so the `.out` the Q2 line writes and the `.out` the Q7
+line writes are the same bytes, and `ladder.log`'s two entries for that
+file both describe the file on disk. The whole ladder was re-run, not
+just the changed models; `ladder.log` (14 runs, all `rc=0`, 22 s wall
+total):
+
+```
+sp7_q2_degraded_compromised rc=0 seconds=1 box=900 (Q7, A5.5 addendum: VersionLied unreachable; re-run of the Q2 model under the registered Q7 box)
+sp7_q7_companion_version_unchecked rc=0 seconds=1 box=900 (Q7-C companion; required red: VersionLied only)
+```
+
+### What this addendum does not discharge
+
+Unchanged from the registered boundary: the equality compares two
+fields. It does not establish that either canonicalization version is
+supported, or that the inner bytes were produced under it (P8/H1a) —
+the same obligation the header already carried about the version
+fields. The Q4 re-serialization companions ask a different question
+(whether the outer pass touches the inner bytes) and are untouched, as
+the eleven byte-identical `.out` files show. Nothing here bears on the
+depth axis (Q5/Q5c), on standing evidence, or on the P4 partition.
+
+### Status toward discharge (no change)
+
+**This section changes nothing about P7's tracker row, and nothing in
+the "Status toward discharge" section above.** That section's state
+stands as written: tool passes yes; the cross-family falsification
+review run; **author read pending**. P7's row moves on the author's
+**C5 read** (`formal/suite/READ-C5-2026-09-12.md`;
+`ROUTED-2026-09-06.md` C5, narrowed 2026-09-11), and on nothing
+recorded here — Amendment 5 §A5.8 says so in terms: each of the three
+new verifier obligations "is a new query with its own registered
+prediction and companion, recorded as a post-freeze addendum, and each
+family's tracker row moves only on its other recorded prerequisites
+(ROUTED C5, as corrected 2026-09-11)". The ROUTED C9 item recorded in
+"Pending author ruling" above is now **ruled** (adopted, Amendment 5
+§A5.5) and implemented; that paragraph is left as written per
+amend-don't-rewrite, and this section is its disposition. No
+recommendation in this file is strengthened, weakened or re-stated by
+these two runs. Two things a reader should carry to the C5 read: the
+suggested read's line range has moved (see the line-shift table), and
+the Q2 claim block now has an ADDENDUM block after it that is part of
+what "does this header say what that verifier does, no more?" now asks.
+
+### Review log (this section)
+
+- **2026-09-12** — written by the AI collaborator after the runs above.
+  No falsification review has been run on the amended Q2 model or on
+  the Q7-C companion; the cross-family review of 2026-09-06 predates
+  both. No author read of either. The trace-shape gap recorded under
+  "The companion trace" is the one item a reviewer should attack first.
+
+## Author read — 2026-09-12 (ROUTED C5; entered by the AI collaborator in the author's words)
+
+The author read the S-P7 block of `formal/suite/READ-C5-2026-09-12.md`
+(this family's block 3, quoting model lines 13–75) and returned **one
+NO**: the read's line 254, which is model line 55 — *"Line 254 says
+'the wrapper's authorship is S-P3 entry 1, consumed' but S-P3 entry 1
+establishes key binding. It does not establish authorship. S-P1
+authorship is required to establish authorship."* Verified:
+`formal/suite/s-p3/RESULTS.md` ledger entry 1 is the **key-binding**
+relation (acceptance binds the bytes' committed `(issuerId, kfp)` to
+the accepting key; honest bytes are never accepted under another key);
+**authorship** — that bytes accepted under an honest key were signed at
+an issuance event by that key's holder — is S-P1's headline, assigned
+there by S-P3 F7. The header misattributed. Repair: model line 55
+rewritten **in place, same line count**, to "the wrapper's KEY BINDING
+is S-P3 entry 1, consumed; its AUTHORSHIP is S-P1's, per S-P3 F7", with
+a dated `CORRECTION` marker quoting the pre-repair wording, so every
+`.pv` line citation in this file and in `READING-AIDS.md` still
+resolves. Comment-only: re-run the same day with
+`proverif -lib formal/suite/lib/tessera_theory.pvl`, the `.out`
+byte-identical to the pre-edit file (`proverif/ladder.log`, the
+`recut=header-only-2026-09-12-author-C5-read out=identical` line). No
+result, query, prediction or ledger entry changed. The same row is
+repeated at `READING-AIDS.md:207` and is corrected in that file's
+appended section. Author read of the Q2 header: **one sentence
+repaired; the read otherwise stands as returned.**
+
+## Cross-family review 2026-09-12 — dispositions applied
+
+Source: `docs/reviews/2026-09-12-codex-falsification-amendment-5-checks.md`
+(OpenAI Codex CLI, `gpt-6-astra`, non-author; scratch under
+`proverif/falsification-2026-09-12/scratch/`). **Amend-don't-rewrite**:
+the sentences corrected below are left as written above; this section
+is the correction of record. The `.pv` edits named here are
+comment-only, same line count, re-run the same day with the `.out`
+byte-identical (`proverif/ladder.log`, last line).
+
+**1 — "recorded equals declared, not produced" is already a stated
+boundary** (review §2). Confirmed at `sp7_q2_degraded_compromised.pv:139–141`:
+"This model does NOT prove: that either canonicalization version is
+supported, or that the inner bytes were produced under it (P8/H1a).
+The check compares two fields for equality and nothing more." The
+reviewer's own diagnostic agrees that the limit is structural — the
+model contains no canonicalization algorithm, so the version tag is a
+surrogate (`S/production_version_v3.out:1368,1133`). **No change
+needed.**
+
+**2 — the version report establishes OUTER acceptance** (review §2,
+§6). Verified: `versionCh` is emitted in the parallel composition that
+follows `event AcceptOuter` (`.pv:330–334`), *alongside* the
+`InnerCheck` call rather than after it, so the report witnesses that
+the outer object was accepted and the recorded/declared versions
+agreed — **not** that `InnerCheck` completed. The base path and the
+wrapped path invoke the identical `InnerCheck` (`:291–309`), so the new
+destructuring adds no completed inner acceptance the base path lacks.
+The header now says this (`.pv:154–155`, marked `cross-family review
+item 3`). ACCEPTED-verified.
+
+**3 — "stands as written for cvI, cvW and the base path" is wrong for
+wrapped-path `cvI`** (review §6). Verified: the new guard
+`let framed(otIv, algIv, idIv, kfpIv, mhIv, =cvIw, plIv) = fbI`
+(`.pv:330`) compares the inner frame's own canonicalization-version
+field with `cvIw`, so on the wrapped path `cvI` is no longer "checked
+only for presence". Repaired in place at `.pv:144–145` (same line
+count, marked `cross-family review item 7`). The correct text: **the
+"carried, not load-bearing" line stands as written for `cvW` and for
+the base path; on the wrapped path it does not stand as written for
+`cvI`, which the addendum now compares with `cvIw` through the same
+frame field.** Lines 964–967 above repeat the wrong wording and are
+corrected to this. ACCEPTED-verified.
+
+**4 — the open trace-shape cell is CLOSED by the reviewer's exhibit**
+(review §3). The sentence at lines 1034–1043 above —
+
+> What the companion establishes is exactly what the addendum asked of
+> it
+
+— and its conclusion that the registered honest-wrapper shape is "not
+refuted … simply **not exhibited**, and no model has been built to
+exhibit it … Recorded as an open cell of this addendum, not repaired"
+are **superseded**. The reviewer built that model. In
+`falsification-2026-09-12/scratch/literal_honest_wrapper.pv:137–138`,
+which literally names W1, I1, the honest signature, `reviewPayload`,
+recorded `cvB` and inner `cvA`, both literal events are **reachable**:
+`literal_honest_wrapper.out:1537` (`VersionLied(framed(OT_WRAPPER, …, cvB[], wrap(cvB[], (framed(OT_ATTEST, …, cvA[], reviewPayload[]), sign(…, skI1[])))), cvB[], cvA[])` `is false`)
+and `:1815` (the matching
+`AcceptInner(wctx(pk(skW1[]), idW1[], …), pk(skI1[]), issuerId[], framed(OT_ATTEST, …, cvA[], reviewPayload[]))`
+`is false`) — so the lie is accepted **with an honest inner producer
+and the completed inner acceptance**, which is the registered shape.
+The control with the version guard restored makes both literal events
+unreachable (`literal_correct_control.out:1063,1078`), so the exhibit
+is the removed equality doing the work. Correct text for lines
+1034–1043: **the companion establishes that `VersionJudge` fires at
+all; the stronger registered shape — the lie accepted with no
+compromised wrapper — was neither refuted nor exhibited by the
+committed companion, and is now EXHIBITED by the non-author
+reviewer's `literal_honest_wrapper` model. The open cell is closed;
+the closure is the reviewer's, not this file's.** ACCEPTED-verified.
+
+**Not accepted / no change.** The review found no further overclaim in
+the claim block or the addendum block, and §§4–5 confirm the new
+equality is individually load-bearing with every pre-existing polarity
+unchanged (`S/matrix.txt:4`) and both committed witnesses still
+reachable (`sp7_q2_degraded_compromised.out:865,1061`).
+
+**Method.** Every `.out` line the review cites was opened before the
+finding was accepted. No `PREDICTIONS.md`, library, amendment,
+coverage-map or scratch file was edited; no result, query text or
+prediction changed; nothing was committed.

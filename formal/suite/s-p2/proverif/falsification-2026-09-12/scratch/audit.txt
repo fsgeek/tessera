@@ -1,0 +1,84 @@
+s-p2/sp2_q1_strict_dns_compromised.out: old_results=7 old_query_text_equal=True byte_equal=True
+s-p2/sp2_q1_strict_repo_compromised.out: old_results=7 old_query_text_equal=True byte_equal=True
+s-p2/sp2_q2_degraded_compromised.out: old_results=7 old_query_text_equal=True byte_equal=False
+s-p2/sp2_q3_companion_cardinality_ignored.out: old_results=7 old_query_text_equal=True byte_equal=True
+s-p2/sp2_q4_companion_slot_unbound.out: old_results=7 old_query_text_equal=True byte_equal=True
+s-p2/sp2_q5_c1_fponly_frame_mh.out: old_results=7 old_query_text_equal=True byte_equal=True
+s-p2/sp2_q5_c2_fponly_frame_nomh.out: old_results=7 old_query_text_equal=True byte_equal=True
+s-p2/sp2_q5_c3_manifestposs_frame_nomh.out: old_results=7 old_query_text_equal=True byte_equal=True
+s-p2/sp2_q2_degraded_compromised.out:378: RESULT not event(Stripped(t_2,v)) is true.
+s-p2/sp2_q2_degraded_compromised.out:384: RESULT not event(SignerForged(t_2,k)) is true.
+s-p2/sp2_q2_degraded_compromised.out:390: RESULT not event(SetAltered(kH_2,m,t_2)) is true.
+s-p2/sp2_q2_degraded_compromised.out:397: RESULT not event(Reattributed(kX_1,kH_2,fb_4)) is true.
+s-p2/sp2_q2_degraded_compromised.out:561: RESULT not event(HonestComplete(authTuple(issuerId[],fp(pk(skA1[])),signers0,algH[],verH[]),verified1(k1))) is false.
+s-p2/sp2_q2_degraded_compromised.out:778: RESULT not event(HonestComplete(authTuple(issuerId2[],fp(pk(skA2[])),signers1(fp(pk(skB2[]))),algH[],verH[]),verified2(k1,k2))) is false.
+s-p2/sp2_q2_degraded_compromised.out:1007: RESULT not event(HonestAccepted(k,fb_4)) is false.
+s-p2/sp2_q2_degraded_compromised.out:1013: RESULT not event(Spliced(t_2,fa_2,fb_4)) is true.
+s-p7/sp7_q1_strict_dns_compromised.out: old_results=6 old_query_text_equal=True byte_equal=True
+s-p7/sp7_q1_strict_repo_compromised.out: old_results=6 old_query_text_equal=True byte_equal=True
+s-p7/sp7_q2_degraded_compromised.out: old_results=6 old_query_text_equal=True byte_equal=False
+s-p7/sp7_q3_companion_type_unchecked.out: old_results=5 old_query_text_equal=True byte_equal=True
+s-p7/sp7_q4_companion_reserialize_isolation.out: old_results=5 old_query_text_equal=True byte_equal=True
+s-p7/sp7_q4_companion_reserialize_twoversion.out: old_results=5 old_query_text_equal=True byte_equal=True
+s-p7/sp7_q4_control_opaque_twoversion.out: old_results=5 old_query_text_equal=True byte_equal=True
+s-p7/sp7_q4_probe_degraded_twoversion.out: old_results=5 old_query_text_equal=True byte_equal=True
+s-p7/sp7_q5_depth2_correct.out: old_results=8 old_query_text_equal=True byte_equal=True
+s-p7/sp7_q5c_companion_one_level_in.out: old_results=7 old_query_text_equal=True byte_equal=True
+s-p7/sp7_q6a_companion_identity_outermost.out: old_results=5 old_query_text_equal=True byte_equal=True
+s-p7/sp7_q6b_companion_key_outermost.out: old_results=5 old_query_text_equal=True byte_equal=True
+s-p7/sp7_q2_degraded_compromised.out:527: RESULT not event(TypeConfused(otS_1,otA_1,fb)) is true.
+s-p7/sp7_q2_degraded_compromised.out:540: RESULT not event(Rescoped(kX_1,idX_1,kH_3,idH_1,fb)) is true.
+s-p7/sp7_q2_degraded_compromised.out:553: RESULT not event(InnerSigTransplanted(kX_1,s)) is true.
+s-p7/sp7_q2_degraded_compromised.out:566: RESULT not event(Reattributed(kX_1,kH_3,fb)) is true.
+s-p7/sp7_q2_degraded_compromised.out:865: RESULT not event(HonestWrappedAccepted(kH_3,fb,kW_3)) is false.
+s-p7/sp7_q2_degraded_compromised.out:1061: RESULT not event(HonestAccepted(k,fb)) is false.
+s-p7/sp7_q2_degraded_compromised.out:1074: RESULT not event(VersionLied(fbWq,cvRec,cvAct)) is true.
+s-standing/ss_q1_strict_dns_compromised.out: old_results=11 old_query_text_equal=True byte_equal=False
+s-standing/ss_q1_strict_repo_compromised.out: old_results=11 old_query_text_equal=True byte_equal=False
+s-standing/ss_q1d_degraded_compromised.out: old_results=11 old_query_text_equal=True byte_equal=False
+s-standing/ss_q2_companionA_identity_declared.out: old_results=13 old_query_text_equal=True byte_equal=True
+s-standing/ss_q3_companionB_entitled_via_envelope.out: old_results=11 old_query_text_equal=True byte_equal=True
+s-standing/ss_q4_companionC_terminal_unchecked.out: old_results=11 old_query_text_equal=True byte_equal=True
+s-standing/ss_q5_companionD_reason_collapsed.out: old_results=10 old_query_text_equal=True byte_equal=True
+s-standing/ss_q1_strict_dns_compromised.out:503: RESULT event(Established(kX_3,t_3,aid_2)) ==> event(Designated(kX_3,aid_2)) is true.
+s-standing/ss_q1_strict_dns_compromised.out:513: RESULT event(Established(pk(skH1[]),t_3,aid_2)) ==> event(Designated(pk(skH1[]),aid_2)) is true.
+s-standing/ss_q1_strict_dns_compromised.out:523: RESULT event(Established(pk(skH2[]),t_3,aid_2)) ==> event(Designated(pk(skH2[]),aid_2)) is true.
+s-standing/ss_q1_strict_dns_compromised.out:530: RESULT not event(StandingUnentitled(kX_3,t_3)) is true.
+s-standing/ss_q1_strict_dns_compromised.out:829: RESULT not event(HonestStandingEstablished(k,aid_2)) is false.
+s-standing/ss_q1_strict_dns_compromised.out:1114: RESULT not event(StandingReport(ESTABLISHED,TERMINAL_DISPOSITION_SHOWN,k,t_3,a)) is false.
+s-standing/ss_q1_strict_dns_compromised.out:1397: RESULT not event(StandingReport(ABSENT,SUPERSEDED,k,t_3,a)) is false.
+s-standing/ss_q1_strict_dns_compromised.out:1523: RESULT not event(StandingReport(ABSENT,NO_TERMINAL_DISPOSITION_EVIDENCE,k,t_3,a)) is false.
+s-standing/ss_q1_strict_dns_compromised.out:1804: RESULT not event(StandingReport(ABSENT,ISSUANCE_REFUSED,k,t_3,a)) is false.
+s-standing/ss_q1_strict_dns_compromised.out:1993: RESULT not event(StandingReport(ABSENT,STANDING_EVIDENCE_MISMATCH,k,t_3,a)) is false.
+s-standing/ss_q1_strict_dns_compromised.out:2000: RESULT not event(ReasonCollapsed(p1_5,p2_5,r)) is true.
+s-standing/ss_q1_strict_dns_compromised.out:2007: RESULT not event(Aliased(kX_3,t_3,tc,aid_2)) is true.
+s-standing/ss_q1_strict_repo_compromised.out:503: RESULT event(Established(kX_3,t_3,aid_2)) ==> event(Designated(kX_3,aid_2)) is true.
+s-standing/ss_q1_strict_repo_compromised.out:513: RESULT event(Established(pk(skH1[]),t_3,aid_2)) ==> event(Designated(pk(skH1[]),aid_2)) is true.
+s-standing/ss_q1_strict_repo_compromised.out:523: RESULT event(Established(pk(skH2[]),t_3,aid_2)) ==> event(Designated(pk(skH2[]),aid_2)) is true.
+s-standing/ss_q1_strict_repo_compromised.out:530: RESULT not event(StandingUnentitled(kX_3,t_3)) is true.
+s-standing/ss_q1_strict_repo_compromised.out:829: RESULT not event(HonestStandingEstablished(k,aid_2)) is false.
+s-standing/ss_q1_strict_repo_compromised.out:1114: RESULT not event(StandingReport(ESTABLISHED,TERMINAL_DISPOSITION_SHOWN,k,t_3,a)) is false.
+s-standing/ss_q1_strict_repo_compromised.out:1397: RESULT not event(StandingReport(ABSENT,SUPERSEDED,k,t_3,a)) is false.
+s-standing/ss_q1_strict_repo_compromised.out:1523: RESULT not event(StandingReport(ABSENT,NO_TERMINAL_DISPOSITION_EVIDENCE,k,t_3,a)) is false.
+s-standing/ss_q1_strict_repo_compromised.out:1804: RESULT not event(StandingReport(ABSENT,ISSUANCE_REFUSED,k,t_3,a)) is false.
+s-standing/ss_q1_strict_repo_compromised.out:1993: RESULT not event(StandingReport(ABSENT,STANDING_EVIDENCE_MISMATCH,k,t_3,a)) is false.
+s-standing/ss_q1_strict_repo_compromised.out:2000: RESULT not event(ReasonCollapsed(p1_5,p2_5,r)) is true.
+s-standing/ss_q1_strict_repo_compromised.out:2007: RESULT not event(Aliased(kX_3,t_3,tc,aid_2)) is true.
+s-standing/ss_q1d_degraded_compromised.out:640: RESULT event(Established(kX_3,t_3,aid_2)) ==> event(Designated(kX_3,aid_2)) is false.
+s-standing/ss_q1d_degraded_compromised.out:649: RESULT event(Established(pk(skH1[]),t_3,aid_2)) ==> event(Designated(pk(skH1[]),aid_2)) is true.
+s-standing/ss_q1d_degraded_compromised.out:658: RESULT event(Established(pk(skH2[]),t_3,aid_2)) ==> event(Designated(pk(skH2[]),aid_2)) is true.
+s-standing/ss_q1d_degraded_compromised.out:664: RESULT not event(StandingUnentitled(kX_3,t_3)) is true.
+s-standing/ss_q1d_degraded_compromised.out:950: RESULT not event(HonestStandingEstablished(k,aid_2)) is false.
+s-standing/ss_q1d_degraded_compromised.out:1145: RESULT not event(StandingReport(ESTABLISHED,TERMINAL_DISPOSITION_SHOWN,k,t_3,a)) is false.
+s-standing/ss_q1d_degraded_compromised.out:1341: RESULT not event(StandingReport(ABSENT,SUPERSEDED,k,t_3,a)) is false.
+s-standing/ss_q1d_degraded_compromised.out:1450: RESULT not event(StandingReport(ABSENT,NO_TERMINAL_DISPOSITION_EVIDENCE,k,t_3,a)) is false.
+s-standing/ss_q1d_degraded_compromised.out:1642: RESULT not event(StandingReport(ABSENT,ISSUANCE_REFUSED,k,t_3,a)) is false.
+s-standing/ss_q1d_degraded_compromised.out:1809: RESULT not event(StandingReport(ABSENT,STANDING_EVIDENCE_MISMATCH,k,t_3,a)) is false.
+s-standing/ss_q1d_degraded_compromised.out:1815: RESULT not event(ReasonCollapsed(p1_5,p2_5,r)) is true.
+s-standing/ss_q1d_degraded_compromised.out:1821: RESULT not event(Aliased(kX_3,t_3,tc,aid_2)) is true.
+SHIFT formal/suite/s-p2/proverif/falsification-2026-09-06/scratch/baseline_sp2_q2_degraded_compromised.pv:146 -> formal/suite/s-p2/proverif/sp2_q2_degraded_compromised.pv:179: equal=True; let Signer(sk: skey, id: bitstring, m: bitstring) = -> let Signer(sk: skey, id: bitstring, m: bitstring) =
+SHIFT formal/suite/s-p2/proverif/falsification-2026-09-06/scratch/baseline_sp2_q2_degraded_compromised.pv:192 -> formal/suite/s-p2/proverif/sp2_q2_degraded_compromised.pv:231: equal=True;   event Accept2S(ev, t, kA, kB, fa, fb); ->   event Accept2S(ev, t, kA, kB, fa, fb);
+SHIFT formal/suite/s-p7/proverif/falsification-2026-09-06/scratch/q2_baseline.pv:253 -> formal/suite/s-p7/proverif/sp7_q2_degraded_compromised.pv:298: equal=True;   let framed(=OT_ATTEST, =algI, =idI, =fp(kI), mhI, cvI, plI) = fbI in ->   let framed(=OT_ATTEST, =algI, =idI, =fp(kI), mhI, cvI, plI) = fbI in
+SHIFT formal/suite/s-p7/proverif/falsification-2026-09-06/scratch/q2_baseline.pv:281 -> formal/suite/s-p7/proverif/sp7_q2_degraded_compromised.pv:331: equal=True;   event AcceptOuter(kW, idW, fbW); ->   event AcceptOuter(kW, idW, fbW);
+SHIFT formal/suite/s-standing/proverif/pre-addendum-2026-09-12/ss_q1_strict_dns_compromised.out:457 -> formal/suite/s-standing/proverif/ss_q1_strict_dns_compromised.out:503: equal=True; RESULT event(Established(kX_3,t_3,aid_2)) ==> event(Designated(kX_3,aid_2)) is true.
+SHIFT formal/suite/s-standing/proverif/pre-addendum-2026-09-12/ss_q1_strict_dns_compromised.out:781 -> formal/suite/s-standing/proverif/ss_q1_strict_dns_compromised.out:829: equal=True; RESULT not event(HonestStandingEstablished(k,aid_2)) is false.

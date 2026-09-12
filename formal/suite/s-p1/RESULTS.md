@@ -756,3 +756,20 @@ statement already stood in the review log below and in
   build failure). No `.pv` file was changed, so no re-run was owed; no
   result, no registered query text and no `PREDICTIONS.md` text
   touched; no ROUTED item applied. Author read: **pending**.
+
+## Author read — 2026-09-12 (ROUTED C5; entered by the AI collaborator in the author's words)
+
+The author read the Q2 claim block (lines 18–73) against P1's operative
+form via `formal/suite/READ-C5-2026-09-12.md` and returned **one NO**:
+line 28, "in degraded-compromised mode it is not", is too strong —
+*"honest key acceptance is also reachable as the model explicitly checks
+this case."* Verified: N1 `HonestAccepted` reachable, `.out:396`. Line 28
+rewritten in place to "it need not be" with a dated CORRECTION marker
+citing the witness; same line count, so every citation in this file and
+in `READING-AIDS.md` still resolves. Comment-only: re-run same day, the
+`.out` byte-identical to the pre-edit file (`ladder.log`, last line).
+No result, query, prediction or ledger entry changed. The frozen draft
+header in `PREDICTIONS.md` (line 256) keeps the original wording.
+Author read of the Q2 header: **one sentence repaired; the read
+otherwise stands as returned** — the row's other prerequisites (B2:
+the `Accept` ↔ P4 join written in the coverage map) are unchanged.

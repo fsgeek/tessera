@@ -48,6 +48,26 @@
 (* Carried, not exercised (d2-d4; footer): the authority-evidence check (sole *)
 (* channel key public, S-P3 F6); the S-P3 F7 fields, object type being   *)
 (* S-P7's; the attestation-signature check itself (for S-P1).            *)
+(* -------------------------------------------------------------------- *)
+(* ADDENDUM 2026-09-12 (Amendment 5 §A5.4; PREDICTIONS.md "Post-freeze   *)
+(* addendum 1 — 2026-09-12"; ROUTED C8, ADOPTED (author) reading (a)).   *)
+(* Added to "This model proves": (5) for required sets of two, the       *)
+(* accepted frames agree on object type, canonicalization version and    *)
+(* payload (Amendment 5 §A5.4) — every required signer attests to the    *)
+(* same content, each in its own frame [Spliced unreachable].            *)
+(* Added to "This model does not prove": nothing about the encoding or   *)
+(* ordering of the equal fields (P8).                                    *)
+(* Registered encoding: Verifier2S gains ota = otb, cva = cvb, pla = plb; *)
+(* one new private report channel contentCh carries (t, fa, fb) from the *)
+(* single Accept2S point, in parallel with the existing reports (S-P3    *)
+(* recut-1 idiom); ContentJudge reads it and fires Spliced when any of   *)
+(* the three differs. The judge is instrumentation on the acceptance     *)
+(* report, not a verifier check; setCh/slotCh/acceptCh, their judges and *)
+(* Verifier1S are untouched. Companion:                                  *)
+(* sp2_q6_companion_content_unchecked.pv (the three equalities absent —  *)
+(* the verifier as it stood). Body change, not comment-only: line shifts *)
+(* are tabulated in RESULTS.md's post-freeze addendum 1 section.         *)
+(* -------------------------------------------------------------------- *)
 (* CORRECTION 2026-09-06 (cross-family review items 2, 4, 13, 14, 15):   *)
 (* narrowed as marked above; full record and matrix lines in the footer of *)
 (* this file. Comment-only; body unchanged; re-run in ladder.log.        *)
@@ -131,6 +151,19 @@ query k1: pkey, k2: pkey;
 query k: pkey, fb: bitstring;
   event(HonestAccepted(k, fb)).
 
+(* --- ADDENDUM 2026-09-12 (Amendment 5 §A5.4) ----------------------- *)
+(* Common attested content for n = 2: one new private report channel,  *)
+(* one new event, one new query. Every query above is unchanged.       *)
+free contentCh: channel [private].
+  (* verifier -> ContentJudge : (tuple, frame A, frame B), emitted at  *)
+  (* the single Accept2S point (S-P3 recut-1 idiom)                    *)
+event Spliced(bitstring, bitstring, bitstring).
+  (* tuple, frame A, frame B: two frames of ONE acceptance that differ *)
+  (* in object type, canonicalization version or payload               *)
+(* content splicing: one acceptance whose two frames attest different content *)
+query t: bitstring, fa: bitstring, fb: bitstring;
+  event(Spliced(t, fa, fb)).
+
 let AuthorityS(skS: skey, t: bitstring) =
   event AuthorityPublishedDNS(t);
   out(c, sign((STMT_DIGEST, h(t)), skS)).
@@ -189,10 +222,17 @@ let Verifier2S(pkS: pkey) =
   if mha = h(t) then
   let framed(otb, =alg, =id, =fp(kB), mhb, cvb, plb) = fb in
   if mhb = h(t) then
+  (* ADDENDUM 2026-09-12 (§A5.4): the three non-fingerprint frame fields *)
+  (* not already pinned through the shared tuple must be equal across    *)
+  (* the two signer slots; each slot keeps its own =fp(kX).              *)
+  if ota = otb then
+  if cva = cvb then
+  if pla = plb then
   event Accept2S(ev, t, kA, kB, fa, fb);
   ( out(setCh, (t, verified2(kA, kB)))
   | out(slotCh, (t, kfprA, kA)) | out(slotCh, (t, kfprB, kB))
-  | out(acceptCh, (kA, id, fa)) | out(acceptCh, (kB, id, fb)) ).
+  | out(acceptCh, (kA, id, fa)) | out(acceptCh, (kB, id, fb))
+  | out(contentCh, (t, fa, fb)) ).
 
 (* SetJudge: pairs an honest manifest with an acceptance of the SAME     *)
 (* tuple. Emits HonestComplete only on key-by-key fingerprint match with  *)
@@ -232,6 +272,17 @@ let Judge =
   if kX = kH then event HonestAccepted(kX, fbHon)
   else event Reattributed(kX, kH, fbHon).
 
+(* ContentJudge (ADDENDUM 2026-09-12, §A5.4): reads the one acceptance  *)
+(* report that carries BOTH frames and fires Spliced when they disagree *)
+(* on object type, canonicalization version or payload. Instrumentation *)
+(* on the acceptance report, not a verifier check.                      *)
+let ContentJudge =
+  in(contentCh, (tJ: bitstring, faJ: bitstring, fbJ: bitstring));
+  let framed(otaJ, algaJ, idaJ, kfpaJ, mhaJ, cvaJ, plaJ) = faJ in
+  let framed(otbJ, algbJ, idbJ, kfpbJ, mhbJ, cvbJ, plbJ) = fbJ in
+  if otaJ <> otbJ || cvaJ <> cvbJ || plaJ <> plbJ then
+  event Spliced(tJ, faJ, fbJ).
+
 process
   new skS: skey;
   let m1 = authTuple(issuerId,  fp(pk(skA1)), signers0,               algH, verH) in
@@ -245,7 +296,7 @@ process
   | !Signer(skA1, issuerId,  m1)
   | !Signer(skA2, issuerId2, m2) | !Signer(skB2, issuerId2, m2)
   | !Verifier1S(pk(skS)) | !Verifier2S(pk(skS))
-  | !SetJudge | !MemberJudge | !Judge )
+  | !SetJudge | !MemberJudge | !Judge | !ContentJudge )
 
 (* ==================================================================== *)
 (* CORRECTION RECORD 2026-09-06 — cross-family falsification review      *)

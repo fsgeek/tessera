@@ -17,4 +17,8 @@ run ss_q2_companionA_identity_declared 900
 run ss_q3_companionB_entitled_via_envelope 900
 run ss_q4_companionC_terminal_unchecked 900
 run ss_q5_companionD_reason_collapsed 900
+# ADDENDUM 2026-09-12 (Amendment 5 §A5.6; PREDICTIONS.md "Post-freeze addendum 1 — 2026-09-12"):
+# SS.Q6-C, the alias companion. Its registered box is 30 min, not the 15-min companion box.
+# The three SS.Q6 amended models are the ladder's existing Q1/Q1r/Q1d entries (already 30 min).
+run ss_q6_companion_alias_unchecked 1800
 echo DONE >> ladder.log
