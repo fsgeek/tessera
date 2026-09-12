@@ -1,0 +1,116 @@
+(* ==================================================================== *)
+(* STATUS: PROPOSED — 2026-09-06 — produced by the AI collaborator;    *)
+(* not adopted; the commit is the author's.                            *)
+(* ==================================================================== *)
+(* S-P1.Q4 — BROKEN COMPANION B: frame fields outside the signature.   *)
+(* Variant: degraded, sole channel compromised (Q2 form).              *)
+(*                                                                      *)
+(* Registered prediction (PREDICTIONS.md, frozen 5188e7a): violation   *)
+(* found (p~0.80); a companion that could not fail (p~0.10) only if    *)
+(* the verifier diverges from S-P3's (ot and cv are unpinned there,    *)
+(* F7) — disposition "which frame fields the manifest pins", recut to  *)
+(* a field the manifest does not carry; timeout (p~0.10).              *)
+(* Timebox: 15 min.                                                    *)
+(*                                                                      *)
+(* BROKEN COMPANION B. This model exists to go RED on the headline     *)
+(* AcceptedUnderHonestKey ==> IssuerSigned and to keep HonestAccepted  *)
+(* REACHABLE. It discharges nothing. It proves nothing about P1.       *)
+(* Mutation: the issuer signs the PAYLOAD alone, sign((BYTES,          *)
+(* payload), skI), while still framing (and reporting, and emitting   *)
+(* IssuerSigned for) the full framed bytes it intends; the verifier   *)
+(* reconstructs: it takes the presented fb apart, checks the frame     *)
+(* fields against the manifest exactly as Q2 does, and checks that sg  *)
+(* verifies under kX to (BYTES, pl) for the payload field pl of fb.    *)
+(* The unsigned frame fields the manifest does not pin (object type    *)
+(* ot, canonicalization version cv — S-P3 F7: bound-but-unchecked)     *)
+(* can be altered by the adversary while the payload signature still   *)
+(* verifies: the accepted fb is then a frame the honest key never      *)
+(* signed. Which field ProVerif alters is read from the trace.         *)
+(* This model does not prove: anything (companion). Q2's load-bearing  *)
+(* check is present in the weakened form "signature over the payload  *)
+(* only"; Q2's carried checks are present and unchanged.               *)
+(*                                                                      *)
+(* Theory, frame, fixture, judges: as sp1_q2_degraded_compromised.pv.  *)
+(* Run: proverif -lib ../../lib/tessera_theory.pvl sp1_q4_companionB_frame_unsigned.pv *)
+(* ==================================================================== *)
+
+(* --- model-local declarations (library terms are not redeclared) ---- *)
+fun framed(bitstring, bitstring, bitstring, bitstring, bitstring, bitstring, bitstring): bitstring [data].
+  (* objType, alg, issuerId, kfp, manifestHash, canonVer, payload *)
+free canonVerH: bitstring.
+free issuerId2: bitstring.
+
+free honestKeyCh: channel [private].
+free honestCh: channel [private].
+free acceptCh: channel [private].
+event AcceptedUnderHonestKey(pkey, bitstring).
+event HonestAccepted(pkey, bitstring).
+
+(* headline — REQUIRED RED in this companion *)
+query k: pkey, fb: bitstring;
+  event(AcceptedUnderHonestKey(k, fb)) ==> event(IssuerSigned(k, fb)).
+
+(* N1 — must remain REACHABLE *)
+query k: pkey, fb: bitstring;
+  event(HonestAccepted(k, fb)).
+
+let AuthorityS(skS: skey, t: bitstring) =
+  event AuthorityPublishedDNS(t);
+  out(c, sign((STMT_DIGEST, h(t)), skS)).
+
+event AcceptS(bitstring, bitstring, pkey, bitstring).
+
+(* unrestricted contrast, carried from Q2 (red there already; reported for completeness) *)
+query t: bitstring, k: pkey, fb: bitstring, ev: bitstring;
+  event(AcceptS(ev, t, k, fb)) ==> event(IssuerSigned(k, fb)).
+
+let VerifierS(pkS: pkey) =
+  in(c, (t: bitstring, ev: bitstring,
+         kX: pkey, ppf: bitstring, sg: bitstring, fb: bitstring));
+  let (=STMT_DIGEST, =h(t)) = checksign(ev, pkS) in
+  let authTuple(id, kfpr, ss, alg, ver) = t in
+  if fp(kX) = kfpr then
+  let (=POSS, =t) = checksign(ppf, kX) in
+  (* frame fields checked against the manifest exactly as in Q2 *)
+  let framed(ot, =alg, =id, =fp(kX), mh, cv, pl) = fb in
+  if mh = h(t) then
+  (* MUTATION: the signature covers the PAYLOAD only; ot, cv (and the *)
+  (* manifest-pinned fields) are outside it.                          *)
+  let (=BYTES, =pl) = checksign(sg, kX) in
+  event AcceptS(ev, t, kX, fb);
+  out(acceptCh, (kX, fb)).
+
+(* Issuer: frames the bytes it intends and records them (IssuerSigned, *)
+(* honestCh), but releases a signature over the payload alone.         *)
+let Issuer(skI: skey, id: bitstring, m: bitstring) =
+  in(c, payload: bitstring);
+  event IssuerPossession(pk(skI));
+  let ppf = sign((POSS, m), skI) in
+  out(c, ppf);
+  let fb = framed(OT_ATTEST, algH, id, fp(pk(skI)), h(m), canonVerH, payload) in
+  event IssuerSigned(pk(skI), fb);
+  ( out(honestCh, (pk(skI), fb))
+  | out(c, sign((BYTES, payload), skI)) ).
+
+let JudgeH =
+  in(honestKeyCh, kH: pkey);
+  in(acceptCh, (=kH, fbAcc: bitstring));
+  event AcceptedUnderHonestKey(kH, fbAcc).
+
+let JudgeN1 =
+  in(honestCh, (kH: pkey, fbHon: bitstring));
+  in(acceptCh, (=kH, =fbHon));
+  event HonestAccepted(kH, fbHon).
+
+process
+  new skS: skey; new skI: skey; new skI2: skey;
+  let m  = authTuple(issuerId,  fp(pk(skI)),  ssetH, algH, verH) in
+  let m2 = authTuple(issuerId2, fp(pk(skI2)), ssetH, algH, verH) in
+  out(c, pk(skS)); out(c, pk(skI)); out(c, pk(skI2));
+  out(c, m); out(c, m2);
+  out(c, skS);
+  ( !out(honestKeyCh, pk(skI)) | !out(honestKeyCh, pk(skI2))
+  | !AuthorityS(skS, m) | !AuthorityS(skS, m2)
+  | !Issuer(skI, issuerId, m) | !Issuer(skI2, issuerId2, m2)
+  | !VerifierS(pk(skS))
+  | !JudgeH | !JudgeN1 )

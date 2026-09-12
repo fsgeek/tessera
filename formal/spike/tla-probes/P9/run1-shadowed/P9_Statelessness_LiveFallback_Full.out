@@ -1,0 +1,70 @@
+TLC2 Version 2026.07.31.184830 (rev: 30cc360)
+Running breadth-first search Model-Checking with fp 65 and seed -8540896699747954169 with 4 workers on 12 cores with 7068MB heap and 64MB offheap memory [pid: 568076] (Linux 6.8.0-136-generic amd64, Ubuntu 21.0.12 64bit, MSBDiskFPSet, DiskStateQueue).
+Parsing file /home/tony/projects/tessera/formal/spike/tla-probes/P9/P9_Statelessness.tla
+Parsing file /tmp/tlc-4255229458602728137/Naturals.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Naturals.tla)
+Parsing file /tmp/tlc-4255229458602728137/Sequences.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Sequences.tla)
+Parsing file /tmp/tlc-4255229458602728137/FiniteSets.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/FiniteSets.tla)
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module P9_Statelessness
+Linting of module P9_Statelessness
+Starting... (2026-09-06 18:32:02)
+Computing initial states...
+Computed 2 initial states...
+Computed 4 initial states...
+Computed 8 initial states...
+Computed 16 initial states...
+Computed 32 initial states...
+Finished computing initial states: 54 distinct states generated at 2026-09-06 18:32:02.
+Error: Invariant Purity is violated.
+Error: The behavior up to this point is:
+State 1: <Initial predicate>
+/\ service = "revoked"
+/\ bundle = (c1 :> "pass" @@ c2 :> "pass")
+/\ seen = (mA :> FALSE @@ mB :> FALSE)
+/\ view = "none"
+/\ consulted = FALSE
+/\ policy = {}
+/\ phase = "idle"
+/\ verdicts = <<>>
+/\ machine = mA
+
+State 2: <StartRun(mA) line 141, col 3 to line 148, col 58 of module P9_Statelessness>
+/\ service = "revoked"
+/\ bundle = (c1 :> "pass" @@ c2 :> "pass")
+/\ seen = (mA :> FALSE @@ mB :> FALSE)
+/\ view = "none"
+/\ consulted = FALSE
+/\ policy = {}
+/\ phase = "running"
+/\ verdicts = <<>>
+/\ machine = mA
+
+State 3: <Consult line 155, col 3 to line 159, col 74 of module P9_Statelessness>
+/\ service = "revoked"
+/\ bundle = (c1 :> "pass" @@ c2 :> "pass")
+/\ seen = (mA :> FALSE @@ mB :> FALSE)
+/\ view = "revoked"
+/\ consulted = TRUE
+/\ policy = {}
+/\ phase = "running"
+/\ verdicts = <<>>
+/\ machine = mA
+
+State 4: <Decide line 164, col 3 to line 170, col 68 of module P9_Statelessness>
+/\ service = "revoked"
+/\ bundle = (c1 :> "pass" @@ c2 :> "pass")
+/\ seen = (mA :> TRUE @@ mB :> FALSE)
+/\ view = "revoked"
+/\ consulted = TRUE
+/\ policy = {}
+/\ phase = "idle"
+/\ verdicts = <<[m |-> mA, v |-> "INVALID", svc |-> "revoked", cons |-> TRUE]>>
+/\ machine = mA
+
+### filter-tlc-output.sh: 5939 further violation report(s) of already-witnessed invariants omitted; full output reproduces from the .cfg ###
+45846 states generated, 14562 distinct states found, 0 states left on queue.
+The depth of the complete state graph search is 11.
+The average outdegree of the complete state graph is 1 (minimum is 0, the maximum 4 and the 95th percentile is 3).
+Finished in 02s at (2026-09-06 18:32:03)

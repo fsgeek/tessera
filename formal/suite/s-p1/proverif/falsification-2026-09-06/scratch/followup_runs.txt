@@ -1,0 +1,17 @@
+a5_repeat_replay.pv exit=0
+289: RESULT event(AcceptedUnderHonestKey(k,fb_6)) ==> event(IssuerSigned(k,fb_6)) is true.
+459: RESULT not event(HonestAccepted(k,fb_6)) is false.
+628: RESULT event(AcceptS(ev_3,t_3,k,fb_6)) ==> event(IssuerSigned(k,fb_6)) is false.
+737: RESULT not event(Attack) cannot be proved.
+m_D_poss_key.pv exit=0
+203: RESULT event(Accept(evD_1,evR_1,t_1,k,fb_3)) ==> event(IssuerSigned(k,fb_3)) is true.
+210: RESULT event(AcceptedUnderHonestKey(k,fb_3)) ==> event(IssuerSigned(k,fb_3)) is true.
+401: RESULT not event(HonestAccepted(k,fb_3)) is false.
+m_G_poss_key.pv exit=0
+175: RESULT event(AcceptedUnderHonestKey(k,fb_3)) ==> event(IssuerSigned(k,fb_3)) is true.
+354: RESULT not event(HonestAccepted(k,fb_3)) is false.
+514: RESULT event(AcceptS(ev_1,t_1,k,fb_3)) ==> event(IssuerSigned(k,fb_3)) is false.
+m_R_poss_key.pv exit=0
+204: RESULT event(Accept(evD_1,evR_1,t_1,k,fb_3)) ==> event(IssuerSigned(k,fb_3)) is true.
+211: RESULT event(AcceptedUnderHonestKey(k,fb_3)) ==> event(IssuerSigned(k,fb_3)) is true.
+402: RESULT not event(HonestAccepted(k,fb_3)) is false.

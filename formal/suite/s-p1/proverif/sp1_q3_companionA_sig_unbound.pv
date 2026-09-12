@@ -1,0 +1,136 @@
+(* ==================================================================== *)
+(* STATUS: PROPOSED — 2026-09-06 — produced by the AI collaborator;    *)
+(* not adopted; the commit is the author's.                            *)
+(* ==================================================================== *)
+(* S-P1.Q3 — BROKEN COMPANION A: signature not bound to the presented  *)
+(* bytes (the required bytes-substitution companion).                  *)
+(* Variant: degraded, sole channel compromised (Q2 form).              *)
+(*                                                                      *)
+(* Registered prediction (PREDICTIONS.md, frozen 5188e7a): violation   *)
+(* found, trace readable, fb' <> fb visible in the trace (p~0.80); the *)
+(* companion cannot be made to go red (p~0.10) = amendment trigger     *)
+(* under the Grok panel criterion (theory cannot express the           *)
+(* alteration threat); timeout (p~0.10). Timebox: 15 min.              *)
+(* Trace-inspection rule (registered): a trace in which the issuer was *)
+(* simply ASKED to sign fb' is not a violation; the recorded red must  *)
+(* show fb' absent from every IssuerSigned.                            *)
+(*                                                                      *)
+(* BROKEN COMPANION A. This model exists to go RED on the headline     *)
+(* AcceptedUnderHonestKey ==> IssuerSigned and to keep HonestAccepted  *)
+(* REACHABLE. It discharges nothing. It proves nothing about P1.       *)
+(* What it does show: that the checking arrangement (judge H + the     *)
+(* correspondence) detects the detached-signature integrity bug —      *)
+(* a verifier that checks a signature verifies under kX to (BYTES, x)  *)
+(* for SOME x and then returns the PRESENTED bytes fb without          *)
+(* requiring x = fb.                                                    *)
+(* Mutation (one line): `let (=BYTES, =fb) = checksign(sg, kX)`        *)
+(* becomes `let (=BYTES, fbSigned: bitstring) = checksign(sg, kX)`;   *)
+(* fbSigned is bound and never compared to fb (build fix after run 1:  *)
+(* the pattern variable needs a type annotation; run1/ archived).     *)
+(* Every other check is Q2's, unchanged.                               *)
+(* This model does not prove: anything (companion). The load-bearing  *)
+(* check of Q2 is the one removed here; all Q2 carried checks are      *)
+(* present and still do not close the gap (manifest-pinned alg, id,   *)
+(* fp, mh unaltered; ot, cv, pl differ: .out:171, :330; note at end). *)
+(*                                                                      *)
+(* Theory, frame, fixture, judges: as sp1_q2_degraded_compromised.pv.  *)
+(* Run: proverif -lib ../../lib/tessera_theory.pvl sp1_q3_companionA_sig_unbound.pv *)
+(* ==================================================================== *)
+
+(* --- model-local declarations (library terms are not redeclared) ---- *)
+fun framed(bitstring, bitstring, bitstring, bitstring, bitstring, bitstring, bitstring): bitstring [data].
+  (* objType, alg, issuerId, kfp, manifestHash, canonVer, payload *)
+free canonVerH: bitstring.
+free issuerId2: bitstring.
+
+free honestKeyCh: channel [private].
+free honestCh: channel [private].
+free acceptCh: channel [private].
+event AcceptedUnderHonestKey(pkey, bitstring).
+event HonestAccepted(pkey, bitstring).
+
+(* headline — REQUIRED RED in this companion *)
+query k: pkey, fb: bitstring;
+  event(AcceptedUnderHonestKey(k, fb)) ==> event(IssuerSigned(k, fb)).
+
+(* N1 — must remain REACHABLE *)
+query k: pkey, fb: bitstring;
+  event(HonestAccepted(k, fb)).
+
+let AuthorityS(skS: skey, t: bitstring) =
+  event AuthorityPublishedDNS(t);
+  out(c, sign((STMT_DIGEST, h(t)), skS)).
+
+event AcceptS(bitstring, bitstring, pkey, bitstring).
+
+(* unrestricted contrast, carried from Q2 (red there already; reported for completeness) *)
+query t: bitstring, k: pkey, fb: bitstring, ev: bitstring;
+  event(AcceptS(ev, t, k, fb)) ==> event(IssuerSigned(k, fb)).
+
+let VerifierS(pkS: pkey) =
+  in(c, (t: bitstring, ev: bitstring,
+         kX: pkey, ppf: bitstring, sg: bitstring, fb: bitstring));
+  let (=STMT_DIGEST, =h(t)) = checksign(ev, pkS) in
+  let authTuple(id, kfpr, ss, alg, ver) = t in
+  if fp(kX) = kfpr then
+  let (=POSS, =t) = checksign(ppf, kX) in
+  (* MUTATION: the signature verifies under kX over SOME bytes, but the *)
+  (* verifier does not require them to be the PRESENTED bytes fb.       *)
+  let (=BYTES, fbSigned: bitstring) = checksign(sg, kX) in
+  let framed(ot, =alg, =id, =fp(kX), mh, cv, pl) = fb in
+  if mh = h(t) then
+  event AcceptS(ev, t, kX, fb);
+  out(acceptCh, (kX, fb)).
+
+let Issuer(skI: skey, id: bitstring, m: bitstring) =
+  in(c, payload: bitstring);
+  event IssuerPossession(pk(skI));
+  let ppf = sign((POSS, m), skI) in
+  out(c, ppf);
+  let fb = framed(OT_ATTEST, algH, id, fp(pk(skI)), h(m), canonVerH, payload) in
+  event IssuerSigned(pk(skI), fb);
+  ( out(honestCh, (pk(skI), fb))
+  | out(c, sign((BYTES, fb), skI)) ).
+
+let JudgeH =
+  in(honestKeyCh, kH: pkey);
+  in(acceptCh, (=kH, fbAcc: bitstring));
+  event AcceptedUnderHonestKey(kH, fbAcc).
+
+let JudgeN1 =
+  in(honestCh, (kH: pkey, fbHon: bitstring));
+  in(acceptCh, (=kH, =fbHon));
+  event HonestAccepted(kH, fbHon).
+
+process
+  new skS: skey; new skI: skey; new skI2: skey;
+  let m  = authTuple(issuerId,  fp(pk(skI)),  ssetH, algH, verH) in
+  let m2 = authTuple(issuerId2, fp(pk(skI2)), ssetH, algH, verH) in
+  out(c, pk(skS)); out(c, pk(skI)); out(c, pk(skI2));
+  out(c, m); out(c, m2);
+  out(c, skS);
+  ( !out(honestKeyCh, pk(skI)) | !out(honestKeyCh, pk(skI2))
+  | !AuthorityS(skS, m) | !AuthorityS(skS, m2)
+  | !Issuer(skI, issuerId, m) | !Issuer(skI2, issuerId2, m2)
+  | !VerifierS(pk(skS))
+  | !JudgeH | !JudgeN1 )
+
+(* ==================================================================== *)
+(* Header correction 2026-09-06 (skeptic finding; comment-only, no     *)
+(* encoding change). Lines 30 and 33–34 of the header previously read: *)
+(*   "never compared to fb. Every other check is Q2's, unchanged."     *)
+(*   "(the frame's binding fields are unaltered by the attack — only   *)
+(*   the payload differs)"                                             *)
+(* The first carried a stray duplicated fragment; the second was       *)
+(* contradicted by this model's own .out (run 2, :171 derivation:      *)
+(* attacker(ot_1) && attacker(cv_1) && attacker(pl_1); :330 accepted   *)
+(* frame framed(a_4, algH, issuerId2, fp(pk(skI2)), h(m2), a_5, a_6)   *)
+(* against the single IssuerSigned over framed(OT_ATTEST, ...,         *)
+(* canonVerH, a_2)). Corrected reading: the manifest-pinned fields     *)
+(* alg, id, fp, mh are unaltered by the attack; object type,           *)
+(* canonicalization version and payload differ (RESULTS.md,            *)
+(* "Prediction divergences" note 2; Finding F4). The note is placed    *)
+(* here, and the header kept to its original line count, so that line *)
+(* numbers cited in READING-AIDS.md remain valid. Re-run after the     *)
+(* correction: .out byte-identical to run 2 (ladder.log).              *)
+(* ==================================================================== *)

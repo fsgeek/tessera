@@ -1,0 +1,40 @@
+a1_payload_tamper.pv exit=0
+238: RESULT event(AcceptedUnderHonestKey(k,fb_4)) ==> event(IssuerSigned(k,fb_4)) is true.
+408: RESULT not event(HonestAccepted(k,fb_4)) is false.
+577: RESULT event(AcceptS(ev_1,t_1,k,fb_4)) ==> event(IssuerSigned(k,fb_4)) is false.
+582: RESULT not event(Attack) is true.
+a2_party_swap.pv exit=0
+239: RESULT event(AcceptedUnderHonestKey(k,fb_4)) ==> event(IssuerSigned(k,fb_4)) is true.
+409: RESULT not event(HonestAccepted(k,fb_4)) is false.
+578: RESULT event(AcceptS(ev_1,t_1,k,fb_4)) ==> event(IssuerSigned(k,fb_4)) is false.
+583: RESULT not event(Attack) is true.
+a3_dsks_replay.pv exit=0
+241: RESULT event(AcceptedUnderHonestKey(k,fb_4)) ==> event(IssuerSigned(k,fb_4)) is true.
+411: RESULT not event(HonestAccepted(k,fb_4)) is false.
+580: RESULT event(AcceptS(ev_1,t_1,k,fb_4)) ==> event(IssuerSigned(k,fb_4)) is false.
+585: RESULT not event(Attack) is true.
+a4_dsks_resign.pv exit=0
+242: RESULT event(AcceptedUnderHonestKey(k,fb_4)) ==> event(IssuerSigned(k,fb_4)) is true.
+412: RESULT not event(HonestAccepted(k,fb_4)) is false.
+581: RESULT event(AcceptS(ev_1,t_1,k,fb_4)) ==> event(IssuerSigned(k,fb_4)) is false.
+783: RESULT not event(Attack) is false.
+a5_repeat_replay.pv exit=0
+241: RESULT event(AcceptedUnderHonestKey(k,fb_4)) ==> event(IssuerSigned(k,fb_4)) is true.
+411: RESULT not event(HonestAccepted(k,fb_4)) is false.
+580: RESULT event(AcceptS(ev_1,t_1,k,fb_4)) ==> event(IssuerSigned(k,fb_4)) is false.
+689: RESULT not event(Attack) cannot be proved.
+a6_foreign_type.pv exit=0
+238: RESULT event(AcceptedUnderHonestKey(k,fb_4)) ==> event(IssuerSigned(k,fb_4)) is true.
+408: RESULT not event(HonestAccepted(k,fb_4)) is false.
+577: RESULT event(AcceptS(ev_1,t_1,k,fb_4)) ==> event(IssuerSigned(k,fb_4)) is false.
+747: RESULT not event(Attack) is false.
+a7_cross_mode.pv exit=0
+239: RESULT event(AcceptedUnderHonestKey(k,fb_4)) ==> event(IssuerSigned(k,fb_4)) is true.
+401: RESULT not event(HonestAccepted(k,fb_4)) is false.
+566: RESULT event(AcceptS(ev_1,t_1,k,fb_4)) ==> event(IssuerSigned(k,fb_4)) is false.
+747: RESULT not event(Attack) is false.
+a8_cross_broken_endpoint.pv exit=0
+428: RESULT event(AcceptedUnderHonestKey(k,fb_5)) ==> event(IssuerSigned(k,fb_5)) is false.
+598: RESULT not event(HonestAccepted(k,fb_5)) is false.
+767: RESULT event(AcceptS(ev_1,t_1,k,fb_5)) ==> event(IssuerSigned(k,fb_5)) is false.
+948: RESULT not event(Attack) is false.

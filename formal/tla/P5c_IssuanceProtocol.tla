@@ -100,6 +100,51 @@
 (*   without them that path is claimed but unreachable (Codex finding 5,  *)
 (*   2026-07-20).                                                          *)
 (*                                                                          *)
+(* CORRECTION 2026-09-06 (cross-family falsification review, Codex          *)
+(* gpt-6-astra; docs/reviews/2026-09-06-codex-tla-falsification-            *)
+(* p4-p5p6-p5c.md items 15, 16, 17; entered by the AI collaborator,         *)
+(* PROPOSED, not adopted; header text above is left as written per          *)
+(* amend-don't-rewrite — read it with these three notes):                   *)
+(* - Item 17: "Ship's fused guard IS the chain-time predicate" (above) is   *)
+(*   narrowed. Ship's guard `depth >= DepthK /\ now <= declared + Delta`    *)
+(*   coincides with A2.1's `timestamp(block h+k-1) <= declared + delta`     *)
+(*   ONLY under the single-clock abstraction (block timestamp = tick, one   *)
+(*   block per tick, no skew); ShippedIsSound carries no confirmation-time  *)
+(*   conjunct and no epsilon side, and A2.1 itself calls the fused guard    *)
+(*   "locally stronger", not equivalent. The decoupled three-conjunct       *)
+(*   verifier predicate and its agreement with this Ship are checked in     *)
+(*   P5cP5P6_Bridge.tla (invariant ShippedDesignatedAgree; companion        *)
+(*   _BrokenAnchorSubst red), not here.                                     *)
+(* - Item 16: eligibility latching — a timely-eligible final attempt cannot *)
+(*   be expired by scheduling delay — is the registered lifecycle           *)
+(*   (clock-roles ruling 2026-07-21, Codex constraint 1) and is MODELED AND *)
+(*   CHECKED in P5cP5P6_BridgeSlack_Latch.tla. This module is the earlier,  *)
+(*   S = 0, pre-latch instance: here a timely-eligible final attempt CAN be *)
+(*   expired by a Tick scheduled before Ship (the boundary race named at    *)
+(*   Ship). That is a property of this instance, not of the registered      *)
+(*   lifecycle; the reader is sent to the Latch module for the lifecycle    *)
+(*   claim.                                                                 *)
+(* - Item 15 (CONFIRMED by re-run at MaxTime = 12, 21 violations): the      *)
+(*   witness RefusalBuriedAnchorUnreachable == ~(refused /\ depth >=        *)
+(*   DepthK) did not encode chronology — an anchor placed BEFORE the        *)
+(*   refusal and buried by the final ticks satisfied it — so it fired at    *)
+(*   MaxTime = 12, and the "+DepthK headroom = 14 exercises the             *)
+(*   post-refusal burial path" sentences above, in the cfg, and in          *)
+(*   formal/PROPERTIES.md were not what that witness guarded. RECUT         *)
+(*   2026-09-06: variable `refusedAt` records the clock value at which the  *)
+(*   refusing Tick entered the refusal (sentinel NoRefusal before); the     *)
+(*   witness now requires the anchor to have landed AT OR AFTER that        *)
+(*   instant (anchorAt >= refusedAt, which an anchor placed before the      *)
+(*   refusing Tick cannot satisfy) and then to have reached full depth.     *)
+(*   Under the recut the witness is unreachable at MaxTime = 12 and 13 and  *)
+(*   fires at 14 (runs archived under falsification-2026-09-06/P5c/recut/). *)
+(*   Every previously checked invariant and the action property are kept    *)
+(*   unchanged; one guard invariant on the new variable,                    *)
+(*   RefusalTimeConsistent, is added so the witness cannot degenerate if    *)
+(*   the recording were broken. Companions _Broken and _BrokenSilent carry  *)
+(*   the same variable so their "identical state space" claims stay         *)
+(*   literally true.                                                        *)
+(*                                                                          *)
 (* Reading guide (Tony): this module has real actions. Tick advances      *)
 (* time and deepens an included anchor by one block per tick (block       *)
 (* arrival = clock tick, a deliberate simplification). Anchor lands the   *)
@@ -116,6 +161,7 @@ ASSUME Delta \in Nat /\ DepthK \in Nat \ {0} /\ MaxTime \in Nat
        /\ MaxAttempts \in Nat \ {0}
 
 NoAnchor == -1
+NoRefusal == -1  \* refusedAt sentinel: no refusal recorded (recut 2026-09-06)
 
 VARIABLES
   now,             \* the clock
@@ -126,17 +172,19 @@ VARIABLES
   shippedOrphaned, \* a SHIPPED receipt's anchor was orphaned (must stay FALSE)
   attempts,        \* issuance attempts so far
   reorgs,          \* reorg count (capped; for reachability witnesses)
-  refused          \* the durable refusal record (A2.3 / round-3 ruling 4)
+  refused,         \* the durable refusal record (A2.3 / round-3 ruling 4)
+  refusedAt        \* clock value at which the refusing Tick entered `refused`
+                   \* (NoRefusal until then; recut 2026-09-06, review item 15)
 
 vars == <<now, declared, anchorAt, depth, shipped, shippedOrphaned,
-          attempts, reorgs, refused>>
+          attempts, reorgs, refused, refusedAt>>
 
 Init ==
   /\ now = 0 /\ declared = 0
   /\ anchorAt = NoAnchor /\ depth = 0
   /\ shipped = FALSE /\ shippedOrphaned = FALSE
   /\ attempts = 1 /\ reorgs = 0
-  /\ refused = FALSE
+  /\ refused = FALSE /\ refusedAt = NoRefusal
 
 (* Time advances; an included, unorphaned anchor gains one confirmation   *)
 (* per tick (depth capped at DepthK — beyond k, nothing changes).          *)
@@ -154,6 +202,8 @@ Tick ==
   /\ depth' = IF anchorAt # NoAnchor /\ depth < DepthK THEN depth + 1 ELSE depth
   /\ refused' = (refused \/ (~shipped /\ attempts = MaxAttempts
                                       /\ now + 1 > declared + Delta))
+  \* recut 2026-09-06: the entering Tick stamps the clock value it moved to
+  /\ refusedAt' = IF refused' /\ ~refused THEN now + 1 ELSE refusedAt
   /\ UNCHANGED <<declared, anchorAt, shipped, shippedOrphaned, attempts, reorgs>>
 
 (* The OTS calendar lands the stamp in a block — at any time (delays are  *)
@@ -167,11 +217,16 @@ Tick ==
 (* refused state; RefusalBuriedAnchorUnreachable shows it BURIED to full  *)
 (* depth post-refusal with Ship still disabled — the latter needs the     *)
 (* +DepthK headroom in MaxTime (14), and at 12 it is unreachable.          *)
+(* CORRECTION 2026-09-06 (item 15): the sentence above was false for the    *)
+(* witness as it stood (no chronology; fired at 12). It is true for the     *)
+(* recut witness, which requires anchorAt >= refusedAt — the anchor         *)
+(* landing at or after the refusal instant — and is unreachable at 12       *)
+(* and 13, reachable at 14 (see the header correction and the cfg).         *)
 Anchor ==
   /\ ~shipped /\ anchorAt = NoAnchor
   /\ anchorAt' = now /\ depth' = 0
   /\ UNCHANGED <<now, declared, shipped, shippedOrphaned, attempts, reorgs,
-                 refused>>
+                 refused, refusedAt>>
 
 (* A reorganization orphans any anchor shallower than DepthK. Depth >= k  *)
 (* is permanent BY ASSUMPTION (A1.6) — that is the Layer 2 line this      *)
@@ -183,7 +238,7 @@ Reorg ==
   /\ reorgs < 2
   /\ anchorAt' = NoAnchor /\ depth' = 0 /\ reorgs' = reorgs + 1
   /\ shippedOrphaned' = (shipped \/ shippedOrphaned)
-  /\ UNCHANGED <<now, declared, shipped, attempts, refused>>
+  /\ UNCHANGED <<now, declared, shipped, attempts, refused, refusedAt>>
 
 (* Issuance completes — STRICT rule per the registered text: the anchor   *)
 (* is buried at depth k AND we are still within delta of the declared     *)
@@ -208,7 +263,7 @@ Ship ==
   /\ now <= declared + Delta
   /\ shipped' = TRUE
   /\ UNCHANGED <<now, declared, anchorAt, depth, shippedOrphaned, attempts,
-                 reorgs, refused>>
+                 reorgs, refused, refusedAt>>
 
 (* The window expired without completion: discard the attempt, redeclare  *)
 (* fresh. The old attempt never ships — its declared time is gone.         *)
@@ -217,7 +272,7 @@ Reissue ==
   /\ attempts < MaxAttempts
   /\ declared' = now /\ anchorAt' = NoAnchor /\ depth' = 0
   /\ attempts' = attempts + 1
-  /\ UNCHANGED <<now, shipped, shippedOrphaned, reorgs, refused>>
+  /\ UNCHANGED <<now, shipped, shippedOrphaned, reorgs, refused, refusedAt>>
 
 Next == Tick \/ Anchor \/ Reorg \/ Ship \/ Reissue
 
@@ -281,6 +336,15 @@ RefusedOnlyWhenExhausted ==
 (* obligations (see the header's narrowed claim).                          *)
 RefusalLatched == [][refused => refused']_vars
 
+(* Guard on the recording variable (recut 2026-09-06, review item 15):    *)
+(* refusedAt is set exactly when the refusal is entered, to a clock value *)
+(* no later than now. Without this, a broken recording (refusedAt stuck   *)
+(* at NoRefusal = -1) would make anchorAt >= refusedAt trivially true and *)
+(* silently restore the chronology-free witness this recut replaces.      *)
+RefusalTimeConsistent ==
+  /\ (refused <=> refusedAt # NoRefusal)
+  /\ (refused => refusedAt \in 0..now)
+
 (* Vacuity witnesses — _Sanity cfg, TLC -continue; VIOLATIONS are the     *)
 (* healthy result: shipping is reachable at all, after a re-issue, and    *)
 (* after surviving a reorg; refusal is reachable at all, after a reorg,   *)
@@ -298,6 +362,10 @@ ReorgShipUnreachable   == ~(shipped /\ reorgs > 0)
 RefusalUnreachable               == ~refused
 RefusalAfterReorgUnreachable     == ~(refused /\ reorgs > 0)
 RefusalWithLiveAnchorUnreachable == ~(refused /\ anchorAt # NoAnchor)
-RefusalBuriedAnchorUnreachable   == ~(refused /\ depth >= DepthK)
+\* recut 2026-09-06 (item 15): was ~(refused /\ depth >= DepthK), which an
+\* anchor placed BEFORE the refusal satisfied; now the anchor must have
+\* landed at or after the refusal instant and then reached full depth.
+RefusalBuriedAnchorUnreachable   ==
+  ~(refused /\ anchorAt >= refusedAt /\ depth >= DepthK)
 
 ================================================================================

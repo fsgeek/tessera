@@ -14,6 +14,14 @@ Status values: `open` → `modeling` → `checked` (tool passes) →
 Per A1.1, any weakening of a property is *not* recorded here — it
 requires a signed amendment.
 
+**Amendment 4 (signed 2026-09-06, `5188e7a`)** moved P10 to `checked`
+([model] half; tool assignment corrected to ProVerif), changed P9's
+discharge label, ratified P4's fail-vs-unperformable precedence,
+qualified P4's and P5/P6's registered sentences to what the models
+implement, registered the general degraded-mode principle (§A4.6), and
+commissioned non-discharging TLA+ probes of P9 and P10 whose green
+results are never cited here.
+
 | Prop | Short name                         | Discharge      | Tool (A1.4)        | Status | Artifact |
 |------|------------------------------------|----------------|--------------------| -------|----------|
 | P1   | Integrity (headline)               | [model]        | TLA+ and ProVerif  | open   | —        |
@@ -25,8 +33,8 @@ requires a signed amendment.
 | P6   | Revocation over uncertainty window | [model]        | TLA+               | checked| `formal/tla/P5P6_TemporalRevocation.tla` |
 | P7   | Wrapper / object-type soundness    | [model]        | TLA+ and ProVerif  | open   | —        |
 | P8   | Canonicalization inj. + framing    | [proof]        | Lean4 or prose+vec | open   | —        |
-| P9   | Verification statelessness         | [model]        | TLA+               | open   | —        |
-| P10  | Manifest authority                 | [model]        | TLA+               | open   | —        |
+| P9   | Verification statelessness         | [inspection+vector] (A4.1) | inspection; H1a vector; TLA+ probe non-discharging | open   | inputs enumerated `formal/spike/standing-probe/RESULTS-PROBE.md` Q6; two-machine vector owed (H1a) |
+| P10  | Manifest authority                 | [model]        | ProVerif (A4.1; was TLA+); TLA+ probe non-discharging | checked| `formal/spike/first-link/` Q1/Q3 both variants; `formal/suite/s-p3/` Q1 strict; degraded half carried by P4; possession half S-P3 ledger 2 |
 
 Cross-cutting obligations (A1.4, A1.7):
 
@@ -201,3 +209,31 @@ Cross-cutting obligations (A1.4, A1.7):
       `docs/reviews/2026-07-20-claude-predictions-p5c-refusal-bench.md`
       (first run caught a TLA+ precedence bug that silently disabled the
       atomic entry — `NoSilentDeadlock` flagged its own author's error).
+      **Note 2026-09-06 (STATUS: PROPOSED — produced by the AI
+      collaborator; not adopted; the commit is the author's; appended,
+      nothing above altered).** The parenthetical above, "+DepthK
+      headroom = 14 exercises post-refusal burial, the
+      `RefusalBuriedAnchorUnreachable` witness guards", was not true of
+      the witness as it stood: `~(refused /\ depth >= DepthK)` encoded
+      no chronology, and an anchor placed before the refusal and buried
+      by the final ticks satisfied it at `MaxTime = 12` (cross-family
+      review item 15, `docs/reviews/2026-09-06-codex-tla-falsification-
+      p4-p5p6-p5c.md`; confirmed by re-run, 21 violations). **Recut
+      2026-09-06:** `P5c_IssuanceProtocol.tla` gains one recording
+      variable, `refusedAt` (the clock value at which the refusing Tick
+      entered the refusal; sentinel before), one guard invariant on it,
+      `RefusalTimeConsistent`, and the witness becomes `~(refused /\
+      anchorAt >= refusedAt /\ depth >= DepthK)` — the anchor must have
+      landed at or after the refusal instant and then reached full
+      depth. Re-run 2026-09-06: main cfg green on all six invariants and
+      the action property (3606/2190 states, unchanged); `_Sanity` all
+      seven witnesses fire at 14; the recut witness does NOT fire at
+      `MaxTime = 12` or 13 (`formal/tla/falsification-2026-09-06/P5c/
+      recut/`), so the sentence above is true of the recut witness.
+      `_Broken` and `_BrokenSilent` carry the variable verbatim (their
+      "identical state space" claims stay literal); `_Broken` red on
+      `NoShippedOrphan`, `_BrokenSilent` red on `NoSilentDeadlock`,
+      `_BrokenSilent_Green` green with `RefusalTimeConsistent` added to
+      its set. Every committed `.out` in `formal/tla/` was regenerated
+      the same day so trace line numbers match the modules (review item
+      19). Log: `formal/tla/falsification-2026-09-06/FIXES-2026-09-06.md`.

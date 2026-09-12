@@ -1,0 +1,226 @@
+### STATUS: PROPOSED — 2026-09-06 — produced by the AI collaborator; not adopted; the commit is the author's. PROBE — NON-DISCHARGING.
+### P4 join source: formal/tla/P4_VerifierStates.tla sha256=9f5c551641f6627f HEAD=5dfd82b working-tree=modified-uncommitted
+### run-probe.sh per-invariant: P10_ManifestAuthority_BrokenSilent with P10_ManifestAuthority_BrokenSilent.cfg (2026-09-06T19:19Z)
+### one TLC run per invariant; each section is that run's evidentiary core
+
+### ---- P10_ManifestAuthority_BrokenSilent / TypeOK ----
+Model checking completed. No error has been found.
+62448 states generated, 43248 distinct states found, 0 states left on queue.
+Finished in 00s at (2026-09-06 19:19:13)
+### exit=0
+
+### ---- P10_ManifestAuthority_BrokenSilent / Partition ----
+Model checking completed. No error has been found.
+62448 states generated, 43248 distinct states found, 0 states left on queue.
+Finished in 00s at (2026-09-06 19:19:14)
+### exit=0
+
+### ---- P10_ManifestAuthority_BrokenSilent / StrictNeedsAuthorizedKey ----
+Model checking completed. No error has been found.
+62448 states generated, 43248 distinct states found, 0 states left on queue.
+Finished in 00s at (2026-09-06 19:19:15)
+### exit=0
+
+### ---- P10_ManifestAuthority_BrokenSilent / StrictMeansBothAgree ----
+Model checking completed. No error has been found.
+62448 states generated, 43248 distinct states found, 0 states left on queue.
+Finished in 00s at (2026-09-06 19:19:16)
+### exit=0
+
+### ---- P10_ManifestAuthority_BrokenSilent / DegradedNamesWaived ----
+Error: Invariant DegradedNamesWaived is violated.
+Error: The behavior up to this point is:
+State 1: <Initial predicate>
+/\ phase = "setup"
+/\ mkey = "kH"
+/\ waived = {"dns"}
+/\ ev = [ dns |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ],
+  repo |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ] ]
+/\ record = [policy |-> {}, why |-> <<>>]
+/\ poss = "pass"
+/\ compLater = {}
+/\ verdict = "none"
+/\ compIssue = {}
+
+State 2: <Publish line 110, col 3 to line 113, col 76 of module P10_ManifestAuthority_BrokenSilent>
+/\ phase = "published"
+/\ mkey = "kH"
+/\ waived = {"dns"}
+/\ ev = [ dns |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ],
+  repo |->
+      [ present |-> TRUE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ] ]
+/\ record = [policy |-> {}, why |-> <<>>]
+/\ poss = "pass"
+/\ compLater = {}
+/\ verdict = "none"
+/\ compIssue = {}
+
+State 3: <Present line 116, col 3 to line 120, col 68 of module P10_ManifestAuthority_BrokenSilent>
+/\ phase = "presented"
+/\ mkey = "kH"
+/\ waived = {"dns"}
+/\ ev = [ dns |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ],
+  repo |->
+      [ present |-> TRUE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ] ]
+/\ record = [policy |-> {}, why |-> <<>>]
+/\ poss = "pass"
+/\ compLater = {}
+/\ verdict = "none"
+/\ compIssue = {}
+
+State 4: <Verify line 123, col 3 to line 127, col 63 of module P10_ManifestAuthority_BrokenSilent>
+/\ phase = "verified"
+/\ mkey = "kH"
+/\ waived = {"dns"}
+/\ ev = [ dns |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ],
+  repo |->
+      [ present |-> TRUE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ] ]
+/\ record = [policy |-> {}, why |-> <<>>]
+/\ poss = "pass"
+/\ compLater = {}
+/\ verdict = "VALID_DEGRADED"
+/\ compIssue = {}
+
+24113 states generated, 24113 distinct states found, 19142 states left on queue.
+Finished in 00s at (2026-09-06 19:19:17)
+### exit=12
+
+### ---- P10_ManifestAuthority_BrokenSilent / NeverSilent ----
+Error: Invariant NeverSilent is violated.
+Error: The behavior up to this point is:
+State 1: <Initial predicate>
+/\ phase = "setup"
+/\ mkey = "kH"
+/\ waived = {"dns"}
+/\ ev = [ dns |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ],
+  repo |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ] ]
+/\ record = [policy |-> {}, why |-> <<>>]
+/\ poss = "pass"
+/\ compLater = {}
+/\ verdict = "none"
+/\ compIssue = {}
+
+State 2: <Publish line 110, col 3 to line 113, col 76 of module P10_ManifestAuthority_BrokenSilent>
+/\ phase = "published"
+/\ mkey = "kH"
+/\ waived = {"dns"}
+/\ ev = [ dns |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ],
+  repo |->
+      [ present |-> TRUE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ] ]
+/\ record = [policy |-> {}, why |-> <<>>]
+/\ poss = "pass"
+/\ compLater = {}
+/\ verdict = "none"
+/\ compIssue = {}
+
+State 3: <Present line 116, col 3 to line 120, col 68 of module P10_ManifestAuthority_BrokenSilent>
+/\ phase = "presented"
+/\ mkey = "kH"
+/\ waived = {"dns"}
+/\ ev = [ dns |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ],
+  repo |->
+      [ present |-> TRUE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ] ]
+/\ record = [policy |-> {}, why |-> <<>>]
+/\ poss = "pass"
+/\ compLater = {}
+/\ verdict = "none"
+/\ compIssue = {}
+
+State 4: <Verify line 123, col 3 to line 127, col 63 of module P10_ManifestAuthority_BrokenSilent>
+/\ phase = "verified"
+/\ mkey = "kH"
+/\ waived = {"dns"}
+/\ ev = [ dns |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ],
+  repo |->
+      [ present |-> TRUE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ] ]
+/\ record = [policy |-> {}, why |-> <<>>]
+/\ poss = "pass"
+/\ compLater = {}
+/\ verdict = "VALID_DEGRADED"
+/\ compIssue = {}
+
+24149 states generated, 24149 distinct states found, 19142 states left on queue.
+Finished in 00s at (2026-09-06 19:19:18)
+### exit=12
+
+### ---- P10_ManifestAuthority_BrokenSilent / NeverZero ----
+Model checking completed. No error has been found.
+62448 states generated, 43248 distinct states found, 0 states left on queue.
+Finished in 00s at (2026-09-06 19:19:19)
+### exit=0
+
+### ---- P10_ManifestAuthority_BrokenSilent / UnavailabilityIsNotWaiver ----
+Model checking completed. No error has been found.
+62448 states generated, 43248 distinct states found, 0 states left on queue.
+Finished in 00s at (2026-09-06 19:19:20)
+### exit=0
+
+### ---- P10_ManifestAuthority_BrokenSilent / PossessionNeverAuthority ----
+Model checking completed. No error has been found.
+62448 states generated, 43248 distinct states found, 0 states left on queue.
+Finished in 00s at (2026-09-06 19:19:21)
+### exit=0
+
+### ---- P10_ManifestAuthority_BrokenSilent / LaterCaptureStrictUnreachable ----
+Model checking completed. No error has been found.
+62448 states generated, 43248 distinct states found, 0 states left on queue.
+Finished in 00s at (2026-09-06 19:19:22)
+### exit=0

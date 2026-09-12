@@ -1,0 +1,1388 @@
+[
+  {
+    "name": "q1d_I_evDI_evidence",
+    "source": "proverif/sp7_q1_strict_dns_compromised.pv",
+    "line": 179,
+    "old": "  let (=STMT_DIGEST, =h(tI)) = checksign(evDI, pkD) in",
+    "new": "(* removed evidence check *)"
+  },
+  {
+    "name": "q1d_I_evDI_tag",
+    "source": "proverif/sp7_q1_strict_dns_compromised.pv",
+    "line": 179,
+    "old": "  let (=STMT_DIGEST, =h(tI)) = checksign(evDI, pkD) in",
+    "new": "  let (unusedTag, =h(tI)) = checksign(evDI, pkD) in"
+  },
+  {
+    "name": "q1d_I_evDI_digest",
+    "source": "proverif/sp7_q1_strict_dns_compromised.pv",
+    "line": 179,
+    "old": "  let (=STMT_DIGEST, =h(tI)) = checksign(evDI, pkD) in",
+    "new": "  let (=STMT_DIGEST, unusedDigest) = checksign(evDI, pkD) in"
+  },
+  {
+    "name": "q1d_I_evRI_evidence",
+    "source": "proverif/sp7_q1_strict_dns_compromised.pv",
+    "line": 180,
+    "old": "  let (=STMT_DIGEST, =h(tI)) = checksign(evRI, pkR) in",
+    "new": "(* removed evidence check *)"
+  },
+  {
+    "name": "q1d_I_evRI_tag",
+    "source": "proverif/sp7_q1_strict_dns_compromised.pv",
+    "line": 180,
+    "old": "  let (=STMT_DIGEST, =h(tI)) = checksign(evRI, pkR) in",
+    "new": "  let (unusedTag, =h(tI)) = checksign(evRI, pkR) in"
+  },
+  {
+    "name": "q1d_I_evRI_digest",
+    "source": "proverif/sp7_q1_strict_dns_compromised.pv",
+    "line": 180,
+    "old": "  let (=STMT_DIGEST, =h(tI)) = checksign(evRI, pkR) in",
+    "new": "  let (=STMT_DIGEST, unusedDigest) = checksign(evRI, pkR) in"
+  },
+  {
+    "name": "q1d_I_slot",
+    "source": "proverif/sp7_q1_strict_dns_compromised.pv",
+    "line": 182,
+    "old": "  if fp(kI) = kfprI then",
+    "new": "(* removed slot check *)"
+  },
+  {
+    "name": "q1d_I_possession",
+    "source": "proverif/sp7_q1_strict_dns_compromised.pv",
+    "line": 183,
+    "old": "  let (=POSS, =tI) = checksign(ppfI, kI) in",
+    "new": "(* removed possession check *)"
+  },
+  {
+    "name": "q1d_I_poss_tag",
+    "source": "proverif/sp7_q1_strict_dns_compromised.pv",
+    "line": 183,
+    "old": "  let (=POSS, =tI) = checksign(ppfI, kI) in",
+    "new": "  let (unusedTag, =tI) = checksign(ppfI, kI) in"
+  },
+  {
+    "name": "q1d_I_poss_manifest",
+    "source": "proverif/sp7_q1_strict_dns_compromised.pv",
+    "line": 183,
+    "old": "  let (=POSS, =tI) = checksign(ppfI, kI) in",
+    "new": "  let (=POSS, unusedManifest) = checksign(ppfI, kI) in"
+  },
+  {
+    "name": "q1d_I_signature",
+    "source": "proverif/sp7_q1_strict_dns_compromised.pv",
+    "line": 184,
+    "old": "  let (=BYTES, =fbI) = checksign(sgI, kI) in",
+    "new": "(* removed signature check *)"
+  },
+  {
+    "name": "q1d_I_sig_tag",
+    "source": "proverif/sp7_q1_strict_dns_compromised.pv",
+    "line": 184,
+    "old": "  let (=BYTES, =fbI) = checksign(sgI, kI) in",
+    "new": "  let (unusedTag, =fbI) = checksign(sgI, kI) in"
+  },
+  {
+    "name": "q1d_I_sig_bytes",
+    "source": "proverif/sp7_q1_strict_dns_compromised.pv",
+    "line": 184,
+    "old": "  let (=BYTES, =fbI) = checksign(sgI, kI) in",
+    "new": "  let (=BYTES, unusedBytes) = checksign(sgI, kI) in"
+  },
+  {
+    "name": "q1d_I_type",
+    "source": "proverif/sp7_q1_strict_dns_compromised.pv",
+    "line": 185,
+    "old": "  let framed(=OT_ATTEST, =algI, =idI, =fp(kI), mhI, cvI, plI) = fbI in",
+    "new": "  let framed(unusedType, =algI, =idI, =fp(kI), mhI, cvI, plI) = fbI in"
+  },
+  {
+    "name": "q1d_I_alg",
+    "source": "proverif/sp7_q1_strict_dns_compromised.pv",
+    "line": 185,
+    "old": "  let framed(=OT_ATTEST, =algI, =idI, =fp(kI), mhI, cvI, plI) = fbI in",
+    "new": "  let framed(=OT_ATTEST, unusedAlg, =idI, =fp(kI), mhI, cvI, plI) = fbI in"
+  },
+  {
+    "name": "q1d_I_id",
+    "source": "proverif/sp7_q1_strict_dns_compromised.pv",
+    "line": 185,
+    "old": "  let framed(=OT_ATTEST, =algI, =idI, =fp(kI), mhI, cvI, plI) = fbI in",
+    "new": "  let framed(=OT_ATTEST, =algI, unusedId, =fp(kI), mhI, cvI, plI) = fbI in"
+  },
+  {
+    "name": "q1d_I_fp",
+    "source": "proverif/sp7_q1_strict_dns_compromised.pv",
+    "line": 185,
+    "old": "  let framed(=OT_ATTEST, =algI, =idI, =fp(kI), mhI, cvI, plI) = fbI in",
+    "new": "  let framed(=OT_ATTEST, =algI, =idI, unusedFp, mhI, cvI, plI) = fbI in"
+  },
+  {
+    "name": "q1d_I_hash",
+    "source": "proverif/sp7_q1_strict_dns_compromised.pv",
+    "line": 186,
+    "old": "  if mhI = h(tI) then",
+    "new": "(* removed manifest hash check *)"
+  },
+  {
+    "name": "q1d_W_evDW_evidence",
+    "source": "proverif/sp7_q1_strict_dns_compromised.pv",
+    "line": 206,
+    "old": "  let (=STMT_DIGEST, =h(tW)) = checksign(evDW, pkD) in",
+    "new": "(* removed evidence check *)"
+  },
+  {
+    "name": "q1d_W_evDW_tag",
+    "source": "proverif/sp7_q1_strict_dns_compromised.pv",
+    "line": 206,
+    "old": "  let (=STMT_DIGEST, =h(tW)) = checksign(evDW, pkD) in",
+    "new": "  let (unusedTag, =h(tW)) = checksign(evDW, pkD) in"
+  },
+  {
+    "name": "q1d_W_evDW_digest",
+    "source": "proverif/sp7_q1_strict_dns_compromised.pv",
+    "line": 206,
+    "old": "  let (=STMT_DIGEST, =h(tW)) = checksign(evDW, pkD) in",
+    "new": "  let (=STMT_DIGEST, unusedDigest) = checksign(evDW, pkD) in"
+  },
+  {
+    "name": "q1d_W_evRW_evidence",
+    "source": "proverif/sp7_q1_strict_dns_compromised.pv",
+    "line": 207,
+    "old": "  let (=STMT_DIGEST, =h(tW)) = checksign(evRW, pkR) in",
+    "new": "(* removed evidence check *)"
+  },
+  {
+    "name": "q1d_W_evRW_tag",
+    "source": "proverif/sp7_q1_strict_dns_compromised.pv",
+    "line": 207,
+    "old": "  let (=STMT_DIGEST, =h(tW)) = checksign(evRW, pkR) in",
+    "new": "  let (unusedTag, =h(tW)) = checksign(evRW, pkR) in"
+  },
+  {
+    "name": "q1d_W_evRW_digest",
+    "source": "proverif/sp7_q1_strict_dns_compromised.pv",
+    "line": 207,
+    "old": "  let (=STMT_DIGEST, =h(tW)) = checksign(evRW, pkR) in",
+    "new": "  let (=STMT_DIGEST, unusedDigest) = checksign(evRW, pkR) in"
+  },
+  {
+    "name": "q1d_W_slot",
+    "source": "proverif/sp7_q1_strict_dns_compromised.pv",
+    "line": 209,
+    "old": "  if fp(kW) = kfprW then",
+    "new": "(* removed slot check *)"
+  },
+  {
+    "name": "q1d_W_possession",
+    "source": "proverif/sp7_q1_strict_dns_compromised.pv",
+    "line": 210,
+    "old": "  let (=POSS, =tW) = checksign(ppfW, kW) in",
+    "new": "(* removed possession check *)"
+  },
+  {
+    "name": "q1d_W_poss_tag",
+    "source": "proverif/sp7_q1_strict_dns_compromised.pv",
+    "line": 210,
+    "old": "  let (=POSS, =tW) = checksign(ppfW, kW) in",
+    "new": "  let (unusedTag, =tW) = checksign(ppfW, kW) in"
+  },
+  {
+    "name": "q1d_W_poss_manifest",
+    "source": "proverif/sp7_q1_strict_dns_compromised.pv",
+    "line": 210,
+    "old": "  let (=POSS, =tW) = checksign(ppfW, kW) in",
+    "new": "  let (=POSS, unusedManifest) = checksign(ppfW, kW) in"
+  },
+  {
+    "name": "q1d_W_signature",
+    "source": "proverif/sp7_q1_strict_dns_compromised.pv",
+    "line": 211,
+    "old": "  let (=BYTES, =fbW) = checksign(sgW, kW) in",
+    "new": "(* removed signature check *)"
+  },
+  {
+    "name": "q1d_W_sig_tag",
+    "source": "proverif/sp7_q1_strict_dns_compromised.pv",
+    "line": 211,
+    "old": "  let (=BYTES, =fbW) = checksign(sgW, kW) in",
+    "new": "  let (unusedTag, =fbW) = checksign(sgW, kW) in"
+  },
+  {
+    "name": "q1d_W_sig_bytes",
+    "source": "proverif/sp7_q1_strict_dns_compromised.pv",
+    "line": 211,
+    "old": "  let (=BYTES, =fbW) = checksign(sgW, kW) in",
+    "new": "  let (=BYTES, unusedBytes) = checksign(sgW, kW) in"
+  },
+  {
+    "name": "q1d_W_type",
+    "source": "proverif/sp7_q1_strict_dns_compromised.pv",
+    "line": 212,
+    "old": "  let framed(=OT_WRAPPER, =algW, =idW, =fp(kW), mhW, cvW, wrap(cvIw: bitstring, (fbI: bitstring, sgI: bitstring))) = fbW in",
+    "new": "  let framed(unusedType, =algW, =idW, =fp(kW), mhW, cvW, wrap(cvIw: bitstring, (fbI: bitstring, sgI: bitstring))) = fbW in"
+  },
+  {
+    "name": "q1d_W_alg",
+    "source": "proverif/sp7_q1_strict_dns_compromised.pv",
+    "line": 212,
+    "old": "  let framed(=OT_WRAPPER, =algW, =idW, =fp(kW), mhW, cvW, wrap(cvIw: bitstring, (fbI: bitstring, sgI: bitstring))) = fbW in",
+    "new": "  let framed(=OT_WRAPPER, unusedAlg, =idW, =fp(kW), mhW, cvW, wrap(cvIw: bitstring, (fbI: bitstring, sgI: bitstring))) = fbW in"
+  },
+  {
+    "name": "q1d_W_id",
+    "source": "proverif/sp7_q1_strict_dns_compromised.pv",
+    "line": 212,
+    "old": "  let framed(=OT_WRAPPER, =algW, =idW, =fp(kW), mhW, cvW, wrap(cvIw: bitstring, (fbI: bitstring, sgI: bitstring))) = fbW in",
+    "new": "  let framed(=OT_WRAPPER, =algW, unusedId, =fp(kW), mhW, cvW, wrap(cvIw: bitstring, (fbI: bitstring, sgI: bitstring))) = fbW in"
+  },
+  {
+    "name": "q1d_W_fp",
+    "source": "proverif/sp7_q1_strict_dns_compromised.pv",
+    "line": 212,
+    "old": "  let framed(=OT_WRAPPER, =algW, =idW, =fp(kW), mhW, cvW, wrap(cvIw: bitstring, (fbI: bitstring, sgI: bitstring))) = fbW in",
+    "new": "  let framed(=OT_WRAPPER, =algW, =idW, unusedFp, mhW, cvW, wrap(cvIw: bitstring, (fbI: bitstring, sgI: bitstring))) = fbW in"
+  },
+  {
+    "name": "q1d_W_hash",
+    "source": "proverif/sp7_q1_strict_dns_compromised.pv",
+    "line": 213,
+    "old": "  if mhW = h(tW) then",
+    "new": "(* removed manifest hash check *)"
+  },
+  {
+    "name": "q1r_I_evDI_evidence",
+    "source": "proverif/sp7_q1_strict_repo_compromised.pv",
+    "line": 179,
+    "old": "  let (=STMT_DIGEST, =h(tI)) = checksign(evDI, pkD) in",
+    "new": "(* removed evidence check *)"
+  },
+  {
+    "name": "q1r_I_evDI_tag",
+    "source": "proverif/sp7_q1_strict_repo_compromised.pv",
+    "line": 179,
+    "old": "  let (=STMT_DIGEST, =h(tI)) = checksign(evDI, pkD) in",
+    "new": "  let (unusedTag, =h(tI)) = checksign(evDI, pkD) in"
+  },
+  {
+    "name": "q1r_I_evDI_digest",
+    "source": "proverif/sp7_q1_strict_repo_compromised.pv",
+    "line": 179,
+    "old": "  let (=STMT_DIGEST, =h(tI)) = checksign(evDI, pkD) in",
+    "new": "  let (=STMT_DIGEST, unusedDigest) = checksign(evDI, pkD) in"
+  },
+  {
+    "name": "q1r_I_evRI_evidence",
+    "source": "proverif/sp7_q1_strict_repo_compromised.pv",
+    "line": 180,
+    "old": "  let (=STMT_DIGEST, =h(tI)) = checksign(evRI, pkR) in",
+    "new": "(* removed evidence check *)"
+  },
+  {
+    "name": "q1r_I_evRI_tag",
+    "source": "proverif/sp7_q1_strict_repo_compromised.pv",
+    "line": 180,
+    "old": "  let (=STMT_DIGEST, =h(tI)) = checksign(evRI, pkR) in",
+    "new": "  let (unusedTag, =h(tI)) = checksign(evRI, pkR) in"
+  },
+  {
+    "name": "q1r_I_evRI_digest",
+    "source": "proverif/sp7_q1_strict_repo_compromised.pv",
+    "line": 180,
+    "old": "  let (=STMT_DIGEST, =h(tI)) = checksign(evRI, pkR) in",
+    "new": "  let (=STMT_DIGEST, unusedDigest) = checksign(evRI, pkR) in"
+  },
+  {
+    "name": "q1r_I_slot",
+    "source": "proverif/sp7_q1_strict_repo_compromised.pv",
+    "line": 182,
+    "old": "  if fp(kI) = kfprI then",
+    "new": "(* removed slot check *)"
+  },
+  {
+    "name": "q1r_I_possession",
+    "source": "proverif/sp7_q1_strict_repo_compromised.pv",
+    "line": 183,
+    "old": "  let (=POSS, =tI) = checksign(ppfI, kI) in",
+    "new": "(* removed possession check *)"
+  },
+  {
+    "name": "q1r_I_poss_tag",
+    "source": "proverif/sp7_q1_strict_repo_compromised.pv",
+    "line": 183,
+    "old": "  let (=POSS, =tI) = checksign(ppfI, kI) in",
+    "new": "  let (unusedTag, =tI) = checksign(ppfI, kI) in"
+  },
+  {
+    "name": "q1r_I_poss_manifest",
+    "source": "proverif/sp7_q1_strict_repo_compromised.pv",
+    "line": 183,
+    "old": "  let (=POSS, =tI) = checksign(ppfI, kI) in",
+    "new": "  let (=POSS, unusedManifest) = checksign(ppfI, kI) in"
+  },
+  {
+    "name": "q1r_I_signature",
+    "source": "proverif/sp7_q1_strict_repo_compromised.pv",
+    "line": 184,
+    "old": "  let (=BYTES, =fbI) = checksign(sgI, kI) in",
+    "new": "(* removed signature check *)"
+  },
+  {
+    "name": "q1r_I_sig_tag",
+    "source": "proverif/sp7_q1_strict_repo_compromised.pv",
+    "line": 184,
+    "old": "  let (=BYTES, =fbI) = checksign(sgI, kI) in",
+    "new": "  let (unusedTag, =fbI) = checksign(sgI, kI) in"
+  },
+  {
+    "name": "q1r_I_sig_bytes",
+    "source": "proverif/sp7_q1_strict_repo_compromised.pv",
+    "line": 184,
+    "old": "  let (=BYTES, =fbI) = checksign(sgI, kI) in",
+    "new": "  let (=BYTES, unusedBytes) = checksign(sgI, kI) in"
+  },
+  {
+    "name": "q1r_I_type",
+    "source": "proverif/sp7_q1_strict_repo_compromised.pv",
+    "line": 185,
+    "old": "  let framed(=OT_ATTEST, =algI, =idI, =fp(kI), mhI, cvI, plI) = fbI in",
+    "new": "  let framed(unusedType, =algI, =idI, =fp(kI), mhI, cvI, plI) = fbI in"
+  },
+  {
+    "name": "q1r_I_alg",
+    "source": "proverif/sp7_q1_strict_repo_compromised.pv",
+    "line": 185,
+    "old": "  let framed(=OT_ATTEST, =algI, =idI, =fp(kI), mhI, cvI, plI) = fbI in",
+    "new": "  let framed(=OT_ATTEST, unusedAlg, =idI, =fp(kI), mhI, cvI, plI) = fbI in"
+  },
+  {
+    "name": "q1r_I_id",
+    "source": "proverif/sp7_q1_strict_repo_compromised.pv",
+    "line": 185,
+    "old": "  let framed(=OT_ATTEST, =algI, =idI, =fp(kI), mhI, cvI, plI) = fbI in",
+    "new": "  let framed(=OT_ATTEST, =algI, unusedId, =fp(kI), mhI, cvI, plI) = fbI in"
+  },
+  {
+    "name": "q1r_I_fp",
+    "source": "proverif/sp7_q1_strict_repo_compromised.pv",
+    "line": 185,
+    "old": "  let framed(=OT_ATTEST, =algI, =idI, =fp(kI), mhI, cvI, plI) = fbI in",
+    "new": "  let framed(=OT_ATTEST, =algI, =idI, unusedFp, mhI, cvI, plI) = fbI in"
+  },
+  {
+    "name": "q1r_I_hash",
+    "source": "proverif/sp7_q1_strict_repo_compromised.pv",
+    "line": 186,
+    "old": "  if mhI = h(tI) then",
+    "new": "(* removed manifest hash check *)"
+  },
+  {
+    "name": "q1r_W_evDW_evidence",
+    "source": "proverif/sp7_q1_strict_repo_compromised.pv",
+    "line": 206,
+    "old": "  let (=STMT_DIGEST, =h(tW)) = checksign(evDW, pkD) in",
+    "new": "(* removed evidence check *)"
+  },
+  {
+    "name": "q1r_W_evDW_tag",
+    "source": "proverif/sp7_q1_strict_repo_compromised.pv",
+    "line": 206,
+    "old": "  let (=STMT_DIGEST, =h(tW)) = checksign(evDW, pkD) in",
+    "new": "  let (unusedTag, =h(tW)) = checksign(evDW, pkD) in"
+  },
+  {
+    "name": "q1r_W_evDW_digest",
+    "source": "proverif/sp7_q1_strict_repo_compromised.pv",
+    "line": 206,
+    "old": "  let (=STMT_DIGEST, =h(tW)) = checksign(evDW, pkD) in",
+    "new": "  let (=STMT_DIGEST, unusedDigest) = checksign(evDW, pkD) in"
+  },
+  {
+    "name": "q1r_W_evRW_evidence",
+    "source": "proverif/sp7_q1_strict_repo_compromised.pv",
+    "line": 207,
+    "old": "  let (=STMT_DIGEST, =h(tW)) = checksign(evRW, pkR) in",
+    "new": "(* removed evidence check *)"
+  },
+  {
+    "name": "q1r_W_evRW_tag",
+    "source": "proverif/sp7_q1_strict_repo_compromised.pv",
+    "line": 207,
+    "old": "  let (=STMT_DIGEST, =h(tW)) = checksign(evRW, pkR) in",
+    "new": "  let (unusedTag, =h(tW)) = checksign(evRW, pkR) in"
+  },
+  {
+    "name": "q1r_W_evRW_digest",
+    "source": "proverif/sp7_q1_strict_repo_compromised.pv",
+    "line": 207,
+    "old": "  let (=STMT_DIGEST, =h(tW)) = checksign(evRW, pkR) in",
+    "new": "  let (=STMT_DIGEST, unusedDigest) = checksign(evRW, pkR) in"
+  },
+  {
+    "name": "q1r_W_slot",
+    "source": "proverif/sp7_q1_strict_repo_compromised.pv",
+    "line": 209,
+    "old": "  if fp(kW) = kfprW then",
+    "new": "(* removed slot check *)"
+  },
+  {
+    "name": "q1r_W_possession",
+    "source": "proverif/sp7_q1_strict_repo_compromised.pv",
+    "line": 210,
+    "old": "  let (=POSS, =tW) = checksign(ppfW, kW) in",
+    "new": "(* removed possession check *)"
+  },
+  {
+    "name": "q1r_W_poss_tag",
+    "source": "proverif/sp7_q1_strict_repo_compromised.pv",
+    "line": 210,
+    "old": "  let (=POSS, =tW) = checksign(ppfW, kW) in",
+    "new": "  let (unusedTag, =tW) = checksign(ppfW, kW) in"
+  },
+  {
+    "name": "q1r_W_poss_manifest",
+    "source": "proverif/sp7_q1_strict_repo_compromised.pv",
+    "line": 210,
+    "old": "  let (=POSS, =tW) = checksign(ppfW, kW) in",
+    "new": "  let (=POSS, unusedManifest) = checksign(ppfW, kW) in"
+  },
+  {
+    "name": "q1r_W_signature",
+    "source": "proverif/sp7_q1_strict_repo_compromised.pv",
+    "line": 211,
+    "old": "  let (=BYTES, =fbW) = checksign(sgW, kW) in",
+    "new": "(* removed signature check *)"
+  },
+  {
+    "name": "q1r_W_sig_tag",
+    "source": "proverif/sp7_q1_strict_repo_compromised.pv",
+    "line": 211,
+    "old": "  let (=BYTES, =fbW) = checksign(sgW, kW) in",
+    "new": "  let (unusedTag, =fbW) = checksign(sgW, kW) in"
+  },
+  {
+    "name": "q1r_W_sig_bytes",
+    "source": "proverif/sp7_q1_strict_repo_compromised.pv",
+    "line": 211,
+    "old": "  let (=BYTES, =fbW) = checksign(sgW, kW) in",
+    "new": "  let (=BYTES, unusedBytes) = checksign(sgW, kW) in"
+  },
+  {
+    "name": "q1r_W_type",
+    "source": "proverif/sp7_q1_strict_repo_compromised.pv",
+    "line": 212,
+    "old": "  let framed(=OT_WRAPPER, =algW, =idW, =fp(kW), mhW, cvW, wrap(cvIw: bitstring, (fbI: bitstring, sgI: bitstring))) = fbW in",
+    "new": "  let framed(unusedType, =algW, =idW, =fp(kW), mhW, cvW, wrap(cvIw: bitstring, (fbI: bitstring, sgI: bitstring))) = fbW in"
+  },
+  {
+    "name": "q1r_W_alg",
+    "source": "proverif/sp7_q1_strict_repo_compromised.pv",
+    "line": 212,
+    "old": "  let framed(=OT_WRAPPER, =algW, =idW, =fp(kW), mhW, cvW, wrap(cvIw: bitstring, (fbI: bitstring, sgI: bitstring))) = fbW in",
+    "new": "  let framed(=OT_WRAPPER, unusedAlg, =idW, =fp(kW), mhW, cvW, wrap(cvIw: bitstring, (fbI: bitstring, sgI: bitstring))) = fbW in"
+  },
+  {
+    "name": "q1r_W_id",
+    "source": "proverif/sp7_q1_strict_repo_compromised.pv",
+    "line": 212,
+    "old": "  let framed(=OT_WRAPPER, =algW, =idW, =fp(kW), mhW, cvW, wrap(cvIw: bitstring, (fbI: bitstring, sgI: bitstring))) = fbW in",
+    "new": "  let framed(=OT_WRAPPER, =algW, unusedId, =fp(kW), mhW, cvW, wrap(cvIw: bitstring, (fbI: bitstring, sgI: bitstring))) = fbW in"
+  },
+  {
+    "name": "q1r_W_fp",
+    "source": "proverif/sp7_q1_strict_repo_compromised.pv",
+    "line": 212,
+    "old": "  let framed(=OT_WRAPPER, =algW, =idW, =fp(kW), mhW, cvW, wrap(cvIw: bitstring, (fbI: bitstring, sgI: bitstring))) = fbW in",
+    "new": "  let framed(=OT_WRAPPER, =algW, =idW, unusedFp, mhW, cvW, wrap(cvIw: bitstring, (fbI: bitstring, sgI: bitstring))) = fbW in"
+  },
+  {
+    "name": "q1r_W_hash",
+    "source": "proverif/sp7_q1_strict_repo_compromised.pv",
+    "line": 213,
+    "old": "  if mhW = h(tW) then",
+    "new": "(* removed manifest hash check *)"
+  },
+  {
+    "name": "q2_I_evI_evidence",
+    "source": "proverif/sp7_q2_degraded_compromised.pv",
+    "line": 248,
+    "old": "  let (=STMT_DIGEST, =h(tI)) = checksign(evI, pkS) in",
+    "new": "(* removed evidence check *)"
+  },
+  {
+    "name": "q2_I_evI_tag",
+    "source": "proverif/sp7_q2_degraded_compromised.pv",
+    "line": 248,
+    "old": "  let (=STMT_DIGEST, =h(tI)) = checksign(evI, pkS) in",
+    "new": "  let (unusedTag, =h(tI)) = checksign(evI, pkS) in"
+  },
+  {
+    "name": "q2_I_evI_digest",
+    "source": "proverif/sp7_q2_degraded_compromised.pv",
+    "line": 248,
+    "old": "  let (=STMT_DIGEST, =h(tI)) = checksign(evI, pkS) in",
+    "new": "  let (=STMT_DIGEST, unusedDigest) = checksign(evI, pkS) in"
+  },
+  {
+    "name": "q2_I_slot",
+    "source": "proverif/sp7_q2_degraded_compromised.pv",
+    "line": 250,
+    "old": "  if fp(kI) = kfprI then",
+    "new": "(* removed slot check *)"
+  },
+  {
+    "name": "q2_I_possession",
+    "source": "proverif/sp7_q2_degraded_compromised.pv",
+    "line": 251,
+    "old": "  let (=POSS, =tI) = checksign(ppfI, kI) in",
+    "new": "(* removed possession check *)"
+  },
+  {
+    "name": "q2_I_poss_tag",
+    "source": "proverif/sp7_q2_degraded_compromised.pv",
+    "line": 251,
+    "old": "  let (=POSS, =tI) = checksign(ppfI, kI) in",
+    "new": "  let (unusedTag, =tI) = checksign(ppfI, kI) in"
+  },
+  {
+    "name": "q2_I_poss_manifest",
+    "source": "proverif/sp7_q2_degraded_compromised.pv",
+    "line": 251,
+    "old": "  let (=POSS, =tI) = checksign(ppfI, kI) in",
+    "new": "  let (=POSS, unusedManifest) = checksign(ppfI, kI) in"
+  },
+  {
+    "name": "q2_I_signature",
+    "source": "proverif/sp7_q2_degraded_compromised.pv",
+    "line": 252,
+    "old": "  let (=BYTES, =fbI) = checksign(sgI, kI) in",
+    "new": "(* removed signature check *)"
+  },
+  {
+    "name": "q2_I_sig_tag",
+    "source": "proverif/sp7_q2_degraded_compromised.pv",
+    "line": 252,
+    "old": "  let (=BYTES, =fbI) = checksign(sgI, kI) in",
+    "new": "  let (unusedTag, =fbI) = checksign(sgI, kI) in"
+  },
+  {
+    "name": "q2_I_sig_bytes",
+    "source": "proverif/sp7_q2_degraded_compromised.pv",
+    "line": 252,
+    "old": "  let (=BYTES, =fbI) = checksign(sgI, kI) in",
+    "new": "  let (=BYTES, unusedBytes) = checksign(sgI, kI) in"
+  },
+  {
+    "name": "q2_I_type",
+    "source": "proverif/sp7_q2_degraded_compromised.pv",
+    "line": 253,
+    "old": "  let framed(=OT_ATTEST, =algI, =idI, =fp(kI), mhI, cvI, plI) = fbI in",
+    "new": "  let framed(unusedType, =algI, =idI, =fp(kI), mhI, cvI, plI) = fbI in"
+  },
+  {
+    "name": "q2_I_alg",
+    "source": "proverif/sp7_q2_degraded_compromised.pv",
+    "line": 253,
+    "old": "  let framed(=OT_ATTEST, =algI, =idI, =fp(kI), mhI, cvI, plI) = fbI in",
+    "new": "  let framed(=OT_ATTEST, unusedAlg, =idI, =fp(kI), mhI, cvI, plI) = fbI in"
+  },
+  {
+    "name": "q2_I_id",
+    "source": "proverif/sp7_q2_degraded_compromised.pv",
+    "line": 253,
+    "old": "  let framed(=OT_ATTEST, =algI, =idI, =fp(kI), mhI, cvI, plI) = fbI in",
+    "new": "  let framed(=OT_ATTEST, =algI, unusedId, =fp(kI), mhI, cvI, plI) = fbI in"
+  },
+  {
+    "name": "q2_I_fp",
+    "source": "proverif/sp7_q2_degraded_compromised.pv",
+    "line": 253,
+    "old": "  let framed(=OT_ATTEST, =algI, =idI, =fp(kI), mhI, cvI, plI) = fbI in",
+    "new": "  let framed(=OT_ATTEST, =algI, =idI, unusedFp, mhI, cvI, plI) = fbI in"
+  },
+  {
+    "name": "q2_I_hash",
+    "source": "proverif/sp7_q2_degraded_compromised.pv",
+    "line": 254,
+    "old": "  if mhI = h(tI) then",
+    "new": "(* removed manifest hash check *)"
+  },
+  {
+    "name": "q2_W_evW_evidence",
+    "source": "proverif/sp7_q2_degraded_compromised.pv",
+    "line": 274,
+    "old": "  let (=STMT_DIGEST, =h(tW)) = checksign(evW, pkS) in",
+    "new": "(* removed evidence check *)"
+  },
+  {
+    "name": "q2_W_evW_tag",
+    "source": "proverif/sp7_q2_degraded_compromised.pv",
+    "line": 274,
+    "old": "  let (=STMT_DIGEST, =h(tW)) = checksign(evW, pkS) in",
+    "new": "  let (unusedTag, =h(tW)) = checksign(evW, pkS) in"
+  },
+  {
+    "name": "q2_W_evW_digest",
+    "source": "proverif/sp7_q2_degraded_compromised.pv",
+    "line": 274,
+    "old": "  let (=STMT_DIGEST, =h(tW)) = checksign(evW, pkS) in",
+    "new": "  let (=STMT_DIGEST, unusedDigest) = checksign(evW, pkS) in"
+  },
+  {
+    "name": "q2_W_slot",
+    "source": "proverif/sp7_q2_degraded_compromised.pv",
+    "line": 276,
+    "old": "  if fp(kW) = kfprW then",
+    "new": "(* removed slot check *)"
+  },
+  {
+    "name": "q2_W_possession",
+    "source": "proverif/sp7_q2_degraded_compromised.pv",
+    "line": 277,
+    "old": "  let (=POSS, =tW) = checksign(ppfW, kW) in",
+    "new": "(* removed possession check *)"
+  },
+  {
+    "name": "q2_W_poss_tag",
+    "source": "proverif/sp7_q2_degraded_compromised.pv",
+    "line": 277,
+    "old": "  let (=POSS, =tW) = checksign(ppfW, kW) in",
+    "new": "  let (unusedTag, =tW) = checksign(ppfW, kW) in"
+  },
+  {
+    "name": "q2_W_poss_manifest",
+    "source": "proverif/sp7_q2_degraded_compromised.pv",
+    "line": 277,
+    "old": "  let (=POSS, =tW) = checksign(ppfW, kW) in",
+    "new": "  let (=POSS, unusedManifest) = checksign(ppfW, kW) in"
+  },
+  {
+    "name": "q2_W_signature",
+    "source": "proverif/sp7_q2_degraded_compromised.pv",
+    "line": 278,
+    "old": "  let (=BYTES, =fbW) = checksign(sgW, kW) in",
+    "new": "(* removed signature check *)"
+  },
+  {
+    "name": "q2_W_sig_tag",
+    "source": "proverif/sp7_q2_degraded_compromised.pv",
+    "line": 278,
+    "old": "  let (=BYTES, =fbW) = checksign(sgW, kW) in",
+    "new": "  let (unusedTag, =fbW) = checksign(sgW, kW) in"
+  },
+  {
+    "name": "q2_W_sig_bytes",
+    "source": "proverif/sp7_q2_degraded_compromised.pv",
+    "line": 278,
+    "old": "  let (=BYTES, =fbW) = checksign(sgW, kW) in",
+    "new": "  let (=BYTES, unusedBytes) = checksign(sgW, kW) in"
+  },
+  {
+    "name": "q2_W_type",
+    "source": "proverif/sp7_q2_degraded_compromised.pv",
+    "line": 279,
+    "old": "  let framed(=OT_WRAPPER, =algW, =idW, =fp(kW), mhW, cvW, wrap(cvIw: bitstring, (fbI: bitstring, sgI: bitstring))) = fbW in",
+    "new": "  let framed(unusedType, =algW, =idW, =fp(kW), mhW, cvW, wrap(cvIw: bitstring, (fbI: bitstring, sgI: bitstring))) = fbW in"
+  },
+  {
+    "name": "q2_W_alg",
+    "source": "proverif/sp7_q2_degraded_compromised.pv",
+    "line": 279,
+    "old": "  let framed(=OT_WRAPPER, =algW, =idW, =fp(kW), mhW, cvW, wrap(cvIw: bitstring, (fbI: bitstring, sgI: bitstring))) = fbW in",
+    "new": "  let framed(=OT_WRAPPER, unusedAlg, =idW, =fp(kW), mhW, cvW, wrap(cvIw: bitstring, (fbI: bitstring, sgI: bitstring))) = fbW in"
+  },
+  {
+    "name": "q2_W_id",
+    "source": "proverif/sp7_q2_degraded_compromised.pv",
+    "line": 279,
+    "old": "  let framed(=OT_WRAPPER, =algW, =idW, =fp(kW), mhW, cvW, wrap(cvIw: bitstring, (fbI: bitstring, sgI: bitstring))) = fbW in",
+    "new": "  let framed(=OT_WRAPPER, =algW, unusedId, =fp(kW), mhW, cvW, wrap(cvIw: bitstring, (fbI: bitstring, sgI: bitstring))) = fbW in"
+  },
+  {
+    "name": "q2_W_fp",
+    "source": "proverif/sp7_q2_degraded_compromised.pv",
+    "line": 279,
+    "old": "  let framed(=OT_WRAPPER, =algW, =idW, =fp(kW), mhW, cvW, wrap(cvIw: bitstring, (fbI: bitstring, sgI: bitstring))) = fbW in",
+    "new": "  let framed(=OT_WRAPPER, =algW, =idW, unusedFp, mhW, cvW, wrap(cvIw: bitstring, (fbI: bitstring, sgI: bitstring))) = fbW in"
+  },
+  {
+    "name": "q2_W_hash",
+    "source": "proverif/sp7_q2_degraded_compromised.pv",
+    "line": 280,
+    "old": "  if mhW = h(tW) then",
+    "new": "(* removed manifest hash check *)"
+  },
+  {
+    "name": "q4o_I_evDI_evidence",
+    "source": "proverif/sp7_q4_control_opaque_twoversion.pv",
+    "line": 153,
+    "old": "  let (=STMT_DIGEST, =h(tI)) = checksign(evDI, pkD) in",
+    "new": "(* removed evidence check *)"
+  },
+  {
+    "name": "q4o_I_evDI_tag",
+    "source": "proverif/sp7_q4_control_opaque_twoversion.pv",
+    "line": 153,
+    "old": "  let (=STMT_DIGEST, =h(tI)) = checksign(evDI, pkD) in",
+    "new": "  let (unusedTag, =h(tI)) = checksign(evDI, pkD) in"
+  },
+  {
+    "name": "q4o_I_evDI_digest",
+    "source": "proverif/sp7_q4_control_opaque_twoversion.pv",
+    "line": 153,
+    "old": "  let (=STMT_DIGEST, =h(tI)) = checksign(evDI, pkD) in",
+    "new": "  let (=STMT_DIGEST, unusedDigest) = checksign(evDI, pkD) in"
+  },
+  {
+    "name": "q4o_I_evRI_evidence",
+    "source": "proverif/sp7_q4_control_opaque_twoversion.pv",
+    "line": 154,
+    "old": "  let (=STMT_DIGEST, =h(tI)) = checksign(evRI, pkR) in",
+    "new": "(* removed evidence check *)"
+  },
+  {
+    "name": "q4o_I_evRI_tag",
+    "source": "proverif/sp7_q4_control_opaque_twoversion.pv",
+    "line": 154,
+    "old": "  let (=STMT_DIGEST, =h(tI)) = checksign(evRI, pkR) in",
+    "new": "  let (unusedTag, =h(tI)) = checksign(evRI, pkR) in"
+  },
+  {
+    "name": "q4o_I_evRI_digest",
+    "source": "proverif/sp7_q4_control_opaque_twoversion.pv",
+    "line": 154,
+    "old": "  let (=STMT_DIGEST, =h(tI)) = checksign(evRI, pkR) in",
+    "new": "  let (=STMT_DIGEST, unusedDigest) = checksign(evRI, pkR) in"
+  },
+  {
+    "name": "q4o_I_slot",
+    "source": "proverif/sp7_q4_control_opaque_twoversion.pv",
+    "line": 156,
+    "old": "  if fp(kI) = kfprI then",
+    "new": "(* removed slot check *)"
+  },
+  {
+    "name": "q4o_I_possession",
+    "source": "proverif/sp7_q4_control_opaque_twoversion.pv",
+    "line": 157,
+    "old": "  let (=POSS, =tI) = checksign(ppfI, kI) in",
+    "new": "(* removed possession check *)"
+  },
+  {
+    "name": "q4o_I_poss_tag",
+    "source": "proverif/sp7_q4_control_opaque_twoversion.pv",
+    "line": 157,
+    "old": "  let (=POSS, =tI) = checksign(ppfI, kI) in",
+    "new": "  let (unusedTag, =tI) = checksign(ppfI, kI) in"
+  },
+  {
+    "name": "q4o_I_poss_manifest",
+    "source": "proverif/sp7_q4_control_opaque_twoversion.pv",
+    "line": 157,
+    "old": "  let (=POSS, =tI) = checksign(ppfI, kI) in",
+    "new": "  let (=POSS, unusedManifest) = checksign(ppfI, kI) in"
+  },
+  {
+    "name": "q4o_I_signature",
+    "source": "proverif/sp7_q4_control_opaque_twoversion.pv",
+    "line": 158,
+    "old": "  let (=BYTES, =fbI) = checksign(sgI, kI) in",
+    "new": "(* removed signature check *)"
+  },
+  {
+    "name": "q4o_I_sig_tag",
+    "source": "proverif/sp7_q4_control_opaque_twoversion.pv",
+    "line": 158,
+    "old": "  let (=BYTES, =fbI) = checksign(sgI, kI) in",
+    "new": "  let (unusedTag, =fbI) = checksign(sgI, kI) in"
+  },
+  {
+    "name": "q4o_I_sig_bytes",
+    "source": "proverif/sp7_q4_control_opaque_twoversion.pv",
+    "line": 158,
+    "old": "  let (=BYTES, =fbI) = checksign(sgI, kI) in",
+    "new": "  let (=BYTES, unusedBytes) = checksign(sgI, kI) in"
+  },
+  {
+    "name": "q4o_I_type",
+    "source": "proverif/sp7_q4_control_opaque_twoversion.pv",
+    "line": 159,
+    "old": "  let canon(cvc, framed(=OT_ATTEST, =algI, =idI, =fp(kI), mhI, cvI, plI)) = fbI in",
+    "new": "  let canon(cvc, framed(unusedType, =algI, =idI, =fp(kI), mhI, cvI, plI)) = fbI in"
+  },
+  {
+    "name": "q4o_I_alg",
+    "source": "proverif/sp7_q4_control_opaque_twoversion.pv",
+    "line": 159,
+    "old": "  let canon(cvc, framed(=OT_ATTEST, =algI, =idI, =fp(kI), mhI, cvI, plI)) = fbI in",
+    "new": "  let canon(cvc, framed(=OT_ATTEST, unusedAlg, =idI, =fp(kI), mhI, cvI, plI)) = fbI in"
+  },
+  {
+    "name": "q4o_I_id",
+    "source": "proverif/sp7_q4_control_opaque_twoversion.pv",
+    "line": 159,
+    "old": "  let canon(cvc, framed(=OT_ATTEST, =algI, =idI, =fp(kI), mhI, cvI, plI)) = fbI in",
+    "new": "  let canon(cvc, framed(=OT_ATTEST, =algI, unusedId, =fp(kI), mhI, cvI, plI)) = fbI in"
+  },
+  {
+    "name": "q4o_I_fp",
+    "source": "proverif/sp7_q4_control_opaque_twoversion.pv",
+    "line": 159,
+    "old": "  let canon(cvc, framed(=OT_ATTEST, =algI, =idI, =fp(kI), mhI, cvI, plI)) = fbI in",
+    "new": "  let canon(cvc, framed(=OT_ATTEST, =algI, =idI, unusedFp, mhI, cvI, plI)) = fbI in"
+  },
+  {
+    "name": "q4o_I_hash",
+    "source": "proverif/sp7_q4_control_opaque_twoversion.pv",
+    "line": 160,
+    "old": "  if mhI = h(tI) then",
+    "new": "(* removed manifest hash check *)"
+  },
+  {
+    "name": "q4o_W_evDW_evidence",
+    "source": "proverif/sp7_q4_control_opaque_twoversion.pv",
+    "line": 180,
+    "old": "  let (=STMT_DIGEST, =h(tW)) = checksign(evDW, pkD) in",
+    "new": "(* removed evidence check *)"
+  },
+  {
+    "name": "q4o_W_evDW_tag",
+    "source": "proverif/sp7_q4_control_opaque_twoversion.pv",
+    "line": 180,
+    "old": "  let (=STMT_DIGEST, =h(tW)) = checksign(evDW, pkD) in",
+    "new": "  let (unusedTag, =h(tW)) = checksign(evDW, pkD) in"
+  },
+  {
+    "name": "q4o_W_evDW_digest",
+    "source": "proverif/sp7_q4_control_opaque_twoversion.pv",
+    "line": 180,
+    "old": "  let (=STMT_DIGEST, =h(tW)) = checksign(evDW, pkD) in",
+    "new": "  let (=STMT_DIGEST, unusedDigest) = checksign(evDW, pkD) in"
+  },
+  {
+    "name": "q4o_W_evRW_evidence",
+    "source": "proverif/sp7_q4_control_opaque_twoversion.pv",
+    "line": 181,
+    "old": "  let (=STMT_DIGEST, =h(tW)) = checksign(evRW, pkR) in",
+    "new": "(* removed evidence check *)"
+  },
+  {
+    "name": "q4o_W_evRW_tag",
+    "source": "proverif/sp7_q4_control_opaque_twoversion.pv",
+    "line": 181,
+    "old": "  let (=STMT_DIGEST, =h(tW)) = checksign(evRW, pkR) in",
+    "new": "  let (unusedTag, =h(tW)) = checksign(evRW, pkR) in"
+  },
+  {
+    "name": "q4o_W_evRW_digest",
+    "source": "proverif/sp7_q4_control_opaque_twoversion.pv",
+    "line": 181,
+    "old": "  let (=STMT_DIGEST, =h(tW)) = checksign(evRW, pkR) in",
+    "new": "  let (=STMT_DIGEST, unusedDigest) = checksign(evRW, pkR) in"
+  },
+  {
+    "name": "q4o_W_slot",
+    "source": "proverif/sp7_q4_control_opaque_twoversion.pv",
+    "line": 183,
+    "old": "  if fp(kW) = kfprW then",
+    "new": "(* removed slot check *)"
+  },
+  {
+    "name": "q4o_W_possession",
+    "source": "proverif/sp7_q4_control_opaque_twoversion.pv",
+    "line": 184,
+    "old": "  let (=POSS, =tW) = checksign(ppfW, kW) in",
+    "new": "(* removed possession check *)"
+  },
+  {
+    "name": "q4o_W_poss_tag",
+    "source": "proverif/sp7_q4_control_opaque_twoversion.pv",
+    "line": 184,
+    "old": "  let (=POSS, =tW) = checksign(ppfW, kW) in",
+    "new": "  let (unusedTag, =tW) = checksign(ppfW, kW) in"
+  },
+  {
+    "name": "q4o_W_poss_manifest",
+    "source": "proverif/sp7_q4_control_opaque_twoversion.pv",
+    "line": 184,
+    "old": "  let (=POSS, =tW) = checksign(ppfW, kW) in",
+    "new": "  let (=POSS, unusedManifest) = checksign(ppfW, kW) in"
+  },
+  {
+    "name": "q4o_W_signature",
+    "source": "proverif/sp7_q4_control_opaque_twoversion.pv",
+    "line": 185,
+    "old": "  let (=BYTES, =fbW) = checksign(sgW, kW) in",
+    "new": "(* removed signature check *)"
+  },
+  {
+    "name": "q4o_W_sig_tag",
+    "source": "proverif/sp7_q4_control_opaque_twoversion.pv",
+    "line": 185,
+    "old": "  let (=BYTES, =fbW) = checksign(sgW, kW) in",
+    "new": "  let (unusedTag, =fbW) = checksign(sgW, kW) in"
+  },
+  {
+    "name": "q4o_W_sig_bytes",
+    "source": "proverif/sp7_q4_control_opaque_twoversion.pv",
+    "line": 185,
+    "old": "  let (=BYTES, =fbW) = checksign(sgW, kW) in",
+    "new": "  let (=BYTES, unusedBytes) = checksign(sgW, kW) in"
+  },
+  {
+    "name": "q4o_W_type",
+    "source": "proverif/sp7_q4_control_opaque_twoversion.pv",
+    "line": 186,
+    "old": "  let framed(=OT_WRAPPER, =algW, =idW, =fp(kW), mhW, cvW, wrap(cvIw: bitstring, (fbI: bitstring, sgI: bitstring))) = fbW in",
+    "new": "  let framed(unusedType, =algW, =idW, =fp(kW), mhW, cvW, wrap(cvIw: bitstring, (fbI: bitstring, sgI: bitstring))) = fbW in"
+  },
+  {
+    "name": "q4o_W_alg",
+    "source": "proverif/sp7_q4_control_opaque_twoversion.pv",
+    "line": 186,
+    "old": "  let framed(=OT_WRAPPER, =algW, =idW, =fp(kW), mhW, cvW, wrap(cvIw: bitstring, (fbI: bitstring, sgI: bitstring))) = fbW in",
+    "new": "  let framed(=OT_WRAPPER, unusedAlg, =idW, =fp(kW), mhW, cvW, wrap(cvIw: bitstring, (fbI: bitstring, sgI: bitstring))) = fbW in"
+  },
+  {
+    "name": "q4o_W_id",
+    "source": "proverif/sp7_q4_control_opaque_twoversion.pv",
+    "line": 186,
+    "old": "  let framed(=OT_WRAPPER, =algW, =idW, =fp(kW), mhW, cvW, wrap(cvIw: bitstring, (fbI: bitstring, sgI: bitstring))) = fbW in",
+    "new": "  let framed(=OT_WRAPPER, =algW, unusedId, =fp(kW), mhW, cvW, wrap(cvIw: bitstring, (fbI: bitstring, sgI: bitstring))) = fbW in"
+  },
+  {
+    "name": "q4o_W_fp",
+    "source": "proverif/sp7_q4_control_opaque_twoversion.pv",
+    "line": 186,
+    "old": "  let framed(=OT_WRAPPER, =algW, =idW, =fp(kW), mhW, cvW, wrap(cvIw: bitstring, (fbI: bitstring, sgI: bitstring))) = fbW in",
+    "new": "  let framed(=OT_WRAPPER, =algW, =idW, unusedFp, mhW, cvW, wrap(cvIw: bitstring, (fbI: bitstring, sgI: bitstring))) = fbW in"
+  },
+  {
+    "name": "q4o_W_hash",
+    "source": "proverif/sp7_q4_control_opaque_twoversion.pv",
+    "line": 187,
+    "old": "  if mhW = h(tW) then",
+    "new": "(* removed manifest hash check *)"
+  },
+  {
+    "name": "q5_I_evI_evidence",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 179,
+    "old": "  let (=STMT_DIGEST, =h(tI)) = checksign(evI, pkS) in",
+    "new": "(* removed evidence check *)"
+  },
+  {
+    "name": "q5_I_evI_tag",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 179,
+    "old": "  let (=STMT_DIGEST, =h(tI)) = checksign(evI, pkS) in",
+    "new": "  let (unusedTag, =h(tI)) = checksign(evI, pkS) in"
+  },
+  {
+    "name": "q5_I_evI_digest",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 179,
+    "old": "  let (=STMT_DIGEST, =h(tI)) = checksign(evI, pkS) in",
+    "new": "  let (=STMT_DIGEST, unusedDigest) = checksign(evI, pkS) in"
+  },
+  {
+    "name": "q5_I_slot",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 181,
+    "old": "  if fp(kI) = kfprI then",
+    "new": "(* removed slot check *)"
+  },
+  {
+    "name": "q5_I_possession",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 182,
+    "old": "  let (=POSS, =tI) = checksign(ppfI, kI) in",
+    "new": "(* removed possession check *)"
+  },
+  {
+    "name": "q5_I_poss_tag",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 182,
+    "old": "  let (=POSS, =tI) = checksign(ppfI, kI) in",
+    "new": "  let (unusedTag, =tI) = checksign(ppfI, kI) in"
+  },
+  {
+    "name": "q5_I_poss_manifest",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 182,
+    "old": "  let (=POSS, =tI) = checksign(ppfI, kI) in",
+    "new": "  let (=POSS, unusedManifest) = checksign(ppfI, kI) in"
+  },
+  {
+    "name": "q5_I_signature",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 183,
+    "old": "  let (=BYTES, =fbI) = checksign(sgI, kI) in",
+    "new": "(* removed signature check *)"
+  },
+  {
+    "name": "q5_I_sig_tag",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 183,
+    "old": "  let (=BYTES, =fbI) = checksign(sgI, kI) in",
+    "new": "  let (unusedTag, =fbI) = checksign(sgI, kI) in"
+  },
+  {
+    "name": "q5_I_sig_bytes",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 183,
+    "old": "  let (=BYTES, =fbI) = checksign(sgI, kI) in",
+    "new": "  let (=BYTES, unusedBytes) = checksign(sgI, kI) in"
+  },
+  {
+    "name": "q5_I_type",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 184,
+    "old": "  let framed(=OT_ATTEST, =algI, =idI, =fp(kI), mhI, cvI, plI) = fbI in",
+    "new": "  let framed(unusedType, =algI, =idI, =fp(kI), mhI, cvI, plI) = fbI in"
+  },
+  {
+    "name": "q5_I_alg",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 184,
+    "old": "  let framed(=OT_ATTEST, =algI, =idI, =fp(kI), mhI, cvI, plI) = fbI in",
+    "new": "  let framed(=OT_ATTEST, unusedAlg, =idI, =fp(kI), mhI, cvI, plI) = fbI in"
+  },
+  {
+    "name": "q5_I_id",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 184,
+    "old": "  let framed(=OT_ATTEST, =algI, =idI, =fp(kI), mhI, cvI, plI) = fbI in",
+    "new": "  let framed(=OT_ATTEST, =algI, unusedId, =fp(kI), mhI, cvI, plI) = fbI in"
+  },
+  {
+    "name": "q5_I_fp",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 184,
+    "old": "  let framed(=OT_ATTEST, =algI, =idI, =fp(kI), mhI, cvI, plI) = fbI in",
+    "new": "  let framed(=OT_ATTEST, =algI, =idI, unusedFp, mhI, cvI, plI) = fbI in"
+  },
+  {
+    "name": "q5_I_hash",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 185,
+    "old": "  if mhI = h(tI) then",
+    "new": "(* removed manifest hash check *)"
+  },
+  {
+    "name": "q5_W_evW_evidence",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 205,
+    "old": "  let (=STMT_DIGEST, =h(tW)) = checksign(evW, pkS) in",
+    "new": "(* removed evidence check *)"
+  },
+  {
+    "name": "q5_W_evW_tag",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 205,
+    "old": "  let (=STMT_DIGEST, =h(tW)) = checksign(evW, pkS) in",
+    "new": "  let (unusedTag, =h(tW)) = checksign(evW, pkS) in"
+  },
+  {
+    "name": "q5_W_evW_digest",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 205,
+    "old": "  let (=STMT_DIGEST, =h(tW)) = checksign(evW, pkS) in",
+    "new": "  let (=STMT_DIGEST, unusedDigest) = checksign(evW, pkS) in"
+  },
+  {
+    "name": "q5_W_slot",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 207,
+    "old": "  if fp(kW) = kfprW then",
+    "new": "(* removed slot check *)"
+  },
+  {
+    "name": "q5_W_possession",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 208,
+    "old": "  let (=POSS, =tW) = checksign(ppfW, kW) in",
+    "new": "(* removed possession check *)"
+  },
+  {
+    "name": "q5_W_poss_tag",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 208,
+    "old": "  let (=POSS, =tW) = checksign(ppfW, kW) in",
+    "new": "  let (unusedTag, =tW) = checksign(ppfW, kW) in"
+  },
+  {
+    "name": "q5_W_poss_manifest",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 208,
+    "old": "  let (=POSS, =tW) = checksign(ppfW, kW) in",
+    "new": "  let (=POSS, unusedManifest) = checksign(ppfW, kW) in"
+  },
+  {
+    "name": "q5_W_signature",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 209,
+    "old": "  let (=BYTES, =fbW) = checksign(sgW, kW) in",
+    "new": "(* removed signature check *)"
+  },
+  {
+    "name": "q5_W_sig_tag",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 209,
+    "old": "  let (=BYTES, =fbW) = checksign(sgW, kW) in",
+    "new": "  let (unusedTag, =fbW) = checksign(sgW, kW) in"
+  },
+  {
+    "name": "q5_W_sig_bytes",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 209,
+    "old": "  let (=BYTES, =fbW) = checksign(sgW, kW) in",
+    "new": "  let (=BYTES, unusedBytes) = checksign(sgW, kW) in"
+  },
+  {
+    "name": "q5_W_type",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 210,
+    "old": "  let framed(=OT_WRAPPER, =algW, =idW, =fp(kW), mhW, cvW, wrap(cvIw: bitstring, (fbI: bitstring, sgI: bitstring))) = fbW in",
+    "new": "  let framed(unusedType, =algW, =idW, =fp(kW), mhW, cvW, wrap(cvIw: bitstring, (fbI: bitstring, sgI: bitstring))) = fbW in"
+  },
+  {
+    "name": "q5_W_alg",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 210,
+    "old": "  let framed(=OT_WRAPPER, =algW, =idW, =fp(kW), mhW, cvW, wrap(cvIw: bitstring, (fbI: bitstring, sgI: bitstring))) = fbW in",
+    "new": "  let framed(=OT_WRAPPER, unusedAlg, =idW, =fp(kW), mhW, cvW, wrap(cvIw: bitstring, (fbI: bitstring, sgI: bitstring))) = fbW in"
+  },
+  {
+    "name": "q5_W_id",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 210,
+    "old": "  let framed(=OT_WRAPPER, =algW, =idW, =fp(kW), mhW, cvW, wrap(cvIw: bitstring, (fbI: bitstring, sgI: bitstring))) = fbW in",
+    "new": "  let framed(=OT_WRAPPER, =algW, unusedId, =fp(kW), mhW, cvW, wrap(cvIw: bitstring, (fbI: bitstring, sgI: bitstring))) = fbW in"
+  },
+  {
+    "name": "q5_W_fp",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 210,
+    "old": "  let framed(=OT_WRAPPER, =algW, =idW, =fp(kW), mhW, cvW, wrap(cvIw: bitstring, (fbI: bitstring, sgI: bitstring))) = fbW in",
+    "new": "  let framed(=OT_WRAPPER, =algW, =idW, unusedFp, mhW, cvW, wrap(cvIw: bitstring, (fbI: bitstring, sgI: bitstring))) = fbW in"
+  },
+  {
+    "name": "q5_W_hash",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 211,
+    "old": "  if mhW = h(tW) then",
+    "new": "(* removed manifest hash check *)"
+  },
+  {
+    "name": "q5_O_evO_evidence",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 224,
+    "old": "  let (=STMT_DIGEST, =h(tO)) = checksign(evO, pkS) in",
+    "new": "(* removed evidence check *)"
+  },
+  {
+    "name": "q5_O_evO_tag",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 224,
+    "old": "  let (=STMT_DIGEST, =h(tO)) = checksign(evO, pkS) in",
+    "new": "  let (unusedTag, =h(tO)) = checksign(evO, pkS) in"
+  },
+  {
+    "name": "q5_O_evO_digest",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 224,
+    "old": "  let (=STMT_DIGEST, =h(tO)) = checksign(evO, pkS) in",
+    "new": "  let (=STMT_DIGEST, unusedDigest) = checksign(evO, pkS) in"
+  },
+  {
+    "name": "q5_O_slot",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 226,
+    "old": "  if fp(kO) = kfprO then",
+    "new": "(* removed slot check *)"
+  },
+  {
+    "name": "q5_O_possession",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 227,
+    "old": "  let (=POSS, =tO) = checksign(ppfO, kO) in",
+    "new": "(* removed possession check *)"
+  },
+  {
+    "name": "q5_O_poss_tag",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 227,
+    "old": "  let (=POSS, =tO) = checksign(ppfO, kO) in",
+    "new": "  let (unusedTag, =tO) = checksign(ppfO, kO) in"
+  },
+  {
+    "name": "q5_O_poss_manifest",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 227,
+    "old": "  let (=POSS, =tO) = checksign(ppfO, kO) in",
+    "new": "  let (=POSS, unusedManifest) = checksign(ppfO, kO) in"
+  },
+  {
+    "name": "q5_O_signature",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 228,
+    "old": "  let (=BYTES, =fbO) = checksign(sgO, kO) in",
+    "new": "(* removed signature check *)"
+  },
+  {
+    "name": "q5_O_sig_tag",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 228,
+    "old": "  let (=BYTES, =fbO) = checksign(sgO, kO) in",
+    "new": "  let (unusedTag, =fbO) = checksign(sgO, kO) in"
+  },
+  {
+    "name": "q5_O_sig_bytes",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 228,
+    "old": "  let (=BYTES, =fbO) = checksign(sgO, kO) in",
+    "new": "  let (=BYTES, unusedBytes) = checksign(sgO, kO) in"
+  },
+  {
+    "name": "q5_O_type",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 229,
+    "old": "  let framed(=OT_WRAPPER, =algO, =idO, =fp(kO), mhO, cvO, wrap(cvMw: bitstring, (fbM: bitstring, sgM: bitstring))) = fbO in",
+    "new": "  let framed(unusedType, =algO, =idO, =fp(kO), mhO, cvO, wrap(cvMw: bitstring, (fbM: bitstring, sgM: bitstring))) = fbO in"
+  },
+  {
+    "name": "q5_O_alg",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 229,
+    "old": "  let framed(=OT_WRAPPER, =algO, =idO, =fp(kO), mhO, cvO, wrap(cvMw: bitstring, (fbM: bitstring, sgM: bitstring))) = fbO in",
+    "new": "  let framed(=OT_WRAPPER, unusedAlg, =idO, =fp(kO), mhO, cvO, wrap(cvMw: bitstring, (fbM: bitstring, sgM: bitstring))) = fbO in"
+  },
+  {
+    "name": "q5_O_id",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 229,
+    "old": "  let framed(=OT_WRAPPER, =algO, =idO, =fp(kO), mhO, cvO, wrap(cvMw: bitstring, (fbM: bitstring, sgM: bitstring))) = fbO in",
+    "new": "  let framed(=OT_WRAPPER, =algO, unusedId, =fp(kO), mhO, cvO, wrap(cvMw: bitstring, (fbM: bitstring, sgM: bitstring))) = fbO in"
+  },
+  {
+    "name": "q5_O_fp",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 229,
+    "old": "  let framed(=OT_WRAPPER, =algO, =idO, =fp(kO), mhO, cvO, wrap(cvMw: bitstring, (fbM: bitstring, sgM: bitstring))) = fbO in",
+    "new": "  let framed(=OT_WRAPPER, =algO, =idO, unusedFp, mhO, cvO, wrap(cvMw: bitstring, (fbM: bitstring, sgM: bitstring))) = fbO in"
+  },
+  {
+    "name": "q5_O_hash",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 230,
+    "old": "  if mhO = h(tO) then",
+    "new": "(* removed manifest hash check *)"
+  },
+  {
+    "name": "q5_M_evM_evidence",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 233,
+    "old": "  | let (=STMT_DIGEST, =h(tM)) = checksign(evM, pkS) in",
+    "new": "  | (* removed evidence check *)"
+  },
+  {
+    "name": "q5_M_evM_tag",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 233,
+    "old": "  | let (=STMT_DIGEST, =h(tM)) = checksign(evM, pkS) in",
+    "new": "  | let (unusedTag, =h(tM)) = checksign(evM, pkS) in"
+  },
+  {
+    "name": "q5_M_evM_digest",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 233,
+    "old": "  | let (=STMT_DIGEST, =h(tM)) = checksign(evM, pkS) in",
+    "new": "  | let (=STMT_DIGEST, unusedDigest) = checksign(evM, pkS) in"
+  },
+  {
+    "name": "q5_M_slot",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 235,
+    "old": "    if fp(kM) = kfprM then",
+    "new": "(* removed slot check *)"
+  },
+  {
+    "name": "q5_M_possession",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 236,
+    "old": "    let (=POSS, =tM) = checksign(ppfM, kM) in",
+    "new": "(* removed possession check *)"
+  },
+  {
+    "name": "q5_M_poss_tag",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 236,
+    "old": "    let (=POSS, =tM) = checksign(ppfM, kM) in",
+    "new": "    let (unusedTag, =tM) = checksign(ppfM, kM) in"
+  },
+  {
+    "name": "q5_M_poss_manifest",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 236,
+    "old": "    let (=POSS, =tM) = checksign(ppfM, kM) in",
+    "new": "    let (=POSS, unusedManifest) = checksign(ppfM, kM) in"
+  },
+  {
+    "name": "q5_M_signature",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 237,
+    "old": "    let (=BYTES, =fbM) = checksign(sgM, kM) in",
+    "new": "(* removed signature check *)"
+  },
+  {
+    "name": "q5_M_sig_tag",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 237,
+    "old": "    let (=BYTES, =fbM) = checksign(sgM, kM) in",
+    "new": "    let (unusedTag, =fbM) = checksign(sgM, kM) in"
+  },
+  {
+    "name": "q5_M_sig_bytes",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 237,
+    "old": "    let (=BYTES, =fbM) = checksign(sgM, kM) in",
+    "new": "    let (=BYTES, unusedBytes) = checksign(sgM, kM) in"
+  },
+  {
+    "name": "q5_M_type",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 238,
+    "old": "    let framed(=OT_WRAPPER, =algM, =idM, =fp(kM), mhM, cvM, wrap(cvIw: bitstring, (fbI: bitstring, sgI: bitstring))) = fbM in",
+    "new": "    let framed(unusedType, =algM, =idM, =fp(kM), mhM, cvM, wrap(cvIw: bitstring, (fbI: bitstring, sgI: bitstring))) = fbM in"
+  },
+  {
+    "name": "q5_M_alg",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 238,
+    "old": "    let framed(=OT_WRAPPER, =algM, =idM, =fp(kM), mhM, cvM, wrap(cvIw: bitstring, (fbI: bitstring, sgI: bitstring))) = fbM in",
+    "new": "    let framed(=OT_WRAPPER, unusedAlg, =idM, =fp(kM), mhM, cvM, wrap(cvIw: bitstring, (fbI: bitstring, sgI: bitstring))) = fbM in"
+  },
+  {
+    "name": "q5_M_id",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 238,
+    "old": "    let framed(=OT_WRAPPER, =algM, =idM, =fp(kM), mhM, cvM, wrap(cvIw: bitstring, (fbI: bitstring, sgI: bitstring))) = fbM in",
+    "new": "    let framed(=OT_WRAPPER, =algM, unusedId, =fp(kM), mhM, cvM, wrap(cvIw: bitstring, (fbI: bitstring, sgI: bitstring))) = fbM in"
+  },
+  {
+    "name": "q5_M_fp",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 238,
+    "old": "    let framed(=OT_WRAPPER, =algM, =idM, =fp(kM), mhM, cvM, wrap(cvIw: bitstring, (fbI: bitstring, sgI: bitstring))) = fbM in",
+    "new": "    let framed(=OT_WRAPPER, =algM, =idM, unusedFp, mhM, cvM, wrap(cvIw: bitstring, (fbI: bitstring, sgI: bitstring))) = fbM in"
+  },
+  {
+    "name": "q5_M_hash",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 239,
+    "old": "    if mhM = h(tM) then",
+    "new": "(* removed manifest hash check *)"
+  }
+]

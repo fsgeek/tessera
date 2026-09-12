@@ -1,0 +1,40 @@
+a1_payload_tamper.pv exit=0
+236: RESULT event(AcceptedUnderHonestKey(k,fb_4)) ==> event(IssuerSigned(k,fb_4)) is true.
+550: RESULT not event(HonestAccepted(k,fb_4)) cannot be proved.
+675: RESULT event(AcceptS(ev_1,t_1,k,fb_4)) ==> event(IssuerSigned(k,fb_4)) cannot be proved.
+680: RESULT not event(Attack) is true.
+a2_party_swap.pv exit=0
+237: RESULT event(AcceptedUnderHonestKey(k,fb_4)) ==> event(IssuerSigned(k,fb_4)) is true.
+551: RESULT not event(HonestAccepted(k,fb_4)) cannot be proved.
+676: RESULT event(AcceptS(ev_1,t_1,k,fb_4)) ==> event(IssuerSigned(k,fb_4)) cannot be proved.
+681: RESULT not event(Attack) is true.
+a3_dsks_replay.pv exit=0
+239: RESULT event(AcceptedUnderHonestKey(k,fb_4)) ==> event(IssuerSigned(k,fb_4)) is true.
+553: RESULT not event(HonestAccepted(k,fb_4)) cannot be proved.
+678: RESULT event(AcceptS(ev_1,t_1,k,fb_4)) ==> event(IssuerSigned(k,fb_4)) cannot be proved.
+683: RESULT not event(Attack) is true.
+a4_dsks_resign.pv exit=0
+240: RESULT event(AcceptedUnderHonestKey(k,fb_4)) ==> event(IssuerSigned(k,fb_4)) is true.
+554: RESULT not event(HonestAccepted(k,fb_4)) cannot be proved.
+679: RESULT event(AcceptS(ev_1,t_1,k,fb_4)) ==> event(IssuerSigned(k,fb_4)) cannot be proved.
+819: RESULT not event(Attack) cannot be proved.
+a5_repeat_replay.pv exit=0
+239: RESULT event(AcceptedUnderHonestKey(k,fb_4)) ==> event(IssuerSigned(k,fb_4)) is true.
+553: RESULT not event(HonestAccepted(k,fb_4)) cannot be proved.
+678: RESULT event(AcceptS(ev_1,t_1,k,fb_4)) ==> event(IssuerSigned(k,fb_4)) cannot be proved.
+787: RESULT not event(Attack) cannot be proved.
+a6_foreign_type.pv exit=0
+236: RESULT event(AcceptedUnderHonestKey(k,fb_4)) ==> event(IssuerSigned(k,fb_4)) is true.
+550: RESULT not event(HonestAccepted(k,fb_4)) cannot be proved.
+675: RESULT event(AcceptS(ev_1,t_1,k,fb_4)) ==> event(IssuerSigned(k,fb_4)) cannot be proved.
+783: RESULT not event(Attack) cannot be proved.
+a7_cross_mode.pv exit=0
+237: RESULT event(AcceptedUnderHonestKey(k,fb_4)) ==> event(IssuerSigned(k,fb_4)) is true.
+561: RESULT not event(HonestAccepted(k,fb_4)) cannot be proved.
+686: RESULT event(AcceptS(ev_1,t_1,k,fb_4)) ==> event(IssuerSigned(k,fb_4)) cannot be proved.
+803: RESULT not event(Attack) cannot be proved.
+a8_cross_broken_endpoint.pv exit=0
+366: RESULT event(AcceptedUnderHonestKey(k,fb_5)) ==> event(IssuerSigned(k,fb_5)) cannot be proved.
+685: RESULT not event(HonestAccepted(k,fb_5)) cannot be proved.
+907: RESULT event(AcceptS(ev_1,t_1,k,fb_5)) ==> event(IssuerSigned(k,fb_5)) cannot be proved.
+1016: RESULT not event(Attack) cannot be proved.

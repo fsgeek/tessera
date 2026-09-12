@@ -1,23 +1,86 @@
-TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)
-Warning: Please run the Java VM which executes TLC with a throughput optimized garbage collector by passing the "-XX:+UseParallelGC" property.
-(Use the -nowarning option to disable this warning.)
-Running breadth-first search Model-Checking with fp 0 and seed -4029338531182993631 with 1 worker on 128 cores with 30688MB heap and 64MB offheap memory [pid: 2608494] (Linux 6.18.33.2-microsoft-standard-WSL2 amd64, Ubuntu 11.0.31 x86_64, MSBDiskFPSet, DiskStateQueue).
+TLC2 Version 2026.07.31.184830 (rev: 30cc360)
+Running breadth-first search Model-Checking with fp 72 and seed -590124741629966047 with 4 workers on 12 cores with 7068MB heap and 64MB offheap memory [pid: 662203] (Linux 6.8.0-136-generic amd64, Ubuntu 21.0.12 64bit, MSBDiskFPSet, DiskStateQueue).
 Parsing file /home/tony/projects/tessera/formal/tla/P5P6_TemporalRevocation.tla
-Parsing file /tmp/Integers.tla
-Parsing file /tmp/Naturals.tla
+Parsing file /tmp/tlc-6308211593146811976/Integers.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Integers.tla)
+Parsing file /tmp/tlc-6308211593146811976/Naturals.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Naturals.tla)
 Semantic processing of module Naturals
+Semantic processing of module Integers
+Semantic processing of module P5P6_TemporalRevocation
+Linting of module P5P6_TemporalRevocation
+Starting... (2026-09-06 19:38:16)
+Computing initial states...
+Computed 2 initial states...
+Computed 4 initial states...
+Computed 8 initial states...
+Computed 16 initial states...
+Computed 32 initial states...
+Computed 64 initial states...
+Computed 128 initial states...
+Computed 256 initial states...
+Error: Invariant AcceptanceUnreachable is violated by the initial state:
+/\ rcptDelta = 0
+/\ revoked = 1
+/\ declared = 0
+/\ confirmedAt = 0
+/\ signed = 0
+/\ polEps = 0
+/\ polDelta = 0
+/\ anchor = 0
+/\ rcptEps = 0
 
-[... 1078294 violation reports elided from this evidence file; the sanity
- methodology EXPECTS violations (vacuity witnesses). Per-invariant counts:
-    441098 Invariant AcceptanceUnreachable is violated
-    101528 Invariant HonestCostCaseUnreachable is violated
-    267736 Invariant LateBurialCaseUnreachable is violated
-    267932 Invariant NonMonotonicAcceptUnreachable is violated
- Full raw output (11.9M lines) recoverable at commit 70f2105. ...]
+Error: Invariant LateBurialCaseUnreachable is violated by the initial state:
+/\ rcptDelta = 0
+/\ revoked = 0
+/\ declared = 0
+/\ confirmedAt = 1
+/\ signed = 0
+/\ polEps = 0
+/\ polDelta = 0
+/\ anchor = 0
+/\ rcptEps = 0
 
+Error: Invariant HonestCostCaseUnreachable is violated by the initial state:
+/\ rcptDelta = 0
+/\ revoked = 1
+/\ declared = 0
+/\ confirmedAt = 0
+/\ signed = 0
+/\ polEps = 0
+/\ polDelta = 1
+/\ anchor = 1
+/\ rcptEps = 0
+
+Error: Invariant NonMonotonicAcceptUnreachable is violated by the initial state:
+/\ rcptDelta = 0
+/\ revoked = 2
+/\ declared = 0
+/\ confirmedAt = 0
+/\ signed = 0
+/\ polEps = 0
+/\ polDelta = 1
+/\ anchor = 1
+/\ rcptEps = 0
+
+
+[... 1078290 further violation report(s) of already-witnessed invariants elided from this
+ evidence file by falsification-2026-09-06/filter-tlc-initial-state.awk (the committed
+ scripts/filter-tlc-output.sh keys on "is violated." and does not match TLC's "is violated
+ by the initial state:" form; noted in falsification-2026-09-06/FIXES-2026-09-06.md). The
+ sanity methodology EXPECTS violations (vacuity witnesses). Per-invariant counts, from the
+ raw stream of this run:
+      441098 Invariant AcceptanceUnreachable is violated
+      267736 Invariant LateBurialCaseUnreachable is violated
+      101528 Invariant HonestCostCaseUnreachable is violated
+      267932 Invariant NonMonotonicAcceptUnreachable is violated
+ Raw output of this run: 11861268 lines, not archived; reproduces from the .cfg. ...]
+
+Finished computing initial states: 4302592 distinct states generated at 2026-09-06 19:38:27.
+Model checking completed. No error has been found.
+  Estimates of the probability that TLC did not check all reachable states
+  because two distinct states had the same fingerprint:
   calculated (optimistic):  val = 1.0E-6
-  based on the actual fingerprints:  val = 1.2E-11
+  based on the actual fingerprints:  val = 1.3E-11
 8605184 states generated, 4302592 distinct states found, 0 states left on queue.
 The depth of the complete state graph search is 1.
 The average outdegree of the complete state graph is 0 (minimum is 0, the maximum 0 and the 95th percentile is 0).
-Finished in 52s at (2026-07-07 10:23:56)
+Finished in 13s at (2026-09-06 19:38:29)

@@ -45,6 +45,14 @@ VerdictFor(W) ==
 Verdict == VerdictFor(waived)
 
 (* Same invariants as the correct module. *)
+(* CORRECTION 2026-09-06 (review item 5): the FIRST SEVEN of the correct    *)
+(* module's eleven. The four exact-classification formulas (ExactInvalid,   *)
+(* ExactUnverifiable, ExactStrict, ExactDegraded) are not carried here, and *)
+(* P4_VerifierStates.cfg checks all eleven. Of the seven,                   *)
+(* UnverifiableIsHonest is vacuous in this module (the broken VerdictFor    *)
+(* never returns UNVERIFIABLE). The _Green cfg (2026-09-06) records which   *)
+(* of the seven the fail-open defect turns red; see                         *)
+(* falsification-2026-09-06/FIXES-2026-09-06.md.                            *)
 Partition == Verdict \in Verdicts
 
 Monotonicity ==

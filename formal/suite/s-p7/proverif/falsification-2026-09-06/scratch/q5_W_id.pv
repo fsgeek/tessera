@@ -1,0 +1,295 @@
+(* ==================================================================== *)
+(* STATUS: PROPOSED — 2026-09-06 — produced by the AI collaborator;     *)
+(* not adopted; the commit is the author's.                             *)
+(*                                                                      *)
+(* S-P7.Q5 — correct model, DEPTH 2, degraded mode: "innermost" has     *)
+(* content.                                                             *)
+(*                                                                      *)
+(* Registered prediction (PREDICTIONS.md, frozen 5188e7a): correct      *)
+(* model holds (p~0.45); encoding defect in the recursive unwrap —      *)
+(* ProVerif has no recursion, so depth 2 is a second hand-written       *)
+(* verifier path and the two may drift (p~0.2); timeout, concentrated   *)
+(* here (p~0.35). Timebox: 45 min.                                      *)
+(*                                                                      *)
+(* This model proves: everything the Q2 header states, at nesting       *)
+(* depths 1 AND 2 — in particular, a depth-2 presentation (wrapper over *)
+(* wrapper over attestation, the outermost wrapper the adversary's idA  *)
+(* or an honest idW2, the middle one honest idW1 or I1-as-wrapper) is   *)
+(* never accepted with the inner artifact attributed to anything but   *)
+(* the INNERMOST frame's (issuerId, kfp): never the middle wrapper's,   *)
+(* never the outermost's (RescopedD2 unreachable); InnerSigTransplanted *)
+(* unreachable at both depths; TypeConfused unreachable (the model accepts only as an attestation — InnerCheck — or as a wrapper — the outer check of VerifierWrapped/VerifierWrapped2 and the middle check of VerifierWrapped2; no other kind is accepted anywhere; the depth-1 *)
+(* path presented with a depth-2 object rejects the middle wrapper as   *)
+(* an attestation by its type — the cross-level confusion this fixture  *)
+(* can exhibit); the honest flows are accepted at both depths           *)
+(* (HonestWrappedAcceptedD1/D2 reachable). Depth is bounded at 2 in the *)
+(* model; nothing is claimed beyond 2 (ENUMERATION §3, n = 2 does not   *)
+(* generalize).                                                         *)
+(*                                                                      *)
+(* ENCODING: depth 2 is VerifierWrapped2 — outer check, then middle     *)
+(* check written out again (no recursion), then the SAME InnerCheck    *)
+(* with context wctx2(kO, idO, kM, idM). Per-depth events RescopedD1 /  *)
+(* RescopedD2 and HonestWrappedAcceptedD1 / D2 (S-P3 recut-2 per-role   *)
+(* pattern) so "red at depth 2 only" is statable for Q5c; the           *)
+(* registered 5-ary Rescoped / 3-ary HonestWrappedAccepted are these    *)
+(* with a depth tag in the name. Load-bearing / carried: as the Q2      *)
+(* header's ablation result, at each level; the depth-2 attribution is  *)
+(* pinned by the INNERMOST frame's =fp(kI) inside InnerCheck exactly as *)
+(* at depth 1 (no Q5 ablation is in the record; carried by reasoning).  *)
+(*                                                                      *)
+(* This model does not prove: anything at depth > 2; anything the Q2    *)
+(* header excludes.                                                     *)
+(*                                                                      *)
+(* Theory, frame, wrapper, judges, fixture and suite rules: exactly as   *)
+(* sp7_q2_degraded_compromised.pv (the template); only the differences  *)
+(* named above are changed. Object types are the library D-5 constants. *)
+(* ==================================================================== *)
+
+(* --- model-local declarations (library terms are not redeclared) ---- *)
+fun framed(bitstring, bitstring, bitstring, bitstring, bitstring, bitstring, bitstring): bitstring [data].
+  (* objType, alg, issuerId, kfp, manifestHash, canonVer, payload *)
+fun wrap(bitstring, bitstring): bitstring [data].
+  (* cvInner, innerBlob = (innerBytes, innerSig) — the opaque embedding as a term *)
+fun wctx(pkey, bitstring, bitstring): bitstring [data].
+  (* depth-1 context handed to the judges: (wrapper key, wrapper id, wrapper bytes) *)
+fun wctx2(pkey, bitstring, pkey, bitstring): bitstring [data].
+  (* depth-2 context: (outermost key, outermost id, middle key, middle id) *)
+const BASE: bitstring.            (* context of the standalone base path *)
+
+free issuerId2: bitstring.        (* second honest inner issuer (N2) *)
+free idW1: bitstring.             (* honest wrapper issuers *)
+free idW2: bitstring.
+free idA: bitstring.              (* the adversary's wrapper identity (readability only) *)
+free cvA: bitstring.              (* two honest canonicalization versions (N2) *)
+free cvB: bitstring.
+
+(* judge channels (private; S-P3 pattern) *)
+free honestTypeCh: channel [private].   (* signer  -> type judge : (objType signed, framed bytes) *)
+free typeCh: channel [private].         (* verifier-> type judge : (objType accepted as, framed bytes) *)
+free honestCh: channel [private].       (* attester-> base judge : (signer key, framed bytes)  [S-P3 transcribed] *)
+free acceptCh: channel [private].       (* verifier-> base judge : (ctx, accepted key, id, framed bytes) *)
+free honestInnerCh: channel [private].  (* attester-> scope judge: (signer key, signer id, framed bytes) *)
+free scopeCh: channel [private].        (* verifier-> scope judge: (ctx, attributed key, attributed id, framed bytes) *)
+free honestSigCh: channel [private].    (* attester-> sig judge  : (signer key, signature term) *)
+free sigCh: channel [private].          (* verifier-> sig judge  : (ctx, attributed key, signature term verified) *)
+
+event AcceptInner(bitstring, pkey, bitstring, bitstring).
+  (* ctx, attributed key, attributed id, inner framed bytes *)
+event AcceptOuter(pkey, bitstring, bitstring).
+  (* wrapper key, wrapper id, wrapper framed bytes *)
+event AcceptMiddle(pkey, bitstring, pkey, bitstring, bitstring).
+  (* outermost key, outermost id, middle key, middle id, middle framed bytes *)
+event TypeConfused(bitstring, bitstring, bitstring).
+  (* objType signed, objType accepted as, the honest framed bytes *)
+event RescopedD1(pkey, bitstring, pkey, bitstring, bitstring).
+event RescopedD2(pkey, bitstring, pkey, bitstring, bitstring).
+  (* attributed key, attributed id, honest signer key, honest signer id, the honest inner bytes *)
+event HonestWrappedAcceptedD1(pkey, bitstring, pkey).
+event HonestWrappedAcceptedD2(pkey, bitstring, pkey).
+  (* N1 witness (wrapped path, per depth): honest signer key, its bytes, the OUTERMOST wrapper key *)
+event InnerSigTransplanted(pkey, bitstring).
+  (* attributed key, the honest signature term it was verified under *)
+event Reattributed(pkey, pkey, bitstring).
+  (* S-P3 transcribed: accepted key, honest signer key, the honest bytes *)
+event HonestAccepted(pkey, bitstring).
+  (* N1 witness (base path): honest bytes accepted under their signer's key *)
+
+(* C1: type soundness — must be UNREACHABLE *)
+query otS: bitstring, otA: bitstring, fb: bitstring;
+  event(TypeConfused(otS, otA, fb)).
+(* C2: scope soundness, depth 1 — must be UNREACHABLE *)
+query kX: pkey, idX: bitstring, kH: pkey, idH: bitstring, fb: bitstring;
+  event(RescopedD1(kX, idX, kH, idH, fb)).
+(* C2: scope soundness, depth 2 — must be UNREACHABLE *)
+query kX: pkey, idX: bitstring, kH: pkey, idH: bitstring, fb: bitstring;
+  event(RescopedD2(kX, idX, kH, idH, fb)).
+(* C2, signature-term keyed — must be UNREACHABLE *)
+query kX: pkey, s: bitstring;
+  event(InnerSigTransplanted(kX, s)).
+(* S-P3 transcribed — must stay UNREACHABLE *)
+query kX: pkey, kH: pkey, fb: bitstring;
+  event(Reattributed(kX, kH, fb)).
+(* N1 wrapped-path honest-flow witnesses, both depths — must be REACHABLE *)
+query kH: pkey, fb: bitstring, kW: pkey;
+  event(HonestWrappedAcceptedD1(kH, fb, kW)).
+query kH: pkey, fb: bitstring, kW: pkey;
+  event(HonestWrappedAcceptedD2(kH, fb, kW)).
+(* N1 base-path honest-flow witness — must be REACHABLE *)
+query k: pkey, fb: bitstring;
+  event(HonestAccepted(k, fb)).
+
+(* --- the sole authority channel (degraded; its key is public below) --- *)
+(* Fires the library's DNS branch event, as S-P3 did; nothing queries    *)
+(* it here and the sole channel is generic, not "DNS".                   *)
+let AuthorityS(skS: skey, t: bitstring) =
+  event AuthorityPublishedDNS(t);
+  out(c, sign((STMT_DIGEST, h(t)), skS)).
+
+(* --- honest signers ---------------------------------------------------- *)
+(* Attester: frames an adversary-chosen payload as OT_ATTEST and reports  *)
+(* to the type, base, scope and signature judges.                         *)
+let Attester(skI: skey, idI: bitstring, mI: bitstring, cvI: bitstring) =
+  in(c, payload: bitstring);
+  event IssuerPossession(pk(skI));
+  let ppfI = sign((POSS, mI), skI) in
+  out(c, ppfI);
+  let fbI = framed(OT_ATTEST, algH, idI, fp(pk(skI)), h(mI), cvI, payload) in
+  let sgI = sign((BYTES, fbI), skI) in
+  event IssuerSigned(pk(skI), fbI);
+  ( out(honestTypeCh, (OT_ATTEST, fbI))
+  | out(honestCh, (pk(skI), fbI))
+  | out(honestInnerCh, (pk(skI), idI, fbI))
+  | out(honestSigCh, (pk(skI), sgI))
+  | out(c, sgI) ).
+
+(* Wrapper: frames an adversary-chosen inner blob (cvInner, bytes, sig)   *)
+(* as OT_WRAPPER — the embedding is the term itself (opaque by            *)
+(* construction) — and reports to the type judge.                         *)
+let Wrapper(skW: skey, idW: bitstring, mW: bitstring, cvW: bitstring) =
+  in(c, (cvIw: bitstring, fbIn: bitstring, sgIn: bitstring));
+  event IssuerPossession(pk(skW));
+  let ppfW = sign((POSS, mW), skW) in
+  out(c, ppfW);
+  let fbW = framed(OT_WRAPPER, algH, idW, fp(pk(skW)), h(mW), cvW, wrap(cvIw, (fbIn, sgIn))) in
+  event IssuerSigned(pk(skW), fbW);
+  ( out(honestTypeCh, (OT_WRAPPER, fbW))
+  | out(c, sign((BYTES, fbW), skW)) ).
+
+(* OtherSigner: frames an adversary-chosen payload under another          *)
+(* enumerated type (here OT_REVIEWREC) — the N2 second type; reports to   *)
+(* the type judge only (it is not an inner issuer).                       *)
+let OtherSigner(skO: skey, idO: bitstring, mO: bitstring, ot: bitstring, cvO: bitstring) =
+  in(c, payload: bitstring);
+  event IssuerPossession(pk(skO));
+  let ppfO = sign((POSS, mO), skO) in
+  out(c, ppfO);
+  let fbO = framed(ot, algH, idO, fp(pk(skO)), h(mO), cvO, payload) in
+  event IssuerSigned(pk(skO), fbO);
+  ( out(honestTypeCh, (ot, fbO))
+  | out(c, sign((BYTES, fbO), skO)) ).
+
+(* --- the inner check: ONE process, invoked by both verifier paths ------ *)
+(* Checks an attestation completely and independently: authority         *)
+(* evidence over its manifest, fingerprint slot, possession over the     *)
+(* manifest, signature over the bytes, frame fields, manifest hash,      *)
+(* objType = OT_ATTEST. Attributes the artifact to (kI, idI) read from   *)
+(* the manifest and pinned by the frame's =idI and =fp(kI).              *)
+let InnerCheck(pkS: pkey, ctx: bitstring, tI: bitstring, evI: bitstring, kI: pkey,
+               ppfI: bitstring, sgI: bitstring, fbI: bitstring) =
+  let (=STMT_DIGEST, =h(tI)) = checksign(evI, pkS) in
+  let authTuple(idI, kfprI, ssI, algI, verI) = tI in
+  if fp(kI) = kfprI then
+  let (=POSS, =tI) = checksign(ppfI, kI) in
+  let (=BYTES, =fbI) = checksign(sgI, kI) in
+  let framed(=OT_ATTEST, =algI, =idI, =fp(kI), mhI, cvI, plI) = fbI in
+  if mhI = h(tI) then
+  event AcceptInner(ctx, kI, idI, fbI);
+  ( out(typeCh, (OT_ATTEST, fbI))
+  | out(acceptCh, (ctx, kI, idI, fbI))
+  | out(scopeCh, (ctx, kI, idI, fbI))
+  | out(sigCh, (ctx, kI, sgI)) ).
+
+(* --- base verifier: a standalone attestation --------------------------- *)
+let VerifierBase(pkS: pkey) =
+  in(c, (tI: bitstring, evI: bitstring, kI: pkey, ppfI: bitstring, sgI: bitstring, fbI: bitstring));
+  InnerCheck(pkS, BASE, tI, evI, kI, ppfI, sgI, fbI).
+
+(* --- wrapped-path verifier: wrapper over attestation, depth 1 ---------- *)
+(* Checks the outer object as a base verifier would (objType =           *)
+(* OT_WRAPPER), unwraps, then runs the SAME InnerCheck on the inner       *)
+(* blob with the inner manifest / evidence / key / possession the        *)
+(* presenter supplies. The wrapper lends nothing to the inner check.      *)
+let VerifierWrapped(pkS: pkey) =
+  in(c, (tW: bitstring, evW: bitstring, kW: pkey, ppfW: bitstring, sgW: bitstring, fbW: bitstring,
+         tI: bitstring, evI: bitstring, kI: pkey, ppfI: bitstring));
+  let (=STMT_DIGEST, =h(tW)) = checksign(evW, pkS) in
+  let authTuple(idW, kfprW, ssW, algW, verW) = tW in
+  if fp(kW) = kfprW then
+  let (=POSS, =tW) = checksign(ppfW, kW) in
+  let (=BYTES, =fbW) = checksign(sgW, kW) in
+  let framed(=OT_WRAPPER, =algW, unusedId, =fp(kW), mhW, cvW, wrap(cvIw: bitstring, (fbI: bitstring, sgI: bitstring))) = fbW in
+  if mhW = h(tW) then
+  event AcceptOuter(kW, idW, fbW);
+  ( out(typeCh, (OT_WRAPPER, fbW))
+  | InnerCheck(pkS, wctx(kW, idW, fbW), tI, evI, kI, ppfI, sgI, fbI) ).
+
+(* --- wrapped-path verifier, depth 2: wrapper over wrapper over attestation *)
+(* Outer check as VerifierWrapped; the MIDDLE object is checked as a     *)
+(* wrapper again (second hand-written path — ProVerif has no recursion); *)
+(* then the SAME InnerCheck on the innermost blob.                       *)
+let VerifierWrapped2(pkS: pkey) =
+  in(c, (tO: bitstring, evO: bitstring, kO: pkey, ppfO: bitstring, sgO: bitstring, fbO: bitstring,
+         tM: bitstring, evM: bitstring, kM: pkey, ppfM: bitstring,
+         tI: bitstring, evI: bitstring, kI: pkey, ppfI: bitstring));
+  let (=STMT_DIGEST, =h(tO)) = checksign(evO, pkS) in
+  let authTuple(idO, kfprO, ssO, algO, verO) = tO in
+  if fp(kO) = kfprO then
+  let (=POSS, =tO) = checksign(ppfO, kO) in
+  let (=BYTES, =fbO) = checksign(sgO, kO) in
+  let framed(=OT_WRAPPER, =algO, =idO, =fp(kO), mhO, cvO, wrap(cvMw: bitstring, (fbM: bitstring, sgM: bitstring))) = fbO in
+  if mhO = h(tO) then
+  event AcceptOuter(kO, idO, fbO);
+  ( out(typeCh, (OT_WRAPPER, fbO))
+  | let (=STMT_DIGEST, =h(tM)) = checksign(evM, pkS) in
+    let authTuple(idM, kfprM, ssM, algM, verM) = tM in
+    if fp(kM) = kfprM then
+    let (=POSS, =tM) = checksign(ppfM, kM) in
+    let (=BYTES, =fbM) = checksign(sgM, kM) in
+    let framed(=OT_WRAPPER, =algM, =idM, =fp(kM), mhM, cvM, wrap(cvIw: bitstring, (fbI: bitstring, sgI: bitstring))) = fbM in
+    if mhM = h(tM) then
+    event AcceptMiddle(kO, idO, kM, idM, fbM);
+    ( out(typeCh, (OT_WRAPPER, fbM))
+    | InnerCheck(pkS, wctx2(kO, idO, kM, idM), tI, evI, kI, ppfI, sgI, fbI) ) ).
+
+(* --- judges ------------------------------------------------------------ *)
+let TypeJudge =
+  in(honestTypeCh, (otS: bitstring, fbT: bitstring));
+  in(typeCh, (otA: bitstring, =fbT));
+  if otS = otA then 0 else event TypeConfused(otS, otA, fbT).
+
+(* S-P3's judge, transcribed; HonestAccepted is the BASE-path witness. *)
+let Judge =
+  in(honestCh, (kH: pkey, fbHon: bitstring));
+  in(acceptCh, (ctx: bitstring, kX: pkey, idX: bitstring, =fbHon));
+  if kX = kH then (if ctx = BASE then event HonestAccepted(kX, fbHon))
+  else event Reattributed(kX, kH, fbHon).
+
+let ScopeJudge =
+  in(honestInnerCh, (kH: pkey, idH: bitstring, fbHon: bitstring));
+  in(scopeCh, (wctx(kW: pkey, idW: bitstring, fbW: bitstring), kIrep: pkey, idIrep: bitstring, =fbHon));
+  if kIrep = kH && idIrep = idH then event HonestWrappedAcceptedD1(kH, fbHon, kW)
+  else event RescopedD1(kIrep, idIrep, kH, idH, fbHon).
+
+let ScopeJudge2 =
+  in(honestInnerCh, (kH: pkey, idH: bitstring, fbHon: bitstring));
+  in(scopeCh, (wctx2(kO: pkey, idO: bitstring, kM: pkey, idM: bitstring), kIrep: pkey, idIrep: bitstring, =fbHon));
+  if kIrep = kH && idIrep = idH then event HonestWrappedAcceptedD2(kH, fbHon, kO)
+  else event RescopedD2(kIrep, idIrep, kH, idH, fbHon).
+
+let SigJudge =
+  in(honestSigCh, (kH: pkey, sgH: bitstring));
+  in(sigCh, (wctx(kW: pkey, idW: bitstring, fbW: bitstring), kIrep: pkey, =sgH));
+  if kIrep = kH then 0 else event InnerSigTransplanted(kIrep, sgH).
+
+let SigJudge2 =
+  in(honestSigCh, (kH: pkey, sgH: bitstring));
+  in(sigCh, (wctx2(kO: pkey, idO: bitstring, kM: pkey, idM: bitstring), kIrep: pkey, =sgH));
+  if kIrep = kH then 0 else event InnerSigTransplanted(kIrep, sgH).
+
+process
+  new skS: skey; new skI1: skey; new skI2: skey; new skW1: skey; new skW2: skey;
+  let mI1 = authTuple(issuerId,  fp(pk(skI1)), ssetH, algH, verH) in
+  let mI2 = authTuple(issuerId2, fp(pk(skI2)), ssetH, algH, verH) in
+  let mW1 = authTuple(idW1,      fp(pk(skW1)), ssetH, algH, verH) in
+  let mW2 = authTuple(idW2,      fp(pk(skW2)), ssetH, algH, verH) in
+  out(c, pk(skS)); out(c, pk(skI1)); out(c, pk(skI2)); out(c, pk(skW1)); out(c, pk(skW2));
+  out(c, mI1); out(c, mI2); out(c, mW1); out(c, mW2);
+  (* DEGRADED MODE, SOLE CHANNEL COMPROMISED: its signing key is public. *)
+  (* This is what makes the adversary an authorized wrapper issuer idA.  *)
+  out(c, skS);
+  ( !AuthorityS(skS, mI1) | !AuthorityS(skS, mI2) | !AuthorityS(skS, mW1) | !AuthorityS(skS, mW2)
+  | !Attester(skI1, issuerId,  mI1, cvA) | !Wrapper(skI1, issuerId, mI1, cvB)          (* I1 attests AND wraps *)
+  | !Attester(skI2, issuerId2, mI2, cvB) | !OtherSigner(skI2, issuerId2, mI2, OT_REVIEWREC, cvA)
+  | !Wrapper(skW1, idW1, mW1, cvB) | !Wrapper(skW2, idW2, mW2, cvA)
+  | !VerifierBase(pk(skS)) | !VerifierWrapped(pk(skS)) | !VerifierWrapped2(pk(skS))
+  | !Judge | !TypeJudge | !ScopeJudge | !ScopeJudge2 | !SigJudge | !SigJudge2 )

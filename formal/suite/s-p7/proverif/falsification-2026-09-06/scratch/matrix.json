@@ -1,0 +1,8576 @@
+[
+  {
+    "name": "q1d_I_evDI_evidence",
+    "source": "proverif/sp7_q1_strict_dns_compromised.pv",
+    "line": 179,
+    "old": "  let (=STMT_DIGEST, =h(tI)) = checksign(evDI, pkD) in",
+    "new": "(* removed evidence check *)",
+    "out": "scratch/q1d_I_evDI_evidence.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        555
+      ],
+      [
+        "Rescoped",
+        "true",
+        569
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        583
+      ],
+      [
+        "Reattributed",
+        "true",
+        597
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        923
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1119
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q1d_I_evDI_tag",
+    "source": "proverif/sp7_q1_strict_dns_compromised.pv",
+    "line": 179,
+    "old": "  let (=STMT_DIGEST, =h(tI)) = checksign(evDI, pkD) in",
+    "new": "  let (unusedTag, =h(tI)) = checksign(evDI, pkD) in",
+    "out": "scratch/q1d_I_evDI_tag_typed.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        560
+      ],
+      [
+        "Rescoped",
+        "true",
+        574
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        588
+      ],
+      [
+        "Reattributed",
+        "true",
+        602
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        938
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1147
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q1d_I_evDI_digest",
+    "source": "proverif/sp7_q1_strict_dns_compromised.pv",
+    "line": 179,
+    "old": "  let (=STMT_DIGEST, =h(tI)) = checksign(evDI, pkD) in",
+    "new": "  let (=STMT_DIGEST, unusedDigest) = checksign(evDI, pkD) in",
+    "out": "scratch/q1d_I_evDI_digest_typed.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        560
+      ],
+      [
+        "Rescoped",
+        "true",
+        574
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        588
+      ],
+      [
+        "Reattributed",
+        "true",
+        602
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        938
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1150
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q1d_I_evRI_evidence",
+    "source": "proverif/sp7_q1_strict_dns_compromised.pv",
+    "line": 180,
+    "old": "  let (=STMT_DIGEST, =h(tI)) = checksign(evRI, pkR) in",
+    "new": "(* removed evidence check *)",
+    "out": "scratch/q1d_I_evRI_evidence.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        554
+      ],
+      [
+        "Rescoped",
+        "true",
+        567
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        580
+      ],
+      [
+        "Reattributed",
+        "true",
+        593
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        921
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1125
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q1d_I_evRI_tag",
+    "source": "proverif/sp7_q1_strict_dns_compromised.pv",
+    "line": 180,
+    "old": "  let (=STMT_DIGEST, =h(tI)) = checksign(evRI, pkR) in",
+    "new": "  let (unusedTag, =h(tI)) = checksign(evRI, pkR) in",
+    "out": "scratch/q1d_I_evRI_tag_typed.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        560
+      ],
+      [
+        "Rescoped",
+        "true",
+        574
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        588
+      ],
+      [
+        "Reattributed",
+        "true",
+        602
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        935
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1144
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q1d_I_evRI_digest",
+    "source": "proverif/sp7_q1_strict_dns_compromised.pv",
+    "line": 180,
+    "old": "  let (=STMT_DIGEST, =h(tI)) = checksign(evRI, pkR) in",
+    "new": "  let (=STMT_DIGEST, unusedDigest) = checksign(evRI, pkR) in",
+    "out": "scratch/q1d_I_evRI_digest_typed.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        560
+      ],
+      [
+        "Rescoped",
+        "true",
+        574
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        588
+      ],
+      [
+        "Reattributed",
+        "true",
+        602
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        928
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1137
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q1d_I_slot",
+    "source": "proverif/sp7_q1_strict_dns_compromised.pv",
+    "line": 182,
+    "old": "  if fp(kI) = kfprI then",
+    "new": "(* removed slot check *)",
+    "out": "scratch/q1d_I_slot.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        570
+      ],
+      [
+        "Rescoped",
+        "true",
+        598
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        626
+      ],
+      [
+        "Reattributed",
+        "true",
+        654
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        1001
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1224
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q1d_I_possession",
+    "source": "proverif/sp7_q1_strict_dns_compromised.pv",
+    "line": 183,
+    "old": "  let (=POSS, =tI) = checksign(ppfI, kI) in",
+    "new": "(* removed possession check *)",
+    "out": "scratch/q1d_I_possession.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        555
+      ],
+      [
+        "Rescoped",
+        "true",
+        568
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        581
+      ],
+      [
+        "Reattributed",
+        "true",
+        594
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        912
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1106
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q1d_I_poss_tag",
+    "source": "proverif/sp7_q1_strict_dns_compromised.pv",
+    "line": 183,
+    "old": "  let (=POSS, =tI) = checksign(ppfI, kI) in",
+    "new": "  let (unusedTag, =tI) = checksign(ppfI, kI) in",
+    "out": "scratch/q1d_I_poss_tag_typed.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        560
+      ],
+      [
+        "Rescoped",
+        "true",
+        574
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        588
+      ],
+      [
+        "Reattributed",
+        "true",
+        602
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        935
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1144
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q1d_I_poss_manifest",
+    "source": "proverif/sp7_q1_strict_dns_compromised.pv",
+    "line": 183,
+    "old": "  let (=POSS, =tI) = checksign(ppfI, kI) in",
+    "new": "  let (=POSS, unusedManifest) = checksign(ppfI, kI) in",
+    "out": "scratch/q1d_I_poss_manifest_typed.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        564
+      ],
+      [
+        "Rescoped",
+        "true",
+        581
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        598
+      ],
+      [
+        "Reattributed",
+        "true",
+        615
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        951
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1163
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q1d_I_signature",
+    "source": "proverif/sp7_q1_strict_dns_compromised.pv",
+    "line": 184,
+    "old": "  let (=BYTES, =fbI) = checksign(sgI, kI) in",
+    "new": "(* removed signature check *)",
+    "out": "scratch/q1d_I_signature.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        553
+      ],
+      [
+        "Rescoped",
+        "true",
+        564
+      ],
+      [
+        "InnerSigTransplanted",
+        "false",
+        842
+      ],
+      [
+        "Reattributed",
+        "true",
+        853
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        1173
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1368
+      ]
+    ],
+    "changed": [
+      "InnerSigTransplanted"
+    ]
+  },
+  {
+    "name": "q1d_I_sig_tag",
+    "source": "proverif/sp7_q1_strict_dns_compromised.pv",
+    "line": 184,
+    "old": "  let (=BYTES, =fbI) = checksign(sgI, kI) in",
+    "new": "  let (unusedTag, =fbI) = checksign(sgI, kI) in",
+    "out": "scratch/q1d_I_sig_tag_typed.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        560
+      ],
+      [
+        "Rescoped",
+        "true",
+        574
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        588
+      ],
+      [
+        "Reattributed",
+        "true",
+        602
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        935
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1144
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q1d_I_sig_bytes",
+    "source": "proverif/sp7_q1_strict_dns_compromised.pv",
+    "line": 184,
+    "old": "  let (=BYTES, =fbI) = checksign(sgI, kI) in",
+    "new": "  let (=BYTES, unusedBytes) = checksign(sgI, kI) in",
+    "out": "scratch/q1d_I_sig_bytes_typed.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        569
+      ],
+      [
+        "Rescoped",
+        "true",
+        592
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        615
+      ],
+      [
+        "Reattributed",
+        "true",
+        638
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        983
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1204
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q1d_I_type",
+    "source": "proverif/sp7_q1_strict_dns_compromised.pv",
+    "line": 185,
+    "old": "  let framed(=OT_ATTEST, =algI, =idI, =fp(kI), mhI, cvI, plI) = fbI in",
+    "new": "  let framed(unusedType, =algI, =idI, =fp(kI), mhI, cvI, plI) = fbI in",
+    "out": "scratch/q1d_I_type.out",
+    "results": [
+      [
+        "TypeConfused",
+        "false",
+        795
+      ],
+      [
+        "Rescoped",
+        "true",
+        814
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        832
+      ],
+      [
+        "Reattributed",
+        "true",
+        850
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        1188
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1401
+      ]
+    ],
+    "changed": [
+      "TypeConfused"
+    ]
+  },
+  {
+    "name": "q1d_I_alg",
+    "source": "proverif/sp7_q1_strict_dns_compromised.pv",
+    "line": 185,
+    "old": "  let framed(=OT_ATTEST, =algI, =idI, =fp(kI), mhI, cvI, plI) = fbI in",
+    "new": "  let framed(=OT_ATTEST, unusedAlg, =idI, =fp(kI), mhI, cvI, plI) = fbI in",
+    "out": "scratch/q1d_I_alg.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        560
+      ],
+      [
+        "Rescoped",
+        "true",
+        574
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        588
+      ],
+      [
+        "Reattributed",
+        "true",
+        602
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        935
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1144
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q1d_I_id",
+    "source": "proverif/sp7_q1_strict_dns_compromised.pv",
+    "line": 185,
+    "old": "  let framed(=OT_ATTEST, =algI, =idI, =fp(kI), mhI, cvI, plI) = fbI in",
+    "new": "  let framed(=OT_ATTEST, =algI, unusedId, =fp(kI), mhI, cvI, plI) = fbI in",
+    "out": "scratch/q1d_I_id.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        560
+      ],
+      [
+        "Rescoped",
+        "true",
+        574
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        588
+      ],
+      [
+        "Reattributed",
+        "true",
+        602
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        935
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1144
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q1d_I_fp",
+    "source": "proverif/sp7_q1_strict_dns_compromised.pv",
+    "line": 185,
+    "old": "  let framed(=OT_ATTEST, =algI, =idI, =fp(kI), mhI, cvI, plI) = fbI in",
+    "new": "  let framed(=OT_ATTEST, =algI, =idI, unusedFp, mhI, cvI, plI) = fbI in",
+    "out": "scratch/q1d_I_fp.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        560
+      ],
+      [
+        "Rescoped",
+        "true",
+        574
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        587
+      ],
+      [
+        "Reattributed",
+        "true",
+        601
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        934
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1142
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q1d_I_hash",
+    "source": "proverif/sp7_q1_strict_dns_compromised.pv",
+    "line": 186,
+    "old": "  if mhI = h(tI) then",
+    "new": "(* removed manifest hash check *)",
+    "out": "scratch/q1d_I_hash.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        556
+      ],
+      [
+        "Rescoped",
+        "true",
+        570
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        583
+      ],
+      [
+        "Reattributed",
+        "true",
+        596
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        928
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1136
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q1d_W_evDW_evidence",
+    "source": "proverif/sp7_q1_strict_dns_compromised.pv",
+    "line": 206,
+    "old": "  let (=STMT_DIGEST, =h(tW)) = checksign(evDW, pkD) in",
+    "new": "(* removed evidence check *)",
+    "out": "scratch/q1d_W_evDW_evidence.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        558
+      ],
+      [
+        "Rescoped",
+        "true",
+        572
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        585
+      ],
+      [
+        "Reattributed",
+        "true",
+        598
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        923
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1131
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q1d_W_evDW_tag",
+    "source": "proverif/sp7_q1_strict_dns_compromised.pv",
+    "line": 206,
+    "old": "  let (=STMT_DIGEST, =h(tW)) = checksign(evDW, pkD) in",
+    "new": "  let (unusedTag, =h(tW)) = checksign(evDW, pkD) in",
+    "out": "scratch/q1d_W_evDW_tag_typed.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        560
+      ],
+      [
+        "Rescoped",
+        "true",
+        574
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        588
+      ],
+      [
+        "Reattributed",
+        "true",
+        602
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        938
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1147
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q1d_W_evDW_digest",
+    "source": "proverif/sp7_q1_strict_dns_compromised.pv",
+    "line": 206,
+    "old": "  let (=STMT_DIGEST, =h(tW)) = checksign(evDW, pkD) in",
+    "new": "  let (=STMT_DIGEST, unusedDigest) = checksign(evDW, pkD) in",
+    "out": "scratch/q1d_W_evDW_digest_typed.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        561
+      ],
+      [
+        "Rescoped",
+        "true",
+        575
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        589
+      ],
+      [
+        "Reattributed",
+        "true",
+        603
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        939
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1148
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q1d_W_evRW_evidence",
+    "source": "proverif/sp7_q1_strict_dns_compromised.pv",
+    "line": 207,
+    "old": "  let (=STMT_DIGEST, =h(tW)) = checksign(evRW, pkR) in",
+    "new": "(* removed evidence check *)",
+    "out": "scratch/q1d_W_evRW_evidence.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        557
+      ],
+      [
+        "Rescoped",
+        "true",
+        570
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        583
+      ],
+      [
+        "Reattributed",
+        "true",
+        596
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        914
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1122
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q1d_W_evRW_tag",
+    "source": "proverif/sp7_q1_strict_dns_compromised.pv",
+    "line": 207,
+    "old": "  let (=STMT_DIGEST, =h(tW)) = checksign(evRW, pkR) in",
+    "new": "  let (unusedTag, =h(tW)) = checksign(evRW, pkR) in",
+    "out": "scratch/q1d_W_evRW_tag_typed.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        560
+      ],
+      [
+        "Rescoped",
+        "true",
+        574
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        587
+      ],
+      [
+        "Reattributed",
+        "true",
+        601
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        934
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1143
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q1d_W_evRW_digest",
+    "source": "proverif/sp7_q1_strict_dns_compromised.pv",
+    "line": 207,
+    "old": "  let (=STMT_DIGEST, =h(tW)) = checksign(evRW, pkR) in",
+    "new": "  let (=STMT_DIGEST, unusedDigest) = checksign(evRW, pkR) in",
+    "out": "scratch/q1d_W_evRW_digest_typed.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        560
+      ],
+      [
+        "Rescoped",
+        "true",
+        574
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        588
+      ],
+      [
+        "Reattributed",
+        "true",
+        602
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        925
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1134
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q1d_W_slot",
+    "source": "proverif/sp7_q1_strict_dns_compromised.pv",
+    "line": 209,
+    "old": "  if fp(kW) = kfprW then",
+    "new": "(* removed slot check *)",
+    "out": "scratch/q1d_W_slot.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        570
+      ],
+      [
+        "Rescoped",
+        "true",
+        596
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        622
+      ],
+      [
+        "Reattributed",
+        "true",
+        648
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        942
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1163
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q1d_W_possession",
+    "source": "proverif/sp7_q1_strict_dns_compromised.pv",
+    "line": 210,
+    "old": "  let (=POSS, =tW) = checksign(ppfW, kW) in",
+    "new": "(* removed possession check *)",
+    "out": "scratch/q1d_W_possession.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        557
+      ],
+      [
+        "Rescoped",
+        "true",
+        570
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        583
+      ],
+      [
+        "Reattributed",
+        "true",
+        596
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        902
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1110
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q1d_W_poss_tag",
+    "source": "proverif/sp7_q1_strict_dns_compromised.pv",
+    "line": 210,
+    "old": "  let (=POSS, =tW) = checksign(ppfW, kW) in",
+    "new": "  let (unusedTag, =tW) = checksign(ppfW, kW) in",
+    "out": "scratch/q1d_W_poss_tag_typed.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        560
+      ],
+      [
+        "Rescoped",
+        "true",
+        574
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        588
+      ],
+      [
+        "Reattributed",
+        "true",
+        602
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        935
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1144
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q1d_W_poss_manifest",
+    "source": "proverif/sp7_q1_strict_dns_compromised.pv",
+    "line": 210,
+    "old": "  let (=POSS, =tW) = checksign(ppfW, kW) in",
+    "new": "  let (=POSS, unusedManifest) = checksign(ppfW, kW) in",
+    "out": "scratch/q1d_W_poss_manifest_typed.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        563
+      ],
+      [
+        "Rescoped",
+        "true",
+        580
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        597
+      ],
+      [
+        "Reattributed",
+        "true",
+        614
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        950
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1162
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q1d_W_signature",
+    "source": "proverif/sp7_q1_strict_dns_compromised.pv",
+    "line": 211,
+    "old": "  let (=BYTES, =fbW) = checksign(sgW, kW) in",
+    "new": "(* removed signature check *)",
+    "out": "scratch/q1d_W_signature.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        555
+      ],
+      [
+        "Rescoped",
+        "true",
+        566
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        577
+      ],
+      [
+        "Reattributed",
+        "true",
+        588
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        901
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1107
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q1d_W_sig_tag",
+    "source": "proverif/sp7_q1_strict_dns_compromised.pv",
+    "line": 211,
+    "old": "  let (=BYTES, =fbW) = checksign(sgW, kW) in",
+    "new": "  let (unusedTag, =fbW) = checksign(sgW, kW) in",
+    "out": "scratch/q1d_W_sig_tag_typed.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        560
+      ],
+      [
+        "Rescoped",
+        "true",
+        574
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        588
+      ],
+      [
+        "Reattributed",
+        "true",
+        602
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        935
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1144
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q1d_W_sig_bytes",
+    "source": "proverif/sp7_q1_strict_dns_compromised.pv",
+    "line": 211,
+    "old": "  let (=BYTES, =fbW) = checksign(sgW, kW) in",
+    "new": "  let (=BYTES, unusedBytes) = checksign(sgW, kW) in",
+    "out": "scratch/q1d_W_sig_bytes_typed.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        561
+      ],
+      [
+        "Rescoped",
+        "true",
+        576
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        591
+      ],
+      [
+        "Reattributed",
+        "true",
+        606
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        949
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1159
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q1d_W_type",
+    "source": "proverif/sp7_q1_strict_dns_compromised.pv",
+    "line": 212,
+    "old": "  let framed(=OT_WRAPPER, =algW, =idW, =fp(kW), mhW, cvW, wrap(cvIw: bitstring, (fbI: bitstring, sgI: bitstring))) = fbW in",
+    "new": "  let framed(unusedType, =algW, =idW, =fp(kW), mhW, cvW, wrap(cvIw: bitstring, (fbI: bitstring, sgI: bitstring))) = fbW in",
+    "out": "scratch/q1d_W_type.out",
+    "results": [
+      [
+        "TypeConfused",
+        "false",
+        795
+      ],
+      [
+        "Rescoped",
+        "true",
+        811
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        827
+      ],
+      [
+        "Reattributed",
+        "true",
+        843
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        1178
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1389
+      ]
+    ],
+    "changed": [
+      "TypeConfused"
+    ]
+  },
+  {
+    "name": "q1d_W_alg",
+    "source": "proverif/sp7_q1_strict_dns_compromised.pv",
+    "line": 212,
+    "old": "  let framed(=OT_WRAPPER, =algW, =idW, =fp(kW), mhW, cvW, wrap(cvIw: bitstring, (fbI: bitstring, sgI: bitstring))) = fbW in",
+    "new": "  let framed(=OT_WRAPPER, unusedAlg, =idW, =fp(kW), mhW, cvW, wrap(cvIw: bitstring, (fbI: bitstring, sgI: bitstring))) = fbW in",
+    "out": "scratch/q1d_W_alg.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        560
+      ],
+      [
+        "Rescoped",
+        "true",
+        574
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        588
+      ],
+      [
+        "Reattributed",
+        "true",
+        602
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        935
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1144
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q1d_W_id",
+    "source": "proverif/sp7_q1_strict_dns_compromised.pv",
+    "line": 212,
+    "old": "  let framed(=OT_WRAPPER, =algW, =idW, =fp(kW), mhW, cvW, wrap(cvIw: bitstring, (fbI: bitstring, sgI: bitstring))) = fbW in",
+    "new": "  let framed(=OT_WRAPPER, =algW, unusedId, =fp(kW), mhW, cvW, wrap(cvIw: bitstring, (fbI: bitstring, sgI: bitstring))) = fbW in",
+    "out": "scratch/q1d_W_id.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        560
+      ],
+      [
+        "Rescoped",
+        "true",
+        574
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        588
+      ],
+      [
+        "Reattributed",
+        "true",
+        602
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        935
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1144
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q1d_W_fp",
+    "source": "proverif/sp7_q1_strict_dns_compromised.pv",
+    "line": 212,
+    "old": "  let framed(=OT_WRAPPER, =algW, =idW, =fp(kW), mhW, cvW, wrap(cvIw: bitstring, (fbI: bitstring, sgI: bitstring))) = fbW in",
+    "new": "  let framed(=OT_WRAPPER, =algW, =idW, unusedFp, mhW, cvW, wrap(cvIw: bitstring, (fbI: bitstring, sgI: bitstring))) = fbW in",
+    "out": "scratch/q1d_W_fp.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        560
+      ],
+      [
+        "Rescoped",
+        "true",
+        574
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        588
+      ],
+      [
+        "Reattributed",
+        "true",
+        602
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        935
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1144
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q1d_W_hash",
+    "source": "proverif/sp7_q1_strict_dns_compromised.pv",
+    "line": 213,
+    "old": "  if mhW = h(tW) then",
+    "new": "(* removed manifest hash check *)",
+    "out": "scratch/q1d_W_hash.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        558
+      ],
+      [
+        "Rescoped",
+        "true",
+        572
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        586
+      ],
+      [
+        "Reattributed",
+        "true",
+        600
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        933
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1142
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q1r_I_evDI_evidence",
+    "source": "proverif/sp7_q1_strict_repo_compromised.pv",
+    "line": 179,
+    "old": "  let (=STMT_DIGEST, =h(tI)) = checksign(evDI, pkD) in",
+    "new": "(* removed evidence check *)",
+    "out": "scratch/q1r_I_evDI_evidence.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        554
+      ],
+      [
+        "Rescoped",
+        "true",
+        567
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        580
+      ],
+      [
+        "Reattributed",
+        "true",
+        593
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        921
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1125
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q1r_I_evDI_tag",
+    "source": "proverif/sp7_q1_strict_repo_compromised.pv",
+    "line": 179,
+    "old": "  let (=STMT_DIGEST, =h(tI)) = checksign(evDI, pkD) in",
+    "new": "  let (unusedTag, =h(tI)) = checksign(evDI, pkD) in",
+    "out": "scratch/q1r_I_evDI_tag_typed.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        560
+      ],
+      [
+        "Rescoped",
+        "true",
+        574
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        588
+      ],
+      [
+        "Reattributed",
+        "true",
+        602
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        935
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1144
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q1r_I_evDI_digest",
+    "source": "proverif/sp7_q1_strict_repo_compromised.pv",
+    "line": 179,
+    "old": "  let (=STMT_DIGEST, =h(tI)) = checksign(evDI, pkD) in",
+    "new": "  let (=STMT_DIGEST, unusedDigest) = checksign(evDI, pkD) in",
+    "out": "scratch/q1r_I_evDI_digest_typed.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        560
+      ],
+      [
+        "Rescoped",
+        "true",
+        574
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        588
+      ],
+      [
+        "Reattributed",
+        "true",
+        602
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        928
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1137
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q1r_I_evRI_evidence",
+    "source": "proverif/sp7_q1_strict_repo_compromised.pv",
+    "line": 180,
+    "old": "  let (=STMT_DIGEST, =h(tI)) = checksign(evRI, pkR) in",
+    "new": "(* removed evidence check *)",
+    "out": "scratch/q1r_I_evRI_evidence.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        555
+      ],
+      [
+        "Rescoped",
+        "true",
+        569
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        583
+      ],
+      [
+        "Reattributed",
+        "true",
+        597
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        923
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1119
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q1r_I_evRI_tag",
+    "source": "proverif/sp7_q1_strict_repo_compromised.pv",
+    "line": 180,
+    "old": "  let (=STMT_DIGEST, =h(tI)) = checksign(evRI, pkR) in",
+    "new": "  let (unusedTag, =h(tI)) = checksign(evRI, pkR) in",
+    "out": "scratch/q1r_I_evRI_tag_typed.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        560
+      ],
+      [
+        "Rescoped",
+        "true",
+        574
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        588
+      ],
+      [
+        "Reattributed",
+        "true",
+        602
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        938
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1147
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q1r_I_evRI_digest",
+    "source": "proverif/sp7_q1_strict_repo_compromised.pv",
+    "line": 180,
+    "old": "  let (=STMT_DIGEST, =h(tI)) = checksign(evRI, pkR) in",
+    "new": "  let (=STMT_DIGEST, unusedDigest) = checksign(evRI, pkR) in",
+    "out": "scratch/q1r_I_evRI_digest_typed.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        561
+      ],
+      [
+        "Rescoped",
+        "true",
+        575
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        589
+      ],
+      [
+        "Reattributed",
+        "true",
+        603
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        939
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1151
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q1r_I_slot",
+    "source": "proverif/sp7_q1_strict_repo_compromised.pv",
+    "line": 182,
+    "old": "  if fp(kI) = kfprI then",
+    "new": "(* removed slot check *)",
+    "out": "scratch/q1r_I_slot.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        571
+      ],
+      [
+        "Rescoped",
+        "true",
+        600
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        629
+      ],
+      [
+        "Reattributed",
+        "true",
+        658
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        1006
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1230
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q1r_I_possession",
+    "source": "proverif/sp7_q1_strict_repo_compromised.pv",
+    "line": 183,
+    "old": "  let (=POSS, =tI) = checksign(ppfI, kI) in",
+    "new": "(* removed possession check *)",
+    "out": "scratch/q1r_I_possession.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        556
+      ],
+      [
+        "Rescoped",
+        "true",
+        570
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        583
+      ],
+      [
+        "Reattributed",
+        "true",
+        596
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        914
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1108
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q1r_I_poss_tag",
+    "source": "proverif/sp7_q1_strict_repo_compromised.pv",
+    "line": 183,
+    "old": "  let (=POSS, =tI) = checksign(ppfI, kI) in",
+    "new": "  let (unusedTag, =tI) = checksign(ppfI, kI) in",
+    "out": "scratch/q1r_I_poss_tag_typed.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        560
+      ],
+      [
+        "Rescoped",
+        "true",
+        574
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        588
+      ],
+      [
+        "Reattributed",
+        "true",
+        602
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        935
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1144
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q1r_I_poss_manifest",
+    "source": "proverif/sp7_q1_strict_repo_compromised.pv",
+    "line": 183,
+    "old": "  let (=POSS, =tI) = checksign(ppfI, kI) in",
+    "new": "  let (=POSS, unusedManifest) = checksign(ppfI, kI) in",
+    "out": "scratch/q1r_I_poss_manifest_typed.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        564
+      ],
+      [
+        "Rescoped",
+        "true",
+        582
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        600
+      ],
+      [
+        "Reattributed",
+        "true",
+        618
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        955
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1168
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q1r_I_signature",
+    "source": "proverif/sp7_q1_strict_repo_compromised.pv",
+    "line": 184,
+    "old": "  let (=BYTES, =fbI) = checksign(sgI, kI) in",
+    "new": "(* removed signature check *)",
+    "out": "scratch/q1r_I_signature.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        554
+      ],
+      [
+        "Rescoped",
+        "true",
+        566
+      ],
+      [
+        "InnerSigTransplanted",
+        "false",
+        845
+      ],
+      [
+        "Reattributed",
+        "true",
+        857
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        1177
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1373
+      ]
+    ],
+    "changed": [
+      "InnerSigTransplanted"
+    ]
+  },
+  {
+    "name": "q1r_I_sig_tag",
+    "source": "proverif/sp7_q1_strict_repo_compromised.pv",
+    "line": 184,
+    "old": "  let (=BYTES, =fbI) = checksign(sgI, kI) in",
+    "new": "  let (unusedTag, =fbI) = checksign(sgI, kI) in",
+    "out": "scratch/q1r_I_sig_tag_typed.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        560
+      ],
+      [
+        "Rescoped",
+        "true",
+        574
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        588
+      ],
+      [
+        "Reattributed",
+        "true",
+        602
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        935
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1144
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q1r_I_sig_bytes",
+    "source": "proverif/sp7_q1_strict_repo_compromised.pv",
+    "line": 184,
+    "old": "  let (=BYTES, =fbI) = checksign(sgI, kI) in",
+    "new": "  let (=BYTES, unusedBytes) = checksign(sgI, kI) in",
+    "out": "scratch/q1r_I_sig_bytes_typed.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        569
+      ],
+      [
+        "Rescoped",
+        "true",
+        592
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        615
+      ],
+      [
+        "Reattributed",
+        "true",
+        638
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        983
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1204
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q1r_I_type",
+    "source": "proverif/sp7_q1_strict_repo_compromised.pv",
+    "line": 185,
+    "old": "  let framed(=OT_ATTEST, =algI, =idI, =fp(kI), mhI, cvI, plI) = fbI in",
+    "new": "  let framed(unusedType, =algI, =idI, =fp(kI), mhI, cvI, plI) = fbI in",
+    "out": "scratch/q1r_I_type.out",
+    "results": [
+      [
+        "TypeConfused",
+        "false",
+        796
+      ],
+      [
+        "Rescoped",
+        "true",
+        816
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        835
+      ],
+      [
+        "Reattributed",
+        "true",
+        854
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        1193
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1407
+      ]
+    ],
+    "changed": [
+      "TypeConfused"
+    ]
+  },
+  {
+    "name": "q1r_I_alg",
+    "source": "proverif/sp7_q1_strict_repo_compromised.pv",
+    "line": 185,
+    "old": "  let framed(=OT_ATTEST, =algI, =idI, =fp(kI), mhI, cvI, plI) = fbI in",
+    "new": "  let framed(=OT_ATTEST, unusedAlg, =idI, =fp(kI), mhI, cvI, plI) = fbI in",
+    "out": "scratch/q1r_I_alg.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        560
+      ],
+      [
+        "Rescoped",
+        "true",
+        574
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        588
+      ],
+      [
+        "Reattributed",
+        "true",
+        602
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        935
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1144
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q1r_I_id",
+    "source": "proverif/sp7_q1_strict_repo_compromised.pv",
+    "line": 185,
+    "old": "  let framed(=OT_ATTEST, =algI, =idI, =fp(kI), mhI, cvI, plI) = fbI in",
+    "new": "  let framed(=OT_ATTEST, =algI, unusedId, =fp(kI), mhI, cvI, plI) = fbI in",
+    "out": "scratch/q1r_I_id.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        560
+      ],
+      [
+        "Rescoped",
+        "true",
+        574
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        588
+      ],
+      [
+        "Reattributed",
+        "true",
+        602
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        935
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1144
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q1r_I_fp",
+    "source": "proverif/sp7_q1_strict_repo_compromised.pv",
+    "line": 185,
+    "old": "  let framed(=OT_ATTEST, =algI, =idI, =fp(kI), mhI, cvI, plI) = fbI in",
+    "new": "  let framed(=OT_ATTEST, =algI, =idI, unusedFp, mhI, cvI, plI) = fbI in",
+    "out": "scratch/q1r_I_fp.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        560
+      ],
+      [
+        "Rescoped",
+        "true",
+        574
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        588
+      ],
+      [
+        "Reattributed",
+        "true",
+        602
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        935
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1144
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q1r_I_hash",
+    "source": "proverif/sp7_q1_strict_repo_compromised.pv",
+    "line": 186,
+    "old": "  if mhI = h(tI) then",
+    "new": "(* removed manifest hash check *)",
+    "out": "scratch/q1r_I_hash.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        556
+      ],
+      [
+        "Rescoped",
+        "true",
+        570
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        584
+      ],
+      [
+        "Reattributed",
+        "true",
+        598
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        931
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1140
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q1r_W_evDW_evidence",
+    "source": "proverif/sp7_q1_strict_repo_compromised.pv",
+    "line": 206,
+    "old": "  let (=STMT_DIGEST, =h(tW)) = checksign(evDW, pkD) in",
+    "new": "(* removed evidence check *)",
+    "out": "scratch/q1r_W_evDW_evidence.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        558
+      ],
+      [
+        "Rescoped",
+        "true",
+        572
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        585
+      ],
+      [
+        "Reattributed",
+        "true",
+        598
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        916
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1124
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q1r_W_evDW_tag",
+    "source": "proverif/sp7_q1_strict_repo_compromised.pv",
+    "line": 206,
+    "old": "  let (=STMT_DIGEST, =h(tW)) = checksign(evDW, pkD) in",
+    "new": "  let (unusedTag, =h(tW)) = checksign(evDW, pkD) in",
+    "out": "scratch/q1r_W_evDW_tag_typed.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        560
+      ],
+      [
+        "Rescoped",
+        "true",
+        574
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        588
+      ],
+      [
+        "Reattributed",
+        "true",
+        602
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        935
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1144
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q1r_W_evDW_digest",
+    "source": "proverif/sp7_q1_strict_repo_compromised.pv",
+    "line": 206,
+    "old": "  let (=STMT_DIGEST, =h(tW)) = checksign(evDW, pkD) in",
+    "new": "  let (=STMT_DIGEST, unusedDigest) = checksign(evDW, pkD) in",
+    "out": "scratch/q1r_W_evDW_digest_typed.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        561
+      ],
+      [
+        "Rescoped",
+        "true",
+        575
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        589
+      ],
+      [
+        "Reattributed",
+        "true",
+        603
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        926
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1135
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q1r_W_evRW_evidence",
+    "source": "proverif/sp7_q1_strict_repo_compromised.pv",
+    "line": 207,
+    "old": "  let (=STMT_DIGEST, =h(tW)) = checksign(evRW, pkR) in",
+    "new": "(* removed evidence check *)",
+    "out": "scratch/q1r_W_evRW_evidence.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        558
+      ],
+      [
+        "Rescoped",
+        "true",
+        572
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        586
+      ],
+      [
+        "Reattributed",
+        "true",
+        600
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        926
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1135
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q1r_W_evRW_tag",
+    "source": "proverif/sp7_q1_strict_repo_compromised.pv",
+    "line": 207,
+    "old": "  let (=STMT_DIGEST, =h(tW)) = checksign(evRW, pkR) in",
+    "new": "  let (unusedTag, =h(tW)) = checksign(evRW, pkR) in",
+    "out": "scratch/q1r_W_evRW_tag_typed.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        560
+      ],
+      [
+        "Rescoped",
+        "true",
+        574
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        588
+      ],
+      [
+        "Reattributed",
+        "true",
+        602
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        938
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1147
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q1r_W_evRW_digest",
+    "source": "proverif/sp7_q1_strict_repo_compromised.pv",
+    "line": 207,
+    "old": "  let (=STMT_DIGEST, =h(tW)) = checksign(evRW, pkR) in",
+    "new": "  let (=STMT_DIGEST, unusedDigest) = checksign(evRW, pkR) in",
+    "out": "scratch/q1r_W_evRW_digest_typed.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        561
+      ],
+      [
+        "Rescoped",
+        "true",
+        576
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        591
+      ],
+      [
+        "Reattributed",
+        "true",
+        606
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        943
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1153
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q1r_W_slot",
+    "source": "proverif/sp7_q1_strict_repo_compromised.pv",
+    "line": 209,
+    "old": "  if fp(kW) = kfprW then",
+    "new": "(* removed slot check *)",
+    "out": "scratch/q1r_W_slot.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        571
+      ],
+      [
+        "Rescoped",
+        "true",
+        598
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        625
+      ],
+      [
+        "Reattributed",
+        "true",
+        652
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        947
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1169
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q1r_W_possession",
+    "source": "proverif/sp7_q1_strict_repo_compromised.pv",
+    "line": 210,
+    "old": "  let (=POSS, =tW) = checksign(ppfW, kW) in",
+    "new": "(* removed possession check *)",
+    "out": "scratch/q1r_W_possession.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        558
+      ],
+      [
+        "Rescoped",
+        "true",
+        572
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        586
+      ],
+      [
+        "Reattributed",
+        "true",
+        600
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        907
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1116
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q1r_W_poss_tag",
+    "source": "proverif/sp7_q1_strict_repo_compromised.pv",
+    "line": 210,
+    "old": "  let (=POSS, =tW) = checksign(ppfW, kW) in",
+    "new": "  let (unusedTag, =tW) = checksign(ppfW, kW) in",
+    "out": "scratch/q1r_W_poss_tag_typed.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        560
+      ],
+      [
+        "Rescoped",
+        "true",
+        574
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        588
+      ],
+      [
+        "Reattributed",
+        "true",
+        602
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        935
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1144
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q1r_W_poss_manifest",
+    "source": "proverif/sp7_q1_strict_repo_compromised.pv",
+    "line": 210,
+    "old": "  let (=POSS, =tW) = checksign(ppfW, kW) in",
+    "new": "  let (=POSS, unusedManifest) = checksign(ppfW, kW) in",
+    "out": "scratch/q1r_W_poss_manifest_typed.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        564
+      ],
+      [
+        "Rescoped",
+        "true",
+        582
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        599
+      ],
+      [
+        "Reattributed",
+        "true",
+        616
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        953
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1165
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q1r_W_signature",
+    "source": "proverif/sp7_q1_strict_repo_compromised.pv",
+    "line": 211,
+    "old": "  let (=BYTES, =fbW) = checksign(sgW, kW) in",
+    "new": "(* removed signature check *)",
+    "out": "scratch/q1r_W_signature.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        556
+      ],
+      [
+        "Rescoped",
+        "true",
+        567
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        578
+      ],
+      [
+        "Reattributed",
+        "true",
+        589
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        902
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1108
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q1r_W_sig_tag",
+    "source": "proverif/sp7_q1_strict_repo_compromised.pv",
+    "line": 211,
+    "old": "  let (=BYTES, =fbW) = checksign(sgW, kW) in",
+    "new": "  let (unusedTag, =fbW) = checksign(sgW, kW) in",
+    "out": "scratch/q1r_W_sig_tag_typed.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        560
+      ],
+      [
+        "Rescoped",
+        "true",
+        574
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        588
+      ],
+      [
+        "Reattributed",
+        "true",
+        602
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        935
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1144
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q1r_W_sig_bytes",
+    "source": "proverif/sp7_q1_strict_repo_compromised.pv",
+    "line": 211,
+    "old": "  let (=BYTES, =fbW) = checksign(sgW, kW) in",
+    "new": "  let (=BYTES, unusedBytes) = checksign(sgW, kW) in",
+    "out": "scratch/q1r_W_sig_bytes_typed.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        561
+      ],
+      [
+        "Rescoped",
+        "true",
+        576
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        591
+      ],
+      [
+        "Reattributed",
+        "true",
+        606
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        949
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1159
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q1r_W_type",
+    "source": "proverif/sp7_q1_strict_repo_compromised.pv",
+    "line": 212,
+    "old": "  let framed(=OT_WRAPPER, =algW, =idW, =fp(kW), mhW, cvW, wrap(cvIw: bitstring, (fbI: bitstring, sgI: bitstring))) = fbW in",
+    "new": "  let framed(unusedType, =algW, =idW, =fp(kW), mhW, cvW, wrap(cvIw: bitstring, (fbI: bitstring, sgI: bitstring))) = fbW in",
+    "out": "scratch/q1r_W_type.out",
+    "results": [
+      [
+        "TypeConfused",
+        "false",
+        795
+      ],
+      [
+        "Rescoped",
+        "true",
+        812
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        829
+      ],
+      [
+        "Reattributed",
+        "true",
+        846
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        1182
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1394
+      ]
+    ],
+    "changed": [
+      "TypeConfused"
+    ]
+  },
+  {
+    "name": "q1r_W_alg",
+    "source": "proverif/sp7_q1_strict_repo_compromised.pv",
+    "line": 212,
+    "old": "  let framed(=OT_WRAPPER, =algW, =idW, =fp(kW), mhW, cvW, wrap(cvIw: bitstring, (fbI: bitstring, sgI: bitstring))) = fbW in",
+    "new": "  let framed(=OT_WRAPPER, unusedAlg, =idW, =fp(kW), mhW, cvW, wrap(cvIw: bitstring, (fbI: bitstring, sgI: bitstring))) = fbW in",
+    "out": "scratch/q1r_W_alg.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        560
+      ],
+      [
+        "Rescoped",
+        "true",
+        574
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        588
+      ],
+      [
+        "Reattributed",
+        "true",
+        602
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        935
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1144
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q1r_W_id",
+    "source": "proverif/sp7_q1_strict_repo_compromised.pv",
+    "line": 212,
+    "old": "  let framed(=OT_WRAPPER, =algW, =idW, =fp(kW), mhW, cvW, wrap(cvIw: bitstring, (fbI: bitstring, sgI: bitstring))) = fbW in",
+    "new": "  let framed(=OT_WRAPPER, =algW, unusedId, =fp(kW), mhW, cvW, wrap(cvIw: bitstring, (fbI: bitstring, sgI: bitstring))) = fbW in",
+    "out": "scratch/q1r_W_id.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        560
+      ],
+      [
+        "Rescoped",
+        "true",
+        574
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        588
+      ],
+      [
+        "Reattributed",
+        "true",
+        602
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        935
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1144
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q1r_W_fp",
+    "source": "proverif/sp7_q1_strict_repo_compromised.pv",
+    "line": 212,
+    "old": "  let framed(=OT_WRAPPER, =algW, =idW, =fp(kW), mhW, cvW, wrap(cvIw: bitstring, (fbI: bitstring, sgI: bitstring))) = fbW in",
+    "new": "  let framed(=OT_WRAPPER, =algW, =idW, unusedFp, mhW, cvW, wrap(cvIw: bitstring, (fbI: bitstring, sgI: bitstring))) = fbW in",
+    "out": "scratch/q1r_W_fp.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        560
+      ],
+      [
+        "Rescoped",
+        "true",
+        574
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        588
+      ],
+      [
+        "Reattributed",
+        "true",
+        602
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        935
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1144
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q1r_W_hash",
+    "source": "proverif/sp7_q1_strict_repo_compromised.pv",
+    "line": 213,
+    "old": "  if mhW = h(tW) then",
+    "new": "(* removed manifest hash check *)",
+    "out": "scratch/q1r_W_hash.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        558
+      ],
+      [
+        "Rescoped",
+        "true",
+        572
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        586
+      ],
+      [
+        "Reattributed",
+        "true",
+        600
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        933
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1142
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q2_I_evI_evidence",
+    "source": "proverif/sp7_q2_degraded_compromised.pv",
+    "line": 248,
+    "old": "  let (=STMT_DIGEST, =h(tI)) = checksign(evI, pkS) in",
+    "new": "(* removed evidence check *)",
+    "out": "scratch/q2_I_evI_evidence.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        500
+      ],
+      [
+        "Rescoped",
+        "true",
+        513
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        526
+      ],
+      [
+        "Reattributed",
+        "true",
+        539
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        834
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1017
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q2_I_evI_tag",
+    "source": "proverif/sp7_q2_degraded_compromised.pv",
+    "line": 248,
+    "old": "  let (=STMT_DIGEST, =h(tI)) = checksign(evI, pkS) in",
+    "new": "  let (unusedTag, =h(tI)) = checksign(evI, pkS) in",
+    "out": "scratch/q2_I_evI_tag_typed.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        505
+      ],
+      [
+        "Rescoped",
+        "true",
+        518
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        531
+      ],
+      [
+        "Reattributed",
+        "true",
+        544
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        849
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1045
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q2_I_evI_digest",
+    "source": "proverif/sp7_q2_degraded_compromised.pv",
+    "line": 248,
+    "old": "  let (=STMT_DIGEST, =h(tI)) = checksign(evI, pkS) in",
+    "new": "  let (=STMT_DIGEST, unusedDigest) = checksign(evI, pkS) in",
+    "out": "scratch/q2_I_evI_digest_typed.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        506
+      ],
+      [
+        "Rescoped",
+        "true",
+        520
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        533
+      ],
+      [
+        "Reattributed",
+        "true",
+        546
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        852
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1051
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q2_I_slot",
+    "source": "proverif/sp7_q2_degraded_compromised.pv",
+    "line": 250,
+    "old": "  if fp(kI) = kfprI then",
+    "new": "(* removed slot check *)",
+    "out": "scratch/q2_I_slot.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        506
+      ],
+      [
+        "Rescoped",
+        "true",
+        524
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        541
+      ],
+      [
+        "Reattributed",
+        "true",
+        559
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        866
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1066
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q2_I_possession",
+    "source": "proverif/sp7_q2_degraded_compromised.pv",
+    "line": 251,
+    "old": "  let (=POSS, =tI) = checksign(ppfI, kI) in",
+    "new": "(* removed possession check *)",
+    "out": "scratch/q2_I_possession.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        497
+      ],
+      [
+        "Rescoped",
+        "true",
+        506
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        515
+      ],
+      [
+        "Reattributed",
+        "true",
+        524
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        808
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        986
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q2_I_poss_tag",
+    "source": "proverif/sp7_q2_degraded_compromised.pv",
+    "line": 251,
+    "old": "  let (=POSS, =tI) = checksign(ppfI, kI) in",
+    "new": "  let (unusedTag, =tI) = checksign(ppfI, kI) in",
+    "out": "scratch/q2_I_poss_tag_typed.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        505
+      ],
+      [
+        "Rescoped",
+        "true",
+        518
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        531
+      ],
+      [
+        "Reattributed",
+        "true",
+        544
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        846
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1042
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q2_I_poss_manifest",
+    "source": "proverif/sp7_q2_degraded_compromised.pv",
+    "line": 251,
+    "old": "  let (=POSS, =tI) = checksign(ppfI, kI) in",
+    "new": "  let (=POSS, unusedManifest) = checksign(ppfI, kI) in",
+    "out": "scratch/q2_I_poss_manifest_typed.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        505
+      ],
+      [
+        "Rescoped",
+        "true",
+        518
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        531
+      ],
+      [
+        "Reattributed",
+        "true",
+        544
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        846
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1042
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q2_I_signature",
+    "source": "proverif/sp7_q2_degraded_compromised.pv",
+    "line": 252,
+    "old": "  let (=BYTES, =fbI) = checksign(sgI, kI) in",
+    "new": "(* removed signature check *)",
+    "out": "scratch/q2_I_signature.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        499
+      ],
+      [
+        "Rescoped",
+        "true",
+        510
+      ],
+      [
+        "InnerSigTransplanted",
+        "false",
+        833
+      ],
+      [
+        "Reattributed",
+        "true",
+        844
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        1133
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1316
+      ]
+    ],
+    "changed": [
+      "InnerSigTransplanted"
+    ]
+  },
+  {
+    "name": "q2_I_sig_tag",
+    "source": "proverif/sp7_q2_degraded_compromised.pv",
+    "line": 252,
+    "old": "  let (=BYTES, =fbI) = checksign(sgI, kI) in",
+    "new": "  let (unusedTag, =fbI) = checksign(sgI, kI) in",
+    "out": "scratch/q2_I_sig_tag_typed.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        505
+      ],
+      [
+        "Rescoped",
+        "true",
+        518
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        531
+      ],
+      [
+        "Reattributed",
+        "true",
+        544
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        846
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1042
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q2_I_sig_bytes",
+    "source": "proverif/sp7_q2_degraded_compromised.pv",
+    "line": 252,
+    "old": "  let (=BYTES, =fbI) = checksign(sgI, kI) in",
+    "new": "  let (=BYTES, unusedBytes) = checksign(sgI, kI) in",
+    "out": "scratch/q2_I_sig_bytes_typed.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        514
+      ],
+      [
+        "Rescoped",
+        "true",
+        537
+      ],
+      [
+        "InnerSigTransplanted",
+        "false",
+        876
+      ],
+      [
+        "Reattributed",
+        "true",
+        899
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        1215
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1423
+      ]
+    ],
+    "changed": [
+      "InnerSigTransplanted"
+    ]
+  },
+  {
+    "name": "q2_I_type",
+    "source": "proverif/sp7_q2_degraded_compromised.pv",
+    "line": 253,
+    "old": "  let framed(=OT_ATTEST, =algI, =idI, =fp(kI), mhI, cvI, plI) = fbI in",
+    "new": "  let framed(unusedType, =algI, =idI, =fp(kI), mhI, cvI, plI) = fbI in",
+    "out": "scratch/q2_I_type.out",
+    "results": [
+      [
+        "TypeConfused",
+        "false",
+        727
+      ],
+      [
+        "Rescoped",
+        "true",
+        744
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        761
+      ],
+      [
+        "Reattributed",
+        "true",
+        778
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        1084
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1284
+      ]
+    ],
+    "changed": [
+      "TypeConfused"
+    ]
+  },
+  {
+    "name": "q2_I_alg",
+    "source": "proverif/sp7_q2_degraded_compromised.pv",
+    "line": 253,
+    "old": "  let framed(=OT_ATTEST, =algI, =idI, =fp(kI), mhI, cvI, plI) = fbI in",
+    "new": "  let framed(=OT_ATTEST, unusedAlg, =idI, =fp(kI), mhI, cvI, plI) = fbI in",
+    "out": "scratch/q2_I_alg.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        505
+      ],
+      [
+        "Rescoped",
+        "true",
+        518
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        531
+      ],
+      [
+        "Reattributed",
+        "true",
+        544
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        846
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1042
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q2_I_id",
+    "source": "proverif/sp7_q2_degraded_compromised.pv",
+    "line": 253,
+    "old": "  let framed(=OT_ATTEST, =algI, =idI, =fp(kI), mhI, cvI, plI) = fbI in",
+    "new": "  let framed(=OT_ATTEST, =algI, unusedId, =fp(kI), mhI, cvI, plI) = fbI in",
+    "out": "scratch/q2_I_id.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        505
+      ],
+      [
+        "Rescoped",
+        "true",
+        518
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        531
+      ],
+      [
+        "Reattributed",
+        "true",
+        544
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        846
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1042
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q2_I_fp",
+    "source": "proverif/sp7_q2_degraded_compromised.pv",
+    "line": 253,
+    "old": "  let framed(=OT_ATTEST, =algI, =idI, =fp(kI), mhI, cvI, plI) = fbI in",
+    "new": "  let framed(=OT_ATTEST, =algI, =idI, unusedFp, mhI, cvI, plI) = fbI in",
+    "out": "scratch/q2_I_fp.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        505
+      ],
+      [
+        "Rescoped",
+        "true",
+        518
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        531
+      ],
+      [
+        "Reattributed",
+        "true",
+        544
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        846
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1042
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q2_I_hash",
+    "source": "proverif/sp7_q2_degraded_compromised.pv",
+    "line": 254,
+    "old": "  if mhI = h(tI) then",
+    "new": "(* removed manifest hash check *)",
+    "out": "scratch/q2_I_hash.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        501
+      ],
+      [
+        "Rescoped",
+        "true",
+        514
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        526
+      ],
+      [
+        "Reattributed",
+        "true",
+        538
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        839
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1034
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q2_W_evW_evidence",
+    "source": "proverif/sp7_q2_degraded_compromised.pv",
+    "line": 274,
+    "old": "  let (=STMT_DIGEST, =h(tW)) = checksign(evW, pkS) in",
+    "new": "(* removed evidence check *)",
+    "out": "scratch/q2_W_evW_evidence.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        503
+      ],
+      [
+        "Rescoped",
+        "true",
+        516
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        528
+      ],
+      [
+        "Reattributed",
+        "true",
+        541
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        836
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1031
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q2_W_evW_tag",
+    "source": "proverif/sp7_q2_degraded_compromised.pv",
+    "line": 274,
+    "old": "  let (=STMT_DIGEST, =h(tW)) = checksign(evW, pkS) in",
+    "new": "  let (unusedTag, =h(tW)) = checksign(evW, pkS) in",
+    "out": "scratch/q2_W_evW_tag_typed.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        505
+      ],
+      [
+        "Rescoped",
+        "true",
+        518
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        531
+      ],
+      [
+        "Reattributed",
+        "true",
+        544
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        849
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1045
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q2_W_evW_digest",
+    "source": "proverif/sp7_q2_degraded_compromised.pv",
+    "line": 274,
+    "old": "  let (=STMT_DIGEST, =h(tW)) = checksign(evW, pkS) in",
+    "new": "  let (=STMT_DIGEST, unusedDigest) = checksign(evW, pkS) in",
+    "out": "scratch/q2_W_evW_digest_typed.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        506
+      ],
+      [
+        "Rescoped",
+        "true",
+        520
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        533
+      ],
+      [
+        "Reattributed",
+        "true",
+        546
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        852
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1048
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q2_W_slot",
+    "source": "proverif/sp7_q2_degraded_compromised.pv",
+    "line": 276,
+    "old": "  if fp(kW) = kfprW then",
+    "new": "(* removed slot check *)",
+    "out": "scratch/q2_W_slot.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        507
+      ],
+      [
+        "Rescoped",
+        "true",
+        524
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        540
+      ],
+      [
+        "Reattributed",
+        "true",
+        556
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        865
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1064
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q2_W_possession",
+    "source": "proverif/sp7_q2_degraded_compromised.pv",
+    "line": 277,
+    "old": "  let (=POSS, =tW) = checksign(ppfW, kW) in",
+    "new": "(* removed possession check *)",
+    "out": "scratch/q2_W_possession.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        500
+      ],
+      [
+        "Rescoped",
+        "true",
+        510
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        520
+      ],
+      [
+        "Reattributed",
+        "true",
+        530
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        819
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1012
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q2_W_poss_tag",
+    "source": "proverif/sp7_q2_degraded_compromised.pv",
+    "line": 277,
+    "old": "  let (=POSS, =tW) = checksign(ppfW, kW) in",
+    "new": "  let (unusedTag, =tW) = checksign(ppfW, kW) in",
+    "out": "scratch/q2_W_poss_tag_typed.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        505
+      ],
+      [
+        "Rescoped",
+        "true",
+        518
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        531
+      ],
+      [
+        "Reattributed",
+        "true",
+        544
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        846
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1042
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q2_W_poss_manifest",
+    "source": "proverif/sp7_q2_degraded_compromised.pv",
+    "line": 277,
+    "old": "  let (=POSS, =tW) = checksign(ppfW, kW) in",
+    "new": "  let (=POSS, unusedManifest) = checksign(ppfW, kW) in",
+    "out": "scratch/q2_W_poss_manifest_typed.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        505
+      ],
+      [
+        "Rescoped",
+        "true",
+        518
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        531
+      ],
+      [
+        "Reattributed",
+        "true",
+        544
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        849
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1045
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q2_W_signature",
+    "source": "proverif/sp7_q2_degraded_compromised.pv",
+    "line": 278,
+    "old": "  let (=BYTES, =fbW) = checksign(sgW, kW) in",
+    "new": "(* removed signature check *)",
+    "out": "scratch/q2_W_signature.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        501
+      ],
+      [
+        "Rescoped",
+        "true",
+        511
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        521
+      ],
+      [
+        "Reattributed",
+        "true",
+        531
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        820
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1013
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q2_W_sig_tag",
+    "source": "proverif/sp7_q2_degraded_compromised.pv",
+    "line": 278,
+    "old": "  let (=BYTES, =fbW) = checksign(sgW, kW) in",
+    "new": "  let (unusedTag, =fbW) = checksign(sgW, kW) in",
+    "out": "scratch/q2_W_sig_tag_typed.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        505
+      ],
+      [
+        "Rescoped",
+        "true",
+        518
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        531
+      ],
+      [
+        "Reattributed",
+        "true",
+        544
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        846
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1042
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q2_W_sig_bytes",
+    "source": "proverif/sp7_q2_degraded_compromised.pv",
+    "line": 278,
+    "old": "  let (=BYTES, =fbW) = checksign(sgW, kW) in",
+    "new": "  let (=BYTES, unusedBytes) = checksign(sgW, kW) in",
+    "out": "scratch/q2_W_sig_bytes_typed.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        507
+      ],
+      [
+        "Rescoped",
+        "true",
+        522
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        536
+      ],
+      [
+        "Reattributed",
+        "true",
+        550
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        857
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1054
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q2_W_type",
+    "source": "proverif/sp7_q2_degraded_compromised.pv",
+    "line": 279,
+    "old": "  let framed(=OT_WRAPPER, =algW, =idW, =fp(kW), mhW, cvW, wrap(cvIw: bitstring, (fbI: bitstring, sgI: bitstring))) = fbW in",
+    "new": "  let framed(unusedType, =algW, =idW, =fp(kW), mhW, cvW, wrap(cvIw: bitstring, (fbI: bitstring, sgI: bitstring))) = fbW in",
+    "out": "scratch/q2_W_type.out",
+    "results": [
+      [
+        "TypeConfused",
+        "false",
+        723
+      ],
+      [
+        "Rescoped",
+        "true",
+        738
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        753
+      ],
+      [
+        "Reattributed",
+        "true",
+        768
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        1072
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1270
+      ]
+    ],
+    "changed": [
+      "TypeConfused"
+    ]
+  },
+  {
+    "name": "q2_W_alg",
+    "source": "proverif/sp7_q2_degraded_compromised.pv",
+    "line": 279,
+    "old": "  let framed(=OT_WRAPPER, =algW, =idW, =fp(kW), mhW, cvW, wrap(cvIw: bitstring, (fbI: bitstring, sgI: bitstring))) = fbW in",
+    "new": "  let framed(=OT_WRAPPER, unusedAlg, =idW, =fp(kW), mhW, cvW, wrap(cvIw: bitstring, (fbI: bitstring, sgI: bitstring))) = fbW in",
+    "out": "scratch/q2_W_alg.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        505
+      ],
+      [
+        "Rescoped",
+        "true",
+        518
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        531
+      ],
+      [
+        "Reattributed",
+        "true",
+        544
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        849
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1045
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q2_W_id",
+    "source": "proverif/sp7_q2_degraded_compromised.pv",
+    "line": 279,
+    "old": "  let framed(=OT_WRAPPER, =algW, =idW, =fp(kW), mhW, cvW, wrap(cvIw: bitstring, (fbI: bitstring, sgI: bitstring))) = fbW in",
+    "new": "  let framed(=OT_WRAPPER, =algW, unusedId, =fp(kW), mhW, cvW, wrap(cvIw: bitstring, (fbI: bitstring, sgI: bitstring))) = fbW in",
+    "out": "scratch/q2_W_id.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        505
+      ],
+      [
+        "Rescoped",
+        "true",
+        518
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        531
+      ],
+      [
+        "Reattributed",
+        "true",
+        544
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        849
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1045
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q2_W_fp",
+    "source": "proverif/sp7_q2_degraded_compromised.pv",
+    "line": 279,
+    "old": "  let framed(=OT_WRAPPER, =algW, =idW, =fp(kW), mhW, cvW, wrap(cvIw: bitstring, (fbI: bitstring, sgI: bitstring))) = fbW in",
+    "new": "  let framed(=OT_WRAPPER, =algW, =idW, unusedFp, mhW, cvW, wrap(cvIw: bitstring, (fbI: bitstring, sgI: bitstring))) = fbW in",
+    "out": "scratch/q2_W_fp.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        505
+      ],
+      [
+        "Rescoped",
+        "true",
+        518
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        531
+      ],
+      [
+        "Reattributed",
+        "true",
+        544
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        849
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1045
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q2_W_hash",
+    "source": "proverif/sp7_q2_degraded_compromised.pv",
+    "line": 280,
+    "old": "  if mhW = h(tW) then",
+    "new": "(* removed manifest hash check *)",
+    "out": "scratch/q2_W_hash.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        503
+      ],
+      [
+        "Rescoped",
+        "true",
+        516
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        529
+      ],
+      [
+        "Reattributed",
+        "true",
+        542
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        847
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1043
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q4o_I_evDI_evidence",
+    "source": "proverif/sp7_q4_control_opaque_twoversion.pv",
+    "line": 153,
+    "old": "  let (=STMT_DIGEST, =h(tI)) = checksign(evDI, pkD) in",
+    "new": "(* removed evidence check *)",
+    "out": "scratch/q4o_I_evDI_evidence.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        555
+      ],
+      [
+        "Rescoped",
+        "true",
+        569
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        583
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        914
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1115
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q4o_I_evDI_tag",
+    "source": "proverif/sp7_q4_control_opaque_twoversion.pv",
+    "line": 153,
+    "old": "  let (=STMT_DIGEST, =h(tI)) = checksign(evDI, pkD) in",
+    "new": "  let (unusedTag, =h(tI)) = checksign(evDI, pkD) in",
+    "out": "scratch/q4o_I_evDI_tag_typed.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        560
+      ],
+      [
+        "Rescoped",
+        "true",
+        574
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        588
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        929
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1143
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q4o_I_evDI_digest",
+    "source": "proverif/sp7_q4_control_opaque_twoversion.pv",
+    "line": 153,
+    "old": "  let (=STMT_DIGEST, =h(tI)) = checksign(evDI, pkD) in",
+    "new": "  let (=STMT_DIGEST, unusedDigest) = checksign(evDI, pkD) in",
+    "out": "scratch/q4o_I_evDI_digest_typed.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        560
+      ],
+      [
+        "Rescoped",
+        "true",
+        574
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        588
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        929
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1146
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q4o_I_evRI_evidence",
+    "source": "proverif/sp7_q4_control_opaque_twoversion.pv",
+    "line": 154,
+    "old": "  let (=STMT_DIGEST, =h(tI)) = checksign(evRI, pkR) in",
+    "new": "(* removed evidence check *)",
+    "out": "scratch/q4o_I_evRI_evidence.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        554
+      ],
+      [
+        "Rescoped",
+        "true",
+        567
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        580
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        913
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1122
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q4o_I_evRI_tag",
+    "source": "proverif/sp7_q4_control_opaque_twoversion.pv",
+    "line": 154,
+    "old": "  let (=STMT_DIGEST, =h(tI)) = checksign(evRI, pkR) in",
+    "new": "  let (unusedTag, =h(tI)) = checksign(evRI, pkR) in",
+    "out": "scratch/q4o_I_evRI_tag_typed.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        560
+      ],
+      [
+        "Rescoped",
+        "true",
+        574
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        588
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        926
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1140
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q4o_I_evRI_digest",
+    "source": "proverif/sp7_q4_control_opaque_twoversion.pv",
+    "line": 154,
+    "old": "  let (=STMT_DIGEST, =h(tI)) = checksign(evRI, pkR) in",
+    "new": "  let (=STMT_DIGEST, unusedDigest) = checksign(evRI, pkR) in",
+    "out": "scratch/q4o_I_evRI_digest_typed.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        560
+      ],
+      [
+        "Rescoped",
+        "true",
+        574
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        588
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        919
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1133
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q4o_I_slot",
+    "source": "proverif/sp7_q4_control_opaque_twoversion.pv",
+    "line": 156,
+    "old": "  if fp(kI) = kfprI then",
+    "new": "(* removed slot check *)",
+    "out": "scratch/q4o_I_slot.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        570
+      ],
+      [
+        "Rescoped",
+        "true",
+        598
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        626
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        978
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1206
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q4o_I_possession",
+    "source": "proverif/sp7_q4_control_opaque_twoversion.pv",
+    "line": 157,
+    "old": "  let (=POSS, =tI) = checksign(ppfI, kI) in",
+    "new": "(* removed possession check *)",
+    "out": "scratch/q4o_I_possession.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        555
+      ],
+      [
+        "Rescoped",
+        "true",
+        568
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        581
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        904
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1103
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q4o_I_poss_tag",
+    "source": "proverif/sp7_q4_control_opaque_twoversion.pv",
+    "line": 157,
+    "old": "  let (=POSS, =tI) = checksign(ppfI, kI) in",
+    "new": "  let (unusedTag, =tI) = checksign(ppfI, kI) in",
+    "out": "scratch/q4o_I_poss_tag_typed.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        560
+      ],
+      [
+        "Rescoped",
+        "true",
+        574
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        588
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        926
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1140
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q4o_I_poss_manifest",
+    "source": "proverif/sp7_q4_control_opaque_twoversion.pv",
+    "line": 157,
+    "old": "  let (=POSS, =tI) = checksign(ppfI, kI) in",
+    "new": "  let (=POSS, unusedManifest) = checksign(ppfI, kI) in",
+    "out": "scratch/q4o_I_poss_manifest_typed.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        564
+      ],
+      [
+        "Rescoped",
+        "true",
+        581
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        598
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        939
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1156
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q4o_I_signature",
+    "source": "proverif/sp7_q4_control_opaque_twoversion.pv",
+    "line": 158,
+    "old": "  let (=BYTES, =fbI) = checksign(sgI, kI) in",
+    "new": "(* removed signature check *)",
+    "out": "scratch/q4o_I_signature.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        554
+      ],
+      [
+        "Rescoped",
+        "true",
+        566
+      ],
+      [
+        "InnerSigTransplanted",
+        "false",
+        852
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        1177
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1377
+      ]
+    ],
+    "changed": [
+      "InnerSigTransplanted"
+    ]
+  },
+  {
+    "name": "q4o_I_sig_tag",
+    "source": "proverif/sp7_q4_control_opaque_twoversion.pv",
+    "line": 158,
+    "old": "  let (=BYTES, =fbI) = checksign(sgI, kI) in",
+    "new": "  let (unusedTag, =fbI) = checksign(sgI, kI) in",
+    "out": "scratch/q4o_I_sig_tag_typed.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        560
+      ],
+      [
+        "Rescoped",
+        "true",
+        574
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        588
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        926
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1140
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q4o_I_sig_bytes",
+    "source": "proverif/sp7_q4_control_opaque_twoversion.pv",
+    "line": 158,
+    "old": "  let (=BYTES, =fbI) = checksign(sgI, kI) in",
+    "new": "  let (=BYTES, unusedBytes) = checksign(sgI, kI) in",
+    "out": "scratch/q4o_I_sig_bytes_typed.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        569
+      ],
+      [
+        "Rescoped",
+        "true",
+        592
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        615
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        965
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1191
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q4o_I_type",
+    "source": "proverif/sp7_q4_control_opaque_twoversion.pv",
+    "line": 159,
+    "old": "  let canon(cvc, framed(=OT_ATTEST, =algI, =idI, =fp(kI), mhI, cvI, plI)) = fbI in",
+    "new": "  let canon(cvc, framed(unusedType, =algI, =idI, =fp(kI), mhI, cvI, plI)) = fbI in",
+    "out": "scratch/q4o_I_type.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        560
+      ],
+      [
+        "Rescoped",
+        "true",
+        574
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        588
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        926
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1140
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q4o_I_alg",
+    "source": "proverif/sp7_q4_control_opaque_twoversion.pv",
+    "line": 159,
+    "old": "  let canon(cvc, framed(=OT_ATTEST, =algI, =idI, =fp(kI), mhI, cvI, plI)) = fbI in",
+    "new": "  let canon(cvc, framed(=OT_ATTEST, unusedAlg, =idI, =fp(kI), mhI, cvI, plI)) = fbI in",
+    "out": "scratch/q4o_I_alg.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        560
+      ],
+      [
+        "Rescoped",
+        "true",
+        574
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        588
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        926
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1140
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q4o_I_id",
+    "source": "proverif/sp7_q4_control_opaque_twoversion.pv",
+    "line": 159,
+    "old": "  let canon(cvc, framed(=OT_ATTEST, =algI, =idI, =fp(kI), mhI, cvI, plI)) = fbI in",
+    "new": "  let canon(cvc, framed(=OT_ATTEST, =algI, unusedId, =fp(kI), mhI, cvI, plI)) = fbI in",
+    "out": "scratch/q4o_I_id.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        560
+      ],
+      [
+        "Rescoped",
+        "true",
+        574
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        588
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        926
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1140
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q4o_I_fp",
+    "source": "proverif/sp7_q4_control_opaque_twoversion.pv",
+    "line": 159,
+    "old": "  let canon(cvc, framed(=OT_ATTEST, =algI, =idI, =fp(kI), mhI, cvI, plI)) = fbI in",
+    "new": "  let canon(cvc, framed(=OT_ATTEST, =algI, =idI, unusedFp, mhI, cvI, plI)) = fbI in",
+    "out": "scratch/q4o_I_fp.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        560
+      ],
+      [
+        "Rescoped",
+        "true",
+        574
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        588
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        926
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1140
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q4o_I_hash",
+    "source": "proverif/sp7_q4_control_opaque_twoversion.pv",
+    "line": 160,
+    "old": "  if mhI = h(tI) then",
+    "new": "(* removed manifest hash check *)",
+    "out": "scratch/q4o_I_hash.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        556
+      ],
+      [
+        "Rescoped",
+        "true",
+        570
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        584
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        922
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1136
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q4o_W_evDW_evidence",
+    "source": "proverif/sp7_q4_control_opaque_twoversion.pv",
+    "line": 180,
+    "old": "  let (=STMT_DIGEST, =h(tW)) = checksign(evDW, pkD) in",
+    "new": "(* removed evidence check *)",
+    "out": "scratch/q4o_W_evDW_evidence.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        558
+      ],
+      [
+        "Rescoped",
+        "true",
+        572
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        585
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        915
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1128
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q4o_W_evDW_tag",
+    "source": "proverif/sp7_q4_control_opaque_twoversion.pv",
+    "line": 180,
+    "old": "  let (=STMT_DIGEST, =h(tW)) = checksign(evDW, pkD) in",
+    "new": "  let (unusedTag, =h(tW)) = checksign(evDW, pkD) in",
+    "out": "scratch/q4o_W_evDW_tag_typed.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        560
+      ],
+      [
+        "Rescoped",
+        "true",
+        574
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        588
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        929
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1143
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q4o_W_evDW_digest",
+    "source": "proverif/sp7_q4_control_opaque_twoversion.pv",
+    "line": 180,
+    "old": "  let (=STMT_DIGEST, =h(tW)) = checksign(evDW, pkD) in",
+    "new": "  let (=STMT_DIGEST, unusedDigest) = checksign(evDW, pkD) in",
+    "out": "scratch/q4o_W_evDW_digest_typed.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        561
+      ],
+      [
+        "Rescoped",
+        "true",
+        575
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        589
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        930
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1144
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q4o_W_evRW_evidence",
+    "source": "proverif/sp7_q4_control_opaque_twoversion.pv",
+    "line": 181,
+    "old": "  let (=STMT_DIGEST, =h(tW)) = checksign(evRW, pkR) in",
+    "new": "(* removed evidence check *)",
+    "out": "scratch/q4o_W_evRW_evidence.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        557
+      ],
+      [
+        "Rescoped",
+        "true",
+        570
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        583
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        906
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1119
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q4o_W_evRW_tag",
+    "source": "proverif/sp7_q4_control_opaque_twoversion.pv",
+    "line": 181,
+    "old": "  let (=STMT_DIGEST, =h(tW)) = checksign(evRW, pkR) in",
+    "new": "  let (unusedTag, =h(tW)) = checksign(evRW, pkR) in",
+    "out": "scratch/q4o_W_evRW_tag_typed.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        560
+      ],
+      [
+        "Rescoped",
+        "true",
+        574
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        588
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        926
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1140
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q4o_W_evRW_digest",
+    "source": "proverif/sp7_q4_control_opaque_twoversion.pv",
+    "line": 181,
+    "old": "  let (=STMT_DIGEST, =h(tW)) = checksign(evRW, pkR) in",
+    "new": "  let (=STMT_DIGEST, unusedDigest) = checksign(evRW, pkR) in",
+    "out": "scratch/q4o_W_evRW_digest_typed.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        560
+      ],
+      [
+        "Rescoped",
+        "true",
+        574
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        588
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        916
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1130
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q4o_W_slot",
+    "source": "proverif/sp7_q4_control_opaque_twoversion.pv",
+    "line": 183,
+    "old": "  if fp(kW) = kfprW then",
+    "new": "(* removed slot check *)",
+    "out": "scratch/q4o_W_slot.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        570
+      ],
+      [
+        "Rescoped",
+        "true",
+        596
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        622
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        921
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1147
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q4o_W_possession",
+    "source": "proverif/sp7_q4_control_opaque_twoversion.pv",
+    "line": 184,
+    "old": "  let (=POSS, =tW) = checksign(ppfW, kW) in",
+    "new": "(* removed possession check *)",
+    "out": "scratch/q4o_W_possession.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        557
+      ],
+      [
+        "Rescoped",
+        "true",
+        570
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        583
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        894
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1107
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q4o_W_poss_tag",
+    "source": "proverif/sp7_q4_control_opaque_twoversion.pv",
+    "line": 184,
+    "old": "  let (=POSS, =tW) = checksign(ppfW, kW) in",
+    "new": "  let (unusedTag, =tW) = checksign(ppfW, kW) in",
+    "out": "scratch/q4o_W_poss_tag_typed.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        560
+      ],
+      [
+        "Rescoped",
+        "true",
+        574
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        588
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        926
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1140
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q4o_W_poss_manifest",
+    "source": "proverif/sp7_q4_control_opaque_twoversion.pv",
+    "line": 184,
+    "old": "  let (=POSS, =tW) = checksign(ppfW, kW) in",
+    "new": "  let (=POSS, unusedManifest) = checksign(ppfW, kW) in",
+    "out": "scratch/q4o_W_poss_manifest_typed.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        563
+      ],
+      [
+        "Rescoped",
+        "true",
+        580
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        597
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        938
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1155
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q4o_W_signature",
+    "source": "proverif/sp7_q4_control_opaque_twoversion.pv",
+    "line": 185,
+    "old": "  let (=BYTES, =fbW) = checksign(sgW, kW) in",
+    "new": "(* removed signature check *)",
+    "out": "scratch/q4o_W_signature.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        555
+      ],
+      [
+        "Rescoped",
+        "true",
+        566
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        577
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        895
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1106
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q4o_W_sig_tag",
+    "source": "proverif/sp7_q4_control_opaque_twoversion.pv",
+    "line": 185,
+    "old": "  let (=BYTES, =fbW) = checksign(sgW, kW) in",
+    "new": "  let (unusedTag, =fbW) = checksign(sgW, kW) in",
+    "out": "scratch/q4o_W_sig_tag_typed.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        560
+      ],
+      [
+        "Rescoped",
+        "true",
+        574
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        588
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        926
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1140
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q4o_W_sig_bytes",
+    "source": "proverif/sp7_q4_control_opaque_twoversion.pv",
+    "line": 185,
+    "old": "  let (=BYTES, =fbW) = checksign(sgW, kW) in",
+    "new": "  let (=BYTES, unusedBytes) = checksign(sgW, kW) in",
+    "out": "scratch/q4o_W_sig_bytes_typed.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        561
+      ],
+      [
+        "Rescoped",
+        "true",
+        576
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        591
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        939
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1154
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q4o_W_type",
+    "source": "proverif/sp7_q4_control_opaque_twoversion.pv",
+    "line": 186,
+    "old": "  let framed(=OT_WRAPPER, =algW, =idW, =fp(kW), mhW, cvW, wrap(cvIw: bitstring, (fbI: bitstring, sgI: bitstring))) = fbW in",
+    "new": "  let framed(unusedType, =algW, =idW, =fp(kW), mhW, cvW, wrap(cvIw: bitstring, (fbI: bitstring, sgI: bitstring))) = fbW in",
+    "out": "scratch/q4o_W_type.out",
+    "results": [
+      [
+        "TypeConfused",
+        "false",
+        793
+      ],
+      [
+        "Rescoped",
+        "true",
+        808
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        822
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        1161
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1376
+      ]
+    ],
+    "changed": [
+      "TypeConfused"
+    ]
+  },
+  {
+    "name": "q4o_W_alg",
+    "source": "proverif/sp7_q4_control_opaque_twoversion.pv",
+    "line": 186,
+    "old": "  let framed(=OT_WRAPPER, =algW, =idW, =fp(kW), mhW, cvW, wrap(cvIw: bitstring, (fbI: bitstring, sgI: bitstring))) = fbW in",
+    "new": "  let framed(=OT_WRAPPER, unusedAlg, =idW, =fp(kW), mhW, cvW, wrap(cvIw: bitstring, (fbI: bitstring, sgI: bitstring))) = fbW in",
+    "out": "scratch/q4o_W_alg.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        560
+      ],
+      [
+        "Rescoped",
+        "true",
+        574
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        588
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        926
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1140
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q4o_W_id",
+    "source": "proverif/sp7_q4_control_opaque_twoversion.pv",
+    "line": 186,
+    "old": "  let framed(=OT_WRAPPER, =algW, =idW, =fp(kW), mhW, cvW, wrap(cvIw: bitstring, (fbI: bitstring, sgI: bitstring))) = fbW in",
+    "new": "  let framed(=OT_WRAPPER, =algW, unusedId, =fp(kW), mhW, cvW, wrap(cvIw: bitstring, (fbI: bitstring, sgI: bitstring))) = fbW in",
+    "out": "scratch/q4o_W_id.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        560
+      ],
+      [
+        "Rescoped",
+        "true",
+        574
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        588
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        926
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1140
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q4o_W_fp",
+    "source": "proverif/sp7_q4_control_opaque_twoversion.pv",
+    "line": 186,
+    "old": "  let framed(=OT_WRAPPER, =algW, =idW, =fp(kW), mhW, cvW, wrap(cvIw: bitstring, (fbI: bitstring, sgI: bitstring))) = fbW in",
+    "new": "  let framed(=OT_WRAPPER, =algW, =idW, unusedFp, mhW, cvW, wrap(cvIw: bitstring, (fbI: bitstring, sgI: bitstring))) = fbW in",
+    "out": "scratch/q4o_W_fp.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        560
+      ],
+      [
+        "Rescoped",
+        "true",
+        574
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        588
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        926
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1140
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q4o_W_hash",
+    "source": "proverif/sp7_q4_control_opaque_twoversion.pv",
+    "line": 187,
+    "old": "  if mhW = h(tW) then",
+    "new": "(* removed manifest hash check *)",
+    "out": "scratch/q4o_W_hash.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        558
+      ],
+      [
+        "Rescoped",
+        "true",
+        572
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        586
+      ],
+      [
+        "HonestWrappedAccepted",
+        "false",
+        924
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1138
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q5_I_evI_evidence",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 179,
+    "old": "  let (=STMT_DIGEST, =h(tI)) = checksign(evI, pkS) in",
+    "new": "(* removed evidence check *)",
+    "out": "scratch/q5_I_evI_evidence.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        646
+      ],
+      [
+        "RescopedD1",
+        "true",
+        683
+      ],
+      [
+        "RescopedD2",
+        "true",
+        720
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        757
+      ],
+      [
+        "Reattributed",
+        "true",
+        794
+      ],
+      [
+        "HonestWrappedAcceptedD1",
+        "false",
+        1113
+      ],
+      [
+        "HonestWrappedAcceptedD2",
+        "false",
+        1545
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1752
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q5_I_evI_tag",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 179,
+    "old": "  let (=STMT_DIGEST, =h(tI)) = checksign(evI, pkS) in",
+    "new": "  let (unusedTag, =h(tI)) = checksign(evI, pkS) in",
+    "out": "scratch/q5_I_evI_tag_typed.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        654
+      ],
+      [
+        "RescopedD1",
+        "true",
+        692
+      ],
+      [
+        "RescopedD2",
+        "true",
+        730
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        768
+      ],
+      [
+        "Reattributed",
+        "true",
+        806
+      ],
+      [
+        "HonestWrappedAcceptedD1",
+        "false",
+        1136
+      ],
+      [
+        "HonestWrappedAcceptedD2",
+        "false",
+        1579
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1800
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q5_I_evI_digest",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 179,
+    "old": "  let (=STMT_DIGEST, =h(tI)) = checksign(evI, pkS) in",
+    "new": "  let (=STMT_DIGEST, unusedDigest) = checksign(evI, pkS) in",
+    "out": "scratch/q5_I_evI_digest_typed.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        657
+      ],
+      [
+        "RescopedD1",
+        "true",
+        698
+      ],
+      [
+        "RescopedD2",
+        "true",
+        739
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        779
+      ],
+      [
+        "Reattributed",
+        "true",
+        819
+      ],
+      [
+        "HonestWrappedAcceptedD1",
+        "false",
+        1151
+      ],
+      [
+        "HonestWrappedAcceptedD2",
+        "false",
+        1596
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1822
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q5_I_slot",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 181,
+    "old": "  if fp(kI) = kfprI then",
+    "new": "(* removed slot check *)",
+    "out": "scratch/q5_I_slot.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        670
+      ],
+      [
+        "RescopedD1",
+        "true",
+        730
+      ],
+      [
+        "RescopedD2",
+        "true",
+        790
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        849
+      ],
+      [
+        "Reattributed",
+        "true",
+        908
+      ],
+      [
+        "HonestWrappedAcceptedD1",
+        "false",
+        1257
+      ],
+      [
+        "HonestWrappedAcceptedD2",
+        "false",
+        1719
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1961
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q5_I_possession",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 182,
+    "old": "  let (=POSS, =tI) = checksign(ppfI, kI) in",
+    "new": "(* removed possession check *)",
+    "out": "scratch/q5_I_possession.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        632
+      ],
+      [
+        "RescopedD1",
+        "true",
+        654
+      ],
+      [
+        "RescopedD2",
+        "true",
+        676
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        698
+      ],
+      [
+        "Reattributed",
+        "true",
+        720
+      ],
+      [
+        "HonestWrappedAcceptedD1",
+        "false",
+        1017
+      ],
+      [
+        "HonestWrappedAcceptedD2",
+        "false",
+        1427
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1618
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q5_I_poss_tag",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 182,
+    "old": "  let (=POSS, =tI) = checksign(ppfI, kI) in",
+    "new": "  let (unusedTag, =tI) = checksign(ppfI, kI) in",
+    "out": "scratch/q5_I_poss_tag_typed.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        654
+      ],
+      [
+        "RescopedD1",
+        "true",
+        692
+      ],
+      [
+        "RescopedD2",
+        "true",
+        730
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        768
+      ],
+      [
+        "Reattributed",
+        "true",
+        806
+      ],
+      [
+        "HonestWrappedAcceptedD1",
+        "false",
+        1133
+      ],
+      [
+        "HonestWrappedAcceptedD2",
+        "false",
+        1573
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1794
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q5_I_poss_manifest",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 182,
+    "old": "  let (=POSS, =tI) = checksign(ppfI, kI) in",
+    "new": "  let (=POSS, unusedManifest) = checksign(ppfI, kI) in",
+    "out": "scratch/q5_I_poss_manifest_typed.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        657
+      ],
+      [
+        "RescopedD1",
+        "true",
+        698
+      ],
+      [
+        "RescopedD2",
+        "true",
+        739
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        780
+      ],
+      [
+        "Reattributed",
+        "true",
+        821
+      ],
+      [
+        "HonestWrappedAcceptedD1",
+        "false",
+        1151
+      ],
+      [
+        "HonestWrappedAcceptedD2",
+        "false",
+        1594
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1818
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q5_I_signature",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 183,
+    "old": "  let (=BYTES, =fbI) = checksign(sgI, kI) in",
+    "new": "(* removed signature check *)",
+    "out": "scratch/q5_I_signature.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        638
+      ],
+      [
+        "RescopedD1",
+        "true",
+        666
+      ],
+      [
+        "RescopedD2",
+        "true",
+        694
+      ],
+      [
+        "InnerSigTransplanted",
+        "false",
+        1034
+      ],
+      [
+        "Reattributed",
+        "true",
+        1062
+      ],
+      [
+        "HonestWrappedAcceptedD1",
+        "false",
+        1369
+      ],
+      [
+        "HonestWrappedAcceptedD2",
+        "false",
+        1789
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1989
+      ]
+    ],
+    "changed": [
+      "InnerSigTransplanted"
+    ]
+  },
+  {
+    "name": "q5_I_sig_tag",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 183,
+    "old": "  let (=BYTES, =fbI) = checksign(sgI, kI) in",
+    "new": "  let (unusedTag, =fbI) = checksign(sgI, kI) in",
+    "out": "scratch/q5_I_sig_tag_typed.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        654
+      ],
+      [
+        "RescopedD1",
+        "true",
+        692
+      ],
+      [
+        "RescopedD2",
+        "true",
+        730
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        768
+      ],
+      [
+        "Reattributed",
+        "true",
+        806
+      ],
+      [
+        "HonestWrappedAcceptedD1",
+        "false",
+        1133
+      ],
+      [
+        "HonestWrappedAcceptedD2",
+        "false",
+        1573
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1794
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q5_I_sig_bytes",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 183,
+    "old": "  let (=BYTES, =fbI) = checksign(sgI, kI) in",
+    "new": "  let (=BYTES, unusedBytes) = checksign(sgI, kI) in",
+    "out": "scratch/q5_I_sig_bytes_typed.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        678
+      ],
+      [
+        "RescopedD1",
+        "true",
+        740
+      ],
+      [
+        "RescopedD2",
+        "true",
+        802
+      ],
+      [
+        "InnerSigTransplanted",
+        "false",
+        1181
+      ],
+      [
+        "Reattributed",
+        "true",
+        1243
+      ],
+      [
+        "HonestWrappedAcceptedD1",
+        "false",
+        1598
+      ],
+      [
+        "HonestWrappedAcceptedD2",
+        "false",
+        2065
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        2313
+      ]
+    ],
+    "changed": [
+      "InnerSigTransplanted"
+    ]
+  },
+  {
+    "name": "q5_I_type",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 184,
+    "old": "  let framed(=OT_ATTEST, =algI, =idI, =fp(kI), mhI, cvI, plI) = fbI in",
+    "new": "  let framed(unusedType, =algI, =idI, =fp(kI), mhI, cvI, plI) = fbI in",
+    "out": "scratch/q5_I_type.out",
+    "results": [
+      [
+        "TypeConfused",
+        "false",
+        892
+      ],
+      [
+        "RescopedD1",
+        "true",
+        950
+      ],
+      [
+        "RescopedD2",
+        "true",
+        1008
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        1066
+      ],
+      [
+        "Reattributed",
+        "true",
+        1124
+      ],
+      [
+        "HonestWrappedAcceptedD1",
+        "false",
+        1472
+      ],
+      [
+        "HonestWrappedAcceptedD2",
+        "false",
+        1933
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        2174
+      ]
+    ],
+    "changed": [
+      "TypeConfused"
+    ]
+  },
+  {
+    "name": "q5_I_alg",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 184,
+    "old": "  let framed(=OT_ATTEST, =algI, =idI, =fp(kI), mhI, cvI, plI) = fbI in",
+    "new": "  let framed(=OT_ATTEST, unusedAlg, =idI, =fp(kI), mhI, cvI, plI) = fbI in",
+    "out": "scratch/q5_I_alg.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        654
+      ],
+      [
+        "RescopedD1",
+        "true",
+        692
+      ],
+      [
+        "RescopedD2",
+        "true",
+        730
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        768
+      ],
+      [
+        "Reattributed",
+        "true",
+        806
+      ],
+      [
+        "HonestWrappedAcceptedD1",
+        "false",
+        1133
+      ],
+      [
+        "HonestWrappedAcceptedD2",
+        "false",
+        1573
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1794
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q5_I_id",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 184,
+    "old": "  let framed(=OT_ATTEST, =algI, =idI, =fp(kI), mhI, cvI, plI) = fbI in",
+    "new": "  let framed(=OT_ATTEST, =algI, unusedId, =fp(kI), mhI, cvI, plI) = fbI in",
+    "out": "scratch/q5_I_id.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        654
+      ],
+      [
+        "RescopedD1",
+        "true",
+        692
+      ],
+      [
+        "RescopedD2",
+        "true",
+        730
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        768
+      ],
+      [
+        "Reattributed",
+        "true",
+        806
+      ],
+      [
+        "HonestWrappedAcceptedD1",
+        "false",
+        1133
+      ],
+      [
+        "HonestWrappedAcceptedD2",
+        "false",
+        1573
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1794
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q5_I_fp",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 184,
+    "old": "  let framed(=OT_ATTEST, =algI, =idI, =fp(kI), mhI, cvI, plI) = fbI in",
+    "new": "  let framed(=OT_ATTEST, =algI, =idI, unusedFp, mhI, cvI, plI) = fbI in",
+    "out": "scratch/q5_I_fp.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        654
+      ],
+      [
+        "RescopedD1",
+        "true",
+        692
+      ],
+      [
+        "RescopedD2",
+        "true",
+        730
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        767
+      ],
+      [
+        "Reattributed",
+        "true",
+        804
+      ],
+      [
+        "HonestWrappedAcceptedD1",
+        "false",
+        1131
+      ],
+      [
+        "HonestWrappedAcceptedD2",
+        "false",
+        1571
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1791
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q5_I_hash",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 185,
+    "old": "  if mhI = h(tI) then",
+    "new": "(* removed manifest hash check *)",
+    "out": "scratch/q5_I_hash.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        646
+      ],
+      [
+        "RescopedD1",
+        "true",
+        682
+      ],
+      [
+        "RescopedD2",
+        "true",
+        718
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        754
+      ],
+      [
+        "Reattributed",
+        "true",
+        790
+      ],
+      [
+        "HonestWrappedAcceptedD1",
+        "false",
+        1115
+      ],
+      [
+        "HonestWrappedAcceptedD2",
+        "false",
+        1553
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1772
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q5_W_evW_evidence",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 205,
+    "old": "  let (=STMT_DIGEST, =h(tW)) = checksign(evW, pkS) in",
+    "new": "(* removed evidence check *)",
+    "out": "scratch/q5_W_evW_evidence.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        652
+      ],
+      [
+        "RescopedD1",
+        "true",
+        690
+      ],
+      [
+        "RescopedD2",
+        "true",
+        728
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        766
+      ],
+      [
+        "Reattributed",
+        "true",
+        804
+      ],
+      [
+        "HonestWrappedAcceptedD1",
+        "false",
+        1124
+      ],
+      [
+        "HonestWrappedAcceptedD2",
+        "false",
+        1564
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1785
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q5_W_evW_tag",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 205,
+    "old": "  let (=STMT_DIGEST, =h(tW)) = checksign(evW, pkS) in",
+    "new": "  let (unusedTag, =h(tW)) = checksign(evW, pkS) in",
+    "out": "scratch/q5_W_evW_tag_typed.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        654
+      ],
+      [
+        "RescopedD1",
+        "true",
+        692
+      ],
+      [
+        "RescopedD2",
+        "true",
+        730
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        768
+      ],
+      [
+        "Reattributed",
+        "true",
+        806
+      ],
+      [
+        "HonestWrappedAcceptedD1",
+        "false",
+        1136
+      ],
+      [
+        "HonestWrappedAcceptedD2",
+        "false",
+        1576
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1797
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q5_W_evW_digest",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 205,
+    "old": "  let (=STMT_DIGEST, =h(tW)) = checksign(evW, pkS) in",
+    "new": "  let (=STMT_DIGEST, unusedDigest) = checksign(evW, pkS) in",
+    "out": "scratch/q5_W_evW_digest_typed.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        655
+      ],
+      [
+        "RescopedD1",
+        "true",
+        694
+      ],
+      [
+        "RescopedD2",
+        "true",
+        733
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        771
+      ],
+      [
+        "Reattributed",
+        "true",
+        810
+      ],
+      [
+        "HonestWrappedAcceptedD1",
+        "false",
+        1141
+      ],
+      [
+        "HonestWrappedAcceptedD2",
+        "false",
+        1582
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1803
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q5_W_slot",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 207,
+    "old": "  if fp(kW) = kfprW then",
+    "new": "(* removed slot check *)",
+    "out": "scratch/q5_W_slot.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        656
+      ],
+      [
+        "RescopedD1",
+        "true",
+        698
+      ],
+      [
+        "RescopedD2",
+        "true",
+        740
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        782
+      ],
+      [
+        "Reattributed",
+        "true",
+        824
+      ],
+      [
+        "HonestWrappedAcceptedD1",
+        "false",
+        1158
+      ],
+      [
+        "HonestWrappedAcceptedD2",
+        "false",
+        1602
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1827
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q5_W_possession",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 208,
+    "old": "  let (=POSS, =tW) = checksign(ppfW, kW) in",
+    "new": "(* removed possession check *)",
+    "out": "scratch/q5_W_possession.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        649
+      ],
+      [
+        "RescopedD1",
+        "true",
+        684
+      ],
+      [
+        "RescopedD2",
+        "true",
+        719
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        754
+      ],
+      [
+        "Reattributed",
+        "true",
+        789
+      ],
+      [
+        "HonestWrappedAcceptedD1",
+        "false",
+        1103
+      ],
+      [
+        "HonestWrappedAcceptedD2",
+        "false",
+        1540
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1758
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q5_W_poss_tag",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 208,
+    "old": "  let (=POSS, =tW) = checksign(ppfW, kW) in",
+    "new": "  let (unusedTag, =tW) = checksign(ppfW, kW) in",
+    "out": "scratch/q5_W_poss_tag_typed.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        654
+      ],
+      [
+        "RescopedD1",
+        "true",
+        692
+      ],
+      [
+        "RescopedD2",
+        "true",
+        730
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        768
+      ],
+      [
+        "Reattributed",
+        "true",
+        806
+      ],
+      [
+        "HonestWrappedAcceptedD1",
+        "false",
+        1133
+      ],
+      [
+        "HonestWrappedAcceptedD2",
+        "false",
+        1573
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1794
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q5_W_poss_manifest",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 208,
+    "old": "  let (=POSS, =tW) = checksign(ppfW, kW) in",
+    "new": "  let (=POSS, unusedManifest) = checksign(ppfW, kW) in",
+    "out": "scratch/q5_W_poss_manifest_typed.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        654
+      ],
+      [
+        "RescopedD1",
+        "true",
+        692
+      ],
+      [
+        "RescopedD2",
+        "true",
+        730
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        768
+      ],
+      [
+        "Reattributed",
+        "true",
+        806
+      ],
+      [
+        "HonestWrappedAcceptedD1",
+        "false",
+        1136
+      ],
+      [
+        "HonestWrappedAcceptedD2",
+        "false",
+        1576
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1797
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q5_W_signature",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 209,
+    "old": "  let (=BYTES, =fbW) = checksign(sgW, kW) in",
+    "new": "(* removed signature check *)",
+    "out": "scratch/q5_W_signature.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        650
+      ],
+      [
+        "RescopedD1",
+        "true",
+        686
+      ],
+      [
+        "RescopedD2",
+        "true",
+        722
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        757
+      ],
+      [
+        "Reattributed",
+        "true",
+        792
+      ],
+      [
+        "HonestWrappedAcceptedD1",
+        "false",
+        1107
+      ],
+      [
+        "HonestWrappedAcceptedD2",
+        "false",
+        1545
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1763
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q5_W_sig_tag",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 209,
+    "old": "  let (=BYTES, =fbW) = checksign(sgW, kW) in",
+    "new": "  let (unusedTag, =fbW) = checksign(sgW, kW) in",
+    "out": "scratch/q5_W_sig_tag_typed.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        654
+      ],
+      [
+        "RescopedD1",
+        "true",
+        692
+      ],
+      [
+        "RescopedD2",
+        "true",
+        730
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        768
+      ],
+      [
+        "Reattributed",
+        "true",
+        806
+      ],
+      [
+        "HonestWrappedAcceptedD1",
+        "false",
+        1133
+      ],
+      [
+        "HonestWrappedAcceptedD2",
+        "false",
+        1573
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1794
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q5_W_sig_bytes",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 209,
+    "old": "  let (=BYTES, =fbW) = checksign(sgW, kW) in",
+    "new": "  let (=BYTES, unusedBytes) = checksign(sgW, kW) in",
+    "out": "scratch/q5_W_sig_bytes_typed.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        656
+      ],
+      [
+        "RescopedD1",
+        "true",
+        696
+      ],
+      [
+        "RescopedD2",
+        "true",
+        736
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        775
+      ],
+      [
+        "Reattributed",
+        "true",
+        814
+      ],
+      [
+        "HonestWrappedAcceptedD1",
+        "false",
+        1146
+      ],
+      [
+        "HonestWrappedAcceptedD2",
+        "false",
+        1588
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1810
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q5_W_type",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 210,
+    "old": "  let framed(=OT_WRAPPER, =algW, =idW, =fp(kW), mhW, cvW, wrap(cvIw: bitstring, (fbI: bitstring, sgI: bitstring))) = fbW in",
+    "new": "  let framed(unusedType, =algW, =idW, =fp(kW), mhW, cvW, wrap(cvIw: bitstring, (fbI: bitstring, sgI: bitstring))) = fbW in",
+    "out": "scratch/q5_W_type.out",
+    "results": [
+      [
+        "TypeConfused",
+        "false",
+        872
+      ],
+      [
+        "RescopedD1",
+        "true",
+        912
+      ],
+      [
+        "RescopedD2",
+        "true",
+        952
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        992
+      ],
+      [
+        "Reattributed",
+        "true",
+        1032
+      ],
+      [
+        "HonestWrappedAcceptedD1",
+        "false",
+        1361
+      ],
+      [
+        "HonestWrappedAcceptedD2",
+        "false",
+        1803
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        2026
+      ]
+    ],
+    "changed": [
+      "TypeConfused"
+    ]
+  },
+  {
+    "name": "q5_W_alg",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 210,
+    "old": "  let framed(=OT_WRAPPER, =algW, =idW, =fp(kW), mhW, cvW, wrap(cvIw: bitstring, (fbI: bitstring, sgI: bitstring))) = fbW in",
+    "new": "  let framed(=OT_WRAPPER, unusedAlg, =idW, =fp(kW), mhW, cvW, wrap(cvIw: bitstring, (fbI: bitstring, sgI: bitstring))) = fbW in",
+    "out": "scratch/q5_W_alg.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        654
+      ],
+      [
+        "RescopedD1",
+        "true",
+        692
+      ],
+      [
+        "RescopedD2",
+        "true",
+        730
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        768
+      ],
+      [
+        "Reattributed",
+        "true",
+        806
+      ],
+      [
+        "HonestWrappedAcceptedD1",
+        "false",
+        1136
+      ],
+      [
+        "HonestWrappedAcceptedD2",
+        "false",
+        1576
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1797
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q5_W_id",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 210,
+    "old": "  let framed(=OT_WRAPPER, =algW, =idW, =fp(kW), mhW, cvW, wrap(cvIw: bitstring, (fbI: bitstring, sgI: bitstring))) = fbW in",
+    "new": "  let framed(=OT_WRAPPER, =algW, unusedId, =fp(kW), mhW, cvW, wrap(cvIw: bitstring, (fbI: bitstring, sgI: bitstring))) = fbW in",
+    "out": "scratch/q5_W_id.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        654
+      ],
+      [
+        "RescopedD1",
+        "true",
+        692
+      ],
+      [
+        "RescopedD2",
+        "true",
+        730
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        768
+      ],
+      [
+        "Reattributed",
+        "true",
+        806
+      ],
+      [
+        "HonestWrappedAcceptedD1",
+        "false",
+        1136
+      ],
+      [
+        "HonestWrappedAcceptedD2",
+        "false",
+        1576
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1797
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q5_W_fp",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 210,
+    "old": "  let framed(=OT_WRAPPER, =algW, =idW, =fp(kW), mhW, cvW, wrap(cvIw: bitstring, (fbI: bitstring, sgI: bitstring))) = fbW in",
+    "new": "  let framed(=OT_WRAPPER, =algW, =idW, unusedFp, mhW, cvW, wrap(cvIw: bitstring, (fbI: bitstring, sgI: bitstring))) = fbW in",
+    "out": "scratch/q5_W_fp.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        654
+      ],
+      [
+        "RescopedD1",
+        "true",
+        692
+      ],
+      [
+        "RescopedD2",
+        "true",
+        730
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        768
+      ],
+      [
+        "Reattributed",
+        "true",
+        806
+      ],
+      [
+        "HonestWrappedAcceptedD1",
+        "false",
+        1136
+      ],
+      [
+        "HonestWrappedAcceptedD2",
+        "false",
+        1576
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1797
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q5_W_hash",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 211,
+    "old": "  if mhW = h(tW) then",
+    "new": "(* removed manifest hash check *)",
+    "out": "scratch/q5_W_hash.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        652
+      ],
+      [
+        "RescopedD1",
+        "true",
+        690
+      ],
+      [
+        "RescopedD2",
+        "true",
+        728
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        766
+      ],
+      [
+        "Reattributed",
+        "true",
+        804
+      ],
+      [
+        "HonestWrappedAcceptedD1",
+        "false",
+        1134
+      ],
+      [
+        "HonestWrappedAcceptedD2",
+        "false",
+        1574
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1795
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q5_O_evO_evidence",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 224,
+    "old": "  let (=STMT_DIGEST, =h(tO)) = checksign(evO, pkS) in",
+    "new": "(* removed evidence check *)",
+    "out": "scratch/q5_O_evO_evidence.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        652
+      ],
+      [
+        "RescopedD1",
+        "true",
+        689
+      ],
+      [
+        "RescopedD2",
+        "true",
+        726
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        763
+      ],
+      [
+        "Reattributed",
+        "true",
+        800
+      ],
+      [
+        "HonestWrappedAcceptedD1",
+        "false",
+        1126
+      ],
+      [
+        "HonestWrappedAcceptedD2",
+        "false",
+        1558
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1778
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q5_O_evO_tag",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 224,
+    "old": "  let (=STMT_DIGEST, =h(tO)) = checksign(evO, pkS) in",
+    "new": "  let (unusedTag, =h(tO)) = checksign(evO, pkS) in",
+    "out": "scratch/q5_O_evO_tag_typed.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        654
+      ],
+      [
+        "RescopedD1",
+        "true",
+        692
+      ],
+      [
+        "RescopedD2",
+        "true",
+        730
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        768
+      ],
+      [
+        "Reattributed",
+        "true",
+        806
+      ],
+      [
+        "HonestWrappedAcceptedD1",
+        "false",
+        1133
+      ],
+      [
+        "HonestWrappedAcceptedD2",
+        "false",
+        1576
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1797
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q5_O_evO_digest",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 224,
+    "old": "  let (=STMT_DIGEST, =h(tO)) = checksign(evO, pkS) in",
+    "new": "  let (=STMT_DIGEST, unusedDigest) = checksign(evO, pkS) in",
+    "out": "scratch/q5_O_evO_digest_typed.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        656
+      ],
+      [
+        "RescopedD1",
+        "true",
+        696
+      ],
+      [
+        "RescopedD2",
+        "true",
+        736
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        776
+      ],
+      [
+        "Reattributed",
+        "true",
+        816
+      ],
+      [
+        "HonestWrappedAcceptedD1",
+        "false",
+        1145
+      ],
+      [
+        "HonestWrappedAcceptedD2",
+        "false",
+        1590
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1813
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q5_O_slot",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 226,
+    "old": "  if fp(kO) = kfprO then",
+    "new": "(* removed slot check *)",
+    "out": "scratch/q5_O_slot.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        674
+      ],
+      [
+        "RescopedD1",
+        "true",
+        734
+      ],
+      [
+        "RescopedD2",
+        "true",
+        794
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        854
+      ],
+      [
+        "Reattributed",
+        "true",
+        914
+      ],
+      [
+        "HonestWrappedAcceptedD1",
+        "false",
+        1263
+      ],
+      [
+        "HonestWrappedAcceptedD2",
+        "false",
+        1728
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1971
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q5_O_possession",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 227,
+    "old": "  let (=POSS, =tO) = checksign(ppfO, kO) in",
+    "new": "(* removed possession check *)",
+    "out": "scratch/q5_O_possession.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        648
+      ],
+      [
+        "RescopedD1",
+        "true",
+        682
+      ],
+      [
+        "RescopedD2",
+        "true",
+        716
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        750
+      ],
+      [
+        "Reattributed",
+        "true",
+        784
+      ],
+      [
+        "HonestWrappedAcceptedD1",
+        "false",
+        1107
+      ],
+      [
+        "HonestWrappedAcceptedD2",
+        "false",
+        1533
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1750
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q5_O_poss_tag",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 227,
+    "old": "  let (=POSS, =tO) = checksign(ppfO, kO) in",
+    "new": "  let (unusedTag, =tO) = checksign(ppfO, kO) in",
+    "out": "scratch/q5_O_poss_tag_typed.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        654
+      ],
+      [
+        "RescopedD1",
+        "true",
+        692
+      ],
+      [
+        "RescopedD2",
+        "true",
+        730
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        768
+      ],
+      [
+        "Reattributed",
+        "true",
+        806
+      ],
+      [
+        "HonestWrappedAcceptedD1",
+        "false",
+        1133
+      ],
+      [
+        "HonestWrappedAcceptedD2",
+        "false",
+        1573
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1794
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q5_O_poss_manifest",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 227,
+    "old": "  let (=POSS, =tO) = checksign(ppfO, kO) in",
+    "new": "  let (=POSS, unusedManifest) = checksign(ppfO, kO) in",
+    "out": "scratch/q5_O_poss_manifest_typed.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        671
+      ],
+      [
+        "RescopedD1",
+        "true",
+        726
+      ],
+      [
+        "RescopedD2",
+        "true",
+        781
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        836
+      ],
+      [
+        "Reattributed",
+        "true",
+        891
+      ],
+      [
+        "HonestWrappedAcceptedD1",
+        "false",
+        1235
+      ],
+      [
+        "HonestWrappedAcceptedD2",
+        "false",
+        1695
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1933
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q5_O_signature",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 228,
+    "old": "  let (=BYTES, =fbO) = checksign(sgO, kO) in",
+    "new": "(* removed signature check *)",
+    "out": "scratch/q5_O_signature.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        650
+      ],
+      [
+        "RescopedD1",
+        "true",
+        686
+      ],
+      [
+        "RescopedD2",
+        "true",
+        722
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        758
+      ],
+      [
+        "Reattributed",
+        "true",
+        794
+      ],
+      [
+        "HonestWrappedAcceptedD1",
+        "false",
+        1119
+      ],
+      [
+        "HonestWrappedAcceptedD2",
+        "false",
+        1547
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1766
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q5_O_sig_tag",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 228,
+    "old": "  let (=BYTES, =fbO) = checksign(sgO, kO) in",
+    "new": "  let (unusedTag, =fbO) = checksign(sgO, kO) in",
+    "out": "scratch/q5_O_sig_tag_typed.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        654
+      ],
+      [
+        "RescopedD1",
+        "true",
+        692
+      ],
+      [
+        "RescopedD2",
+        "true",
+        730
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        768
+      ],
+      [
+        "Reattributed",
+        "true",
+        806
+      ],
+      [
+        "HonestWrappedAcceptedD1",
+        "false",
+        1133
+      ],
+      [
+        "HonestWrappedAcceptedD2",
+        "false",
+        1573
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1794
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q5_O_sig_bytes",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 228,
+    "old": "  let (=BYTES, =fbO) = checksign(sgO, kO) in",
+    "new": "  let (=BYTES, unusedBytes) = checksign(sgO, kO) in",
+    "out": "scratch/q5_O_sig_bytes_typed.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        679
+      ],
+      [
+        "RescopedD1",
+        "true",
+        742
+      ],
+      [
+        "RescopedD2",
+        "true",
+        805
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        868
+      ],
+      [
+        "Reattributed",
+        "true",
+        931
+      ],
+      [
+        "HonestWrappedAcceptedD1",
+        "false",
+        1283
+      ],
+      [
+        "HonestWrappedAcceptedD2",
+        "false",
+        1751
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1997
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q5_O_type",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 229,
+    "old": "  let framed(=OT_WRAPPER, =algO, =idO, =fp(kO), mhO, cvO, wrap(cvMw: bitstring, (fbM: bitstring, sgM: bitstring))) = fbO in",
+    "new": "  let framed(unusedType, =algO, =idO, =fp(kO), mhO, cvO, wrap(cvMw: bitstring, (fbM: bitstring, sgM: bitstring))) = fbO in",
+    "out": "scratch/q5_O_type.out",
+    "results": [
+      [
+        "TypeConfused",
+        "false",
+        887
+      ],
+      [
+        "RescopedD1",
+        "true",
+        926
+      ],
+      [
+        "RescopedD2",
+        "true",
+        965
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        1004
+      ],
+      [
+        "Reattributed",
+        "true",
+        1043
+      ],
+      [
+        "HonestWrappedAcceptedD1",
+        "false",
+        1371
+      ],
+      [
+        "HonestWrappedAcceptedD2",
+        "false",
+        1815
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        2037
+      ]
+    ],
+    "changed": [
+      "TypeConfused"
+    ]
+  },
+  {
+    "name": "q5_O_alg",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 229,
+    "old": "  let framed(=OT_WRAPPER, =algO, =idO, =fp(kO), mhO, cvO, wrap(cvMw: bitstring, (fbM: bitstring, sgM: bitstring))) = fbO in",
+    "new": "  let framed(=OT_WRAPPER, unusedAlg, =idO, =fp(kO), mhO, cvO, wrap(cvMw: bitstring, (fbM: bitstring, sgM: bitstring))) = fbO in",
+    "out": "scratch/q5_O_alg.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        654
+      ],
+      [
+        "RescopedD1",
+        "true",
+        692
+      ],
+      [
+        "RescopedD2",
+        "true",
+        730
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        768
+      ],
+      [
+        "Reattributed",
+        "true",
+        806
+      ],
+      [
+        "HonestWrappedAcceptedD1",
+        "false",
+        1133
+      ],
+      [
+        "HonestWrappedAcceptedD2",
+        "false",
+        1576
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1797
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q5_O_id",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 229,
+    "old": "  let framed(=OT_WRAPPER, =algO, =idO, =fp(kO), mhO, cvO, wrap(cvMw: bitstring, (fbM: bitstring, sgM: bitstring))) = fbO in",
+    "new": "  let framed(=OT_WRAPPER, =algO, unusedId, =fp(kO), mhO, cvO, wrap(cvMw: bitstring, (fbM: bitstring, sgM: bitstring))) = fbO in",
+    "out": "scratch/q5_O_id.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        654
+      ],
+      [
+        "RescopedD1",
+        "true",
+        692
+      ],
+      [
+        "RescopedD2",
+        "true",
+        730
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        768
+      ],
+      [
+        "Reattributed",
+        "true",
+        806
+      ],
+      [
+        "HonestWrappedAcceptedD1",
+        "false",
+        1133
+      ],
+      [
+        "HonestWrappedAcceptedD2",
+        "false",
+        1576
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1797
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q5_O_fp",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 229,
+    "old": "  let framed(=OT_WRAPPER, =algO, =idO, =fp(kO), mhO, cvO, wrap(cvMw: bitstring, (fbM: bitstring, sgM: bitstring))) = fbO in",
+    "new": "  let framed(=OT_WRAPPER, =algO, =idO, unusedFp, mhO, cvO, wrap(cvMw: bitstring, (fbM: bitstring, sgM: bitstring))) = fbO in",
+    "out": "scratch/q5_O_fp.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        654
+      ],
+      [
+        "RescopedD1",
+        "true",
+        692
+      ],
+      [
+        "RescopedD2",
+        "true",
+        730
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        768
+      ],
+      [
+        "Reattributed",
+        "true",
+        806
+      ],
+      [
+        "HonestWrappedAcceptedD1",
+        "false",
+        1133
+      ],
+      [
+        "HonestWrappedAcceptedD2",
+        "false",
+        1576
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1797
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q5_O_hash",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 230,
+    "old": "  if mhO = h(tO) then",
+    "new": "(* removed manifest hash check *)",
+    "out": "scratch/q5_O_hash.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        652
+      ],
+      [
+        "RescopedD1",
+        "true",
+        690
+      ],
+      [
+        "RescopedD2",
+        "true",
+        728
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        766
+      ],
+      [
+        "Reattributed",
+        "true",
+        804
+      ],
+      [
+        "HonestWrappedAcceptedD1",
+        "false",
+        1131
+      ],
+      [
+        "HonestWrappedAcceptedD2",
+        "false",
+        1574
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1795
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q5_M_evM_evidence",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 233,
+    "old": "  | let (=STMT_DIGEST, =h(tM)) = checksign(evM, pkS) in",
+    "new": "  | (* removed evidence check *)",
+    "out": "scratch/q5_M_evM_evidence.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        652
+      ],
+      [
+        "RescopedD1",
+        "true",
+        690
+      ],
+      [
+        "RescopedD2",
+        "true",
+        728
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        765
+      ],
+      [
+        "Reattributed",
+        "true",
+        803
+      ],
+      [
+        "HonestWrappedAcceptedD1",
+        "false",
+        1130
+      ],
+      [
+        "HonestWrappedAcceptedD2",
+        "false",
+        1563
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1783
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q5_M_evM_tag",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 233,
+    "old": "  | let (=STMT_DIGEST, =h(tM)) = checksign(evM, pkS) in",
+    "new": "  | let (unusedTag, =h(tM)) = checksign(evM, pkS) in",
+    "out": "scratch/q5_M_evM_tag_typed.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        654
+      ],
+      [
+        "RescopedD1",
+        "true",
+        692
+      ],
+      [
+        "RescopedD2",
+        "true",
+        730
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        768
+      ],
+      [
+        "Reattributed",
+        "true",
+        806
+      ],
+      [
+        "HonestWrappedAcceptedD1",
+        "false",
+        1133
+      ],
+      [
+        "HonestWrappedAcceptedD2",
+        "false",
+        1576
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1797
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q5_M_evM_digest",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 233,
+    "old": "  | let (=STMT_DIGEST, =h(tM)) = checksign(evM, pkS) in",
+    "new": "  | let (=STMT_DIGEST, unusedDigest) = checksign(evM, pkS) in",
+    "out": "scratch/q5_M_evM_digest_typed.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        656
+      ],
+      [
+        "RescopedD1",
+        "true",
+        696
+      ],
+      [
+        "RescopedD2",
+        "true",
+        736
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        776
+      ],
+      [
+        "Reattributed",
+        "true",
+        816
+      ],
+      [
+        "HonestWrappedAcceptedD1",
+        "false",
+        1145
+      ],
+      [
+        "HonestWrappedAcceptedD2",
+        "false",
+        1590
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1813
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q5_M_slot",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 235,
+    "old": "    if fp(kM) = kfprM then",
+    "new": "(* removed slot check *)",
+    "out": "scratch/q5_M_slot.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        675
+      ],
+      [
+        "RescopedD1",
+        "true",
+        736
+      ],
+      [
+        "RescopedD2",
+        "true",
+        797
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        858
+      ],
+      [
+        "Reattributed",
+        "true",
+        919
+      ],
+      [
+        "HonestWrappedAcceptedD1",
+        "false",
+        1269
+      ],
+      [
+        "HonestWrappedAcceptedD2",
+        "false",
+        1732
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1976
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q5_M_possession",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 236,
+    "old": "    let (=POSS, =tM) = checksign(ppfM, kM) in",
+    "new": "(* removed possession check *)",
+    "out": "scratch/q5_M_possession.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        648
+      ],
+      [
+        "RescopedD1",
+        "true",
+        682
+      ],
+      [
+        "RescopedD2",
+        "true",
+        716
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        749
+      ],
+      [
+        "Reattributed",
+        "true",
+        782
+      ],
+      [
+        "HonestWrappedAcceptedD1",
+        "false",
+        1105
+      ],
+      [
+        "HonestWrappedAcceptedD2",
+        "false",
+        1515
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1731
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q5_M_poss_tag",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 236,
+    "old": "    let (=POSS, =tM) = checksign(ppfM, kM) in",
+    "new": "    let (unusedTag, =tM) = checksign(ppfM, kM) in",
+    "out": "scratch/q5_M_poss_tag_typed.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        655
+      ],
+      [
+        "RescopedD1",
+        "true",
+        694
+      ],
+      [
+        "RescopedD2",
+        "true",
+        733
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        771
+      ],
+      [
+        "Reattributed",
+        "true",
+        809
+      ],
+      [
+        "HonestWrappedAcceptedD1",
+        "false",
+        1137
+      ],
+      [
+        "HonestWrappedAcceptedD2",
+        "false",
+        1578
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1799
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q5_M_poss_manifest",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 236,
+    "old": "    let (=POSS, =tM) = checksign(ppfM, kM) in",
+    "new": "    let (=POSS, unusedManifest) = checksign(ppfM, kM) in",
+    "out": "scratch/q5_M_poss_manifest_typed.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        671
+      ],
+      [
+        "RescopedD1",
+        "true",
+        726
+      ],
+      [
+        "RescopedD2",
+        "true",
+        781
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        836
+      ],
+      [
+        "Reattributed",
+        "true",
+        891
+      ],
+      [
+        "HonestWrappedAcceptedD1",
+        "false",
+        1235
+      ],
+      [
+        "HonestWrappedAcceptedD2",
+        "false",
+        1692
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1930
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q5_M_signature",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 237,
+    "old": "    let (=BYTES, =fbM) = checksign(sgM, kM) in",
+    "new": "(* removed signature check *)",
+    "out": "scratch/q5_M_signature.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        650
+      ],
+      [
+        "RescopedD1",
+        "true",
+        686
+      ],
+      [
+        "RescopedD2",
+        "true",
+        722
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        758
+      ],
+      [
+        "Reattributed",
+        "true",
+        794
+      ],
+      [
+        "HonestWrappedAcceptedD1",
+        "false",
+        1119
+      ],
+      [
+        "HonestWrappedAcceptedD2",
+        "false",
+        1479
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1698
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q5_M_sig_tag",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 237,
+    "old": "    let (=BYTES, =fbM) = checksign(sgM, kM) in",
+    "new": "    let (unusedTag, =fbM) = checksign(sgM, kM) in",
+    "out": "scratch/q5_M_sig_tag_typed.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        654
+      ],
+      [
+        "RescopedD1",
+        "true",
+        692
+      ],
+      [
+        "RescopedD2",
+        "true",
+        730
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        768
+      ],
+      [
+        "Reattributed",
+        "true",
+        806
+      ],
+      [
+        "HonestWrappedAcceptedD1",
+        "false",
+        1133
+      ],
+      [
+        "HonestWrappedAcceptedD2",
+        "false",
+        1573
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1794
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q5_M_sig_bytes",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 237,
+    "old": "    let (=BYTES, =fbM) = checksign(sgM, kM) in",
+    "new": "    let (=BYTES, unusedBytes) = checksign(sgM, kM) in",
+    "out": "scratch/q5_M_sig_bytes_typed.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        679
+      ],
+      [
+        "RescopedD1",
+        "true",
+        742
+      ],
+      [
+        "RescopedD2",
+        "true",
+        805
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        868
+      ],
+      [
+        "Reattributed",
+        "true",
+        931
+      ],
+      [
+        "HonestWrappedAcceptedD1",
+        "false",
+        1283
+      ],
+      [
+        "HonestWrappedAcceptedD2",
+        "false",
+        1684
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1930
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q5_M_type",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 238,
+    "old": "    let framed(=OT_WRAPPER, =algM, =idM, =fp(kM), mhM, cvM, wrap(cvIw: bitstring, (fbI: bitstring, sgI: bitstring))) = fbM in",
+    "new": "    let framed(unusedType, =algM, =idM, =fp(kM), mhM, cvM, wrap(cvIw: bitstring, (fbI: bitstring, sgI: bitstring))) = fbM in",
+    "out": "scratch/q5_M_type.out",
+    "results": [
+      [
+        "TypeConfused",
+        "false",
+        988
+      ],
+      [
+        "RescopedD1",
+        "true",
+        1027
+      ],
+      [
+        "RescopedD2",
+        "true",
+        1066
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        1105
+      ],
+      [
+        "Reattributed",
+        "true",
+        1144
+      ],
+      [
+        "HonestWrappedAcceptedD1",
+        "false",
+        1472
+      ],
+      [
+        "HonestWrappedAcceptedD2",
+        "false",
+        1843
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        2065
+      ]
+    ],
+    "changed": [
+      "TypeConfused"
+    ]
+  },
+  {
+    "name": "q5_M_alg",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 238,
+    "old": "    let framed(=OT_WRAPPER, =algM, =idM, =fp(kM), mhM, cvM, wrap(cvIw: bitstring, (fbI: bitstring, sgI: bitstring))) = fbM in",
+    "new": "    let framed(=OT_WRAPPER, unusedAlg, =idM, =fp(kM), mhM, cvM, wrap(cvIw: bitstring, (fbI: bitstring, sgI: bitstring))) = fbM in",
+    "out": "scratch/q5_M_alg.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        654
+      ],
+      [
+        "RescopedD1",
+        "true",
+        692
+      ],
+      [
+        "RescopedD2",
+        "true",
+        730
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        768
+      ],
+      [
+        "Reattributed",
+        "true",
+        806
+      ],
+      [
+        "HonestWrappedAcceptedD1",
+        "false",
+        1133
+      ],
+      [
+        "HonestWrappedAcceptedD2",
+        "false",
+        1573
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1794
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q5_M_id",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 238,
+    "old": "    let framed(=OT_WRAPPER, =algM, =idM, =fp(kM), mhM, cvM, wrap(cvIw: bitstring, (fbI: bitstring, sgI: bitstring))) = fbM in",
+    "new": "    let framed(=OT_WRAPPER, =algM, unusedId, =fp(kM), mhM, cvM, wrap(cvIw: bitstring, (fbI: bitstring, sgI: bitstring))) = fbM in",
+    "out": "scratch/q5_M_id.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        654
+      ],
+      [
+        "RescopedD1",
+        "true",
+        692
+      ],
+      [
+        "RescopedD2",
+        "true",
+        730
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        768
+      ],
+      [
+        "Reattributed",
+        "true",
+        806
+      ],
+      [
+        "HonestWrappedAcceptedD1",
+        "false",
+        1133
+      ],
+      [
+        "HonestWrappedAcceptedD2",
+        "false",
+        1573
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1794
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q5_M_fp",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 238,
+    "old": "    let framed(=OT_WRAPPER, =algM, =idM, =fp(kM), mhM, cvM, wrap(cvIw: bitstring, (fbI: bitstring, sgI: bitstring))) = fbM in",
+    "new": "    let framed(=OT_WRAPPER, =algM, =idM, unusedFp, mhM, cvM, wrap(cvIw: bitstring, (fbI: bitstring, sgI: bitstring))) = fbM in",
+    "out": "scratch/q5_M_fp.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        654
+      ],
+      [
+        "RescopedD1",
+        "true",
+        692
+      ],
+      [
+        "RescopedD2",
+        "true",
+        730
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        768
+      ],
+      [
+        "Reattributed",
+        "true",
+        806
+      ],
+      [
+        "HonestWrappedAcceptedD1",
+        "false",
+        1133
+      ],
+      [
+        "HonestWrappedAcceptedD2",
+        "false",
+        1573
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1794
+      ]
+    ],
+    "changed": []
+  },
+  {
+    "name": "q5_M_hash",
+    "source": "proverif/sp7_q5_depth2_correct.pv",
+    "line": 239,
+    "old": "    if mhM = h(tM) then",
+    "new": "(* removed manifest hash check *)",
+    "out": "scratch/q5_M_hash.out",
+    "results": [
+      [
+        "TypeConfused",
+        "true",
+        653
+      ],
+      [
+        "RescopedD1",
+        "true",
+        692
+      ],
+      [
+        "RescopedD2",
+        "true",
+        731
+      ],
+      [
+        "InnerSigTransplanted",
+        "true",
+        770
+      ],
+      [
+        "Reattributed",
+        "true",
+        809
+      ],
+      [
+        "HonestWrappedAcceptedD1",
+        "false",
+        1137
+      ],
+      [
+        "HonestWrappedAcceptedD2",
+        "false",
+        1578
+      ],
+      [
+        "HonestAccepted",
+        "false",
+        1800
+      ]
+    ],
+    "changed": []
+  }
+]

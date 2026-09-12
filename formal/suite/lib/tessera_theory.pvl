@@ -51,6 +51,37 @@
 (*        signature section for exactly what this does and does not     *)
 (*        grant. Every suite query therefore holds, if it holds, under  *)
 (*        an adversary with the registered DSKS capability.             *)
+(*   D-5  Object-type constants (2026-09-06, after the four suite plans *)
+(*        froze at 5188e7a). P7's enumerated signed-object set is       *)
+(*        declared here as constants OT_ATTEST, OT_WRAPPER,             *)
+(*        OT_MANIFEST, OT_AUTHEVID, OT_CONFVEC, OT_REVIEWREC, plus the   *)
+(*        two types Amendment 4 §A4.5 added, OT_TLR and OT_REFUSAL, so  *)
+(*        S-P1/S-P2/S-P7/S-STANDING and the capstone share the names.   *)
+(*        S-P3's models predate this and use a model-local free name    *)
+(*        objTypeH; they are not recut (no collision: different name).  *)
+(*   D-6  Domain-separation tags TLR and REFUSAL (Amendment 4 §A4.5):   *)
+(*        the terminal lineage record and the portable refusal record   *)
+(*        are signed-object kinds with their own tags, never parsing    *)
+(*        as any other kind.                                            *)
+(*        Note 2026-09-06 (cross-family falsification review,          *)
+(*        S-STANDING item 27; docs/reviews/2026-09-06-codex-suite-     *)
+(*        falsification-s-p1-s-p2-s-p7-s-standing.md): the TLR tag     *)
+(*        check is INERT in every single-family fixture (no honest     *)
+(*        signer emits another tag over a TLR-shaped body) and LOAD-   *)
+(*        BEARING under composition: with an honest REFUSAL-tagged     *)
+(*        signer over a TLR-shaped body added (reviewer fixture        *)
+(*        a_foreign_tag), removing only the tag check turns the strict *)
+(*        standing correspondence red. The tag's work is cross-        *)
+(*        protocol, invisible to any single-family model; carried,     *)
+(*        never removable on single-removal evidence.                  *)
+(*   NOT promoted — framed. The seven-field frame constructor stays     *)
+(*        model-local, copied verbatim from S-P3 into S-P1/S-P2         *)
+(*        (S-P2 plan, "framed into the library", disposition B7):       *)
+(*        promoting it would make S-P3's eight committed models         *)
+(*        redeclare a library term (a build failure by the rule above)  *)
+(*        and force a recut of results already reviewed. Shared by      *)
+(*        copy; the capstone, which transcribes this library, checks    *)
+(*        the copies agree.                                             *)
 (* ==================================================================== *)
 
 (* --- public channel ------------------------------------------------- *)
@@ -119,6 +150,22 @@ const STMT_DIRECT: bitstring.
 const STMT_DIGEST: bitstring.
 const POSS: bitstring.
 const BYTES: bitstring.
+(* D-6: terminal lineage record and portable refusal record (A4 §A4.5). *)
+const TLR: bitstring.
+const REFUSAL: bitstring.
+
+(* --- object-type constants (D-5; P7's enumerated set + A4 §A4.5) ------ *)
+(* One constant per signed-object kind; carried inside the framed bytes  *)
+(* as the object-type field. Which are EXERCISED is each model's own     *)
+(* header's business (S-P3 F7 pattern).                                  *)
+const OT_ATTEST: bitstring.
+const OT_WRAPPER: bitstring.
+const OT_MANIFEST: bitstring.
+const OT_AUTHEVID: bitstring.
+const OT_CONFVEC: bitstring.
+const OT_REVIEWREC: bitstring.
+const OT_TLR: bitstring.
+const OT_REFUSAL: bitstring.
 
 (* --- map-v1 authority-relevant tuple (D-2) ---------------------------- *)
 (* (issuer identity, key fingerprint, signer-set, algorithm id,         *)

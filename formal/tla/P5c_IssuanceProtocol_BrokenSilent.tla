@@ -25,6 +25,12 @@
 (*                                                                          *)
 (* Identical state space and actions except: Tick does not record the     *)
 (* refusal; a separate Refuse action does, whenever it gets around to it.  *)
+(*                                                                          *)
+(* RECUT 2026-09-06 (review item 15): the main module's `refusedAt`        *)
+(* recording variable and its guard invariant RefusalTimeConsistent are   *)
+(* carried here; Refuse stamps refusedAt with the clock value at which it *)
+(* fires. Expected verdicts are unchanged: NoSilentDeadlock red, all      *)
+(* others (now including RefusalTimeConsistent) green in the _Green cfg.   *)
 (***************************************************************************)
 EXTENDS Integers
 
@@ -34,19 +40,20 @@ ASSUME Delta \in Nat /\ DepthK \in Nat \ {0} /\ MaxTime \in Nat
        /\ MaxAttempts \in Nat \ {0}
 
 NoAnchor == -1
+NoRefusal == -1
 
 VARIABLES now, declared, anchorAt, depth, shipped, shippedOrphaned,
-          attempts, reorgs, refused
+          attempts, reorgs, refused, refusedAt
 
 vars == <<now, declared, anchorAt, depth, shipped, shippedOrphaned,
-          attempts, reorgs, refused>>
+          attempts, reorgs, refused, refusedAt>>
 
 Init ==
   /\ now = 0 /\ declared = 0
   /\ anchorAt = NoAnchor /\ depth = 0
   /\ shipped = FALSE /\ shippedOrphaned = FALSE
   /\ attempts = 1 /\ reorgs = 0
-  /\ refused = FALSE
+  /\ refused = FALSE /\ refusedAt = NoRefusal
 
 (* THE BREAK: Tick advances time but records nothing — crossing the final *)
 (* deadline leaves refused = FALSE until Refuse happens to fire.           *)
@@ -55,20 +62,20 @@ Tick ==
   /\ now' = now + 1
   /\ depth' = IF anchorAt # NoAnchor /\ depth < DepthK THEN depth + 1 ELSE depth
   /\ UNCHANGED <<declared, anchorAt, shipped, shippedOrphaned, attempts,
-                 reorgs, refused>>
+                 reorgs, refused, refusedAt>>
 
 Anchor ==
   /\ ~shipped /\ anchorAt = NoAnchor
   /\ anchorAt' = now /\ depth' = 0
   /\ UNCHANGED <<now, declared, shipped, shippedOrphaned, attempts, reorgs,
-                 refused>>
+                 refused, refusedAt>>
 
 Reorg ==
   /\ anchorAt # NoAnchor /\ depth < DepthK
   /\ reorgs < 2
   /\ anchorAt' = NoAnchor /\ depth' = 0 /\ reorgs' = reorgs + 1
   /\ shippedOrphaned' = (shipped \/ shippedOrphaned)
-  /\ UNCHANGED <<now, declared, shipped, attempts, refused>>
+  /\ UNCHANGED <<now, declared, shipped, attempts, refused, refusedAt>>
 
 Ship ==
   /\ ~shipped /\ anchorAt # NoAnchor
@@ -76,14 +83,14 @@ Ship ==
   /\ now <= declared + Delta
   /\ shipped' = TRUE
   /\ UNCHANGED <<now, declared, anchorAt, depth, shippedOrphaned, attempts,
-                 reorgs, refused>>
+                 reorgs, refused, refusedAt>>
 
 Reissue ==
   /\ ~shipped /\ now > declared + Delta
   /\ attempts < MaxAttempts
   /\ declared' = now /\ anchorAt' = NoAnchor /\ depth' = 0
   /\ attempts' = attempts + 1
-  /\ UNCHANGED <<now, shipped, shippedOrphaned, reorgs, refused>>
+  /\ UNCHANGED <<now, shipped, shippedOrphaned, reorgs, refused, refusedAt>>
 
 (* The separately enabled Refuse: guard is the honest exhaustion          *)
 (* condition (so RefusedOnlyWhenExhausted still holds), but nothing       *)
@@ -91,7 +98,7 @@ Reissue ==
 Refuse ==
   /\ ~shipped /\ ~refused
   /\ attempts = MaxAttempts /\ now > declared + Delta
-  /\ refused' = TRUE
+  /\ refused' = TRUE /\ refusedAt' = now
   /\ UNCHANGED <<now, declared, anchorAt, depth, shipped, shippedOrphaned,
                  attempts, reorgs>>
 
@@ -123,5 +130,9 @@ RefusedOnlyWhenExhausted ==
              /\ now > declared + Delta
 
 RefusalLatched == [][refused => refused']_vars
+
+RefusalTimeConsistent ==
+  /\ (refused <=> refusedAt # NoRefusal)
+  /\ (refused => refusedAt \in 0..now)
 
 ================================================================================

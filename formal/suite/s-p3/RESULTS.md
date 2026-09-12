@@ -333,4 +333,35 @@ the [assumption] half (H1a) regardless.
   `checked` with this file as artifact; `discharged` waits on the
   [assumption] half. Recorded by the collaborator in the author's
   words; the commit is the author's.
+- 2026-09-06 — library divergences D-5 (object-type constants) and D-6
+  (`TLR`, `REFUSAL` tags, Amendment 4 §A4.5) entered in
+  `formal/suite/lib/tessera_theory.pvl` after the four suite plans
+  froze at `5188e7a`; `framed` deliberately NOT promoted (would make
+  these eight models redeclare a library term). All eight models
+  re-run against the changed library by the collaborator: every
+  `RESULT` line identical to the committed `.out` files, no warnings.
+  Committed `.out` files left as they are (no result changed);
+  the re-run outputs are not archived.
 
+- 2026-09-06 — pointer only, no change to any S-P3 file (recorded
+  while applying the cross-family falsification review to S-P1;
+  `docs/reviews/2026-09-06-codex-suite-falsification-s-p1-s-p2-s-p7-s-standing.md`,
+  item 7). That item says S-P1's headers listed "object type (P7);
+  canonicalization version and algorithm profile (P8/H1a)" under
+  **Carried checks** when there are no such checks — `ot` and `cv` are
+  bound by the frame pattern and never compared — and adds that
+  "S-P3's headers have the same wording and get the same fix". Checked
+  against the eight S-P3 headers: **they do not.** All eight say
+  "identity, algorithm, object type, canonicalization version and
+  domain tags are **included in the signed bytes but unexercised by
+  these two queries**", which is already the corrected form; item 7
+  asks nothing of them. Where the shape does recur is
+  `READING-AIDS.md`, whose verifier-check tables give `ot` and `cv` a
+  **CARRIED** status label inside a column of check statuses (§ rows
+  138, 108, 116/118, and the multikey table) — qualified there as
+  "CARRIED unchecked", so it is a weaker version of the same
+  conflation, not the overclaim itself. S-P3 is committed and already
+  reviewed, so nothing is edited here: this is deferred to S-P3's next
+  recut, where the fix is to say *signed fields carried as obligations
+  for P7 and P8/H1a*, not carried checks. Proposed by the AI
+  collaborator; not adopted; the commit is the author's.

@@ -1,0 +1,195 @@
+(* REVIEW ATTACK: Replay first issuer frame under third honest party key. Baseline header is inherited; fixture changed only. *)
+(* ==================================================================== *)
+(* STATUS: PROPOSED — 2026-09-06 — produced by the AI collaborator;    *)
+(* not adopted; the commit is the author's.                            *)
+(* ==================================================================== *)
+(* S-P1.Q2 — correct model, DEGRADED mode, sole channel compromised.   *)
+(* Variant: the P1 [model] binding claim in the hard case.             *)
+(*                                                                      *)
+(* Registered prediction (PREDICTIONS.md, frozen 5188e7a):             *)
+(* (i)  headline AcceptedUnderHonestKey ==> IssuerSigned: unreachable, *)
+(*      terminating (p~0.70); real violation (p~0.10) = amendment      *)
+(*      trigger on the verifier specification, not a recut; timeout   *)
+(*      (p~0.20).                                                      *)
+(* (ii) unrestricted AcceptS ==> IssuerSigned: VIOLATION as registered *)
+(*      (p~0.85) via impersonation under the adversary's own key;      *)
+(*      unexpectedly unreachable (p~0.10) = model defect; timeout 0.05.*)
+(* (iii) N1 HonestAccepted reachable. Timebox: 30 min.                 *)
+(*                                                                      *)
+(* This model proves: in degraded mode with the sole authority channel *)
+(* compromised, under an adversary that can alter any bytes after      *)
+(* issue, holds every key it uses, and has the A1.3 item 3 (DSKS)      *)
+(* capability, framed bytes accepted under an honest issuer's key are  *)
+(* exactly the bytes that issuer signed at an issuance event — the     *)
+(* [model] binding half of P1 in its §A3.1 operative form, as a        *)
+(* non-injective correspondence.                                       *)
+(* This model does not prove: the verdict partition (P4, TLA+); that   *)
+(* acceptance is fresh or context-bound (replay is permitted, §A3.1    *)
+(* item 1); that the accepted key is an honest issuer's (P10 / the     *)
+(* first link — in degraded-compromised mode it is not, and the        *)
+(* unrestricted contrast query (ii) is registered red); re-attribution *)
+(* of honest bytes to another key (S-P3, complementary — composed at   *)
+(* the capstone, not consumed here); the multi-signer set (S-P2);      *)
+(* canonicalization or the frame's byte layout (P8); wrapper soundness *)
+(* (P7); anything temporal (P5/P6); the verification profile (H1a).    *)
+(* Load-bearing checks (for the headline): the attestation-signature   *)
+(* check `let (=BYTES, =fb) = checksign(sg, kX)` binding the PRESENTED *)
+(* bytes to the SIGNED bytes, resting on signature unforgeability      *)
+(* (library, Dolev-Yao). Confirmed by the S-P1 probes (RESULTS.md,     *)
+(* "Load-bearing / carried, from ablation"): only this check, and the  *)
+(* unforgeability of sign, move the headline.                          *)
+(* Carried checks (not exercised by these queries): the fingerprint    *)
+(* match and manifest-hash check (S-P3), possession over the manifest  *)
+(* (A1.5/P10, S-P3 entry 2), the authority-evidence check (inert in    *)
+(* degraded-compromised mode by construction, S-P3 F6), object type    *)
+(* (P7); canonicalization version and algorithm profile (P8/H1a);      *)
+(* algorithm identifier (A3 identifier-binding invariant, per F7);     *)
+(* issuer identity (S-P3 F8 and its 2026-09-05 ruling).                *)
+(*                                                                      *)
+(* Theory: formal/suite/lib/tessera_theory.pvl (D-3 possession over    *)
+(* manifest; D-4 DSKS expressible; D-5 object-type constants).          *)
+(* First link in the SELECTED form: transcription binding, evidence =  *)
+(* sign((STMT_DIGEST, h(t)), skCh); the sole channel's key is public.  *)
+(* Frame: framed(objType, alg, issuerId, kfp, mh, canonVer, payload)   *)
+(* under BYTES — copied VERBATIM from S-P3 (library header: NOT        *)
+(* promoted; shared by copy). Object type is the library's OT_ATTEST.  *)
+(* Fixture (PREDICTIONS.md "Fixture statement", N1/N2): TWO honest     *)
+(* issuers, each with its own honestly published manifest, replicated  *)
+(* with adversary-chosen payloads; N1 witness HonestAccepted emitted   *)
+(* by the judge, must be reachable.                                     *)
+(* Judge encoding as registered (PREDICTIONS.md "The judge"): judge H  *)
+(* keyed on honest KEYS (honestKeyCh), judge N1 keyed on honest        *)
+(* (key, bytes) reports; report outputs parallel with continuations   *)
+(* (S-P3 recut 1); judge locals never shadow library names.            *)
+(*                                                                      *)
+(* Run: proverif -lib ../../lib/tessera_theory.pvl sp1_q2_degraded_compromised.pv *)
+(* ==================================================================== *)
+
+(* --- model-local declarations (library terms are not redeclared) ---- *)
+fun framed(bitstring, bitstring, bitstring, bitstring, bitstring, bitstring, bitstring): bitstring [data].
+  (* objType, alg, issuerId, kfp, manifestHash, canonVer, payload *)
+free canonVerH: bitstring.
+free issuerId2: bitstring.        (* second honest issuer's identity (N2) *)
+
+(* judge channels (registered encoding) *)
+free honestKeyCh: channel [private]. (* main -> judge H : honest issuer key *)
+free honestCh: channel [private].    (* issuer -> judge N1 : (signer key, framed bytes) *)
+free acceptCh: channel [private].    (* verifier -> judges : (accepted key, framed bytes) *)
+event AcceptedUnderHonestKey(pkey, bitstring).
+  (* judge H: bytes accepted under a key that is an honest issuer's *)
+event HonestAccepted(pkey, bitstring).
+  (* judge N1 witness: honest bytes accepted under their signer's key *)
+
+(* (i) HEADLINE — the registered P1 [model] claim for this leg:        *)
+(* accepted under an honest key ==> that key's holder signed exactly   *)
+(* these bytes. Non-injective by registration (§A3.1 item 1).          *)
+query k: pkey, fb: bitstring;
+  event(AcceptedUnderHonestKey(k, fb)) ==> event(IssuerSigned(k, fb)).
+
+(* (iii) N1 honest-flow witness: must be REACHABLE *)
+query k: pkey, fb: bitstring;
+  event(HonestAccepted(k, fb)).
+
+let AuthorityS(skS: skey, t: bitstring) =
+  event AuthorityPublishedDNS(t);
+  out(c, sign((STMT_DIGEST, h(t)), skS)).
+
+(* Degraded first link (A3.2 VALID_DEGRADED, never-zero evidences):     *)
+(* the SOLE accepted evidence binds h(t). Event AcceptS is model-local  *)
+(* (spike Q5 shape): evidence, tuple, accepted key, bytes.              *)
+event AcceptS(bitstring, bitstring, pkey, bitstring).
+
+(* (ii) unrestricted contrast — REGISTERED RED: the adversary's own key *)
+(* is vouched for by the compromised sole channel (impersonation, the  *)
+(* degraded-mode cost; s-p3/RESULTS.md F8, RULED (author) 2026-09-05). *)
+query t: bitstring, k: pkey, fb: bitstring, ev: bitstring;
+  event(AcceptS(ev, t, k, fb)) ==> event(IssuerSigned(k, fb)).
+
+(* Verifier: the S-P3 Q2 verifier, unchanged (PREDICTIONS.md: "the   *)
+(* same verifier S-P3 checked, not a subset of it").                    *)
+let VerifierS(pkS: pkey) =
+  in(c, (t: bitstring, ev: bitstring,
+         kX: pkey, ppf: bitstring, sg: bitstring, fb: bitstring));
+  let (=STMT_DIGEST, =h(t)) = checksign(ev, pkS) in
+  let authTuple(id, kfpr, ss, alg, ver) = t in
+  if fp(kX) = kfpr then
+  (* possession OVER THE MANIFEST under that key (D-3) *)
+  let (=POSS, =t) = checksign(ppf, kX) in
+  (* LOAD-BEARING: the presented key signed exactly the PRESENTED bytes *)
+  let (=BYTES, =fb) = checksign(sg, kX) in
+  (* P3 in-bytes binding: alg, issuer identity, key fingerprint, manifest hash *)
+  let framed(ot, =alg, =id, =fp(kX), mh, cv, pl) = fb in
+  if mh = h(t) then
+  event AcceptS(ev, t, kX, fb);
+  out(acceptCh, (kX, fb)).
+
+(* Issuer: manifest m names its own key; possession is over m (D-3);   *)
+(* the framed bytes carry the P3 binding fields; payload chosen by the  *)
+(* adversary (chosen-message issuer). IssuerSigned is emitted           *)
+(* immediately before the signature is released.                        *)
+let Issuer(skI: skey, id: bitstring, m: bitstring) =
+  in(c, payload: bitstring);
+  event IssuerPossession(pk(skI));
+  let ppf = sign((POSS, m), skI) in
+  out(c, ppf);
+  let fb = framed(OT_ATTEST, algH, id, fp(pk(skI)), h(m), canonVerH, payload) in
+  event IssuerSigned(pk(skI), fb);
+  ( out(honestCh, (pk(skI), fb))
+  | out(c, sign((BYTES, fb), skI)) ).
+
+(* Judge H (headline): an acceptance whose key is an honest issuer's.  *)
+let JudgeH =
+  in(honestKeyCh, kH: pkey);
+  in(acceptCh, (=kH, fbAcc: bitstring));
+  event AcceptedUnderHonestKey(kH, fbAcc).
+
+(* Judge N1 (witness): honest bytes accepted under their signer's key. *)
+let JudgeN1 =
+  in(honestCh, (kH: pkey, fbHon: bitstring));
+  in(acceptCh, (=kH, =fbHon));
+  event HonestAccepted(kH, fbHon).
+
+let FixedIssuer(skI: skey, id: bitstring, m: bitstring, payload: bitstring) =
+  event IssuerPossession(pk(skI));
+  let ppf = sign((POSS, m), skI) in
+  out(c, ppf);
+  let fb = framed(OT_ATTEST, algH, id, fp(pk(skI)), h(m), canonVerH, payload) in
+  event IssuerSigned(pk(skI), fb);
+  ( out(honestCh, (pk(skI), fb))
+  | out(c, sign((BYTES, fb), skI)) ).
+
+
+free goodPayload: bitstring.
+free alteredPayload: bitstring.
+free dsksSalt: bitstring.
+free issuerId3: bitstring.
+free badVersion: bitstring.
+free arbitrarySet: bitstring.
+free targetCh: channel [private].
+event Attack.
+query event(Attack).
+let TargetJudge =
+  in(targetCh, (targetKey: pkey, targetBytes: bitstring));
+  in(acceptCh, (=targetKey, =targetBytes));
+  event Attack.
+
+process
+  new skS: skey; new skI: skey; new skI2: skey; new skI3: skey;
+  let m = authTuple(issuerId, fp(pk(skI)), ssetH, algH, verH) in
+  let m2 = authTuple(issuerId2, fp(pk(skI2)), ssetH, algH, verH) in
+  let m3 = authTuple(issuerId3, fp(pk(skI3)), ssetH, algH, verH) in
+  let original = framed(OT_ATTEST, algH, issuerId, fp(pk(skI)), h(m), canonVerH, goodPayload) in
+  let observed = sign((BYTES, original), skI) in
+  let derived = dsks(observed, dsksSalt) in
+  let derivedManifest = authTuple(issuerId, fp(pk(derived)), arbitrarySet, algH, verH) in
+  out(c, pk(skS)); out(c, skS);
+  out(c, pk(skI)); out(c, pk(skI2)); out(c, pk(skI3));
+  out(c, m); out(c, m2); out(c, m3);
+  out(targetCh, (pk(skI3), original));
+  ( !out(honestKeyCh, pk(skI)) | !out(honestKeyCh, pk(skI2)) | !out(honestKeyCh, pk(skI3))
+  | !AuthorityS(skS, m) | !AuthorityS(skS, m2) | !AuthorityS(skS, m3)
+  | FixedIssuer(skI, issuerId, m, goodPayload)
+  | FixedIssuer(skI2, issuerId2, m2, goodPayload)
+  | FixedIssuer(skI3, issuerId3, m3, goodPayload)
+  | !VerifierS(pk(skS))
+  | !JudgeH | !JudgeN1 | TargetJudge )

@@ -13,6 +13,16 @@
 (* invariant cannot detect receipt-controlled enlargement.                  *)
 (* State space and variables match the correct module exactly; only the   *)
 (* effective-tolerance computation differs.                                 *)
+(*                                                                          *)
+(* CORRECTION 2026-09-06 (review item 9): the witness quantity named above  *)
+(* is wrong. The committed counterexample has anchor = declared = 0         *)
+(* (anchor-to-declared gap ZERO, inside the maxima); the red conjunct is    *)
+(* confirmedAt - declared <= DeltaMax (confirmedAt = 4, DeltaMax = 3),      *)
+(* enabled by rcptDelta = 4 enlarging the A2.2 confirmation-timing          *)
+(* allowance. The enlargement defect is exhibited; the quantity it is       *)
+(* exhibited on is the k-th-confirmation gap, not the anchor gap. (A        *)
+(* counterexample on the anchor gap also exists in the state space; TLC     *)
+(* reports the first it meets.)                                             *)
 (***************************************************************************)
 EXTENDS Integers
 

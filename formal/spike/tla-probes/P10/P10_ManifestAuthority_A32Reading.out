@@ -1,0 +1,44 @@
+### STATUS: PROPOSED — 2026-09-06 — produced by the AI collaborator; not adopted; the commit is the author's. PROBE — NON-DISCHARGING.
+### P4 join source: formal/tla/P4_VerifierStates.tla sha256=9f5c551641f6627f HEAD=5dfd82b working-tree=modified-uncommitted
+### run-probe.sh single: P10_ManifestAuthority_A32Reading with P10_ManifestAuthority_A32Reading.cfg (2026-09-06T19:32Z)
+TLC2 Version 2026.07.31.184830 (rev: 30cc360)
+Running breadth-first search Model-Checking with fp 94 and seed -4915804605209870023 with 4 workers on 12 cores with 7068MB heap and 64MB offheap memory [pid: 652646] (Linux 6.8.0-136-generic amd64, Ubuntu 21.0.12 64bit, MSBDiskFPSet, DiskStateQueue).
+Parsing file /home/tony/projects/tessera/formal/spike/tla-probes/P10/P10_ManifestAuthority_A32Reading.tla
+Parsing file /tmp/tlc-18316902844980200797/FiniteSets.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/FiniteSets.tla)
+Parsing file /tmp/tlc-18316902844980200797/Naturals.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Naturals.tla)
+Parsing file /tmp/tlc-18316902844980200797/_TLCTrace.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/_TLCTrace.tla)
+Parsing file /home/tony/projects/tessera/formal/tla/P4_VerifierStates.tla
+Parsing file /tmp/tlc-18316902844980200797/Sequences.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Sequences.tla)
+Parsing file /tmp/tlc-18316902844980200797/TLC.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/TLC.tla)
+Parsing file /tmp/tlc-18316902844980200797/TLCExt.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/TLCExt.tla)
+Parsing file /tmp/tlc-18316902844980200797/Integers.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Integers.tla)
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module TLC
+Semantic processing of module Integers
+Semantic processing of module TLCExt
+Semantic processing of module _TLCTrace
+Semantic processing of module P4_VerifierStates
+Semantic processing of module P10_ManifestAuthority_A32Reading
+Linting of module TLCExt
+Linting of module _TLCTrace
+Linting of module P4_VerifierStates
+Linting of module P10_ManifestAuthority_A32Reading
+Starting... (2026-09-06 19:32:30)
+Computing initial states...
+Computed 2 initial states...
+Computed 4 initial states...
+Computed 8 initial states...
+Computed 16 initial states...
+Computed 32 initial states...
+Finished computing initial states: 48 distinct states generated at 2026-09-06 19:32:30.
+Model checking completed. No error has been found.
+  Estimates of the probability that TLC did not check all reachable states
+  because two distinct states had the same fingerprint:
+  calculated (optimistic):  val = 4.5E-11
+62448 states generated, 43248 distinct states found, 0 states left on queue.
+The depth of the complete state graph search is 4.
+The average outdegree of the complete state graph is 1 (minimum is 0, the maximum 31 and the 95th percentile is 4).
+Finished in 01s at (2026-09-06 19:32:31)
+### exit=0

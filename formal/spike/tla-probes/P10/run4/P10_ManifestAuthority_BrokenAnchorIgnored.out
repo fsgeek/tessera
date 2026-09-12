@@ -1,0 +1,190 @@
+### STATUS: PROPOSED — 2026-09-06 — produced by the AI collaborator; not adopted; the commit is the author's. PROBE — NON-DISCHARGING.
+### P4 join source: formal/tla/P4_VerifierStates.tla sha256=9f5c551641f6627f HEAD=5dfd82b working-tree=modified-uncommitted
+### run-probe.sh per-invariant: P10_ManifestAuthority_BrokenAnchorIgnored with P10_ManifestAuthority_BrokenAnchorIgnored.cfg (2026-09-06T19:19Z)
+### one TLC run per invariant; each section is that run's evidentiary core
+
+### ---- P10_ManifestAuthority_BrokenAnchorIgnored / TypeOK ----
+Model checking completed. No error has been found.
+62448 states generated, 43248 distinct states found, 0 states left on queue.
+Finished in 01s at (2026-09-06 19:19:35)
+### exit=0
+
+### ---- P10_ManifestAuthority_BrokenAnchorIgnored / Partition ----
+Model checking completed. No error has been found.
+62448 states generated, 43248 distinct states found, 0 states left on queue.
+Finished in 01s at (2026-09-06 19:19:36)
+### exit=0
+
+### ---- P10_ManifestAuthority_BrokenAnchorIgnored / StrictNeedsAuthorizedKey ----
+Error: Invariant StrictNeedsAuthorizedKey is violated.
+Error: The behavior up to this point is:
+State 1: <Initial predicate>
+/\ phase = "setup"
+/\ mkey = "kH"
+/\ waived = {}
+/\ ev = [ dns |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ],
+  repo |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ] ]
+/\ record = [policy |-> {}, why |-> <<>>]
+/\ poss = "pass"
+/\ compLater = {"dns", "repo"}
+/\ verdict = "none"
+/\ compIssue = {}
+
+State 2: <Publish line 115, col 3 to line 118, col 76 of module P10_ManifestAuthority_BrokenAnchorIgnored>
+/\ phase = "published"
+/\ mkey = "kH"
+/\ waived = {}
+/\ ev = [ dns |->
+      [present |-> TRUE, names |-> "kA", sig |-> "valid", anchor |-> "late"],
+  repo |->
+      [present |-> TRUE, names |-> "kA", sig |-> "valid", anchor |-> "late"] ]
+/\ record = [policy |-> {}, why |-> <<>>]
+/\ poss = "pass"
+/\ compLater = {"dns", "repo"}
+/\ verdict = "none"
+/\ compIssue = {}
+
+State 3: <Present line 121, col 3 to line 125, col 68 of module P10_ManifestAuthority_BrokenAnchorIgnored>
+/\ phase = "presented"
+/\ mkey = "kA"
+/\ waived = {}
+/\ ev = [ dns |->
+      [present |-> TRUE, names |-> "kA", sig |-> "valid", anchor |-> "late"],
+  repo |->
+      [present |-> TRUE, names |-> "kA", sig |-> "valid", anchor |-> "late"] ]
+/\ record = [policy |-> {}, why |-> <<>>]
+/\ poss = "pass"
+/\ compLater = {"dns", "repo"}
+/\ verdict = "none"
+/\ compIssue = {}
+
+State 4: <Verify line 128, col 3 to line 132, col 63 of module P10_ManifestAuthority_BrokenAnchorIgnored>
+/\ phase = "verified"
+/\ mkey = "kA"
+/\ waived = {}
+/\ ev = [ dns |->
+      [present |-> TRUE, names |-> "kA", sig |-> "valid", anchor |-> "late"],
+  repo |->
+      [present |-> TRUE, names |-> "kA", sig |-> "valid", anchor |-> "late"] ]
+/\ record = [policy |-> {}, why |-> <<>>]
+/\ poss = "pass"
+/\ compLater = {"dns", "repo"}
+/\ verdict = "VALID_STRICT"
+/\ compIssue = {}
+
+28173 states generated, 28173 distinct states found, 19199 states left on queue.
+Finished in 00s at (2026-09-06 19:19:37)
+### exit=12
+
+### ---- P10_ManifestAuthority_BrokenAnchorIgnored / StrictMeansBothAgree ----
+Model checking completed. No error has been found.
+62448 states generated, 43248 distinct states found, 0 states left on queue.
+Finished in 01s at (2026-09-06 19:19:38)
+### exit=0
+
+### ---- P10_ManifestAuthority_BrokenAnchorIgnored / DegradedNamesWaived ----
+Model checking completed. No error has been found.
+62448 states generated, 43248 distinct states found, 0 states left on queue.
+Finished in 01s at (2026-09-06 19:19:40)
+### exit=0
+
+### ---- P10_ManifestAuthority_BrokenAnchorIgnored / NeverSilent ----
+Model checking completed. No error has been found.
+62448 states generated, 43248 distinct states found, 0 states left on queue.
+Finished in 01s at (2026-09-06 19:19:41)
+### exit=0
+
+### ---- P10_ManifestAuthority_BrokenAnchorIgnored / NeverZero ----
+Model checking completed. No error has been found.
+62448 states generated, 43248 distinct states found, 0 states left on queue.
+Finished in 01s at (2026-09-06 19:19:42)
+### exit=0
+
+### ---- P10_ManifestAuthority_BrokenAnchorIgnored / UnavailabilityIsNotWaiver ----
+Model checking completed. No error has been found.
+62448 states generated, 43248 distinct states found, 0 states left on queue.
+Finished in 01s at (2026-09-06 19:19:43)
+### exit=0
+
+### ---- P10_ManifestAuthority_BrokenAnchorIgnored / PossessionNeverAuthority ----
+Model checking completed. No error has been found.
+62448 states generated, 43248 distinct states found, 0 states left on queue.
+Finished in 01s at (2026-09-06 19:19:45)
+### exit=0
+
+### ---- P10_ManifestAuthority_BrokenAnchorIgnored / LaterCaptureStrictUnreachable ----
+Error: Invariant LaterCaptureStrictUnreachable is violated.
+Error: The behavior up to this point is:
+State 1: <Initial predicate>
+/\ phase = "setup"
+/\ mkey = "kH"
+/\ waived = {}
+/\ ev = [ dns |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ],
+  repo |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ] ]
+/\ record = [policy |-> {}, why |-> <<>>]
+/\ poss = "pass"
+/\ compLater = {"dns", "repo"}
+/\ verdict = "none"
+/\ compIssue = {}
+
+State 2: <Publish line 115, col 3 to line 118, col 76 of module P10_ManifestAuthority_BrokenAnchorIgnored>
+/\ phase = "published"
+/\ mkey = "kH"
+/\ waived = {}
+/\ ev = [ dns |->
+      [present |-> TRUE, names |-> "kA", sig |-> "valid", anchor |-> "late"],
+  repo |->
+      [present |-> TRUE, names |-> "kA", sig |-> "valid", anchor |-> "late"] ]
+/\ record = [policy |-> {}, why |-> <<>>]
+/\ poss = "pass"
+/\ compLater = {"dns", "repo"}
+/\ verdict = "none"
+/\ compIssue = {}
+
+State 3: <Present line 121, col 3 to line 125, col 68 of module P10_ManifestAuthority_BrokenAnchorIgnored>
+/\ phase = "presented"
+/\ mkey = "kA"
+/\ waived = {}
+/\ ev = [ dns |->
+      [present |-> TRUE, names |-> "kA", sig |-> "valid", anchor |-> "late"],
+  repo |->
+      [present |-> TRUE, names |-> "kA", sig |-> "valid", anchor |-> "late"] ]
+/\ record = [policy |-> {}, why |-> <<>>]
+/\ poss = "pass"
+/\ compLater = {"dns", "repo"}
+/\ verdict = "none"
+/\ compIssue = {}
+
+State 4: <Verify line 128, col 3 to line 132, col 63 of module P10_ManifestAuthority_BrokenAnchorIgnored>
+/\ phase = "verified"
+/\ mkey = "kA"
+/\ waived = {}
+/\ ev = [ dns |->
+      [present |-> TRUE, names |-> "kA", sig |-> "valid", anchor |-> "late"],
+  repo |->
+      [present |-> TRUE, names |-> "kA", sig |-> "valid", anchor |-> "late"] ]
+/\ record = [policy |-> {}, why |-> <<>>]
+/\ poss = "pass"
+/\ compLater = {"dns", "repo"}
+/\ verdict = "VALID_STRICT"
+/\ compIssue = {}
+
+27469 states generated, 27469 distinct states found, 19199 states left on queue.
+Finished in 00s at (2026-09-06 19:19:46)
+### exit=12

@@ -1,0 +1,1378 @@
+### STATUS: PROPOSED — 2026-09-06 — produced by the AI collaborator; not adopted; the commit is the author's. PROBE — NON-DISCHARGING.
+### P4 join source: formal/tla/P4_VerifierStates.tla sha256=9f5c551641f6627f HEAD=5dfd82b working-tree=modified-uncommitted
+### run-probe.sh per-invariant: P10_ManifestAuthority with P10_ManifestAuthority_Sanity.cfg (2026-09-06T19:18Z)
+### one TLC run per invariant; each section is that run's evidentiary core
+
+### ---- P10_ManifestAuthority / VerdictNeverStrict ----
+Error: Invariant VerdictNeverStrict is violated.
+Error: The behavior up to this point is:
+State 1: <Initial predicate>
+/\ phase = "setup"
+/\ mkey = "kH"
+/\ waived = {}
+/\ ev = [ dns |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ],
+  repo |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ] ]
+/\ record = [policy |-> {}, why |-> <<>>]
+/\ poss = "pass"
+/\ compLater = {}
+/\ verdict = "none"
+/\ compIssue = {}
+
+State 2: <Publish line 157, col 3 to line 160, col 76 of module P10_ManifestAuthority>
+/\ phase = "published"
+/\ mkey = "kH"
+/\ waived = {}
+/\ ev = [ dns |->
+      [ present |-> TRUE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ],
+  repo |->
+      [ present |-> TRUE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ] ]
+/\ record = [policy |-> {}, why |-> <<>>]
+/\ poss = "pass"
+/\ compLater = {}
+/\ verdict = "none"
+/\ compIssue = {}
+
+State 3: <Present line 163, col 3 to line 167, col 68 of module P10_ManifestAuthority>
+/\ phase = "presented"
+/\ mkey = "kH"
+/\ waived = {}
+/\ ev = [ dns |->
+      [ present |-> TRUE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ],
+  repo |->
+      [ present |-> TRUE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ] ]
+/\ record = [policy |-> {}, why |-> <<>>]
+/\ poss = "pass"
+/\ compLater = {}
+/\ verdict = "none"
+/\ compIssue = {}
+
+State 4: <Verify line 170, col 3 to line 174, col 63 of module P10_ManifestAuthority>
+/\ phase = "verified"
+/\ mkey = "kH"
+/\ waived = {}
+/\ ev = [ dns |->
+      [ present |-> TRUE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ],
+  repo |->
+      [ present |-> TRUE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ] ]
+/\ record = [policy |-> {}, why |-> <<>>]
+/\ poss = "pass"
+/\ compLater = {}
+/\ verdict = "VALID_STRICT"
+/\ compIssue = {}
+
+24223 states generated, 24223 distinct states found, 18862 states left on queue.
+Finished in 00s at (2026-09-06 19:18:47)
+### exit=12
+
+### ---- P10_ManifestAuthority / VerdictNeverDegraded ----
+Error: Invariant VerdictNeverDegraded is violated.
+Error: The behavior up to this point is:
+State 1: <Initial predicate>
+/\ phase = "setup"
+/\ mkey = "kH"
+/\ waived = {"dns"}
+/\ ev = [ dns |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ],
+  repo |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ] ]
+/\ record = [policy |-> {}, why |-> <<>>]
+/\ poss = "pass"
+/\ compLater = {}
+/\ verdict = "none"
+/\ compIssue = {}
+
+State 2: <Publish line 157, col 3 to line 160, col 76 of module P10_ManifestAuthority>
+/\ phase = "published"
+/\ mkey = "kH"
+/\ waived = {"dns"}
+/\ ev = [ dns |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ],
+  repo |->
+      [ present |-> TRUE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ] ]
+/\ record = [policy |-> {}, why |-> <<>>]
+/\ poss = "pass"
+/\ compLater = {}
+/\ verdict = "none"
+/\ compIssue = {}
+
+State 3: <Present line 163, col 3 to line 167, col 68 of module P10_ManifestAuthority>
+/\ phase = "presented"
+/\ mkey = "kH"
+/\ waived = {"dns"}
+/\ ev = [ dns |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ],
+  repo |->
+      [ present |-> TRUE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ] ]
+/\ record = [policy |-> {}, why |-> <<>>]
+/\ poss = "pass"
+/\ compLater = {}
+/\ verdict = "none"
+/\ compIssue = {}
+
+State 4: <Verify line 170, col 3 to line 174, col 63 of module P10_ManifestAuthority>
+/\ phase = "verified"
+/\ mkey = "kH"
+/\ waived = {"dns"}
+/\ ev = [ dns |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ],
+  repo |->
+      [ present |-> TRUE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ] ]
+/\ record = [policy |-> {"dns"}, why |-> [dns |-> "absent"]]
+/\ poss = "pass"
+/\ compLater = {}
+/\ verdict = "VALID_DEGRADED"
+/\ compIssue = {}
+
+23823 states generated, 23823 distinct states found, 18902 states left on queue.
+Finished in 00s at (2026-09-06 19:18:47)
+### exit=12
+
+### ---- P10_ManifestAuthority / VerdictNeverInvalid ----
+Error: Invariant VerdictNeverInvalid is violated.
+Error: The behavior up to this point is:
+State 1: <Initial predicate>
+/\ phase = "setup"
+/\ mkey = "kH"
+/\ waived = {}
+/\ ev = [ dns |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ],
+  repo |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ] ]
+/\ record = [policy |-> {}, why |-> <<>>]
+/\ poss = "pass"
+/\ compLater = {}
+/\ verdict = "none"
+/\ compIssue = {}
+
+State 2: <Publish line 157, col 3 to line 160, col 76 of module P10_ManifestAuthority>
+/\ phase = "published"
+/\ mkey = "kH"
+/\ waived = {}
+/\ ev = [ dns |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ],
+  repo |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ] ]
+/\ record = [policy |-> {}, why |-> <<>>]
+/\ poss = "pass"
+/\ compLater = {}
+/\ verdict = "none"
+/\ compIssue = {}
+
+State 3: <Present line 163, col 3 to line 167, col 68 of module P10_ManifestAuthority>
+/\ phase = "presented"
+/\ mkey = "kH"
+/\ waived = {}
+/\ ev = [ dns |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ],
+  repo |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ] ]
+/\ record = [policy |-> {}, why |-> <<>>]
+/\ poss = "fail"
+/\ compLater = {}
+/\ verdict = "none"
+/\ compIssue = {}
+
+State 4: <Verify line 170, col 3 to line 174, col 63 of module P10_ManifestAuthority>
+/\ phase = "verified"
+/\ mkey = "kH"
+/\ waived = {}
+/\ ev = [ dns |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ],
+  repo |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ] ]
+/\ record = [policy |-> {}, why |-> <<>>]
+/\ poss = "fail"
+/\ compLater = {}
+/\ verdict = "INVALID"
+/\ compIssue = {}
+
+22964 states generated, 22964 distinct states found, 18377 states left on queue.
+Finished in 00s at (2026-09-06 19:18:48)
+### exit=12
+
+### ---- P10_ManifestAuthority / VerdictNeverUnverifiable ----
+Error: Invariant VerdictNeverUnverifiable is violated.
+Error: The behavior up to this point is:
+State 1: <Initial predicate>
+/\ phase = "setup"
+/\ mkey = "kH"
+/\ waived = {"repo"}
+/\ ev = [ dns |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ],
+  repo |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ] ]
+/\ record = [policy |-> {}, why |-> <<>>]
+/\ poss = "pass"
+/\ compLater = {}
+/\ verdict = "none"
+/\ compIssue = {}
+
+State 2: <Publish line 157, col 3 to line 160, col 76 of module P10_ManifestAuthority>
+/\ phase = "published"
+/\ mkey = "kH"
+/\ waived = {"repo"}
+/\ ev = [ dns |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ],
+  repo |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ] ]
+/\ record = [policy |-> {}, why |-> <<>>]
+/\ poss = "pass"
+/\ compLater = {}
+/\ verdict = "none"
+/\ compIssue = {}
+
+State 3: <Present line 163, col 3 to line 167, col 68 of module P10_ManifestAuthority>
+/\ phase = "presented"
+/\ mkey = "kH"
+/\ waived = {"repo"}
+/\ ev = [ dns |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ],
+  repo |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ] ]
+/\ record = [policy |-> {}, why |-> <<>>]
+/\ poss = "pass"
+/\ compLater = {}
+/\ verdict = "none"
+/\ compIssue = {}
+
+State 4: <Verify line 170, col 3 to line 174, col 63 of module P10_ManifestAuthority>
+/\ phase = "verified"
+/\ mkey = "kH"
+/\ waived = {"repo"}
+/\ ev = [ dns |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ],
+  repo |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ] ]
+/\ record = [policy |-> {}, why |-> <<>>]
+/\ poss = "pass"
+/\ compLater = {}
+/\ verdict = "UNVERIFIABLE"
+/\ compIssue = {}
+
+22663 states generated, 22663 distinct states found, 18152 states left on queue.
+Finished in 00s at (2026-09-06 19:18:49)
+### exit=12
+
+### ---- P10_ManifestAuthority / DegradedNonAuthorizedUnreachable ----
+Error: Invariant DegradedNonAuthorizedUnreachable is violated.
+Error: The behavior up to this point is:
+State 1: <Initial predicate>
+/\ phase = "setup"
+/\ mkey = "kH"
+/\ waived = {"repo"}
+/\ ev = [ dns |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ],
+  repo |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ] ]
+/\ record = [policy |-> {}, why |-> <<>>]
+/\ poss = "pass"
+/\ compLater = {}
+/\ verdict = "none"
+/\ compIssue = {"dns"}
+
+State 2: <Publish line 157, col 3 to line 160, col 76 of module P10_ManifestAuthority>
+/\ phase = "published"
+/\ mkey = "kH"
+/\ waived = {"repo"}
+/\ ev = [ dns |->
+      [ present |-> TRUE,
+        names |-> "kA",
+        sig |-> "valid",
+        anchor |-> "consistent" ],
+  repo |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ] ]
+/\ record = [policy |-> {}, why |-> <<>>]
+/\ poss = "pass"
+/\ compLater = {}
+/\ verdict = "none"
+/\ compIssue = {"dns"}
+
+State 3: <Present line 163, col 3 to line 167, col 68 of module P10_ManifestAuthority>
+/\ phase = "presented"
+/\ mkey = "kA"
+/\ waived = {"repo"}
+/\ ev = [ dns |->
+      [ present |-> TRUE,
+        names |-> "kA",
+        sig |-> "valid",
+        anchor |-> "consistent" ],
+  repo |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ] ]
+/\ record = [policy |-> {}, why |-> <<>>]
+/\ poss = "pass"
+/\ compLater = {}
+/\ verdict = "none"
+/\ compIssue = {"dns"}
+
+State 4: <Verify line 170, col 3 to line 174, col 63 of module P10_ManifestAuthority>
+/\ phase = "verified"
+/\ mkey = "kA"
+/\ waived = {"repo"}
+/\ ev = [ dns |->
+      [ present |-> TRUE,
+        names |-> "kA",
+        sig |-> "valid",
+        anchor |-> "consistent" ],
+  repo |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ] ]
+/\ record = [policy |-> {"repo"}, why |-> [repo |-> "absent"]]
+/\ poss = "pass"
+/\ compLater = {}
+/\ verdict = "VALID_DEGRADED"
+/\ compIssue = {"dns"}
+
+27072 states generated, 27072 distinct states found, 19196 states left on queue.
+Finished in 00s at (2026-09-06 19:18:50)
+### exit=12
+
+### ---- P10_ManifestAuthority / StrictNonAuthorizedUnreachable ----
+Error: Invariant StrictNonAuthorizedUnreachable is violated.
+Error: The behavior up to this point is:
+State 1: <Initial predicate>
+/\ phase = "setup"
+/\ mkey = "kH"
+/\ waived = {}
+/\ ev = [ dns |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ],
+  repo |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ] ]
+/\ record = [policy |-> {}, why |-> <<>>]
+/\ poss = "pass"
+/\ compLater = {}
+/\ verdict = "none"
+/\ compIssue = {"dns", "repo"}
+
+State 2: <Publish line 157, col 3 to line 160, col 76 of module P10_ManifestAuthority>
+/\ phase = "published"
+/\ mkey = "kH"
+/\ waived = {}
+/\ ev = [ dns |->
+      [ present |-> TRUE,
+        names |-> "kA",
+        sig |-> "valid",
+        anchor |-> "consistent" ],
+  repo |->
+      [ present |-> TRUE,
+        names |-> "kA",
+        sig |-> "valid",
+        anchor |-> "consistent" ] ]
+/\ record = [policy |-> {}, why |-> <<>>]
+/\ poss = "pass"
+/\ compLater = {}
+/\ verdict = "none"
+/\ compIssue = {"dns", "repo"}
+
+State 3: <Present line 163, col 3 to line 167, col 68 of module P10_ManifestAuthority>
+/\ phase = "presented"
+/\ mkey = "kA"
+/\ waived = {}
+/\ ev = [ dns |->
+      [ present |-> TRUE,
+        names |-> "kA",
+        sig |-> "valid",
+        anchor |-> "consistent" ],
+  repo |->
+      [ present |-> TRUE,
+        names |-> "kA",
+        sig |-> "valid",
+        anchor |-> "consistent" ] ]
+/\ record = [policy |-> {}, why |-> <<>>]
+/\ poss = "pass"
+/\ compLater = {}
+/\ verdict = "none"
+/\ compIssue = {"dns", "repo"}
+
+State 4: <Verify line 170, col 3 to line 174, col 63 of module P10_ManifestAuthority>
+/\ phase = "verified"
+/\ mkey = "kA"
+/\ waived = {}
+/\ ev = [ dns |->
+      [ present |-> TRUE,
+        names |-> "kA",
+        sig |-> "valid",
+        anchor |-> "consistent" ],
+  repo |->
+      [ present |-> TRUE,
+        names |-> "kA",
+        sig |-> "valid",
+        anchor |-> "consistent" ] ]
+/\ record = [policy |-> {}, why |-> <<>>]
+/\ poss = "pass"
+/\ compLater = {}
+/\ verdict = "VALID_STRICT"
+/\ compIssue = {"dns", "repo"}
+
+38638 states generated, 38638 distinct states found, 19198 states left on queue.
+Finished in 00s at (2026-09-06 19:18:51)
+### exit=12
+
+### ---- P10_ManifestAuthority / LateEvidenceUnreachable ----
+Error: Invariant LateEvidenceUnreachable is violated.
+Error: The behavior up to this point is:
+State 1: <Initial predicate>
+/\ phase = "setup"
+/\ mkey = "kH"
+/\ waived = {}
+/\ ev = [ dns |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ],
+  repo |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ] ]
+/\ record = [policy |-> {}, why |-> <<>>]
+/\ poss = "pass"
+/\ compLater = {"dns"}
+/\ verdict = "none"
+/\ compIssue = {}
+
+State 2: <Publish line 157, col 3 to line 160, col 76 of module P10_ManifestAuthority>
+/\ phase = "published"
+/\ mkey = "kH"
+/\ waived = {}
+/\ ev = [ dns |->
+      [present |-> TRUE, names |-> "kH", sig |-> "valid", anchor |-> "late"],
+  repo |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ] ]
+/\ record = [policy |-> {}, why |-> <<>>]
+/\ poss = "pass"
+/\ compLater = {"dns"}
+/\ verdict = "none"
+/\ compIssue = {}
+
+State 3: <Present line 163, col 3 to line 167, col 68 of module P10_ManifestAuthority>
+/\ phase = "presented"
+/\ mkey = "kH"
+/\ waived = {}
+/\ ev = [ dns |->
+      [present |-> TRUE, names |-> "kH", sig |-> "valid", anchor |-> "late"],
+  repo |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ] ]
+/\ record = [policy |-> {}, why |-> <<>>]
+/\ poss = "fail"
+/\ compLater = {"dns"}
+/\ verdict = "none"
+/\ compIssue = {}
+
+State 4: <Verify line 170, col 3 to line 174, col 63 of module P10_ManifestAuthority>
+/\ phase = "verified"
+/\ mkey = "kH"
+/\ waived = {}
+/\ ev = [ dns |->
+      [present |-> TRUE, names |-> "kH", sig |-> "valid", anchor |-> "late"],
+  repo |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ] ]
+/\ record = [policy |-> {}, why |-> <<>>]
+/\ poss = "fail"
+/\ compLater = {"dns"}
+/\ verdict = "INVALID"
+/\ compIssue = {}
+
+23960 states generated, 23960 distinct states found, 18935 states left on queue.
+Finished in 00s at (2026-09-06 19:18:52)
+### exit=12
+
+### ---- P10_ManifestAuthority / WhyNever_absent ----
+Error: Invariant WhyNever_absent is violated.
+Error: The behavior up to this point is:
+State 1: <Initial predicate>
+/\ phase = "setup"
+/\ mkey = "kH"
+/\ waived = {"dns"}
+/\ ev = [ dns |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ],
+  repo |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ] ]
+/\ record = [policy |-> {}, why |-> <<>>]
+/\ poss = "pass"
+/\ compLater = {}
+/\ verdict = "none"
+/\ compIssue = {}
+
+State 2: <Publish line 157, col 3 to line 160, col 76 of module P10_ManifestAuthority>
+/\ phase = "published"
+/\ mkey = "kH"
+/\ waived = {"dns"}
+/\ ev = [ dns |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ],
+  repo |->
+      [ present |-> TRUE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ] ]
+/\ record = [policy |-> {}, why |-> <<>>]
+/\ poss = "pass"
+/\ compLater = {}
+/\ verdict = "none"
+/\ compIssue = {}
+
+State 3: <Present line 163, col 3 to line 167, col 68 of module P10_ManifestAuthority>
+/\ phase = "presented"
+/\ mkey = "kH"
+/\ waived = {"dns"}
+/\ ev = [ dns |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ],
+  repo |->
+      [ present |-> TRUE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ] ]
+/\ record = [policy |-> {}, why |-> <<>>]
+/\ poss = "pass"
+/\ compLater = {}
+/\ verdict = "none"
+/\ compIssue = {}
+
+State 4: <Verify line 170, col 3 to line 174, col 63 of module P10_ManifestAuthority>
+/\ phase = "verified"
+/\ mkey = "kH"
+/\ waived = {"dns"}
+/\ ev = [ dns |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ],
+  repo |->
+      [ present |-> TRUE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ] ]
+/\ record = [policy |-> {"dns"}, why |-> [dns |-> "absent"]]
+/\ poss = "pass"
+/\ compLater = {}
+/\ verdict = "VALID_DEGRADED"
+/\ compIssue = {}
+
+24346 states generated, 24346 distinct states found, 19170 states left on queue.
+Finished in 00s at (2026-09-06 19:18:53)
+### exit=12
+
+### ---- P10_ManifestAuthority / WhyNever_unperformable ----
+Error: Invariant WhyNever_unperformable is violated.
+Error: The behavior up to this point is:
+State 1: <Initial predicate>
+/\ phase = "setup"
+/\ mkey = "kH"
+/\ waived = {"dns"}
+/\ ev = [ dns |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ],
+  repo |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ] ]
+/\ record = [policy |-> {}, why |-> <<>>]
+/\ poss = "pass"
+/\ compLater = {}
+/\ verdict = "none"
+/\ compIssue = {}
+
+State 2: <Publish line 157, col 3 to line 160, col 76 of module P10_ManifestAuthority>
+/\ phase = "published"
+/\ mkey = "kH"
+/\ waived = {"dns"}
+/\ ev = [ dns |->
+      [ present |-> TRUE,
+        names |-> "kH",
+        sig |-> "unperformable",
+        anchor |-> "consistent" ],
+  repo |->
+      [ present |-> TRUE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ] ]
+/\ record = [policy |-> {}, why |-> <<>>]
+/\ poss = "pass"
+/\ compLater = {}
+/\ verdict = "none"
+/\ compIssue = {}
+
+State 3: <Present line 163, col 3 to line 167, col 68 of module P10_ManifestAuthority>
+/\ phase = "presented"
+/\ mkey = "kH"
+/\ waived = {"dns"}
+/\ ev = [ dns |->
+      [ present |-> TRUE,
+        names |-> "kH",
+        sig |-> "unperformable",
+        anchor |-> "consistent" ],
+  repo |->
+      [ present |-> TRUE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ] ]
+/\ record = [policy |-> {}, why |-> <<>>]
+/\ poss = "pass"
+/\ compLater = {}
+/\ verdict = "none"
+/\ compIssue = {}
+
+State 4: <Verify line 170, col 3 to line 174, col 63 of module P10_ManifestAuthority>
+/\ phase = "verified"
+/\ mkey = "kH"
+/\ waived = {"dns"}
+/\ ev = [ dns |->
+      [ present |-> TRUE,
+        names |-> "kH",
+        sig |-> "unperformable",
+        anchor |-> "consistent" ],
+  repo |->
+      [ present |-> TRUE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ] ]
+/\ record = [policy |-> {"dns"}, why |-> [dns |-> "unperformable"]]
+/\ poss = "pass"
+/\ compLater = {}
+/\ verdict = "VALID_DEGRADED"
+/\ compIssue = {}
+
+24231 states generated, 24231 distinct states found, 19028 states left on queue.
+Finished in 00s at (2026-09-06 19:18:53)
+### exit=12
+
+### ---- P10_ManifestAuthority / WhyNever_invalid ----
+Error: Invariant WhyNever_invalid is violated.
+Error: The behavior up to this point is:
+State 1: <Initial predicate>
+/\ phase = "setup"
+/\ mkey = "kH"
+/\ waived = {"repo"}
+/\ ev = [ dns |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ],
+  repo |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ] ]
+/\ record = [policy |-> {}, why |-> <<>>]
+/\ poss = "pass"
+/\ compLater = {}
+/\ verdict = "none"
+/\ compIssue = {}
+
+State 2: <Publish line 157, col 3 to line 160, col 76 of module P10_ManifestAuthority>
+/\ phase = "published"
+/\ mkey = "kH"
+/\ waived = {"repo"}
+/\ ev = [ dns |->
+      [ present |-> TRUE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ],
+  repo |->
+      [ present |-> TRUE,
+        names |-> "kH",
+        sig |-> "invalid",
+        anchor |-> "consistent" ] ]
+/\ record = [policy |-> {}, why |-> <<>>]
+/\ poss = "pass"
+/\ compLater = {}
+/\ verdict = "none"
+/\ compIssue = {}
+
+State 3: <Present line 163, col 3 to line 167, col 68 of module P10_ManifestAuthority>
+/\ phase = "presented"
+/\ mkey = "kH"
+/\ waived = {"repo"}
+/\ ev = [ dns |->
+      [ present |-> TRUE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ],
+  repo |->
+      [ present |-> TRUE,
+        names |-> "kH",
+        sig |-> "invalid",
+        anchor |-> "consistent" ] ]
+/\ record = [policy |-> {}, why |-> <<>>]
+/\ poss = "pass"
+/\ compLater = {}
+/\ verdict = "none"
+/\ compIssue = {}
+
+State 4: <Verify line 170, col 3 to line 174, col 63 of module P10_ManifestAuthority>
+/\ phase = "verified"
+/\ mkey = "kH"
+/\ waived = {"repo"}
+/\ ev = [ dns |->
+      [ present |-> TRUE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ],
+  repo |->
+      [ present |-> TRUE,
+        names |-> "kH",
+        sig |-> "invalid",
+        anchor |-> "consistent" ] ]
+/\ record = [policy |-> {"repo"}, why |-> [repo |-> "invalid"]]
+/\ poss = "pass"
+/\ compLater = {}
+/\ verdict = "VALID_DEGRADED"
+/\ compIssue = {}
+
+24547 states generated, 24547 distinct states found, 19118 states left on queue.
+Finished in 00s at (2026-09-06 19:18:54)
+### exit=12
+
+### ---- P10_ManifestAuthority / WhyNever_anchor_late ----
+Error: Invariant WhyNever_anchor_late is violated.
+Error: The behavior up to this point is:
+State 1: <Initial predicate>
+/\ phase = "setup"
+/\ mkey = "kH"
+/\ waived = {"dns"}
+/\ ev = [ dns |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ],
+  repo |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ] ]
+/\ record = [policy |-> {}, why |-> <<>>]
+/\ poss = "pass"
+/\ compLater = {"dns"}
+/\ verdict = "none"
+/\ compIssue = {}
+
+State 2: <Publish line 157, col 3 to line 160, col 76 of module P10_ManifestAuthority>
+/\ phase = "published"
+/\ mkey = "kH"
+/\ waived = {"dns"}
+/\ ev = [ dns |->
+      [present |-> TRUE, names |-> "kH", sig |-> "valid", anchor |-> "late"],
+  repo |->
+      [ present |-> TRUE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ] ]
+/\ record = [policy |-> {}, why |-> <<>>]
+/\ poss = "pass"
+/\ compLater = {"dns"}
+/\ verdict = "none"
+/\ compIssue = {}
+
+State 3: <Present line 163, col 3 to line 167, col 68 of module P10_ManifestAuthority>
+/\ phase = "presented"
+/\ mkey = "kH"
+/\ waived = {"dns"}
+/\ ev = [ dns |->
+      [present |-> TRUE, names |-> "kH", sig |-> "valid", anchor |-> "late"],
+  repo |->
+      [ present |-> TRUE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ] ]
+/\ record = [policy |-> {}, why |-> <<>>]
+/\ poss = "pass"
+/\ compLater = {"dns"}
+/\ verdict = "none"
+/\ compIssue = {}
+
+State 4: <Verify line 170, col 3 to line 174, col 63 of module P10_ManifestAuthority>
+/\ phase = "verified"
+/\ mkey = "kH"
+/\ waived = {"dns"}
+/\ ev = [ dns |->
+      [present |-> TRUE, names |-> "kH", sig |-> "valid", anchor |-> "late"],
+  repo |->
+      [ present |-> TRUE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ] ]
+/\ record = [policy |-> {"dns"}, why |-> [dns |-> "anchor_late"]]
+/\ poss = "pass"
+/\ compLater = {"dns"}
+/\ verdict = "VALID_DEGRADED"
+/\ compIssue = {}
+
+25147 states generated, 25147 distinct states found, 19196 states left on queue.
+Finished in 00s at (2026-09-06 19:18:55)
+### exit=12
+
+### ---- P10_ManifestAuthority / WhyNever_names_other_key ----
+Error: Invariant WhyNever_names_other_key is violated.
+Error: The behavior up to this point is:
+State 1: <Initial predicate>
+/\ phase = "setup"
+/\ mkey = "kH"
+/\ waived = {"dns"}
+/\ ev = [ dns |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ],
+  repo |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ] ]
+/\ record = [policy |-> {}, why |-> <<>>]
+/\ poss = "pass"
+/\ compLater = {}
+/\ verdict = "none"
+/\ compIssue = {"dns"}
+
+State 2: <Publish line 157, col 3 to line 160, col 76 of module P10_ManifestAuthority>
+/\ phase = "published"
+/\ mkey = "kH"
+/\ waived = {"dns"}
+/\ ev = [ dns |->
+      [ present |-> TRUE,
+        names |-> "kA",
+        sig |-> "valid",
+        anchor |-> "consistent" ],
+  repo |->
+      [ present |-> TRUE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ] ]
+/\ record = [policy |-> {}, why |-> <<>>]
+/\ poss = "pass"
+/\ compLater = {}
+/\ verdict = "none"
+/\ compIssue = {"dns"}
+
+State 3: <Present line 163, col 3 to line 167, col 68 of module P10_ManifestAuthority>
+/\ phase = "presented"
+/\ mkey = "kH"
+/\ waived = {"dns"}
+/\ ev = [ dns |->
+      [ present |-> TRUE,
+        names |-> "kA",
+        sig |-> "valid",
+        anchor |-> "consistent" ],
+  repo |->
+      [ present |-> TRUE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ] ]
+/\ record = [policy |-> {}, why |-> <<>>]
+/\ poss = "pass"
+/\ compLater = {}
+/\ verdict = "none"
+/\ compIssue = {"dns"}
+
+State 4: <Verify line 170, col 3 to line 174, col 63 of module P10_ManifestAuthority>
+/\ phase = "verified"
+/\ mkey = "kH"
+/\ waived = {"dns"}
+/\ ev = [ dns |->
+      [ present |-> TRUE,
+        names |-> "kA",
+        sig |-> "valid",
+        anchor |-> "consistent" ],
+  repo |->
+      [ present |-> TRUE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ] ]
+/\ record = [policy |-> {"dns"}, why |-> [dns |-> "names_other_key"]]
+/\ poss = "pass"
+/\ compLater = {}
+/\ verdict = "VALID_DEGRADED"
+/\ compIssue = {"dns"}
+
+28031 states generated, 28031 distinct states found, 19197 states left on queue.
+Finished in 00s at (2026-09-06 19:18:56)
+### exit=12
+
+### ---- P10_ManifestAuthority / WhyNever_would_pass ----
+Error: Invariant WhyNever_would_pass is violated.
+Error: The behavior up to this point is:
+State 1: <Initial predicate>
+/\ phase = "setup"
+/\ mkey = "kH"
+/\ waived = {"repo"}
+/\ ev = [ dns |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ],
+  repo |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ] ]
+/\ record = [policy |-> {}, why |-> <<>>]
+/\ poss = "pass"
+/\ compLater = {}
+/\ verdict = "none"
+/\ compIssue = {}
+
+State 2: <Publish line 157, col 3 to line 160, col 76 of module P10_ManifestAuthority>
+/\ phase = "published"
+/\ mkey = "kH"
+/\ waived = {"repo"}
+/\ ev = [ dns |->
+      [ present |-> TRUE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ],
+  repo |->
+      [ present |-> TRUE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ] ]
+/\ record = [policy |-> {}, why |-> <<>>]
+/\ poss = "pass"
+/\ compLater = {}
+/\ verdict = "none"
+/\ compIssue = {}
+
+State 3: <Present line 163, col 3 to line 167, col 68 of module P10_ManifestAuthority>
+/\ phase = "presented"
+/\ mkey = "kH"
+/\ waived = {"repo"}
+/\ ev = [ dns |->
+      [ present |-> TRUE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ],
+  repo |->
+      [ present |-> TRUE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ] ]
+/\ record = [policy |-> {}, why |-> <<>>]
+/\ poss = "pass"
+/\ compLater = {}
+/\ verdict = "none"
+/\ compIssue = {}
+
+State 4: <Verify line 170, col 3 to line 174, col 63 of module P10_ManifestAuthority>
+/\ phase = "verified"
+/\ mkey = "kH"
+/\ waived = {"repo"}
+/\ ev = [ dns |->
+      [ present |-> TRUE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ],
+  repo |->
+      [ present |-> TRUE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ] ]
+/\ record = [policy |-> {"repo"}, why |-> [repo |-> "would_pass"]]
+/\ poss = "pass"
+/\ compLater = {}
+/\ verdict = "VALID_DEGRADED"
+/\ compIssue = {}
+
+24340 states generated, 24340 distinct states found, 19141 states left on queue.
+Finished in 00s at (2026-09-06 19:18:57)
+### exit=12
+
+### ---- P10_ManifestAuthority / UnverifiableViaAbsentUnreachable ----
+Error: Invariant UnverifiableViaAbsentUnreachable is violated.
+Error: The behavior up to this point is:
+State 1: <Initial predicate>
+/\ phase = "setup"
+/\ mkey = "kH"
+/\ waived = {}
+/\ ev = [ dns |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ],
+  repo |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ] ]
+/\ record = [policy |-> {}, why |-> <<>>]
+/\ poss = "pass"
+/\ compLater = {"dns"}
+/\ verdict = "none"
+/\ compIssue = {}
+
+State 2: <Publish line 157, col 3 to line 160, col 76 of module P10_ManifestAuthority>
+/\ phase = "published"
+/\ mkey = "kH"
+/\ waived = {}
+/\ ev = [ dns |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ],
+  repo |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ] ]
+/\ record = [policy |-> {}, why |-> <<>>]
+/\ poss = "pass"
+/\ compLater = {"dns"}
+/\ verdict = "none"
+/\ compIssue = {}
+
+State 3: <Present line 163, col 3 to line 167, col 68 of module P10_ManifestAuthority>
+/\ phase = "presented"
+/\ mkey = "kA"
+/\ waived = {}
+/\ ev = [ dns |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ],
+  repo |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ] ]
+/\ record = [policy |-> {}, why |-> <<>>]
+/\ poss = "pass"
+/\ compLater = {"dns"}
+/\ verdict = "none"
+/\ compIssue = {}
+
+State 4: <Verify line 170, col 3 to line 174, col 63 of module P10_ManifestAuthority>
+/\ phase = "verified"
+/\ mkey = "kA"
+/\ waived = {}
+/\ ev = [ dns |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ],
+  repo |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ] ]
+/\ record = [policy |-> {}, why |-> <<>>]
+/\ poss = "pass"
+/\ compLater = {"dns"}
+/\ verdict = "UNVERIFIABLE"
+/\ compIssue = {}
+
+23731 states generated, 23731 distinct states found, 18953 states left on queue.
+Finished in 00s at (2026-09-06 19:18:58)
+### exit=12
+
+### ---- P10_ManifestAuthority / InvalidViaConflictUnreachable ----
+Error: Invariant InvalidViaConflictUnreachable is violated.
+Error: The behavior up to this point is:
+State 1: <Initial predicate>
+/\ phase = "setup"
+/\ mkey = "kH"
+/\ waived = {}
+/\ ev = [ dns |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ],
+  repo |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ] ]
+/\ record = [policy |-> {}, why |-> <<>>]
+/\ poss = "pass"
+/\ compLater = {}
+/\ verdict = "none"
+/\ compIssue = {}
+
+State 2: <Publish line 157, col 3 to line 160, col 76 of module P10_ManifestAuthority>
+/\ phase = "published"
+/\ mkey = "kH"
+/\ waived = {}
+/\ ev = [ dns |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ],
+  repo |->
+      [ present |-> TRUE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ] ]
+/\ record = [policy |-> {}, why |-> <<>>]
+/\ poss = "pass"
+/\ compLater = {}
+/\ verdict = "none"
+/\ compIssue = {}
+
+State 3: <Present line 163, col 3 to line 167, col 68 of module P10_ManifestAuthority>
+/\ phase = "presented"
+/\ mkey = "kA"
+/\ waived = {}
+/\ ev = [ dns |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ],
+  repo |->
+      [ present |-> TRUE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ] ]
+/\ record = [policy |-> {}, why |-> <<>>]
+/\ poss = "fail"
+/\ compLater = {}
+/\ verdict = "none"
+/\ compIssue = {}
+
+State 4: <Verify line 170, col 3 to line 174, col 63 of module P10_ManifestAuthority>
+/\ phase = "verified"
+/\ mkey = "kA"
+/\ waived = {}
+/\ ev = [ dns |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ],
+  repo |->
+      [ present |-> TRUE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ] ]
+/\ record = [policy |-> {}, why |-> <<>>]
+/\ poss = "fail"
+/\ compLater = {}
+/\ verdict = "INVALID"
+/\ compIssue = {}
+
+23504 states generated, 23504 distinct states found, 18755 states left on queue.
+Finished in 00s at (2026-09-06 19:18:58)
+### exit=12
+
+### ---- P10_ManifestAuthority / DegradedWaivedFailUnreachable ----
+Error: Invariant DegradedWaivedFailUnreachable is violated.
+Error: The behavior up to this point is:
+State 1: <Initial predicate>
+/\ phase = "setup"
+/\ mkey = "kH"
+/\ waived = {"repo"}
+/\ ev = [ dns |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ],
+  repo |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ] ]
+/\ record = [policy |-> {}, why |-> <<>>]
+/\ poss = "pass"
+/\ compLater = {}
+/\ verdict = "none"
+/\ compIssue = {}
+
+State 2: <Publish line 157, col 3 to line 160, col 76 of module P10_ManifestAuthority>
+/\ phase = "published"
+/\ mkey = "kH"
+/\ waived = {"repo"}
+/\ ev = [ dns |->
+      [ present |-> TRUE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ],
+  repo |->
+      [ present |-> TRUE,
+        names |-> "kH",
+        sig |-> "invalid",
+        anchor |-> "consistent" ] ]
+/\ record = [policy |-> {}, why |-> <<>>]
+/\ poss = "pass"
+/\ compLater = {}
+/\ verdict = "none"
+/\ compIssue = {}
+
+State 3: <Present line 163, col 3 to line 167, col 68 of module P10_ManifestAuthority>
+/\ phase = "presented"
+/\ mkey = "kH"
+/\ waived = {"repo"}
+/\ ev = [ dns |->
+      [ present |-> TRUE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ],
+  repo |->
+      [ present |-> TRUE,
+        names |-> "kH",
+        sig |-> "invalid",
+        anchor |-> "consistent" ] ]
+/\ record = [policy |-> {}, why |-> <<>>]
+/\ poss = "pass"
+/\ compLater = {}
+/\ verdict = "none"
+/\ compIssue = {}
+
+State 4: <Verify line 170, col 3 to line 174, col 63 of module P10_ManifestAuthority>
+/\ phase = "verified"
+/\ mkey = "kH"
+/\ waived = {"repo"}
+/\ ev = [ dns |->
+      [ present |-> TRUE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ],
+  repo |->
+      [ present |-> TRUE,
+        names |-> "kH",
+        sig |-> "invalid",
+        anchor |-> "consistent" ] ]
+/\ record = [policy |-> {"repo"}, why |-> [repo |-> "invalid"]]
+/\ poss = "pass"
+/\ compLater = {}
+/\ verdict = "VALID_DEGRADED"
+/\ compIssue = {}
+
+24412 states generated, 24412 distinct states found, 19123 states left on queue.
+Finished in 00s at (2026-09-06 19:18:59)
+### exit=12

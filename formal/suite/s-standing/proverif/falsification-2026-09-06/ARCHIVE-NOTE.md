@@ -1,0 +1,1 @@
+Archived 111 scratch files (.pv mutants/attacks and the reviewer's index/generator files). The 101 .out files the reviewer produced were NOT archived (regenerable with: proverif -lib ../../../lib/tessera_theory.pvl <file.pv>); every RESULT line the review cites is quoted in CODEX-REVIEW.md. Reviewer: model: gpt-6-astra.

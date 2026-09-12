@@ -1,0 +1,230 @@
+(* ==================================================================== *)
+(* STATUS: PROPOSED — 2026-09-06 — produced by the AI collaborator;      *)
+(* not adopted; the commit is the author's.                              *)
+(*                                                                       *)
+(* S-P2.Q1 — correct model, STRICT mode, DNS channel compromised.  *)
+(* Variant: sanity and linkage (both channels required; the DNS        *)
+(* channel's signing key is public; the repository channel is honest).      *)
+(*                                                                       *)
+(* Registered prediction (PREDICTIONS.md, frozen 5188e7a): Stripped,     *)
+(* SignerForged, SetAltered, Reattributed unreachable; HonestComplete    *)
+(* reachable for M1 and for M2; all hold, both variants (p~0.65);        *)
+(* violation = amendment trigger (p~0.10); termination-after-recut       *)
+(* (p~0.15); timeout (p~0.10). Timebox: 15 min per variant.             *)
+(*                                                                       *)
+(* This model proves: in strict mode with two authority channels both    *)
+(* required and the DNS channel fully compromised, the four        *)
+(* S-P2.Q2 results (no stripping, no slot substitution, no set-          *)
+(* shrinking around an honest key, no re-attribution) hold and the       *)
+(* honest flow is accepted for both set sizes — for required sets of at  *)
+(* most two signers. This model does not prove: the degraded case (Q2);  *)
+(* anything Q2's header excludes (sets larger than two, P8 encoding,     *)
+(* P4 verdicts, the VALID_DEGRADED waiver, impersonation, authorship,    *)
+(* the verification profile).                                            *)
+(* Load-bearing checks: the same as Q2's — the sset pattern (Stripped),  *)
+(* the per-slot fingerprint match (SignerForged), the frame hash and     *)
+(* possession-over-manifest (SetAltered), the frame's fingerprint        *)
+(* (Reattributed). The honest channel's evidence check additionally pins *)
+(* t to an honestly published manifest. Strict-mode ablations            *)
+(* (diagnostics/ d7-d11) show what that pin does and does not close:     *)
+(* it closes SetAltered on its own (d9: both set-pins removed, green);    *)
+(* it does NOT close Stripped or SignerForged (d7/d8: the Q3/Q4          *)
+(* mutations, red — those packages present the honest tuple M2, which    *)
+(* the honest channel endorses); and it closes Reattributed only through *)
+(* the slot match against the pinned tuple's kfpr (d10 green with the    *)
+(* frame's =fp unbound; d11 red with the slot matches removed too).      *)
+(* [Header corrected 2026-09-06 after the S-P2 skeptic review: the       *)
+(* original text claimed the channel pin closed Stripped; d7 refutes it. *)
+(* Comment-only change; the model body is unchanged; re-run recorded in  *)
+(* ladder.log and RESULTS.md.]                                           *)
+(* Carried, not exercised: the compromised channel's evidence check      *)
+(* (inert: its key is public); the S-P3 F7 fields; authorship (S-P1).    *)
+(* Theory, frame, set representation, fixture (M1 n=1, M2 n=2, three     *)
+(* private honest signer keys), judges and encoding idioms: exactly as   *)
+(* sp2_q2_degraded_compromised.pv; the body of this file is Q2's with    *)
+(* the differences named above and marked "MUTATION"/"VARIANT" inline.   *)
+(* Run: proverif -lib ../../lib/tessera_theory.pvl sp2_q1_strict_dns_compromised.pv *)
+(* ==================================================================== *)
+
+(* --- model-local declarations (library terms are not redeclared) ---- *)
+fun framed(bitstring, bitstring, bitstring, bitstring, bitstring, bitstring, bitstring): bitstring [data].
+  (* objType, alg, issuerId, kfp, manifestHash, canonVer, payload *)
+free canonVerH: bitstring.
+free issuerId2: bitstring.        (* second honest issuer's identity (N2) *)
+
+(* the signer-set field of the map-v1 tuple: a bounded family, n <= 2 *)
+const signers0: bitstring.                        (* no additional signer: n = 1 *)
+fun signers1(bitstring): bitstring [data].        (* one additional signer's fp: n = 2 *)
+(* the keys the verifier actually verified signatures under *)
+fun verified1(pkey): bitstring [data].
+fun verified2(pkey, pkey): bitstring [data].
+
+(* honest signer keys (fixture; private free names so queries can cite M1/M2) *)
+free skA1: skey [private].        (* M1's sole required signer *)
+free skA2: skey [private].        (* M2's first required signer *)
+free skB2: skey [private].        (* M2's second required signer *)
+
+(* judge channels (spike Q4 / S-P3 pattern) *)
+free honestSetCh: channel [private].   (* registrar -> SetJudge : honest manifest *)
+free honestKeyCh: channel [private].   (* signer -> MemberJudge : (key, the one manifest it belongs to) *)
+free setCh: channel [private].         (* verifier -> SetJudge : (tuple, verified keys) *)
+free slotCh: channel [private].        (* verifier -> MemberJudge : (tuple, slot fp named by the set, key used) *)
+free honestCh: channel [private].      (* signer -> Judge : (signer key, framed bytes)   [S-P3, verbatim] *)
+free acceptCh: channel [private].      (* verifier -> Judge : (accepted key, id, framed bytes) [S-P3, verbatim] *)
+
+event Stripped(bitstring, bitstring).            (* honest manifest, verified keys: fewer than the set names *)
+event SignerForged(bitstring, pkey).             (* tuple, key that satisfied a slot the set assigns to an honest signer *)
+event SetAltered(pkey, bitstring, bitstring).    (* honest key, the manifest it signed, the manifest it was accepted for *)
+event HonestComplete(bitstring, bitstring).      (* N1 witness: honest manifest, exactly its named signers, each under its own key *)
+event Reattributed(pkey, pkey, bitstring).       (* S-P3 judge, verbatim: accepted key, honest signer key, honest bytes *)
+event HonestAccepted(pkey, bitstring).           (* S-P3 judge, verbatim: honest bytes under their own key *)
+(* n = 1 strict acceptance uses the library's Accept(evD, evR, t, k, fb). *)
+event Accept2(bitstring, bitstring, bitstring, pkey, pkey, bitstring, bitstring).
+  (* evidenceDNS, evidenceRepo, tuple, key A, key B, bytes A, bytes B — n = 2 branch *)
+
+(* --- registered queries ------------------------------------------- *)
+(* stripping: honest manifest accepted with fewer signers than it names *)
+query t: bitstring, v: bitstring;
+  event(Stripped(t, v)).
+(* membership: a slot the signed set assigns to an honest signer, satisfied by another key *)
+query t: bitstring, k: pkey;
+  event(SignerForged(t, k)).
+(* set-shrinking: an honest key accepted as a signer of a manifest it never signed *)
+query kH: pkey, m: bitstring, t: bitstring;
+  event(SetAltered(kH, m, t)).
+(* S-P3 key-binding relation, carried as the consumer-side check *)
+query kX: pkey, kH: pkey, fb: bitstring;
+  event(Reattributed(kX, kH, fb)).
+(* N1 honest-flow witnesses, one per set size: must be REACHABLE ("is false") *)
+query k1: pkey;
+  event(HonestComplete(authTuple(issuerId, fp(pk(skA1)), signers0, algH, verH), verified1(k1))).
+query k1: pkey, k2: pkey;
+  event(HonestComplete(authTuple(issuerId2, fp(pk(skA2)), signers1(fp(pk(skB2))), algH, verH), verified2(k1, k2))).
+(* vacuity guard on the carried S-P3 judge (not registered; added so the consumer check is shown live) *)
+query k: pkey, fb: bitstring;
+  event(HonestAccepted(k, fb)).
+
+let AuthorityDNS(skD: skey, t: bitstring) =
+  event AuthorityPublishedDNS(t);
+  out(c, sign((STMT_DIGEST, h(t)), skD)).
+
+let AuthorityRepo(skR: skey, t: bitstring) =
+  event AuthorityPublishedRepo(t);
+  out(c, sign((STMT_DIGEST, h(t)), skR)).
+
+(* Registrar: reports each honest manifest to the set judge. *)
+let Registrar(m: bitstring) =
+  out(honestSetCh, m).
+
+(* Honest signer of manifest m (one key, one manifest): possession over  *)
+(* m (D-3); frame binds its own fingerprint and h(m); payload chosen by  *)
+(* the adversary. Reports (key, manifest) to MemberJudge and (key, bytes) *)
+(* to the S-P3 judge.                                                     *)
+let Signer(sk: skey, id: bitstring, m: bitstring) =
+  in(c, payload: bitstring);
+  event IssuerPossession(pk(sk));
+  let ppf = sign((POSS, m), sk) in
+  ( out(honestKeyCh, (pk(sk), m))
+  | out(c, ppf);
+    let fb = framed(OT_ATTEST, algH, id, fp(pk(sk)), h(m), canonVerH, payload) in
+    event IssuerSigned(pk(sk), fb);
+    ( out(honestCh, (pk(sk), fb))
+    | out(c, sign((BYTES, fb), sk)) ) ).
+
+(* Verifier, n = 1 branch: the signed tuple's set names exactly one signer. *)
+let Verifier1(pkD: pkey, pkR: pkey) =
+  in(c, (t: bitstring, evD: bitstring, evR: bitstring,
+         kA: pkey, ppfA: bitstring, sgA: bitstring, fa: bitstring));
+  (* first link, strict: both channels' evidence binds this exact tuple *)
+  let (=STMT_DIGEST, valueLoose) = checksign(evD, pkD) in
+  let (=STMT_DIGEST, =h(t)) = checksign(evR, pkR) in
+  (* required arity read from the SIGNED tuple: sset must be signers0 *)
+  let authTuple(id, kfprA, =signers0, alg, ver) = t in
+  if fp(kA) = kfprA then
+  let (=POSS, =t) = checksign(ppfA, kA) in
+  let (=BYTES, =fa) = checksign(sgA, kA) in
+  let framed(ota, =alg, =id, =fp(kA), mha, cva, pla) = fa in
+  if mha = h(t) then
+  event Accept(evD, evR, t, kA, fa);
+  ( out(setCh, (t, verified1(kA)))
+  | out(slotCh, (t, kfprA, kA))
+  | out(acceptCh, (kA, id, fa)) ).
+
+(* Verifier, n = 2 branch: the signed tuple's set names a second signer. *)
+let Verifier2(pkD: pkey, pkR: pkey) =
+  in(c, (t: bitstring, evD: bitstring, evR: bitstring,
+         kA: pkey, kB: pkey, ppfA: bitstring, ppfB: bitstring,
+         sgA: bitstring, sgB: bitstring, fa: bitstring, fb: bitstring));
+  (* first link, strict: both channels' evidence binds this exact tuple *)
+  let (=STMT_DIGEST, =h(t)) = checksign(evD, pkD) in
+  let (=STMT_DIGEST, =h(t)) = checksign(evR, pkR) in
+  (* required arity read from the SIGNED tuple: sset must be signers1(kfprB) *)
+  let authTuple(id, kfprA, signers1(kfprB), alg, ver) = t in
+  if fp(kA) = kfprA then
+  if fp(kB) = kfprB then
+  let (=POSS, =t) = checksign(ppfA, kA) in
+  let (=POSS, =t) = checksign(ppfB, kB) in
+  let (=BYTES, =fa) = checksign(sgA, kA) in
+  let (=BYTES, =fb) = checksign(sgB, kB) in
+  let framed(ota, =alg, =id, =fp(kA), mha, cva, pla) = fa in
+  if mha = h(t) then
+  let framed(otb, =alg, =id, =fp(kB), mhb, cvb, plb) = fb in
+  if mhb = h(t) then
+  event Accept2(evD, evR, t, kA, kB, fa, fb);
+  ( out(setCh, (t, verified2(kA, kB)))
+  | out(slotCh, (t, kfprA, kA)) | out(slotCh, (t, kfprB, kB))
+  | out(acceptCh, (kA, id, fa)) | out(acceptCh, (kB, id, fb)) ).
+
+(* SetJudge: pairs an honest manifest with an acceptance of the SAME     *)
+(* tuple. Emits HonestComplete only on key-by-key fingerprint match with  *)
+(* the set the manifest names; Stripped when a two-signer manifest was    *)
+(* accepted with one verified key.                                        *)
+let SetJudge =
+  in(honestSetCh, mJ: bitstring);
+  in(setCh, (=mJ, vJ: bitstring));
+  let authTuple(idJ, fpAJ, ssJ, algJ, verJ) = mJ in
+  ( let signers1(fpBJ) = ssJ in
+      ( let verified2(kA: pkey, kB: pkey) = vJ in
+          ( if fp(kA) = fpAJ && fp(kB) = fpBJ then event HonestComplete(mJ, vJ) )
+        else
+          let verified1(kA: pkey) = vJ in
+          event Stripped(mJ, vJ) )
+    else
+      if ssJ = signers0 then
+      let verified1(kA: pkey) = vJ in
+      if fp(kA) = fpAJ then event HonestComplete(mJ, vJ) ).
+
+(* MemberJudge: pairs an honest (key, manifest) with a slot report.       *)
+(* Same tuple, slot named for this key, satisfied by another key ->       *)
+(* SignerForged. Different tuple, satisfied by this honest key ->         *)
+(* SetAltered.                                                            *)
+let MemberJudge =
+  in(honestKeyCh, (kH: pkey, mH: bitstring));
+  in(slotCh, (tS: bitstring, fpS: bitstring, kUsed: pkey));
+  if tS = mH then
+    ( if fpS = fp(kH) && kUsed <> kH then event SignerForged(tS, kUsed) )
+  else
+    ( if kUsed = kH then event SetAltered(kH, mH, tS) ).
+
+(* S-P3 judge, verbatim (sp3_q2_degraded_compromised.pv). *)
+let Judge =
+  in(honestCh, (kH: pkey, fbHon: bitstring));
+  in(acceptCh, (kX: pkey, id: bitstring, =fbHon));
+  if kX = kH then event HonestAccepted(kX, fbHon)
+  else event Reattributed(kX, kH, fbHon).
+
+process
+  new skD: skey; new skR: skey;
+  let m1 = authTuple(issuerId,  fp(pk(skA1)), signers0,               algH, verH) in
+  let m2 = authTuple(issuerId2, fp(pk(skA2)), signers1(fp(pk(skB2))), algH, verH) in
+  out(c, pk(skD)); out(c, pk(skR)); out(c, pk(skA1)); out(c, pk(skA2)); out(c, pk(skB2));
+  out(c, m1); out(c, m2);
+  (* VARIANT: DNS channel compromised — its signing key is public *)
+  out(c, skD);
+  ( !AuthorityDNS(skD, m1)  | !AuthorityDNS(skD, m2)
+  | !AuthorityRepo(skR, m1) | !AuthorityRepo(skR, m2)
+  | !Registrar(m1) | !Registrar(m2)
+  | !Signer(skA1, issuerId,  m1)
+  | !Signer(skA2, issuerId2, m2) | !Signer(skB2, issuerId2, m2)
+  | !Verifier1(pk(skD), pk(skR)) | !Verifier2(pk(skD), pk(skR))
+  | !SetJudge | !MemberJudge | !Judge )

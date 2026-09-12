@@ -1,0 +1,124 @@
+TLC2 Version 2026.07.31.184830 (rev: 30cc360)
+Running breadth-first search Model-Checking with fp 51 and seed -3656398867876649951 with 4 workers on 12 cores with 7068MB heap and 64MB offheap memory [pid: 571999] (Linux 6.8.0-136-generic amd64, Ubuntu 21.0.12 64bit, MSBDiskFPSet, DiskStateQueue).
+Parsing file /home/tony/projects/tessera/formal/spike/tla-probes/P9/P9_Statelessness.tla
+Parsing file /tmp/tlc-1807031433071369845/Naturals.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Naturals.tla)
+Parsing file /tmp/tlc-1807031433071369845/Sequences.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Sequences.tla)
+Parsing file /tmp/tlc-1807031433071369845/FiniteSets.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/FiniteSets.tla)
+Parsing file /tmp/tlc-1807031433071369845/_TLCTrace.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/_TLCTrace.tla)
+Parsing file /tmp/tlc-1807031433071369845/TLC.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/TLC.tla)
+Parsing file /tmp/tlc-1807031433071369845/TLCExt.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/TLCExt.tla)
+Parsing file /tmp/tlc-1807031433071369845/Integers.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Integers.tla)
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module TLC
+Semantic processing of module Integers
+Semantic processing of module TLCExt
+Semantic processing of module _TLCTrace
+Semantic processing of module P9_Statelessness
+Linting of module TLCExt
+Linting of module _TLCTrace
+Linting of module P9_Statelessness
+Starting... (2026-09-06 18:34:45)
+Computing initial states...
+Computed 2 initial states...
+Computed 4 initial states...
+Computed 8 initial states...
+Computed 16 initial states...
+Computed 32 initial states...
+Finished computing initial states: 54 distinct states generated at 2026-09-06 18:34:45.
+Error: Invariant Agreement is violated.
+Error: The behavior up to this point is:
+State 1: <Initial predicate>
+/\ service = "authorized"
+/\ bundle = (c1 :> "pass" @@ c2 :> "pass")
+/\ seen = (mA :> FALSE @@ mB :> FALSE)
+/\ view = "none"
+/\ consulted = FALSE
+/\ policy = {c2}
+/\ phase = "idle"
+/\ verdicts = <<>>
+/\ machine = mA
+
+State 2: <StartRun(mA) line 141, col 3 to line 148, col 58 of module P9_Statelessness>
+/\ service = "authorized"
+/\ bundle = (c1 :> "pass" @@ c2 :> "pass")
+/\ seen = (mA :> FALSE @@ mB :> FALSE)
+/\ view = "none"
+/\ consulted = FALSE
+/\ policy = {c2}
+/\ phase = "running"
+/\ verdicts = <<>>
+/\ machine = mA
+
+State 3: <Consult line 155, col 3 to line 159, col 74 of module P9_Statelessness>
+/\ service = "authorized"
+/\ bundle = (c1 :> "pass" @@ c2 :> "pass")
+/\ seen = (mA :> FALSE @@ mB :> FALSE)
+/\ view = "authorized"
+/\ consulted = TRUE
+/\ policy = {c2}
+/\ phase = "running"
+/\ verdicts = <<>>
+/\ machine = mA
+
+State 4: <Decide line 164, col 3 to line 170, col 68 of module P9_Statelessness>
+/\ service = "authorized"
+/\ bundle = (c1 :> "pass" @@ c2 :> "pass")
+/\ seen = (mA :> TRUE @@ mB :> FALSE)
+/\ view = "authorized"
+/\ consulted = TRUE
+/\ policy = {c2}
+/\ phase = "idle"
+/\ verdicts = <<[m |-> mA, v |-> "VALID_DEGRADED", svc |-> "authorized", cons |-> TRUE]>>
+/\ machine = mA
+
+State 5: <StartRun(mA) line 141, col 3 to line 148, col 58 of module P9_Statelessness>
+/\ service = "authorized"
+/\ bundle = (c1 :> "pass" @@ c2 :> "pass")
+/\ seen = (mA :> TRUE @@ mB :> FALSE)
+/\ view = "none"
+/\ consulted = FALSE
+/\ policy = {c2}
+/\ phase = "running"
+/\ verdicts = <<[m |-> mA, v |-> "VALID_DEGRADED", svc |-> "authorized", cons |-> TRUE]>>
+/\ machine = mA
+
+State 6: <ServiceChange line 176, col 3 to line 177, col 82 of module P9_Statelessness>
+/\ service = "unreachable"
+/\ bundle = (c1 :> "pass" @@ c2 :> "pass")
+/\ seen = (mA :> TRUE @@ mB :> FALSE)
+/\ view = "none"
+/\ consulted = FALSE
+/\ policy = {c2}
+/\ phase = "running"
+/\ verdicts = <<[m |-> mA, v |-> "VALID_DEGRADED", svc |-> "authorized", cons |-> TRUE]>>
+/\ machine = mA
+
+State 7: <Consult line 155, col 3 to line 159, col 74 of module P9_Statelessness>
+/\ service = "unreachable"
+/\ bundle = (c1 :> "pass" @@ c2 :> "pass")
+/\ seen = (mA :> TRUE @@ mB :> FALSE)
+/\ view = "unreachable"
+/\ consulted = TRUE
+/\ policy = {c2}
+/\ phase = "running"
+/\ verdicts = <<[m |-> mA, v |-> "VALID_DEGRADED", svc |-> "authorized", cons |-> TRUE]>>
+/\ machine = mA
+
+State 8: <Decide line 164, col 3 to line 170, col 68 of module P9_Statelessness>
+/\ service = "unreachable"
+/\ bundle = (c1 :> "pass" @@ c2 :> "pass")
+/\ seen = (mA :> TRUE @@ mB :> FALSE)
+/\ view = "unreachable"
+/\ consulted = TRUE
+/\ policy = {c2}
+/\ phase = "idle"
+/\ verdicts = << [m |-> mA, v |-> "VALID_DEGRADED", svc |-> "authorized", cons |-> TRUE],
+   [m |-> mA, v |-> "UNVERIFIABLE", svc |-> "unreachable", cons |-> TRUE] >>
+/\ machine = mA
+
+9619 states generated, 4014 distinct states found, 1521 states left on queue.
+The depth of the complete state graph search is 8.
+Finished in 00s at (2026-09-06 18:34:45)
+Trace exploration spec path: ./P9_Statelessness_TTrace_1788719685.tla

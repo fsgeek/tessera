@@ -1,0 +1,869 @@
+TLC2 Version 2026.07.31.184830 (rev: 30cc360)
+Running breadth-first search Model-Checking with fp 128 and seed -7442735905475176333 with 4 workers on 12 cores with 7068MB heap and 64MB offheap memory [pid: 586022] (Linux 6.8.0-136-generic amd64, Ubuntu 21.0.12 64bit, MSBDiskFPSet, DiskStateQueue).
+Parsing file /home/tony/projects/tessera/formal/tla/P5c_IssuanceProtocol.tla
+Parsing file /tmp/tlc-7458854442934534461/Integers.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Integers.tla)
+Parsing file /tmp/tlc-7458854442934534461/Naturals.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Naturals.tla)
+Semantic processing of module Naturals
+Semantic processing of module Integers
+Semantic processing of module P5c_IssuanceProtocol
+Linting of module P5c_IssuanceProtocol
+Starting... (2026-09-06 18:42:05)
+Computing initial states...
+Finished computing initial states: 1 distinct state generated at 2026-09-06 18:42:05.
+Error: Invariant ShipUnreachable is violated.
+Error: The behavior up to this point is:
+State 1: <Initial predicate>
+/\ now = 0
+/\ depth = 0
+/\ reorgs = 0
+/\ declared = 0
+/\ refused = FALSE
+/\ anchorAt = -1
+/\ shippedOrphaned = FALSE
+/\ attempts = 1
+/\ shipped = FALSE
+/\ refusedAt = -1
+
+State 2: <Anchor line 226, col 3 to line 229, col 37 of module P5c_IssuanceProtocol>
+/\ now = 0
+/\ depth = 0
+/\ reorgs = 0
+/\ declared = 0
+/\ refused = FALSE
+/\ anchorAt = 0
+/\ shippedOrphaned = FALSE
+/\ attempts = 1
+/\ shipped = FALSE
+/\ refusedAt = -1
+
+State 3: <Tick line 200, col 3 to line 207, col 81 of module P5c_IssuanceProtocol>
+/\ now = 1
+/\ depth = 1
+/\ reorgs = 0
+/\ declared = 0
+/\ refused = FALSE
+/\ anchorAt = 0
+/\ shippedOrphaned = FALSE
+/\ attempts = 1
+/\ shipped = FALSE
+/\ refusedAt = -1
+
+State 4: <Tick line 200, col 3 to line 207, col 81 of module P5c_IssuanceProtocol>
+/\ now = 2
+/\ depth = 2
+/\ reorgs = 0
+/\ declared = 0
+/\ refused = FALSE
+/\ anchorAt = 0
+/\ shippedOrphaned = FALSE
+/\ attempts = 1
+/\ shipped = FALSE
+/\ refusedAt = -1
+
+State 5: <Ship line 261, col 3 to line 266, col 45 of module P5c_IssuanceProtocol>
+/\ now = 2
+/\ depth = 2
+/\ reorgs = 0
+/\ declared = 0
+/\ refused = FALSE
+/\ anchorAt = 0
+/\ shippedOrphaned = FALSE
+/\ attempts = 1
+/\ shipped = TRUE
+/\ refusedAt = -1
+
+Error: Invariant ReorgShipUnreachable is violated.
+Error: The behavior up to this point is:
+State 1: <Initial predicate>
+/\ now = 0
+/\ depth = 0
+/\ reorgs = 0
+/\ declared = 0
+/\ refused = FALSE
+/\ anchorAt = -1
+/\ shippedOrphaned = FALSE
+/\ attempts = 1
+/\ shipped = FALSE
+/\ refusedAt = -1
+
+State 2: <Anchor line 226, col 3 to line 229, col 37 of module P5c_IssuanceProtocol>
+/\ now = 0
+/\ depth = 0
+/\ reorgs = 0
+/\ declared = 0
+/\ refused = FALSE
+/\ anchorAt = 0
+/\ shippedOrphaned = FALSE
+/\ attempts = 1
+/\ shipped = FALSE
+/\ refusedAt = -1
+
+State 3: <Reorg line 237, col 3 to line 241, col 71 of module P5c_IssuanceProtocol>
+/\ now = 0
+/\ depth = 0
+/\ reorgs = 1
+/\ declared = 0
+/\ refused = FALSE
+/\ anchorAt = -1
+/\ shippedOrphaned = FALSE
+/\ attempts = 1
+/\ shipped = FALSE
+/\ refusedAt = -1
+
+State 4: <Anchor line 226, col 3 to line 229, col 37 of module P5c_IssuanceProtocol>
+/\ now = 0
+/\ depth = 0
+/\ reorgs = 1
+/\ declared = 0
+/\ refused = FALSE
+/\ anchorAt = 0
+/\ shippedOrphaned = FALSE
+/\ attempts = 1
+/\ shipped = FALSE
+/\ refusedAt = -1
+
+State 5: <Tick line 200, col 3 to line 207, col 81 of module P5c_IssuanceProtocol>
+/\ now = 1
+/\ depth = 1
+/\ reorgs = 1
+/\ declared = 0
+/\ refused = FALSE
+/\ anchorAt = 0
+/\ shippedOrphaned = FALSE
+/\ attempts = 1
+/\ shipped = FALSE
+/\ refusedAt = -1
+
+State 6: <Tick line 200, col 3 to line 207, col 81 of module P5c_IssuanceProtocol>
+/\ now = 2
+/\ depth = 2
+/\ reorgs = 1
+/\ declared = 0
+/\ refused = FALSE
+/\ anchorAt = 0
+/\ shippedOrphaned = FALSE
+/\ attempts = 1
+/\ shipped = FALSE
+/\ refusedAt = -1
+
+State 7: <Ship line 261, col 3 to line 266, col 45 of module P5c_IssuanceProtocol>
+/\ now = 2
+/\ depth = 2
+/\ reorgs = 1
+/\ declared = 0
+/\ refused = FALSE
+/\ anchorAt = 0
+/\ shippedOrphaned = FALSE
+/\ attempts = 1
+/\ shipped = TRUE
+/\ refusedAt = -1
+
+Error: Invariant ReissueShipUnreachable is violated.
+Error: The behavior up to this point is:
+State 1: <Initial predicate>
+/\ now = 0
+/\ depth = 0
+/\ reorgs = 0
+/\ declared = 0
+/\ refused = FALSE
+/\ anchorAt = -1
+/\ shippedOrphaned = FALSE
+/\ attempts = 1
+/\ shipped = FALSE
+/\ refusedAt = -1
+
+State 2: <Tick line 200, col 3 to line 207, col 81 of module P5c_IssuanceProtocol>
+/\ now = 1
+/\ depth = 0
+/\ reorgs = 0
+/\ declared = 0
+/\ refused = FALSE
+/\ anchorAt = -1
+/\ shippedOrphaned = FALSE
+/\ attempts = 1
+/\ shipped = FALSE
+/\ refusedAt = -1
+
+State 3: <Tick line 200, col 3 to line 207, col 81 of module P5c_IssuanceProtocol>
+/\ now = 2
+/\ depth = 0
+/\ reorgs = 0
+/\ declared = 0
+/\ refused = FALSE
+/\ anchorAt = -1
+/\ shippedOrphaned = FALSE
+/\ attempts = 1
+/\ shipped = FALSE
+/\ refusedAt = -1
+
+State 4: <Tick line 200, col 3 to line 207, col 81 of module P5c_IssuanceProtocol>
+/\ now = 3
+/\ depth = 0
+/\ reorgs = 0
+/\ declared = 0
+/\ refused = FALSE
+/\ anchorAt = -1
+/\ shippedOrphaned = FALSE
+/\ attempts = 1
+/\ shipped = FALSE
+/\ refusedAt = -1
+
+State 5: <Tick line 200, col 3 to line 207, col 81 of module P5c_IssuanceProtocol>
+/\ now = 4
+/\ depth = 0
+/\ reorgs = 0
+/\ declared = 0
+/\ refused = FALSE
+/\ anchorAt = -1
+/\ shippedOrphaned = FALSE
+/\ attempts = 1
+/\ shipped = FALSE
+/\ refusedAt = -1
+
+State 6: <Reissue line 271, col 3 to line 275, col 76 of module P5c_IssuanceProtocol>
+/\ now = 4
+/\ depth = 0
+/\ reorgs = 0
+/\ declared = 4
+/\ refused = FALSE
+/\ anchorAt = -1
+/\ shippedOrphaned = FALSE
+/\ attempts = 2
+/\ shipped = FALSE
+/\ refusedAt = -1
+
+State 7: <Anchor line 226, col 3 to line 229, col 37 of module P5c_IssuanceProtocol>
+/\ now = 4
+/\ depth = 0
+/\ reorgs = 0
+/\ declared = 4
+/\ refused = FALSE
+/\ anchorAt = 4
+/\ shippedOrphaned = FALSE
+/\ attempts = 2
+/\ shipped = FALSE
+/\ refusedAt = -1
+
+State 8: <Tick line 200, col 3 to line 207, col 81 of module P5c_IssuanceProtocol>
+/\ now = 5
+/\ depth = 1
+/\ reorgs = 0
+/\ declared = 4
+/\ refused = FALSE
+/\ anchorAt = 4
+/\ shippedOrphaned = FALSE
+/\ attempts = 2
+/\ shipped = FALSE
+/\ refusedAt = -1
+
+State 9: <Tick line 200, col 3 to line 207, col 81 of module P5c_IssuanceProtocol>
+/\ now = 6
+/\ depth = 2
+/\ reorgs = 0
+/\ declared = 4
+/\ refused = FALSE
+/\ anchorAt = 4
+/\ shippedOrphaned = FALSE
+/\ attempts = 2
+/\ shipped = FALSE
+/\ refusedAt = -1
+
+State 10: <Ship line 261, col 3 to line 266, col 45 of module P5c_IssuanceProtocol>
+/\ now = 6
+/\ depth = 2
+/\ reorgs = 0
+/\ declared = 4
+/\ refused = FALSE
+/\ anchorAt = 4
+/\ shippedOrphaned = FALSE
+/\ attempts = 2
+/\ shipped = TRUE
+/\ refusedAt = -1
+
+Error: Invariant RefusalUnreachable is violated.
+Error: The behavior up to this point is:
+State 1: <Initial predicate>
+/\ now = 0
+/\ depth = 0
+/\ reorgs = 0
+/\ declared = 0
+/\ refused = FALSE
+/\ anchorAt = -1
+/\ shippedOrphaned = FALSE
+/\ attempts = 1
+/\ shipped = FALSE
+/\ refusedAt = -1
+
+State 2: <Tick line 200, col 3 to line 207, col 81 of module P5c_IssuanceProtocol>
+/\ now = 1
+/\ depth = 0
+/\ reorgs = 0
+/\ declared = 0
+/\ refused = FALSE
+/\ anchorAt = -1
+/\ shippedOrphaned = FALSE
+/\ attempts = 1
+/\ shipped = FALSE
+/\ refusedAt = -1
+
+State 3: <Tick line 200, col 3 to line 207, col 81 of module P5c_IssuanceProtocol>
+/\ now = 2
+/\ depth = 0
+/\ reorgs = 0
+/\ declared = 0
+/\ refused = FALSE
+/\ anchorAt = -1
+/\ shippedOrphaned = FALSE
+/\ attempts = 1
+/\ shipped = FALSE
+/\ refusedAt = -1
+
+State 4: <Tick line 200, col 3 to line 207, col 81 of module P5c_IssuanceProtocol>
+/\ now = 3
+/\ depth = 0
+/\ reorgs = 0
+/\ declared = 0
+/\ refused = FALSE
+/\ anchorAt = -1
+/\ shippedOrphaned = FALSE
+/\ attempts = 1
+/\ shipped = FALSE
+/\ refusedAt = -1
+
+State 5: <Tick line 200, col 3 to line 207, col 81 of module P5c_IssuanceProtocol>
+/\ now = 4
+/\ depth = 0
+/\ reorgs = 0
+/\ declared = 0
+/\ refused = FALSE
+/\ anchorAt = -1
+/\ shippedOrphaned = FALSE
+/\ attempts = 1
+/\ shipped = FALSE
+/\ refusedAt = -1
+
+State 6: <Reissue line 271, col 3 to line 275, col 76 of module P5c_IssuanceProtocol>
+/\ now = 4
+/\ depth = 0
+/\ reorgs = 0
+/\ declared = 4
+/\ refused = FALSE
+/\ anchorAt = -1
+/\ shippedOrphaned = FALSE
+/\ attempts = 2
+/\ shipped = FALSE
+/\ refusedAt = -1
+
+State 7: <Tick line 200, col 3 to line 207, col 81 of module P5c_IssuanceProtocol>
+/\ now = 5
+/\ depth = 0
+/\ reorgs = 0
+/\ declared = 4
+/\ refused = FALSE
+/\ anchorAt = -1
+/\ shippedOrphaned = FALSE
+/\ attempts = 2
+/\ shipped = FALSE
+/\ refusedAt = -1
+
+State 8: <Tick line 200, col 3 to line 207, col 81 of module P5c_IssuanceProtocol>
+/\ now = 6
+/\ depth = 0
+/\ reorgs = 0
+/\ declared = 4
+/\ refused = FALSE
+/\ anchorAt = -1
+/\ shippedOrphaned = FALSE
+/\ attempts = 2
+/\ shipped = FALSE
+/\ refusedAt = -1
+
+State 9: <Tick line 200, col 3 to line 207, col 81 of module P5c_IssuanceProtocol>
+/\ now = 7
+/\ depth = 0
+/\ reorgs = 0
+/\ declared = 4
+/\ refused = FALSE
+/\ anchorAt = -1
+/\ shippedOrphaned = FALSE
+/\ attempts = 2
+/\ shipped = FALSE
+/\ refusedAt = -1
+
+State 10: <Tick line 200, col 3 to line 207, col 81 of module P5c_IssuanceProtocol>
+/\ now = 8
+/\ depth = 0
+/\ reorgs = 0
+/\ declared = 4
+/\ refused = FALSE
+/\ anchorAt = -1
+/\ shippedOrphaned = FALSE
+/\ attempts = 2
+/\ shipped = FALSE
+/\ refusedAt = -1
+
+State 11: <Reissue line 271, col 3 to line 275, col 76 of module P5c_IssuanceProtocol>
+/\ now = 8
+/\ depth = 0
+/\ reorgs = 0
+/\ declared = 8
+/\ refused = FALSE
+/\ anchorAt = -1
+/\ shippedOrphaned = FALSE
+/\ attempts = 3
+/\ shipped = FALSE
+/\ refusedAt = -1
+
+State 12: <Tick line 200, col 3 to line 207, col 81 of module P5c_IssuanceProtocol>
+/\ now = 9
+/\ depth = 0
+/\ reorgs = 0
+/\ declared = 8
+/\ refused = FALSE
+/\ anchorAt = -1
+/\ shippedOrphaned = FALSE
+/\ attempts = 3
+/\ shipped = FALSE
+/\ refusedAt = -1
+
+State 13: <Tick line 200, col 3 to line 207, col 81 of module P5c_IssuanceProtocol>
+/\ now = 10
+/\ depth = 0
+/\ reorgs = 0
+/\ declared = 8
+/\ refused = FALSE
+/\ anchorAt = -1
+/\ shippedOrphaned = FALSE
+/\ attempts = 3
+/\ shipped = FALSE
+/\ refusedAt = -1
+
+State 14: <Tick line 200, col 3 to line 207, col 81 of module P5c_IssuanceProtocol>
+/\ now = 11
+/\ depth = 0
+/\ reorgs = 0
+/\ declared = 8
+/\ refused = FALSE
+/\ anchorAt = -1
+/\ shippedOrphaned = FALSE
+/\ attempts = 3
+/\ shipped = FALSE
+/\ refusedAt = -1
+
+State 15: <Tick line 200, col 3 to line 207, col 81 of module P5c_IssuanceProtocol>
+/\ now = 12
+/\ depth = 0
+/\ reorgs = 0
+/\ declared = 8
+/\ refused = TRUE
+/\ anchorAt = -1
+/\ shippedOrphaned = FALSE
+/\ attempts = 3
+/\ shipped = FALSE
+/\ refusedAt = 12
+
+Error: Invariant RefusalWithLiveAnchorUnreachable is violated.
+Error: The behavior up to this point is:
+State 1: <Initial predicate>
+/\ now = 0
+/\ depth = 0
+/\ reorgs = 0
+/\ declared = 0
+/\ refused = FALSE
+/\ anchorAt = -1
+/\ shippedOrphaned = FALSE
+/\ attempts = 1
+/\ shipped = FALSE
+/\ refusedAt = -1
+
+State 2: <Tick line 200, col 3 to line 207, col 81 of module P5c_IssuanceProtocol>
+/\ now = 1
+/\ depth = 0
+/\ reorgs = 0
+/\ declared = 0
+/\ refused = FALSE
+/\ anchorAt = -1
+/\ shippedOrphaned = FALSE
+/\ attempts = 1
+/\ shipped = FALSE
+/\ refusedAt = -1
+
+State 3: <Tick line 200, col 3 to line 207, col 81 of module P5c_IssuanceProtocol>
+/\ now = 2
+/\ depth = 0
+/\ reorgs = 0
+/\ declared = 0
+/\ refused = FALSE
+/\ anchorAt = -1
+/\ shippedOrphaned = FALSE
+/\ attempts = 1
+/\ shipped = FALSE
+/\ refusedAt = -1
+
+State 4: <Tick line 200, col 3 to line 207, col 81 of module P5c_IssuanceProtocol>
+/\ now = 3
+/\ depth = 0
+/\ reorgs = 0
+/\ declared = 0
+/\ refused = FALSE
+/\ anchorAt = -1
+/\ shippedOrphaned = FALSE
+/\ attempts = 1
+/\ shipped = FALSE
+/\ refusedAt = -1
+
+State 5: <Tick line 200, col 3 to line 207, col 81 of module P5c_IssuanceProtocol>
+/\ now = 4
+/\ depth = 0
+/\ reorgs = 0
+/\ declared = 0
+/\ refused = FALSE
+/\ anchorAt = -1
+/\ shippedOrphaned = FALSE
+/\ attempts = 1
+/\ shipped = FALSE
+/\ refusedAt = -1
+
+State 6: <Reissue line 271, col 3 to line 275, col 76 of module P5c_IssuanceProtocol>
+/\ now = 4
+/\ depth = 0
+/\ reorgs = 0
+/\ declared = 4
+/\ refused = FALSE
+/\ anchorAt = -1
+/\ shippedOrphaned = FALSE
+/\ attempts = 2
+/\ shipped = FALSE
+/\ refusedAt = -1
+
+State 7: <Tick line 200, col 3 to line 207, col 81 of module P5c_IssuanceProtocol>
+/\ now = 5
+/\ depth = 0
+/\ reorgs = 0
+/\ declared = 4
+/\ refused = FALSE
+/\ anchorAt = -1
+/\ shippedOrphaned = FALSE
+/\ attempts = 2
+/\ shipped = FALSE
+/\ refusedAt = -1
+
+State 8: <Tick line 200, col 3 to line 207, col 81 of module P5c_IssuanceProtocol>
+/\ now = 6
+/\ depth = 0
+/\ reorgs = 0
+/\ declared = 4
+/\ refused = FALSE
+/\ anchorAt = -1
+/\ shippedOrphaned = FALSE
+/\ attempts = 2
+/\ shipped = FALSE
+/\ refusedAt = -1
+
+State 9: <Tick line 200, col 3 to line 207, col 81 of module P5c_IssuanceProtocol>
+/\ now = 7
+/\ depth = 0
+/\ reorgs = 0
+/\ declared = 4
+/\ refused = FALSE
+/\ anchorAt = -1
+/\ shippedOrphaned = FALSE
+/\ attempts = 2
+/\ shipped = FALSE
+/\ refusedAt = -1
+
+State 10: <Tick line 200, col 3 to line 207, col 81 of module P5c_IssuanceProtocol>
+/\ now = 8
+/\ depth = 0
+/\ reorgs = 0
+/\ declared = 4
+/\ refused = FALSE
+/\ anchorAt = -1
+/\ shippedOrphaned = FALSE
+/\ attempts = 2
+/\ shipped = FALSE
+/\ refusedAt = -1
+
+State 11: <Reissue line 271, col 3 to line 275, col 76 of module P5c_IssuanceProtocol>
+/\ now = 8
+/\ depth = 0
+/\ reorgs = 0
+/\ declared = 8
+/\ refused = FALSE
+/\ anchorAt = -1
+/\ shippedOrphaned = FALSE
+/\ attempts = 3
+/\ shipped = FALSE
+/\ refusedAt = -1
+
+State 12: <Tick line 200, col 3 to line 207, col 81 of module P5c_IssuanceProtocol>
+/\ now = 9
+/\ depth = 0
+/\ reorgs = 0
+/\ declared = 8
+/\ refused = FALSE
+/\ anchorAt = -1
+/\ shippedOrphaned = FALSE
+/\ attempts = 3
+/\ shipped = FALSE
+/\ refusedAt = -1
+
+State 13: <Anchor line 226, col 3 to line 229, col 37 of module P5c_IssuanceProtocol>
+/\ now = 9
+/\ depth = 0
+/\ reorgs = 0
+/\ declared = 8
+/\ refused = FALSE
+/\ anchorAt = 9
+/\ shippedOrphaned = FALSE
+/\ attempts = 3
+/\ shipped = FALSE
+/\ refusedAt = -1
+
+State 14: <Tick line 200, col 3 to line 207, col 81 of module P5c_IssuanceProtocol>
+/\ now = 10
+/\ depth = 1
+/\ reorgs = 0
+/\ declared = 8
+/\ refused = FALSE
+/\ anchorAt = 9
+/\ shippedOrphaned = FALSE
+/\ attempts = 3
+/\ shipped = FALSE
+/\ refusedAt = -1
+
+State 15: <Tick line 200, col 3 to line 207, col 81 of module P5c_IssuanceProtocol>
+/\ now = 11
+/\ depth = 2
+/\ reorgs = 0
+/\ declared = 8
+/\ refused = FALSE
+/\ anchorAt = 9
+/\ shippedOrphaned = FALSE
+/\ attempts = 3
+/\ shipped = FALSE
+/\ refusedAt = -1
+
+State 16: <Tick line 200, col 3 to line 207, col 81 of module P5c_IssuanceProtocol>
+/\ now = 12
+/\ depth = 2
+/\ reorgs = 0
+/\ declared = 8
+/\ refused = TRUE
+/\ anchorAt = 9
+/\ shippedOrphaned = FALSE
+/\ attempts = 3
+/\ shipped = FALSE
+/\ refusedAt = 12
+
+Error: Invariant RefusalAfterReorgUnreachable is violated.
+Error: The behavior up to this point is:
+State 1: <Initial predicate>
+/\ now = 0
+/\ depth = 0
+/\ reorgs = 0
+/\ declared = 0
+/\ refused = FALSE
+/\ anchorAt = -1
+/\ shippedOrphaned = FALSE
+/\ attempts = 1
+/\ shipped = FALSE
+/\ refusedAt = -1
+
+State 2: <Tick line 200, col 3 to line 207, col 81 of module P5c_IssuanceProtocol>
+/\ now = 1
+/\ depth = 0
+/\ reorgs = 0
+/\ declared = 0
+/\ refused = FALSE
+/\ anchorAt = -1
+/\ shippedOrphaned = FALSE
+/\ attempts = 1
+/\ shipped = FALSE
+/\ refusedAt = -1
+
+State 3: <Anchor line 226, col 3 to line 229, col 37 of module P5c_IssuanceProtocol>
+/\ now = 1
+/\ depth = 0
+/\ reorgs = 0
+/\ declared = 0
+/\ refused = FALSE
+/\ anchorAt = 1
+/\ shippedOrphaned = FALSE
+/\ attempts = 1
+/\ shipped = FALSE
+/\ refusedAt = -1
+
+State 4: <Tick line 200, col 3 to line 207, col 81 of module P5c_IssuanceProtocol>
+/\ now = 2
+/\ depth = 1
+/\ reorgs = 0
+/\ declared = 0
+/\ refused = FALSE
+/\ anchorAt = 1
+/\ shippedOrphaned = FALSE
+/\ attempts = 1
+/\ shipped = FALSE
+/\ refusedAt = -1
+
+State 5: <Reorg line 237, col 3 to line 241, col 71 of module P5c_IssuanceProtocol>
+/\ now = 2
+/\ depth = 0
+/\ reorgs = 1
+/\ declared = 0
+/\ refused = FALSE
+/\ anchorAt = -1
+/\ shippedOrphaned = FALSE
+/\ attempts = 1
+/\ shipped = FALSE
+/\ refusedAt = -1
+
+State 6: <Tick line 200, col 3 to line 207, col 81 of module P5c_IssuanceProtocol>
+/\ now = 3
+/\ depth = 0
+/\ reorgs = 1
+/\ declared = 0
+/\ refused = FALSE
+/\ anchorAt = -1
+/\ shippedOrphaned = FALSE
+/\ attempts = 1
+/\ shipped = FALSE
+/\ refusedAt = -1
+
+State 7: <Tick line 200, col 3 to line 207, col 81 of module P5c_IssuanceProtocol>
+/\ now = 4
+/\ depth = 0
+/\ reorgs = 1
+/\ declared = 0
+/\ refused = FALSE
+/\ anchorAt = -1
+/\ shippedOrphaned = FALSE
+/\ attempts = 1
+/\ shipped = FALSE
+/\ refusedAt = -1
+
+State 8: <Reissue line 271, col 3 to line 275, col 76 of module P5c_IssuanceProtocol>
+/\ now = 4
+/\ depth = 0
+/\ reorgs = 1
+/\ declared = 4
+/\ refused = FALSE
+/\ anchorAt = -1
+/\ shippedOrphaned = FALSE
+/\ attempts = 2
+/\ shipped = FALSE
+/\ refusedAt = -1
+
+State 9: <Tick line 200, col 3 to line 207, col 81 of module P5c_IssuanceProtocol>
+/\ now = 5
+/\ depth = 0
+/\ reorgs = 1
+/\ declared = 4
+/\ refused = FALSE
+/\ anchorAt = -1
+/\ shippedOrphaned = FALSE
+/\ attempts = 2
+/\ shipped = FALSE
+/\ refusedAt = -1
+
+State 10: <Tick line 200, col 3 to line 207, col 81 of module P5c_IssuanceProtocol>
+/\ now = 6
+/\ depth = 0
+/\ reorgs = 1
+/\ declared = 4
+/\ refused = FALSE
+/\ anchorAt = -1
+/\ shippedOrphaned = FALSE
+/\ attempts = 2
+/\ shipped = FALSE
+/\ refusedAt = -1
+
+State 11: <Tick line 200, col 3 to line 207, col 81 of module P5c_IssuanceProtocol>
+/\ now = 7
+/\ depth = 0
+/\ reorgs = 1
+/\ declared = 4
+/\ refused = FALSE
+/\ anchorAt = -1
+/\ shippedOrphaned = FALSE
+/\ attempts = 2
+/\ shipped = FALSE
+/\ refusedAt = -1
+
+State 12: <Tick line 200, col 3 to line 207, col 81 of module P5c_IssuanceProtocol>
+/\ now = 8
+/\ depth = 0
+/\ reorgs = 1
+/\ declared = 4
+/\ refused = FALSE
+/\ anchorAt = -1
+/\ shippedOrphaned = FALSE
+/\ attempts = 2
+/\ shipped = FALSE
+/\ refusedAt = -1
+
+State 13: <Reissue line 271, col 3 to line 275, col 76 of module P5c_IssuanceProtocol>
+/\ now = 8
+/\ depth = 0
+/\ reorgs = 1
+/\ declared = 8
+/\ refused = FALSE
+/\ anchorAt = -1
+/\ shippedOrphaned = FALSE
+/\ attempts = 3
+/\ shipped = FALSE
+/\ refusedAt = -1
+
+State 14: <Tick line 200, col 3 to line 207, col 81 of module P5c_IssuanceProtocol>
+/\ now = 9
+/\ depth = 0
+/\ reorgs = 1
+/\ declared = 8
+/\ refused = FALSE
+/\ anchorAt = -1
+/\ shippedOrphaned = FALSE
+/\ attempts = 3
+/\ shipped = FALSE
+/\ refusedAt = -1
+
+State 15: <Tick line 200, col 3 to line 207, col 81 of module P5c_IssuanceProtocol>
+/\ now = 10
+/\ depth = 0
+/\ reorgs = 1
+/\ declared = 8
+/\ refused = FALSE
+/\ anchorAt = -1
+/\ shippedOrphaned = FALSE
+/\ attempts = 3
+/\ shipped = FALSE
+/\ refusedAt = -1
+
+State 16: <Tick line 200, col 3 to line 207, col 81 of module P5c_IssuanceProtocol>
+/\ now = 11
+/\ depth = 0
+/\ reorgs = 1
+/\ declared = 8
+/\ refused = FALSE
+/\ anchorAt = -1
+/\ shippedOrphaned = FALSE
+/\ attempts = 3
+/\ shipped = FALSE
+/\ refusedAt = -1
+
+State 17: <Tick line 200, col 3 to line 207, col 81 of module P5c_IssuanceProtocol>
+/\ now = 12
+/\ depth = 0
+/\ reorgs = 1
+/\ declared = 8
+/\ refused = TRUE
+/\ anchorAt = -1
+/\ shippedOrphaned = FALSE
+/\ attempts = 3
+/\ shipped = FALSE
+/\ refusedAt = 12
+
+### filter-tlc-output.sh: 249 further violation report(s) of already-witnessed invariants omitted; full output reproduces from the .cfg ###
+2174 states generated, 1329 distinct states found, 0 states left on queue.
+The depth of the complete state graph search is 21.
+The average outdegree of the complete state graph is 1 (minimum is 0, the maximum 3 and the 95th percentile is 2).
+Finished in 00s at (2026-09-06 18:42:06)

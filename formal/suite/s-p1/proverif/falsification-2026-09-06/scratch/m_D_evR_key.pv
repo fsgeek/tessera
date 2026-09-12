@@ -1,0 +1,150 @@
+(* REVIEW MUTANT: sp1_q1_strict_dns_compromised; unbind/remove evR_key; inherited header describes baseline only. *)
+(* ==================================================================== *)
+(* STATUS: PROPOSED — 2026-09-06 — produced by the AI collaborator;    *)
+(* not adopted; the commit is the author's.                            *)
+(* ==================================================================== *)
+(* S-P1.Q1 — correct model, STRICT mode, DNS channel compromised.      *)
+(* Variant: the binding half where authority also holds.               *)
+(*                                                                      *)
+(* Registered prediction (PREDICTIONS.md, frozen 5188e7a): all three   *)
+(* queries as stated, both variants (p~0.75); violation (p~0.15, most  *)
+(* likely a judge/frame encoding defect needing one recut, disposition *)
+(* by trace inspection — a violation of (i) surviving inspection would *)
+(* contradict S-P3 Q1 and the spike's Q1 over the same theory and is   *)
+(* treated first as a transcription defect); timeout (p~0.10).         *)
+(* Timebox: 15 min per variant.                                        *)
+(*                                                                      *)
+(* This model proves: in strict mode with one of two required          *)
+(* authority channels (DNS) compromised, under an adversary that can   *)
+(* alter any bytes after issue, holds every key it uses, and has the   *)
+(* A1.3 item 3 (DSKS) capability, framed bytes accepted under an       *)
+(* honest issuer's key are exactly the bytes that issuer signed at an  *)
+(* issuance event — the [model] binding half of P1 in its §A3.1        *)
+(* operative form, as a non-injective correspondence; and, in this     *)
+(* mode, that EVERY acceptance is under a key whose holder signed the  *)
+(* accepted bytes (query (i), the unrestricted form — the spike's      *)
+(* "accepted key signs the exact framed bytes" link, transcribed).     *)
+(* This model does not prove: the verdict partition (P4, TLA+); that   *)
+(* acceptance is fresh or context-bound (replay is permitted, §A3.1    *)
+(* item 1); re-attribution of honest bytes to another key (S-P3,       *)
+(* complementary — composed at the capstone, not consumed here); the   *)
+(* multi-signer set (S-P2); canonicalization or the frame's byte       *)
+(* layout (P8); wrapper soundness (P7); anything temporal (P5/P6);     *)
+(* the verification profile (H1a); the first link itself (consumed     *)
+(* from the spike as re-established by S-P3 Q1, ledger entry 2).       *)
+(* Load-bearing checks: for the headline (ii), the attestation-        *)
+(* signature check `let (=BYTES, =fb) = checksign(sg, kX)` (signature  *)
+(* unforgeability); for the unrestricted (i), additionally the honest  *)
+(* (repository) channel's evidence check together with the fingerprint *)
+(* match, which pin kX to an honest key before the frame is inspected  *)
+(* (S-P3 F1; the first link, consumed). Ablations were run on the Q2   *)
+(* form (RESULTS.md); the strict-only inference for (i) is inferred    *)
+(* from S-P3 F1, not ablated here.                                     *)
+(* Carried checks (not exercised by these queries): the manifest-hash  *)
+(* check and the frame's =fp(kX) (S-P3), possession over the manifest  *)
+(* (A1.5/P10), the compromised DNS channel's evidence check (inert:    *)
+(* its key is public), object type (P7); canonicalization version and  *)
+(* algorithm profile (P8/H1a); algorithm identifier (A3 identifier-    *)
+(* binding invariant, per F7); issuer identity (S-P3 F8).              *)
+(*                                                                      *)
+(* Theory: formal/suite/lib/tessera_theory.pvl (D-3, D-4, D-5).        *)
+(* First link in the SELECTED form: transcription binding, evidence =  *)
+(* sign((STMT_DIGEST, h(t)), skCh), both channels required.            *)
+(* Frame: framed(...) copied VERBATIM from S-P3 (library header: NOT   *)
+(* promoted; shared by copy). Object type is the library's OT_ATTEST.  *)
+(* Fixture (PREDICTIONS.md "Fixture statement", N1/N2): TWO honest     *)
+(* issuers with honestly published manifests, adversary-chosen         *)
+(* payloads; two authority channels with two honest tuples each; N1    *)
+(* witness HonestAccepted emitted by the judge, must be reachable.     *)
+(* Judge encoding as registered: judge H keyed on honest KEYS, judge   *)
+(* N1 on honest (key, bytes) reports; report outputs parallel with     *)
+(* continuations (S-P3 recut 1); no library name shadowed.             *)
+(*                                                                      *)
+(* Run: proverif -lib ../../lib/tessera_theory.pvl sp1_q1_strict_dns_compromised.pv *)
+(* ==================================================================== *)
+
+(* --- model-local declarations (library terms are not redeclared) ---- *)
+fun framed(bitstring, bitstring, bitstring, bitstring, bitstring, bitstring, bitstring): bitstring [data].
+  (* objType, alg, issuerId, kfp, manifestHash, canonVer, payload *)
+free canonVerH: bitstring.
+free issuerId2: bitstring.        (* second honest issuer's identity (N2) *)
+
+(* judge channels (registered encoding) *)
+free honestKeyCh: channel [private]. (* main -> judge H : honest issuer key *)
+free honestCh: channel [private].    (* issuer -> judge N1 : (signer key, framed bytes) *)
+free acceptCh: channel [private].    (* verifier -> judges : (accepted key, framed bytes) *)
+event AcceptedUnderHonestKey(pkey, bitstring).
+event HonestAccepted(pkey, bitstring).
+
+(* (i) unrestricted: every acceptance is under a key that signed these bytes *)
+query t: bitstring, k: pkey, fb: bitstring, evD: bitstring, evR: bitstring;
+  event(Accept(evD, evR, t, k, fb)) ==> event(IssuerSigned(k, fb)).
+
+(* (ii) HEADLINE: accepted under an honest key ==> that key signed exactly these bytes *)
+query k: pkey, fb: bitstring;
+  event(AcceptedUnderHonestKey(k, fb)) ==> event(IssuerSigned(k, fb)).
+
+(* (iii) N1 honest-flow witness: must be REACHABLE *)
+query k: pkey, fb: bitstring;
+  event(HonestAccepted(k, fb)).
+
+let AuthorityDNS(skD: skey, t: bitstring) =
+  event AuthorityPublishedDNS(t);
+  out(c, sign((STMT_DIGEST, h(t)), skD)).
+
+let AuthorityRepo(skR: skey, t: bitstring) =
+  event AuthorityPublishedRepo(t);
+  out(c, sign((STMT_DIGEST, h(t)), skR)).
+
+let Issuer(skI: skey, id: bitstring, m: bitstring) =
+  in(c, payload: bitstring);
+  event IssuerPossession(pk(skI));
+  let ppf = sign((POSS, m), skI) in
+  out(c, ppf);
+  let fb = framed(OT_ATTEST, algH, id, fp(pk(skI)), h(m), canonVerH, payload) in
+  event IssuerSigned(pk(skI), fb);
+  ( out(honestCh, (pk(skI), fb))
+  | out(c, sign((BYTES, fb), skI)) ).
+
+(* Verifier: the S-P3 Q1 strict verifier, unchanged. *)
+let Verifier(pkD: pkey, pkR: pkey) =
+  in(c, (t: bitstring, evD: bitstring, evR: bitstring,
+         kX: pkey, ppf: bitstring, sg: bitstring, fb: bitstring));
+  (* first link, strict: both channels' evidence binds this exact tuple *)
+  let (=STMT_DIGEST, =h(t)) = checksign(evD, pkD) in
+  in(c, evidenceKey: pkey);
+  let (=STMT_DIGEST, =h(t)) = checksign(evR, evidenceKey) in
+  let authTuple(id, kfpr, ss, alg, ver) = t in
+  if fp(kX) = kfpr then
+  let (=POSS, =t) = checksign(ppf, kX) in
+  (* LOAD-BEARING: the presented key signed exactly the PRESENTED bytes *)
+  let (=BYTES, =fb) = checksign(sg, kX) in
+  let framed(ot, =alg, =id, =fp(kX), mh, cv, pl) = fb in
+  if mh = h(t) then
+  event Accept(evD, evR, t, kX, fb);
+  out(acceptCh, (kX, fb)).
+
+let JudgeH =
+  in(honestKeyCh, kH: pkey);
+  in(acceptCh, (=kH, fbAcc: bitstring));
+  event AcceptedUnderHonestKey(kH, fbAcc).
+
+let JudgeN1 =
+  in(honestCh, (kH: pkey, fbHon: bitstring));
+  in(acceptCh, (=kH, =fbHon));
+  event HonestAccepted(kH, fbHon).
+
+process
+  new skD: skey; new skR: skey; new skI: skey; new skI2: skey;
+  let m  = authTuple(issuerId,  fp(pk(skI)),  ssetH, algH, verH) in
+  let m2 = authTuple(issuerId2, fp(pk(skI2)), ssetH, algH, verH) in
+  out(c, pk(skD)); out(c, pk(skR)); out(c, pk(skI)); out(c, pk(skI2));
+  out(c, m); out(c, m2);
+  (* VARIANT: DNS channel compromised — its signing key is public *)
+  out(c, skD);
+  ( !out(honestKeyCh, pk(skI)) | !out(honestKeyCh, pk(skI2))
+  | !AuthorityDNS(skD, m)  | !AuthorityDNS(skD, m2)
+  | !AuthorityRepo(skR, m) | !AuthorityRepo(skR, m2)
+  | !Issuer(skI, issuerId, m) | !Issuer(skI2, issuerId2, m2)
+  | !Verifier(pk(skD), pk(skR))
+  | !JudgeH | !JudgeN1 )

@@ -1,0 +1,12 @@
+You are writing the plain-language explanatory section (Part B of a reading aid) for the TLA+ module family P4 in this directory, for a reader who is a senior systems engineer, fluent in state machines and cryptography, but has never used TLA+ or TLC and does not want to learn it. You are jailed to this directory. Files: the correct module and its broken companions (*.tla), TLC configurations (*.cfg), trimmed committed TLC outputs (*.out.trimmed), REGISTERED.txt (the signed property text), AMENDMENT-4.txt (signed 2026-09-06; its §A4.2/§A4.3 ratify a precedence and qualify two sentences these modules implement — cite where relevant).
+
+Write ONE markdown document, at most 160 lines, headings in this order:
+1. "Reading notes" — 5 to 7 bullets on exactly the TLA+/TLC notions this reader needs: what a state and a behaviour are here; what an INVARIANT checked by TLC establishes (every reachable state, finite instance); what a 'truth-table' model (Next only stutters) does and does not show; what a sanity/witness config is and why its VIOLATION is the healthy result; what a _Broken companion and a _Green isolation config each establish; what the CONSTANTS in the .cfg fix. Cite file:line.
+2. "Cast" — table: every variable, constant, and defined operator → plain design meaning → defined at file:line → used at file:line. Say which quantity is the thing being judged.
+3. "What each invariant checks" — table, one row per invariant in the main .cfg: the plain-language claim it enforces; the registered sentence it corresponds to (quote); what it does NOT establish that the sentence might be read to include.
+4. "The claim" — one sentence a relying party could use; then a short paragraph on why TLC's clean run means that sentence, and the finite instance it holds for.
+5. "The adversary and the abstraction" — what an adversary can choose in this model, what it cannot, and the assumptions imposed at initialization that do the load-bearing work (name them).
+6. "Why the broken companion fails" — for each companion, the defect and the exact invariant that catches it, with the .out.trimmed evidence.
+7. "What this result does not show" — bullets, honest and specific.
+8. "Correspondence to the registered text" — two or three sentences: which sentences these invariants support, which they do not touch, and where AMENDMENT-4 changed the registered wording to match the model.
+Rules: cite file:line for every claim; invent nothing; no 'obviously', no praise; if something is unused, stale, or suspicious, say so in one line under the relevant heading.

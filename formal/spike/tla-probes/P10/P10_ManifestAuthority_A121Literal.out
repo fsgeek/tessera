@@ -1,0 +1,307 @@
+### STATUS: PROPOSED — 2026-09-06 — produced by the AI collaborator; not adopted; the commit is the author's. PROBE — NON-DISCHARGING.
+### P4 join source: formal/tla/P4_VerifierStates.tla sha256=9f5c551641f6627f HEAD=5dfd82b working-tree=modified-uncommitted
+### run-probe.sh per-invariant: P10_ManifestAuthority_A121Literal with P10_ManifestAuthority_A121Literal.cfg (2026-09-06T19:32Z)
+### one TLC run per invariant; each section is that run's evidentiary core
+
+### ---- P10_ManifestAuthority_A121Literal / TypeOK ----
+Model checking completed. No error has been found.
+83264 states generated, 57664 distinct states found, 0 states left on queue.
+Finished in 00s at (2026-09-06 19:32:48)
+### exit=0
+
+### ---- P10_ManifestAuthority_A121Literal / Partition ----
+Model checking completed. No error has been found.
+83264 states generated, 57664 distinct states found, 0 states left on queue.
+Finished in 01s at (2026-09-06 19:32:49)
+### exit=0
+
+### ---- P10_ManifestAuthority_A121Literal / StrictNeedsAuthorizedKey ----
+Model checking completed. No error has been found.
+83264 states generated, 57664 distinct states found, 0 states left on queue.
+Finished in 01s at (2026-09-06 19:32:51)
+### exit=0
+
+### ---- P10_ManifestAuthority_A121Literal / StrictMeansBothAgree ----
+Model checking completed. No error has been found.
+83264 states generated, 57664 distinct states found, 0 states left on queue.
+Finished in 01s at (2026-09-06 19:32:52)
+### exit=0
+
+### ---- P10_ManifestAuthority_A121Literal / DegradedNamesWaived ----
+Model checking completed. No error has been found.
+83264 states generated, 57664 distinct states found, 0 states left on queue.
+Finished in 01s at (2026-09-06 19:32:53)
+### exit=0
+
+### ---- P10_ManifestAuthority_A121Literal / NeverSilent ----
+Model checking completed. No error has been found.
+83264 states generated, 57664 distinct states found, 0 states left on queue.
+Finished in 01s at (2026-09-06 19:32:54)
+### exit=0
+
+### ---- P10_ManifestAuthority_A121Literal / NeverZero ----
+Error: Invariant NeverZero is violated.
+Error: The behavior up to this point is:
+State 1: <Initial predicate>
+/\ phase = "setup"
+/\ mkey = "kH"
+/\ waived = {"dns", "repo"}
+/\ ev = [ dns |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ],
+  repo |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ] ]
+/\ record = [policy |-> {}, why |-> <<>>]
+/\ poss = "pass"
+/\ compLater = {}
+/\ verdict = "none"
+/\ compIssue = {}
+
+State 2: <Publish line 116, col 3 to line 119, col 76 of module P10_ManifestAuthority_A121Literal>
+/\ phase = "published"
+/\ mkey = "kH"
+/\ waived = {"dns", "repo"}
+/\ ev = [ dns |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ],
+  repo |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ] ]
+/\ record = [policy |-> {}, why |-> <<>>]
+/\ poss = "pass"
+/\ compLater = {}
+/\ verdict = "none"
+/\ compIssue = {}
+
+State 3: <Present line 122, col 3 to line 126, col 68 of module P10_ManifestAuthority_A121Literal>
+/\ phase = "presented"
+/\ mkey = "kH"
+/\ waived = {"dns", "repo"}
+/\ ev = [ dns |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ],
+  repo |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ] ]
+/\ record = [policy |-> {}, why |-> <<>>]
+/\ poss = "pass"
+/\ compLater = {}
+/\ verdict = "none"
+/\ compIssue = {}
+
+State 4: <Verify line 129, col 3 to line 133, col 63 of module P10_ManifestAuthority_A121Literal>
+/\ phase = "verified"
+/\ mkey = "kH"
+/\ waived = {"dns", "repo"}
+/\ ev = [ dns |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ],
+  repo |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ] ]
+/\ record = [policy |-> {"dns", "repo"}, why |-> [dns |-> "absent", repo |-> "absent"]]
+/\ poss = "pass"
+/\ compLater = {}
+/\ verdict = "VALID_DEGRADED"
+/\ compIssue = {}
+
+31063 states generated, 31063 distinct states found, 24828 states left on queue.
+Finished in 00s at (2026-09-06 19:32:55)
+### exit=12
+
+### ---- P10_ManifestAuthority_A121Literal / UnavailabilityIsNotWaiver ----
+Error: Invariant UnavailabilityIsNotWaiver is violated.
+Error: The behavior up to this point is:
+State 1: <Initial predicate>
+/\ phase = "setup"
+/\ mkey = "kH"
+/\ waived = {"dns", "repo"}
+/\ ev = [ dns |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ],
+  repo |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ] ]
+/\ record = [policy |-> {}, why |-> <<>>]
+/\ poss = "pass"
+/\ compLater = {}
+/\ verdict = "none"
+/\ compIssue = {}
+
+State 2: <Publish line 116, col 3 to line 119, col 76 of module P10_ManifestAuthority_A121Literal>
+/\ phase = "published"
+/\ mkey = "kH"
+/\ waived = {"dns", "repo"}
+/\ ev = [ dns |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ],
+  repo |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ] ]
+/\ record = [policy |-> {}, why |-> <<>>]
+/\ poss = "pass"
+/\ compLater = {}
+/\ verdict = "none"
+/\ compIssue = {}
+
+State 3: <Present line 122, col 3 to line 126, col 68 of module P10_ManifestAuthority_A121Literal>
+/\ phase = "presented"
+/\ mkey = "kA"
+/\ waived = {"dns", "repo"}
+/\ ev = [ dns |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ],
+  repo |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ] ]
+/\ record = [policy |-> {}, why |-> <<>>]
+/\ poss = "pass"
+/\ compLater = {}
+/\ verdict = "none"
+/\ compIssue = {}
+
+State 4: <Verify line 129, col 3 to line 133, col 63 of module P10_ManifestAuthority_A121Literal>
+/\ phase = "verified"
+/\ mkey = "kA"
+/\ waived = {"dns", "repo"}
+/\ ev = [ dns |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ],
+  repo |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ] ]
+/\ record = [policy |-> {"dns", "repo"}, why |-> [dns |-> "absent", repo |-> "absent"]]
+/\ poss = "pass"
+/\ compLater = {}
+/\ verdict = "VALID_DEGRADED"
+/\ compIssue = {}
+
+31363 states generated, 31363 distinct states found, 25053 states left on queue.
+Finished in 00s at (2026-09-06 19:32:56)
+### exit=12
+
+### ---- P10_ManifestAuthority_A121Literal / PossessionNeverAuthority ----
+Error: Invariant PossessionNeverAuthority is violated.
+Error: The behavior up to this point is:
+State 1: <Initial predicate>
+/\ phase = "setup"
+/\ mkey = "kH"
+/\ waived = {"dns", "repo"}
+/\ ev = [ dns |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ],
+  repo |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ] ]
+/\ record = [policy |-> {}, why |-> <<>>]
+/\ poss = "pass"
+/\ compLater = {}
+/\ verdict = "none"
+/\ compIssue = {}
+
+State 2: <Publish line 116, col 3 to line 119, col 76 of module P10_ManifestAuthority_A121Literal>
+/\ phase = "published"
+/\ mkey = "kH"
+/\ waived = {"dns", "repo"}
+/\ ev = [ dns |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ],
+  repo |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ] ]
+/\ record = [policy |-> {}, why |-> <<>>]
+/\ poss = "pass"
+/\ compLater = {}
+/\ verdict = "none"
+/\ compIssue = {}
+
+State 3: <Present line 122, col 3 to line 126, col 68 of module P10_ManifestAuthority_A121Literal>
+/\ phase = "presented"
+/\ mkey = "kH"
+/\ waived = {"dns", "repo"}
+/\ ev = [ dns |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ],
+  repo |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ] ]
+/\ record = [policy |-> {}, why |-> <<>>]
+/\ poss = "pass"
+/\ compLater = {}
+/\ verdict = "none"
+/\ compIssue = {}
+
+State 4: <Verify line 129, col 3 to line 133, col 63 of module P10_ManifestAuthority_A121Literal>
+/\ phase = "verified"
+/\ mkey = "kH"
+/\ waived = {"dns", "repo"}
+/\ ev = [ dns |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ],
+  repo |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ] ]
+/\ record = [policy |-> {"dns", "repo"}, why |-> [dns |-> "absent", repo |-> "absent"]]
+/\ poss = "pass"
+/\ compLater = {}
+/\ verdict = "VALID_DEGRADED"
+/\ compIssue = {}
+
+31439 states generated, 31439 distinct states found, 25104 states left on queue.
+Finished in 00s at (2026-09-06 19:32:57)
+### exit=12
+
+### ---- P10_ManifestAuthority_A121Literal / LaterCaptureStrictUnreachable ----
+Model checking completed. No error has been found.
+83264 states generated, 57664 distinct states found, 0 states left on queue.
+Finished in 01s at (2026-09-06 19:32:58)
+### exit=0

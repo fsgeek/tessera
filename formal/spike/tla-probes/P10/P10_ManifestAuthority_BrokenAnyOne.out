@@ -1,0 +1,307 @@
+### STATUS: PROPOSED — 2026-09-06 — produced by the AI collaborator; not adopted; the commit is the author's. PROBE — NON-DISCHARGING.
+### P4 join source: formal/tla/P4_VerifierStates.tla sha256=9f5c551641f6627f HEAD=5dfd82b working-tree=modified-uncommitted
+### run-probe.sh per-invariant: P10_ManifestAuthority_BrokenAnyOne with P10_ManifestAuthority_BrokenAnyOne.cfg (2026-09-06T19:33Z)
+### one TLC run per invariant; each section is that run's evidentiary core
+
+### ---- P10_ManifestAuthority_BrokenAnyOne / TypeOK ----
+Model checking completed. No error has been found.
+62448 states generated, 43248 distinct states found, 0 states left on queue.
+Finished in 01s at (2026-09-06 19:33:31)
+### exit=0
+
+### ---- P10_ManifestAuthority_BrokenAnyOne / Partition ----
+Model checking completed. No error has been found.
+62448 states generated, 43248 distinct states found, 0 states left on queue.
+Finished in 01s at (2026-09-06 19:33:32)
+### exit=0
+
+### ---- P10_ManifestAuthority_BrokenAnyOne / StrictNeedsAuthorizedKey ----
+Error: Invariant StrictNeedsAuthorizedKey is violated.
+Error: The behavior up to this point is:
+State 1: <Initial predicate>
+/\ phase = "setup"
+/\ mkey = "kH"
+/\ waived = {}
+/\ ev = [ dns |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ],
+  repo |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ] ]
+/\ record = [policy |-> {}, why |-> <<>>]
+/\ poss = "pass"
+/\ compLater = {}
+/\ verdict = "none"
+/\ compIssue = {"dns"}
+
+State 2: <Publish line 116, col 3 to line 119, col 76 of module P10_ManifestAuthority_BrokenAnyOne>
+/\ phase = "published"
+/\ mkey = "kH"
+/\ waived = {}
+/\ ev = [ dns |->
+      [ present |-> TRUE,
+        names |-> "kA",
+        sig |-> "valid",
+        anchor |-> "consistent" ],
+  repo |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ] ]
+/\ record = [policy |-> {}, why |-> <<>>]
+/\ poss = "pass"
+/\ compLater = {}
+/\ verdict = "none"
+/\ compIssue = {"dns"}
+
+State 3: <Present line 122, col 3 to line 126, col 68 of module P10_ManifestAuthority_BrokenAnyOne>
+/\ phase = "presented"
+/\ mkey = "kA"
+/\ waived = {}
+/\ ev = [ dns |->
+      [ present |-> TRUE,
+        names |-> "kA",
+        sig |-> "valid",
+        anchor |-> "consistent" ],
+  repo |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ] ]
+/\ record = [policy |-> {}, why |-> <<>>]
+/\ poss = "pass"
+/\ compLater = {}
+/\ verdict = "none"
+/\ compIssue = {"dns"}
+
+State 4: <Verify line 129, col 3 to line 133, col 63 of module P10_ManifestAuthority_BrokenAnyOne>
+/\ phase = "verified"
+/\ mkey = "kA"
+/\ waived = {}
+/\ ev = [ dns |->
+      [ present |-> TRUE,
+        names |-> "kA",
+        sig |-> "valid",
+        anchor |-> "consistent" ],
+  repo |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ] ]
+/\ record = [policy |-> {}, why |-> <<>>]
+/\ poss = "pass"
+/\ compLater = {}
+/\ verdict = "VALID_STRICT"
+/\ compIssue = {"dns"}
+
+26461 states generated, 26461 distinct states found, 19196 states left on queue.
+Finished in 00s at (2026-09-06 19:33:33)
+### exit=12
+
+### ---- P10_ManifestAuthority_BrokenAnyOne / StrictMeansBothAgree ----
+Error: Invariant StrictMeansBothAgree is violated.
+Error: The behavior up to this point is:
+State 1: <Initial predicate>
+/\ phase = "setup"
+/\ mkey = "kH"
+/\ waived = {}
+/\ ev = [ dns |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ],
+  repo |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ] ]
+/\ record = [policy |-> {}, why |-> <<>>]
+/\ poss = "pass"
+/\ compLater = {}
+/\ verdict = "none"
+/\ compIssue = {}
+
+State 2: <Publish line 116, col 3 to line 119, col 76 of module P10_ManifestAuthority_BrokenAnyOne>
+/\ phase = "published"
+/\ mkey = "kH"
+/\ waived = {}
+/\ ev = [ dns |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ],
+  repo |->
+      [ present |-> TRUE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ] ]
+/\ record = [policy |-> {}, why |-> <<>>]
+/\ poss = "pass"
+/\ compLater = {}
+/\ verdict = "none"
+/\ compIssue = {}
+
+State 3: <Present line 122, col 3 to line 126, col 68 of module P10_ManifestAuthority_BrokenAnyOne>
+/\ phase = "presented"
+/\ mkey = "kH"
+/\ waived = {}
+/\ ev = [ dns |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ],
+  repo |->
+      [ present |-> TRUE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ] ]
+/\ record = [policy |-> {}, why |-> <<>>]
+/\ poss = "pass"
+/\ compLater = {}
+/\ verdict = "none"
+/\ compIssue = {}
+
+State 4: <Verify line 129, col 3 to line 133, col 63 of module P10_ManifestAuthority_BrokenAnyOne>
+/\ phase = "verified"
+/\ mkey = "kH"
+/\ waived = {}
+/\ ev = [ dns |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ],
+  repo |->
+      [ present |-> TRUE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ] ]
+/\ record = [policy |-> {}, why |-> <<>>]
+/\ poss = "pass"
+/\ compLater = {}
+/\ verdict = "VALID_STRICT"
+/\ compIssue = {}
+
+23926 states generated, 23926 distinct states found, 19019 states left on queue.
+Finished in 00s at (2026-09-06 19:33:34)
+### exit=12
+
+### ---- P10_ManifestAuthority_BrokenAnyOne / DegradedNamesWaived ----
+Model checking completed. No error has been found.
+62448 states generated, 43248 distinct states found, 0 states left on queue.
+Finished in 01s at (2026-09-06 19:33:35)
+### exit=0
+
+### ---- P10_ManifestAuthority_BrokenAnyOne / NeverSilent ----
+Error: Invariant NeverSilent is violated.
+Error: The behavior up to this point is:
+State 1: <Initial predicate>
+/\ phase = "setup"
+/\ mkey = "kH"
+/\ waived = {}
+/\ ev = [ dns |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ],
+  repo |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ] ]
+/\ record = [policy |-> {}, why |-> <<>>]
+/\ poss = "pass"
+/\ compLater = {}
+/\ verdict = "none"
+/\ compIssue = {}
+
+State 2: <Publish line 116, col 3 to line 119, col 76 of module P10_ManifestAuthority_BrokenAnyOne>
+/\ phase = "published"
+/\ mkey = "kH"
+/\ waived = {}
+/\ ev = [ dns |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ],
+  repo |->
+      [ present |-> TRUE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ] ]
+/\ record = [policy |-> {}, why |-> <<>>]
+/\ poss = "pass"
+/\ compLater = {}
+/\ verdict = "none"
+/\ compIssue = {}
+
+State 3: <Present line 122, col 3 to line 126, col 68 of module P10_ManifestAuthority_BrokenAnyOne>
+/\ phase = "presented"
+/\ mkey = "kH"
+/\ waived = {}
+/\ ev = [ dns |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ],
+  repo |->
+      [ present |-> TRUE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ] ]
+/\ record = [policy |-> {}, why |-> <<>>]
+/\ poss = "pass"
+/\ compLater = {}
+/\ verdict = "none"
+/\ compIssue = {}
+
+State 4: <Verify line 129, col 3 to line 133, col 63 of module P10_ManifestAuthority_BrokenAnyOne>
+/\ phase = "verified"
+/\ mkey = "kH"
+/\ waived = {}
+/\ ev = [ dns |->
+      [ present |-> FALSE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ],
+  repo |->
+      [ present |-> TRUE,
+        names |-> "kH",
+        sig |-> "valid",
+        anchor |-> "consistent" ] ]
+/\ record = [policy |-> {}, why |-> <<>>]
+/\ poss = "pass"
+/\ compLater = {}
+/\ verdict = "VALID_STRICT"
+/\ compIssue = {}
+
+23993 states generated, 23993 distinct states found, 19064 states left on queue.
+Finished in 00s at (2026-09-06 19:33:36)
+### exit=12
+
+### ---- P10_ManifestAuthority_BrokenAnyOne / NeverZero ----
+Model checking completed. No error has been found.
+62448 states generated, 43248 distinct states found, 0 states left on queue.
+Finished in 00s at (2026-09-06 19:33:37)
+### exit=0
+
+### ---- P10_ManifestAuthority_BrokenAnyOne / UnavailabilityIsNotWaiver ----
+Model checking completed. No error has been found.
+62448 states generated, 43248 distinct states found, 0 states left on queue.
+Finished in 01s at (2026-09-06 19:33:38)
+### exit=0
+
+### ---- P10_ManifestAuthority_BrokenAnyOne / PossessionNeverAuthority ----
+Model checking completed. No error has been found.
+62448 states generated, 43248 distinct states found, 0 states left on queue.
+Finished in 00s at (2026-09-06 19:33:39)
+### exit=0
+
+### ---- P10_ManifestAuthority_BrokenAnyOne / LaterCaptureStrictUnreachable ----
+Model checking completed. No error has been found.
+62448 states generated, 43248 distinct states found, 0 states left on queue.
+Finished in 00s at (2026-09-06 19:33:40)
+### exit=0

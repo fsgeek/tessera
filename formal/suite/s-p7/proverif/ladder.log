@@ -1,0 +1,13 @@
+sp7_q1_strict_dns_compromised rc=0 seconds=1 box=900 (Q1, strict, DNS leaked)
+sp7_q1_strict_repo_compromised rc=0 seconds=1 box=900 (Q1, strict, repo leaked)
+sp7_q2_degraded_compromised rc=0 seconds=1 box=1800 (Q2, the C2 claim)
+sp7_q3_companion_type_unchecked rc=0 seconds=1 box=900 (Q3 companion; required red: TypeConfused)
+sp7_q4_companion_reserialize_twoversion rc=0 seconds=1 box=900 (Q4 companion, two-version; required red: HonestWrappedAccepted unreachable)
+sp7_q4_companion_reserialize_isolation rc=0 seconds=1 box=900 (Q4 isolation config; required: HonestWrappedAccepted reachable)
+sp7_q4_control_opaque_twoversion rc=0 seconds=1 box=900 (UNREGISTERED added control: opaque wrapper, two versions)
+sp7_q4_probe_degraded_twoversion rc=0 seconds=0 box=900 (UNREGISTERED probe: mutated wrapper, degraded mode)
+sp7_q6a_companion_identity_outermost rc=0 seconds=1 box=900 (Q6a companion; required red: Rescoped)
+sp7_q6b_companion_key_outermost rc=0 seconds=0 box=900 (Q6b companion; required red: Rescoped AND InnerSigTransplanted)
+sp7_q5_depth2_correct rc=0 seconds=7 box=2700 (Q5 correct, depth 2)
+sp7_q5c_companion_one_level_in rc=0 seconds=5 box=2700 (Q5c companion; required red: RescopedD2 only)
+DONE
