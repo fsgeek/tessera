@@ -225,61 +225,13 @@ I haven't done a good job of keeping this up to date.  Last week we exhausted th
 
 Today has been going over everything, reviewing, revising, pressure testing.  The work is slow going because decisions are presented with historical context - useful, but making parsing it more complex.  One task that arose as a result of this is to build a "clean" design spec that can point at other artifacts but should be a complete, stand-alone document describing the design, with the why and graphic detail about how we got there kept separately.
 
-
-
-B
-B
-B
-B
-B
-B
-B
-B
-B
-B
-B
-B
-B
-B
-B
-B
-B
-B
-B
-B
-B
-B
-B
-B
-B
-A
-A
-A
-A
-A
-A
-A
-A
-A
-A
-A
-A
-A
-A
-A
-B
-B
-B
-B
-B
-B
-B
-B
-B
-B
-B
-B
-B
-B
-B
 I haven't done a great job of maintaining this, have I.  Last week we bumped into the token cap for the subscription, largely due to injudicious use of Fable model for everything in heavy workflows.   Since then we have switched to a more balanced approach and I 
+think that it is working better. 
+
+## September 13, 2026
+
+It seems the travelog was trounced on by something, adding in random text and truncating the writing.  I terminated the last sentence so it doesn't sound completely incoherent, but I had written more.  There seems to be a (to me) frustrating interaction between the five or six different ways of moving text between contexts.  Most likely I just don't remember which magic incantation works versus which one randomly runs commands or does other operations.
+
+At any rate, Claude tells me that I have yet another decision, framed as a binary (LEAN4 or prose + vectors) and I'll have to go push back on it.  The propensity of LLMs to frame things as binary choices is common and I suspect an artifact of the training, but at the same time it helps me stay vigilant - like working with a predictable colleague, whose weaknesses are well-known.
+
+
