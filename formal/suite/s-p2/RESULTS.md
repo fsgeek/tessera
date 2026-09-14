@@ -923,3 +923,7 @@ need its own registered design decision: Amendment 5 §A5.4 does not
 grant it, and the P8 exclusion carried in the header
 (`.pv:58–59`) is an exclusion of encoding and ordering obligations, not
 an authorization to accept them as equivalent. **No action.**
+
+## Author read 2026-09-12 — status correction (appended 2026-09-13; AI collaborator, recording the record)
+
+Sentences above that say the author's ROUTED C5 read of this family's narrowed headers is owed or pending are superseded and left as written per amend-don't-rewrite. The read was completed on 2026-09-12 and its four answers are entered at `formal/suite/READ-C5-2026-09-12.md`, "Author's answers" (S-P1: one NO, repaired; S-P2: YES; S-P7: one NO, repaired; S-STANDING: YES). No further author read of any suite claim block is requested by the record. What remains for the author on these families is different in kind and happens once: the adjudication of the cross-family review findings that moves rows from `checked` to `discharged` (`formal/BAND0-EXIT.md` item E9), assembled into one sitting by the owner instance.

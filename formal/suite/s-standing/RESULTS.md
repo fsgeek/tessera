@@ -1393,3 +1393,22 @@ check confirms all six committed witnesses stay reachable
 finding was accepted. No `PREDICTIONS.md`, no library, no amendment, no
 coverage-map and no scratch file was edited; no result, query text or
 prediction changed; nothing was committed.
+
+## Author read 2026-09-12 — status correction (appended 2026-09-13; AI collaborator, recording the record)
+
+Two passages above still say the author's read is pending: "Author read of
+the correct models and of the narrowed headers: **pending** (ROUTED C5)" and
+"`checked` for the standing invariant therefore still waits on the author"
+under *Status toward discharge*, and "Author read: **pending**" under
+§A1.10. Both are superseded and left as written per amend-don't-rewrite.
+The read was made on 2026-09-12 and is recorded at
+`formal/suite/READ-C5-2026-09-12.md`, "Author's answers": block 4
+(S-STANDING) returned **YES** — the claim block says what that verifier
+does, no more. `formal/PROPERTIES.md` (note of 2026-09-12, "SC row added
+`open`") records the same read against the SC row. What this correction
+does **not** say: that criterion 4's second condition is satisfied, or
+that the row moves. The falsification review of the §A5.6 query and its
+companion, which §A1.10 calls NOT RUN, has since run (`Cross-family
+review 2026-09-12 — dispositions applied`, above). What remains before
+the row can be proposed `checked` is assessed separately by the owner
+instance from the tracker's recorded prerequisites, not here.

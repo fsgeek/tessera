@@ -365,3 +365,7 @@ the [assumption] half (H1a) regardless.
   recut, where the fix is to say *signed fields carried as obligations
   for P7 and P8/H1a*, not carried checks. Proposed by the AI
   collaborator; not adopted; the commit is the author's.
+
+## Author ruling 2026-09-14 on the `ot`/`cv` description (appended by the AI collaborator; instrument Amendment 7 §A7.10, PROPOSED until the author's commit)
+
+The author, answering C-12 of `docs/implementation-spec.md` §12: *"Code description needs to be accurate: the fields are bound, they are not checks done by S-P3 and the obligation to validate is not here, it is somewhere else."* The proposed disposition above ("deferred to S-P3's next recut") is thereby adopted as a reading-aid correction only: `READING-AIDS.md` lines 177 and 302 are corrected in place with a dated marker; the model headers (`sp3_q2_degraded_compromised.pv:53-55`) were already accurate and no model is edited or re-run.

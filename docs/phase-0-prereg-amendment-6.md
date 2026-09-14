@@ -1,5 +1,7 @@
 # Tessera — Phase 0 Pre-Registration, Amendment 6 — P7's discharge path (2026-09-12)
 
+> **Signing recorded, 2026-09-13 (AI collaborator, recording the record; the stale status line below is retained per amend-don't-rewrite).** The author's first commit containing this file is `c105be7` (2026-09-12, "Another round of amendments, reviews, decisions, and (hopefully) one step closer to moving to implementation."), OTS-stamped at `f1ac93f`. By the sentence below ("which is its signing act") this amendment has been in force since that commit, and P7's tracker row moved to `checked` on it (`formal/PROPERTIES.md`, note of 2026-09-12).
+>
 > **Status: PROPOSED — the ruling below was adopted in session
 > 2026-09-12 (author); this document is the instrument and is not yet
 > signed. It becomes in force on the author's commit of this file,

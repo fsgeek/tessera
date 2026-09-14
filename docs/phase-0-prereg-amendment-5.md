@@ -1,5 +1,7 @@
 # Tessera — Phase 0 Pre-Registration, Amendment 5 — the probe and cross-family findings: precision repairs, one boundary, three verifier obligations (2026-09-12)
 
+> **Signing recorded, 2026-09-13 (AI collaborator, recording the record; the stale status line below is retained per amend-don't-rewrite).** The author's first commit containing this file is `504e662` (2026-09-12, "Completed further revisions, clarifications, and marked decisions."), OTS-stamped at `f0398ea`. By the sentence below ("the author's first commit containing this file is its signing act") this amendment has been in force since that commit. `README.md` and `formal/PROPERTIES.md` already read it so.
+>
 > **Status: PROPOSED — the rulings below were adopted in session
 > 2026-09-12 (author); this document is the instrument and is not yet
 > signed. It becomes in force on the author's commit of this file.**

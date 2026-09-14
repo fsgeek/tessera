@@ -73,6 +73,19 @@ specification) or disposed with reasons.
     embedded in the core. H1a reference-verifier obligations, entered
     once their symbolic legs run.
 
+33. **Encoding map: the four-field signed frame and the signer-specific
+    bindings** (Amendment 7 §A7.9, author ruling 2026-09-14 on
+    `docs/implementation-spec.md` §12 C-15). One artifact showing where
+    each of A5 §A5.4's seven symbolic bindings lives in bytes: as an
+    envelope field, inside the canonical payload under P3's obligations
+    (the A3 §A3.6.1 and docket-25 precedents), or in the manifest tuple
+    the frame commits to by hash; and separating the requester's content
+    from the signer-specific metadata so that "payload equal across
+    signer slots" is a statement about bytes. **Pre-freeze deadline**
+    (with items 17, 25, 27): until settled, the frame layout is open and
+    no signed-frame golden vector is final. The author: *"neither field
+    count alone gives us an answer."*
+
 ## Surfaces / conformance
 
 11. **Renderer conformance vectors** (Kimi 6). Structured outputs a
