@@ -1,0 +1,165 @@
+TLC2 Version 2026.07.31.184830 (rev: 30cc360)
+Running breadth-first search Model-Checking with fp 114 and seed 2373386900084627509 with 12 workers on 12 cores with 10923MB heap and 64MB offheap memory [pid: 4089404] (Linux 6.8.0-136-generic amd64, Ubuntu 21.0.12 64bit, MSBDiskFPSet, DiskStateQueue).
+Parsing file /tmp/claude-1000/-home-tony-projects-tessera/1c3e4609-cb0e-405d-a8c0-bef3fa91906a/scratchpad/e18/P5cP5P6_Bridge.tla
+Parsing file /tmp/tlc-16017246573479888115/Integers.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Integers.tla)
+Parsing file /tmp/tlc-16017246573479888115/Sequences.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Sequences.tla)
+Parsing file /tmp/tlc-16017246573479888115/_TLCTrace.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/_TLCTrace.tla)
+Parsing file /tmp/tlc-16017246573479888115/Naturals.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Naturals.tla)
+Parsing file /tmp/tlc-16017246573479888115/TLC.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/TLC.tla)
+Parsing file /tmp/tlc-16017246573479888115/TLCExt.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/TLCExt.tla)
+Parsing file /tmp/tlc-16017246573479888115/FiniteSets.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/FiniteSets.tla)
+Semantic processing of module Naturals
+Semantic processing of module Integers
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module TLC
+Semantic processing of module TLCExt
+Semantic processing of module _TLCTrace
+Semantic processing of module P5cP5P6_Bridge
+Linting of module TLCExt
+Linting of module _TLCTrace
+Linting of module P5cP5P6_Bridge
+Starting... (2026-09-14 20:03:02)
+Computing initial states...
+Finished computing initial states: 1 distinct state generated at 2026-09-14 20:03:02.
+Error: Invariant ShipUnreachable is violated.
+Error: The behavior up to this point is:
+State 1: <Initial predicate>
+/\ shipAtWall = -1
+/\ now = 0
+/\ declared = -1
+/\ anchorH = -1
+/\ shipped = FALSE
+/\ chain = <<>>
+/\ pendingAnchor = FALSE
+
+State 2: <Tick line 119, col 3 to line 121, col 79 of module P5cP5P6_Bridge>
+/\ shipAtWall = -1
+/\ now = 1
+/\ declared = -1
+/\ anchorH = -1
+/\ shipped = FALSE
+/\ chain = <<>>
+/\ pendingAnchor = FALSE
+
+State 3: <Tick line 119, col 3 to line 121, col 79 of module P5cP5P6_Bridge>
+/\ shipAtWall = -1
+/\ now = 2
+/\ declared = -1
+/\ anchorH = -1
+/\ shipped = FALSE
+/\ chain = <<>>
+/\ pendingAnchor = FALSE
+
+State 4: <Tick line 119, col 3 to line 121, col 79 of module P5cP5P6_Bridge>
+/\ shipAtWall = -1
+/\ now = 3
+/\ declared = -1
+/\ anchorH = -1
+/\ shipped = FALSE
+/\ chain = <<>>
+/\ pendingAnchor = FALSE
+
+State 5: <Tick line 119, col 3 to line 121, col 79 of module P5cP5P6_Bridge>
+/\ shipAtWall = -1
+/\ now = 4
+/\ declared = -1
+/\ anchorH = -1
+/\ shipped = FALSE
+/\ chain = <<>>
+/\ pendingAnchor = FALSE
+
+State 6: <Tick line 119, col 3 to line 121, col 79 of module P5cP5P6_Bridge>
+/\ shipAtWall = -1
+/\ now = 5
+/\ declared = -1
+/\ anchorH = -1
+/\ shipped = FALSE
+/\ chain = <<>>
+/\ pendingAnchor = FALSE
+
+State 7: <Declare line 134, col 3 to line 136, col 74 of module P5cP5P6_Bridge>
+/\ shipAtWall = -1
+/\ now = 5
+/\ declared = 5
+/\ anchorH = -1
+/\ shipped = FALSE
+/\ chain = <<>>
+/\ pendingAnchor = FALSE
+
+State 8: <AnchorNext line 141, col 3 to line 143, col 69 of module P5cP5P6_Bridge>
+/\ shipAtWall = -1
+/\ now = 5
+/\ declared = 5
+/\ anchorH = -1
+/\ shipped = FALSE
+/\ chain = <<>>
+/\ pendingAnchor = TRUE
+
+State 9: <NewBlock line 126, col 3 to line 131, col 53 of module P5cP5P6_Bridge>
+/\ shipAtWall = -1
+/\ now = 5
+/\ declared = 5
+/\ anchorH = 1
+/\ shipped = FALSE
+/\ chain = <<4>>
+/\ pendingAnchor = FALSE
+
+State 10: <NewBlock line 126, col 3 to line 131, col 53 of module P5cP5P6_Bridge>
+/\ shipAtWall = -1
+/\ now = 5
+/\ declared = 5
+/\ anchorH = 1
+/\ shipped = FALSE
+/\ chain = <<4, 4>>
+/\ pendingAnchor = FALSE
+
+State 11: <NewBlock line 126, col 3 to line 131, col 53 of module P5cP5P6_Bridge>
+/\ shipAtWall = -1
+/\ now = 5
+/\ declared = 5
+/\ anchorH = 1
+/\ shipped = FALSE
+/\ chain = <<4, 4, 4>>
+/\ pendingAnchor = FALSE
+
+State 12: <NewBlock line 126, col 3 to line 131, col 53 of module P5cP5P6_Bridge>
+/\ shipAtWall = -1
+/\ now = 5
+/\ declared = 5
+/\ anchorH = 1
+/\ shipped = FALSE
+/\ chain = <<4, 4, 4, 4>>
+/\ pendingAnchor = FALSE
+
+State 13: <NewBlock line 126, col 3 to line 131, col 53 of module P5cP5P6_Bridge>
+/\ shipAtWall = -1
+/\ now = 5
+/\ declared = 5
+/\ anchorH = 1
+/\ shipped = FALSE
+/\ chain = <<4, 4, 4, 4, 4>>
+/\ pendingAnchor = FALSE
+
+State 14: <NewBlock line 126, col 3 to line 131, col 53 of module P5cP5P6_Bridge>
+/\ shipAtWall = -1
+/\ now = 5
+/\ declared = 5
+/\ anchorH = 1
+/\ shipped = FALSE
+/\ chain = <<4, 4, 4, 4, 4, 4>>
+/\ pendingAnchor = FALSE
+
+State 15: <Ship line 172, col 3 to line 178, col 63 of module P5cP5P6_Bridge>
+/\ shipAtWall = 5
+/\ now = 5
+/\ declared = 5
+/\ anchorH = 1
+/\ shipped = TRUE
+/\ chain = <<4, 4, 4, 4, 4, 4>>
+/\ pendingAnchor = FALSE
+
+1037061 states generated, 809833 distinct states found, 545527 states left on queue.
+The depth of the complete state graph search is 19.
+Finished in 01s at (2026-09-14 20:03:03)
+Trace exploration spec path: ./P5cP5P6_Bridge_TTrace_1789416182.tla

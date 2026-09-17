@@ -1,0 +1,405 @@
+(* ==================================================================== *)
+(* d10b_sp2_q9_manifest_unbound.pv - SCRATCH COPY, 2026-09-15, ledger   *)
+(*   probe.                                                             *)
+(* COPY OF: formal/suite/ledger-tests-2026-09-14/d10a_sp2_q9_base.pv    *)
+(*   (itself an unmutated copy of the committed                         *)
+(*   s-p2/proverif/sp2_q2_degraded_compromised.pv plus the S-P3         *)
+(*   PossessionTransplanted judge and the C-Q9 judge).                  *)
+(* MUTATES: BOTH manifest-binding protections, together (the            *)
+(*   reviewer's round-3 finding-2 diagnostic).                          *)
+(*   (a) possession becomes FINGERPRINT-ONLY - the honest signer emits  *)
+(*       sign((POSS, fp(pk(sk))), sk) and each verifier slot checks     *)
+(*       let (=POSS, =fp(kX)) = checksign(ppfX, kX), so the proof no    *)
+(*       longer names the manifest (the library's D-3 under-encoding,   *)
+(*       a broken companion BY LIBRARY DEFINITION);                     *)
+(*   (b) the frame's manifest-hash equalities `if mha = h(t)` and       *)
+(*       `if mhb = h(t)` are removed.                                   *)
+(*   The seven-field frames, the per-slot =fp(kX) pins, the tuple       *)
+(*   fingerprint matches and the three §A5.4 content guards are all     *)
+(*   RETAINED. Nothing else is changed.                                 *)
+(* WHY: S-P3's PossessionTransplanted compares the proof term's         *)
+(*   ORIGINAL and ACCEPTED KEYS only. This mutation leaves that         *)
+(*   theorem standing while the consumer S-P2 Q5 `SetAltered` goes      *)
+(*   red - so the theorem D10 named cannot be its producer. C-Q9,       *)
+(*   which ranges over the accepted MANIFEST, does go red.              *)
+(*   Not a registered S-P2 or S-P3 result; no family file records it;   *)
+(*   discharges nothing.                                                *)
+(* ==================================================================== *)
+
+(* ==================================================================== *)
+(* STATUS: PROPOSED — 2026-09-06 — produced by the AI collaborator;      *)
+(* not adopted; the commit is the author's.                              *)
+(*                                                                       *)
+(* S-P2.Q2 — correct model, DEGRADED mode, sole channel compromised.     *)
+(* Variant: the P2 claim (signature-set completeness, anti-stripping).   *)
+(*                                                                       *)
+(* Registered prediction (PREDICTIONS.md, frozen 5188e7a): Stripped,     *)
+(* SignerForged, SetAltered, Reattributed unreachable; HonestComplete    *)
+(* reachable for M1 and for M2 separately; terminating (p~0.65); a REAL  *)
+(* violation surfaces, most plausibly SetAltered (p~0.15) = amendment    *)
+(* trigger, not a recut; timeout (p~0.20). Timebox: 30 min.              *)
+(*                                                                       *)
+(* This model proves: in degraded mode with the SOLE authority channel   *)
+(* compromised, under an adversary that holds every key it uses and the DSKS *)
+(* capability, (1) no package is accepted for an honest manifest with fewer *)
+(* signatures than that manifest's signed required set names [Stripped   *)
+(* unreachable]; (2) each required slot is satisfied only by the key the *)
+(* signed set names [SignerForged unreachable]; (3) under the fixture rule *)
+(* ONE KEY, ONE MANIFEST, no honest key is accepted as a signer of a manifest *)
+(* other than the one it signed — note 2's set-shrinking surface [SetAltered *)
+(* unreachable; the judge is instrumentation, not a verifier check: see  *)
+(* CORRECTION]; and (4) S-P3's key-binding relation is not weakened      *)
+(* [Reattributed unreachable, judge carried verbatim] — for required sets of *)
+(* at most two signers, read from the map-v1 tuple's kfp and sset fields. The *)
+(* honest flow is accepted for both set sizes [HonestComplete reachable for *)
+(* M1 and for M2 — existential witnesses, a vacuity guard, not coverage]. *)
+(* This model does not prove: anything about required sets larger than two; *)
+(* canonical ordering, uniqueness or bounds of the set encoding, or any  *)
+(* byte-encoding attack — a coverage failure, not an unreachable attack (P8, *)
+(* consumed ledger entry 3; A1.3 item 2's "reorder" has no query here); that *)
+(* a stripped package yields INVALID rather than some other non-valid verdict *)
+(* (P4, cross-formalism join, consumed entry 4); the VALID_DEGRADED waiver of *)
+(* a signature subset (P4's lattice); impersonation by the adversary's own *)
+(* key over its own bytes and its own manifest (reachable, the registered *)
+(* degraded-mode cost, A4 §A4.6); authorship — a fabricated signature    *)
+(* accepted under the honest NAMED key is not detected by any judge here *)
+(* (S-P3 F7: S-P1); the verification profile.                            *)
+(* Load-bearing checks (confirmed: RESULTS.md F2-F6; cross-family        *)
+(* single-removal matrix, see footer): Stripped — the required arity is read *)
+(* from the signed tuple's sset PATTERN (=signers0 / signers1(kfprB)), never *)
+(* from what the package presents (severed by Q3); SignerForged — the    *)
+(* per-slot fingerprint match fp(kX) = kfprX (fp idealization; severed by *)
+(* Q4); SetAltered — the frame's manifest hash mh = h(t) (h idealization) and *)
+(* possession over the manifest (signature unforgeability), JOINTLY: either *)
+(* alone suffices, so each single removal is green (Q5-C1/C3) and only both *)
+(* removed is red (Q5-C2).                                               *)
+(* Carried, not exercised (d2-d4; footer): the authority-evidence check (sole *)
+(* channel key public, S-P3 F6); the S-P3 F7 fields, object type being   *)
+(* S-P7's; the attestation-signature check itself (for S-P1).            *)
+(* -------------------------------------------------------------------- *)
+(* ADDENDUM 2026-09-12 (Amendment 5 §A5.4; PREDICTIONS.md "Post-freeze   *)
+(* addendum 1 — 2026-09-12"; ROUTED C8, ADOPTED (author) reading (a)).   *)
+(* Added to "This model proves": (5) for required sets of two, the       *)
+(* accepted frames agree on object type, canonicalization version and    *)
+(* payload (Amendment 5 §A5.4) — every required signer attests to the    *)
+(* same content, each in its own frame [Spliced unreachable].            *)
+(* Added to "This model does not prove": nothing about the encoding or   *)
+(* ordering of the equal fields (P8).                                    *)
+(* Registered encoding: Verifier2S gains ota = otb, cva = cvb, pla = plb; *)
+(* one new private report channel contentCh carries (t, fa, fb) from the *)
+(* single Accept2S point, in parallel with the existing reports (S-P3    *)
+(* recut-1 idiom); ContentJudge reads it and fires Spliced when any of   *)
+(* the three differs. The judge is instrumentation on the acceptance     *)
+(* report, not a verifier check; setCh/slotCh/acceptCh, their judges and *)
+(* Verifier1S are untouched. Companion:                                  *)
+(* sp2_q6_companion_content_unchecked.pv (the three equalities absent —  *)
+(* the verifier as it stood). Body change, not comment-only: line shifts *)
+(* are tabulated in RESULTS.md's post-freeze addendum 1 section.         *)
+(* -------------------------------------------------------------------- *)
+(* CORRECTION 2026-09-06 (cross-family review items 2, 4, 13, 14, 15):   *)
+(* narrowed as marked above; full record and matrix lines in the footer of *)
+(* this file. Comment-only; body unchanged; re-run in ladder.log.        *)
+(* Theory: formal/suite/lib/tessera_theory.pvl (D-2 authTuple with a     *)
+(* signer-set field; D-3 possession over manifest; D-4 DSKS expressible; D-5 *)
+(* object-type constants). First link in the selected form, evidence =   *)
+(* sign((STMT_DIGEST, h(t)), skCh). Frame: framed(objType, alg, issuerId, *)
+(* kfp, mh, canonVer, payload) under BYTES — copied verbatim from S-P3   *)
+(* (library "NOT promoted" record). Required set: {kfp} U sset with sset in *)
+(* {signers0, signers1(fp)} (n <= 2), one verifier branch per arity, in  *)
+(* parallel (PREDICTIONS.md "How the signer set is represented").        *)
+(* Fixture (N2): M1 = authTuple(issuerId, fp(pk(skA1)), signers0, ...) — one *)
+(* required signer; M2 = authTuple(issuerId2, fp(pk(skA2)),              *)
+(* signers1(fp(pk(skB2))), ...) — two. Both published on the sole channel; *)
+(* payloads adversary-chosen. The three honest signer keys are private free *)
+(* names (equivalent to top-level new) so the registered N1 queries can name *)
+(* M1 and M2 literally.                                                  *)
+(* Encoding idioms carried from S-P3 (RESULTS.md "Suite rules"): judge report *)
+(* outputs in parallel with continuations (recut 1); N1 witness judge-emitted *)
+(* on key-by-key fingerprint match, never bare acceptance (recut 3); judge *)
+(* locals never shadow library names.                                    *)
+(* Run: proverif -lib ../../lib/tessera_theory.pvl sp2_q2_degraded_compromised.pv *)
+(* ==================================================================== *)
+
+(* --- model-local declarations (library terms are not redeclared) ---- *)
+fun framed(bitstring, bitstring, bitstring, bitstring, bitstring, bitstring, bitstring): bitstring [data].
+  (* objType, alg, issuerId, kfp, manifestHash, canonVer, payload *)
+free canonVerH: bitstring.
+free issuerId2: bitstring.        (* second honest issuer's identity (N2) *)
+
+(* the signer-set field of the map-v1 tuple: a bounded family, n <= 2 *)
+const signers0: bitstring.                        (* no additional signer: n = 1 *)
+fun signers1(bitstring): bitstring [data].        (* one additional signer's fp: n = 2 *)
+(* the keys the verifier actually verified signatures under *)
+fun verified1(pkey): bitstring [data].
+fun verified2(pkey, pkey): bitstring [data].
+
+(* honest signer keys (fixture; private free names so queries can cite M1/M2) *)
+free skA1: skey [private].        (* M1's sole required signer *)
+free skA2: skey [private].        (* M2's first required signer *)
+free skB2: skey [private].        (* M2's second required signer *)
+
+(* judge channels (spike Q4 / S-P3 pattern) *)
+free honestSetCh: channel [private].   (* registrar -> SetJudge : honest manifest *)
+free honestKeyCh: channel [private].   (* signer -> MemberJudge : (key, the one manifest it belongs to) *)
+free setCh: channel [private].         (* verifier -> SetJudge : (tuple, verified keys) *)
+free slotCh: channel [private].        (* verifier -> MemberJudge : (tuple, slot fp named by the set, key used) *)
+free honestCh: channel [private].      (* signer -> Judge : (signer key, framed bytes)   [S-P3, verbatim] *)
+free acceptCh: channel [private].      (* verifier -> Judge : (accepted key, id, framed bytes) [S-P3, verbatim] *)
+
+event Stripped(bitstring, bitstring).            (* honest manifest, verified keys: fewer than the set names *)
+event SignerForged(bitstring, pkey).             (* tuple, key that satisfied a slot the set assigns to an honest signer *)
+event SetAltered(pkey, bitstring, bitstring).    (* honest key, the manifest it signed, the manifest it was accepted for *)
+event HonestComplete(bitstring, bitstring).      (* N1 witness: honest manifest, exactly its named signers, each under its own key *)
+event Reattributed(pkey, pkey, bitstring).       (* S-P3 judge, verbatim: accepted key, honest signer key, honest bytes *)
+event HonestAccepted(pkey, bitstring).           (* S-P3 judge, verbatim: honest bytes under their own key *)
+event Accept1S(bitstring, bitstring, pkey, bitstring).
+  (* evidence, tuple, key, bytes — n = 1 branch *)
+event Accept2S(bitstring, bitstring, pkey, pkey, bitstring, bitstring).
+  (* evidence, tuple, key A, key B, bytes A, bytes B — n = 2 branch *)
+
+(* --- registered queries ------------------------------------------- *)
+(* stripping: honest manifest accepted with fewer signers than it names *)
+query t: bitstring, v: bitstring;
+  event(Stripped(t, v)).
+(* membership: a slot the signed set assigns to an honest signer, satisfied by another key *)
+query t: bitstring, k: pkey;
+  event(SignerForged(t, k)).
+(* set-shrinking: an honest key accepted as a signer of a manifest it never signed *)
+query kH: pkey, m: bitstring, t: bitstring;
+  event(SetAltered(kH, m, t)).
+(* S-P3 key-binding relation, carried as the consumer-side check *)
+query kX: pkey, kH: pkey, fb: bitstring;
+  event(Reattributed(kX, kH, fb)).
+(* N1 honest-flow witnesses, one per set size: must be REACHABLE ("is false") *)
+query k1: pkey;
+  event(HonestComplete(authTuple(issuerId, fp(pk(skA1)), signers0, algH, verH), verified1(k1))).
+query k1: pkey, k2: pkey;
+  event(HonestComplete(authTuple(issuerId2, fp(pk(skA2)), signers1(fp(pk(skB2))), algH, verH), verified2(k1, k2))).
+(* vacuity guard on the carried S-P3 judge (not registered; added so the consumer check is shown live) *)
+query k: pkey, fb: bitstring;
+  event(HonestAccepted(k, fb)).
+
+(* --- ADDENDUM 2026-09-12 (Amendment 5 §A5.4) ----------------------- *)
+(* Common attested content for n = 2: one new private report channel,  *)
+(* one new event, one new query. Every query above is unchanged.       *)
+free contentCh: channel [private].
+  (* verifier -> ContentJudge : (tuple, frame A, frame B), emitted at  *)
+  (* the single Accept2S point (S-P3 recut-1 idiom)                    *)
+event Spliced(bitstring, bitstring, bitstring).
+  (* tuple, frame A, frame B: two frames of ONE acceptance that differ *)
+  (* in object type, canonicalization version or payload               *)
+(* content splicing: one acceptance whose two frames attest different content *)
+query t: bitstring, fa: bitstring, fb: bitstring;
+  event(Spliced(t, fa, fb)).
+
+(* --- ADDED (D10-A, 2026-09-15 scratch probe): two possession judges -- *)
+(* (1) S-P3's PossJudge shape: KEYS only, no manifest.                   *)
+free honestPossCh: channel [private].  (* signer   -> PossJudge : (signer key, possession proof) *)
+free possCh: channel [private].        (* verifier -> PossJudge : (accepted key, possession proof) *)
+event PossessionTransplanted(pkey, bitstring).
+query kX: pkey, p: bitstring;
+  event(PossessionTransplanted(kX, p)).
+(* (2) C-Q9: possession over the ACCEPTED MANIFEST under the ACCEPTING   *)
+(* key. Three-place: accepting key, accepted manifest, accepted proof.   *)
+free possMCh: channel [private].       (* verifier -> PossManifestJudge : (accepted key, accepted tuple, accepted proof) *)
+event PossessionUnbound(pkey, bitstring, bitstring).
+query kX: pkey, t: bitstring, p: bitstring;
+  event(PossessionUnbound(kX, t, p)).
+
+let AuthorityS(skS: skey, t: bitstring) =
+  event AuthorityPublishedDNS(t);
+  out(c, sign((STMT_DIGEST, h(t)), skS)).
+
+(* Registrar: reports each honest manifest to the set judge. *)
+let Registrar(m: bitstring) =
+  out(honestSetCh, m).
+
+(* Honest signer of manifest m (one key, one manifest): possession over  *)
+(* m (D-3); frame binds its own fingerprint and h(m); payload chosen by  *)
+(* the adversary. Reports (key, manifest) to MemberJudge and (key, bytes) *)
+(* to the S-P3 judge.                                                     *)
+let Signer(sk: skey, id: bitstring, m: bitstring) =
+  in(c, payload: bitstring);
+  event IssuerPossession(pk(sk));
+  let ppf = sign((POSS, fp(pk(sk))), sk) in   (* MUTATED (D10-B)(a) *)
+  ( out(honestKeyCh, (pk(sk), m))
+  | out(honestPossCh, (pk(sk), ppf))    (* ADDED (D10-A) *)
+  | out(c, ppf);
+    let fb = framed(OT_ATTEST, algH, id, fp(pk(sk)), h(m), canonVerH, payload) in
+    event IssuerSigned(pk(sk), fb);
+    ( out(honestCh, (pk(sk), fb))
+    | out(c, sign((BYTES, fb), sk)) ) ).
+
+(* Verifier, n = 1 branch: the signed tuple's set names exactly one signer. *)
+let Verifier1S(pkS: pkey) =
+  in(c, (t: bitstring, ev: bitstring,
+         kA: pkey, ppfA: bitstring, sgA: bitstring, fa: bitstring));
+  let (=STMT_DIGEST, =h(t)) = checksign(ev, pkS) in
+  (* required arity read from the SIGNED tuple: sset must be signers0 *)
+  let authTuple(id, kfprA, =signers0, alg, ver) = t in
+  if fp(kA) = kfprA then
+  let (=POSS, =fp(kA)) = checksign(ppfA, kA) in   (* MUTATED (D10-B)(a) *)
+  let (=BYTES, =fa) = checksign(sgA, kA) in
+  let framed(ota, =alg, =id, =fp(kA), mha, cva, pla) = fa in
+  (* MUTATED (D10-B)(b): `if mha = h(t) then` removed *)
+  event Accept1S(ev, t, kA, fa);
+  ( out(setCh, (t, verified1(kA)))
+  | out(slotCh, (t, kfprA, kA))
+  | out(possCh, (kA, ppfA))               (* ADDED (D10-A) *)
+  | out(possMCh, (kA, t, ppfA))           (* ADDED (D10-A) *)
+  | out(acceptCh, (kA, id, fa)) ).
+
+(* Verifier, n = 2 branch: the signed tuple's set names a second signer. *)
+let Verifier2S(pkS: pkey) =
+  in(c, (t: bitstring, ev: bitstring,
+         kA: pkey, kB: pkey, ppfA: bitstring, ppfB: bitstring,
+         sgA: bitstring, sgB: bitstring, fa: bitstring, fb: bitstring));
+  let (=STMT_DIGEST, =h(t)) = checksign(ev, pkS) in
+  (* required arity read from the SIGNED tuple: sset must be signers1(kfprB) *)
+  let authTuple(id, kfprA, signers1(kfprB), alg, ver) = t in
+  if fp(kA) = kfprA then
+  if fp(kB) = kfprB then
+  let (=POSS, =fp(kA)) = checksign(ppfA, kA) in   (* MUTATED (D10-B)(a) *)
+  let (=POSS, =fp(kB)) = checksign(ppfB, kB) in   (* MUTATED (D10-B)(a) *)
+  let (=BYTES, =fa) = checksign(sgA, kA) in
+  let (=BYTES, =fb) = checksign(sgB, kB) in
+  let framed(ota, =alg, =id, =fp(kA), mha, cva, pla) = fa in
+  let framed(otb, =alg, =id, =fp(kB), mhb, cvb, plb) = fb in
+  (* MUTATED (D10-B)(b): both `if mh_ = h(t) then` guards removed *)
+  (* ADDENDUM 2026-09-12 (§A5.4): the three non-fingerprint frame fields *)
+  (* not already pinned through the shared tuple must be equal across    *)
+  (* the two signer slots; each slot keeps its own =fp(kX).              *)
+  if ota = otb then
+  if cva = cvb then
+  if pla = plb then
+  event Accept2S(ev, t, kA, kB, fa, fb);
+  ( out(setCh, (t, verified2(kA, kB)))
+  | out(slotCh, (t, kfprA, kA)) | out(slotCh, (t, kfprB, kB))
+  | out(possCh, (kA, ppfA)) | out(possCh, (kB, ppfB))              (* ADDED (D10-A) *)
+  | out(possMCh, (kA, t, ppfA)) | out(possMCh, (kB, t, ppfB))      (* ADDED (D10-A) *)
+  | out(acceptCh, (kA, id, fa)) | out(acceptCh, (kB, id, fb))
+  | out(contentCh, (t, fa, fb)) ).
+
+(* SetJudge: pairs an honest manifest with an acceptance of the SAME     *)
+(* tuple. Emits HonestComplete only on key-by-key fingerprint match with  *)
+(* the set the manifest names; Stripped when a two-signer manifest was    *)
+(* accepted with one verified key.                                        *)
+let SetJudge =
+  in(honestSetCh, mJ: bitstring);
+  in(setCh, (=mJ, vJ: bitstring));
+  let authTuple(idJ, fpAJ, ssJ, algJ, verJ) = mJ in
+  ( let signers1(fpBJ) = ssJ in
+      ( let verified2(kA: pkey, kB: pkey) = vJ in
+          ( if fp(kA) = fpAJ && fp(kB) = fpBJ then event HonestComplete(mJ, vJ) )
+        else
+          let verified1(kA: pkey) = vJ in
+          event Stripped(mJ, vJ) )
+    else
+      if ssJ = signers0 then
+      let verified1(kA: pkey) = vJ in
+      if fp(kA) = fpAJ then event HonestComplete(mJ, vJ) ).
+
+(* MemberJudge: pairs an honest (key, manifest) with a slot report.       *)
+(* Same tuple, slot named for this key, satisfied by another key ->       *)
+(* SignerForged. Different tuple, satisfied by this honest key ->         *)
+(* SetAltered.                                                            *)
+let MemberJudge =
+  in(honestKeyCh, (kH: pkey, mH: bitstring));
+  in(slotCh, (tS: bitstring, fpS: bitstring, kUsed: pkey));
+  if tS = mH then
+    ( if fpS = fp(kH) && kUsed <> kH then event SignerForged(tS, kUsed) )
+  else
+    ( if kUsed = kH then event SetAltered(kH, mH, tS) ).
+
+(* S-P3 judge, verbatim (sp3_q2_degraded_compromised.pv). *)
+let Judge =
+  in(honestCh, (kH: pkey, fbHon: bitstring));
+  in(acceptCh, (kX: pkey, id: bitstring, =fbHon));
+  if kX = kH then event HonestAccepted(kX, fbHon)
+  else event Reattributed(kX, kH, fbHon).
+
+(* ContentJudge (ADDENDUM 2026-09-12, §A5.4): reads the one acceptance  *)
+(* report that carries BOTH frames and fires Spliced when they disagree *)
+(* on object type, canonicalization version or payload. Instrumentation *)
+(* on the acceptance report, not a verifier check.                      *)
+let ContentJudge =
+  in(contentCh, (tJ: bitstring, faJ: bitstring, fbJ: bitstring));
+  let framed(otaJ, algaJ, idaJ, kfpaJ, mhaJ, cvaJ, plaJ) = faJ in
+  let framed(otbJ, algbJ, idbJ, kfpbJ, mhbJ, cvbJ, plbJ) = fbJ in
+  if otaJ <> otbJ || cvaJ <> cvbJ || plaJ <> plbJ then
+  event Spliced(tJ, faJ, fbJ).
+
+(* ADDED (D10-A): S-P3's PossJudge, keys only - the theorem D10 named.  *)
+let PossJudge =
+  in(honestPossCh, (kH: pkey, p: bitstring));
+  in(possCh, (kX: pkey, =p));
+  if kX = kH then 0
+  else event PossessionTransplanted(kX, p).
+
+(* ADDED (D10-A): C-Q9 - possession over the ACCEPTED MANIFEST under    *)
+(* the ACCEPTING key. Fires when the accepted proof is not a POSS       *)
+(* signature under kX over exactly the tuple t the verifier accepted.   *)
+let PossManifestJudge =
+  in(possMCh, (kX: pkey, tA: bitstring, p: bitstring));
+  let (=POSS, mP: bitstring) = checksign(p, kX) in
+    ( if mP <> tA then event PossessionUnbound(kX, tA, p) )
+  else event PossessionUnbound(kX, tA, p).
+
+process
+  new skS: skey;
+  let m1 = authTuple(issuerId,  fp(pk(skA1)), signers0,               algH, verH) in
+  let m2 = authTuple(issuerId2, fp(pk(skA2)), signers1(fp(pk(skB2))), algH, verH) in
+  out(c, pk(skS)); out(c, pk(skA1)); out(c, pk(skA2)); out(c, pk(skB2));
+  out(c, m1); out(c, m2);
+  (* DEGRADED MODE, SOLE CHANNEL COMPROMISED: its signing key is public *)
+  out(c, skS);
+  ( !AuthorityS(skS, m1) | !AuthorityS(skS, m2)
+  | !Registrar(m1) | !Registrar(m2)
+  | !Signer(skA1, issuerId,  m1)
+  | !Signer(skA2, issuerId2, m2) | !Signer(skB2, issuerId2, m2)
+  | !Verifier1S(pk(skS)) | !Verifier2S(pk(skS))
+  | !SetJudge | !MemberJudge | !Judge | !ContentJudge
+  | !PossJudge | !PossManifestJudge )
+
+(* ==================================================================== *)
+(* CORRECTION RECORD 2026-09-06 — cross-family falsification review      *)
+(* (docs/reviews/2026-09-06-codex-suite-falsification-s-p1-s-p2-s-p7-s-standing.md, *)
+(* items 2, 4, 13, 14, 15; reviewer scratch archived at                  *)
+(* falsification-2026-09-06/scratch/, matrix = dependencies.tsv, its line *)
+(* numbers cited as "tsv:N"; this file is the reviewer's G). Placed after the *)
+(* process so that every body line number cited in RESULTS.md,           *)
+(* READING-AIDS.md and the archived review is unchanged; the header above was *)
+(* edited in place within its original line count. Comment-only: the model *)
+(* body is byte-identical to the reviewed file; re-run recorded in       *)
+(* ladder.log.                                                           *)
+(* Item 13 — claim (3): "no honest key is accepted as a signer of a manifest *)
+(* it never signed" is what the SetAltered judge expresses only under the *)
+(* fixture rule ONE KEY, ONE MANIFEST (Signer, lines 146-155; each honest key *)
+(* is bound to one manifest at 245-246). The judge fires on difference from *)
+(* the one honest (key, manifest) record (MemberJudge, 220-226); the     *)
+(* reviewer's a_key_reuse (A1 also honestly signs a third manifest M3, then *)
+(* honest M1 material is replayed) makes SetAltered reachable with nothing *)
+(* forged (scratch/a_key_reuse.pv:221-227; RESULT quoted in CODEX-REVIEW.md *)
+(* as a_key_reuse.out:654). The judge is instrumentation, not a verifier *)
+(* check; no verifier line changes.                                      *)
+(* Item 4 — SetAltered's two pins: single removal of the frame's manifest *)
+(* hash (168, 189, 191; tsv:108,129,133) or of possession over the manifest *)
+(* (165, 184-185; tsv:99,114,117) leaves all four queries unreachable; only *)
+(* both removed (Q5-C2) is red. "Each individually" in the original header *)
+(* meant individually sufficient; it now reads JOINTLY so it cannot be read *)
+(* as individually necessary.                                            *)
+(* Item 14 — the attestation-signature check (166, 186-187) is inert for *)
+(* these queries as a whole, not only in its "authorship content": drop, tag *)
+(* or binding removal (tsv:102-104,120-125) leaves every result identical (d4 *)
+(* agrees). The judges compare keys and manifests, never who authored the *)
+(* bytes; the check is carried for S-P1's correspondence.                *)
+(* Item 15 — object type (ota/otb at 167, 188, 190) is read and never    *)
+(* compared: the reviewer's a_wrapper_replay (an honest OT_WRAPPER producer *)
+(* on the shared frame, presented to this verifier) is accepted, all four *)
+(* registered queries green (a_wrapper_replay.out:588, quoted). S-P7's type *)
+(* judge; the header already listed object type as carried.              *)
+(* Item 2 — byte-encoding attacks (non-canonical encodings, hash-input   *)
+(* ambiguity, cross-kind parse confusion) are unrepresentable here: term *)
+(* equality stands in for byte equality (library h/fp idealizations). A  *)
+(* coverage failure, not an unreachable attack — P8's obligation.        *)
+(* ==================================================================== *)

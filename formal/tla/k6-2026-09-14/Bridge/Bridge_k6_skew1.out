@@ -1,0 +1,37 @@
+TLC2 Version 2026.07.31.184830 (rev: 30cc360)
+Running breadth-first search Model-Checking with fp 53 and seed -2794453338056361881 with 12 workers on 12 cores with 10923MB heap and 64MB offheap memory [pid: 4071336] (Linux 6.8.0-136-generic amd64, Ubuntu 21.0.12 64bit, MSBDiskFPSet, DiskStateQueue).
+Parsing file /tmp/claude-1000/-home-tony-projects-tessera/1c3e4609-cb0e-405d-a8c0-bef3fa91906a/scratchpad/e18/P5cP5P6_Bridge.tla
+Parsing file /tmp/tlc-4494533091325237825/Integers.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Integers.tla)
+Parsing file /tmp/tlc-4494533091325237825/Sequences.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Sequences.tla)
+Parsing file /tmp/tlc-4494533091325237825/_TLCTrace.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/_TLCTrace.tla)
+Parsing file /tmp/tlc-4494533091325237825/Naturals.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Naturals.tla)
+Parsing file /tmp/tlc-4494533091325237825/TLC.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/TLC.tla)
+Parsing file /tmp/tlc-4494533091325237825/TLCExt.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/TLCExt.tla)
+Parsing file /tmp/tlc-4494533091325237825/FiniteSets.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/FiniteSets.tla)
+Semantic processing of module Naturals
+Semantic processing of module Integers
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module TLC
+Semantic processing of module TLCExt
+Semantic processing of module _TLCTrace
+Semantic processing of module P5cP5P6_Bridge
+Linting of module TLCExt
+Linting of module _TLCTrace
+Linting of module P5cP5P6_Bridge
+Starting... (2026-09-14 19:47:53)
+Warning: The invariant PinAgreement is a constant-level formula (i.e., it contains no variables, primes, or temporal operators) and evaluates to TRUE. To assert constant-level formulas in your spec, use ASSUME ConstInv. If you optionally want to give the assumption a name, write ASSUME YourAssumption == ConstInv instead. See https://explain.tlapl.us/assumptions-and-invariants for additional details.
+(Use the -nowarning option to disable this warning.)
+Computing initial states...
+Finished computing initial states: 1 distinct state generated at 2026-09-14 19:47:53.
+Progress(15) at 2026-09-14 19:47:56: 3,121,988 states generated (3,121,988 s/min), 2,438,939 distinct states found (2,438,939 ds/min), 1,555,134 states left on queue.
+Progress(20) at 2026-09-14 19:48:56: 82,355,178 states generated (79,233,190 s/min), 62,403,375 distinct states found (59,964,436 ds/min), 15,771,185 states left on queue.
+Model checking completed. No error has been found.
+  Estimates of the probability that TLC did not check all reachable states
+  because two distinct states had the same fingerprint:
+  calculated (optimistic):  val = 1.3E-4
+  based on the actual fingerprints:  val = 1.5E-5
+114703188 states generated, 86849955 distinct states found, 0 states left on queue.
+The depth of the complete state graph search is 20.
+The average outdegree of the complete state graph is 1 (minimum is 0, the maximum 5 and the 95th percentile is 4).
+Finished in 01min 40s at (2026-09-14 19:49:33)

@@ -1,0 +1,147 @@
+TLC2 Version 2026.07.31.184830 (rev: 30cc360)
+Running breadth-first search Model-Checking with fp 123 and seed 5521915653998832457 with 12 workers on 12 cores with 10923MB heap and 64MB offheap memory [pid: 4089709] (Linux 6.8.0-136-generic amd64, Ubuntu 21.0.12 64bit, MSBDiskFPSet, DiskStateQueue).
+Parsing file /tmp/claude-1000/-home-tony-projects-tessera/1c3e4609-cb0e-405d-a8c0-bef3fa91906a/scratchpad/e18/P5cP5P6_Bridge_BrokenAnchorSubst.tla
+Parsing file /tmp/tlc-1999887954024612063/Integers.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Integers.tla)
+Parsing file /tmp/tlc-1999887954024612063/Sequences.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Sequences.tla)
+Parsing file /tmp/tlc-1999887954024612063/_TLCTrace.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/_TLCTrace.tla)
+Parsing file /tmp/tlc-1999887954024612063/Naturals.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Naturals.tla)
+Parsing file /tmp/tlc-1999887954024612063/TLC.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/TLC.tla)
+Parsing file /tmp/tlc-1999887954024612063/TLCExt.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/TLCExt.tla)
+Parsing file /tmp/tlc-1999887954024612063/FiniteSets.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/FiniteSets.tla)
+Semantic processing of module Naturals
+Semantic processing of module Integers
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module TLC
+Semantic processing of module TLCExt
+Semantic processing of module _TLCTrace
+Semantic processing of module P5cP5P6_Bridge_BrokenAnchorSubst
+Linting of module TLCExt
+Linting of module _TLCTrace
+Linting of module P5cP5P6_Bridge_BrokenAnchorSubst
+Starting... (2026-09-14 20:03:09)
+Computing initial states...
+Finished computing initial states: 1 distinct state generated at 2026-09-14 20:03:09.
+Error: Invariant LateBurialRejected is violated.
+Error: The behavior up to this point is:
+State 1: <Initial predicate>
+/\ shipAtWall = -1
+/\ now = 0
+/\ declared = -1
+/\ anchorH = -1
+/\ shipped = FALSE
+/\ chain = <<>>
+/\ pendingAnchor = FALSE
+
+State 2: <Tick line 54, col 3 to line 56, col 79 of module P5cP5P6_Bridge_BrokenAnchorSubst>
+/\ shipAtWall = -1
+/\ now = 1
+/\ declared = -1
+/\ anchorH = -1
+/\ shipped = FALSE
+/\ chain = <<>>
+/\ pendingAnchor = FALSE
+
+State 3: <Tick line 54, col 3 to line 56, col 79 of module P5cP5P6_Bridge_BrokenAnchorSubst>
+/\ shipAtWall = -1
+/\ now = 2
+/\ declared = -1
+/\ anchorH = -1
+/\ shipped = FALSE
+/\ chain = <<>>
+/\ pendingAnchor = FALSE
+
+State 4: <Declare line 67, col 3 to line 69, col 74 of module P5cP5P6_Bridge_BrokenAnchorSubst>
+/\ shipAtWall = -1
+/\ now = 2
+/\ declared = 2
+/\ anchorH = -1
+/\ shipped = FALSE
+/\ chain = <<>>
+/\ pendingAnchor = FALSE
+
+State 5: <Tick line 54, col 3 to line 56, col 79 of module P5cP5P6_Bridge_BrokenAnchorSubst>
+/\ shipAtWall = -1
+/\ now = 3
+/\ declared = 2
+/\ anchorH = -1
+/\ shipped = FALSE
+/\ chain = <<>>
+/\ pendingAnchor = FALSE
+
+State 6: <Tick line 54, col 3 to line 56, col 79 of module P5cP5P6_Bridge_BrokenAnchorSubst>
+/\ shipAtWall = -1
+/\ now = 4
+/\ declared = 2
+/\ anchorH = -1
+/\ shipped = FALSE
+/\ chain = <<>>
+/\ pendingAnchor = FALSE
+
+State 7: <AnchorNext line 72, col 3 to line 74, col 69 of module P5cP5P6_Bridge_BrokenAnchorSubst>
+/\ shipAtWall = -1
+/\ now = 4
+/\ declared = 2
+/\ anchorH = -1
+/\ shipped = FALSE
+/\ chain = <<>>
+/\ pendingAnchor = TRUE
+
+State 8: <NewBlock line 59, col 3 to line 64, col 53 of module P5cP5P6_Bridge_BrokenAnchorSubst>
+/\ shipAtWall = -1
+/\ now = 4
+/\ declared = 2
+/\ anchorH = 1
+/\ shipped = FALSE
+/\ chain = <<3>>
+/\ pendingAnchor = FALSE
+
+State 9: <NewBlock line 59, col 3 to line 64, col 53 of module P5cP5P6_Bridge_BrokenAnchorSubst>
+/\ shipAtWall = -1
+/\ now = 4
+/\ declared = 2
+/\ anchorH = 1
+/\ shipped = FALSE
+/\ chain = <<3, 3>>
+/\ pendingAnchor = FALSE
+
+State 10: <NewBlock line 59, col 3 to line 64, col 53 of module P5cP5P6_Bridge_BrokenAnchorSubst>
+/\ shipAtWall = -1
+/\ now = 4
+/\ declared = 2
+/\ anchorH = 1
+/\ shipped = FALSE
+/\ chain = <<3, 3, 4>>
+/\ pendingAnchor = FALSE
+
+State 11: <NewBlock line 59, col 3 to line 64, col 53 of module P5cP5P6_Bridge_BrokenAnchorSubst>
+/\ shipAtWall = -1
+/\ now = 4
+/\ declared = 2
+/\ anchorH = 1
+/\ shipped = FALSE
+/\ chain = <<3, 3, 4, 3>>
+/\ pendingAnchor = FALSE
+
+State 12: <NewBlock line 59, col 3 to line 64, col 53 of module P5cP5P6_Bridge_BrokenAnchorSubst>
+/\ shipAtWall = -1
+/\ now = 4
+/\ declared = 2
+/\ anchorH = 1
+/\ shipped = FALSE
+/\ chain = <<3, 3, 4, 3, 3>>
+/\ pendingAnchor = FALSE
+
+State 13: <NewBlock line 59, col 3 to line 64, col 53 of module P5cP5P6_Bridge_BrokenAnchorSubst>
+/\ shipAtWall = -1
+/\ now = 4
+/\ declared = 2
+/\ anchorH = 1
+/\ shipped = FALSE
+/\ chain = <<3, 3, 4, 3, 3, 5>>
+/\ pendingAnchor = FALSE
+
+2506162 states generated, 1969320 distinct states found, 1264860 states left on queue.
+The depth of the complete state graph search is 20.
+Finished in 02s at (2026-09-14 20:03:12)
+Trace exploration spec path: ./P5cP5P6_Bridge_BrokenAnchorSubst_TTrace_1789416189.tla

@@ -51,7 +51,7 @@ links into them and does not repeat them.
 | Amendment 4 | `5188e7a` | 2026-09-06, confirmed by the author 2026-09-12 (A5 §A5.0) |
 | Amendment 5 | `504e662` | 2026-09-12 |
 | Amendment 6 | `c105be7` | 2026-09-12 |
-| Amendment 7 | — | PROPOSED 2026-09-14; in force on the author's first commit containing it. Its rulings are tagged `[RULED (author) 2026-09-14; instrument A7 §A7.n, PROPOSED]` |
+| Amendment 7 | — | signed 2026-09-14 at `9863513`, OTS `d871c90`. Its rulings are tagged `[RULED (author) 2026-09-14; instrument A7 §A7.n, PROPOSED]` |
 | First-link mechanism decision | `459aff0` | 2026-08-13 |
 | Standing-evidence decision | `fbf6387` | entered 2026-09-04 |
 | Identity-boundary ruling of 2026-07-28 | `68b581c` | 2026-08-07 |

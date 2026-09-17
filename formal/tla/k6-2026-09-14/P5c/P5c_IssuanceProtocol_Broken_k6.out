@@ -1,0 +1,102 @@
+TLC2 Version 2026.07.31.184830 (rev: 30cc360)
+Running breadth-first search Model-Checking with fp 16 and seed -7890109120795984405 with 12 workers on 12 cores with 7068MB heap and 64MB offheap memory [pid: 4046545] (Linux 6.8.0-136-generic amd64, Ubuntu 21.0.12 64bit, MSBDiskFPSet, DiskStateQueue).
+Parsing file /tmp/claude-1000/-home-tony-projects-tessera/1c3e4609-cb0e-405d-a8c0-bef3fa91906a/scratchpad/e18/P5c_IssuanceProtocol_Broken.tla
+Parsing file /tmp/tlc-5587698169554579155/Integers.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Integers.tla)
+Parsing file /tmp/tlc-5587698169554579155/_TLCTrace.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/_TLCTrace.tla)
+Parsing file /tmp/tlc-5587698169554579155/Naturals.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Naturals.tla)
+Parsing file /tmp/tlc-5587698169554579155/TLC.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/TLC.tla)
+Parsing file /tmp/tlc-5587698169554579155/TLCExt.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/TLCExt.tla)
+Parsing file /tmp/tlc-5587698169554579155/Sequences.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Sequences.tla)
+Parsing file /tmp/tlc-5587698169554579155/FiniteSets.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/FiniteSets.tla)
+Semantic processing of module Naturals
+Semantic processing of module Integers
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module TLC
+Semantic processing of module TLCExt
+Semantic processing of module _TLCTrace
+Semantic processing of module P5c_IssuanceProtocol_Broken
+Linting of module TLCExt
+Linting of module _TLCTrace
+Linting of module P5c_IssuanceProtocol_Broken
+Starting... (2026-09-14 19:23:05)
+Computing initial states...
+Finished computing initial states: 1 distinct state generated at 2026-09-14 19:23:06.
+Error: Invariant NoShippedOrphan is violated.
+Error: The behavior up to this point is:
+State 1: <Initial predicate>
+/\ now = 0
+/\ depth = 0
+/\ reorgs = 0
+/\ declared = 0
+/\ refused = FALSE
+/\ anchorAt = -1
+/\ shippedOrphaned = FALSE
+/\ attempts = 1
+/\ shipped = FALSE
+/\ refusedAt = -1
+
+State 2: <Tick line 51, col 3 to line 57, col 81 of module P5c_IssuanceProtocol_Broken>
+/\ now = 1
+/\ depth = 0
+/\ reorgs = 0
+/\ declared = 0
+/\ refused = FALSE
+/\ anchorAt = -1
+/\ shippedOrphaned = FALSE
+/\ attempts = 1
+/\ shipped = FALSE
+/\ refusedAt = -1
+
+State 3: <Anchor line 60, col 3 to line 63, col 37 of module P5c_IssuanceProtocol_Broken>
+/\ now = 1
+/\ depth = 0
+/\ reorgs = 0
+/\ declared = 0
+/\ refused = FALSE
+/\ anchorAt = 1
+/\ shippedOrphaned = FALSE
+/\ attempts = 1
+/\ shipped = FALSE
+/\ refusedAt = -1
+
+State 4: <Tick line 51, col 3 to line 57, col 81 of module P5c_IssuanceProtocol_Broken>
+/\ now = 2
+/\ depth = 1
+/\ reorgs = 0
+/\ declared = 0
+/\ refused = FALSE
+/\ anchorAt = 1
+/\ shippedOrphaned = FALSE
+/\ attempts = 1
+/\ shipped = FALSE
+/\ refusedAt = -1
+
+State 5: <Ship line 76, col 3 to line 81, col 45 of module P5c_IssuanceProtocol_Broken>
+/\ now = 2
+/\ depth = 1
+/\ reorgs = 0
+/\ declared = 0
+/\ refused = FALSE
+/\ anchorAt = 1
+/\ shippedOrphaned = FALSE
+/\ attempts = 1
+/\ shipped = TRUE
+/\ refusedAt = -1
+
+State 6: <Reorg line 66, col 3 to line 70, col 71 of module P5c_IssuanceProtocol_Broken>
+/\ now = 2
+/\ depth = 0
+/\ reorgs = 1
+/\ declared = 0
+/\ refused = FALSE
+/\ anchorAt = -1
+/\ shippedOrphaned = TRUE
+/\ attempts = 1
+/\ shipped = TRUE
+/\ refusedAt = -1
+
+269 states generated, 172 distinct states found, 43 states left on queue.
+The depth of the complete state graph search is 11.
+Finished in 00s at (2026-09-14 19:23:06)
+Trace exploration spec path: ./P5c_IssuanceProtocol_Broken_TTrace_1789413785.tla

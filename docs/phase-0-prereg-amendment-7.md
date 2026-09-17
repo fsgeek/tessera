@@ -1,5 +1,7 @@
 # Tessera — Phase 0 Pre-Registration, Amendment 7 — the specification's routed contradictions: nine rulings, two record dispositions (2026-09-14)
 
+> **Signed 2026-09-14 at `9863513`** ("Further revisions, clarifications, and a move towards completion of the design."), the author's first commit containing this file, OTS-stamped at `d871c90` and anchored at `7a995eb`; pushed the same day. Recorded by the AI collaborator; the status line below is retained per amend-don't-rewrite.
+>
 > **Status: PROPOSED — the rulings below were made by the author on
 > 2026-09-14 in session; this document is the instrument and is not yet
 > signed. The author's first commit containing this file is its signing

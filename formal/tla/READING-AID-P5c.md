@@ -440,3 +440,25 @@ The other load-bearing restrictions are action rules, not initialization assumpt
 The checks support A2.1's issuance deadline under its explicitly stronger single-clock interpretation, the A2.2 anchor-window bounds in that abstraction, and A2.3's conditional atomic-refusal safety half; they do not establish the full three-conjunct verifier agreement, latched lifecycle, or implementation termination/delivery obligations. (`REGISTERED.txt:98–101`, `REGISTERED.txt:143–147`, `REGISTERED.txt:183–215`; `P5c_IssuanceProtocol.tla:108–126`.)
 Amendment 4 §A4.2 ratifies INVALID precedence for a failed required check combined with an unperformable one and qualifies P4's sentence to a “required” check; §A4.3 changes revocation immunity to revocation after **both** anchor and declaration, but neither changes a sentence implemented by this P5c family, whose checks contain no verdict partition or revocation logic. (`AMENDMENT-4.txt:84–119`, `P5c_IssuanceProtocol.tla:292–346`.)
 Provenance caveat: the task identifies Amendment 4 as signed on 2026-09-06, while the supplied extract retains “DRAFT — adopted in session, not yet signed”; local correction comments likewise retain “PROPOSED, not adopted”, so those labels should not be mistaken for independently verified current signing status. (`AMENDMENT-4.txt:1–10`, `P5c_IssuanceProtocol.tla:103–107`, `P5c_IssuanceProtocol.cfg:10–14`.)
+
+## Note 2026-09-14 — evidence at the registered depth k = 6 (appended by the AI collaborator; PROPOSED; the commit is the author's)
+
+Item 20's boundary ("`DepthK = 2` represents k = 3, not the registered
+strict default k = 6") is now answered by `formal/tla/k6-2026-09-14/`
+(Amendment 7 §A7.8, exit item E18): at `Delta = 6, MaxTime = 26,
+DepthK = 5, MaxAttempts = 3` the main configuration is green on all
+six invariants and `RefusalLatched`, all seven `_Sanity` witnesses
+fire, `_Broken` is red on exactly `NoShippedOrphan`, `_BrokenSilent`
+on exactly `NoSilentDeadlock`, and `_BrokenSilent_Green` is green.
+**Constraint on any instance, found the same day:** `Ship` needs
+`depth >= DepthK` inside the window `now <= declared + Delta`, and
+depth grows one per `Tick`, so an instance with `Delta < DepthK` never
+ships; at `Delta = 3, DepthK = 5` the three ship witnesses survive and
+the three ship invariants hold vacuously (`k6-2026-09-14/P5c/P5c_k6_d3_Sanity.out`).
+Choose `Delta ≥ DepthK` and `MaxTime = MaxAttempts · (Delta + 1) +
+DepthK`. The committed instance is unchanged; nothing above is edited.
+(Bridge, same day: the k = 6 instance of `P5cP5P6_Bridge.tla` closes
+only with block-timestamp skew ±1 at `MaxBlocks = 7`; at ±2 the space
+exceeded 329 M distinct states without closing. All six bridge witnesses
+and the three companions behave as registered at skew ±1 —
+`formal/tla/k6-2026-09-14/RESULTS-K6.md` §3.)

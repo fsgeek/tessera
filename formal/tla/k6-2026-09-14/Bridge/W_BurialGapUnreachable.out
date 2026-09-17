@@ -1,0 +1,192 @@
+TLC2 Version 2026.07.31.184830 (rev: 30cc360)
+Running breadth-first search Model-Checking with fp 46 and seed 6490072483100997252 with 12 workers on 12 cores with 10923MB heap and 64MB offheap memory [pid: 4089346] (Linux 6.8.0-136-generic amd64, Ubuntu 21.0.12 64bit, MSBDiskFPSet, DiskStateQueue).
+Parsing file /tmp/claude-1000/-home-tony-projects-tessera/1c3e4609-cb0e-405d-a8c0-bef3fa91906a/scratchpad/e18/P5cP5P6_Bridge.tla
+Parsing file /tmp/tlc-8972879598152463511/Integers.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Integers.tla)
+Parsing file /tmp/tlc-8972879598152463511/Sequences.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Sequences.tla)
+Parsing file /tmp/tlc-8972879598152463511/_TLCTrace.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/_TLCTrace.tla)
+Parsing file /tmp/tlc-8972879598152463511/Naturals.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Naturals.tla)
+Parsing file /tmp/tlc-8972879598152463511/TLC.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/TLC.tla)
+Parsing file /tmp/tlc-8972879598152463511/TLCExt.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/TLCExt.tla)
+Parsing file /tmp/tlc-8972879598152463511/FiniteSets.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/FiniteSets.tla)
+Semantic processing of module Naturals
+Semantic processing of module Integers
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module TLC
+Semantic processing of module TLCExt
+Semantic processing of module _TLCTrace
+Semantic processing of module P5cP5P6_Bridge
+Linting of module TLCExt
+Linting of module _TLCTrace
+Linting of module P5cP5P6_Bridge
+Starting... (2026-09-14 20:03:01)
+Computing initial states...
+Finished computing initial states: 1 distinct state generated at 2026-09-14 20:03:01.
+Error: Invariant BurialGapUnreachable is violated.
+Error: The behavior up to this point is:
+State 1: <Initial predicate>
+/\ shipAtWall = -1
+/\ now = 0
+/\ declared = -1
+/\ anchorH = -1
+/\ shipped = FALSE
+/\ chain = <<>>
+/\ pendingAnchor = FALSE
+
+State 2: <Tick line 119, col 3 to line 121, col 79 of module P5cP5P6_Bridge>
+/\ shipAtWall = -1
+/\ now = 1
+/\ declared = -1
+/\ anchorH = -1
+/\ shipped = FALSE
+/\ chain = <<>>
+/\ pendingAnchor = FALSE
+
+State 3: <Tick line 119, col 3 to line 121, col 79 of module P5cP5P6_Bridge>
+/\ shipAtWall = -1
+/\ now = 2
+/\ declared = -1
+/\ anchorH = -1
+/\ shipped = FALSE
+/\ chain = <<>>
+/\ pendingAnchor = FALSE
+
+State 4: <Tick line 119, col 3 to line 121, col 79 of module P5cP5P6_Bridge>
+/\ shipAtWall = -1
+/\ now = 3
+/\ declared = -1
+/\ anchorH = -1
+/\ shipped = FALSE
+/\ chain = <<>>
+/\ pendingAnchor = FALSE
+
+State 5: <Tick line 119, col 3 to line 121, col 79 of module P5cP5P6_Bridge>
+/\ shipAtWall = -1
+/\ now = 4
+/\ declared = -1
+/\ anchorH = -1
+/\ shipped = FALSE
+/\ chain = <<>>
+/\ pendingAnchor = FALSE
+
+State 6: <Tick line 119, col 3 to line 121, col 79 of module P5cP5P6_Bridge>
+/\ shipAtWall = -1
+/\ now = 5
+/\ declared = -1
+/\ anchorH = -1
+/\ shipped = FALSE
+/\ chain = <<>>
+/\ pendingAnchor = FALSE
+
+State 7: <Tick line 119, col 3 to line 121, col 79 of module P5cP5P6_Bridge>
+/\ shipAtWall = -1
+/\ now = 6
+/\ declared = -1
+/\ anchorH = -1
+/\ shipped = FALSE
+/\ chain = <<>>
+/\ pendingAnchor = FALSE
+
+State 8: <Tick line 119, col 3 to line 121, col 79 of module P5cP5P6_Bridge>
+/\ shipAtWall = -1
+/\ now = 7
+/\ declared = -1
+/\ anchorH = -1
+/\ shipped = FALSE
+/\ chain = <<>>
+/\ pendingAnchor = FALSE
+
+State 9: <Tick line 119, col 3 to line 121, col 79 of module P5cP5P6_Bridge>
+/\ shipAtWall = -1
+/\ now = 8
+/\ declared = -1
+/\ anchorH = -1
+/\ shipped = FALSE
+/\ chain = <<>>
+/\ pendingAnchor = FALSE
+
+State 10: <Declare line 134, col 3 to line 136, col 74 of module P5cP5P6_Bridge>
+/\ shipAtWall = -1
+/\ now = 8
+/\ declared = 8
+/\ anchorH = -1
+/\ shipped = FALSE
+/\ chain = <<>>
+/\ pendingAnchor = FALSE
+
+State 11: <AnchorNext line 141, col 3 to line 143, col 69 of module P5cP5P6_Bridge>
+/\ shipAtWall = -1
+/\ now = 8
+/\ declared = 8
+/\ anchorH = -1
+/\ shipped = FALSE
+/\ chain = <<>>
+/\ pendingAnchor = TRUE
+
+State 12: <NewBlock line 126, col 3 to line 131, col 53 of module P5cP5P6_Bridge>
+/\ shipAtWall = -1
+/\ now = 8
+/\ declared = 8
+/\ anchorH = 1
+/\ shipped = FALSE
+/\ chain = <<7>>
+/\ pendingAnchor = FALSE
+
+State 13: <NewBlock line 126, col 3 to line 131, col 53 of module P5cP5P6_Bridge>
+/\ shipAtWall = -1
+/\ now = 8
+/\ declared = 8
+/\ anchorH = 1
+/\ shipped = FALSE
+/\ chain = <<7, 7>>
+/\ pendingAnchor = FALSE
+
+State 14: <NewBlock line 126, col 3 to line 131, col 53 of module P5cP5P6_Bridge>
+/\ shipAtWall = -1
+/\ now = 8
+/\ declared = 8
+/\ anchorH = 1
+/\ shipped = FALSE
+/\ chain = <<7, 7, 7>>
+/\ pendingAnchor = FALSE
+
+State 15: <NewBlock line 126, col 3 to line 131, col 53 of module P5cP5P6_Bridge>
+/\ shipAtWall = -1
+/\ now = 8
+/\ declared = 8
+/\ anchorH = 1
+/\ shipped = FALSE
+/\ chain = <<7, 7, 7, 7>>
+/\ pendingAnchor = FALSE
+
+State 16: <NewBlock line 126, col 3 to line 131, col 53 of module P5cP5P6_Bridge>
+/\ shipAtWall = -1
+/\ now = 8
+/\ declared = 8
+/\ anchorH = 1
+/\ shipped = FALSE
+/\ chain = <<7, 7, 7, 7, 8>>
+/\ pendingAnchor = FALSE
+
+State 17: <NewBlock line 126, col 3 to line 131, col 53 of module P5cP5P6_Bridge>
+/\ shipAtWall = -1
+/\ now = 8
+/\ declared = 8
+/\ anchorH = 1
+/\ shipped = FALSE
+/\ chain = <<7, 7, 7, 7, 8, 9>>
+/\ pendingAnchor = FALSE
+
+State 18: <Ship line 172, col 3 to line 178, col 63 of module P5cP5P6_Bridge>
+/\ shipAtWall = 8
+/\ now = 8
+/\ declared = 8
+/\ anchorH = 1
+/\ shipped = TRUE
+/\ chain = <<7, 7, 7, 7, 8, 9>>
+/\ pendingAnchor = FALSE
+
+954416 states generated, 745259 distinct states found, 501333 states left on queue.
+The depth of the complete state graph search is 18.
+Finished in 01s at (2026-09-14 20:03:02)
+Trace exploration spec path: ./P5cP5P6_Bridge_TTrace_1789416180.tla

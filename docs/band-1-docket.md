@@ -537,3 +537,59 @@ specification) or disposed with reasons.
     verification."* The relying-party story defines both terms; an
     enumeration API may feed a log and may never feed a verdict.
 
+
+34. **Wrapping is no stronger than the wrapped attestation at wrap
+    time** (candidate, 2026-09-15; entered by the AI collaborator from
+    the author's words in session, alongside the LEDGER §5 ruling).
+    *Author, 2026-09-15, in session:* **"wrapping a prior attestation is
+    no stronger than the strength of the attestation at the time of
+    wrapping. In other words, if in 2066 someone asks to re-wrap a prior
+    decision bundle but this is PQ and the original attestation was not
+    using a PQ-resistant signing mechanism, there's no guarantee about
+    the bundle since it could have been forged. That's ultimately a
+    decision for the adjudicator."**
+
+    *The distinction the non-author reviewer drew (Codex, gpt-6-astra,
+    same day, carried here because the author's sentence turns on it):*
+    **renewing protection *before* the old protection fails is not the
+    same act as wrapping *after* authenticity has become uncertain.** The
+    first carries forward a claim that was still sound when it was
+    re-attested; the second re-signs bytes whose provenance the new
+    signature cannot restore, and adds a fresh strong signature over a
+    weak inner one without adding evidence about the inner one. Both
+    produce a well-formed wrapper. **"Wrapped successfully" must
+    therefore never read as "historically authentic"** — in the format,
+    in a verdict, in a renderer, or in the relying-party story. What the
+    accumulated grounds justify is **the adjudicator's decision**, which
+    is where the author's sentence puts it and where item 27's
+    vocabulary ruling already puts the trust judgment (the verifier is
+    P9's pure function; the adjudicator decides).
+
+    *Relation to what is already docketed.* Items 19–22 cover verdict
+    composition along a renewal chain (19), renewal always being
+    cumulative (20), completeness of wrapper lineage (21), and
+    independence of testimony coming from anchors rather than custody
+    (22). **None of them states the ceiling.** This item is the ceiling:
+    whatever 19–22 accumulate, the chain's strength at any point is
+    bounded by the strength of the innermost attestation *at the moment
+    it was wrapped*, and the anchor (22) is what dates that moment. It
+    also bears on A3 §A3.4's survivability floor, whose century horizon
+    is exactly the horizon over which a signing mechanism's strength
+    changes; and on item 26 (issuer signing-key lifetime and rotation),
+    deferred, and item 18 (binding-form lifecycle), deferred — the
+    ceiling holds whether or not either is activated, since it is a
+    statement about what a wrap *cannot* add rather than about what a
+    lifecycle plan should do.
+
+    *What this item is a candidate for.* (a) **A registered sentence for
+    the renewal semantics** — the ceiling stated where 19–22 state the
+    accumulation rules, so renewal cannot be read as strengthening.
+    (b) **A sentence owed to the relying-party story**
+    (`docs/implementation-spec.md` §1.5): the story must say, in the
+    reader's terms, that a wrapper re-dates and re-protects but does not
+    re-authenticate, and that the judgment about a chain whose inner
+    attestation predates a break belongs to the adjudicator. Both are
+    pre-freeze candidates, alongside items 19–22.
+
+    **Not registered.** Nothing here is adopted; it is parked so it does
+    not silently drop.

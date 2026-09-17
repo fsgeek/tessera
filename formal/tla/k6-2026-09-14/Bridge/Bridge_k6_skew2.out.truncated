@@ -1,0 +1,41 @@
+TLC2 Version 2026.07.31.184830 (rev: 30cc360)
+Running breadth-first search Model-Checking with fp 100 and seed -2101581968101274830 with 12 workers on 12 cores with 7282MB heap and 64MB offheap memory [pid: 4046083] (Linux 6.8.0-136-generic amd64, Ubuntu 21.0.12 64bit, MSBDiskFPSet, DiskStateQueue).
+Parsing file /tmp/claude-1000/-home-tony-projects-tessera/1c3e4609-cb0e-405d-a8c0-bef3fa91906a/scratchpad/e18/P5cP5P6_Bridge.tla
+Parsing file /tmp/tlc-15653277674328299219/Integers.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Integers.tla)
+Parsing file /tmp/tlc-15653277674328299219/Sequences.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Sequences.tla)
+Parsing file /tmp/tlc-15653277674328299219/_TLCTrace.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/_TLCTrace.tla)
+Parsing file /tmp/tlc-15653277674328299219/Naturals.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Naturals.tla)
+Parsing file /tmp/tlc-15653277674328299219/TLC.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/TLC.tla)
+Parsing file /tmp/tlc-15653277674328299219/TLCExt.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/TLCExt.tla)
+Parsing file /tmp/tlc-15653277674328299219/FiniteSets.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/FiniteSets.tla)
+Semantic processing of module Naturals
+Semantic processing of module Integers
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module TLC
+Semantic processing of module TLCExt
+Semantic processing of module _TLCTrace
+Semantic processing of module P5cP5P6_Bridge
+Linting of module TLCExt
+Linting of module _TLCTrace
+Linting of module P5cP5P6_Bridge
+Starting... (2026-09-14 19:22:44)
+Warning: The invariant PinAgreement is a constant-level formula (i.e., it contains no variables, primes, or temporal operators) and evaluates to TRUE. To assert constant-level formulas in your spec, use ASSUME ConstInv. If you optionally want to give the assumption a name, write ASSUME YourAssumption == ConstInv instead. See https://explain.tlapl.us/assumptions-and-invariants for additional details.
+(Use the -nowarning option to disable this warning.)
+Computing initial states...
+Finished computing initial states: 1 distinct state generated at 2026-09-14 19:22:44.
+Progress(18) at 2026-09-14 19:22:47: 4,177,559 states generated (4,177,559 s/min), 3,078,732 distinct states found (3,078,732 ds/min), 2,264,846 states left on queue.
+Progress(20) at 2026-09-14 19:23:47: 93,410,956 states generated (89,233,397 s/min), 69,631,152 distinct states found (66,552,420 ds/min), 39,163,247 states left on queue.
+Progress(20) at 2026-09-14 19:24:47: 177,263,620 states generated (83,852,664 s/min), 129,642,856 distinct states found (60,011,704 ds/min), 61,780,050 states left on queue.
+Progress(20) at 2026-09-14 19:25:47: 218,642,935 states generated (41,379,315 s/min), 158,847,684 distinct states found (29,204,828 ds/min), 71,158,340 states left on queue.
+Progress(20) at 2026-09-14 19:26:47: 261,018,497 states generated (42,375,562 s/min), 188,733,322 distinct states found (29,885,638 ds/min), 81,265,442 states left on queue.
+Progress(20) at 2026-09-14 19:27:47: 302,884,098 states generated (41,865,601 s/min), 218,223,144 distinct states found (29,489,822 ds/min), 89,909,884 states left on queue.
+Progress(20) at 2026-09-14 19:28:47: 344,068,839 states generated (41,184,741 s/min), 247,324,412 distinct states found (29,101,268 ds/min), 97,024,217 states left on queue.
+Progress(20) at 2026-09-14 19:29:47: 376,963,754 states generated (32,894,915 s/min), 270,274,824 distinct states found (22,950,412 ds/min), 97,566,894 states left on queue.
+Progress(20) at 2026-09-14 19:30:47: 419,112,448 states generated (42,148,694 s/min), 299,852,211 distinct states found (29,577,387 ds/min), 104,899,030 states left on queue.
+Progress(20) at 2026-09-14 19:31:47: 461,093,539 states generated (41,981,091 s/min), 329,323,231 distinct states found (29,471,020 ds/min), 112,059,215 states left on queue.
+Progress(20) at 2026-09-14 19:32:47: 502,123,669 states generated (41,030,130 s/min), 358,025,409 distinct states found (28,702,178 ds/min), 118,389,736 states left on queue.
+Progress(20) at 2026-09-14 19:33:47: 542,367,070 states generated (40,243,401 s/min), 386,202,021 distinct states found (28,176,612 ds/min), 118,845,843 states left on queue.
+Progress(20) at 2026-09-14 19:34:47: 573,691,052 states generated (31,323,982 s/min), 407,994,473 distinct states found (21,792,452 ds/min), 125,014,874 states left on queue.
+Progress(20) at 2026-09-14 19:35:47: 615,415,115 states generated (41,724,063 s/min), 437,204,801 distinct states found (29,210,328 ds/min), 129,719,178 states left on queue.
+[run killed at the 600 s tool limit, 2026-09-14 19:32; 461,093,539 states generated, 329,323,231 distinct, 112,059,215 on queue, not closed]
