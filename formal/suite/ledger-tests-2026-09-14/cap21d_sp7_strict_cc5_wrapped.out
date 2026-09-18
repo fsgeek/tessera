@@ -1,0 +1,1583 @@
+Process 0 (that is, the initial process):
+{1}new skD: skey;
+{2}new skR: skey;
+{3}new skI1: skey;
+{4}new skI2: skey;
+{5}new skW1: skey;
+{6}new skW2: skey;
+{7}let mI1: bitstring = authTuple(issuerId,fp(pk(skI1)),ssetH,algH,verH) in
+{8}let mI2: bitstring = authTuple(issuerId2,fp(pk(skI2)),ssetH,algH,verH) in
+{9}let mW1: bitstring = authTuple(idW1,fp(pk(skW1)),ssetH,algH,verH) in
+{10}let mW2: bitstring = authTuple(idW2,fp(pk(skW2)),ssetH,algH,verH) in
+{11}out(c, pk(skD));
+{12}out(c, pk(skR));
+{13}out(c, pk(skI1));
+{14}out(c, pk(skI2));
+{15}out(c, pk(skW1));
+{16}out(c, pk(skW2));
+{17}out(c, mI1);
+{18}out(c, mI2);
+{19}out(c, mW1);
+{20}out(c, mW2);
+{21}out(c, skD);
+(
+    {22}!
+    {23}let skD_1: skey = skD in
+    {24}event AuthorityPublishedDNS(mI1);
+    {25}out(c, sign((STMT_DIGEST,h(mI1)),skD_1))
+) | (
+    {26}!
+    {27}let skD_2: skey = skD in
+    {28}event AuthorityPublishedDNS(mI2);
+    {29}out(c, sign((STMT_DIGEST,h(mI2)),skD_2))
+) | (
+    {30}!
+    {31}let skD_3: skey = skD in
+    {32}event AuthorityPublishedDNS(mW1);
+    {33}out(c, sign((STMT_DIGEST,h(mW1)),skD_3))
+) | (
+    {34}!
+    {35}let skD_4: skey = skD in
+    {36}event AuthorityPublishedDNS(mW2);
+    {37}out(c, sign((STMT_DIGEST,h(mW2)),skD_4))
+) | (
+    {38}!
+    {39}let skR_1: skey = skR in
+    {40}event AuthorityPublishedRepo(mI1);
+    {41}out(c, sign((STMT_DIGEST,h(mI1)),skR_1))
+) | (
+    {42}!
+    {43}let skR_2: skey = skR in
+    {44}event AuthorityPublishedRepo(mI2);
+    {45}out(c, sign((STMT_DIGEST,h(mI2)),skR_2))
+) | (
+    {46}!
+    {47}let skR_3: skey = skR in
+    {48}event AuthorityPublishedRepo(mW1);
+    {49}out(c, sign((STMT_DIGEST,h(mW1)),skR_3))
+) | (
+    {50}!
+    {51}let skR_4: skey = skR in
+    {52}event AuthorityPublishedRepo(mW2);
+    {53}out(c, sign((STMT_DIGEST,h(mW2)),skR_4))
+) | (
+    {54}!
+    {55}let skI: skey = skI1 in
+    {56}let idI: bitstring = issuerId in
+    {57}let cvI: bitstring = cvA in
+    {58}in(c, payload: bitstring);
+    {59}event IssuerPossession(pk(skI));
+    {60}let ppfI: bitstring = sign((POSS,mI1),skI) in
+    {61}out(c, ppfI);
+    {62}let fbI: bitstring = framed(OT_ATTEST,algH,idI,fp(pk(skI)),h(mI1),cvI,payload) in
+    {63}let sgI: bitstring = sign((BYTES,fbI),skI) in
+    {64}event IssuerSigned(pk(skI),fbI);
+    (
+        {65}out(honestTypeCh, (OT_ATTEST,fbI))
+    ) | (
+        {66}out(honestCh, (pk(skI),fbI))
+    ) | (
+        {67}out(honestInnerCh, (pk(skI),idI,fbI))
+    ) | (
+        {68}out(honestSigCh, (pk(skI),sgI))
+    ) | (
+        {69}out(c, sgI)
+    )
+) | (
+    {70}!
+    {71}let skW: skey = skI1 in
+    {72}let idW: bitstring = issuerId in
+    {73}let cvW: bitstring = cvB in
+    {74}in(c, (cvIw: bitstring,fbIn: bitstring,sgIn: bitstring));
+    {75}event IssuerPossession(pk(skW));
+    {76}let ppfW: bitstring = sign((POSS,mI1),skW) in
+    {77}out(c, ppfW);
+    {78}let fbW: bitstring = framed(OT_WRAPPER,algH,idW,fp(pk(skW)),h(mI1),cvW,wrap(cvIw,(fbIn,sgIn))) in
+    {79}event IssuerSigned(pk(skW),fbW);
+    (
+        {80}out(honestTypeCh, (OT_WRAPPER,fbW))
+    ) | (
+        {81}out(c, sign((BYTES,fbW),skW))
+    )
+) | (
+    {82}!
+    {83}let skI_1: skey = skI2 in
+    {84}let idI_1: bitstring = issuerId2 in
+    {85}let cvI_1: bitstring = cvB in
+    {86}in(c, payload_1: bitstring);
+    {87}event IssuerPossession(pk(skI_1));
+    {88}let ppfI_1: bitstring = sign((POSS,mI2),skI_1) in
+    {89}out(c, ppfI_1);
+    {90}let fbI_1: bitstring = framed(OT_ATTEST,algH,idI_1,fp(pk(skI_1)),h(mI2),cvI_1,payload_1) in
+    {91}let sgI_1: bitstring = sign((BYTES,fbI_1),skI_1) in
+    {92}event IssuerSigned(pk(skI_1),fbI_1);
+    (
+        {93}out(honestTypeCh, (OT_ATTEST,fbI_1))
+    ) | (
+        {94}out(honestCh, (pk(skI_1),fbI_1))
+    ) | (
+        {95}out(honestInnerCh, (pk(skI_1),idI_1,fbI_1))
+    ) | (
+        {96}out(honestSigCh, (pk(skI_1),sgI_1))
+    ) | (
+        {97}out(c, sgI_1)
+    )
+) | (
+    {98}!
+    {99}let skO: skey = skI2 in
+    {100}let idO: bitstring = issuerId2 in
+    {101}let ot: bitstring = OT_REVIEWREC in
+    {102}let cvO: bitstring = cvA in
+    {103}in(c, payload_2: bitstring);
+    {104}event IssuerPossession(pk(skO));
+    {105}let ppfO: bitstring = sign((POSS,mI2),skO) in
+    {106}out(c, ppfO);
+    {107}let fbO: bitstring = framed(ot,algH,idO,fp(pk(skO)),h(mI2),cvO,payload_2) in
+    {108}event IssuerSigned(pk(skO),fbO);
+    (
+        {109}out(honestTypeCh, (ot,fbO))
+    ) | (
+        {110}out(c, sign((BYTES,fbO),skO))
+    )
+) | (
+    {111}!
+    {112}let skW_1: skey = skW1 in
+    {113}let idW_1: bitstring = idW1 in
+    {114}let cvW_1: bitstring = cvB in
+    {115}in(c, (cvIw_1: bitstring,fbIn_1: bitstring,sgIn_1: bitstring));
+    {116}event IssuerPossession(pk(skW_1));
+    {117}let ppfW_1: bitstring = sign((POSS,mW1),skW_1) in
+    {118}out(c, ppfW_1);
+    {119}let fbW_1: bitstring = framed(OT_WRAPPER,algH,idW_1,fp(pk(skW_1)),h(mW1),cvW_1,wrap(cvIw_1,(fbIn_1,sgIn_1))) in
+    {120}event IssuerSigned(pk(skW_1),fbW_1);
+    (
+        {121}out(honestTypeCh, (OT_WRAPPER,fbW_1))
+    ) | (
+        {122}out(c, sign((BYTES,fbW_1),skW_1))
+    )
+) | (
+    {123}!
+    {124}let skW_2: skey = skW2 in
+    {125}let idW_2: bitstring = idW2 in
+    {126}let cvW_2: bitstring = cvA in
+    {127}in(c, (cvIw_2: bitstring,fbIn_2: bitstring,sgIn_2: bitstring));
+    {128}event IssuerPossession(pk(skW_2));
+    {129}let ppfW_2: bitstring = sign((POSS,mW2),skW_2) in
+    {130}out(c, ppfW_2);
+    {131}let fbW_2: bitstring = framed(OT_WRAPPER,algH,idW_2,fp(pk(skW_2)),h(mW2),cvW_2,wrap(cvIw_2,(fbIn_2,sgIn_2))) in
+    {132}event IssuerSigned(pk(skW_2),fbW_2);
+    (
+        {133}out(honestTypeCh, (OT_WRAPPER,fbW_2))
+    ) | (
+        {134}out(c, sign((BYTES,fbW_2),skW_2))
+    )
+) | (
+    {135}!
+    {136}let pkD: pkey = pk(skD) in
+    {137}let pkR: pkey = pk(skR) in
+    {138}in(c, (tI: bitstring,evDI: bitstring,evRI: bitstring,kI: pkey,ppfI_2: bitstring,sgI_2: bitstring,fbI_2: bitstring));
+    {139}let ctx: bitstring = BASE in
+    {140}let (=STMT_DIGEST,=h(tI)) = checksign(evDI,pkD) in
+    {141}let (=STMT_DIGEST,=h(tI)) = checksign(evRI,pkR) in
+    {142}let authTuple(idI_2: bitstring,kfprI: bitstring,ssI: bitstring,algI: bitstring,verI: bitstring) = tI in
+    {143}if (fp(kI) = kfprI) then
+    {144}let (=POSS,=tI) = checksign(ppfI_2,kI) in
+    {145}let (=BYTES,anyb: bitstring) = checksign(sgI_2,kI) in
+    {146}let framed(=OT_ATTEST,=algI,=idI_2,=fp(kI),mhI: bitstring,cvI_2: bitstring,plI: bitstring) = fbI_2 in
+    {147}if (mhI = h(tI)) then
+    {148}event AcceptInner(ctx,kI,idI_2,fbI_2);
+    (
+        {149}out(typeCh, (OT_ATTEST,fbI_2))
+    ) | (
+        {150}out(acceptCh, (ctx,kI,idI_2,fbI_2))
+    ) | (
+        {151}out(scopeCh, (ctx,kI,idI_2,fbI_2))
+    ) | (
+        {152}out(sigCh, (ctx,kI,sgI_2))
+    ) | (
+        {153}out(bytesCh, (ctx,kI,sgI_2,fbI_2))
+    )
+) | (
+    {154}!
+    {155}let pkD_1: pkey = pk(skD) in
+    {156}let pkR_1: pkey = pk(skR) in
+    {157}in(c, (tW: bitstring,evDW: bitstring,evRW: bitstring,kW: pkey,ppfW_3: bitstring,sgW: bitstring,fbW_3: bitstring,tI_1: bitstring,evDI_1: bitstring,evRI_1: bitstring,kI_1: pkey,ppfI_3: bitstring));
+    {158}let (=STMT_DIGEST,=h(tW)) = checksign(evDW,pkD_1) in
+    {159}let (=STMT_DIGEST,=h(tW)) = checksign(evRW,pkR_1) in
+    {160}let authTuple(idW_3: bitstring,kfprW: bitstring,ssW: bitstring,algW: bitstring,verW: bitstring) = tW in
+    {161}if (fp(kW) = kfprW) then
+    {162}let (=POSS,=tW) = checksign(ppfW_3,kW) in
+    {163}let (=BYTES,=fbW_3) = checksign(sgW,kW) in
+    {164}let framed(=OT_WRAPPER,=algW,=idW_3,=fp(kW),mhW: bitstring,cvW_3: bitstring,wrap(cvIw_3: bitstring,(fbI_3: bitstring,sgI_3: bitstring))) = fbW_3 in
+    {165}if (mhW = h(tW)) then
+    {166}event AcceptOuter(kW,idW_3,fbW_3);
+    (
+        {167}out(typeCh, (OT_WRAPPER,fbW_3))
+    ) | (
+        {168}let ctx_1: bitstring = wctx(kW,idW_3,fbW_3) in
+        {169}let (=STMT_DIGEST,=h(tI_1)) = checksign(evDI_1,pkD_1) in
+        {170}let (=STMT_DIGEST,=h(tI_1)) = checksign(evRI_1,pkR_1) in
+        {171}let authTuple(idI_3: bitstring,kfprI_1: bitstring,ssI_1: bitstring,algI_1: bitstring,verI_1: bitstring) = tI_1 in
+        {172}if (fp(kI_1) = kfprI_1) then
+        {173}let (=POSS,=tI_1) = checksign(ppfI_3,kI_1) in
+        {174}let (=BYTES,anyb_1: bitstring) = checksign(sgI_3,kI_1) in
+        {175}let framed(=OT_ATTEST,=algI_1,=idI_3,=fp(kI_1),mhI_1: bitstring,cvI_3: bitstring,plI_1: bitstring) = fbI_3 in
+        {176}if (mhI_1 = h(tI_1)) then
+        {177}event AcceptInner(ctx_1,kI_1,idI_3,fbI_3);
+        (
+            {178}out(typeCh, (OT_ATTEST,fbI_3))
+        ) | (
+            {179}out(acceptCh, (ctx_1,kI_1,idI_3,fbI_3))
+        ) | (
+            {180}out(scopeCh, (ctx_1,kI_1,idI_3,fbI_3))
+        ) | (
+            {181}out(sigCh, (ctx_1,kI_1,sgI_3))
+        ) | (
+            {182}out(bytesCh, (ctx_1,kI_1,sgI_3,fbI_3))
+        )
+    )
+) | (
+    {183}!
+    {184}in(bytesCh, (wctx(wk: pkey,wi: bitstring,wb: bitstring),k: pkey,s: bitstring,b: bitstring));
+    {185}let (=BYTES,bSigned: bitstring) = checksign(s,k) in
+    (
+        {186}if (bSigned = b) then
+            0
+        else
+            {187}event BytesUnbound(k,s,b)
+    )
+    else
+        {188}event BytesUnbound(k,s,b)
+) | (
+    {189}!
+    {190}in(honestCh, (kH: pkey,fbHon: bitstring));
+    {191}in(acceptCh, (ctx_2: bitstring,kX: pkey,idX: bitstring,=fbHon));
+    {192}if (kX = kH) then
+    (
+        {193}if (ctx_2 = BASE) then
+        {194}event HonestAccepted(kX,fbHon)
+    )
+    else
+        {195}event Reattributed(kX,kH,fbHon)
+) | (
+    {196}!
+    {197}in(honestTypeCh, (otS: bitstring,fbT: bitstring));
+    {198}in(typeCh, (otA: bitstring,=fbT));
+    {199}if (otS = otA) then
+        0
+    else
+        {200}event TypeConfused(otS,otA,fbT)
+) | (
+    {201}!
+    {202}in(honestInnerCh, (kH_1: pkey,idH: bitstring,fbHon_1: bitstring));
+    {203}in(scopeCh, (wctx(kW_1: pkey,idW_4: bitstring,fbW_4: bitstring),kIrep: pkey,idIrep: bitstring,=fbHon_1));
+    {204}if ((kIrep = kH_1) && (idIrep = idH)) then
+        {205}event HonestWrappedAccepted(kH_1,fbHon_1,kW_1)
+    else
+        {206}event Rescoped(kIrep,idIrep,kH_1,idH,fbHon_1)
+) | (
+    {207}!
+    {208}in(honestSigCh, (kH_2: pkey,sgH: bitstring));
+    {209}in(sigCh, (wctx(kW_2: pkey,idW_5: bitstring,fbW_5: bitstring),kIrep_1: pkey,=sgH));
+    {210}if (kIrep_1 = kH_2) then
+        0
+    else
+        {211}event InnerSigTransplanted(kIrep_1,sgH)
+)
+
+--  Process 1 (that is, process 0, with let moved downwards):
+{1}new skD: skey;
+{2}new skR: skey;
+{3}new skI1: skey;
+{4}new skI2: skey;
+{5}new skW1: skey;
+{6}new skW2: skey;
+{11}out(c, pk(skD));
+{12}out(c, pk(skR));
+{13}out(c, pk(skI1));
+{14}out(c, pk(skI2));
+{15}out(c, pk(skW1));
+{16}out(c, pk(skW2));
+{7}let mI1: bitstring = authTuple(issuerId,fp(pk(skI1)),ssetH,algH,verH) in
+{17}out(c, mI1);
+{8}let mI2: bitstring = authTuple(issuerId2,fp(pk(skI2)),ssetH,algH,verH) in
+{18}out(c, mI2);
+{9}let mW1: bitstring = authTuple(idW1,fp(pk(skW1)),ssetH,algH,verH) in
+{19}out(c, mW1);
+{10}let mW2: bitstring = authTuple(idW2,fp(pk(skW2)),ssetH,algH,verH) in
+{20}out(c, mW2);
+{21}out(c, skD);
+(
+    {22}!
+    {24}event AuthorityPublishedDNS(mI1);
+    {23}let skD_1: skey = skD in
+    {25}out(c, sign((STMT_DIGEST,h(mI1)),skD_1))
+) | (
+    {26}!
+    {28}event AuthorityPublishedDNS(mI2);
+    {27}let skD_2: skey = skD in
+    {29}out(c, sign((STMT_DIGEST,h(mI2)),skD_2))
+) | (
+    {30}!
+    {32}event AuthorityPublishedDNS(mW1);
+    {31}let skD_3: skey = skD in
+    {33}out(c, sign((STMT_DIGEST,h(mW1)),skD_3))
+) | (
+    {34}!
+    {36}event AuthorityPublishedDNS(mW2);
+    {35}let skD_4: skey = skD in
+    {37}out(c, sign((STMT_DIGEST,h(mW2)),skD_4))
+) | (
+    {38}!
+    {40}event AuthorityPublishedRepo(mI1);
+    {39}let skR_1: skey = skR in
+    {41}out(c, sign((STMT_DIGEST,h(mI1)),skR_1))
+) | (
+    {42}!
+    {44}event AuthorityPublishedRepo(mI2);
+    {43}let skR_2: skey = skR in
+    {45}out(c, sign((STMT_DIGEST,h(mI2)),skR_2))
+) | (
+    {46}!
+    {48}event AuthorityPublishedRepo(mW1);
+    {47}let skR_3: skey = skR in
+    {49}out(c, sign((STMT_DIGEST,h(mW1)),skR_3))
+) | (
+    {50}!
+    {52}event AuthorityPublishedRepo(mW2);
+    {51}let skR_4: skey = skR in
+    {53}out(c, sign((STMT_DIGEST,h(mW2)),skR_4))
+) | (
+    {54}!
+    {58}in(c, payload: bitstring);
+    {55}let skI: skey = skI1 in
+    {59}event IssuerPossession(pk(skI));
+    {60}let ppfI: bitstring = sign((POSS,mI1),skI) in
+    {61}out(c, ppfI);
+    {57}let cvI: bitstring = cvA in
+    {56}let idI: bitstring = issuerId in
+    {62}let fbI: bitstring = framed(OT_ATTEST,algH,idI,fp(pk(skI)),h(mI1),cvI,payload) in
+    {64}event IssuerSigned(pk(skI),fbI);
+    (
+        {65}out(honestTypeCh, (OT_ATTEST,fbI))
+    ) | (
+        {66}out(honestCh, (pk(skI),fbI))
+    ) | (
+        {67}out(honestInnerCh, (pk(skI),idI,fbI))
+    ) | (
+        {63}let sgI: bitstring = sign((BYTES,fbI),skI) in
+        (
+            {68}out(honestSigCh, (pk(skI),sgI))
+        ) | (
+            {69}out(c, sgI)
+        )
+    )
+) | (
+    {70}!
+    {74}in(c, (cvIw: bitstring,fbIn: bitstring,sgIn: bitstring));
+    {71}let skW: skey = skI1 in
+    {75}event IssuerPossession(pk(skW));
+    {76}let ppfW: bitstring = sign((POSS,mI1),skW) in
+    {77}out(c, ppfW);
+    {73}let cvW: bitstring = cvB in
+    {72}let idW: bitstring = issuerId in
+    {78}let fbW: bitstring = framed(OT_WRAPPER,algH,idW,fp(pk(skW)),h(mI1),cvW,wrap(cvIw,(fbIn,sgIn))) in
+    {79}event IssuerSigned(pk(skW),fbW);
+    (
+        {80}out(honestTypeCh, (OT_WRAPPER,fbW))
+    ) | (
+        {81}out(c, sign((BYTES,fbW),skW))
+    )
+) | (
+    {82}!
+    {86}in(c, payload_1: bitstring);
+    {83}let skI_1: skey = skI2 in
+    {87}event IssuerPossession(pk(skI_1));
+    {88}let ppfI_1: bitstring = sign((POSS,mI2),skI_1) in
+    {89}out(c, ppfI_1);
+    {85}let cvI_1: bitstring = cvB in
+    {84}let idI_1: bitstring = issuerId2 in
+    {90}let fbI_1: bitstring = framed(OT_ATTEST,algH,idI_1,fp(pk(skI_1)),h(mI2),cvI_1,payload_1) in
+    {92}event IssuerSigned(pk(skI_1),fbI_1);
+    (
+        {93}out(honestTypeCh, (OT_ATTEST,fbI_1))
+    ) | (
+        {94}out(honestCh, (pk(skI_1),fbI_1))
+    ) | (
+        {95}out(honestInnerCh, (pk(skI_1),idI_1,fbI_1))
+    ) | (
+        {91}let sgI_1: bitstring = sign((BYTES,fbI_1),skI_1) in
+        (
+            {96}out(honestSigCh, (pk(skI_1),sgI_1))
+        ) | (
+            {97}out(c, sgI_1)
+        )
+    )
+) | (
+    {98}!
+    {103}in(c, payload_2: bitstring);
+    {99}let skO: skey = skI2 in
+    {104}event IssuerPossession(pk(skO));
+    {105}let ppfO: bitstring = sign((POSS,mI2),skO) in
+    {106}out(c, ppfO);
+    {102}let cvO: bitstring = cvA in
+    {101}let ot: bitstring = OT_REVIEWREC in
+    {100}let idO: bitstring = issuerId2 in
+    {107}let fbO: bitstring = framed(ot,algH,idO,fp(pk(skO)),h(mI2),cvO,payload_2) in
+    {108}event IssuerSigned(pk(skO),fbO);
+    (
+        {109}out(honestTypeCh, (ot,fbO))
+    ) | (
+        {110}out(c, sign((BYTES,fbO),skO))
+    )
+) | (
+    {111}!
+    {115}in(c, (cvIw_1: bitstring,fbIn_1: bitstring,sgIn_1: bitstring));
+    {112}let skW_1: skey = skW1 in
+    {116}event IssuerPossession(pk(skW_1));
+    {117}let ppfW_1: bitstring = sign((POSS,mW1),skW_1) in
+    {118}out(c, ppfW_1);
+    {114}let cvW_1: bitstring = cvB in
+    {113}let idW_1: bitstring = idW1 in
+    {119}let fbW_1: bitstring = framed(OT_WRAPPER,algH,idW_1,fp(pk(skW_1)),h(mW1),cvW_1,wrap(cvIw_1,(fbIn_1,sgIn_1))) in
+    {120}event IssuerSigned(pk(skW_1),fbW_1);
+    (
+        {121}out(honestTypeCh, (OT_WRAPPER,fbW_1))
+    ) | (
+        {122}out(c, sign((BYTES,fbW_1),skW_1))
+    )
+) | (
+    {123}!
+    {127}in(c, (cvIw_2: bitstring,fbIn_2: bitstring,sgIn_2: bitstring));
+    {124}let skW_2: skey = skW2 in
+    {128}event IssuerPossession(pk(skW_2));
+    {129}let ppfW_2: bitstring = sign((POSS,mW2),skW_2) in
+    {130}out(c, ppfW_2);
+    {126}let cvW_2: bitstring = cvA in
+    {125}let idW_2: bitstring = idW2 in
+    {131}let fbW_2: bitstring = framed(OT_WRAPPER,algH,idW_2,fp(pk(skW_2)),h(mW2),cvW_2,wrap(cvIw_2,(fbIn_2,sgIn_2))) in
+    {132}event IssuerSigned(pk(skW_2),fbW_2);
+    (
+        {133}out(honestTypeCh, (OT_WRAPPER,fbW_2))
+    ) | (
+        {134}out(c, sign((BYTES,fbW_2),skW_2))
+    )
+) | (
+    {135}!
+    {138}in(c, (tI: bitstring,evDI: bitstring,evRI: bitstring,kI: pkey,ppfI_2: bitstring,sgI_2: bitstring,fbI_2: bitstring));
+    {136}let pkD: pkey = pk(skD) in
+    {140}let (=STMT_DIGEST,=h(tI)) = checksign(evDI,pkD) in
+    {137}let pkR: pkey = pk(skR) in
+    {141}let (=STMT_DIGEST,=h(tI)) = checksign(evRI,pkR) in
+    {142}let authTuple(idI_2: bitstring,kfprI: bitstring,ssI: bitstring,algI: bitstring,verI: bitstring) = tI in
+    {143}if (fp(kI) = kfprI) then
+    {144}let (=POSS,=tI) = checksign(ppfI_2,kI) in
+    {145}let (=BYTES,anyb: bitstring) = checksign(sgI_2,kI) in
+    {146}let framed(=OT_ATTEST,=algI,=idI_2,=fp(kI),mhI: bitstring,cvI_2: bitstring,plI: bitstring) = fbI_2 in
+    {147}if (mhI = h(tI)) then
+    {139}let ctx: bitstring = BASE in
+    {148}event AcceptInner(ctx,kI,idI_2,fbI_2);
+    (
+        {149}out(typeCh, (OT_ATTEST,fbI_2))
+    ) | (
+        {150}out(acceptCh, (ctx,kI,idI_2,fbI_2))
+    ) | (
+        {151}out(scopeCh, (ctx,kI,idI_2,fbI_2))
+    ) | (
+        {152}out(sigCh, (ctx,kI,sgI_2))
+    ) | (
+        {153}out(bytesCh, (ctx,kI,sgI_2,fbI_2))
+    )
+) | (
+    {154}!
+    {157}in(c, (tW: bitstring,evDW: bitstring,evRW: bitstring,kW: pkey,ppfW_3: bitstring,sgW: bitstring,fbW_3: bitstring,tI_1: bitstring,evDI_1: bitstring,evRI_1: bitstring,kI_1: pkey,ppfI_3: bitstring));
+    {155}let pkD_1: pkey = pk(skD) in
+    {158}let (=STMT_DIGEST,=h(tW)) = checksign(evDW,pkD_1) in
+    {156}let pkR_1: pkey = pk(skR) in
+    {159}let (=STMT_DIGEST,=h(tW)) = checksign(evRW,pkR_1) in
+    {160}let authTuple(idW_3: bitstring,kfprW: bitstring,ssW: bitstring,algW: bitstring,verW: bitstring) = tW in
+    {161}if (fp(kW) = kfprW) then
+    {162}let (=POSS,=tW) = checksign(ppfW_3,kW) in
+    {163}let (=BYTES,=fbW_3) = checksign(sgW,kW) in
+    {164}let framed(=OT_WRAPPER,=algW,=idW_3,=fp(kW),mhW: bitstring,cvW_3: bitstring,wrap(cvIw_3: bitstring,(fbI_3: bitstring,sgI_3: bitstring))) = fbW_3 in
+    {165}if (mhW = h(tW)) then
+    {166}event AcceptOuter(kW,idW_3,fbW_3);
+    (
+        {167}out(typeCh, (OT_WRAPPER,fbW_3))
+    ) | (
+        {169}let (=STMT_DIGEST,=h(tI_1)) = checksign(evDI_1,pkD_1) in
+        {170}let (=STMT_DIGEST,=h(tI_1)) = checksign(evRI_1,pkR_1) in
+        {171}let authTuple(idI_3: bitstring,kfprI_1: bitstring,ssI_1: bitstring,algI_1: bitstring,verI_1: bitstring) = tI_1 in
+        {172}if (fp(kI_1) = kfprI_1) then
+        {173}let (=POSS,=tI_1) = checksign(ppfI_3,kI_1) in
+        {174}let (=BYTES,anyb_1: bitstring) = checksign(sgI_3,kI_1) in
+        {175}let framed(=OT_ATTEST,=algI_1,=idI_3,=fp(kI_1),mhI_1: bitstring,cvI_3: bitstring,plI_1: bitstring) = fbI_3 in
+        {176}if (mhI_1 = h(tI_1)) then
+        {168}let ctx_1: bitstring = wctx(kW,idW_3,fbW_3) in
+        {177}event AcceptInner(ctx_1,kI_1,idI_3,fbI_3);
+        (
+            {178}out(typeCh, (OT_ATTEST,fbI_3))
+        ) | (
+            {179}out(acceptCh, (ctx_1,kI_1,idI_3,fbI_3))
+        ) | (
+            {180}out(scopeCh, (ctx_1,kI_1,idI_3,fbI_3))
+        ) | (
+            {181}out(sigCh, (ctx_1,kI_1,sgI_3))
+        ) | (
+            {182}out(bytesCh, (ctx_1,kI_1,sgI_3,fbI_3))
+        )
+    )
+) | (
+    {183}!
+    {184}in(bytesCh, (wctx(wk: pkey,wi: bitstring,wb: bitstring),k: pkey,s: bitstring,b: bitstring));
+    {185}let (=BYTES,bSigned: bitstring) = checksign(s,k) in
+    (
+        {186}if (bSigned = b) then
+            0
+        else
+            {187}event BytesUnbound(k,s,b)
+    )
+    else
+        {188}event BytesUnbound(k,s,b)
+) | (
+    {189}!
+    {190}in(honestCh, (kH: pkey,fbHon: bitstring));
+    {191}in(acceptCh, (ctx_2: bitstring,kX: pkey,idX: bitstring,=fbHon));
+    {192}if (kX = kH) then
+    (
+        {193}if (ctx_2 = BASE) then
+        {194}event HonestAccepted(kX,fbHon)
+    )
+    else
+        {195}event Reattributed(kX,kH,fbHon)
+) | (
+    {196}!
+    {197}in(honestTypeCh, (otS: bitstring,fbT: bitstring));
+    {198}in(typeCh, (otA: bitstring,=fbT));
+    {199}if (otS = otA) then
+        0
+    else
+        {200}event TypeConfused(otS,otA,fbT)
+) | (
+    {201}!
+    {202}in(honestInnerCh, (kH_1: pkey,idH: bitstring,fbHon_1: bitstring));
+    {203}in(scopeCh, (wctx(kW_1: pkey,idW_4: bitstring,fbW_4: bitstring),kIrep: pkey,idIrep: bitstring,=fbHon_1));
+    {204}if ((kIrep = kH_1) && (idIrep = idH)) then
+        {205}event HonestWrappedAccepted(kH_1,fbHon_1,kW_1)
+    else
+        {206}event Rescoped(kIrep,idIrep,kH_1,idH,fbHon_1)
+) | (
+    {207}!
+    {208}in(honestSigCh, (kH_2: pkey,sgH: bitstring));
+    {209}in(sigCh, (wctx(kW_2: pkey,idW_5: bitstring,fbW_5: bitstring),kIrep_1: pkey,=sgH));
+    {210}if (kIrep_1 = kH_2) then
+        0
+    else
+        {211}event InnerSigTransplanted(kIrep_1,sgH)
+)
+
+-- Query not event(BytesUnbound(k_1,s_1,b_1)) in process 1.
+Translating the process into Horn clauses...
+Completing...
+200 rules inserted. Base: 185 rules (82 with conclusion selected). Queue: 74 rules.
+400 rules inserted. Base: 245 rules (82 with conclusion selected). Queue: 93 rules.
+600 rules inserted. Base: 262 rules (82 with conclusion selected). Queue: 148 rules.
+800 rules inserted. Base: 318 rules (82 with conclusion selected). Queue: 289 rules.
+1000 rules inserted. Base: 347 rules (82 with conclusion selected). Queue: 336 rules.
+1200 rules inserted. Base: 392 rules (109 with conclusion selected). Queue: 283 rules.
+1400 rules inserted. Base: 486 rules (109 with conclusion selected). Queue: 232 rules.
+1600 rules inserted. Base: 594 rules (109 with conclusion selected). Queue: 426 rules.
+1800 rules inserted. Base: 609 rules (109 with conclusion selected). Queue: 516 rules.
+2000 rules inserted. Base: 651 rules (109 with conclusion selected). Queue: 576 rules.
+2200 rules inserted. Base: 651 rules (109 with conclusion selected). Queue: 576 rules.
+2400 rules inserted. Base: 651 rules (109 with conclusion selected). Queue: 576 rules.
+2600 rules inserted. Base: 660 rules (109 with conclusion selected). Queue: 595 rules.
+2800 rules inserted. Base: 681 rules (109 with conclusion selected). Queue: 576 rules.
+3000 rules inserted. Base: 697 rules (109 with conclusion selected). Queue: 564 rules.
+3200 rules inserted. Base: 739 rules (113 with conclusion selected). Queue: 720 rules.
+3400 rules inserted. Base: 772 rules (118 with conclusion selected). Queue: 723 rules.
+3600 rules inserted. Base: 795 rules (125 with conclusion selected). Queue: 725 rules.
+3800 rules inserted. Base: 807 rules (125 with conclusion selected). Queue: 758 rules.
+4000 rules inserted. Base: 885 rules (125 with conclusion selected). Queue: 702 rules.
+4200 rules inserted. Base: 1024 rules (125 with conclusion selected). Queue: 557 rules.
+4400 rules inserted. Base: 1133 rules (129 with conclusion selected). Queue: 433 rules.
+4600 rules inserted. Base: 1220 rules (132 with conclusion selected). Queue: 321 rules.
+4800 rules inserted. Base: 1420 rules (185 with conclusion selected). Queue: 125 rules.
+Starting query not event(BytesUnbound(k_1,s_1,b_1))
+goal reachable: attacker(cvI_4) && attacker(plI_2) && attacker(cvIw_4) && attacker(fbIn_3) && attacker(sgIn_3) -> event(BytesUnbound(pk(skW2[]),sign((BYTES,framed(OT_WRAPPER,algH[],idW2[],fp(pk(skW2[])),h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),cvA[],wrap(cvIw_4,(fbIn_3,sgIn_3)))),skW2[]),framed(OT_ATTEST,algH[],idW2[],fp(pk(skW2[])),h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),cvI_4,plI_2)))
+
+Derivation:
+
+1. The attacker has some term sgIn_3.
+attacker(sgIn_3).
+
+2. The attacker has some term fbIn_3.
+attacker(fbIn_3).
+
+3. The attacker has some term cvIw_4.
+attacker(cvIw_4).
+
+4. By 3, the attacker may know cvIw_4.
+By 2, the attacker may know fbIn_3.
+By 1, the attacker may know sgIn_3.
+Using the function 3-tuple the attacker may obtain (cvIw_4,fbIn_3,sgIn_3).
+attacker((cvIw_4,fbIn_3,sgIn_3)).
+
+5. The message (cvIw_4,fbIn_3,sgIn_3) that the attacker may have by 4 may be received at input {127}.
+So the message sign((POSS,authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),skW2[]) may be sent to the attacker at output {130}.
+attacker(sign((POSS,authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),skW2[])).
+
+6. The message pk(skW2[]) may be sent to the attacker at output {16}.
+attacker(pk(skW2[])).
+
+7. The message sign((STMT_DIGEST,h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[]))),skR[]) may be sent to the attacker at output {53}.
+attacker(sign((STMT_DIGEST,h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[]))),skR[])).
+
+8. The message skD[] may be sent to the attacker at output {21}.
+attacker(skD[]).
+
+9. The attacker initially knows verH[].
+attacker(verH[]).
+
+10. The attacker initially knows algH[].
+attacker(algH[]).
+
+11. The attacker initially knows ssetH[].
+attacker(ssetH[]).
+
+12. By 6, the attacker may know pk(skW2[]).
+Using the function fp the attacker may obtain fp(pk(skW2[])).
+attacker(fp(pk(skW2[]))).
+
+13. The attacker initially knows idW2[].
+attacker(idW2[]).
+
+14. By 13, the attacker may know idW2[].
+By 12, the attacker may know fp(pk(skW2[])).
+By 11, the attacker may know ssetH[].
+By 10, the attacker may know algH[].
+By 9, the attacker may know verH[].
+Using the function authTuple the attacker may obtain authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[]).
+attacker(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])).
+
+15. By 14, the attacker may know authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[]).
+Using the function h the attacker may obtain h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])).
+attacker(h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[]))).
+
+16. Using the function STMT_DIGEST the attacker may obtain STMT_DIGEST.
+attacker(STMT_DIGEST).
+
+17. By 16, the attacker may know STMT_DIGEST.
+By 15, the attacker may know h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])).
+Using the function 2-tuple the attacker may obtain (STMT_DIGEST,h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[]))).
+attacker((STMT_DIGEST,h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])))).
+
+18. By 17, the attacker may know (STMT_DIGEST,h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[]))).
+By 8, the attacker may know skD[].
+Using the function sign the attacker may obtain sign((STMT_DIGEST,h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[]))),skD[]).
+attacker(sign((STMT_DIGEST,h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[]))),skD[])).
+
+19. We assume as hypothesis that
+attacker(sgIn_4).
+
+20. We assume as hypothesis that
+attacker(fbIn_4).
+
+21. We assume as hypothesis that
+attacker(cvIw_5).
+
+22. By 21, the attacker may know cvIw_5.
+By 20, the attacker may know fbIn_4.
+By 19, the attacker may know sgIn_4.
+Using the function 3-tuple the attacker may obtain (cvIw_5,fbIn_4,sgIn_4).
+attacker((cvIw_5,fbIn_4,sgIn_4)).
+
+23. The message (cvIw_5,fbIn_4,sgIn_4) that the attacker may have by 22 may be received at input {127}.
+So the message sign((BYTES,framed(OT_WRAPPER,algH[],idW2[],fp(pk(skW2[])),h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),cvA[],wrap(cvIw_5,(fbIn_4,sgIn_4)))),skW2[]) may be sent to the attacker at output {134}.
+attacker(sign((BYTES,framed(OT_WRAPPER,algH[],idW2[],fp(pk(skW2[])),h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),cvA[],wrap(cvIw_5,(fbIn_4,sgIn_4)))),skW2[])).
+
+24. We assume as hypothesis that
+attacker(plI_2).
+
+25. We assume as hypothesis that
+attacker(cvI_4).
+
+26. Using the function OT_ATTEST the attacker may obtain OT_ATTEST.
+attacker(OT_ATTEST).
+
+27. By 26, the attacker may know OT_ATTEST.
+By 10, the attacker may know algH[].
+By 13, the attacker may know idW2[].
+By 12, the attacker may know fp(pk(skW2[])).
+By 15, the attacker may know h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])).
+By 25, the attacker may know cvI_4.
+By 24, the attacker may know plI_2.
+Using the function framed the attacker may obtain framed(OT_ATTEST,algH[],idW2[],fp(pk(skW2[])),h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),cvI_4,plI_2).
+attacker(framed(OT_ATTEST,algH[],idW2[],fp(pk(skW2[])),h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),cvI_4,plI_2)).
+
+28. By 27, the attacker may know framed(OT_ATTEST,algH[],idW2[],fp(pk(skW2[])),h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),cvI_4,plI_2).
+By 23, the attacker may know sign((BYTES,framed(OT_WRAPPER,algH[],idW2[],fp(pk(skW2[])),h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),cvA[],wrap(cvIw_5,(fbIn_4,sgIn_4)))),skW2[]).
+Using the function 2-tuple the attacker may obtain (framed(OT_ATTEST,algH[],idW2[],fp(pk(skW2[])),h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),cvI_4,plI_2),sign((BYTES,framed(OT_WRAPPER,algH[],idW2[],fp(pk(skW2[])),h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),cvA[],wrap(cvIw_5,(fbIn_4,sgIn_4)))),skW2[])).
+attacker((framed(OT_ATTEST,algH[],idW2[],fp(pk(skW2[])),h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),cvI_4,plI_2),sign((BYTES,framed(OT_WRAPPER,algH[],idW2[],fp(pk(skW2[])),h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),cvA[],wrap(cvIw_5,(fbIn_4,sgIn_4)))),skW2[]))).
+
+29. The attacker has some term cvIw_6.
+attacker(cvIw_6).
+
+30. By 29, the attacker may know cvIw_6.
+By 28, the attacker may know (framed(OT_ATTEST,algH[],idW2[],fp(pk(skW2[])),h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),cvI_4,plI_2),sign((BYTES,framed(OT_WRAPPER,algH[],idW2[],fp(pk(skW2[])),h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),cvA[],wrap(cvIw_5,(fbIn_4,sgIn_4)))),skW2[])).
+Using the function wrap the attacker may obtain wrap(cvIw_6,(framed(OT_ATTEST,algH[],idW2[],fp(pk(skW2[])),h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),cvI_4,plI_2),sign((BYTES,framed(OT_WRAPPER,algH[],idW2[],fp(pk(skW2[])),h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),cvA[],wrap(cvIw_5,(fbIn_4,sgIn_4)))),skW2[]))).
+attacker(wrap(cvIw_6,(framed(OT_ATTEST,algH[],idW2[],fp(pk(skW2[])),h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),cvI_4,plI_2),sign((BYTES,framed(OT_WRAPPER,algH[],idW2[],fp(pk(skW2[])),h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),cvA[],wrap(cvIw_5,(fbIn_4,sgIn_4)))),skW2[])))).
+
+31. The attacker initially knows cvA[].
+attacker(cvA[]).
+
+32. Using the function OT_WRAPPER the attacker may obtain OT_WRAPPER.
+attacker(OT_WRAPPER).
+
+33. By 32, the attacker may know OT_WRAPPER.
+By 10, the attacker may know algH[].
+By 13, the attacker may know idW2[].
+By 12, the attacker may know fp(pk(skW2[])).
+By 15, the attacker may know h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])).
+By 31, the attacker may know cvA[].
+By 30, the attacker may know wrap(cvIw_6,(framed(OT_ATTEST,algH[],idW2[],fp(pk(skW2[])),h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),cvI_4,plI_2),sign((BYTES,framed(OT_WRAPPER,algH[],idW2[],fp(pk(skW2[])),h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),cvA[],wrap(cvIw_5,(fbIn_4,sgIn_4)))),skW2[]))).
+Using the function framed the attacker may obtain framed(OT_WRAPPER,algH[],idW2[],fp(pk(skW2[])),h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),cvA[],wrap(cvIw_6,(framed(OT_ATTEST,algH[],idW2[],fp(pk(skW2[])),h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),cvI_4,plI_2),sign((BYTES,framed(OT_WRAPPER,algH[],idW2[],fp(pk(skW2[])),h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),cvA[],wrap(cvIw_5,(fbIn_4,sgIn_4)))),skW2[])))).
+attacker(framed(OT_WRAPPER,algH[],idW2[],fp(pk(skW2[])),h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),cvA[],wrap(cvIw_6,(framed(OT_ATTEST,algH[],idW2[],fp(pk(skW2[])),h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),cvI_4,plI_2),sign((BYTES,framed(OT_WRAPPER,algH[],idW2[],fp(pk(skW2[])),h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),cvA[],wrap(cvIw_5,(fbIn_4,sgIn_4)))),skW2[]))))).
+
+34. By 29, the attacker may know cvIw_6.
+By 27, the attacker may know framed(OT_ATTEST,algH[],idW2[],fp(pk(skW2[])),h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),cvI_4,plI_2).
+By 23, the attacker may know sign((BYTES,framed(OT_WRAPPER,algH[],idW2[],fp(pk(skW2[])),h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),cvA[],wrap(cvIw_5,(fbIn_4,sgIn_4)))),skW2[]).
+Using the function 3-tuple the attacker may obtain (cvIw_6,framed(OT_ATTEST,algH[],idW2[],fp(pk(skW2[])),h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),cvI_4,plI_2),sign((BYTES,framed(OT_WRAPPER,algH[],idW2[],fp(pk(skW2[])),h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),cvA[],wrap(cvIw_5,(fbIn_4,sgIn_4)))),skW2[])).
+attacker((cvIw_6,framed(OT_ATTEST,algH[],idW2[],fp(pk(skW2[])),h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),cvI_4,plI_2),sign((BYTES,framed(OT_WRAPPER,algH[],idW2[],fp(pk(skW2[])),h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),cvA[],wrap(cvIw_5,(fbIn_4,sgIn_4)))),skW2[]))).
+
+35. The message (cvIw_6,framed(OT_ATTEST,algH[],idW2[],fp(pk(skW2[])),h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),cvI_4,plI_2),sign((BYTES,framed(OT_WRAPPER,algH[],idW2[],fp(pk(skW2[])),h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),cvA[],wrap(cvIw_5,(fbIn_4,sgIn_4)))),skW2[])) that the attacker may have by 34 may be received at input {127}.
+So the message sign((BYTES,framed(OT_WRAPPER,algH[],idW2[],fp(pk(skW2[])),h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),cvA[],wrap(cvIw_6,(framed(OT_ATTEST,algH[],idW2[],fp(pk(skW2[])),h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),cvI_4,plI_2),sign((BYTES,framed(OT_WRAPPER,algH[],idW2[],fp(pk(skW2[])),h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),cvA[],wrap(cvIw_5,(fbIn_4,sgIn_4)))),skW2[]))))),skW2[]) may be sent to the attacker at output {134}.
+attacker(sign((BYTES,framed(OT_WRAPPER,algH[],idW2[],fp(pk(skW2[])),h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),cvA[],wrap(cvIw_6,(framed(OT_ATTEST,algH[],idW2[],fp(pk(skW2[])),h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),cvI_4,plI_2),sign((BYTES,framed(OT_WRAPPER,algH[],idW2[],fp(pk(skW2[])),h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),cvA[],wrap(cvIw_5,(fbIn_4,sgIn_4)))),skW2[]))))),skW2[])).
+
+36. By 14, the attacker may know authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[]).
+By 18, the attacker may know sign((STMT_DIGEST,h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[]))),skD[]).
+By 7, the attacker may know sign((STMT_DIGEST,h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[]))),skR[]).
+By 6, the attacker may know pk(skW2[]).
+By 5, the attacker may know sign((POSS,authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),skW2[]).
+By 35, the attacker may know sign((BYTES,framed(OT_WRAPPER,algH[],idW2[],fp(pk(skW2[])),h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),cvA[],wrap(cvIw_6,(framed(OT_ATTEST,algH[],idW2[],fp(pk(skW2[])),h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),cvI_4,plI_2),sign((BYTES,framed(OT_WRAPPER,algH[],idW2[],fp(pk(skW2[])),h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),cvA[],wrap(cvIw_5,(fbIn_4,sgIn_4)))),skW2[]))))),skW2[]).
+By 33, the attacker may know framed(OT_WRAPPER,algH[],idW2[],fp(pk(skW2[])),h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),cvA[],wrap(cvIw_6,(framed(OT_ATTEST,algH[],idW2[],fp(pk(skW2[])),h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),cvI_4,plI_2),sign((BYTES,framed(OT_WRAPPER,algH[],idW2[],fp(pk(skW2[])),h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),cvA[],wrap(cvIw_5,(fbIn_4,sgIn_4)))),skW2[])))).
+By 14, the attacker may know authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[]).
+By 18, the attacker may know sign((STMT_DIGEST,h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[]))),skD[]).
+By 7, the attacker may know sign((STMT_DIGEST,h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[]))),skR[]).
+By 6, the attacker may know pk(skW2[]).
+By 5, the attacker may know sign((POSS,authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),skW2[]).
+Using the function 12-tuple the attacker may obtain (authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[]),sign((STMT_DIGEST,h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[]))),skD[]),sign((STMT_DIGEST,h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[]))),skR[]),pk(skW2[]),sign((POSS,authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),skW2[]),sign((BYTES,framed(OT_WRAPPER,algH[],idW2[],fp(pk(skW2[])),h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),cvA[],wrap(cvIw_6,(framed(OT_ATTEST,algH[],idW2[],fp(pk(skW2[])),h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),cvI_4,plI_2),sign((BYTES,framed(OT_WRAPPER,algH[],idW2[],fp(pk(skW2[])),h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),cvA[],wrap(cvIw_5,(fbIn_4,sgIn_4)))),skW2[]))))),skW2[]),framed(OT_WRAPPER,algH[],idW2[],fp(pk(skW2[])),h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),cvA[],wrap(cvIw_6,(framed(OT_ATTEST,algH[],idW2[],fp(pk(skW2[])),h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),cvI_4,plI_2),sign((BYTES,framed(OT_WRAPPER,algH[],idW2[],fp(pk(skW2[])),h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),cvA[],wrap(cvIw_5,(fbIn_4,sgIn_4)))),skW2[])))),authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[]),sign((STMT_DIGEST,h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[]))),skD[]),sign((STMT_DIGEST,h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[]))),skR[]),pk(skW2[]),sign((POSS,authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),skW2[])).
+attacker((authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[]),sign((STMT_DIGEST,h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[]))),skD[]),sign((STMT_DIGEST,h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[]))),skR[]),pk(skW2[]),sign((POSS,authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),skW2[]),sign((BYTES,framed(OT_WRAPPER,algH[],idW2[],fp(pk(skW2[])),h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),cvA[],wrap(cvIw_6,(framed(OT_ATTEST,algH[],idW2[],fp(pk(skW2[])),h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),cvI_4,plI_2),sign((BYTES,framed(OT_WRAPPER,algH[],idW2[],fp(pk(skW2[])),h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),cvA[],wrap(cvIw_5,(fbIn_4,sgIn_4)))),skW2[]))))),skW2[]),framed(OT_WRAPPER,algH[],idW2[],fp(pk(skW2[])),h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),cvA[],wrap(cvIw_6,(framed(OT_ATTEST,algH[],idW2[],fp(pk(skW2[])),h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),cvI_4,plI_2),sign((BYTES,framed(OT_WRAPPER,algH[],idW2[],fp(pk(skW2[])),h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),cvA[],wrap(cvIw_5,(fbIn_4,sgIn_4)))),skW2[])))),authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[]),sign((STMT_DIGEST,h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[]))),skD[]),sign((STMT_DIGEST,h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[]))),skR[]),pk(skW2[]),sign((POSS,authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),skW2[]))).
+
+37. The message (authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[]),sign((STMT_DIGEST,h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[]))),skD[]),sign((STMT_DIGEST,h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[]))),skR[]),pk(skW2[]),sign((POSS,authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),skW2[]),sign((BYTES,framed(OT_WRAPPER,algH[],idW2[],fp(pk(skW2[])),h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),cvA[],wrap(cvIw_6,(framed(OT_ATTEST,algH[],idW2[],fp(pk(skW2[])),h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),cvI_4,plI_2),sign((BYTES,framed(OT_WRAPPER,algH[],idW2[],fp(pk(skW2[])),h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),cvA[],wrap(cvIw_5,(fbIn_4,sgIn_4)))),skW2[]))))),skW2[]),framed(OT_WRAPPER,algH[],idW2[],fp(pk(skW2[])),h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),cvA[],wrap(cvIw_6,(framed(OT_ATTEST,algH[],idW2[],fp(pk(skW2[])),h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),cvI_4,plI_2),sign((BYTES,framed(OT_WRAPPER,algH[],idW2[],fp(pk(skW2[])),h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),cvA[],wrap(cvIw_5,(fbIn_4,sgIn_4)))),skW2[])))),authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[]),sign((STMT_DIGEST,h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[]))),skD[]),sign((STMT_DIGEST,h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[]))),skR[]),pk(skW2[]),sign((POSS,authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),skW2[])) that the attacker may have by 36 may be received at input {157}.
+So the message (wctx(pk(skW2[]),idW2[],framed(OT_WRAPPER,algH[],idW2[],fp(pk(skW2[])),h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),cvA[],wrap(cvIw_6,(framed(OT_ATTEST,algH[],idW2[],fp(pk(skW2[])),h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),cvI_4,plI_2),sign((BYTES,framed(OT_WRAPPER,algH[],idW2[],fp(pk(skW2[])),h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),cvA[],wrap(cvIw_5,(fbIn_4,sgIn_4)))),skW2[]))))),pk(skW2[]),sign((BYTES,framed(OT_WRAPPER,algH[],idW2[],fp(pk(skW2[])),h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),cvA[],wrap(cvIw_5,(fbIn_4,sgIn_4)))),skW2[]),framed(OT_ATTEST,algH[],idW2[],fp(pk(skW2[])),h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),cvI_4,plI_2)) may be sent on channel bytesCh[] at output {182}.
+mess(bytesCh[],(wctx(pk(skW2[]),idW2[],framed(OT_WRAPPER,algH[],idW2[],fp(pk(skW2[])),h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),cvA[],wrap(cvIw_6,(framed(OT_ATTEST,algH[],idW2[],fp(pk(skW2[])),h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),cvI_4,plI_2),sign((BYTES,framed(OT_WRAPPER,algH[],idW2[],fp(pk(skW2[])),h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),cvA[],wrap(cvIw_5,(fbIn_4,sgIn_4)))),skW2[]))))),pk(skW2[]),sign((BYTES,framed(OT_WRAPPER,algH[],idW2[],fp(pk(skW2[])),h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),cvA[],wrap(cvIw_5,(fbIn_4,sgIn_4)))),skW2[]),framed(OT_ATTEST,algH[],idW2[],fp(pk(skW2[])),h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),cvI_4,plI_2))).
+
+38. The message (wctx(pk(skW2[]),idW2[],framed(OT_WRAPPER,algH[],idW2[],fp(pk(skW2[])),h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),cvA[],wrap(cvIw_6,(framed(OT_ATTEST,algH[],idW2[],fp(pk(skW2[])),h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),cvI_4,plI_2),sign((BYTES,framed(OT_WRAPPER,algH[],idW2[],fp(pk(skW2[])),h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),cvA[],wrap(cvIw_5,(fbIn_4,sgIn_4)))),skW2[]))))),pk(skW2[]),sign((BYTES,framed(OT_WRAPPER,algH[],idW2[],fp(pk(skW2[])),h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),cvA[],wrap(cvIw_5,(fbIn_4,sgIn_4)))),skW2[]),framed(OT_ATTEST,algH[],idW2[],fp(pk(skW2[])),h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),cvI_4,plI_2)) that may be sent on channel bytesCh[] by 37 may be received at input {184}.
+We have framed(OT_WRAPPER,algH[],idW2[],fp(pk(skW2[])),h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),cvA[],wrap(cvIw_5,(fbIn_4,sgIn_4))) ≠ framed(OT_ATTEST,algH[],idW2[],fp(pk(skW2[])),h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),cvI_4,plI_2).
+So event BytesUnbound(pk(skW2[]),sign((BYTES,framed(OT_WRAPPER,algH[],idW2[],fp(pk(skW2[])),h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),cvA[],wrap(cvIw_5,(fbIn_4,sgIn_4)))),skW2[]),framed(OT_ATTEST,algH[],idW2[],fp(pk(skW2[])),h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),cvI_4,plI_2)) may be executed at {187}.
+event(BytesUnbound(pk(skW2[]),sign((BYTES,framed(OT_WRAPPER,algH[],idW2[],fp(pk(skW2[])),h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),cvA[],wrap(cvIw_5,(fbIn_4,sgIn_4)))),skW2[]),framed(OT_ATTEST,algH[],idW2[],fp(pk(skW2[])),h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),cvI_4,plI_2))).
+
+39. By 38, event(BytesUnbound(pk(skW2[]),sign((BYTES,framed(OT_WRAPPER,algH[],idW2[],fp(pk(skW2[])),h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),cvA[],wrap(cvIw_5,(fbIn_4,sgIn_4)))),skW2[]),framed(OT_ATTEST,algH[],idW2[],fp(pk(skW2[])),h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),cvI_4,plI_2))).
+The goal is reached, represented in the following fact:
+event(BytesUnbound(pk(skW2[]),sign((BYTES,framed(OT_WRAPPER,algH[],idW2[],fp(pk(skW2[])),h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),cvA[],wrap(cvIw_5,(fbIn_4,sgIn_4)))),skW2[]),framed(OT_ATTEST,algH[],idW2[],fp(pk(skW2[])),h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),cvI_4,plI_2))).
+
+
+A more detailed output of the traces is available with
+  set traceDisplay = long.
+
+new skD: skey creating skD_5 at {1}
+
+new skR: skey creating skR_5 at {2}
+
+new skI1: skey creating skI1_1 at {3}
+
+new skI2: skey creating skI2_1 at {4}
+
+new skW1: skey creating skW1_1 at {5}
+
+new skW2: skey creating skW2_1 at {6}
+
+out(c, ~M) with ~M = pk(skD_5) at {11}
+
+out(c, ~M_1) with ~M_1 = pk(skR_5) at {12}
+
+out(c, ~M_2) with ~M_2 = pk(skI1_1) at {13}
+
+out(c, ~M_3) with ~M_3 = pk(skI2_1) at {14}
+
+out(c, ~M_4) with ~M_4 = pk(skW1_1) at {15}
+
+out(c, ~M_5) with ~M_5 = pk(skW2_1) at {16}
+
+out(c, authTuple(~M_6,~M_7,~M_8,~M_9,~M_10)) with ~M_6 = issuerId, ~M_7 = fp(pk(skI1_1)), ~M_8 = ssetH, ~M_9 = algH, ~M_10 = verH at {17}
+
+out(c, authTuple(~M_11,~M_12,~M_13,~M_14,~M_15)) with ~M_11 = issuerId2, ~M_12 = fp(pk(skI2_1)), ~M_13 = ssetH, ~M_14 = algH, ~M_15 = verH at {18}
+
+out(c, authTuple(~M_16,~M_17,~M_18,~M_19,~M_20)) with ~M_16 = idW1, ~M_17 = fp(pk(skW1_1)), ~M_18 = ssetH, ~M_19 = algH, ~M_20 = verH at {19}
+
+out(c, authTuple(~M_21,~M_22,~M_23,~M_24,~M_25)) with ~M_21 = idW2, ~M_22 = fp(pk(skW2_1)), ~M_23 = ssetH, ~M_24 = algH, ~M_25 = verH at {20}
+
+out(c, ~M_26) with ~M_26 = skD_5 at {21}
+
+event AuthorityPublishedRepo(authTuple(idW2,fp(pk(skW2_1)),ssetH,algH,verH)) at {52} in copy a
+
+out(c, ~M_27) with ~M_27 = sign((STMT_DIGEST,h(authTuple(idW2,fp(pk(skW2_1)),ssetH,algH,verH))),skR_5) at {53} in copy a
+
+in(c, (a_1,a_2,a_3)) at {127} in copy a_4
+
+event IssuerPossession(pk(skW2_1)) at {128} in copy a_4
+
+out(c, ~M_28) with ~M_28 = sign((POSS,authTuple(idW2,fp(pk(skW2_1)),ssetH,algH,verH)),skW2_1) at {130} in copy a_4
+
+event IssuerSigned(pk(skW2_1),framed(OT_WRAPPER,algH,idW2,fp(pk(skW2_1)),h(authTuple(idW2,fp(pk(skW2_1)),ssetH,algH,verH)),cvA,wrap(a_1,(a_2,a_3)))) at {132} in copy a_4
+
+out(c, ~M_29) with ~M_29 = sign((BYTES,framed(OT_WRAPPER,algH,idW2,fp(pk(skW2_1)),h(authTuple(idW2,fp(pk(skW2_1)),ssetH,algH,verH)),cvA,wrap(a_1,(a_2,a_3)))),skW2_1) at {134} in copy a_4
+
+in(c, (a_5,framed(OT_ATTEST,algH,idW2,fp(~M_5),h(authTuple(idW2,fp(~M_5),ssetH,algH,verH)),a_6,a_7),~M_29)) with fp(~M_5) = fp(pk(skW2_1)), h(authTuple(idW2,fp(~M_5),ssetH,algH,verH)) = h(authTuple(idW2,fp(pk(skW2_1)),ssetH,algH,verH)), ~M_29 = sign((BYTES,framed(OT_WRAPPER,algH,idW2,fp(pk(skW2_1)),h(authTuple(idW2,fp(pk(skW2_1)),ssetH,algH,verH)),cvA,wrap(a_1,(a_2,a_3)))),skW2_1) at {127} in copy a_8
+
+event IssuerPossession(pk(skW2_1)) at {128} in copy a_8
+
+out(c, ~M_30) with ~M_30 = sign((POSS,authTuple(idW2,fp(pk(skW2_1)),ssetH,algH,verH)),skW2_1) at {130} in copy a_8
+
+event IssuerSigned(pk(skW2_1),framed(OT_WRAPPER,algH,idW2,fp(pk(skW2_1)),h(authTuple(idW2,fp(pk(skW2_1)),ssetH,algH,verH)),cvA,wrap(a_5,(framed(OT_ATTEST,algH,idW2,fp(pk(skW2_1)),h(authTuple(idW2,fp(pk(skW2_1)),ssetH,algH,verH)),a_6,a_7),sign((BYTES,framed(OT_WRAPPER,algH,idW2,fp(pk(skW2_1)),h(authTuple(idW2,fp(pk(skW2_1)),ssetH,algH,verH)),cvA,wrap(a_1,(a_2,a_3)))),skW2_1))))) at {132} in copy a_8
+
+out(c, ~M_31) with ~M_31 = sign((BYTES,framed(OT_WRAPPER,algH,idW2,fp(pk(skW2_1)),h(authTuple(idW2,fp(pk(skW2_1)),ssetH,algH,verH)),cvA,wrap(a_5,(framed(OT_ATTEST,algH,idW2,fp(pk(skW2_1)),h(authTuple(idW2,fp(pk(skW2_1)),ssetH,algH,verH)),a_6,a_7),sign((BYTES,framed(OT_WRAPPER,algH,idW2,fp(pk(skW2_1)),h(authTuple(idW2,fp(pk(skW2_1)),ssetH,algH,verH)),cvA,wrap(a_1,(a_2,a_3)))),skW2_1))))),skW2_1) at {134} in copy a_8
+
+in(c, (a_9,a_10,a_11)) at {127} in copy a_12
+
+event IssuerPossession(pk(skW2_1)) at {128} in copy a_12
+
+out(c, ~M_32) with ~M_32 = sign((POSS,authTuple(idW2,fp(pk(skW2_1)),ssetH,algH,verH)),skW2_1) at {130} in copy a_12
+
+event IssuerSigned(pk(skW2_1),framed(OT_WRAPPER,algH,idW2,fp(pk(skW2_1)),h(authTuple(idW2,fp(pk(skW2_1)),ssetH,algH,verH)),cvA,wrap(a_9,(a_10,a_11)))) at {132} in copy a_12
+
+out(c, ~M_33) with ~M_33 = sign((BYTES,framed(OT_WRAPPER,algH,idW2,fp(pk(skW2_1)),h(authTuple(idW2,fp(pk(skW2_1)),ssetH,algH,verH)),cvA,wrap(a_9,(a_10,a_11)))),skW2_1) at {134} in copy a_12
+
+in(c, (authTuple(idW2,fp(~M_5),ssetH,algH,verH),sign((STMT_DIGEST,h(authTuple(idW2,fp(~M_5),ssetH,algH,verH))),~M_26),~M_27,~M_5,~M_28,~M_31,framed(OT_WRAPPER,algH,idW2,fp(~M_5),h(authTuple(idW2,fp(~M_5),ssetH,algH,verH)),cvA,wrap(a_5,(framed(OT_ATTEST,algH,idW2,fp(~M_5),h(authTuple(idW2,fp(~M_5),ssetH,algH,verH)),a_6,a_7),~M_29))),authTuple(idW2,fp(~M_5),ssetH,algH,verH),sign((STMT_DIGEST,h(authTuple(idW2,fp(~M_5),ssetH,algH,verH))),~M_26),~M_27,~M_5,~M_28)) with fp(~M_5) = fp(pk(skW2_1)), sign((STMT_DIGEST,h(authTuple(idW2,fp(~M_5),ssetH,algH,verH))),~M_26) = sign((STMT_DIGEST,h(authTuple(idW2,fp(pk(skW2_1)),ssetH,algH,verH))),skD_5), ~M_27 = sign((STMT_DIGEST,h(authTuple(idW2,fp(pk(skW2_1)),ssetH,algH,verH))),skR_5), ~M_5 = pk(skW2_1), ~M_28 = sign((POSS,authTuple(idW2,fp(pk(skW2_1)),ssetH,algH,verH)),skW2_1), ~M_31 = sign((BYTES,framed(OT_WRAPPER,algH,idW2,fp(pk(skW2_1)),h(authTuple(idW2,fp(pk(skW2_1)),ssetH,algH,verH)),cvA,wrap(a_5,(framed(OT_ATTEST,algH,idW2,fp(pk(skW2_1)),h(authTuple(idW2,fp(pk(skW2_1)),ssetH,algH,verH)),a_6,a_7),sign((BYTES,framed(OT_WRAPPER,algH,idW2,fp(pk(skW2_1)),h(authTuple(idW2,fp(pk(skW2_1)),ssetH,algH,verH)),cvA,wrap(a_1,(a_2,a_3)))),skW2_1))))),skW2_1), fp(~M_5) = fp(pk(skW2_1)), h(authTuple(idW2,fp(~M_5),ssetH,algH,verH)) = h(authTuple(idW2,fp(pk(skW2_1)),ssetH,algH,verH)), fp(~M_5) = fp(pk(skW2_1)), h(authTuple(idW2,fp(~M_5),ssetH,algH,verH)) = h(authTuple(idW2,fp(pk(skW2_1)),ssetH,algH,verH)), ~M_29 = sign((BYTES,framed(OT_WRAPPER,algH,idW2,fp(pk(skW2_1)),h(authTuple(idW2,fp(pk(skW2_1)),ssetH,algH,verH)),cvA,wrap(a_1,(a_2,a_3)))),skW2_1), fp(~M_5) = fp(pk(skW2_1)), sign((STMT_DIGEST,h(authTuple(idW2,fp(~M_5),ssetH,algH,verH))),~M_26) = sign((STMT_DIGEST,h(authTuple(idW2,fp(pk(skW2_1)),ssetH,algH,verH))),skD_5), ~M_27 = sign((STMT_DIGEST,h(authTuple(idW2,fp(pk(skW2_1)),ssetH,algH,verH))),skR_5), ~M_5 = pk(skW2_1), ~M_28 = sign((POSS,authTuple(idW2,fp(pk(skW2_1)),ssetH,algH,verH)),skW2_1) at {157} in copy a_13
+
+event AcceptOuter(pk(skW2_1),idW2,framed(OT_WRAPPER,algH,idW2,fp(pk(skW2_1)),h(authTuple(idW2,fp(pk(skW2_1)),ssetH,algH,verH)),cvA,wrap(a_5,(framed(OT_ATTEST,algH,idW2,fp(pk(skW2_1)),h(authTuple(idW2,fp(pk(skW2_1)),ssetH,algH,verH)),a_6,a_7),sign((BYTES,framed(OT_WRAPPER,algH,idW2,fp(pk(skW2_1)),h(authTuple(idW2,fp(pk(skW2_1)),ssetH,algH,verH)),cvA,wrap(a_1,(a_2,a_3)))),skW2_1))))) at {166} in copy a_13
+
+event AcceptInner(wctx(pk(skW2_1),idW2,framed(OT_WRAPPER,algH,idW2,fp(pk(skW2_1)),h(authTuple(idW2,fp(pk(skW2_1)),ssetH,algH,verH)),cvA,wrap(a_5,(framed(OT_ATTEST,algH,idW2,fp(pk(skW2_1)),h(authTuple(idW2,fp(pk(skW2_1)),ssetH,algH,verH)),a_6,a_7),sign((BYTES,framed(OT_WRAPPER,algH,idW2,fp(pk(skW2_1)),h(authTuple(idW2,fp(pk(skW2_1)),ssetH,algH,verH)),cvA,wrap(a_1,(a_2,a_3)))),skW2_1))))),pk(skW2_1),idW2,framed(OT_ATTEST,algH,idW2,fp(pk(skW2_1)),h(authTuple(idW2,fp(pk(skW2_1)),ssetH,algH,verH)),a_6,a_7)) at {177} in copy a_13
+
+out(bytesCh, (wctx(pk(skW2_1),idW2,framed(OT_WRAPPER,algH,idW2,fp(pk(skW2_1)),h(authTuple(idW2,fp(pk(skW2_1)),ssetH,algH,verH)),cvA,wrap(a_5,(framed(OT_ATTEST,algH,idW2,fp(pk(skW2_1)),h(authTuple(idW2,fp(pk(skW2_1)),ssetH,algH,verH)),a_6,a_7),sign((BYTES,framed(OT_WRAPPER,algH,idW2,fp(pk(skW2_1)),h(authTuple(idW2,fp(pk(skW2_1)),ssetH,algH,verH)),cvA,wrap(a_1,(a_2,a_3)))),skW2_1))))),pk(skW2_1),sign((BYTES,framed(OT_WRAPPER,algH,idW2,fp(pk(skW2_1)),h(authTuple(idW2,fp(pk(skW2_1)),ssetH,algH,verH)),cvA,wrap(a_1,(a_2,a_3)))),skW2_1),framed(OT_ATTEST,algH,idW2,fp(pk(skW2_1)),h(authTuple(idW2,fp(pk(skW2_1)),ssetH,algH,verH)),a_6,a_7))) at {182} in copy a_13 received at {184} in copy a_14
+
+event BytesUnbound(pk(skW2_1),sign((BYTES,framed(OT_WRAPPER,algH,idW2,fp(pk(skW2_1)),h(authTuple(idW2,fp(pk(skW2_1)),ssetH,algH,verH)),cvA,wrap(a_1,(a_2,a_3)))),skW2_1),framed(OT_ATTEST,algH,idW2,fp(pk(skW2_1)),h(authTuple(idW2,fp(pk(skW2_1)),ssetH,algH,verH)),a_6,a_7)) at {187} in copy a_14 (goal)
+
+The event BytesUnbound(pk(skW2_1),sign((BYTES,framed(OT_WRAPPER,algH,idW2,fp(pk(skW2_1)),h(authTuple(idW2,fp(pk(skW2_1)),ssetH,algH,verH)),cvA,wrap(a_1,(a_2,a_3)))),skW2_1),framed(OT_ATTEST,algH,idW2,fp(pk(skW2_1)),h(authTuple(idW2,fp(pk(skW2_1)),ssetH,algH,verH)),a_6,a_7)) is executed at {187} in copy a_14.
+A trace has been found.
+RESULT not event(BytesUnbound(k_1,s_1,b_1)) is false.
+-- Query not event(TypeConfused(otS_1,otA_1,fb)) in process 1.
+Translating the process into Horn clauses...
+Completing...
+200 rules inserted. Base: 185 rules (82 with conclusion selected). Queue: 72 rules.
+400 rules inserted. Base: 239 rules (82 with conclusion selected). Queue: 92 rules.
+600 rules inserted. Base: 243 rules (82 with conclusion selected). Queue: 154 rules.
+800 rules inserted. Base: 305 rules (82 with conclusion selected). Queue: 289 rules.
+1000 rules inserted. Base: 334 rules (82 with conclusion selected). Queue: 336 rules.
+1200 rules inserted. Base: 379 rules (109 with conclusion selected). Queue: 290 rules.
+1400 rules inserted. Base: 475 rules (109 with conclusion selected). Queue: 231 rules.
+1600 rules inserted. Base: 587 rules (109 with conclusion selected). Queue: 427 rules.
+1800 rules inserted. Base: 602 rules (109 with conclusion selected). Queue: 517 rules.
+2000 rules inserted. Base: 652 rules (109 with conclusion selected). Queue: 583 rules.
+2200 rules inserted. Base: 652 rules (109 with conclusion selected). Queue: 583 rules.
+2400 rules inserted. Base: 652 rules (109 with conclusion selected). Queue: 583 rules.
+2600 rules inserted. Base: 651 rules (109 with conclusion selected). Queue: 605 rules.
+2800 rules inserted. Base: 672 rules (109 with conclusion selected). Queue: 586 rules.
+3000 rules inserted. Base: 690 rules (109 with conclusion selected). Queue: 572 rules.
+3200 rules inserted. Base: 738 rules (111 with conclusion selected). Queue: 722 rules.
+3400 rules inserted. Base: 761 rules (117 with conclusion selected). Queue: 716 rules.
+3600 rules inserted. Base: 794 rules (125 with conclusion selected). Queue: 723 rules.
+3800 rules inserted. Base: 808 rules (125 with conclusion selected). Queue: 754 rules.
+4000 rules inserted. Base: 878 rules (125 with conclusion selected). Queue: 710 rules.
+4200 rules inserted. Base: 991 rules (125 with conclusion selected). Queue: 587 rules.
+4400 rules inserted. Base: 1106 rules (125 with conclusion selected). Queue: 460 rules.
+4600 rules inserted. Base: 1201 rules (125 with conclusion selected). Queue: 344 rules.
+4800 rules inserted. Base: 1387 rules (181 with conclusion selected). Queue: 153 rules.
+Starting query not event(TypeConfused(otS_1,otA_1,fb))
+RESULT not event(TypeConfused(otS_1,otA_1,fb)) is true.
+-- Query not event(Rescoped(kX_1,idX_1,kH_3,idH_1,fb)) in process 1.
+Translating the process into Horn clauses...
+Completing...
+200 rules inserted. Base: 185 rules (82 with conclusion selected). Queue: 73 rules.
+400 rules inserted. Base: 238 rules (82 with conclusion selected). Queue: 90 rules.
+600 rules inserted. Base: 246 rules (82 with conclusion selected). Queue: 152 rules.
+800 rules inserted. Base: 307 rules (82 with conclusion selected). Queue: 288 rules.
+1000 rules inserted. Base: 335 rules (82 with conclusion selected). Queue: 336 rules.
+1200 rules inserted. Base: 380 rules (109 with conclusion selected). Queue: 281 rules.
+1400 rules inserted. Base: 479 rules (109 with conclusion selected). Queue: 240 rules.
+1600 rules inserted. Base: 583 rules (109 with conclusion selected). Queue: 432 rules.
+1800 rules inserted. Base: 598 rules (109 with conclusion selected). Queue: 522 rules.
+2000 rules inserted. Base: 639 rules (109 with conclusion selected). Queue: 576 rules.
+2200 rules inserted. Base: 639 rules (109 with conclusion selected). Queue: 576 rules.
+2400 rules inserted. Base: 639 rules (109 with conclusion selected). Queue: 576 rules.
+2600 rules inserted. Base: 648 rules (109 with conclusion selected). Queue: 595 rules.
+2800 rules inserted. Base: 669 rules (109 with conclusion selected). Queue: 576 rules.
+3000 rules inserted. Base: 687 rules (109 with conclusion selected). Queue: 562 rules.
+3200 rules inserted. Base: 728 rules (113 with conclusion selected). Queue: 719 rules.
+3400 rules inserted. Base: 760 rules (118 with conclusion selected). Queue: 729 rules.
+3600 rules inserted. Base: 783 rules (125 with conclusion selected). Queue: 727 rules.
+3800 rules inserted. Base: 795 rules (125 with conclusion selected). Queue: 772 rules.
+4000 rules inserted. Base: 878 rules (125 with conclusion selected). Queue: 703 rules.
+4200 rules inserted. Base: 1018 rules (125 with conclusion selected). Queue: 559 rules.
+4400 rules inserted. Base: 1123 rules (125 with conclusion selected). Queue: 437 rules.
+4600 rules inserted. Base: 1214 rules (130 with conclusion selected). Queue: 323 rules.
+4800 rules inserted. Base: 1408 rules (181 with conclusion selected). Queue: 133 rules.
+Starting query not event(Rescoped(kX_1,idX_1,kH_3,idH_1,fb))
+RESULT not event(Rescoped(kX_1,idX_1,kH_3,idH_1,fb)) is true.
+-- Query not event(InnerSigTransplanted(kX_1,s_1)) in process 1.
+Translating the process into Horn clauses...
+Completing...
+200 rules inserted. Base: 185 rules (82 with conclusion selected). Queue: 72 rules.
+400 rules inserted. Base: 235 rules (82 with conclusion selected). Queue: 86 rules.
+600 rules inserted. Base: 250 rules (82 with conclusion selected). Queue: 152 rules.
+800 rules inserted. Base: 302 rules (82 with conclusion selected). Queue: 296 rules.
+1000 rules inserted. Base: 330 rules (82 with conclusion selected). Queue: 336 rules.
+1200 rules inserted. Base: 375 rules (109 with conclusion selected). Queue: 271 rules.
+1400 rules inserted. Base: 487 rules (109 with conclusion selected). Queue: 264 rules.
+1600 rules inserted. Base: 579 rules (109 with conclusion selected). Queue: 438 rules.
+1800 rules inserted. Base: 594 rules (109 with conclusion selected). Queue: 528 rules.
+2000 rules inserted. Base: 634 rules (109 with conclusion selected). Queue: 576 rules.
+2200 rules inserted. Base: 634 rules (109 with conclusion selected). Queue: 576 rules.
+2400 rules inserted. Base: 634 rules (109 with conclusion selected). Queue: 576 rules.
+2600 rules inserted. Base: 645 rules (109 with conclusion selected). Queue: 593 rules.
+2800 rules inserted. Base: 665 rules (109 with conclusion selected). Queue: 577 rules.
+3000 rules inserted. Base: 682 rules (109 with conclusion selected). Queue: 562 rules.
+3200 rules inserted. Base: 724 rules (113 with conclusion selected). Queue: 718 rules.
+3400 rules inserted. Base: 756 rules (119 with conclusion selected). Queue: 726 rules.
+3600 rules inserted. Base: 780 rules (125 with conclusion selected). Queue: 723 rules.
+3800 rules inserted. Base: 790 rules (125 with conclusion selected). Queue: 772 rules.
+4000 rules inserted. Base: 876 rules (125 with conclusion selected). Queue: 694 rules.
+4200 rules inserted. Base: 1014 rules (125 with conclusion selected). Queue: 549 rules.
+4400 rules inserted. Base: 1116 rules (125 with conclusion selected). Queue: 433 rules.
+4600 rules inserted. Base: 1224 rules (139 with conclusion selected). Queue: 304 rules.
+4800 rules inserted. Base: 1420 rules (181 with conclusion selected). Queue: 112 rules.
+Starting query not event(InnerSigTransplanted(kX_1,s_1))
+RESULT not event(InnerSigTransplanted(kX_1,s_1)) is true.
+-- Query not event(Reattributed(kX_1,kH_3,fb)) in process 1.
+Translating the process into Horn clauses...
+Completing...
+200 rules inserted. Base: 185 rules (82 with conclusion selected). Queue: 72 rules.
+400 rules inserted. Base: 235 rules (82 with conclusion selected). Queue: 88 rules.
+600 rules inserted. Base: 250 rules (82 with conclusion selected). Queue: 152 rules.
+800 rules inserted. Base: 302 rules (82 with conclusion selected). Queue: 292 rules.
+1000 rules inserted. Base: 330 rules (82 with conclusion selected). Queue: 336 rules.
+1200 rules inserted. Base: 375 rules (109 with conclusion selected). Queue: 278 rules.
+1400 rules inserted. Base: 484 rules (109 with conclusion selected). Queue: 257 rules.
+1600 rules inserted. Base: 582 rules (109 with conclusion selected). Queue: 436 rules.
+1800 rules inserted. Base: 597 rules (109 with conclusion selected). Queue: 526 rules.
+2000 rules inserted. Base: 642 rules (109 with conclusion selected). Queue: 580 rules.
+2200 rules inserted. Base: 642 rules (109 with conclusion selected). Queue: 580 rules.
+2400 rules inserted. Base: 642 rules (109 with conclusion selected). Queue: 580 rules.
+2600 rules inserted. Base: 647 rules (109 with conclusion selected). Queue: 599 rules.
+2800 rules inserted. Base: 668 rules (109 with conclusion selected). Queue: 580 rules.
+3000 rules inserted. Base: 684 rules (109 with conclusion selected). Queue: 568 rules.
+3200 rules inserted. Base: 730 rules (113 with conclusion selected). Queue: 720 rules.
+3400 rules inserted. Base: 763 rules (118 with conclusion selected). Queue: 723 rules.
+3600 rules inserted. Base: 786 rules (125 with conclusion selected). Queue: 721 rules.
+3800 rules inserted. Base: 798 rules (125 with conclusion selected). Queue: 754 rules.
+4000 rules inserted. Base: 875 rules (125 with conclusion selected). Queue: 699 rules.
+4200 rules inserted. Base: 1012 rules (125 with conclusion selected). Queue: 556 rules.
+4400 rules inserted. Base: 1120 rules (125 with conclusion selected). Queue: 432 rules.
+4600 rules inserted. Base: 1208 rules (129 with conclusion selected). Queue: 320 rules.
+4800 rules inserted. Base: 1408 rules (181 with conclusion selected). Queue: 122 rules.
+Starting query not event(Reattributed(kX_1,kH_3,fb))
+RESULT not event(Reattributed(kX_1,kH_3,fb)) is true.
+-- Query not event(HonestWrappedAccepted(kH_3,fb,kW_3)) in process 1.
+Translating the process into Horn clauses...
+Completing...
+200 rules inserted. Base: 185 rules (82 with conclusion selected). Queue: 72 rules.
+400 rules inserted. Base: 233 rules (82 with conclusion selected). Queue: 88 rules.
+600 rules inserted. Base: 250 rules (82 with conclusion selected). Queue: 152 rules.
+800 rules inserted. Base: 302 rules (82 with conclusion selected). Queue: 292 rules.
+1000 rules inserted. Base: 330 rules (82 with conclusion selected). Queue: 336 rules.
+1200 rules inserted. Base: 375 rules (109 with conclusion selected). Queue: 274 rules.
+1400 rules inserted. Base: 483 rules (109 with conclusion selected). Queue: 258 rules.
+1600 rules inserted. Base: 579 rules (109 with conclusion selected). Queue: 438 rules.
+1800 rules inserted. Base: 594 rules (109 with conclusion selected). Queue: 528 rules.
+2000 rules inserted. Base: 634 rules (109 with conclusion selected). Queue: 576 rules.
+2200 rules inserted. Base: 634 rules (109 with conclusion selected). Queue: 576 rules.
+2400 rules inserted. Base: 634 rules (109 with conclusion selected). Queue: 576 rules.
+2600 rules inserted. Base: 645 rules (109 with conclusion selected). Queue: 593 rules.
+2800 rules inserted. Base: 665 rules (109 with conclusion selected). Queue: 577 rules.
+3000 rules inserted. Base: 682 rules (109 with conclusion selected). Queue: 562 rules.
+3200 rules inserted. Base: 723 rules (113 with conclusion selected). Queue: 719 rules.
+3400 rules inserted. Base: 756 rules (119 with conclusion selected). Queue: 727 rules.
+3600 rules inserted. Base: 779 rules (125 with conclusion selected). Queue: 723 rules.
+3800 rules inserted. Base: 790 rules (125 with conclusion selected). Queue: 771 rules.
+4000 rules inserted. Base: 876 rules (125 with conclusion selected). Queue: 695 rules.
+4200 rules inserted. Base: 1013 rules (125 with conclusion selected). Queue: 550 rules.
+4400 rules inserted. Base: 1115 rules (125 with conclusion selected). Queue: 433 rules.
+4600 rules inserted. Base: 1220 rules (136 with conclusion selected). Queue: 307 rules.
+4800 rules inserted. Base: 1417 rules (182 with conclusion selected). Queue: 121 rules.
+Starting query not event(HonestWrappedAccepted(kH_3,fb,kW_3))
+goal reachable: attacker(plI_2) -> event(HonestWrappedAccepted(pk(skI2[]),framed(OT_ATTEST,algH[],issuerId2[],fp(pk(skI2[])),h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])),cvB[],plI_2),pk(skW2[])))
+
+Derivation:
+
+1. We assume as hypothesis that
+attacker(plI_2).
+
+2. The message plI_2 that the attacker may have by 1 may be received at input {86}.
+So the message (pk(skI2[]),issuerId2[],framed(OT_ATTEST,algH[],issuerId2[],fp(pk(skI2[])),h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])),cvB[],plI_2)) may be sent on channel honestInnerCh[] at output {95}.
+mess(honestInnerCh[],(pk(skI2[]),issuerId2[],framed(OT_ATTEST,algH[],issuerId2[],fp(pk(skI2[])),h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])),cvB[],plI_2))).
+
+3. The attacker has some term payload_3.
+attacker(payload_3).
+
+4. The message payload_3 that the attacker may have by 3 may be received at input {86}.
+So the message sign((POSS,authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])),skI2[]) may be sent to the attacker at output {89}.
+attacker(sign((POSS,authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])),skI2[])).
+
+5. The message pk(skI2[]) may be sent to the attacker at output {14}.
+attacker(pk(skI2[])).
+
+6. The message sign((STMT_DIGEST,h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[]))),skR[]) may be sent to the attacker at output {45}.
+attacker(sign((STMT_DIGEST,h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[]))),skR[])).
+
+7. The message skD[] may be sent to the attacker at output {21}.
+attacker(skD[]).
+
+8. The attacker initially knows verH[].
+attacker(verH[]).
+
+9. The attacker initially knows algH[].
+attacker(algH[]).
+
+10. The attacker initially knows ssetH[].
+attacker(ssetH[]).
+
+11. By 5, the attacker may know pk(skI2[]).
+Using the function fp the attacker may obtain fp(pk(skI2[])).
+attacker(fp(pk(skI2[]))).
+
+12. The attacker initially knows issuerId2[].
+attacker(issuerId2[]).
+
+13. By 12, the attacker may know issuerId2[].
+By 11, the attacker may know fp(pk(skI2[])).
+By 10, the attacker may know ssetH[].
+By 9, the attacker may know algH[].
+By 8, the attacker may know verH[].
+Using the function authTuple the attacker may obtain authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[]).
+attacker(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])).
+
+14. By 13, the attacker may know authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[]).
+Using the function h the attacker may obtain h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])).
+attacker(h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[]))).
+
+15. Using the function STMT_DIGEST the attacker may obtain STMT_DIGEST.
+attacker(STMT_DIGEST).
+
+16. By 15, the attacker may know STMT_DIGEST.
+By 14, the attacker may know h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])).
+Using the function 2-tuple the attacker may obtain (STMT_DIGEST,h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[]))).
+attacker((STMT_DIGEST,h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])))).
+
+17. By 16, the attacker may know (STMT_DIGEST,h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[]))).
+By 7, the attacker may know skD[].
+Using the function sign the attacker may obtain sign((STMT_DIGEST,h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[]))),skD[]).
+attacker(sign((STMT_DIGEST,h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[]))),skD[])).
+
+18. The attacker has some term payload_4.
+attacker(payload_4).
+
+19. The message payload_4 that the attacker may have by 18 may be received at input {86}.
+So the message sign((BYTES,framed(OT_ATTEST,algH[],issuerId2[],fp(pk(skI2[])),h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])),cvB[],payload_4)),skI2[]) may be sent to the attacker at output {97}.
+attacker(sign((BYTES,framed(OT_ATTEST,algH[],issuerId2[],fp(pk(skI2[])),h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])),cvB[],payload_4)),skI2[])).
+
+20. The attacker initially knows cvB[].
+attacker(cvB[]).
+
+21. Using the function OT_ATTEST the attacker may obtain OT_ATTEST.
+attacker(OT_ATTEST).
+
+22. By 21, the attacker may know OT_ATTEST.
+By 9, the attacker may know algH[].
+By 12, the attacker may know issuerId2[].
+By 11, the attacker may know fp(pk(skI2[])).
+By 14, the attacker may know h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])).
+By 20, the attacker may know cvB[].
+By 1, the attacker may know plI_2.
+Using the function framed the attacker may obtain framed(OT_ATTEST,algH[],issuerId2[],fp(pk(skI2[])),h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])),cvB[],plI_2).
+attacker(framed(OT_ATTEST,algH[],issuerId2[],fp(pk(skI2[])),h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])),cvB[],plI_2)).
+
+23. By 22, the attacker may know framed(OT_ATTEST,algH[],issuerId2[],fp(pk(skI2[])),h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])),cvB[],plI_2).
+By 19, the attacker may know sign((BYTES,framed(OT_ATTEST,algH[],issuerId2[],fp(pk(skI2[])),h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])),cvB[],payload_4)),skI2[]).
+Using the function 2-tuple the attacker may obtain (framed(OT_ATTEST,algH[],issuerId2[],fp(pk(skI2[])),h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])),cvB[],plI_2),sign((BYTES,framed(OT_ATTEST,algH[],issuerId2[],fp(pk(skI2[])),h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])),cvB[],payload_4)),skI2[])).
+attacker((framed(OT_ATTEST,algH[],issuerId2[],fp(pk(skI2[])),h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])),cvB[],plI_2),sign((BYTES,framed(OT_ATTEST,algH[],issuerId2[],fp(pk(skI2[])),h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])),cvB[],payload_4)),skI2[]))).
+
+24. The attacker has some term cvIw_4.
+attacker(cvIw_4).
+
+25. By 24, the attacker may know cvIw_4.
+By 23, the attacker may know (framed(OT_ATTEST,algH[],issuerId2[],fp(pk(skI2[])),h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])),cvB[],plI_2),sign((BYTES,framed(OT_ATTEST,algH[],issuerId2[],fp(pk(skI2[])),h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])),cvB[],payload_4)),skI2[])).
+Using the function wrap the attacker may obtain wrap(cvIw_4,(framed(OT_ATTEST,algH[],issuerId2[],fp(pk(skI2[])),h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])),cvB[],plI_2),sign((BYTES,framed(OT_ATTEST,algH[],issuerId2[],fp(pk(skI2[])),h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])),cvB[],payload_4)),skI2[]))).
+attacker(wrap(cvIw_4,(framed(OT_ATTEST,algH[],issuerId2[],fp(pk(skI2[])),h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])),cvB[],plI_2),sign((BYTES,framed(OT_ATTEST,algH[],issuerId2[],fp(pk(skI2[])),h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])),cvB[],payload_4)),skI2[])))).
+
+26. The attacker initially knows cvA[].
+attacker(cvA[]).
+
+27. The message pk(skW2[]) may be sent to the attacker at output {16}.
+attacker(pk(skW2[])).
+
+28. By 27, the attacker may know pk(skW2[]).
+Using the function fp the attacker may obtain fp(pk(skW2[])).
+attacker(fp(pk(skW2[]))).
+
+29. The attacker initially knows idW2[].
+attacker(idW2[]).
+
+30. By 29, the attacker may know idW2[].
+By 28, the attacker may know fp(pk(skW2[])).
+By 10, the attacker may know ssetH[].
+By 9, the attacker may know algH[].
+By 8, the attacker may know verH[].
+Using the function authTuple the attacker may obtain authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[]).
+attacker(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])).
+
+31. By 30, the attacker may know authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[]).
+Using the function h the attacker may obtain h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])).
+attacker(h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[]))).
+
+32. Using the function OT_WRAPPER the attacker may obtain OT_WRAPPER.
+attacker(OT_WRAPPER).
+
+33. By 32, the attacker may know OT_WRAPPER.
+By 9, the attacker may know algH[].
+By 29, the attacker may know idW2[].
+By 28, the attacker may know fp(pk(skW2[])).
+By 31, the attacker may know h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])).
+By 26, the attacker may know cvA[].
+By 25, the attacker may know wrap(cvIw_4,(framed(OT_ATTEST,algH[],issuerId2[],fp(pk(skI2[])),h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])),cvB[],plI_2),sign((BYTES,framed(OT_ATTEST,algH[],issuerId2[],fp(pk(skI2[])),h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])),cvB[],payload_4)),skI2[]))).
+Using the function framed the attacker may obtain framed(OT_WRAPPER,algH[],idW2[],fp(pk(skW2[])),h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),cvA[],wrap(cvIw_4,(framed(OT_ATTEST,algH[],issuerId2[],fp(pk(skI2[])),h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])),cvB[],plI_2),sign((BYTES,framed(OT_ATTEST,algH[],issuerId2[],fp(pk(skI2[])),h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])),cvB[],payload_4)),skI2[])))).
+attacker(framed(OT_WRAPPER,algH[],idW2[],fp(pk(skW2[])),h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),cvA[],wrap(cvIw_4,(framed(OT_ATTEST,algH[],issuerId2[],fp(pk(skI2[])),h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])),cvB[],plI_2),sign((BYTES,framed(OT_ATTEST,algH[],issuerId2[],fp(pk(skI2[])),h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])),cvB[],payload_4)),skI2[]))))).
+
+34. By 24, the attacker may know cvIw_4.
+By 22, the attacker may know framed(OT_ATTEST,algH[],issuerId2[],fp(pk(skI2[])),h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])),cvB[],plI_2).
+By 19, the attacker may know sign((BYTES,framed(OT_ATTEST,algH[],issuerId2[],fp(pk(skI2[])),h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])),cvB[],payload_4)),skI2[]).
+Using the function 3-tuple the attacker may obtain (cvIw_4,framed(OT_ATTEST,algH[],issuerId2[],fp(pk(skI2[])),h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])),cvB[],plI_2),sign((BYTES,framed(OT_ATTEST,algH[],issuerId2[],fp(pk(skI2[])),h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])),cvB[],payload_4)),skI2[])).
+attacker((cvIw_4,framed(OT_ATTEST,algH[],issuerId2[],fp(pk(skI2[])),h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])),cvB[],plI_2),sign((BYTES,framed(OT_ATTEST,algH[],issuerId2[],fp(pk(skI2[])),h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])),cvB[],payload_4)),skI2[]))).
+
+35. The message (cvIw_4,framed(OT_ATTEST,algH[],issuerId2[],fp(pk(skI2[])),h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])),cvB[],plI_2),sign((BYTES,framed(OT_ATTEST,algH[],issuerId2[],fp(pk(skI2[])),h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])),cvB[],payload_4)),skI2[])) that the attacker may have by 34 may be received at input {127}.
+So the message sign((BYTES,framed(OT_WRAPPER,algH[],idW2[],fp(pk(skW2[])),h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),cvA[],wrap(cvIw_4,(framed(OT_ATTEST,algH[],issuerId2[],fp(pk(skI2[])),h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])),cvB[],plI_2),sign((BYTES,framed(OT_ATTEST,algH[],issuerId2[],fp(pk(skI2[])),h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])),cvB[],payload_4)),skI2[]))))),skW2[]) may be sent to the attacker at output {134}.
+attacker(sign((BYTES,framed(OT_WRAPPER,algH[],idW2[],fp(pk(skW2[])),h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),cvA[],wrap(cvIw_4,(framed(OT_ATTEST,algH[],issuerId2[],fp(pk(skI2[])),h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])),cvB[],plI_2),sign((BYTES,framed(OT_ATTEST,algH[],issuerId2[],fp(pk(skI2[])),h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])),cvB[],payload_4)),skI2[]))))),skW2[])).
+
+36. The attacker has some term sgIn_3.
+attacker(sgIn_3).
+
+37. The attacker has some term fbIn_3.
+attacker(fbIn_3).
+
+38. The attacker has some term cvIw_5.
+attacker(cvIw_5).
+
+39. By 38, the attacker may know cvIw_5.
+By 37, the attacker may know fbIn_3.
+By 36, the attacker may know sgIn_3.
+Using the function 3-tuple the attacker may obtain (cvIw_5,fbIn_3,sgIn_3).
+attacker((cvIw_5,fbIn_3,sgIn_3)).
+
+40. The message (cvIw_5,fbIn_3,sgIn_3) that the attacker may have by 39 may be received at input {127}.
+So the message sign((POSS,authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),skW2[]) may be sent to the attacker at output {130}.
+attacker(sign((POSS,authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),skW2[])).
+
+41. The message sign((STMT_DIGEST,h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[]))),skR[]) may be sent to the attacker at output {53}.
+attacker(sign((STMT_DIGEST,h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[]))),skR[])).
+
+42. By 15, the attacker may know STMT_DIGEST.
+By 31, the attacker may know h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])).
+Using the function 2-tuple the attacker may obtain (STMT_DIGEST,h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[]))).
+attacker((STMT_DIGEST,h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])))).
+
+43. By 42, the attacker may know (STMT_DIGEST,h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[]))).
+By 7, the attacker may know skD[].
+Using the function sign the attacker may obtain sign((STMT_DIGEST,h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[]))),skD[]).
+attacker(sign((STMT_DIGEST,h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[]))),skD[])).
+
+44. By 30, the attacker may know authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[]).
+By 43, the attacker may know sign((STMT_DIGEST,h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[]))),skD[]).
+By 41, the attacker may know sign((STMT_DIGEST,h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[]))),skR[]).
+By 27, the attacker may know pk(skW2[]).
+By 40, the attacker may know sign((POSS,authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),skW2[]).
+By 35, the attacker may know sign((BYTES,framed(OT_WRAPPER,algH[],idW2[],fp(pk(skW2[])),h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),cvA[],wrap(cvIw_4,(framed(OT_ATTEST,algH[],issuerId2[],fp(pk(skI2[])),h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])),cvB[],plI_2),sign((BYTES,framed(OT_ATTEST,algH[],issuerId2[],fp(pk(skI2[])),h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])),cvB[],payload_4)),skI2[]))))),skW2[]).
+By 33, the attacker may know framed(OT_WRAPPER,algH[],idW2[],fp(pk(skW2[])),h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),cvA[],wrap(cvIw_4,(framed(OT_ATTEST,algH[],issuerId2[],fp(pk(skI2[])),h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])),cvB[],plI_2),sign((BYTES,framed(OT_ATTEST,algH[],issuerId2[],fp(pk(skI2[])),h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])),cvB[],payload_4)),skI2[])))).
+By 13, the attacker may know authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[]).
+By 17, the attacker may know sign((STMT_DIGEST,h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[]))),skD[]).
+By 6, the attacker may know sign((STMT_DIGEST,h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[]))),skR[]).
+By 5, the attacker may know pk(skI2[]).
+By 4, the attacker may know sign((POSS,authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])),skI2[]).
+Using the function 12-tuple the attacker may obtain (authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[]),sign((STMT_DIGEST,h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[]))),skD[]),sign((STMT_DIGEST,h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[]))),skR[]),pk(skW2[]),sign((POSS,authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),skW2[]),sign((BYTES,framed(OT_WRAPPER,algH[],idW2[],fp(pk(skW2[])),h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),cvA[],wrap(cvIw_4,(framed(OT_ATTEST,algH[],issuerId2[],fp(pk(skI2[])),h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])),cvB[],plI_2),sign((BYTES,framed(OT_ATTEST,algH[],issuerId2[],fp(pk(skI2[])),h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])),cvB[],payload_4)),skI2[]))))),skW2[]),framed(OT_WRAPPER,algH[],idW2[],fp(pk(skW2[])),h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),cvA[],wrap(cvIw_4,(framed(OT_ATTEST,algH[],issuerId2[],fp(pk(skI2[])),h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])),cvB[],plI_2),sign((BYTES,framed(OT_ATTEST,algH[],issuerId2[],fp(pk(skI2[])),h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])),cvB[],payload_4)),skI2[])))),authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[]),sign((STMT_DIGEST,h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[]))),skD[]),sign((STMT_DIGEST,h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[]))),skR[]),pk(skI2[]),sign((POSS,authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])),skI2[])).
+attacker((authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[]),sign((STMT_DIGEST,h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[]))),skD[]),sign((STMT_DIGEST,h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[]))),skR[]),pk(skW2[]),sign((POSS,authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),skW2[]),sign((BYTES,framed(OT_WRAPPER,algH[],idW2[],fp(pk(skW2[])),h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),cvA[],wrap(cvIw_4,(framed(OT_ATTEST,algH[],issuerId2[],fp(pk(skI2[])),h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])),cvB[],plI_2),sign((BYTES,framed(OT_ATTEST,algH[],issuerId2[],fp(pk(skI2[])),h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])),cvB[],payload_4)),skI2[]))))),skW2[]),framed(OT_WRAPPER,algH[],idW2[],fp(pk(skW2[])),h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),cvA[],wrap(cvIw_4,(framed(OT_ATTEST,algH[],issuerId2[],fp(pk(skI2[])),h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])),cvB[],plI_2),sign((BYTES,framed(OT_ATTEST,algH[],issuerId2[],fp(pk(skI2[])),h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])),cvB[],payload_4)),skI2[])))),authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[]),sign((STMT_DIGEST,h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[]))),skD[]),sign((STMT_DIGEST,h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[]))),skR[]),pk(skI2[]),sign((POSS,authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])),skI2[]))).
+
+45. The message (authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[]),sign((STMT_DIGEST,h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[]))),skD[]),sign((STMT_DIGEST,h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[]))),skR[]),pk(skW2[]),sign((POSS,authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),skW2[]),sign((BYTES,framed(OT_WRAPPER,algH[],idW2[],fp(pk(skW2[])),h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),cvA[],wrap(cvIw_4,(framed(OT_ATTEST,algH[],issuerId2[],fp(pk(skI2[])),h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])),cvB[],plI_2),sign((BYTES,framed(OT_ATTEST,algH[],issuerId2[],fp(pk(skI2[])),h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])),cvB[],payload_4)),skI2[]))))),skW2[]),framed(OT_WRAPPER,algH[],idW2[],fp(pk(skW2[])),h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),cvA[],wrap(cvIw_4,(framed(OT_ATTEST,algH[],issuerId2[],fp(pk(skI2[])),h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])),cvB[],plI_2),sign((BYTES,framed(OT_ATTEST,algH[],issuerId2[],fp(pk(skI2[])),h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])),cvB[],payload_4)),skI2[])))),authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[]),sign((STMT_DIGEST,h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[]))),skD[]),sign((STMT_DIGEST,h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[]))),skR[]),pk(skI2[]),sign((POSS,authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])),skI2[])) that the attacker may have by 44 may be received at input {157}.
+So the message (wctx(pk(skW2[]),idW2[],framed(OT_WRAPPER,algH[],idW2[],fp(pk(skW2[])),h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),cvA[],wrap(cvIw_4,(framed(OT_ATTEST,algH[],issuerId2[],fp(pk(skI2[])),h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])),cvB[],plI_2),sign((BYTES,framed(OT_ATTEST,algH[],issuerId2[],fp(pk(skI2[])),h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])),cvB[],payload_4)),skI2[]))))),pk(skI2[]),issuerId2[],framed(OT_ATTEST,algH[],issuerId2[],fp(pk(skI2[])),h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])),cvB[],plI_2)) may be sent on channel scopeCh[] at output {180}.
+mess(scopeCh[],(wctx(pk(skW2[]),idW2[],framed(OT_WRAPPER,algH[],idW2[],fp(pk(skW2[])),h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),cvA[],wrap(cvIw_4,(framed(OT_ATTEST,algH[],issuerId2[],fp(pk(skI2[])),h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])),cvB[],plI_2),sign((BYTES,framed(OT_ATTEST,algH[],issuerId2[],fp(pk(skI2[])),h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])),cvB[],payload_4)),skI2[]))))),pk(skI2[]),issuerId2[],framed(OT_ATTEST,algH[],issuerId2[],fp(pk(skI2[])),h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])),cvB[],plI_2))).
+
+46. The message (pk(skI2[]),issuerId2[],framed(OT_ATTEST,algH[],issuerId2[],fp(pk(skI2[])),h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])),cvB[],plI_2)) that may be sent on channel honestInnerCh[] by 2 may be received at input {202}.
+The message (wctx(pk(skW2[]),idW2[],framed(OT_WRAPPER,algH[],idW2[],fp(pk(skW2[])),h(authTuple(idW2[],fp(pk(skW2[])),ssetH[],algH[],verH[])),cvA[],wrap(cvIw_4,(framed(OT_ATTEST,algH[],issuerId2[],fp(pk(skI2[])),h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])),cvB[],plI_2),sign((BYTES,framed(OT_ATTEST,algH[],issuerId2[],fp(pk(skI2[])),h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])),cvB[],payload_4)),skI2[]))))),pk(skI2[]),issuerId2[],framed(OT_ATTEST,algH[],issuerId2[],fp(pk(skI2[])),h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])),cvB[],plI_2)) that may be sent on channel scopeCh[] by 45 may be received at input {203}.
+So event HonestWrappedAccepted(pk(skI2[]),framed(OT_ATTEST,algH[],issuerId2[],fp(pk(skI2[])),h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])),cvB[],plI_2),pk(skW2[])) may be executed at {205}.
+event(HonestWrappedAccepted(pk(skI2[]),framed(OT_ATTEST,algH[],issuerId2[],fp(pk(skI2[])),h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])),cvB[],plI_2),pk(skW2[]))).
+
+47. By 46, event(HonestWrappedAccepted(pk(skI2[]),framed(OT_ATTEST,algH[],issuerId2[],fp(pk(skI2[])),h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])),cvB[],plI_2),pk(skW2[]))).
+The goal is reached, represented in the following fact:
+event(HonestWrappedAccepted(pk(skI2[]),framed(OT_ATTEST,algH[],issuerId2[],fp(pk(skI2[])),h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])),cvB[],plI_2),pk(skW2[]))).
+
+
+A more detailed output of the traces is available with
+  set traceDisplay = long.
+
+new skD: skey creating skD_5 at {1}
+
+new skR: skey creating skR_5 at {2}
+
+new skI1: skey creating skI1_1 at {3}
+
+new skI2: skey creating skI2_1 at {4}
+
+new skW1: skey creating skW1_1 at {5}
+
+new skW2: skey creating skW2_1 at {6}
+
+out(c, ~M) with ~M = pk(skD_5) at {11}
+
+out(c, ~M_1) with ~M_1 = pk(skR_5) at {12}
+
+out(c, ~M_2) with ~M_2 = pk(skI1_1) at {13}
+
+out(c, ~M_3) with ~M_3 = pk(skI2_1) at {14}
+
+out(c, ~M_4) with ~M_4 = pk(skW1_1) at {15}
+
+out(c, ~M_5) with ~M_5 = pk(skW2_1) at {16}
+
+out(c, authTuple(~M_6,~M_7,~M_8,~M_9,~M_10)) with ~M_6 = issuerId, ~M_7 = fp(pk(skI1_1)), ~M_8 = ssetH, ~M_9 = algH, ~M_10 = verH at {17}
+
+out(c, authTuple(~M_11,~M_12,~M_13,~M_14,~M_15)) with ~M_11 = issuerId2, ~M_12 = fp(pk(skI2_1)), ~M_13 = ssetH, ~M_14 = algH, ~M_15 = verH at {18}
+
+out(c, authTuple(~M_16,~M_17,~M_18,~M_19,~M_20)) with ~M_16 = idW1, ~M_17 = fp(pk(skW1_1)), ~M_18 = ssetH, ~M_19 = algH, ~M_20 = verH at {19}
+
+out(c, authTuple(~M_21,~M_22,~M_23,~M_24,~M_25)) with ~M_21 = idW2, ~M_22 = fp(pk(skW2_1)), ~M_23 = ssetH, ~M_24 = algH, ~M_25 = verH at {20}
+
+out(c, ~M_26) with ~M_26 = skD_5 at {21}
+
+event AuthorityPublishedRepo(authTuple(idW2,fp(pk(skW2_1)),ssetH,algH,verH)) at {52} in copy a
+
+out(c, ~M_27) with ~M_27 = sign((STMT_DIGEST,h(authTuple(idW2,fp(pk(skW2_1)),ssetH,algH,verH))),skR_5) at {53} in copy a
+
+event AuthorityPublishedRepo(authTuple(issuerId2,fp(pk(skI2_1)),ssetH,algH,verH)) at {44} in copy a_1
+
+out(c, ~M_28) with ~M_28 = sign((STMT_DIGEST,h(authTuple(issuerId2,fp(pk(skI2_1)),ssetH,algH,verH))),skR_5) at {45} in copy a_1
+
+in(c, a_2) at {86} in copy a_3
+
+event IssuerPossession(pk(skI2_1)) at {87} in copy a_3
+
+out(c, ~M_29) with ~M_29 = sign((POSS,authTuple(issuerId2,fp(pk(skI2_1)),ssetH,algH,verH)),skI2_1) at {89} in copy a_3
+
+event IssuerSigned(pk(skI2_1),framed(OT_ATTEST,algH,issuerId2,fp(pk(skI2_1)),h(authTuple(issuerId2,fp(pk(skI2_1)),ssetH,algH,verH)),cvB,a_2)) at {92} in copy a_3
+
+out(c, ~M_30) with ~M_30 = sign((BYTES,framed(OT_ATTEST,algH,issuerId2,fp(pk(skI2_1)),h(authTuple(issuerId2,fp(pk(skI2_1)),ssetH,algH,verH)),cvB,a_2)),skI2_1) at {97} in copy a_3
+
+in(c, a_4) at {86} in copy a_5
+
+event IssuerPossession(pk(skI2_1)) at {87} in copy a_5
+
+out(c, ~M_31) with ~M_31 = sign((POSS,authTuple(issuerId2,fp(pk(skI2_1)),ssetH,algH,verH)),skI2_1) at {89} in copy a_5
+
+event IssuerSigned(pk(skI2_1),framed(OT_ATTEST,algH,issuerId2,fp(pk(skI2_1)),h(authTuple(issuerId2,fp(pk(skI2_1)),ssetH,algH,verH)),cvB,a_4)) at {92} in copy a_5
+
+out(c, ~M_32) with ~M_32 = sign((BYTES,framed(OT_ATTEST,algH,issuerId2,fp(pk(skI2_1)),h(authTuple(issuerId2,fp(pk(skI2_1)),ssetH,algH,verH)),cvB,a_4)),skI2_1) at {97} in copy a_5
+
+in(c, a_6) at {86} in copy a_7
+
+event IssuerPossession(pk(skI2_1)) at {87} in copy a_7
+
+out(c, ~M_33) with ~M_33 = sign((POSS,authTuple(issuerId2,fp(pk(skI2_1)),ssetH,algH,verH)),skI2_1) at {89} in copy a_7
+
+event IssuerSigned(pk(skI2_1),framed(OT_ATTEST,algH,issuerId2,fp(pk(skI2_1)),h(authTuple(issuerId2,fp(pk(skI2_1)),ssetH,algH,verH)),cvB,a_6)) at {92} in copy a_7
+
+out(c, ~M_34) with ~M_34 = sign((BYTES,framed(OT_ATTEST,algH,issuerId2,fp(pk(skI2_1)),h(authTuple(issuerId2,fp(pk(skI2_1)),ssetH,algH,verH)),cvB,a_6)),skI2_1) at {97} in copy a_7
+
+in(c, (a_8,a_9,a_10)) at {127} in copy a_11
+
+event IssuerPossession(pk(skW2_1)) at {128} in copy a_11
+
+out(c, ~M_35) with ~M_35 = sign((POSS,authTuple(idW2,fp(pk(skW2_1)),ssetH,algH,verH)),skW2_1) at {130} in copy a_11
+
+event IssuerSigned(pk(skW2_1),framed(OT_WRAPPER,algH,idW2,fp(pk(skW2_1)),h(authTuple(idW2,fp(pk(skW2_1)),ssetH,algH,verH)),cvA,wrap(a_8,(a_9,a_10)))) at {132} in copy a_11
+
+out(c, ~M_36) with ~M_36 = sign((BYTES,framed(OT_WRAPPER,algH,idW2,fp(pk(skW2_1)),h(authTuple(idW2,fp(pk(skW2_1)),ssetH,algH,verH)),cvA,wrap(a_8,(a_9,a_10)))),skW2_1) at {134} in copy a_11
+
+in(c, (a_12,framed(OT_ATTEST,algH,issuerId2,fp(~M_3),h(authTuple(issuerId2,fp(~M_3),ssetH,algH,verH)),cvB,a_6),~M_30)) with fp(~M_3) = fp(pk(skI2_1)), h(authTuple(issuerId2,fp(~M_3),ssetH,algH,verH)) = h(authTuple(issuerId2,fp(pk(skI2_1)),ssetH,algH,verH)), ~M_30 = sign((BYTES,framed(OT_ATTEST,algH,issuerId2,fp(pk(skI2_1)),h(authTuple(issuerId2,fp(pk(skI2_1)),ssetH,algH,verH)),cvB,a_2)),skI2_1) at {127} in copy a_13
+
+event IssuerPossession(pk(skW2_1)) at {128} in copy a_13
+
+out(c, ~M_37) with ~M_37 = sign((POSS,authTuple(idW2,fp(pk(skW2_1)),ssetH,algH,verH)),skW2_1) at {130} in copy a_13
+
+event IssuerSigned(pk(skW2_1),framed(OT_WRAPPER,algH,idW2,fp(pk(skW2_1)),h(authTuple(idW2,fp(pk(skW2_1)),ssetH,algH,verH)),cvA,wrap(a_12,(framed(OT_ATTEST,algH,issuerId2,fp(pk(skI2_1)),h(authTuple(issuerId2,fp(pk(skI2_1)),ssetH,algH,verH)),cvB,a_6),sign((BYTES,framed(OT_ATTEST,algH,issuerId2,fp(pk(skI2_1)),h(authTuple(issuerId2,fp(pk(skI2_1)),ssetH,algH,verH)),cvB,a_2)),skI2_1))))) at {132} in copy a_13
+
+out(c, ~M_38) with ~M_38 = sign((BYTES,framed(OT_WRAPPER,algH,idW2,fp(pk(skW2_1)),h(authTuple(idW2,fp(pk(skW2_1)),ssetH,algH,verH)),cvA,wrap(a_12,(framed(OT_ATTEST,algH,issuerId2,fp(pk(skI2_1)),h(authTuple(issuerId2,fp(pk(skI2_1)),ssetH,algH,verH)),cvB,a_6),sign((BYTES,framed(OT_ATTEST,algH,issuerId2,fp(pk(skI2_1)),h(authTuple(issuerId2,fp(pk(skI2_1)),ssetH,algH,verH)),cvB,a_2)),skI2_1))))),skW2_1) at {134} in copy a_13
+
+in(c, (authTuple(idW2,fp(~M_5),ssetH,algH,verH),sign((STMT_DIGEST,h(authTuple(idW2,fp(~M_5),ssetH,algH,verH))),~M_26),~M_27,~M_5,~M_35,~M_38,framed(OT_WRAPPER,algH,idW2,fp(~M_5),h(authTuple(idW2,fp(~M_5),ssetH,algH,verH)),cvA,wrap(a_12,(framed(OT_ATTEST,algH,issuerId2,fp(~M_3),h(authTuple(issuerId2,fp(~M_3),ssetH,algH,verH)),cvB,a_6),~M_30))),authTuple(issuerId2,fp(~M_3),ssetH,algH,verH),sign((STMT_DIGEST,h(authTuple(issuerId2,fp(~M_3),ssetH,algH,verH))),~M_26),~M_28,~M_3,~M_29)) with fp(~M_5) = fp(pk(skW2_1)), sign((STMT_DIGEST,h(authTuple(idW2,fp(~M_5),ssetH,algH,verH))),~M_26) = sign((STMT_DIGEST,h(authTuple(idW2,fp(pk(skW2_1)),ssetH,algH,verH))),skD_5), ~M_27 = sign((STMT_DIGEST,h(authTuple(idW2,fp(pk(skW2_1)),ssetH,algH,verH))),skR_5), ~M_5 = pk(skW2_1), ~M_35 = sign((POSS,authTuple(idW2,fp(pk(skW2_1)),ssetH,algH,verH)),skW2_1), ~M_38 = sign((BYTES,framed(OT_WRAPPER,algH,idW2,fp(pk(skW2_1)),h(authTuple(idW2,fp(pk(skW2_1)),ssetH,algH,verH)),cvA,wrap(a_12,(framed(OT_ATTEST,algH,issuerId2,fp(pk(skI2_1)),h(authTuple(issuerId2,fp(pk(skI2_1)),ssetH,algH,verH)),cvB,a_6),sign((BYTES,framed(OT_ATTEST,algH,issuerId2,fp(pk(skI2_1)),h(authTuple(issuerId2,fp(pk(skI2_1)),ssetH,algH,verH)),cvB,a_2)),skI2_1))))),skW2_1), fp(~M_5) = fp(pk(skW2_1)), h(authTuple(idW2,fp(~M_5),ssetH,algH,verH)) = h(authTuple(idW2,fp(pk(skW2_1)),ssetH,algH,verH)), fp(~M_3) = fp(pk(skI2_1)), h(authTuple(issuerId2,fp(~M_3),ssetH,algH,verH)) = h(authTuple(issuerId2,fp(pk(skI2_1)),ssetH,algH,verH)), ~M_30 = sign((BYTES,framed(OT_ATTEST,algH,issuerId2,fp(pk(skI2_1)),h(authTuple(issuerId2,fp(pk(skI2_1)),ssetH,algH,verH)),cvB,a_2)),skI2_1), fp(~M_3) = fp(pk(skI2_1)), sign((STMT_DIGEST,h(authTuple(issuerId2,fp(~M_3),ssetH,algH,verH))),~M_26) = sign((STMT_DIGEST,h(authTuple(issuerId2,fp(pk(skI2_1)),ssetH,algH,verH))),skD_5), ~M_28 = sign((STMT_DIGEST,h(authTuple(issuerId2,fp(pk(skI2_1)),ssetH,algH,verH))),skR_5), ~M_3 = pk(skI2_1), ~M_29 = sign((POSS,authTuple(issuerId2,fp(pk(skI2_1)),ssetH,algH,verH)),skI2_1) at {157} in copy a_14
+
+event AcceptOuter(pk(skW2_1),idW2,framed(OT_WRAPPER,algH,idW2,fp(pk(skW2_1)),h(authTuple(idW2,fp(pk(skW2_1)),ssetH,algH,verH)),cvA,wrap(a_12,(framed(OT_ATTEST,algH,issuerId2,fp(pk(skI2_1)),h(authTuple(issuerId2,fp(pk(skI2_1)),ssetH,algH,verH)),cvB,a_6),sign((BYTES,framed(OT_ATTEST,algH,issuerId2,fp(pk(skI2_1)),h(authTuple(issuerId2,fp(pk(skI2_1)),ssetH,algH,verH)),cvB,a_2)),skI2_1))))) at {166} in copy a_14
+
+event AcceptInner(wctx(pk(skW2_1),idW2,framed(OT_WRAPPER,algH,idW2,fp(pk(skW2_1)),h(authTuple(idW2,fp(pk(skW2_1)),ssetH,algH,verH)),cvA,wrap(a_12,(framed(OT_ATTEST,algH,issuerId2,fp(pk(skI2_1)),h(authTuple(issuerId2,fp(pk(skI2_1)),ssetH,algH,verH)),cvB,a_6),sign((BYTES,framed(OT_ATTEST,algH,issuerId2,fp(pk(skI2_1)),h(authTuple(issuerId2,fp(pk(skI2_1)),ssetH,algH,verH)),cvB,a_2)),skI2_1))))),pk(skI2_1),issuerId2,framed(OT_ATTEST,algH,issuerId2,fp(pk(skI2_1)),h(authTuple(issuerId2,fp(pk(skI2_1)),ssetH,algH,verH)),cvB,a_6)) at {177} in copy a_14
+
+out(honestInnerCh, (pk(skI2_1),issuerId2,framed(OT_ATTEST,algH,issuerId2,fp(pk(skI2_1)),h(authTuple(issuerId2,fp(pk(skI2_1)),ssetH,algH,verH)),cvB,a_6))) at {95} in copy a_7 received at {202} in copy a_15
+
+out(scopeCh, (wctx(pk(skW2_1),idW2,framed(OT_WRAPPER,algH,idW2,fp(pk(skW2_1)),h(authTuple(idW2,fp(pk(skW2_1)),ssetH,algH,verH)),cvA,wrap(a_12,(framed(OT_ATTEST,algH,issuerId2,fp(pk(skI2_1)),h(authTuple(issuerId2,fp(pk(skI2_1)),ssetH,algH,verH)),cvB,a_6),sign((BYTES,framed(OT_ATTEST,algH,issuerId2,fp(pk(skI2_1)),h(authTuple(issuerId2,fp(pk(skI2_1)),ssetH,algH,verH)),cvB,a_2)),skI2_1))))),pk(skI2_1),issuerId2,framed(OT_ATTEST,algH,issuerId2,fp(pk(skI2_1)),h(authTuple(issuerId2,fp(pk(skI2_1)),ssetH,algH,verH)),cvB,a_6))) at {180} in copy a_14 received at {203} in copy a_15
+
+event HonestWrappedAccepted(pk(skI2_1),framed(OT_ATTEST,algH,issuerId2,fp(pk(skI2_1)),h(authTuple(issuerId2,fp(pk(skI2_1)),ssetH,algH,verH)),cvB,a_6),pk(skW2_1)) at {205} in copy a_15 (goal)
+
+The event HonestWrappedAccepted(pk(skI2_1),framed(OT_ATTEST,algH,issuerId2,fp(pk(skI2_1)),h(authTuple(issuerId2,fp(pk(skI2_1)),ssetH,algH,verH)),cvB,a_6),pk(skW2_1)) is executed at {205} in copy a_15.
+A trace has been found.
+RESULT not event(HonestWrappedAccepted(kH_3,fb,kW_3)) is false.
+-- Query not event(HonestAccepted(k_1,fb)) in process 1.
+Translating the process into Horn clauses...
+Completing...
+200 rules inserted. Base: 185 rules (82 with conclusion selected). Queue: 72 rules.
+400 rules inserted. Base: 233 rules (82 with conclusion selected). Queue: 88 rules.
+600 rules inserted. Base: 250 rules (82 with conclusion selected). Queue: 152 rules.
+800 rules inserted. Base: 302 rules (82 with conclusion selected). Queue: 292 rules.
+1000 rules inserted. Base: 330 rules (82 with conclusion selected). Queue: 336 rules.
+1200 rules inserted. Base: 375 rules (109 with conclusion selected). Queue: 278 rules.
+1400 rules inserted. Base: 482 rules (109 with conclusion selected). Queue: 259 rules.
+1600 rules inserted. Base: 582 rules (111 with conclusion selected). Queue: 436 rules.
+1800 rules inserted. Base: 597 rules (111 with conclusion selected). Queue: 526 rules.
+2000 rules inserted. Base: 638 rules (111 with conclusion selected). Queue: 580 rules.
+2200 rules inserted. Base: 638 rules (111 with conclusion selected). Queue: 580 rules.
+2400 rules inserted. Base: 638 rules (111 with conclusion selected). Queue: 580 rules.
+2600 rules inserted. Base: 647 rules (111 with conclusion selected). Queue: 599 rules.
+2800 rules inserted. Base: 668 rules (111 with conclusion selected). Queue: 580 rules.
+3000 rules inserted. Base: 684 rules (111 with conclusion selected). Queue: 568 rules.
+3200 rules inserted. Base: 730 rules (115 with conclusion selected). Queue: 720 rules.
+3400 rules inserted. Base: 763 rules (120 with conclusion selected). Queue: 723 rules.
+3600 rules inserted. Base: 786 rules (127 with conclusion selected). Queue: 721 rules.
+3800 rules inserted. Base: 798 rules (127 with conclusion selected). Queue: 754 rules.
+4000 rules inserted. Base: 874 rules (127 with conclusion selected). Queue: 700 rules.
+4200 rules inserted. Base: 1010 rules (127 with conclusion selected). Queue: 558 rules.
+4400 rules inserted. Base: 1120 rules (127 with conclusion selected). Queue: 433 rules.
+4600 rules inserted. Base: 1206 rules (129 with conclusion selected). Queue: 322 rules.
+4800 rules inserted. Base: 1406 rules (183 with conclusion selected). Queue: 124 rules.
+Starting query not event(HonestAccepted(k_1,fb))
+goal reachable: attacker(plI_2) -> event(HonestAccepted(pk(skI2[]),framed(OT_ATTEST,algH[],issuerId2[],fp(pk(skI2[])),h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])),cvB[],plI_2)))
+
+Derivation:
+
+1. We assume as hypothesis that
+attacker(plI_2).
+
+2. The message plI_2 that the attacker may have by 1 may be received at input {86}.
+So the message (pk(skI2[]),framed(OT_ATTEST,algH[],issuerId2[],fp(pk(skI2[])),h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])),cvB[],plI_2)) may be sent on channel honestCh[] at output {94}.
+mess(honestCh[],(pk(skI2[]),framed(OT_ATTEST,algH[],issuerId2[],fp(pk(skI2[])),h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])),cvB[],plI_2))).
+
+3. The attacker initially knows cvB[].
+attacker(cvB[]).
+
+4. The attacker initially knows verH[].
+attacker(verH[]).
+
+5. The attacker initially knows algH[].
+attacker(algH[]).
+
+6. The attacker initially knows ssetH[].
+attacker(ssetH[]).
+
+7. The message pk(skI2[]) may be sent to the attacker at output {14}.
+attacker(pk(skI2[])).
+
+8. By 7, the attacker may know pk(skI2[]).
+Using the function fp the attacker may obtain fp(pk(skI2[])).
+attacker(fp(pk(skI2[]))).
+
+9. The attacker initially knows issuerId2[].
+attacker(issuerId2[]).
+
+10. By 9, the attacker may know issuerId2[].
+By 8, the attacker may know fp(pk(skI2[])).
+By 6, the attacker may know ssetH[].
+By 5, the attacker may know algH[].
+By 4, the attacker may know verH[].
+Using the function authTuple the attacker may obtain authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[]).
+attacker(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])).
+
+11. By 10, the attacker may know authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[]).
+Using the function h the attacker may obtain h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])).
+attacker(h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[]))).
+
+12. Using the function OT_ATTEST the attacker may obtain OT_ATTEST.
+attacker(OT_ATTEST).
+
+13. By 12, the attacker may know OT_ATTEST.
+By 5, the attacker may know algH[].
+By 9, the attacker may know issuerId2[].
+By 8, the attacker may know fp(pk(skI2[])).
+By 11, the attacker may know h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])).
+By 3, the attacker may know cvB[].
+By 1, the attacker may know plI_2.
+Using the function framed the attacker may obtain framed(OT_ATTEST,algH[],issuerId2[],fp(pk(skI2[])),h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])),cvB[],plI_2).
+attacker(framed(OT_ATTEST,algH[],issuerId2[],fp(pk(skI2[])),h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])),cvB[],plI_2)).
+
+14. The attacker has some term payload_3.
+attacker(payload_3).
+
+15. The message payload_3 that the attacker may have by 14 may be received at input {86}.
+So the message sign((BYTES,framed(OT_ATTEST,algH[],issuerId2[],fp(pk(skI2[])),h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])),cvB[],payload_3)),skI2[]) may be sent to the attacker at output {97}.
+attacker(sign((BYTES,framed(OT_ATTEST,algH[],issuerId2[],fp(pk(skI2[])),h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])),cvB[],payload_3)),skI2[])).
+
+16. The attacker has some term payload_4.
+attacker(payload_4).
+
+17. The message payload_4 that the attacker may have by 16 may be received at input {86}.
+So the message sign((POSS,authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])),skI2[]) may be sent to the attacker at output {89}.
+attacker(sign((POSS,authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])),skI2[])).
+
+18. The message sign((STMT_DIGEST,h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[]))),skR[]) may be sent to the attacker at output {45}.
+attacker(sign((STMT_DIGEST,h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[]))),skR[])).
+
+19. The message skD[] may be sent to the attacker at output {21}.
+attacker(skD[]).
+
+20. Using the function STMT_DIGEST the attacker may obtain STMT_DIGEST.
+attacker(STMT_DIGEST).
+
+21. By 20, the attacker may know STMT_DIGEST.
+By 11, the attacker may know h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])).
+Using the function 2-tuple the attacker may obtain (STMT_DIGEST,h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[]))).
+attacker((STMT_DIGEST,h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])))).
+
+22. By 21, the attacker may know (STMT_DIGEST,h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[]))).
+By 19, the attacker may know skD[].
+Using the function sign the attacker may obtain sign((STMT_DIGEST,h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[]))),skD[]).
+attacker(sign((STMT_DIGEST,h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[]))),skD[])).
+
+23. By 10, the attacker may know authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[]).
+By 22, the attacker may know sign((STMT_DIGEST,h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[]))),skD[]).
+By 18, the attacker may know sign((STMT_DIGEST,h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[]))),skR[]).
+By 7, the attacker may know pk(skI2[]).
+By 17, the attacker may know sign((POSS,authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])),skI2[]).
+By 15, the attacker may know sign((BYTES,framed(OT_ATTEST,algH[],issuerId2[],fp(pk(skI2[])),h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])),cvB[],payload_3)),skI2[]).
+By 13, the attacker may know framed(OT_ATTEST,algH[],issuerId2[],fp(pk(skI2[])),h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])),cvB[],plI_2).
+Using the function 7-tuple the attacker may obtain (authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[]),sign((STMT_DIGEST,h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[]))),skD[]),sign((STMT_DIGEST,h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[]))),skR[]),pk(skI2[]),sign((POSS,authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])),skI2[]),sign((BYTES,framed(OT_ATTEST,algH[],issuerId2[],fp(pk(skI2[])),h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])),cvB[],payload_3)),skI2[]),framed(OT_ATTEST,algH[],issuerId2[],fp(pk(skI2[])),h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])),cvB[],plI_2)).
+attacker((authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[]),sign((STMT_DIGEST,h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[]))),skD[]),sign((STMT_DIGEST,h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[]))),skR[]),pk(skI2[]),sign((POSS,authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])),skI2[]),sign((BYTES,framed(OT_ATTEST,algH[],issuerId2[],fp(pk(skI2[])),h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])),cvB[],payload_3)),skI2[]),framed(OT_ATTEST,algH[],issuerId2[],fp(pk(skI2[])),h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])),cvB[],plI_2))).
+
+24. The message (authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[]),sign((STMT_DIGEST,h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[]))),skD[]),sign((STMT_DIGEST,h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[]))),skR[]),pk(skI2[]),sign((POSS,authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])),skI2[]),sign((BYTES,framed(OT_ATTEST,algH[],issuerId2[],fp(pk(skI2[])),h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])),cvB[],payload_3)),skI2[]),framed(OT_ATTEST,algH[],issuerId2[],fp(pk(skI2[])),h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])),cvB[],plI_2)) that the attacker may have by 23 may be received at input {138}.
+So the message (BASE,pk(skI2[]),issuerId2[],framed(OT_ATTEST,algH[],issuerId2[],fp(pk(skI2[])),h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])),cvB[],plI_2)) may be sent on channel acceptCh[] at output {150}.
+mess(acceptCh[],(BASE,pk(skI2[]),issuerId2[],framed(OT_ATTEST,algH[],issuerId2[],fp(pk(skI2[])),h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])),cvB[],plI_2))).
+
+25. The message (pk(skI2[]),framed(OT_ATTEST,algH[],issuerId2[],fp(pk(skI2[])),h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])),cvB[],plI_2)) that may be sent on channel honestCh[] by 2 may be received at input {190}.
+The message (BASE,pk(skI2[]),issuerId2[],framed(OT_ATTEST,algH[],issuerId2[],fp(pk(skI2[])),h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])),cvB[],plI_2)) that may be sent on channel acceptCh[] by 24 may be received at input {191}.
+So event HonestAccepted(pk(skI2[]),framed(OT_ATTEST,algH[],issuerId2[],fp(pk(skI2[])),h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])),cvB[],plI_2)) may be executed at {194}.
+event(HonestAccepted(pk(skI2[]),framed(OT_ATTEST,algH[],issuerId2[],fp(pk(skI2[])),h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])),cvB[],plI_2))).
+
+26. By 25, event(HonestAccepted(pk(skI2[]),framed(OT_ATTEST,algH[],issuerId2[],fp(pk(skI2[])),h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])),cvB[],plI_2))).
+The goal is reached, represented in the following fact:
+event(HonestAccepted(pk(skI2[]),framed(OT_ATTEST,algH[],issuerId2[],fp(pk(skI2[])),h(authTuple(issuerId2[],fp(pk(skI2[])),ssetH[],algH[],verH[])),cvB[],plI_2))).
+
+
+A more detailed output of the traces is available with
+  set traceDisplay = long.
+
+new skD: skey creating skD_5 at {1}
+
+new skR: skey creating skR_5 at {2}
+
+new skI1: skey creating skI1_1 at {3}
+
+new skI2: skey creating skI2_1 at {4}
+
+new skW1: skey creating skW1_1 at {5}
+
+new skW2: skey creating skW2_1 at {6}
+
+out(c, ~M) with ~M = pk(skD_5) at {11}
+
+out(c, ~M_1) with ~M_1 = pk(skR_5) at {12}
+
+out(c, ~M_2) with ~M_2 = pk(skI1_1) at {13}
+
+out(c, ~M_3) with ~M_3 = pk(skI2_1) at {14}
+
+out(c, ~M_4) with ~M_4 = pk(skW1_1) at {15}
+
+out(c, ~M_5) with ~M_5 = pk(skW2_1) at {16}
+
+out(c, authTuple(~M_6,~M_7,~M_8,~M_9,~M_10)) with ~M_6 = issuerId, ~M_7 = fp(pk(skI1_1)), ~M_8 = ssetH, ~M_9 = algH, ~M_10 = verH at {17}
+
+out(c, authTuple(~M_11,~M_12,~M_13,~M_14,~M_15)) with ~M_11 = issuerId2, ~M_12 = fp(pk(skI2_1)), ~M_13 = ssetH, ~M_14 = algH, ~M_15 = verH at {18}
+
+out(c, authTuple(~M_16,~M_17,~M_18,~M_19,~M_20)) with ~M_16 = idW1, ~M_17 = fp(pk(skW1_1)), ~M_18 = ssetH, ~M_19 = algH, ~M_20 = verH at {19}
+
+out(c, authTuple(~M_21,~M_22,~M_23,~M_24,~M_25)) with ~M_21 = idW2, ~M_22 = fp(pk(skW2_1)), ~M_23 = ssetH, ~M_24 = algH, ~M_25 = verH at {20}
+
+out(c, ~M_26) with ~M_26 = skD_5 at {21}
+
+event AuthorityPublishedRepo(authTuple(issuerId2,fp(pk(skI2_1)),ssetH,algH,verH)) at {44} in copy a
+
+out(c, ~M_27) with ~M_27 = sign((STMT_DIGEST,h(authTuple(issuerId2,fp(pk(skI2_1)),ssetH,algH,verH))),skR_5) at {45} in copy a
+
+in(c, a_1) at {86} in copy a_2
+
+event IssuerPossession(pk(skI2_1)) at {87} in copy a_2
+
+out(c, ~M_28) with ~M_28 = sign((POSS,authTuple(issuerId2,fp(pk(skI2_1)),ssetH,algH,verH)),skI2_1) at {89} in copy a_2
+
+event IssuerSigned(pk(skI2_1),framed(OT_ATTEST,algH,issuerId2,fp(pk(skI2_1)),h(authTuple(issuerId2,fp(pk(skI2_1)),ssetH,algH,verH)),cvB,a_1)) at {92} in copy a_2
+
+out(c, ~M_29) with ~M_29 = sign((BYTES,framed(OT_ATTEST,algH,issuerId2,fp(pk(skI2_1)),h(authTuple(issuerId2,fp(pk(skI2_1)),ssetH,algH,verH)),cvB,a_1)),skI2_1) at {97} in copy a_2
+
+in(c, a_3) at {86} in copy a_4
+
+event IssuerPossession(pk(skI2_1)) at {87} in copy a_4
+
+out(c, ~M_30) with ~M_30 = sign((POSS,authTuple(issuerId2,fp(pk(skI2_1)),ssetH,algH,verH)),skI2_1) at {89} in copy a_4
+
+event IssuerSigned(pk(skI2_1),framed(OT_ATTEST,algH,issuerId2,fp(pk(skI2_1)),h(authTuple(issuerId2,fp(pk(skI2_1)),ssetH,algH,verH)),cvB,a_3)) at {92} in copy a_4
+
+out(c, ~M_31) with ~M_31 = sign((BYTES,framed(OT_ATTEST,algH,issuerId2,fp(pk(skI2_1)),h(authTuple(issuerId2,fp(pk(skI2_1)),ssetH,algH,verH)),cvB,a_3)),skI2_1) at {97} in copy a_4
+
+in(c, a_5) at {86} in copy a_6
+
+event IssuerPossession(pk(skI2_1)) at {87} in copy a_6
+
+out(c, ~M_32) with ~M_32 = sign((POSS,authTuple(issuerId2,fp(pk(skI2_1)),ssetH,algH,verH)),skI2_1) at {89} in copy a_6
+
+event IssuerSigned(pk(skI2_1),framed(OT_ATTEST,algH,issuerId2,fp(pk(skI2_1)),h(authTuple(issuerId2,fp(pk(skI2_1)),ssetH,algH,verH)),cvB,a_5)) at {92} in copy a_6
+
+out(c, ~M_33) with ~M_33 = sign((BYTES,framed(OT_ATTEST,algH,issuerId2,fp(pk(skI2_1)),h(authTuple(issuerId2,fp(pk(skI2_1)),ssetH,algH,verH)),cvB,a_5)),skI2_1) at {97} in copy a_6
+
+in(c, (authTuple(issuerId2,fp(~M_3),ssetH,algH,verH),sign((STMT_DIGEST,h(authTuple(issuerId2,fp(~M_3),ssetH,algH,verH))),~M_26),~M_27,~M_3,~M_28,~M_31,framed(OT_ATTEST,algH,issuerId2,fp(~M_3),h(authTuple(issuerId2,fp(~M_3),ssetH,algH,verH)),cvB,a_5))) with fp(~M_3) = fp(pk(skI2_1)), sign((STMT_DIGEST,h(authTuple(issuerId2,fp(~M_3),ssetH,algH,verH))),~M_26) = sign((STMT_DIGEST,h(authTuple(issuerId2,fp(pk(skI2_1)),ssetH,algH,verH))),skD_5), ~M_27 = sign((STMT_DIGEST,h(authTuple(issuerId2,fp(pk(skI2_1)),ssetH,algH,verH))),skR_5), ~M_3 = pk(skI2_1), ~M_28 = sign((POSS,authTuple(issuerId2,fp(pk(skI2_1)),ssetH,algH,verH)),skI2_1), ~M_31 = sign((BYTES,framed(OT_ATTEST,algH,issuerId2,fp(pk(skI2_1)),h(authTuple(issuerId2,fp(pk(skI2_1)),ssetH,algH,verH)),cvB,a_3)),skI2_1), fp(~M_3) = fp(pk(skI2_1)), h(authTuple(issuerId2,fp(~M_3),ssetH,algH,verH)) = h(authTuple(issuerId2,fp(pk(skI2_1)),ssetH,algH,verH)) at {138} in copy a_7
+
+event AcceptInner(BASE,pk(skI2_1),issuerId2,framed(OT_ATTEST,algH,issuerId2,fp(pk(skI2_1)),h(authTuple(issuerId2,fp(pk(skI2_1)),ssetH,algH,verH)),cvB,a_5)) at {148} in copy a_7
+
+out(honestCh, (pk(skI2_1),framed(OT_ATTEST,algH,issuerId2,fp(pk(skI2_1)),h(authTuple(issuerId2,fp(pk(skI2_1)),ssetH,algH,verH)),cvB,a_5))) at {94} in copy a_6 received at {190} in copy a_8
+
+out(acceptCh, (BASE,pk(skI2_1),issuerId2,framed(OT_ATTEST,algH,issuerId2,fp(pk(skI2_1)),h(authTuple(issuerId2,fp(pk(skI2_1)),ssetH,algH,verH)),cvB,a_5))) at {150} in copy a_7 received at {191} in copy a_8
+
+event HonestAccepted(pk(skI2_1),framed(OT_ATTEST,algH,issuerId2,fp(pk(skI2_1)),h(authTuple(issuerId2,fp(pk(skI2_1)),ssetH,algH,verH)),cvB,a_5)) at {194} in copy a_8 (goal)
+
+The event HonestAccepted(pk(skI2_1),framed(OT_ATTEST,algH,issuerId2,fp(pk(skI2_1)),h(authTuple(issuerId2,fp(pk(skI2_1)),ssetH,algH,verH)),cvB,a_5)) is executed at {194} in copy a_8.
+A trace has been found.
+RESULT not event(HonestAccepted(k_1,fb)) is false.
+
+--------------------------------------------------------------
+Verification summary:
+
+Query not event(BytesUnbound(k_1,s_1,b_1)) is false.
+
+Query not event(TypeConfused(otS_1,otA_1,fb)) is true.
+
+Query not event(Rescoped(kX_1,idX_1,kH_3,idH_1,fb)) is true.
+
+Query not event(InnerSigTransplanted(kX_1,s_1)) is true.
+
+Query not event(Reattributed(kX_1,kH_3,fb)) is true.
+
+Query not event(HonestWrappedAccepted(kH_3,fb,kW_3)) is false.
+
+Query not event(HonestAccepted(k_1,fb)) is false.
+
+--------------------------------------------------------------
+
