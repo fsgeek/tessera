@@ -593,3 +593,78 @@ specification) or disposed with reasons.
 
     **Not registered.** Nothing here is adopted; it is parked so it does
     not silently drop.
+
+35. **The adjudicator decides; the Layer 2 register is their checklist,
+    and it owes them a legible edition** (candidate, 2026-09-18; entered
+    by the owner instance from the author's words in session, during
+    the author's freeze read of the capstone registration; the author
+    left the entry to the owner). *Author, 2026-09-18, asked whether the
+    two-channel capstone says anything about three or more channels,
+    and what an adjudicator eighty years hence would want:* **"The point
+    is that *we* are not making that decision, the Adjudicator is.
+    They're the one that has to rule on the evidence. Signing using two
+    non-PQ (but different) signature schemes is certainly at least as
+    hard to forge as one, so an Adjudicator could evaluate the exact
+    risk of accepting attested evidence of this type. We don't make the
+    decision, we present the evidence. That Adjudicator can make the
+    determination based upon information they have available to them 80
+    years hence. Much of what we do isn't a strict guarantee because in
+    the future we don't know what will break. We're just trying to give
+    said Adjudicator the best evidence possible at the time they make
+    their decision."** And, on a seven-channel adjudicator who might
+    accept evidence if at least two channels remain verifiable: *"That's
+    not a Tessera guarantee, but the proof is not invalidated if there
+    are more than two (I realize we didn't prove that, and I don't think
+    we should …)."*
+
+    *What follows, stated by the owner instance and not ruled.* (a) The
+    suite's results establish what the evidence **means under named
+    assumptions**; the adjudicator supplies the assumptions with
+    hindsight. On that reading the ledger's Layer 2 register
+    (`formal/suite/LEDGER.md` §"Layer 2", carried into
+    `formal/suite/capstone/PREDICTIONS.md` §6) is not a list of residual
+    weaknesses but **the adjudicator's checklist**: everything Band 0
+    discharges is something they need not take on faith; everything
+    left in the register is handed to them explicitly. (b) "Not a strict
+    guarantee" (§7 of the registration; the decision criteria; the
+    freeze read) is the correct posture, and no later summary may harden
+    it into "Tessera guarantees." (c) The register as written is for
+    the suite's own readers; **the record owes a plain-language edition
+    of the register for the adjudicator**, each item stating what is
+    assumed, in whose hands it lies (concrete cryptography, operational
+    independence of channels, implementation fidelity, chain
+    availability, historical anchor correctness), and which results
+    depend on it — so that, e.g., the author's two-scheme judgment can
+    be made by someone who has never read ProVerif. (d) On channel
+    count: every model fixes n = 2 (L2-h, "finite enumeration, not a
+    quantified result"); under the strict rule as registered (every
+    channel's evidence must verify under its own key) adding a channel
+    adds a check, so an n+1-channel acceptance is an n-channel
+    acceptance with one item ignored, and the two-channel provenance
+    argument carries — *monotone, not proved, and not to be modelled
+    now*. A threshold rule (t of n) is the adjudicator's policy on the
+    same evidence: provenance holds while fewer than t channels are
+    compromised; the two extremes are strict (t = n) and degraded
+    (t = n = 1). The three places the intuition can fail are already
+    named in the record: operational independence (L2-h), per-channel
+    key binding (the capstone's contestable choice 3 is its n = 2 form),
+    and the encoding of n evidence items (P8, L-08, unclaimed until E3).
+
+    *Relation to what is already docketed.* Item 27's vocabulary ruling
+    (the verifier is P9's pure function; the adjudicator decides) and
+    item 34's ceiling (a wrap cannot re-authenticate; the judgment about
+    a chain whose inner attestation predates a break belongs to the
+    adjudicator) both already place the trust judgment with the
+    adjudicator; this item names what the adjudicator is owed in order
+    to make it. It bears on A3 §A3.4's survivability floor and on the
+    relying-party story (`docs/implementation-spec.md` §1.5).
+
+    *What this item is a candidate for.* The plain-language register
+    edition, (c), as a hand-forward artifact — after Band 0 exit, since
+    the register's contents are still moving until the capstone runs;
+    and one sentence in the relying-party story saying that the
+    evidence is presented for a future adjudicator's determination and
+    that the assumptions it rests on are enumerated for them.
+
+    **Not registered.** Nothing here is adopted; it is parked so it does
+    not silently drop.
