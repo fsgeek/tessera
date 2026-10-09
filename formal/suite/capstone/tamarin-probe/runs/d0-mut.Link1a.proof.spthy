@@ -1,0 +1,2594 @@
+// EXPLORATORY PROBE 2026-10-04 — non-discharging; not part of any registration
+theory cap_cc02_d_probe
+
+begin
+
+// Function signature and definition of the equational theory E
+
+functions: checksign/2, dsks/2, fp/1, fst/1, h/1, pair/2, pk/1, sign/2,
+           snd/1
+equations:
+    checksign(sign(m, k), pk(k)) = m,
+    checksign(sign(m, k), pk(dsks(sign(m, k), r))) = m,
+    fst(<x.1, x.2>) = x.1,
+    snd(<x.1, x.2>) = x.2
+
+macros: framed( ot, al, id, kfp, mh, cv, pl ) =  <'framed', ot, al, id, 
+                                                  kfp, mh, cv, pl>,
+        authTuple( id, f, ss, al, ver ) =  <'authTuple', id, f, ss, al, ver>,
+        signers1( x ) =  <'signers1', x>,
+        verified1( k ) =  <'verified1', k>,
+        verified2( k1, k2 ) =  <'verified2', k1, k2>,
+        wrap( cv, blob ) =  <'wrap', cv, blob>,
+        wctx( k, id, fb ) =  <'wctx', k, id, fb>,
+        attemptCore( t, ppf, sg, dcl ) =  <'attemptCore', t, ppf, sg, dcl>,
+        entry( a, d ) =  <'entry', a, d>,
+        lineage2( e1, e2 ) =  <'lineage2', e1, e2>,
+        TERM_SHIPPED( x ) =  <'TERM_SHIPPED', x>,
+        withTLR( k, s, ap ) =  <'withTLR', k, s, ap>,
+        anchorProof( x ) =  <'anchorProof', x>,
+        M1( skI2 ) =  <'authTuple', 'issuerId', fp(pk(skI2)), 'signers0', 
+                       'algH', 'verH'>,
+        M2( skI, skB2 ) =  <'authTuple', 'issuerId2', fp(pk(skI)), 
+                            <'signers1', fp(pk(skB2))>, 'algH', 'verH'>,
+        MW( skW ) =  <'authTuple', 'idW', fp(pk(skW)), 'signers0', 'algH', 'verH'
+                     >,
+        MA( skAdv ) =  <'authTuple', 'idAdv', fp(pk(skAdv)), 'signers0', 'algH', 
+                        'verH'>
+
+restriction Eq:
+  "∀ x y #i. (Eq( x, y ) @ #i) ⇒ (x = y)"
+  // safety formula
+
+  /*
+  expanded formula:
+  "∀ x y #i. (Eq( x, y ) @ #i) ⇒ (x = y)"
+  */
+
+restriction Neq:
+  "∀ x y #i. (Neq( x, y ) @ #i) ⇒ (¬(x = y))"
+  // safety formula
+
+  /*
+  expanded formula:
+  "∀ x y #i. (Neq( x, y ) @ #i) ⇒ (¬(x = y))"
+  */
+
+restriction Once:
+  "∀ #i #j. ((Once( ) @ #i) ∧ (Once( ) @ #j)) ⇒ (#i = #j)"
+  // safety formula
+
+  /*
+  expanded formula:
+  "∀ #i #j. ((Once( ) @ #i) ∧ (Once( ) @ #j)) ⇒ (#i = #j)"
+  */
+
+rule (modulo E) Init:
+   [
+   Fr( ~skS ), Fr( ~skAdv ), Fr( ~skI ), Fr( ~skB2 ), Fr( ~skI2 ),
+   Fr( ~skW )
+   ]
+  --[ Once( ), Fixture( ~skS, ~skI, ~skB2, ~skI2, ~skW, ~skAdv ) ]->
+   [
+   Out( pk(~skS) ), Out( pk(~skI) ), Out( pk(~skB2) ), Out( pk(~skI2) ),
+   Out( pk(~skW) ), Out( M1(~skI2) ), Out( M2(~skI, ~skB2) ),
+   Out( MW(~skW) ), Out( ~skAdv ), Out( MA(~skAdv) ), Out( ~skS ),
+   !AuthKey( ~skS ), !HonestKey( pk(~skI) ), !HonestKey( pk(~skB2) ),
+   !HonestKey( pk(~skI2) ), !HonestKey( pk(~skW) ),
+   !HonestMember( pk(~skI), M2(~skI, ~skB2) ),
+   !HonestMember( pk(~skB2), M2(~skI, ~skB2) ),
+   !HonestMember( pk(~skI2), M1(~skI2) ),
+   !HonestMember( pk(~skW), MW(~skW) ), !HonestSet( M1(~skI2) ),
+   !HonestSet( M2(~skI, ~skB2) ), !HonestSet( MW(~skW) ),
+   !AuthTask( M1(~skI2) ), !AuthTask( M2(~skI, ~skB2) ),
+   !AuthTask( MW(~skW) ),
+   !ShipI( ~skI, 'issuerId2', M2(~skI, ~skB2), 'cvA' ),
+   !RefI( ~skI, 'issuerId2', M2(~skI, ~skB2), 'cvA' ),
+   !ShipI( ~skI2, 'issuerId', M1(~skI2), 'cvA' ),
+   !RefI( ~skI2, 'issuerId', M1(~skI2), 'cvA' ),
+   !AttI( ~skB2, 'issuerId2', M2(~skI, ~skB2), 'cvA' ), !ForI( ~skI ),
+   !WrapI( ~skI, 'issuerId2', M2(~skI, ~skB2), 'cvB' ),
+   !WrapI( ~skB2, 'issuerId2', M2(~skI, ~skB2), 'cvB' ),
+   !WrapI( ~skW, 'idW', MW(~skW), 'cvB' )
+   ]
+
+  /*
+  rule (modulo AC) Init:
+     [
+     Fr( ~skS ), Fr( ~skAdv ), Fr( ~skI ), Fr( ~skB2 ), Fr( ~skI2 ),
+     Fr( ~skW )
+     ]
+    --[ Once( ), Fixture( ~skS, ~skI, ~skB2, ~skI2, ~skW, ~skAdv ) ]->
+     [
+     Out( pk(~skS) ), Out( pk(~skI) ), Out( pk(~skB2) ), Out( pk(~skI2) ),
+     Out( pk(~skW) ),
+     Out( <'authTuple', 'issuerId', fp(pk(~skI2)), 'signers0', 'algH', 'verH'>
+     ),
+     Out( <'authTuple', 'issuerId2', fp(pk(~skI)), 
+           <'signers1', fp(pk(~skB2))>, 'algH', 'verH'>
+     ),
+     Out( <'authTuple', 'idW', fp(pk(~skW)), 'signers0', 'algH', 'verH'> ),
+     Out( ~skAdv ),
+     Out( <'authTuple', 'idAdv', fp(pk(~skAdv)), 'signers0', 'algH', 'verH'>
+     ),
+     Out( ~skS ), !AuthKey( ~skS ), !HonestKey( pk(~skI) ),
+     !HonestKey( pk(~skB2) ), !HonestKey( pk(~skI2) ), !HonestKey( pk(~skW) ),
+     !HonestMember( pk(~skI),
+                    <'authTuple', 'issuerId2', fp(pk(~skI)), <'signers1', fp(pk(~skB2))>, 
+                     'algH', 'verH'>
+     ),
+     !HonestMember( pk(~skB2),
+                    <'authTuple', 'issuerId2', fp(pk(~skI)), <'signers1', fp(pk(~skB2))>, 
+                     'algH', 'verH'>
+     ),
+     !HonestMember( pk(~skI2),
+                    <'authTuple', 'issuerId', fp(pk(~skI2)), 'signers0', 'algH', 'verH'>
+     ),
+     !HonestMember( pk(~skW),
+                    <'authTuple', 'idW', fp(pk(~skW)), 'signers0', 'algH', 'verH'>
+     ),
+     !HonestSet( <'authTuple', 'issuerId', fp(pk(~skI2)), 'signers0', 'algH', 
+                  'verH'>
+     ),
+     !HonestSet( <'authTuple', 'issuerId2', fp(pk(~skI)), 
+                  <'signers1', fp(pk(~skB2))>, 'algH', 'verH'>
+     ),
+     !HonestSet( <'authTuple', 'idW', fp(pk(~skW)), 'signers0', 'algH', 'verH'
+                 >
+     ),
+     !AuthTask( <'authTuple', 'issuerId', fp(pk(~skI2)), 'signers0', 'algH', 
+                 'verH'>
+     ),
+     !AuthTask( <'authTuple', 'issuerId2', fp(pk(~skI)), 
+                 <'signers1', fp(pk(~skB2))>, 'algH', 'verH'>
+     ),
+     !AuthTask( <'authTuple', 'idW', fp(pk(~skW)), 'signers0', 'algH', 'verH'>
+     ),
+     !ShipI( ~skI, 'issuerId2',
+             <'authTuple', 'issuerId2', fp(pk(~skI)), <'signers1', fp(pk(~skB2))>, 
+              'algH', 'verH'>,
+             'cvA'
+     ),
+     !RefI( ~skI, 'issuerId2',
+            <'authTuple', 'issuerId2', fp(pk(~skI)), <'signers1', fp(pk(~skB2))>, 
+             'algH', 'verH'>,
+            'cvA'
+     ),
+     !ShipI( ~skI2, 'issuerId',
+             <'authTuple', 'issuerId', fp(pk(~skI2)), 'signers0', 'algH', 'verH'>,
+             'cvA'
+     ),
+     !RefI( ~skI2, 'issuerId',
+            <'authTuple', 'issuerId', fp(pk(~skI2)), 'signers0', 'algH', 'verH'>,
+            'cvA'
+     ),
+     !AttI( ~skB2, 'issuerId2',
+            <'authTuple', 'issuerId2', fp(pk(~skI)), <'signers1', fp(pk(~skB2))>, 
+             'algH', 'verH'>,
+            'cvA'
+     ),
+     !ForI( ~skI ),
+     !WrapI( ~skI, 'issuerId2',
+             <'authTuple', 'issuerId2', fp(pk(~skI)), <'signers1', fp(pk(~skB2))>, 
+              'algH', 'verH'>,
+             'cvB'
+     ),
+     !WrapI( ~skB2, 'issuerId2',
+             <'authTuple', 'issuerId2', fp(pk(~skI)), <'signers1', fp(pk(~skB2))>, 
+              'algH', 'verH'>,
+             'cvB'
+     ),
+     !WrapI( ~skW, 'idW',
+             <'authTuple', 'idW', fp(pk(~skW)), 'signers0', 'algH', 'verH'>, 'cvB'
+     )
+     ]
+  */
+
+rule (modulo E) AuthorityS:
+   [ !AuthKey( skS ), !AuthTask( t ) ]
+  --[ AuthorityPublishedDNS( t ) ]->
+   [ Out( sign(<'STMT_DIGEST', h(t)>, skS) ) ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) Attester:
+   [ !AttI( sk, id, m, cv ), In( payload ) ]
+  --[
+  IssuerPossession( pk(sk) ),
+  IssuerSigned( pk(sk),
+                framed('OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, payload)
+  )
+  ]->
+   [
+   Out( sign(<'POSS', m>, sk) ),
+   !HonestType( 'OT_ATTEST',
+                framed('OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, payload)
+   ),
+   !HonestCh( pk(sk),
+              framed('OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, payload)
+   ),
+   !HonestInner( pk(sk), id,
+                 framed('OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, payload)
+   ),
+   !HonestSig( pk(sk),
+               sign(<'BYTES', 
+                     framed('OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, payload)>,
+                    sk)
+   ),
+   !GsigHon( pk(sk),
+             sign(<'BYTES', 
+                   framed('OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, payload)>,
+                  sk)
+   ),
+   !HonestChainCh( pk(sk), m,
+                   framed('OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, payload)
+   ),
+   Out( sign(<'BYTES', 
+              framed('OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, payload)>,
+             sk)
+   )
+   ]
+
+  /*
+  rule (modulo AC) Attester:
+     [ !AttI( sk, id, m, cv ), In( payload ) ]
+    --[
+    IssuerPossession( pk(sk) ),
+    IssuerSigned( pk(sk),
+                  <'framed', 'OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, payload>
+    )
+    ]->
+     [
+     Out( sign(<'POSS', m>, sk) ),
+     !HonestType( 'OT_ATTEST',
+                  <'framed', 'OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, payload>
+     ),
+     !HonestCh( pk(sk),
+                <'framed', 'OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, payload>
+     ),
+     !HonestInner( pk(sk), id,
+                   <'framed', 'OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, payload>
+     ),
+     !HonestSig( pk(sk),
+                 sign(<'BYTES', 'framed', 'OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, 
+                       payload>,
+                      sk)
+     ),
+     !GsigHon( pk(sk),
+               sign(<'BYTES', 'framed', 'OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, 
+                     payload>,
+                    sk)
+     ),
+     !HonestChainCh( pk(sk), m,
+                     <'framed', 'OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, payload>
+     ),
+     Out( sign(<'BYTES', 'framed', 'OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), 
+                cv, payload>,
+               sk)
+     )
+     ]
+  */
+
+rule (modulo E) ShipIssuer:
+   [
+   !ShipI( sk, id, m, cv ), In( <p1, p2> ), Fr( ~decl1 ), Fr( ~decl2 ),
+   Fr( ~declT )
+   ]
+  --[
+  IssuerPossession( pk(sk) ),
+  IssuerSigned( pk(sk),
+                framed('OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, p1)
+  ),
+  IssuerSigned( pk(sk),
+                framed('OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, p2)
+  ),
+  Designated( pk(sk),
+              h(attemptCore(m, sign(<'POSS', m>, sk),
+                            sign(<'BYTES', framed('OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, p2)
+                                 >,
+                                 sk),
+                            ~decl2))
+  )
+  ]->
+   [
+   Out( sign(<'POSS', m>, sk) ),
+   Out( <
+         attemptCore(m, sign(<'POSS', m>, sk),
+                     sign(<'BYTES', framed('OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, p1)
+                          >,
+                          sk),
+                     ~decl1), 
+         framed('OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, p1), 
+         sign(<'BYTES', framed('OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, p1)
+              >,
+              sk)
+        >
+   ),
+   Out( <
+         attemptCore(m, sign(<'POSS', m>, sk),
+                     sign(<'BYTES', framed('OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, p2)
+                          >,
+                          sk),
+                     ~decl2), 
+         framed('OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, p2), 
+         sign(<'BYTES', framed('OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, p2)
+              >,
+              sk)
+        >
+   ),
+   !Design( pk(sk),
+            h(attemptCore(m, sign(<'POSS', m>, sk),
+                          sign(<'BYTES', framed('OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, p2)
+                               >,
+                               sk),
+                          ~decl2))
+   ),
+   Out( sign(<'TLR', 
+              lineage2(entry(h(attemptCore(m, sign(<'POSS', m>, sk),
+                                           sign(<'BYTES', 
+                                                 framed('OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, p1)>,
+                                                sk),
+                                           ~decl1)),
+                             'DISP_ABANDONED'),
+                       entry(h(attemptCore(m, sign(<'POSS', m>, sk),
+                                           sign(<'BYTES', 
+                                                 framed('OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, p2)>,
+                                                sk),
+                                           ~decl2)),
+                             'DISP_SHIPPED')), 
+              TERM_SHIPPED(h(attemptCore(m, sign(<'POSS', m>, sk),
+                                         sign(<'BYTES', 
+                                               framed('OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, p2)>,
+                                              sk),
+                                         ~decl2))), 
+              ~declT>,
+             sk)
+   ),
+   !HonestType( 'OT_ATTEST',
+                framed('OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, p1)
+   ),
+   !HonestType( 'OT_ATTEST',
+                framed('OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, p2)
+   ),
+   !HonestCh( pk(sk),
+              framed('OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, p1)
+   ),
+   !HonestCh( pk(sk),
+              framed('OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, p2)
+   ),
+   !HonestInner( pk(sk), id,
+                 framed('OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, p1)
+   ),
+   !HonestInner( pk(sk), id,
+                 framed('OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, p2)
+   ),
+   !HonestSig( pk(sk),
+               sign(<'BYTES', framed('OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, p1)
+                    >,
+                    sk)
+   ),
+   !HonestSig( pk(sk),
+               sign(<'BYTES', framed('OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, p2)
+                    >,
+                    sk)
+   ),
+   !GsigHon( pk(sk),
+             sign(<'BYTES', framed('OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, p1)
+                  >,
+                  sk)
+   ),
+   !GsigHon( pk(sk),
+             sign(<'BYTES', framed('OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, p2)
+                  >,
+                  sk)
+   ),
+   !HonestChainCh( pk(sk), m,
+                   framed('OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, p1)
+   ),
+   !HonestChainCh( pk(sk), m,
+                   framed('OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, p2)
+   )
+   ]
+
+  /*
+  rule (modulo AC) ShipIssuer:
+     [
+     !ShipI( sk, id, m, cv ), In( <p1, p2> ), Fr( ~decl1 ), Fr( ~decl2 ),
+     Fr( ~declT )
+     ]
+    --[
+    IssuerPossession( pk(sk) ),
+    IssuerSigned( pk(sk),
+                  <'framed', 'OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, p1>
+    ),
+    IssuerSigned( pk(sk),
+                  <'framed', 'OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, p2>
+    ),
+    Designated( pk(sk),
+                h(<'attemptCore', m, sign(<'POSS', m>, sk), 
+                   sign(<'BYTES', 'framed', 'OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, 
+                         p2>,
+                        sk), 
+                   ~decl2>)
+    )
+    ]->
+     [
+     Out( sign(<'POSS', m>, sk) ),
+     Out( <
+           <'attemptCore', m, sign(<'POSS', m>, sk), 
+            sign(<'BYTES', 'framed', 'OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, 
+                  p1>,
+                 sk), 
+            ~decl1>, 
+           <'framed', 'OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, p1>, 
+           sign(<'BYTES', 'framed', 'OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, 
+                 p1>,
+                sk)
+          >
+     ),
+     Out( <
+           <'attemptCore', m, sign(<'POSS', m>, sk), 
+            sign(<'BYTES', 'framed', 'OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, 
+                  p2>,
+                 sk), 
+            ~decl2>, 
+           <'framed', 'OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, p2>, 
+           sign(<'BYTES', 'framed', 'OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, 
+                 p2>,
+                sk)
+          >
+     ),
+     !Design( pk(sk),
+              h(<'attemptCore', m, sign(<'POSS', m>, sk), 
+                 sign(<'BYTES', 'framed', 'OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, 
+                       p2>,
+                      sk), 
+                 ~decl2>)
+     ),
+     Out( sign(<'TLR', 
+                <'lineage2', 
+                 <'entry', 
+                  h(<'attemptCore', m, sign(<'POSS', m>, sk), 
+                     sign(<'BYTES', 'framed', 'OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, 
+                           p1>,
+                          sk), 
+                     ~decl1>), 
+                  'DISP_ABANDONED'>, 
+                 'entry', 
+                 h(<'attemptCore', m, sign(<'POSS', m>, sk), 
+                    sign(<'BYTES', 'framed', 'OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, 
+                          p2>,
+                         sk), 
+                    ~decl2>), 
+                 'DISP_SHIPPED'>, 
+                <'TERM_SHIPPED', 
+                 h(<'attemptCore', m, sign(<'POSS', m>, sk), 
+                    sign(<'BYTES', 'framed', 'OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, 
+                          p2>,
+                         sk), 
+                    ~decl2>)
+                >, 
+                ~declT>,
+               sk)
+     ),
+     !HonestType( 'OT_ATTEST',
+                  <'framed', 'OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, p1>
+     ),
+     !HonestType( 'OT_ATTEST',
+                  <'framed', 'OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, p2>
+     ),
+     !HonestCh( pk(sk),
+                <'framed', 'OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, p1>
+     ),
+     !HonestCh( pk(sk),
+                <'framed', 'OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, p2>
+     ),
+     !HonestInner( pk(sk), id,
+                   <'framed', 'OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, p1>
+     ),
+     !HonestInner( pk(sk), id,
+                   <'framed', 'OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, p2>
+     ),
+     !HonestSig( pk(sk),
+                 sign(<'BYTES', 'framed', 'OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, 
+                       p1>,
+                      sk)
+     ),
+     !HonestSig( pk(sk),
+                 sign(<'BYTES', 'framed', 'OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, 
+                       p2>,
+                      sk)
+     ),
+     !GsigHon( pk(sk),
+               sign(<'BYTES', 'framed', 'OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, 
+                     p1>,
+                    sk)
+     ),
+     !GsigHon( pk(sk),
+               sign(<'BYTES', 'framed', 'OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, 
+                     p2>,
+                    sk)
+     ),
+     !HonestChainCh( pk(sk), m,
+                     <'framed', 'OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, p1>
+     ),
+     !HonestChainCh( pk(sk), m,
+                     <'framed', 'OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, p2>
+     )
+     ]
+  */
+
+rule (modulo E) RefuseIssuer:
+   [
+   !RefI( sk, id, m, cv ), In( <p1, p2> ), Fr( ~decl1 ), Fr( ~decl2 ),
+   Fr( ~declT )
+   ]
+  --[
+  IssuerPossession( pk(sk) ),
+  IssuerSigned( pk(sk),
+                framed('OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, p1)
+  ),
+  IssuerSigned( pk(sk),
+                framed('OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, p2)
+  )
+  ]->
+   [
+   Out( sign(<'POSS', m>, sk) ),
+   Out( <
+         attemptCore(m, sign(<'POSS', m>, sk),
+                     sign(<'BYTES', framed('OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, p1)
+                          >,
+                          sk),
+                     ~decl1), 
+         framed('OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, p1), 
+         sign(<'BYTES', framed('OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, p1)
+              >,
+              sk)
+        >
+   ),
+   Out( <
+         attemptCore(m, sign(<'POSS', m>, sk),
+                     sign(<'BYTES', framed('OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, p2)
+                          >,
+                          sk),
+                     ~decl2), 
+         framed('OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, p2), 
+         sign(<'BYTES', framed('OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, p2)
+              >,
+              sk)
+        >
+   ),
+   Out( sign(<'TLR', 
+              lineage2(entry(h(attemptCore(m, sign(<'POSS', m>, sk),
+                                           sign(<'BYTES', 
+                                                 framed('OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, p1)>,
+                                                sk),
+                                           ~decl1)),
+                             'DISP_ABANDONED'),
+                       entry(h(attemptCore(m, sign(<'POSS', m>, sk),
+                                           sign(<'BYTES', 
+                                                 framed('OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, p2)>,
+                                                sk),
+                                           ~decl2)),
+                             'DISP_ABANDONED')), 
+              'TERM_REFUSED', ~declT>,
+             sk)
+   ),
+   !HonestType( 'OT_ATTEST',
+                framed('OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, p1)
+   ),
+   !HonestType( 'OT_ATTEST',
+                framed('OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, p2)
+   ),
+   !HonestCh( pk(sk),
+              framed('OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, p1)
+   ),
+   !HonestCh( pk(sk),
+              framed('OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, p2)
+   ),
+   !HonestInner( pk(sk), id,
+                 framed('OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, p1)
+   ),
+   !HonestInner( pk(sk), id,
+                 framed('OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, p2)
+   ),
+   !HonestSig( pk(sk),
+               sign(<'BYTES', framed('OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, p1)
+                    >,
+                    sk)
+   ),
+   !HonestSig( pk(sk),
+               sign(<'BYTES', framed('OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, p2)
+                    >,
+                    sk)
+   ),
+   !GsigHon( pk(sk),
+             sign(<'BYTES', framed('OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, p1)
+                  >,
+                  sk)
+   ),
+   !GsigHon( pk(sk),
+             sign(<'BYTES', framed('OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, p2)
+                  >,
+                  sk)
+   ),
+   !HonestChainCh( pk(sk), m,
+                   framed('OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, p1)
+   ),
+   !HonestChainCh( pk(sk), m,
+                   framed('OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, p2)
+   )
+   ]
+
+  /*
+  rule (modulo AC) RefuseIssuer:
+     [
+     !RefI( sk, id, m, cv ), In( <p1, p2> ), Fr( ~decl1 ), Fr( ~decl2 ),
+     Fr( ~declT )
+     ]
+    --[
+    IssuerPossession( pk(sk) ),
+    IssuerSigned( pk(sk),
+                  <'framed', 'OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, p1>
+    ),
+    IssuerSigned( pk(sk),
+                  <'framed', 'OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, p2>
+    )
+    ]->
+     [
+     Out( sign(<'POSS', m>, sk) ),
+     Out( <
+           <'attemptCore', m, sign(<'POSS', m>, sk), 
+            sign(<'BYTES', 'framed', 'OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, 
+                  p1>,
+                 sk), 
+            ~decl1>, 
+           <'framed', 'OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, p1>, 
+           sign(<'BYTES', 'framed', 'OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, 
+                 p1>,
+                sk)
+          >
+     ),
+     Out( <
+           <'attemptCore', m, sign(<'POSS', m>, sk), 
+            sign(<'BYTES', 'framed', 'OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, 
+                  p2>,
+                 sk), 
+            ~decl2>, 
+           <'framed', 'OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, p2>, 
+           sign(<'BYTES', 'framed', 'OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, 
+                 p2>,
+                sk)
+          >
+     ),
+     Out( sign(<'TLR', 
+                <'lineage2', 
+                 <'entry', 
+                  h(<'attemptCore', m, sign(<'POSS', m>, sk), 
+                     sign(<'BYTES', 'framed', 'OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, 
+                           p1>,
+                          sk), 
+                     ~decl1>), 
+                  'DISP_ABANDONED'>, 
+                 'entry', 
+                 h(<'attemptCore', m, sign(<'POSS', m>, sk), 
+                    sign(<'BYTES', 'framed', 'OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, 
+                          p2>,
+                         sk), 
+                    ~decl2>), 
+                 'DISP_ABANDONED'>, 
+                'TERM_REFUSED', ~declT>,
+               sk)
+     ),
+     !HonestType( 'OT_ATTEST',
+                  <'framed', 'OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, p1>
+     ),
+     !HonestType( 'OT_ATTEST',
+                  <'framed', 'OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, p2>
+     ),
+     !HonestCh( pk(sk),
+                <'framed', 'OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, p1>
+     ),
+     !HonestCh( pk(sk),
+                <'framed', 'OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, p2>
+     ),
+     !HonestInner( pk(sk), id,
+                   <'framed', 'OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, p1>
+     ),
+     !HonestInner( pk(sk), id,
+                   <'framed', 'OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, p2>
+     ),
+     !HonestSig( pk(sk),
+                 sign(<'BYTES', 'framed', 'OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, 
+                       p1>,
+                      sk)
+     ),
+     !HonestSig( pk(sk),
+                 sign(<'BYTES', 'framed', 'OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, 
+                       p2>,
+                      sk)
+     ),
+     !GsigHon( pk(sk),
+               sign(<'BYTES', 'framed', 'OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, 
+                     p1>,
+                    sk)
+     ),
+     !GsigHon( pk(sk),
+               sign(<'BYTES', 'framed', 'OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, 
+                     p2>,
+                    sk)
+     ),
+     !HonestChainCh( pk(sk), m,
+                     <'framed', 'OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, p1>
+     ),
+     !HonestChainCh( pk(sk), m,
+                     <'framed', 'OT_ATTEST', 'algH', id, fp(pk(sk)), h(m), cv, p2>
+     )
+     ]
+  */
+
+rule (modulo E) Wrapper:
+   [ !WrapI( sk, id, m, cv ), In( <cvIw, fbIA, sgIA, fbIB, sgIB> ) ]
+  --[
+  IssuerPossession( pk(sk) ),
+  IssuerSigned( pk(sk),
+                framed('OT_WRAPPER', 'algH', id, fp(pk(sk)), h(m), cv,
+                       wrap(cvIw, <fbIA, sgIA, fbIB, sgIB>))
+  )
+  ]->
+   [
+   Out( sign(<'POSS', m>, sk) ),
+   !HonestType( 'OT_WRAPPER',
+                framed('OT_WRAPPER', 'algH', id, fp(pk(sk)), h(m), cv,
+                       wrap(cvIw, <fbIA, sgIA, fbIB, sgIB>))
+   ),
+   !HonestCh( pk(sk),
+              framed('OT_WRAPPER', 'algH', id, fp(pk(sk)), h(m), cv,
+                     wrap(cvIw, <fbIA, sgIA, fbIB, sgIB>))
+   ),
+   !HonestChainCh( pk(sk), m,
+                   framed('OT_WRAPPER', 'algH', id, fp(pk(sk)), h(m), cv,
+                          wrap(cvIw, <fbIA, sgIA, fbIB, sgIB>))
+   ),
+   !GsigHon( pk(sk),
+             sign(<'BYTES', 
+                   framed('OT_WRAPPER', 'algH', id, fp(pk(sk)), h(m), cv,
+                          wrap(cvIw, <fbIA, sgIA, fbIB, sgIB>))
+                  >,
+                  sk)
+   ),
+   Out( sign(<'BYTES', 
+              framed('OT_WRAPPER', 'algH', id, fp(pk(sk)), h(m), cv,
+                     wrap(cvIw, <fbIA, sgIA, fbIB, sgIB>))
+             >,
+             sk)
+   )
+   ]
+
+  /*
+  rule (modulo AC) Wrapper:
+     [ !WrapI( sk, id, m, cv ), In( <cvIw, fbIA, sgIA, fbIB, sgIB> ) ]
+    --[
+    IssuerPossession( pk(sk) ),
+    IssuerSigned( pk(sk),
+                  <'framed', 'OT_WRAPPER', 'algH', id, fp(pk(sk)), h(m), cv, 'wrap', cvIw, 
+                   fbIA, sgIA, fbIB, sgIB>
+    )
+    ]->
+     [
+     Out( sign(<'POSS', m>, sk) ),
+     !HonestType( 'OT_WRAPPER',
+                  <'framed', 'OT_WRAPPER', 'algH', id, fp(pk(sk)), h(m), cv, 'wrap', cvIw, 
+                   fbIA, sgIA, fbIB, sgIB>
+     ),
+     !HonestCh( pk(sk),
+                <'framed', 'OT_WRAPPER', 'algH', id, fp(pk(sk)), h(m), cv, 'wrap', cvIw, 
+                 fbIA, sgIA, fbIB, sgIB>
+     ),
+     !HonestChainCh( pk(sk), m,
+                     <'framed', 'OT_WRAPPER', 'algH', id, fp(pk(sk)), h(m), cv, 'wrap', cvIw, 
+                      fbIA, sgIA, fbIB, sgIB>
+     ),
+     !GsigHon( pk(sk),
+               sign(<'BYTES', 'framed', 'OT_WRAPPER', 'algH', id, fp(pk(sk)), h(m), cv, 
+                     'wrap', cvIw, fbIA, sgIA, fbIB, sgIB>,
+                    sk)
+     ),
+     Out( sign(<'BYTES', 'framed', 'OT_WRAPPER', 'algH', id, fp(pk(sk)), 
+                h(m), cv, 'wrap', cvIw, fbIA, sgIA, fbIB, sgIB>,
+               sk)
+     )
+     ]
+  */
+
+rule (modulo E) ForeignIssuer:
+   [ !ForI( sk ), In( foreignCore ) ]
+  -->
+   [
+   Out( sign(<'REFUSAL', 
+              lineage2(entry(h(foreignCore), 'DISP_SHIPPED'),
+                       entry('fbH', 'DISP_ABANDONED')), 
+              TERM_SHIPPED(h(foreignCore)), 'fbH'>,
+             sk)
+   )
+   ]
+
+  /*
+  rule (modulo AC) ForeignIssuer:
+     [ !ForI( sk ), In( foreignCore ) ]
+    -->
+     [
+     Out( sign(<'REFUSAL', 
+                <'lineage2', <'entry', h(foreignCore), 'DISP_SHIPPED'>, 'entry', 'fbH', 
+                 'DISP_ABANDONED'>, 
+                <'TERM_SHIPPED', h(foreignCore)>, 'fbH'>,
+               sk)
+     )
+     ]
+  */
+
+rule (modulo E) Front:
+   [
+   In( <fbA, sgA, fbB, sgB, t0, ev0, kA0, ppfA0, kB0, ppfB0, t1, ev1, kA1, 
+        ppfA1, kB1, ppfB1, t2, ev2, kA2, ppfA2, kB2, ppfB2, coreIn, seIn>
+   ),
+   Fr( ~aid )
+   ]
+  --[ Intake( ~aid ) ]->
+   [
+   !StageL0( ~aid, 'L0', 'BASE', 'kNone', 'idAdv', fbA, sgA, fbB, sgB ),
+   !SStageL0( ~aid, 'L0', fbA, sgA, fbB, sgB ),
+   !EnvMat( ~aid, 'L0', t0, ev0, kA0, ppfA0, kB0, ppfB0 ),
+   !EnvMat( ~aid, 'L1', t1, ev1, kA1, ppfA1, kB1, ppfB1 ),
+   !EnvMat( ~aid, 'L2', t2, ev2, kA2, ppfA2, kB2, ppfB2 ),
+   !StdMat( ~aid, 'L0', t0, ev0, kA0, ppfA0, kB0, ppfB0 ),
+   !StdMat( ~aid, 'L1', t1, ev1, kA1, ppfA1, kB1, ppfB1 ),
+   !StdMat( ~aid, 'L2', t2, ev2, kA2, ppfA2, kB2, ppfB2 ),
+   !StandCore( ~aid, coreIn, seIn )
+   ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) AttestCheck1_L0:
+   [
+   !AuthKey( skS ),
+   !StageL0( aid, lyr, ctx, kEnc, idEnc, fbA, sgA, fbB, sgB ),
+   !EnvMat( aid, lyr, authTuple(id, kfprA, ss, al, ver),
+            sign(<'STMT_DIGEST', h(authTuple(id, kfprA, ss, al, ver))>, skS), kA,
+            ppfA, kB, ppfB
+   )
+   ]
+  --[
+  AuthorityEvidence( authTuple(id, kfprA, ss, al, ver),
+                     sign(<'STMT_DIGEST', h(authTuple(id, kfprA, ss, al, ver))>, skS), pk(skS)
+  )
+  ]->
+   [
+   !AS1( aid, lyr, ctx, fbA, sgA, fbB, sgB,
+         authTuple(id, kfprA, ss, al, ver),
+         sign(<'STMT_DIGEST', h(authTuple(id, kfprA, ss, al, ver))>, skS), kA,
+         ppfA, kB, ppfB
+   )
+   ]
+
+  /*
+  rule (modulo AC) AttestCheck1_L0:
+     [
+     !AuthKey( skS ),
+     !StageL0( aid, lyr, ctx, kEnc, idEnc, fbA, sgA, fbB, sgB ),
+     !EnvMat( aid, lyr, <'authTuple', id, kfprA, ss, al, ver>,
+              sign(<'STMT_DIGEST', h(<'authTuple', id, kfprA, ss, al, ver>)>, skS), kA,
+              ppfA, kB, ppfB
+     )
+     ]
+    --[
+    AuthorityEvidence( <'authTuple', id, kfprA, ss, al, ver>,
+                       sign(<'STMT_DIGEST', h(<'authTuple', id, kfprA, ss, al, ver>)>, skS),
+                       pk(skS)
+    )
+    ]->
+     [
+     !AS1( aid, lyr, ctx, fbA, sgA, fbB, sgB,
+           <'authTuple', id, kfprA, ss, al, ver>,
+           sign(<'STMT_DIGEST', h(<'authTuple', id, kfprA, ss, al, ver>)>, skS), kA,
+           ppfA, kB, ppfB
+     )
+     ]
+  */
+
+rule (modulo E) AttestOne_parse:
+   [
+   !AS1( aid, lyr, ctx,
+         framed('OT_ATTEST', al, id, fp(kA),
+                h(authTuple(id, fp(kA), 'signers0', al, ver)), cvsA, plA),
+         sgA, fbB, sgB, authTuple(id, fp(kA), 'signers0', al, ver), ev, kA, ppfA,
+         kB, ppfB
+   )
+   ]
+  -->
+   [
+   !A1s0( aid, lyr, ctx,
+          framed('OT_ATTEST', al, id, fp(kA),
+                 h(authTuple(id, fp(kA), 'signers0', al, ver)), cvsA, plA),
+          sgA, fbB, sgB, authTuple(id, fp(kA), 'signers0', al, ver), ev, kA, ppfA,
+          kB, ppfB
+   )
+   ]
+
+  /*
+  rule (modulo AC) AttestOne_parse:
+     [
+     !AS1( aid, lyr, ctx,
+           <'framed', 'OT_ATTEST', al, id, fp(kA), 
+            h(<'authTuple', id, fp(kA), 'signers0', al, ver>), cvsA, plA>,
+           sgA, fbB, sgB, <'authTuple', id, fp(kA), 'signers0', al, ver>, ev, kA,
+           ppfA, kB, ppfB
+     )
+     ]
+    -->
+     [
+     !A1s0( aid, lyr, ctx,
+            <'framed', 'OT_ATTEST', al, id, fp(kA), 
+             h(<'authTuple', id, fp(kA), 'signers0', al, ver>), cvsA, plA>,
+            sgA, fbB, sgB, <'authTuple', id, fp(kA), 'signers0', al, ver>, ev, kA,
+            ppfA, kB, ppfB
+     )
+     ]
+  */
+
+rule (modulo E) A1_chk1_possA:
+   [ !A1s0( aid, lyr, ctx, fbA, sgA, fbB, sgB, t, ev, kA, ppfA, kB, ppfB ) ]
+  --[ Eq( checksign(ppfA, kA), <'POSS', t> ) ]->
+   [ !A1s1( aid, lyr, ctx, fbA, sgA, fbB, sgB, t, ev, kA, ppfA, kB, ppfB ) ]
+
+  /*
+  rule (modulo AC) A1_chk1_possA:
+     [ !A1s0( aid, lyr, ctx, fbA, sgA, fbB, sgB, t, ev, kA, ppfA, kB, ppfB ) ]
+    --[ Eq( z, <'POSS', t> ) ]->
+     [ !A1s1( aid, lyr, ctx, fbA, sgA, fbB, sgB, t, ev, kA, ppfA, kB, ppfB ) ]
+    variants (modulo AC)
+    1. kA    = kA.16
+       ppfA  = ppfA.19
+       z     = checksign(ppfA.19, kA.16)
+    
+    2. kA    = pk(x.20)
+       ppfA  = sign(z.19, x.20)
+       z     = z.19
+    
+    3. kA    = pk(dsks(sign(z.18, x.20), x.21))
+       ppfA  = sign(z.18, x.20)
+       z     = z.18
+  */
+
+rule (modulo E) A1_chk2_bytesA:
+   [ !A1s1( aid, lyr, ctx, fbA, sgA, fbB, sgB, t, ev, kA, ppfA, kB, ppfB ) ]
+  --[ Eq( checksign(sgA, kA), <'BYTES', fbA> ) ]->
+   [ !A1s2( aid, lyr, ctx, fbA, sgA, fbB, sgB, t, ev, kA, ppfA, kB, ppfB ) ]
+
+  /*
+  rule (modulo AC) A1_chk2_bytesA:
+     [ !A1s1( aid, lyr, ctx, fbA, sgA, fbB, sgB, t, ev, kA, ppfA, kB, ppfB ) ]
+    --[ Eq( z, <'BYTES', fbA> ) ]->
+     [ !A1s2( aid, lyr, ctx, fbA, sgA, fbB, sgB, t, ev, kA, ppfA, kB, ppfB ) ]
+    variants (modulo AC)
+    1. kA    = kA.16
+       sgA   = sgA.21
+       z     = checksign(sgA.21, kA.16)
+    
+    2. kA    = pk(x.22)
+       sgA   = sign(z.21, x.22)
+       z     = z.21
+    
+    3. kA    = pk(dsks(sign(z.18, x.20), x.21))
+       sgA   = sign(z.18, x.20)
+       z     = z.18
+  */
+
+rule (modulo E) AttestOne_accept:
+   [
+   !A1s2( aid, lyr, ctx, fbA, sgA, fbB, sgB,
+          authTuple(id, fpt_, sst_, alt_, vert_), ev, kA, ppfA, kB, ppfB
+   )
+   ]
+  --[
+  LayerAccepted( aid, lyr, authTuple(id, fpt_, sst_, alt_, vert_), ev,
+                 fp(kA), kA, ppfA, sgA, fbA
+  ),
+  SlotSatisfied( aid, lyr, authTuple(id, fpt_, sst_, alt_, vert_), fp(kA)
+  ),
+  AcceptanceComplete( aid, lyr, authTuple(id, fpt_, sst_, alt_, vert_) ),
+  AcceptS( ev, authTuple(id, fpt_, sst_, alt_, vert_), kA, fbA ),
+  ScopeReported( aid, lyr, kA, id )
+  ]->
+   [
+   !Link1a( lyr, authTuple(id, fpt_, sst_, alt_, vert_), ev ),
+   !Link2a( lyr, authTuple(id, fpt_, sst_, alt_, vert_), fp(kA), kA ),
+   !PossCh( lyr, kA, authTuple(id, fpt_, sst_, alt_, vert_), ppfA ),
+   !BytesCh( lyr, kA, sgA, fbA ),
+   !Link5( lyr, authTuple(id, fpt_, sst_, alt_, vert_), kA, fbA ),
+   !Link6a( lyr, 'OT_ATTEST', fbA ), !Link6b( aid, lyr, kA, id, fbA ),
+   !TypeCh( 'OT_ATTEST', fbA ),
+   !SlotCh( authTuple(id, fpt_, sst_, alt_, vert_), fp(kA), kA ),
+   !SetCh( authTuple(id, fpt_, sst_, alt_, vert_), verified1(kA) ),
+   !AcceptCh( ctx, 'SLOT_A', kA, id, fbA ), !AcceptKey( kA, fbA ),
+   !ScopeCh( ctx, kA, id, fbA ), !SigCh( ctx, kA, sgA ), !Gsig( kA, sgA ),
+   !ChainCh( lyr, kA, authTuple(id, fpt_, sst_, alt_, vert_), fbA ),
+   !ScopeEnvelope( aid, lyr, kA, id )
+   ]
+
+  /*
+  rule (modulo AC) AttestOne_accept:
+     [
+     !A1s2( aid, lyr, ctx, fbA, sgA, fbB, sgB,
+            <'authTuple', id, fpt_, sst_, alt_, vert_>, ev, kA, ppfA, kB, ppfB
+     )
+     ]
+    --[
+    LayerAccepted( aid, lyr, <'authTuple', id, fpt_, sst_, alt_, vert_>, ev,
+                   fp(kA), kA, ppfA, sgA, fbA
+    ),
+    SlotSatisfied( aid, lyr, <'authTuple', id, fpt_, sst_, alt_, vert_>,
+                   fp(kA)
+    ),
+    AcceptanceComplete( aid, lyr, <'authTuple', id, fpt_, sst_, alt_, vert_>
+    ),
+    AcceptS( ev, <'authTuple', id, fpt_, sst_, alt_, vert_>, kA, fbA ),
+    ScopeReported( aid, lyr, kA, id )
+    ]->
+     [
+     !Link1a( lyr, <'authTuple', id, fpt_, sst_, alt_, vert_>, ev ),
+     !Link2a( lyr, <'authTuple', id, fpt_, sst_, alt_, vert_>, fp(kA), kA ),
+     !PossCh( lyr, kA, <'authTuple', id, fpt_, sst_, alt_, vert_>, ppfA ),
+     !BytesCh( lyr, kA, sgA, fbA ),
+     !Link5( lyr, <'authTuple', id, fpt_, sst_, alt_, vert_>, kA, fbA ),
+     !Link6a( lyr, 'OT_ATTEST', fbA ), !Link6b( aid, lyr, kA, id, fbA ),
+     !TypeCh( 'OT_ATTEST', fbA ),
+     !SlotCh( <'authTuple', id, fpt_, sst_, alt_, vert_>, fp(kA), kA ),
+     !SetCh( <'authTuple', id, fpt_, sst_, alt_, vert_>, <'verified1', kA> ),
+     !AcceptCh( ctx, 'SLOT_A', kA, id, fbA ), !AcceptKey( kA, fbA ),
+     !ScopeCh( ctx, kA, id, fbA ), !SigCh( ctx, kA, sgA ), !Gsig( kA, sgA ),
+     !ChainCh( lyr, kA, <'authTuple', id, fpt_, sst_, alt_, vert_>, fbA ),
+     !ScopeEnvelope( aid, lyr, kA, id )
+     ]
+  */
+
+rule (modulo E) AttestTwo_parse_mutated:
+   [
+   !AS1( aid, lyr, ctx, framed('OT_ATTEST', al, id, kfpxA, mhA, cvs, pl),
+         sgA, framed('OT_ATTEST', al, id, kfpxB, mhB, cvs, pl), sgB,
+         authTuple(id, fp(kA), signers1(fp(kB)), al, ver), ev, kA, ppfA, kB, ppfB
+   )
+   ]
+  -->
+   [
+   !A2s0( aid, lyr, ctx, framed('OT_ATTEST', al, id, kfpxA, mhA, cvs, pl),
+          sgA, framed('OT_ATTEST', al, id, kfpxB, mhB, cvs, pl), sgB,
+          authTuple(id, fp(kA), signers1(fp(kB)), al, ver), ev, kA, ppfA, kB, ppfB
+   )
+   ]
+
+  /*
+  rule (modulo AC) AttestTwo_parse_mutated:
+     [
+     !AS1( aid, lyr, ctx,
+           <'framed', 'OT_ATTEST', al, id, kfpxA, mhA, cvs, pl>, sgA,
+           <'framed', 'OT_ATTEST', al, id, kfpxB, mhB, cvs, pl>, sgB,
+           <'authTuple', id, fp(kA), <'signers1', fp(kB)>, al, ver>, ev, kA, ppfA,
+           kB, ppfB
+     )
+     ]
+    -->
+     [
+     !A2s0( aid, lyr, ctx,
+            <'framed', 'OT_ATTEST', al, id, kfpxA, mhA, cvs, pl>, sgA,
+            <'framed', 'OT_ATTEST', al, id, kfpxB, mhB, cvs, pl>, sgB,
+            <'authTuple', id, fp(kA), <'signers1', fp(kB)>, al, ver>, ev, kA, ppfA,
+            kB, ppfB
+     )
+     ]
+  */
+
+rule (modulo E) A2_chk1_possA:
+   [ !A2s0( aid, lyr, ctx, fbA, sgA, fbB, sgB, t, ev, kA, ppfA, kB, ppfB ) ]
+  --[ Eq( checksign(ppfA, kA), <'POSS', t> ) ]->
+   [ !A2s1( aid, lyr, ctx, fbA, sgA, fbB, sgB, t, ev, kA, ppfA, kB, ppfB ) ]
+
+  /*
+  rule (modulo AC) A2_chk1_possA:
+     [ !A2s0( aid, lyr, ctx, fbA, sgA, fbB, sgB, t, ev, kA, ppfA, kB, ppfB ) ]
+    --[ Eq( z, <'POSS', t> ) ]->
+     [ !A2s1( aid, lyr, ctx, fbA, sgA, fbB, sgB, t, ev, kA, ppfA, kB, ppfB ) ]
+    variants (modulo AC)
+    1. kA    = kA.16
+       ppfA  = ppfA.19
+       z     = checksign(ppfA.19, kA.16)
+    
+    2. kA    = pk(x.20)
+       ppfA  = sign(z.19, x.20)
+       z     = z.19
+    
+    3. kA    = pk(dsks(sign(z.18, x.20), x.21))
+       ppfA  = sign(z.18, x.20)
+       z     = z.18
+  */
+
+rule (modulo E) A2_chk2_possB:
+   [ !A2s1( aid, lyr, ctx, fbA, sgA, fbB, sgB, t, ev, kA, ppfA, kB, ppfB ) ]
+  --[ Eq( checksign(ppfB, kB), <'POSS', t> ) ]->
+   [ !A2s2( aid, lyr, ctx, fbA, sgA, fbB, sgB, t, ev, kA, ppfA, kB, ppfB ) ]
+
+  /*
+  rule (modulo AC) A2_chk2_possB:
+     [ !A2s1( aid, lyr, ctx, fbA, sgA, fbB, sgB, t, ev, kA, ppfA, kB, ppfB ) ]
+    --[ Eq( z, <'POSS', t> ) ]->
+     [ !A2s2( aid, lyr, ctx, fbA, sgA, fbB, sgB, t, ev, kA, ppfA, kB, ppfB ) ]
+    variants (modulo AC)
+    1. kB    = kB.16
+       ppfB  = ppfB.19
+       z     = checksign(ppfB.19, kB.16)
+    
+    2. kB    = pk(x.20)
+       ppfB  = sign(z.19, x.20)
+       z     = z.19
+    
+    3. kB    = pk(dsks(sign(z.18, x.20), x.21))
+       ppfB  = sign(z.18, x.20)
+       z     = z.18
+  */
+
+rule (modulo E) A2_chk3_bytesA:
+   [ !A2s2( aid, lyr, ctx, fbA, sgA, fbB, sgB, t, ev, kA, ppfA, kB, ppfB ) ]
+  --[ Eq( checksign(sgA, kA), <'BYTES', fbA> ) ]->
+   [ !A2s3( aid, lyr, ctx, fbA, sgA, fbB, sgB, t, ev, kA, ppfA, kB, ppfB ) ]
+
+  /*
+  rule (modulo AC) A2_chk3_bytesA:
+     [ !A2s2( aid, lyr, ctx, fbA, sgA, fbB, sgB, t, ev, kA, ppfA, kB, ppfB ) ]
+    --[ Eq( z, <'BYTES', fbA> ) ]->
+     [ !A2s3( aid, lyr, ctx, fbA, sgA, fbB, sgB, t, ev, kA, ppfA, kB, ppfB ) ]
+    variants (modulo AC)
+    1. kA    = kA.16
+       sgA   = sgA.21
+       z     = checksign(sgA.21, kA.16)
+    
+    2. kA    = pk(x.22)
+       sgA   = sign(z.21, x.22)
+       z     = z.21
+    
+    3. kA    = pk(dsks(sign(z.18, x.20), x.21))
+       sgA   = sign(z.18, x.20)
+       z     = z.18
+  */
+
+rule (modulo E) A2_chk4_bytesB:
+   [ !A2s3( aid, lyr, ctx, fbA, sgA, fbB, sgB, t, ev, kA, ppfA, kB, ppfB ) ]
+  --[ Eq( checksign(sgB, kB), <'BYTES', fbB> ) ]->
+   [ !A2s4( aid, lyr, ctx, fbA, sgA, fbB, sgB, t, ev, kA, ppfA, kB, ppfB ) ]
+
+  /*
+  rule (modulo AC) A2_chk4_bytesB:
+     [ !A2s3( aid, lyr, ctx, fbA, sgA, fbB, sgB, t, ev, kA, ppfA, kB, ppfB ) ]
+    --[ Eq( z, <'BYTES', fbB> ) ]->
+     [ !A2s4( aid, lyr, ctx, fbA, sgA, fbB, sgB, t, ev, kA, ppfA, kB, ppfB ) ]
+    variants (modulo AC)
+    1. kB    = kB.16
+       sgB   = sgB.21
+       z     = checksign(sgB.21, kB.16)
+    
+    2. kB    = pk(x.22)
+       sgB   = sign(z.21, x.22)
+       z     = z.21
+    
+    3. kB    = pk(dsks(sign(z.18, x.20), x.21))
+       sgB   = sign(z.18, x.20)
+       z     = z.18
+  */
+
+rule (modulo E) AttestTwo_accept:
+   [
+   !A2s4( aid, lyr, ctx, fbA, sgA, fbB, sgB,
+          authTuple(id, fpt_, sst_, alt_, vert_), ev, kA, ppfA, kB, ppfB
+   )
+   ]
+  --[
+  LayerAccepted( aid, lyr, authTuple(id, fpt_, sst_, alt_, vert_), ev,
+                 fp(kA), kA, ppfA, sgA, fbA
+  ),
+  LayerAccepted( aid, lyr, authTuple(id, fpt_, sst_, alt_, vert_), ev,
+                 fp(kB), kB, ppfB, sgB, fbB
+  ),
+  SlotSatisfied( aid, lyr, authTuple(id, fpt_, sst_, alt_, vert_), fp(kA)
+  ),
+  SlotSatisfied( aid, lyr, authTuple(id, fpt_, sst_, alt_, vert_), fp(kB)
+  ),
+  AcceptanceComplete( aid, lyr, authTuple(id, fpt_, sst_, alt_, vert_) ),
+  AcceptS( ev, authTuple(id, fpt_, sst_, alt_, vert_), kA, fbA ),
+  AcceptS( ev, authTuple(id, fpt_, sst_, alt_, vert_), kB, fbB ),
+  ScopeReported( aid, lyr, kA, id )
+  ]->
+   [
+   !Link1a( lyr, authTuple(id, fpt_, sst_, alt_, vert_), ev ),
+   !Link2a( lyr, authTuple(id, fpt_, sst_, alt_, vert_), fp(kA), kA ),
+   !Link2a( lyr, authTuple(id, fpt_, sst_, alt_, vert_), fp(kB), kB ),
+   !PossCh( lyr, kA, authTuple(id, fpt_, sst_, alt_, vert_), ppfA ),
+   !PossCh( lyr, kB, authTuple(id, fpt_, sst_, alt_, vert_), ppfB ),
+   !BytesCh( lyr, kA, sgA, fbA ), !BytesCh( lyr, kB, sgB, fbB ),
+   !Link5( lyr, authTuple(id, fpt_, sst_, alt_, vert_), kA, fbA ),
+   !Link5( lyr, authTuple(id, fpt_, sst_, alt_, vert_), kB, fbB ),
+   !Link5c( lyr, fbA, fbB ), !Link6a( lyr, 'OT_ATTEST', fbA ),
+   !Link6a( lyr, 'OT_ATTEST', fbB ), !Link6b( aid, lyr, kA, id, fbA ),
+   !TypeCh( 'OT_ATTEST', fbA ), !TypeCh( 'OT_ATTEST', fbB ),
+   !SlotCh( authTuple(id, fpt_, sst_, alt_, vert_), fp(kA), kA ),
+   !SlotCh( authTuple(id, fpt_, sst_, alt_, vert_), fp(kB), kB ),
+   !SetCh( authTuple(id, fpt_, sst_, alt_, vert_), verified2(kA, kB) ),
+   !AcceptCh( ctx, 'SLOT_A', kA, id, fbA ),
+   !AcceptCh( ctx, 'SLOT_B', kB, id, fbB ), !AcceptKey( kA, fbA ),
+   !AcceptKey( kB, fbB ), !ScopeCh( ctx, kA, id, fbA ),
+   !ScopeCh( ctx, kB, id, fbB ), !SigCh( ctx, kA, sgA ),
+   !SigCh( ctx, kB, sgB ), !Gsig( kA, sgA ), !Gsig( kB, sgB ),
+   !ChainCh( lyr, kA, authTuple(id, fpt_, sst_, alt_, vert_), fbA ),
+   !ChainCh( lyr, kB, authTuple(id, fpt_, sst_, alt_, vert_), fbB ),
+   !ContentCh( authTuple(id, fpt_, sst_, alt_, vert_), fbA, fbB ),
+   !ScopeEnvelope( aid, lyr, kA, id )
+   ]
+
+  /*
+  rule (modulo AC) AttestTwo_accept:
+     [
+     !A2s4( aid, lyr, ctx, fbA, sgA, fbB, sgB,
+            <'authTuple', id, fpt_, sst_, alt_, vert_>, ev, kA, ppfA, kB, ppfB
+     )
+     ]
+    --[
+    LayerAccepted( aid, lyr, <'authTuple', id, fpt_, sst_, alt_, vert_>, ev,
+                   fp(kA), kA, ppfA, sgA, fbA
+    ),
+    LayerAccepted( aid, lyr, <'authTuple', id, fpt_, sst_, alt_, vert_>, ev,
+                   fp(kB), kB, ppfB, sgB, fbB
+    ),
+    SlotSatisfied( aid, lyr, <'authTuple', id, fpt_, sst_, alt_, vert_>,
+                   fp(kA)
+    ),
+    SlotSatisfied( aid, lyr, <'authTuple', id, fpt_, sst_, alt_, vert_>,
+                   fp(kB)
+    ),
+    AcceptanceComplete( aid, lyr, <'authTuple', id, fpt_, sst_, alt_, vert_>
+    ),
+    AcceptS( ev, <'authTuple', id, fpt_, sst_, alt_, vert_>, kA, fbA ),
+    AcceptS( ev, <'authTuple', id, fpt_, sst_, alt_, vert_>, kB, fbB ),
+    ScopeReported( aid, lyr, kA, id )
+    ]->
+     [
+     !Link1a( lyr, <'authTuple', id, fpt_, sst_, alt_, vert_>, ev ),
+     !Link2a( lyr, <'authTuple', id, fpt_, sst_, alt_, vert_>, fp(kA), kA ),
+     !Link2a( lyr, <'authTuple', id, fpt_, sst_, alt_, vert_>, fp(kB), kB ),
+     !PossCh( lyr, kA, <'authTuple', id, fpt_, sst_, alt_, vert_>, ppfA ),
+     !PossCh( lyr, kB, <'authTuple', id, fpt_, sst_, alt_, vert_>, ppfB ),
+     !BytesCh( lyr, kA, sgA, fbA ), !BytesCh( lyr, kB, sgB, fbB ),
+     !Link5( lyr, <'authTuple', id, fpt_, sst_, alt_, vert_>, kA, fbA ),
+     !Link5( lyr, <'authTuple', id, fpt_, sst_, alt_, vert_>, kB, fbB ),
+     !Link5c( lyr, fbA, fbB ), !Link6a( lyr, 'OT_ATTEST', fbA ),
+     !Link6a( lyr, 'OT_ATTEST', fbB ), !Link6b( aid, lyr, kA, id, fbA ),
+     !TypeCh( 'OT_ATTEST', fbA ), !TypeCh( 'OT_ATTEST', fbB ),
+     !SlotCh( <'authTuple', id, fpt_, sst_, alt_, vert_>, fp(kA), kA ),
+     !SlotCh( <'authTuple', id, fpt_, sst_, alt_, vert_>, fp(kB), kB ),
+     !SetCh( <'authTuple', id, fpt_, sst_, alt_, vert_>, <'verified2', kA, kB>
+     ),
+     !AcceptCh( ctx, 'SLOT_A', kA, id, fbA ),
+     !AcceptCh( ctx, 'SLOT_B', kB, id, fbB ), !AcceptKey( kA, fbA ),
+     !AcceptKey( kB, fbB ), !ScopeCh( ctx, kA, id, fbA ),
+     !ScopeCh( ctx, kB, id, fbB ), !SigCh( ctx, kA, sgA ),
+     !SigCh( ctx, kB, sgB ), !Gsig( kA, sgA ), !Gsig( kB, sgB ),
+     !ChainCh( lyr, kA, <'authTuple', id, fpt_, sst_, alt_, vert_>, fbA ),
+     !ChainCh( lyr, kB, <'authTuple', id, fpt_, sst_, alt_, vert_>, fbB ),
+     !ContentCh( <'authTuple', id, fpt_, sst_, alt_, vert_>, fbA, fbB ),
+     !ScopeEnvelope( aid, lyr, kA, id )
+     ]
+  */
+
+rule (modulo E) StandingPathIn_L0:
+   [
+   !AuthKey( skS ), !SStageL0( intake, lyr, fbI, sgI, fbIB, sgIB ),
+   !StdMat( intake, lyr, authTuple(idS, kfpr, ss, al, ver),
+            sign(<'STMT_DIGEST', h(authTuple(idS, kfpr, ss, al, ver))>, skS), kX,
+            ppfI, kBs, ppfBs
+   ),
+   !StandCore( intake,
+               attemptCore(authTuple(idS, kfpr, ss, al, ver), ppfI, sgI, declS), se
+   )
+   ]
+  --[
+  Neq( <fst(fbI), fst(snd(fbI)), 
+        fst(snd(snd(snd(snd(snd(snd(snd(fbI))))))))>,
+       <'framed', 'OT_WRAPPER', 'wrap'>
+  )
+  ]->
+   [
+   !SP1( intake, lyr, authTuple(idS, kfpr, ss, al, ver), kX,
+         attemptCore(authTuple(idS, kfpr, ss, al, ver), ppfI, sgI, declS), se,
+         idS, kfpr
+   )
+   ]
+
+  /*
+  rule (modulo AC) StandingPathIn_L0:
+     [
+     !AuthKey( skS ), !SStageL0( intake, lyr, fbI, sgI, fbIB, sgIB ),
+     !StdMat( intake, lyr, <'authTuple', idS, kfpr, ss, al, ver>,
+              sign(<'STMT_DIGEST', h(<'authTuple', idS, kfpr, ss, al, ver>)>, skS), kX,
+              ppfI, kBs, ppfBs
+     ),
+     !StandCore( intake,
+                 <'attemptCore', <'authTuple', idS, kfpr, ss, al, ver>, ppfI, sgI, declS>,
+                 se
+     )
+     ]
+    --[ Neq( <z, z.1, z.2>, <'framed', 'OT_WRAPPER', 'wrap'> ) ]->
+     [
+     !SP1( intake, lyr, <'authTuple', idS, kfpr, ss, al, ver>, kX,
+           <'attemptCore', <'authTuple', idS, kfpr, ss, al, ver>, ppfI, sgI, declS>,
+           se, idS, kfpr
+     )
+     ]
+    variants (modulo AC)
+    1. fbI   = fbI.26
+       z     = fst(fbI.26)
+       z.1   = fst(snd(fbI.26))
+       z.2   = fst(snd(snd(snd(snd(snd(snd(snd(fbI.26))))))))
+    
+    2. fbI   = <z.57, x.91>
+       z     = z.57
+       z.1   = fst(x.91)
+       z.2   = fst(snd(snd(snd(snd(snd(snd(x.91)))))))
+    
+    3. fbI   = <z.58, z.59, x.93>
+       z     = z.58
+       z.1   = z.59
+       z.2   = fst(snd(snd(snd(snd(snd(x.93))))))
+    
+    4. fbI   = <z.59, z.60, x.94, x.95>
+       z     = z.59
+       z.1   = z.60
+       z.2   = fst(snd(snd(snd(snd(x.95)))))
+    
+    5. fbI   = <z.60, z.61, x.95, x.96, x.97>
+       z     = z.60
+       z.1   = z.61
+       z.2   = fst(snd(snd(snd(x.97))))
+    
+    6. fbI   = <z.61, z.62, x.96, x.97, x.98, x.99>
+       z     = z.61
+       z.1   = z.62
+       z.2   = fst(snd(snd(x.99)))
+    
+    7. fbI   = <z.62, z.63, x.97, x.98, x.99, x.100, x.101>
+       z     = z.62
+       z.1   = z.63
+       z.2   = fst(snd(x.101))
+    
+    8. fbI   = <z.63, z.64, x.98, x.99, x.100, x.101, x.102, x.103>
+       z     = z.63
+       z.1   = z.64
+       z.2   = fst(x.103)
+    
+    9. fbI   = <z.64, z.65, x.99, x.100, x.101, x.102, x.103, z.66, x.105>
+       z     = z.64
+       z.1   = z.65
+       z.2   = z.66
+  */
+
+rule (modulo E) Standing_S3_noTLR:
+   [ !SP1( intake, lyr, t, kX, core, 'noTLR', idS, kfpr ) ]
+  --[
+  StandingReport( 'ABSENT', 'NO_TERMINAL_DISPOSITION_EVIDENCE', kX, t,
+                  h(core)
+  )
+  ]->
+   [ !ReasonCh( 'PATH_S3', 'NO_TERMINAL_DISPOSITION_EVIDENCE' ) ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) Standing_badKeyFp:
+   [ !SP1( intake, lyr, t, kX, core, withTLR(kT, tlrSig, ap), idS, kfpr ) ]
+  --[
+  Neq( fp(kT), kfpr ),
+  StandingReport( 'UNVERIFIABLE', 'STANDING_EVIDENCE_SIGNATURE_INVALID',
+                  kT, t, h(core)
+  )
+  ]->
+   [ ]
+
+  /*
+  rule (modulo AC) Standing_badKeyFp:
+     [
+     !SP1( intake, lyr, t, kX, core, <'withTLR', kT, tlrSig, ap>, idS, kfpr )
+     ]
+    --[
+    Neq( fp(kT), kfpr ),
+    StandingReport( 'UNVERIFIABLE', 'STANDING_EVIDENCE_SIGNATURE_INVALID',
+                    kT, t, h(core)
+    )
+    ]->
+     [ ]
+  */
+
+rule (modulo E) Standing_badKeyEq:
+   [ !SP1( intake, lyr, t, kX, core, withTLR(kT, tlrSig, ap), idS, fp(kT) )
+   ]
+  --[
+  Neq( kT, kX ),
+  StandingReport( 'UNVERIFIABLE', 'STANDING_EVIDENCE_SIGNATURE_INVALID',
+                  kT, t, h(core)
+  )
+  ]->
+   [ ]
+
+  /*
+  rule (modulo AC) Standing_badKeyEq:
+     [
+     !SP1( intake, lyr, t, kX, core, <'withTLR', kT, tlrSig, ap>, idS, fp(kT)
+     )
+     ]
+    --[
+    Neq( kT, kX ),
+    StandingReport( 'UNVERIFIABLE', 'STANDING_EVIDENCE_SIGNATURE_INVALID',
+                    kT, t, h(core)
+    )
+    ]->
+     [ ]
+  */
+
+rule (modulo E) Standing_tagOK:
+   [
+   !SP1( intake, lyr, t, pk(skT), core,
+         withTLR(pk(skT), sign(<'TLR', lin, terminal, declT>, skT), ap), idS,
+         fp(pk(skT))
+   )
+   ]
+  -->
+   [
+   !TagCh( pk(skT), 'TLR' ),
+   !SP2( intake, lyr, t, pk(skT), core,
+         sign(<'TLR', lin, terminal, declT>, skT), ap, lin, terminal, idS
+   )
+   ]
+
+  /*
+  rule (modulo AC) Standing_tagOK:
+     [
+     !SP1( intake, lyr, t, pk(skT), core,
+           <'withTLR', pk(skT), sign(<'TLR', lin, terminal, declT>, skT), ap>, idS,
+           fp(pk(skT))
+     )
+     ]
+    -->
+     [
+     !TagCh( pk(skT), 'TLR' ),
+     !SP2( intake, lyr, t, pk(skT), core,
+           sign(<'TLR', lin, terminal, declT>, skT), ap, lin, terminal, idS
+     )
+     ]
+  */
+
+rule (modulo E) Standing_tagOK_dsks:
+   [
+   !SP1( intake, lyr, t,
+         pk(dsks(sign(<'TLR', lin, terminal, declT>, k0), r)), core,
+         withTLR(pk(dsks(sign(<'TLR', lin, terminal, declT>, k0), r)),
+                 sign(<'TLR', lin, terminal, declT>, k0), ap),
+         idS, fp(pk(dsks(sign(<'TLR', lin, terminal, declT>, k0), r)))
+   )
+   ]
+  -->
+   [
+   !TagCh( pk(dsks(sign(<'TLR', lin, terminal, declT>, k0), r)), 'TLR' ),
+   !SP2( intake, lyr, t,
+         pk(dsks(sign(<'TLR', lin, terminal, declT>, k0), r)), core,
+         sign(<'TLR', lin, terminal, declT>, k0), ap, lin, terminal, idS
+   )
+   ]
+
+  /*
+  rule (modulo AC) Standing_tagOK_dsks:
+     [
+     !SP1( intake, lyr, t,
+           pk(dsks(sign(<'TLR', lin, terminal, declT>, k0), r)), core,
+           <'withTLR', pk(dsks(sign(<'TLR', lin, terminal, declT>, k0), r)), 
+            sign(<'TLR', lin, terminal, declT>, k0), ap>,
+           idS, fp(pk(dsks(sign(<'TLR', lin, terminal, declT>, k0), r)))
+     )
+     ]
+    -->
+     [
+     !TagCh( pk(dsks(sign(<'TLR', lin, terminal, declT>, k0), r)), 'TLR' ),
+     !SP2( intake, lyr, t,
+           pk(dsks(sign(<'TLR', lin, terminal, declT>, k0), r)), core,
+           sign(<'TLR', lin, terminal, declT>, k0), ap, lin, terminal, idS
+     )
+     ]
+  */
+
+rule (modulo E) Standing_tagBad:
+   [ !SP1( intake, lyr, t, kX, core, withTLR(kX, tlrSig, ap), idS, fp(kX) )
+   ]
+  --[
+  Neq( fst(checksign(tlrSig, kX)), 'TLR' ),
+  StandingReport( 'UNVERIFIABLE', 'STANDING_EVIDENCE_SIGNATURE_INVALID',
+                  kX, t, h(core)
+  )
+  ]->
+   [ ]
+
+  /*
+  rule (modulo AC) Standing_tagBad:
+     [
+     !SP1( intake, lyr, t, kX, core, <'withTLR', kX, tlrSig, ap>, idS, fp(kX)
+     )
+     ]
+    --[
+    Neq( z, 'TLR' ),
+    StandingReport( 'UNVERIFIABLE', 'STANDING_EVIDENCE_SIGNATURE_INVALID',
+                    kX, t, h(core)
+    )
+    ]->
+     [ ]
+    variants (modulo AC)
+    1. kX    = kX.15
+       tlrSig
+             = tlrSig.18
+       z     = fst(checksign(tlrSig.18, kX.15))
+    
+    2. kX    = pk(x.15)
+       tlrSig
+             = sign(x.18, x.15)
+       z     = fst(x.18)
+    
+    3. kX    = pk(x.41)
+       tlrSig
+             = sign(<z.28, x.45>, x.41)
+       z     = z.28
+    
+    4. kX    = pk(dsks(sign(x.14, x.15), x.16))
+       tlrSig
+             = sign(x.14, x.15)
+       z     = fst(x.14)
+    
+    5. kX    = pk(dsks(sign(<z.27, x.41>, x.42), x.43))
+       tlrSig
+             = sign(<z.27, x.41>, x.42)
+       z     = z.27
+  */
+
+rule (modulo E) Standing_anchorBad:
+   [ !SP2( intake, lyr, t, kT, core, tlrSig, ap, lin, terminal, idS ) ]
+  --[
+  Neq( ap, anchorProof(h(tlrSig)) ),
+  StandingReport( 'UNVERIFIABLE', 'STANDING_EVIDENCE_TEMPORAL_MISMATCH',
+                  kT, t, h(core)
+  )
+  ]->
+   [ ]
+
+  /*
+  rule (modulo AC) Standing_anchorBad:
+     [ !SP2( intake, lyr, t, kT, core, tlrSig, ap, lin, terminal, idS ) ]
+    --[
+    Neq( ap, <'anchorProof', h(tlrSig)> ),
+    StandingReport( 'UNVERIFIABLE', 'STANDING_EVIDENCE_TEMPORAL_MISMATCH',
+                    kT, t, h(core)
+    )
+    ]->
+     [ ]
+  */
+
+rule (modulo E) Standing_lookup1:
+   [
+   !SP2( intake, lyr, t, kT, core, tlrSig, anchorProof(h(tlrSig)),
+         lineage2(entry(h(core), d1), entry(b, d2)), terminal, idS
+   )
+   ]
+  -->
+   [ !SD( kT, t, h(core), d1, terminal, intake, lyr, core, idS ) ]
+
+  /*
+  rule (modulo AC) Standing_lookup1:
+     [
+     !SP2( intake, lyr, t, kT, core, tlrSig, <'anchorProof', h(tlrSig)>,
+           <'lineage2', <'entry', h(core), d1>, 'entry', b, d2>, terminal, idS
+     )
+     ]
+    -->
+     [ !SD( kT, t, h(core), d1, terminal, intake, lyr, core, idS ) ]
+  */
+
+rule (modulo E) Standing_lookup2:
+   [
+   !SP2( intake, lyr, t, kT, core, tlrSig, anchorProof(h(tlrSig)),
+         lineage2(entry(a, d1), entry(h(core), d2)), terminal, idS
+   )
+   ]
+  --[ Neq( a, h(core) ) ]->
+   [ !SD( kT, t, h(core), d2, terminal, intake, lyr, core, idS ) ]
+
+  /*
+  rule (modulo AC) Standing_lookup2:
+     [
+     !SP2( intake, lyr, t, kT, core, tlrSig, <'anchorProof', h(tlrSig)>,
+           <'lineage2', <'entry', a, d1>, 'entry', h(core), d2>, terminal, idS
+     )
+     ]
+    --[ Neq( a, h(core) ) ]->
+     [ !SD( kT, t, h(core), d2, terminal, intake, lyr, core, idS ) ]
+  */
+
+rule (modulo E) Standing_lookupMiss:
+   [
+   !SP2( intake, lyr, t, kT, core, tlrSig, anchorProof(h(tlrSig)),
+         lineage2(entry(a, d1), entry(b, d2)), terminal, idS
+   )
+   ]
+  --[
+  Neq( a, h(core) ), Neq( b, h(core) ),
+  StandingReport( 'ABSENT', 'STANDING_EVIDENCE_MISMATCH', kT, t, h(core) )
+  ]->
+   [ ]
+
+  /*
+  rule (modulo AC) Standing_lookupMiss:
+     [
+     !SP2( intake, lyr, t, kT, core, tlrSig, <'anchorProof', h(tlrSig)>,
+           <'lineage2', <'entry', a, d1>, 'entry', b, d2>, terminal, idS
+     )
+     ]
+    --[
+    Neq( a, h(core) ), Neq( b, h(core) ),
+    StandingReport( 'ABSENT', 'STANDING_EVIDENCE_MISMATCH', kT, t, h(core) )
+    ]->
+     [ ]
+  */
+
+rule (modulo E) Decide_S4:
+   [ !SD( kT, t, aidD, d, 'TERM_REFUSED', intake, lyr, core, idS ) ]
+  --[ StandingReport( 'ABSENT', 'ISSUANCE_REFUSED', kT, t, aidD ) ]->
+   [ !ReasonCh( 'PATH_S4', 'ISSUANCE_REFUSED' ) ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) Decide_Established:
+   [
+   !SD( kT, t, aidD, 'DISP_SHIPPED', TERM_SHIPPED(aidD), intake, lyr, core,
+        idS
+   )
+   ]
+  --[
+  Established( kT, t, aidD ),
+  StandingReport( 'ESTABLISHED', 'TERMINAL_DISPOSITION_SHOWN', kT, t, aidD
+  )
+  ]->
+   [
+   !EstW( intake, lyr, t, kT, core ), !EstCh( intake, lyr, kT, t, aidD ),
+   !ScopeStanding( intake, lyr, kT, idS, aidD )
+   ]
+
+  /*
+  rule (modulo AC) Decide_Established:
+     [
+     !SD( kT, t, aidD, 'DISP_SHIPPED', <'TERM_SHIPPED', aidD>, intake, lyr,
+          core, idS
+     )
+     ]
+    --[
+    Established( kT, t, aidD ),
+    StandingReport( 'ESTABLISHED', 'TERMINAL_DISPOSITION_SHOWN', kT, t, aidD
+    )
+    ]->
+     [
+     !EstW( intake, lyr, t, kT, core ), !EstCh( intake, lyr, kT, t, aidD ),
+     !ScopeStanding( intake, lyr, kT, idS, aidD )
+     ]
+  */
+
+rule (modulo E) Decide_EstablishedWrapped:
+   [ !EstW( intake, lyr, t, kT, core ) ]
+  --[
+  Neq( lyr, 'L0' ),
+  EstablishedWrapped( intake, lyr, t, kT, core, 'ESTABLISHED' )
+  ]->
+   [ ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) Decide_badDisp:
+   [ !SD( kT, t, aidD, d, TERM_SHIPPED(aidD), intake, lyr, core, idS ) ]
+  --[
+  Neq( d, 'DISP_SHIPPED' ),
+  StandingReport( 'UNVERIFIABLE', 'STANDING_EVIDENCE_MALFORMED', kT, t,
+                  aidD
+  )
+  ]->
+   [ ]
+
+  /*
+  rule (modulo AC) Decide_badDisp:
+     [ !SD( kT, t, aidD, d, <'TERM_SHIPPED', aidD>, intake, lyr, core, idS ) ]
+    --[
+    Neq( d, 'DISP_SHIPPED' ),
+    StandingReport( 'UNVERIFIABLE', 'STANDING_EVIDENCE_MALFORMED', kT, t,
+                    aidD
+    )
+    ]->
+     [ ]
+  */
+
+rule (modulo E) Decide_S2:
+   [ !SD( kT, t, aidD, d, TERM_SHIPPED(shippedId), intake, lyr, core, idS )
+   ]
+  --[
+  Neq( shippedId, aidD ),
+  StandingReport( 'ABSENT', 'SUPERSEDED', kT, t, aidD )
+  ]->
+   [ !ReasonCh( 'PATH_S2', 'SUPERSEDED' ) ]
+
+  /*
+  rule (modulo AC) Decide_S2:
+     [
+     !SD( kT, t, aidD, d, <'TERM_SHIPPED', shippedId>, intake, lyr, core, idS
+     )
+     ]
+    --[
+    Neq( shippedId, aidD ),
+    StandingReport( 'ABSENT', 'SUPERSEDED', kT, t, aidD )
+    ]->
+     [ !ReasonCh( 'PATH_S2', 'SUPERSEDED' ) ]
+  */
+
+rule (modulo E) Decide_badTerminal:
+   [ !SD( kT, t, aidD, d, terminal, intake, lyr, core, idS ) ]
+  --[
+  Neq( terminal, 'TERM_REFUSED' ), Neq( fst(terminal), 'TERM_SHIPPED' ),
+  StandingReport( 'UNVERIFIABLE', 'STANDING_EVIDENCE_MALFORMED', kT, t,
+                  aidD
+  )
+  ]->
+   [ ]
+
+  /*
+  rule (modulo AC) Decide_badTerminal:
+     [ !SD( kT, t, aidD, d, terminal, intake, lyr, core, idS ) ]
+    --[
+    Neq( terminal, 'TERM_REFUSED' ), Neq( z, 'TERM_SHIPPED' ),
+    StandingReport( 'UNVERIFIABLE', 'STANDING_EVIDENCE_MALFORMED', kT, t,
+                    aidD
+    )
+    ]->
+     [ ]
+    variants (modulo AC)
+    1. terminal
+             = terminal.13
+       z     = fst(terminal.13)
+    
+    2. terminal
+             = <z.26, x.40>
+       z     = z.26
+  */
+
+rule (modulo E) Link1aJudge:
+   [ !AuthKey( skS ), !Link1a( lyr, t, ev ) ]
+  --[
+  Neq( checksign(ev, pk(skS)), <'STMT_DIGEST', h(t)> ),
+  Neq( checksign(ev, pk(skS)), <'STMT_DIRECT', t> ),
+  ChainBroken( lyr, 'LINK_1A' )
+  ]->
+   [ ]
+
+  /*
+  rule (modulo AC) Link1aJudge:
+     [ !AuthKey( skS ), !Link1a( lyr, t, ev ) ]
+    --[
+    Neq( z, <'STMT_DIGEST', h(t)> ), Neq( z, <'STMT_DIRECT', t> ),
+    ChainBroken( lyr, 'LINK_1A' )
+    ]->
+     [ ]
+    variants (modulo AC)
+    1. ev    = ev.9
+       skS   = skS.11
+       z     = checksign(ev.9, pk(skS.11))
+    
+    2. ev    = sign(z.11, skS.9)
+       skS   = skS.9
+       z     = z.11
+    
+    3. ev    = sign(z.18, x.28)
+       skS   = dsks(sign(z.18, x.28), x.30)
+       z     = z.18
+  */
+
+rule (modulo E) Link2aJudge_fp:
+   [ !Link2a( lyr, t, slotfp, kX ) ]
+  --[ Neq( fp(kX), slotfp ), ChainBroken( lyr, 'LINK_2A' ) ]->
+   [ ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) Link2aJudge_notB:
+   [
+   !Link2a( lyr, authTuple(idJ, fpAJ, signers1(fpBJ), algJ, verJ), fp(kX),
+            kX
+   )
+   ]
+  --[
+  Neq( fp(kX), fpAJ ), Neq( fp(kX), fpBJ ), ChainBroken( lyr, 'LINK_2A' )
+  ]->
+   [ ]
+
+  /*
+  rule (modulo AC) Link2aJudge_notB:
+     [
+     !Link2a( lyr, <'authTuple', idJ, fpAJ, <'signers1', fpBJ>, algJ, verJ>,
+              fp(kX), kX
+     )
+     ]
+    --[
+    Neq( fp(kX), fpAJ ), Neq( fp(kX), fpBJ ), ChainBroken( lyr, 'LINK_2A' )
+    ]->
+     [ ]
+  */
+
+rule (modulo E) Link2aJudge_s0:
+   [
+   !Link2a( lyr, authTuple(idJ, fpAJ, 'signers0', algJ, verJ), fp(kX), kX )
+   ]
+  --[ Neq( fp(kX), fpAJ ), ChainBroken( lyr, 'LINK_2A' ) ]->
+   [ ]
+
+  /*
+  rule (modulo AC) Link2aJudge_s0:
+     [
+     !Link2a( lyr, <'authTuple', idJ, fpAJ, 'signers0', algJ, verJ>, fp(kX),
+              kX
+     )
+     ]
+    --[ Neq( fp(kX), fpAJ ), ChainBroken( lyr, 'LINK_2A' ) ]->
+     [ ]
+  */
+
+rule (modulo E) PossJudge:
+   [ !PossCh( lyr, kX, t, ppf ) ]
+  --[
+  Neq( checksign(ppf, kX), <'POSS', t> ), ChainBroken( lyr, 'LINK_3' ),
+  PossessionUnbound( kX, t, ppf )
+  ]->
+   [ ]
+
+  /*
+  rule (modulo AC) PossJudge:
+     [ !PossCh( lyr, kX, t, ppf ) ]
+    --[
+    Neq( z, <'POSS', t> ), ChainBroken( lyr, 'LINK_3' ),
+    PossessionUnbound( kX, t, ppf )
+    ]->
+     [ ]
+    variants (modulo AC)
+    1. kX    = kX.9
+       ppf   = ppf.11
+       z     = checksign(ppf.11, kX.9)
+    
+    2. kX    = pk(x.14)
+       ppf   = sign(z.10, x.14)
+       z     = z.10
+    
+    3. kX    = pk(dsks(sign(z.12, x.17), x.18))
+       ppf   = sign(z.12, x.17)
+       z     = z.12
+  */
+
+rule (modulo E) BytesJudge:
+   [ !BytesCh( lyr, kX, sg, fb ) ]
+  --[
+  Neq( checksign(sg, kX), <'BYTES', fb> ), ChainBroken( lyr, 'LINK_4' ),
+  SigBytesUnbound( kX, sg, fb )
+  ]->
+   [ ]
+
+  /*
+  rule (modulo AC) BytesJudge:
+     [ !BytesCh( lyr, kX, sg, fb ) ]
+    --[
+    Neq( z, <'BYTES', fb> ), ChainBroken( lyr, 'LINK_4' ),
+    SigBytesUnbound( kX, sg, fb )
+    ]->
+     [ ]
+    variants (modulo AC)
+    1. kX    = kX.9
+       sg    = sg.11
+       z     = checksign(sg.11, kX.9)
+    
+    2. kX    = pk(x.14)
+       sg    = sign(z.10, x.14)
+       z     = z.10
+    
+    3. kX    = pk(dsks(sign(z.12, x.17), x.18))
+       sg    = sign(z.12, x.17)
+       z     = z.12
+  */
+
+rule (modulo E) Link5Judge_kfp:
+   [ !Link5( lyr, t, kX, framed(otJ, algJ, idJ, kfpJ, mhJ, cvJ, plJ) ) ]
+  --[
+  Neq( kfpJ, fp(kX) ), Link5FrameToKey( lyr, kX, kfpJ ),
+  ChainBroken( lyr, 'LINK_5' )
+  ]->
+   [ ]
+
+  /*
+  rule (modulo AC) Link5Judge_kfp:
+     [ !Link5( lyr, t, kX, <'framed', otJ, algJ, idJ, kfpJ, mhJ, cvJ, plJ> ) ]
+    --[
+    Neq( kfpJ, fp(kX) ), Link5FrameToKey( lyr, kX, kfpJ ),
+    ChainBroken( lyr, 'LINK_5' )
+    ]->
+     [ ]
+  */
+
+rule (modulo E) Link5Judge_mh:
+   [ !Link5( lyr, t, kX, framed(otJ, algJ, idJ, kfpJ, mhJ, cvJ, plJ) ) ]
+  --[
+  Neq( mhJ, h(t) ), Link5ManifestHash( lyr, t, mhJ ),
+  ChainBroken( lyr, 'LINK_5' )
+  ]->
+   [ ]
+
+  /*
+  rule (modulo AC) Link5Judge_mh:
+     [ !Link5( lyr, t, kX, <'framed', otJ, algJ, idJ, kfpJ, mhJ, cvJ, plJ> ) ]
+    --[
+    Neq( mhJ, h(t) ), Link5ManifestHash( lyr, t, mhJ ),
+    ChainBroken( lyr, 'LINK_5' )
+    ]->
+     [ ]
+  */
+
+rule (modulo E) Link5cJudge_ot:
+   [
+   !Link5c( lyr, framed(oa, aa, ia, ka, ma, ca, pa),
+            framed(ob, ab, ib, kb, mb, cb, pb)
+   )
+   ]
+  --[ Neq( oa, ob ), ChainBroken( lyr, 'LINK_5' ) ]->
+   [ ]
+
+  /*
+  rule (modulo AC) Link5cJudge_ot:
+     [
+     !Link5c( lyr, <'framed', oa, aa, ia, ka, ma, ca, pa>,
+              <'framed', ob, ab, ib, kb, mb, cb, pb>
+     )
+     ]
+    --[ Neq( oa, ob ), ChainBroken( lyr, 'LINK_5' ) ]->
+     [ ]
+  */
+
+rule (modulo E) Link5cJudge_cv:
+   [
+   !Link5c( lyr, framed(oa, aa, ia, ka, ma, ca, pa),
+            framed(ob, ab, ib, kb, mb, cb, pb)
+   )
+   ]
+  --[ Neq( ca, cb ), ChainBroken( lyr, 'LINK_5' ) ]->
+   [ ]
+
+  /*
+  rule (modulo AC) Link5cJudge_cv:
+     [
+     !Link5c( lyr, <'framed', oa, aa, ia, ka, ma, ca, pa>,
+              <'framed', ob, ab, ib, kb, mb, cb, pb>
+     )
+     ]
+    --[ Neq( ca, cb ), ChainBroken( lyr, 'LINK_5' ) ]->
+     [ ]
+  */
+
+rule (modulo E) Link5cJudge_pl:
+   [
+   !Link5c( lyr, framed(oa, aa, ia, ka, ma, ca, pa),
+            framed(ob, ab, ib, kb, mb, cb, pb)
+   )
+   ]
+  --[ Neq( pa, pb ), ChainBroken( lyr, 'LINK_5' ) ]->
+   [ ]
+
+  /*
+  rule (modulo AC) Link5cJudge_pl:
+     [
+     !Link5c( lyr, <'framed', oa, aa, ia, ka, ma, ca, pa>,
+              <'framed', ob, ab, ib, kb, mb, cb, pb>
+     )
+     ]
+    --[ Neq( pa, pb ), ChainBroken( lyr, 'LINK_5' ) ]->
+     [ ]
+  */
+
+rule (modulo E) Link6aJudge:
+   [ !Link6a( lyr, otP, framed(otJ, algJ, idJ, kfpJ, mhJ, cvJ, plJ) ) ]
+  --[ Neq( otJ, otP ), ChainBroken( lyr, 'LINK_6A' ) ]->
+   [ ]
+
+  /*
+  rule (modulo AC) Link6aJudge:
+     [ !Link6a( lyr, otP, <'framed', otJ, algJ, idJ, kfpJ, mhJ, cvJ, plJ> ) ]
+    --[ Neq( otJ, otP ), ChainBroken( lyr, 'LINK_6A' ) ]->
+     [ ]
+  */
+
+rule (modulo E) Link6bJudge_k:
+   [
+   !Link6b( aidJ, lyr, kAt, idAt,
+            framed(otJ, algJ, idJ, kfpJ, mhJ, cvJ, plJ)
+   )
+   ]
+  --[ Neq( lyr, 'L0' ), Neq( kfpJ, fp(kAt) ), ChainBroken( lyr, 'LINK_6B' )
+  ]->
+   [ ]
+
+  /*
+  rule (modulo AC) Link6bJudge_k:
+     [
+     !Link6b( aidJ, lyr, kAt, idAt,
+              <'framed', otJ, algJ, idJ, kfpJ, mhJ, cvJ, plJ>
+     )
+     ]
+    --[ Neq( lyr, 'L0' ), Neq( kfpJ, fp(kAt) ), ChainBroken( lyr, 'LINK_6B' )
+    ]->
+     [ ]
+  */
+
+rule (modulo E) Link6bJudge_id:
+   [
+   !Link6b( aidJ, lyr, kAt, idAt,
+            framed(otJ, algJ, idJ, kfpJ, mhJ, cvJ, plJ)
+   )
+   ]
+  --[ Neq( lyr, 'L0' ), Neq( idJ, idAt ), ChainBroken( lyr, 'LINK_6B' ) ]->
+   [ ]
+
+  /*
+  rule (modulo AC) Link6bJudge_id:
+     [
+     !Link6b( aidJ, lyr, kAt, idAt,
+              <'framed', otJ, algJ, idJ, kfpJ, mhJ, cvJ, plJ>
+     )
+     ]
+    --[ Neq( lyr, 'L0' ), Neq( idJ, idAt ), ChainBroken( lyr, 'LINK_6B' ) ]->
+     [ ]
+  */
+
+rule (modulo E) JudgeH:
+   [ !HonestKey( kH ), !AcceptKey( kH, fbAcc ) ]
+  --[ AcceptedUnderHonestKey( kH, fbAcc ) ]->
+   [ ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) SP3Judge_honest:
+   [ !HonestCh( kH, fbHon ), !AcceptCh( 'BASE', role, kH, idX, fbHon ) ]
+  --[ HonestAccepted( kH, fbHon ) ]->
+   [ ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) SP3Judge_reA:
+   [ !HonestCh( kH, fbHon ), !AcceptCh( ctxJ, 'SLOT_A', kX, idX, fbHon ) ]
+  --[ Neq( kX, kH ), ReattributedA( kX, kH, fbHon ) ]->
+   [ ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) SP3Judge_reB:
+   [ !HonestCh( kH, fbHon ), !AcceptCh( ctxJ, role, kX, idX, fbHon ) ]
+  --[ Neq( kX, kH ), Neq( role, 'SLOT_A' ), ReattributedB( kX, kH, fbHon )
+  ]->
+   [ ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) SetJudge_complete2:
+   [
+   !HonestSet( authTuple(idJ, fp(kA), signers1(fp(kB)), algJ, verJ) ),
+   !SetCh( authTuple(idJ, fp(kA), signers1(fp(kB)), algJ, verJ),
+           verified2(kA, kB)
+   )
+   ]
+  --[
+  HonestComplete( authTuple(idJ, fp(kA), signers1(fp(kB)), algJ, verJ),
+                  verified2(kA, kB)
+  )
+  ]->
+   [ ]
+
+  /*
+  rule (modulo AC) SetJudge_complete2:
+     [
+     !HonestSet( <'authTuple', idJ, fp(kA), <'signers1', fp(kB)>, algJ, verJ>
+     ),
+     !SetCh( <'authTuple', idJ, fp(kA), <'signers1', fp(kB)>, algJ, verJ>,
+             <'verified2', kA, kB>
+     )
+     ]
+    --[
+    HonestComplete( <'authTuple', idJ, fp(kA), <'signers1', fp(kB)>, algJ, 
+                     verJ>,
+                    <'verified2', kA, kB>
+    )
+    ]->
+     [ ]
+  */
+
+rule (modulo E) SetJudge_stripped:
+   [
+   !HonestSet( authTuple(idJ, fpAJ, signers1(fpBJ), algJ, verJ) ),
+   !SetCh( authTuple(idJ, fpAJ, signers1(fpBJ), algJ, verJ), verified1(kA) )
+   ]
+  --[
+  Stripped( authTuple(idJ, fpAJ, signers1(fpBJ), algJ, verJ), verified1(kA)
+  )
+  ]->
+   [ ]
+
+  /*
+  rule (modulo AC) SetJudge_stripped:
+     [
+     !HonestSet( <'authTuple', idJ, fpAJ, <'signers1', fpBJ>, algJ, verJ> ),
+     !SetCh( <'authTuple', idJ, fpAJ, <'signers1', fpBJ>, algJ, verJ>,
+             <'verified1', kA>
+     )
+     ]
+    --[
+    Stripped( <'authTuple', idJ, fpAJ, <'signers1', fpBJ>, algJ, verJ>,
+              <'verified1', kA>
+    )
+    ]->
+     [ ]
+  */
+
+rule (modulo E) SetJudge_complete1:
+   [
+   !HonestSet( authTuple(idJ, fp(kA), 'signers0', algJ, verJ) ),
+   !SetCh( authTuple(idJ, fp(kA), 'signers0', algJ, verJ), verified1(kA) )
+   ]
+  --[
+  HonestComplete( authTuple(idJ, fp(kA), 'signers0', algJ, verJ),
+                  verified1(kA)
+  )
+  ]->
+   [ ]
+
+  /*
+  rule (modulo AC) SetJudge_complete1:
+     [
+     !HonestSet( <'authTuple', idJ, fp(kA), 'signers0', algJ, verJ> ),
+     !SetCh( <'authTuple', idJ, fp(kA), 'signers0', algJ, verJ>,
+             <'verified1', kA>
+     )
+     ]
+    --[
+    HonestComplete( <'authTuple', idJ, fp(kA), 'signers0', algJ, verJ>,
+                    <'verified1', kA>
+    )
+    ]->
+     [ ]
+  */
+
+rule (modulo E) MemberJudge_forged:
+   [ !HonestMember( kH, mH ), !SlotCh( mH, fp(kH), kUsed ) ]
+  --[ Neq( kUsed, kH ), SignerForged( mH, kUsed ) ]->
+   [ ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) MemberJudge_altered:
+   [ !HonestMember( kH, mH ), !SlotCh( tS, fpS, kH ) ]
+  --[ Neq( tS, mH ), SetAltered( kH, mH, tS ) ]->
+   [ ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) ContentJudge_ot:
+   [
+   !ContentCh( tJ, framed(oa, aa, ia, ka, ma, ca, pa),
+               framed(ob, ab, ib, kb, mb, cb, pb)
+   )
+   ]
+  --[
+  Neq( oa, ob ),
+  Spliced( tJ, framed(oa, aa, ia, ka, ma, ca, pa),
+           framed(ob, ab, ib, kb, mb, cb, pb)
+  )
+  ]->
+   [ ]
+
+  /*
+  rule (modulo AC) ContentJudge_ot:
+     [
+     !ContentCh( tJ, <'framed', oa, aa, ia, ka, ma, ca, pa>,
+                 <'framed', ob, ab, ib, kb, mb, cb, pb>
+     )
+     ]
+    --[
+    Neq( oa, ob ),
+    Spliced( tJ, <'framed', oa, aa, ia, ka, ma, ca, pa>,
+             <'framed', ob, ab, ib, kb, mb, cb, pb>
+    )
+    ]->
+     [ ]
+  */
+
+rule (modulo E) ContentJudge_cv:
+   [
+   !ContentCh( tJ, framed(oa, aa, ia, ka, ma, ca, pa),
+               framed(ob, ab, ib, kb, mb, cb, pb)
+   )
+   ]
+  --[
+  Neq( ca, cb ),
+  Spliced( tJ, framed(oa, aa, ia, ka, ma, ca, pa),
+           framed(ob, ab, ib, kb, mb, cb, pb)
+  )
+  ]->
+   [ ]
+
+  /*
+  rule (modulo AC) ContentJudge_cv:
+     [
+     !ContentCh( tJ, <'framed', oa, aa, ia, ka, ma, ca, pa>,
+                 <'framed', ob, ab, ib, kb, mb, cb, pb>
+     )
+     ]
+    --[
+    Neq( ca, cb ),
+    Spliced( tJ, <'framed', oa, aa, ia, ka, ma, ca, pa>,
+             <'framed', ob, ab, ib, kb, mb, cb, pb>
+    )
+    ]->
+     [ ]
+  */
+
+rule (modulo E) ContentJudge_pl:
+   [
+   !ContentCh( tJ, framed(oa, aa, ia, ka, ma, ca, pa),
+               framed(ob, ab, ib, kb, mb, cb, pb)
+   )
+   ]
+  --[
+  Neq( pa, pb ),
+  Spliced( tJ, framed(oa, aa, ia, ka, ma, ca, pa),
+           framed(ob, ab, ib, kb, mb, cb, pb)
+  )
+  ]->
+   [ ]
+
+  /*
+  rule (modulo AC) ContentJudge_pl:
+     [
+     !ContentCh( tJ, <'framed', oa, aa, ia, ka, ma, ca, pa>,
+                 <'framed', ob, ab, ib, kb, mb, cb, pb>
+     )
+     ]
+    --[
+    Neq( pa, pb ),
+    Spliced( tJ, <'framed', oa, aa, ia, ka, ma, ca, pa>,
+             <'framed', ob, ab, ib, kb, mb, cb, pb>
+    )
+    ]->
+     [ ]
+  */
+
+rule (modulo E) TypeJudge:
+   [ !HonestType( otS, fbT ), !TypeCh( otA, fbT ) ]
+  --[ Neq( otS, otA ), TypeConfused( otS, otA, fbT ) ]->
+   [ ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) ScopeJudge_honest:
+   [
+   !HonestInner( kH, idH, fbHon ),
+   !ScopeCh( wctx(kWj, idWj, fbWj), kH, idH, fbHon )
+   ]
+  --[ HonestWrappedAccepted( kH, fbHon, kWj ) ]->
+   [ ]
+
+  /*
+  rule (modulo AC) ScopeJudge_honest:
+     [
+     !HonestInner( kH, idH, fbHon ),
+     !ScopeCh( <'wctx', kWj, idWj, fbWj>, kH, idH, fbHon )
+     ]
+    --[ HonestWrappedAccepted( kH, fbHon, kWj ) ]->
+     [ ]
+  */
+
+rule (modulo E) ScopeJudge_k:
+   [
+   !HonestInner( kH, idH, fbHon ),
+   !ScopeCh( wctx(kWj, idWj, fbWj), kIrep, idIrep, fbHon )
+   ]
+  --[ Neq( kIrep, kH ), Rescoped( kIrep, idIrep, kH, idH, fbHon ) ]->
+   [ ]
+
+  /*
+  rule (modulo AC) ScopeJudge_k:
+     [
+     !HonestInner( kH, idH, fbHon ),
+     !ScopeCh( <'wctx', kWj, idWj, fbWj>, kIrep, idIrep, fbHon )
+     ]
+    --[ Neq( kIrep, kH ), Rescoped( kIrep, idIrep, kH, idH, fbHon ) ]->
+     [ ]
+  */
+
+rule (modulo E) ScopeJudge_id:
+   [
+   !HonestInner( kH, idH, fbHon ),
+   !ScopeCh( wctx(kWj, idWj, fbWj), kIrep, idIrep, fbHon )
+   ]
+  --[ Neq( idIrep, idH ), Rescoped( kIrep, idIrep, kH, idH, fbHon ) ]->
+   [ ]
+
+  /*
+  rule (modulo AC) ScopeJudge_id:
+     [
+     !HonestInner( kH, idH, fbHon ),
+     !ScopeCh( <'wctx', kWj, idWj, fbWj>, kIrep, idIrep, fbHon )
+     ]
+    --[ Neq( idIrep, idH ), Rescoped( kIrep, idIrep, kH, idH, fbHon ) ]->
+     [ ]
+  */
+
+rule (modulo E) SigJudge:
+   [ !HonestSig( kH, sgH ), !SigCh( wctx(kWj, idWj, fbWj), kIrep, sgH ) ]
+  --[ Neq( kIrep, kH ), InnerSigTransplanted( kIrep, sgH ) ]->
+   [ ]
+
+  /*
+  rule (modulo AC) SigJudge:
+     [ !HonestSig( kH, sgH ), !SigCh( <'wctx', kWj, idWj, fbWj>, kIrep, sgH )
+     ]
+    --[ Neq( kIrep, kH ), InnerSigTransplanted( kIrep, sgH ) ]->
+     [ ]
+  */
+
+rule (modulo E) GenericSigJudge:
+   [ !GsigHon( kH, sgH ), !Gsig( kX, sgH ) ]
+  --[ Neq( kX, kH ), SigTransplanted( kX, sgH ) ]->
+   [ ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) VersionJudge:
+   [
+   !VersionCh( fbWv, cvIwv,
+               framed(otJv, algJv, idJv, kfpJv, mhJv, cvI, plJv)
+   )
+   ]
+  --[ Neq( cvIwv, cvI ), VersionLied( fbWv, cvIwv, cvI ) ]->
+   [ ]
+
+  /*
+  rule (modulo AC) VersionJudge:
+     [
+     !VersionCh( fbWv, cvIwv,
+                 <'framed', otJv, algJv, idJv, kfpJv, mhJv, cvI, plJv>
+     )
+     ]
+    --[ Neq( cvIwv, cvI ), VersionLied( fbWv, cvIwv, cvI ) ]->
+     [ ]
+  */
+
+rule (modulo E) ChainWitnessJudge:
+   [ !HonestChainCh( kH, mH, fbHon ), !ChainCh( lyr, kH, mH, fbHon ) ]
+  --[ HonestChain( lyr, mH ) ]->
+   [ ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) StandingJudge_unentitled:
+   [ !EstCh( intake, lyr, kX, authTuple(idJ, kfprJ, ssJ, algJ, verJ), aidD )
+   ]
+  --[
+  Neq( fp(kX), kfprJ ), Neq( lyr, 'L0' ),
+  StandingUnentitledWrapped( kX, authTuple(idJ, kfprJ, ssJ, algJ, verJ) )
+  ]->
+   [ ]
+
+  /*
+  rule (modulo AC) StandingJudge_unentitled:
+     [
+     !EstCh( intake, lyr, kX, <'authTuple', idJ, kfprJ, ssJ, algJ, verJ>, aidD
+     )
+     ]
+    --[
+    Neq( fp(kX), kfprJ ), Neq( lyr, 'L0' ),
+    StandingUnentitledWrapped( kX, <'authTuple', idJ, kfprJ, ssJ, algJ, verJ>
+    )
+    ]->
+     [ ]
+  */
+
+rule (modulo E) StandingJudge_honest:
+   [
+   !EstCh( intake, lyr, kX, authTuple(idJ, fp(kX), ssJ, algJ, verJ), aidD ),
+   !Design( kX, aidD )
+   ]
+  --[ Neq( lyr, 'L0' ), HonestStandingEstablished( kX, aidD ) ]->
+   [ ]
+
+  /*
+  rule (modulo AC) StandingJudge_honest:
+     [
+     !EstCh( intake, lyr, kX, <'authTuple', idJ, fp(kX), ssJ, algJ, verJ>,
+             aidD
+     ),
+     !Design( kX, aidD )
+     ]
+    --[ Neq( lyr, 'L0' ), HonestStandingEstablished( kX, aidD ) ]->
+     [ ]
+  */
+
+rule (modulo E) ScopeAgreement_mis:
+   [ !ScopeStanding( a, l, k, idS, derived ), !ScopeEnvelope( a, l, ka, ia )
+   ]
+  --[ Neq( <ka, ia>, <k, idS> ), ScopeMisreported( a, l, k, idS, ka, ia )
+  ]->
+   [ ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) ScopeAgreement_agree:
+   [
+   !ScopeStanding( a, l, k, idS, derived ), !ScopeEnvelope( a, l, k, idS ),
+   !Design( k, derived )
+   ]
+  --[ Neq( l, 'L0' ), HonestWrappedStandingAgreed( a, l ) ]->
+   [ ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) ScopeKeyOnly:
+   [ !ScopeStanding( a, l, k, idS, derived ), !ScopeEnvelope( a, l, ka, ia )
+   ]
+  --[ Neq( ka, k ), ScopeKeyOnly( a, l, k, ka ) ]->
+   [ ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) ScopeIdentityOnly:
+   [ !ScopeStanding( a, l, k, idS, derived ), !ScopeEnvelope( a, l, ka, ia )
+   ]
+  --[ Neq( ia, idS ), ScopeIdentityOnly( a, l, idS, ia ) ]->
+   [ ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) TagJudge:
+   [ !TagCh( kJ, tagJ ) ]
+  --[ Neq( tagJ, 'TLR' ), TagConfused( kJ, tagJ ) ]->
+   [ ]
+
+  /* has exactly the trivial AC variant */
+
+lemma CQ3_ReattributedA:
+  all-traces "¬(∃ kX kH fb #i. ReattributedA( kX, kH, fb ) @ #i)"
+/*
+guarded formula characterizing all counter-examples:
+"∃ kX kH fb #i. (ReattributedA( kX, kH, fb ) @ #i)"
+*/
+by sorry
+
+lemma CQ3_ReattributedB:
+  all-traces "¬(∃ kX kH fb #i. ReattributedB( kX, kH, fb ) @ #i)"
+/*
+guarded formula characterizing all counter-examples:
+"∃ kX kH fb #i. (ReattributedB( kX, kH, fb ) @ #i)"
+*/
+by sorry
+
+lemma Link5:
+  all-traces "¬(∃ l #i. ChainBroken( l, 'LINK_5' ) @ #i)"
+/*
+guarded formula characterizing all counter-examples:
+"∃ l #i. (ChainBroken( l, 'LINK_5' ) @ #i)"
+*/
+by sorry
+
+lemma Link5_frameToKey_only:
+  all-traces "¬(∃ l k f #i. Link5FrameToKey( l, k, f ) @ #i)"
+/*
+guarded formula characterizing all counter-examples:
+"∃ l k f #i. (Link5FrameToKey( l, k, f ) @ #i)"
+*/
+by sorry
+
+lemma Link1a:
+  all-traces "¬(∃ l #i. ChainBroken( l, 'LINK_1A' ) @ #i)"
+/*
+guarded formula characterizing all counter-examples:
+"∃ l #i. (ChainBroken( l, 'LINK_1A' ) @ #i)"
+*/
+simplify
+solve( ChainBroken( l, 'LINK_1A' ) @ #i )
+  case Link1aJudge
+  solve( !AuthKey( skS ) ▶₀ #i )
+    case Init
+    solve( !Link1a( l, t, ev ) ▶₁ #i )
+      case AttestOne_accept
+      by contradiction /* from formulas */
+    next
+      case AttestTwo_accept
+      by contradiction /* from formulas */
+    qed
+  qed
+qed
+
+lemma A46_AcceptS_IssuerSigned:
+  all-traces
+  "∀ ev t k fb #i.
+    (AcceptS( ev, t, k, fb ) @ #i) ⇒
+    (∃ #j. (IssuerSigned( k, fb ) @ #j) ∧ (#j < #i))"
+/*
+guarded formula characterizing all counter-examples:
+"∃ ev t k fb #i.
+  (AcceptS( ev, t, k, fb ) @ #i)
+ ∧
+  ∀ #j. (IssuerSigned( k, fb ) @ #j) ⇒ ¬(#j < #i)"
+*/
+by sorry
+
+lemma W_HonestAccepted:
+  exists-trace "∃ k fb #i. HonestAccepted( k, fb ) @ #i"
+/*
+guarded formula characterizing all satisfying traces:
+"∃ k fb #i. (HonestAccepted( k, fb ) @ #i)"
+*/
+by sorry
+
+lemma W_HonestChain_L0:
+  exists-trace "∃ t #i. HonestChain( 'L0', t ) @ #i"
+/*
+guarded formula characterizing all satisfying traces:
+"∃ t #i. (HonestChain( 'L0', t ) @ #i)"
+*/
+by sorry
+
+lemma W_HonestChain_L1:
+  exists-trace "∃ t #i. HonestChain( 'L1', t ) @ #i"
+/*
+guarded formula characterizing all satisfying traces:
+"∃ t #i. (HonestChain( 'L1', t ) @ #i)"
+*/
+by sorry
+
+lemma W_HonestComplete2:
+  exists-trace "∃ t a b #i. HonestComplete( t, <'verified2', a, b> ) @ #i"
+/*
+guarded formula characterizing all satisfying traces:
+"∃ t a b #i. (HonestComplete( t, <'verified2', a, b> ) @ #i)"
+*/
+by sorry
+
+/*
+WARNING: the following wellformedness checks failed!
+
+Facts occur in the left-hand-side but not in any right-hand-side 
+=================================================================
+
+  1. in rule "VersionJudge":  factName `VersionCh' arity: 3 multiplicity: Persistent. Perhaps you want to use the fact in rule "Standing_S3_noTLR":  factName `ReasonCh' arity: 2 multiplicity: Persistent
+*/
+
+/*
+Generated from:
+Tamarin version 1.12.0
+Maude version 3.5.1
+Git revision: 82780bbaf3328a45f624ddb41e51bf75425f851c (with uncommited changes), branch: master
+Compiled at: 2026-03-07 14:22:39.174278293 UTC
+*/
+
+end

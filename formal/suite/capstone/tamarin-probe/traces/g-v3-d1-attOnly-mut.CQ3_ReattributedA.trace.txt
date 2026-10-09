@@ -1,0 +1,202 @@
+EXPLORATORY PROBE 2026-10-04 — non-discharging; not part of any registration
+Extracted from runs/g-v3-d1-attOnly-mut.CQ3_ReattributedA.proof.spthy (model runs/cap_cc02_d.v3-encoding.depth1.attOnly.spthy).
+
+lemma CQ3_ReattributedA:
+  all-traces "¬(∃ kX kH fb #i. ReattributedA( kX, kH, fb ) @ #i)"
+/*
+guarded formula characterizing all counter-examples:
+"∃ kX kH fb #i. (ReattributedA( kX, kH, fb ) @ #i)"
+*/
+simplify
+solve( !HonestCh( kH, fb ) ▶₀ #i )
+  case Attester
+  solve( !AcceptCh( ctxJ, 'SLOT_A', kX, idX,
+                    <'framed', 'OT_ATTEST', 'algH', 'issuerId2', fp(pk(~skB2)), 
+                     h(<'authTuple', 'issuerId2', fp(pk(~skI)), <'signers1', fp(pk(~skB2))>, 
+                        'algH', 'verH'>), 
+                     'cvA', payload>
+         ) ▶₁ #i )
+    case AttestTwo_accept_case_1
+    solve( splitEqs(1) )
+      case split_case_1
+      solve( splitEqs(2) )
+        case split_case_1
+        solve( !KU( sign(<'BYTES', 'framed', 'OT_ATTEST', 'algH', 'issuerId2', 
+                          fp(pk(~skB2)), 
+                          h(<'authTuple', 'issuerId2', fp(pk(~skI)), <'signers1', fp(pk(~skB2))>, 
+                             'algH', 'verH'>), 
+                          'cvA', payload>,
+                         x)
+               ) @ #vk.9 )
+          case Attester
+          solve( !KU( sign(<'STMT_DIGEST', 
+                            h(<'authTuple', 'issuerId2', 
+                               fp(pk(dsks(sign(<'BYTES', 'framed', 'OT_ATTEST', 'algH', 'issuerId2', 
+                                                fp(pk(~skB2)), 
+                                                h(<'authTuple', 'issuerId2', fp(pk(~skI)), 
+                                                   <'signers1', fp(pk(~skB2))>, 'algH', 'verH'>), 
+                                                'cvA', payload>,
+                                               ~skB2),
+                                          x))), 
+                               <'signers1', 
+                                fp(pk(dsks(sign(<'BYTES', 'framed', 'OT_ATTEST', 'algH', 'issuerId2', 
+                                                 kfpxB, mhB, 'cvA', payload>,
+                                                x.1),
+                                           x.2)))
+                               >, 
+                               'algH', vert_>)
+                           >,
+                           ~skS)
+                 ) @ #vk.19 )
+            case c_sign
+            solve( !KU( sign(<'POSS', 'authTuple', 'issuerId2', 
+                              fp(pk(dsks(sign(<'BYTES', 'framed', 'OT_ATTEST', 'algH', 'issuerId2', 
+                                               fp(pk(~skB2)), 
+                                               h(<'authTuple', 'issuerId2', fp(pk(~skI)), 
+                                                  <'signers1', fp(pk(~skB2))>, 'algH', 'verH'>), 
+                                               'cvA', payload>,
+                                              ~skB2),
+                                         x))), 
+                              <'signers1', 
+                               fp(pk(dsks(sign(<'BYTES', 'framed', 'OT_ATTEST', 'algH', 'issuerId2', 
+                                                kfpxB, mhB, 'cvA', payload>,
+                                               x.1),
+                                          x.2)))
+                              >, 
+                              'algH', vert_>,
+                             dsks(sign(<'BYTES', 'framed', 'OT_ATTEST', 'algH', 'issuerId2', 
+                                        fp(pk(~skB2)), 
+                                        h(<'authTuple', 'issuerId2', fp(pk(~skI)), 
+                                           <'signers1', fp(pk(~skB2))>, 'algH', 'verH'>), 
+                                        'cvA', payload>,
+                                       ~skB2),
+                                  x))
+                   ) @ #vk.25 )
+              case c_sign
+              solve( !KU( dsks(sign(<'BYTES', 'framed', 'OT_ATTEST', 'algH', 
+                                     'issuerId2', fp(pk(~skB2)), 
+                                     h(<'authTuple', 'issuerId2', fp(pk(~skI)), <'signers1', fp(pk(~skB2))>, 
+                                        'algH', 'verH'>), 
+                                     'cvA', payload>,
+                                    ~skB2),
+                               x)
+                     ) @ #vk.83 )
+                case c_dsks
+                solve( !KU( sign(<'POSS', 'authTuple', 'issuerId2', 
+                                  fp(pk(dsks(sign(<'BYTES', 'framed', 'OT_ATTEST', 'algH', 'issuerId2', 
+                                                   fp(pk(~skB2)), 
+                                                   h(<'authTuple', 'issuerId2', fp(pk(~skI)), 
+                                                      <'signers1', fp(pk(~skB2))>, 'algH', 'verH'>), 
+                                                   'cvA', payload>,
+                                                  ~skB2),
+                                             x))), 
+                                  <'signers1', 
+                                   fp(pk(dsks(sign(<'BYTES', 'framed', 'OT_ATTEST', 'algH', 'issuerId2', 
+                                                    kfpxB, mhB, 'cvA', payload>,
+                                                   x.1),
+                                              x.2)))
+                                  >, 
+                                  'algH', vert_>,
+                                 dsks(sign(<'BYTES', 'framed', 'OT_ATTEST', 'algH', 'issuerId2', kfpxB, 
+                                            mhB, 'cvA', payload>,
+                                           x.1),
+                                      x.2))
+                       ) @ #vk.33 )
+                  case c_sign
+                  solve( !KU( pk(dsks(sign(<'BYTES', 'framed', 'OT_ATTEST', 'algH', 
+                                            'issuerId2', fp(pk(~skB2)), 
+                                            h(<'authTuple', 'issuerId2', fp(pk(~skI)), 
+                                               <'signers1', fp(pk(~skB2))>, 'algH', 'verH'>), 
+                                            'cvA', payload>,
+                                           ~skB2),
+                                      x))
+                         ) @ #vk.30 )
+                    case c_pk
+                    solve( !KU( h(<'authTuple', 'issuerId2', fp(pk(~skI)), 
+                                   <'signers1', fp(pk(~skB2))>, 'algH', 'verH'>)
+                           ) @ #vk.70 )
+                      case Attester_case_1
+                      solve( !KU( fp(pk(dsks(sign(<'BYTES', 'framed', 'OT_ATTEST', 'algH', 
+                                                   'issuerId2', fp(pk(~skB2)), 
+                                                   h(<'authTuple', 'issuerId2', fp(pk(~skI)), 
+                                                      <'signers1', fp(pk(~skB2))>, 'algH', 'verH'>), 
+                                                   'cvA', payload>,
+                                                  ~skB2),
+                                             x)))
+                             ) @ #vk.75 )
+                        case c_fp
+                        solve( !KU( h(<'authTuple', 'issuerId2', 
+                                       fp(pk(dsks(sign(<'BYTES', 'framed', 'OT_ATTEST', 'algH', 'issuerId2', 
+                                                        fp(pk(~skB2)), 
+                                                        h(<'authTuple', 'issuerId2', fp(pk(~skI)), 
+                                                           <'signers1', fp(pk(~skB2))>, 'algH', 'verH'>), 
+                                                        'cvA', payload>,
+                                                       ~skB2),
+                                                  x))), 
+                                       <'signers1', 
+                                        fp(pk(dsks(sign(<'BYTES', 'framed', 'OT_ATTEST', 'algH', 'issuerId2', 
+                                                         kfpxB, mhB, 'cvA', payload>,
+                                                        x.1),
+                                                   x.2)))
+                                       >, 
+                                       'algH', vert_>)
+                               ) @ #vk.83 )
+                          case c_h
+                          solve( !KU( dsks(sign(<'BYTES', 'framed', 'OT_ATTEST', 'algH', 
+                                                 'issuerId2', kfpxB, mhB, 'cvA', payload>,
+                                                x.1),
+                                           x.2)
+                                 ) @ #vk.86 )
+                            case c_dsks
+                            solve( !KU( sign(<'BYTES', 'framed', 'OT_ATTEST', 'algH', 'issuerId2', 
+                                              kfpxB, mhB, 'cvA', payload>,
+                                             x.1)
+                                   ) @ #vk.37 )
+                              case Attester
+                              solve( !KU( pk(dsks(sign(<'BYTES', 'framed', 'OT_ATTEST', 'algH', 
+                                                        'issuerId2', fp(pk(~skB2)), 
+                                                        h(<'authTuple', 'issuerId2', fp(pk(~skI)), 
+                                                           <'signers1', fp(pk(~skB2))>, 'algH', 'verH'>), 
+                                                        'cvA', payload>,
+                                                       ~skB2),
+                                                  x.1))
+                                     ) @ #vk.33 )
+                                case c_pk
+                                solve( !KU( fp(pk(dsks(sign(<'BYTES', 'framed', 'OT_ATTEST', 'algH', 
+                                                             'issuerId2', fp(pk(~skB2)), 
+                                                             h(<'authTuple', 'issuerId2', fp(pk(~skI)), 
+                                                                <'signers1', fp(pk(~skB2))>, 'algH', 'verH'
+                                                               >), 
+                                                             'cvA', payload>,
+                                                            ~skB2),
+                                                       x.1)))
+                                       ) @ #vk.72 )
+                                  case c_fp
+                                  solve( !KU( ~skS ) @ #vk.74 )
+                                    case Init
+                                    solve( !KU( fp(pk(~skB2)) ) @ #vk.70 )
+                                      case Attester_case_1
+                                      solve( !KU( pk(~skB2) ) @ #vk.79 )
+                                        case Init
+                                        SOLVED // trace found
+                                      qed
+                                    qed
+                                  qed
+                                qed
+                              qed
+                            qed
+                          qed
+                        qed
+                      qed
+                    qed
+                  qed
+                qed
+              qed
+            qed
+          qed
+        qed
+      qed
+    qed
+  qed
+qed
+

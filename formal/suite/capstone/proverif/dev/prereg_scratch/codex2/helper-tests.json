@@ -1,0 +1,69 @@
+[
+  {
+    "test": "per-query trace",
+    "results": [
+      {
+        "text": "not event(E()) is false.",
+        "verdict": "false",
+        "trace": true
+      },
+      {
+        "text": "not event(W()) is true.",
+        "verdict": "true",
+        "trace": false
+      }
+    ]
+  },
+  {
+    "test": "negative green",
+    "status": "OK"
+  },
+  {
+    "test": "negative red",
+    "status": "RED"
+  },
+  {
+    "test": "positive traced red",
+    "status": "OK"
+  },
+  {
+    "test": "positive untraced red",
+    "status": "INCONCLUSIVE"
+  },
+  {
+    "test": "positive green",
+    "status": "CAVEAT_GREEN_A46"
+  },
+  {
+    "test": "rc nonzero",
+    "status": "INCONCLUSIVE"
+  },
+  {
+    "test": "provenance mismatch",
+    "status": "PROVENANCE"
+  },
+  {
+    "test": "fallback predicate -",
+    "counted": true
+  },
+  {
+    "test": "fallback predicate T",
+    "counted": false
+  },
+  {
+    "test": "fallback predicate T,L",
+    "counted": false
+  },
+  {
+    "test": "fallback predicate L",
+    "counted": false
+  },
+  {
+    "test": "fallback predicate H",
+    "counted": false
+  },
+  {
+    "test": "A84 nonzero rc misleading safety tag",
+    "tag": "C-Q6k=true A8.4w=INCONCLUSIVE"
+  }
+]

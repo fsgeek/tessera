@@ -1,0 +1,13 @@
+# EXPLORATORY PROBE 2026-10-04 — non-discharging; not part of any registration
+# tamarin-prover --precompute-only -d=0 MODEL +RTS -N2 -RTS, under systemd-run --user --scope -p MemoryMax=20G (v5 encoding unless stated)
+PRECOMPUTE cap_cc02_d.depth0.spthy: rc=0 57.54 s 3229568 KB Refined sources: 68 cases, deconstructions complete
+PRECOMPUTE cap_cc02_d.depth1.spthy: rc=143  OOM at cgroup MemoryMax=20G (journal oom-kill 21:17:07; ~3 min wall)
+PRECOMPUTE cap_cc02_d.spthy: rc=143  OOM at cgroup MemoryMax=20G (journal oom-kill 21:19:47; ~2.7 min wall)
+PRECOMPUTE cap_cc02_d.depth2.attOnly.spthy: rc=143  OOM at cgroup MemoryMax=20G (journal oom-kill 21:20:54; ~1.1 min wall)
+# --- scratch measurements made during encoding diagnosis (v3 encoding, -p MemoryMax=10G, +RTS -N1):
+SCRATCH v3 depth0 slice: rc=0 100.16 s 1981440 KB Refined sources: 68 cases
+SCRATCH v3 depth1 slice: rc=0 492.06 s 9738108 KB Refined sources: 79 cases
+SCRATCH v2 (recursive !Stage) envelope-only slice: tamarin-prover: <<loop>> (Haskell blackhole) in precomputation
+SCRATCH v4 (verification-as-fact) full: killed at 485.73 s, 18724808 KB (no cgroup cap on that run; host OOM)
+PRECOMPUTE v3-encoding full depth2: rc=143 wall=261s  
+PRECOMPUTE v3-encoding depth2.attOnly: rc=143 wall=238s  

@@ -1,0 +1,102 @@
+[
+  {
+    "test": "baseline",
+    "rc": 0,
+    "failures": []
+  },
+  {
+    "test": "blob_mismatch",
+    "rc": 1,
+    "failures": [
+      "FAIL gen/cap_cc02_d__depth0__cq3a.pv: blob mismatch",
+      "FAIL checked count slice blobs: 106 != manifest 107",
+      "FAIL checked count slice == slice.py output: 106 != manifest 107",
+      "FAIL checked count exact prefix: 106 != manifest 107"
+    ]
+  },
+  {
+    "test": "prefix_alteration",
+    "rc": 1,
+    "failures": [
+      "FAIL gen/cap_cc02_d__depth0__cq3a.pv: differs from slice.py output",
+      "FAIL checked count slice == slice.py output: 106 != manifest 107",
+      "FAIL checked count exact prefix: 106 != manifest 107",
+      "FAIL checked count components: 106 != manifest 107"
+    ]
+  },
+  {
+    "test": "component_alteration",
+    "rc": 1,
+    "failures": [
+      "FAIL gen/cap_cc02_d__depth0__cq3a.pv: differs from slice.py output",
+      "FAIL checked count slice == slice.py output: 106 != manifest 107",
+      "FAIL checked count exact prefix: 106 != manifest 107",
+      "FAIL checked count components: 106 != manifest 107"
+    ]
+  },
+  {
+    "test": "query_alteration",
+    "rc": 1,
+    "failures": [
+      "FAIL gen/cap_cc02_d__depth0__cq3a.pv: differs from slice.py output",
+      "FAIL checked count slice == slice.py output: 106 != manifest 107",
+      "FAIL checked count exact prefix: 106 != manifest 107",
+      "FAIL checked count components: 106 != manifest 107"
+    ]
+  },
+  {
+    "test": "prohibited_slice",
+    "rc": 1,
+    "failures": [
+      "FAIL gen/cap_cc02_d__depth0__cq3a.pv: differs from slice.py output",
+      "FAIL checked count slice == slice.py output: 106 != manifest 107",
+      "FAIL checked count exact prefix: 106 != manifest 107",
+      "FAIL checked count components: 106 != manifest 107"
+    ]
+  },
+  {
+    "test": "unexpected_set_slice",
+    "rc": 1,
+    "failures": [
+      "FAIL gen/cap_cc02_d__depth0__cq3a.pv: differs from slice.py output",
+      "FAIL checked count slice == slice.py output: 106 != manifest 107",
+      "FAIL checked count exact prefix: 106 != manifest 107",
+      "FAIL checked count components: 106 != manifest 107"
+    ]
+  },
+  {
+    "test": "prohibited_library",
+    "rc": 1,
+    "failures": [
+      "FAIL lib: prohibited constructs [(197, 'phase')]"
+    ]
+  },
+  {
+    "test": "unexpected_set_library",
+    "rc": 1,
+    "failures": [
+      "FAIL lib: unexpected set lines ['set maxDepth = 1.']"
+    ]
+  },
+  {
+    "test": "indented_set_library",
+    "rc": 1,
+    "failures": [
+      "FAIL lib: unexpected set lines ['set maxDepth = 1.']"
+    ]
+  },
+  {
+    "test": "control_expectation_tamper",
+    "rc": 1,
+    "failures": [
+      "FAIL manifest pin mismatch /home/tony/projects/tessera/formal/suite/capstone/proverif/dev/prereg_scratch/fixcheck/copy/suite/capstone/proverif/slice/MANIFEST.tsv: 30978cd8d7f478b61e3588726339c040cd7c3fd164998f6afb7656ac61b0caa4"
+    ]
+  },
+  {
+    "test": "condition_removal_tamper",
+    "rc": 1,
+    "failures": [
+      "FAIL manifest pin mismatch /home/tony/projects/tessera/formal/suite/capstone/proverif/dev/prereg_scratch/fixcheck/copy/suite/capstone/proverif/slice/MANIFEST.tsv: d7e195c8a6c23d0a1710a5fc740dc47e6c22106fe9e54095c39f056b8ce0b0f8"
+    ]
+  }
+]

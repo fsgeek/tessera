@@ -1,0 +1,72 @@
+
+; <<>> DiG 9.18.39-0ubuntu0.24.04.7-Ubuntu <<>> +dnssec +multi ietf.org TXT @1.1.1.1
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 60290
+;; flags: qr rd ra ad; QUERY: 1, ANSWER: 6, AUTHORITY: 0, ADDITIONAL: 1
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags: do; udp: 1232
+;; QUESTION SECTION:
+;ietf.org.		IN TXT
+
+;; ANSWER SECTION:
+ietf.org.		300 IN TXT "vs58md9pf8hu6knlglfda9lk6g"
+ietf.org.		300 IN TXT "ca3-5567e36d3f9947308ac2892e009840cc"
+ietf.org.		300 IN TXT "google-site-verification=NQpGlv9isd8O_RHzO31C0lOw1XKfQfFoVhZbmir6Lm4"
+ietf.org.		300 IN TXT "google-site-verification=mvpHmuqmM4wrWv5w3S1AAqssmhAITNo2QqPqVLrVWEo"
+ietf.org.		300 IN TXT "v=spf1 ip4:166.84.6.31 ip4:166.84.7.238 ip6:2602:f977:800:f7f6::/64 ip4:166.84.7.34 ip6:2602:f977:800::e276:63ff:fe66:3400 include:_spf.google.com include:spf.hostedrt.com ~all"
+ietf.org.		300 IN RRSIG TXT 13 2 300 (
+				20261008172335 20261006152335 34505 ietf.org.
+				Amrg+CTLTRvBvL8ll3IZr9NsegI1AlKYxXJ4N0XJcnxF
+				POCWgisBmeeaq+qWw+wcmKXKHk2oIe6LzKrvf2UDVA== )
+
+;; Query time: 7 msec
+;; SERVER: 1.1.1.1#53(1.1.1.1) (UDP)
+;; WHEN: Wed Oct 07 16:23:35 UTC 2026
+;; MSG SIZE  rcvd: 580
+
+
+; <<>> DiG 9.18.39-0ubuntu0.24.04.7-Ubuntu <<>> +dnssec +multi wamason.com DS @1.1.1.1
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 9487
+;; flags: qr rd ra; QUERY: 1, ANSWER: 0, AUTHORITY: 6, ADDITIONAL: 1
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags: do; udp: 1232
+;; QUESTION SECTION:
+;wamason.com.		IN DS
+
+;; AUTHORITY SECTION:
+com.			900 IN SOA a.gtld-servers.net. nstld.verisign-grs.com. (
+				1791390179 ; serial
+				1800       ; refresh (30 minutes)
+				900        ; retry (15 minutes)
+				604800     ; expire (1 week)
+				900        ; minimum (15 minutes)
+				)
+com.			900 IN RRSIG SOA 13 1 900 (
+				20261014162259 20261007151259 41446 com.
+				7HJJAC+2Gw/WtV8aLjLSuITvT6CXzZ7EwoP/KSSaCDG4
+				HKEP2OV8MtXNHUfzt+fJP/9vMs9yZ6HwRiDFjMCX+g== )
+I38FVDU69U7C0KQ5VG2FTQGI2BS8970T.com. 900 IN NSEC3 1 1 0 - (
+				I38GF96ANNUSGQCJL0FT01LECBG12NAS
+				NS DS RRSIG )
+I38FVDU69U7C0KQ5VG2FTQGI2BS8970T.com. 900 IN RRSIG NSEC3 13 2 900 (
+				20261013032638 20261006021638 41446 com.
+				+BbYWSttZROWwYJsqVmrFRIL6PHyMDhqiqZ5FqQFVSrT
+				+G0VBgL2hjGwPXlzOj+CRo80i6tVcNFv8Tq10jJ6Rw== )
+CK0POJMG874LJREF7EFN8430QVIT8BSM.com. 900 IN NSEC3 1 1 0 - (
+				CK0Q35HRS4H76G6CHNB9414CJN6S5UPL
+				NS SOA RRSIG DNSKEY NSEC3PARAM )
+CK0POJMG874LJREF7EFN8430QVIT8BSM.com. 900 IN RRSIG NSEC3 13 2 900 (
+				20261013002613 20261005231613 41446 com.
+				d76dwNRyxZv42Cuup3RGXgV1fBbF2DJMUfNnvIt4o5E+
+				Q0H6c+QQ5BXjyPquSGuv0CF+R86GNRjT1D1Xxrvtyw== )
+
+;; Query time: 9 msec
+;; SERVER: 1.1.1.1#53(1.1.1.1) (UDP)
+;; WHEN: Wed Oct 07 16:23:35 UTC 2026
+;; MSG SIZE  rcvd: 569
+

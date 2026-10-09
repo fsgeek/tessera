@@ -1,0 +1,111 @@
+# DIAG START 2026-09-28T16:36:02Z D0_cc02d_1a_verbose blob=e021d7fca040fd73e0a519b630f4162a22af820c box=300s
+# DIAG END 2026-09-28T16:41:02Z bytes=714904960
+# DIAG START 2026-09-28T16:42:32Z D1_capd_1a_verbose blob=1abde71220d376840f52a2a1c749567df3a75b5d box=300s
+# DIAG END 2026-09-28T16:42:55Z secs=23 bytes=151757900
+# DIAG START 2026-09-28T16:43:07Z D2_cc03d_1a_verbose blob=981db40f57be65eebb5ec0cbc3c7e47216a22821 box=300s
+# DIAG END 2026-09-28T16:48:07Z D2_cc03d_1a_verbose secs=300 bytes=619810011
+# DIAG START 2026-09-28T16:48:31Z D3_cc07id_1a_verbose blob=dd5da0228cc07bd5936201d5aa6453bc73410286 box=300s
+# DIAG END 2026-09-28T16:53:31Z D3_cc07id_1a_verbose secs=300 bytes=656511498
+# DIAG START 2026-09-28T16:53:35Z D4_cc06d_1a_verbose blob=03a8a12ac94c532cb1eb00eb7a5ca0b66beab495 box=300s
+# DIAG END 2026-09-28T16:58:35Z D4_cc06d_1a_verbose secs=300 bytes=444614540
+# START 2026-09-28T16:59:05Z A0_cc02d_1a blob=d9a5701e0ea1a844597072ef358e41daf44112a3 availMB=28045
+# START 2026-09-28T17:02:17Z A1_cc02d_1a blob=bf063699e2e7f169b2b779cb25172606181c87fe availMB=26854
+A1_cc02d_1a rc=143 seconds=17 peakRSSkB=395572 results=0 blob=bf063699e2e7f169b2b779cb25172606181c87fe availMB_at_start=26854
+# END 2026-09-28T17:02:34Z
+# VOID 2026-09-28T17:02:44Z: the A1_cc02d_1a START above was launched by a chain.sh bug (its wait-for-idle pgrep pattern used \| which pgrep's ERE reads literally, so it did not wait) while A0 was running; killed by operator after ~15 s. That A1 attempt is VOID and is re-run later on its own. A0 overlapped with it for ~15 s (CPU only; separate ulimit per process).
+# NOTE 2026-09-28T17:03:23Z: a parse-only proverif invocation of T2_cc02d_1a_nounif_fp.pv ran beside A0 and exited at parse (<1 s, 'Unterminated comment': '(*k' opens a comment). No saturation. Parse checks from here on wait for idle.
+A0_cc02d_1a rc=124 seconds=3600 peakRSSkB=7036588 results=0 blob=d9a5701e0ea1a844597072ef358e41daf44112a3 availMB_at_start=28045
+# END 2026-09-28T17:59:05Z
+# START 2026-09-28T17:59:08Z A1_cc02d_1a blob=bf063699e2e7f169b2b779cb25172606181c87fe availMB=28070
+A1_cc02d_1a rc=0 seconds=2418 peakRSSkB=2243140 results=1 blob=bf063699e2e7f169b2b779cb25172606181c87fe availMB_at_start=28070
+4283:RESULT not event(ChainBroken(l_1,LINK_1A)) is true.
+# END 2026-09-28T18:39:26Z
+BREAK cc02d at A1_cc02d_1a
+# START 2026-09-28T18:39:26Z X_cc02d_1a_wrapreverted blob=e4588075d6b624c1f825d0cbc727502d6032cdc9 availMB=28025
+X_cc02d_1a_wrapreverted rc=0 seconds=492 peakRSSkB=1180644 results=1 blob=e4588075d6b624c1f825d0cbc727502d6032cdc9 availMB_at_start=28025
+3505:RESULT not event(ChainBroken(l_1,LINK_1A)) is true.
+# END 2026-09-28T18:47:38Z
+# START 2026-09-28T18:47:38Z B0_cc05d_c1 blob=8ba17b8d60e664d53f5737f6d6821496dc953bf9 availMB=28099
+B0_cc05d_c1 rc=134 seconds=2354 peakRSSkB=9895528 results=0 blob=8ba17b8d60e664d53f5737f6d6821496dc953bf9 availMB_at_start=28099
+4041:Fatal error: out of memory
+# END 2026-09-28T19:26:52Z
+# START 2026-09-28T19:26:52Z B1_cc05d_c1 blob=cd91edc6e4f9574556d8dc72aff65f96ba99e075 availMB=28128
+B1_cc05d_c1 rc=134 seconds=2348 peakRSSkB=9893532 results=0 blob=cd91edc6e4f9574556d8dc72aff65f96ba99e075 availMB_at_start=28128
+3750:Fatal error: out of memory
+# END 2026-09-28T20:06:00Z
+# START 2026-09-28T20:06:00Z B12_cc05d_c1 blob=373080a4c0d4f799a3d947f8a27495915e49cfe4 availMB=27577
+B12_cc05d_c1 rc=134 seconds=2774 peakRSSkB=9893904 results=0 blob=373080a4c0d4f799a3d947f8a27495915e49cfe4 availMB_at_start=27577
+3734:Fatal error: out of memory
+# END 2026-09-28T20:52:14Z
+# START 2026-09-28T20:52:14Z B123_cc05d_c1 blob=a25f1099c28ceb092869a08293f148bb25ef2c5d availMB=27839
+B123_cc05d_c1 rc=134 seconds=2729 peakRSSkB=9893800 results=0 blob=a25f1099c28ceb092869a08293f148bb25ef2c5d availMB_at_start=27839
+3625:Fatal error: out of memory
+# END 2026-09-28T21:37:43Z
+# START 2026-09-28T21:37:43Z B1234_cc05d_c1 blob=bed3cc48aa48ec1ecced9605ce3f53b110441af0 availMB=27926
+B1234_cc05d_c1 rc=0 seconds=14 peakRSSkB=195688 results=1 blob=bed3cc48aa48ec1ecced9605ce3f53b110441af0 availMB_at_start=27926
+1523:RESULT event(AcceptanceComplete(aid_4,lyr_12,authTuple(id_7,fpA,signers0,alg_3,ver_3))) ==> event(SlotSatisfied(aid_4,lyr_12,authTuple(id_7,fpA,signers0,alg_3,ver_3),fpA)) is true.
+# END 2026-09-28T21:37:57Z
+BREAK cc05d at B1234_cc05d_c1
+CHAIN1 DONE
+# NOTE 2026-09-28T21:39:03Z: resumed by a new builder agent after CHAIN1 DONE. Added run1b.sh (run1.sh with the box as a BOX= parameter, default 3600, same ulimit/nice/logging) and diag2.sh (diag.sh with the query selector as a 4th argument). One experiment at a time, as before.
+# DIAG START 2026-09-28T21:39:03Z D5_cc05d_c1_verbose blob=4db35fa159f7108ea52a5faf911e573870b0cb2a box=300s
+# DIAG END 2026-09-28T21:44:03Z D5_cc05d_c1_verbose secs=300 bytes=1104917215
+# DIAG START 2026-09-28T21:44:10Z D6_capd_c1_verbose blob=c5d047e5409e122ad695db57377d739978d7916e box=300s
+# DIAG END 2026-09-28T21:49:03Z D6_capd_c1_verbose secs=293 bytes=3000000000
+# START 2026-09-28T21:54:21Z F1234_cc05d_all blob=9fa436ad071cdb557604b9da2854e8ac7a16da1e availMB=27905 box=3600s
+F1234_cc05d_all rc=0 seconds=240 peakRSSkB=217208 results=44 blob=9fa436ad071cdb557604b9da2854e8ac7a16da1e availMB_at_start=27905
+7222:RESULT not event(StandingReport(ESTABLISHED,TERMINAL_DISPOSITION_SHOWN,k_1,t_8,a_1)) is false.
+7576:RESULT not event(StandingReport(ABSENT,SUPERSEDED,k_1,t_8,a_1)) is false.
+7856:RESULT not event(StandingReport(ABSENT,NO_TERMINAL_DISPOSITION_EVIDENCE,k_1,t_8,a_1)) is false.
+8206:RESULT not event(StandingReport(ABSENT,ISSUANCE_REFUSED,k_1,t_8,a_1)) is false.
+8531:RESULT not event(StandingReport(ABSENT,STANDING_EVIDENCE_MISMATCH,k_1,t_8,a_1)) is false.
+# END 2026-09-28T21:58:21Z
+# START 2026-09-28T22:03:47Z G1234_capd_all blob=ac8f9cdef56da50e2404afa3e14b672d11a77700 availMB=27943 box=3600s
+G1234_capd_all rc=0 seconds=55 peakRSSkB=72328 results=44 blob=ac8f9cdef56da50e2404afa3e14b672d11a77700 availMB_at_start=27943
+4079:RESULT not event(StandingReport(ESTABLISHED,TERMINAL_DISPOSITION_SHOWN,k_1,t_8,a_1)) is false.
+4400:RESULT not event(StandingReport(ABSENT,SUPERSEDED,k_1,t_8,a_1)) is false.
+4647:RESULT not event(StandingReport(ABSENT,NO_TERMINAL_DISPOSITION_EVIDENCE,k_1,t_8,a_1)) is false.
+4964:RESULT not event(StandingReport(ABSENT,ISSUANCE_REFUSED,k_1,t_8,a_1)) is false.
+5256:RESULT not event(StandingReport(ABSENT,STANDING_EVIDENCE_MISMATCH,k_1,t_8,a_1)) is false.
+# END 2026-09-28T22:04:42Z
+# START 2026-09-28T22:05:00Z F1_cc02d_all blob=625eacbf842a4d00c8f91058a559c8f7b4b1ab6b availMB=27941 box=7200s
+F1_cc02d_all rc=134 seconds=6997 peakRSSkB=9858172 results=2 blob=625eacbf842a4d00c8f91058a559c8f7b4b1ab6b availMB_at_start=27941
+4283:RESULT not event(ChainBroken(l_1,LINK_1A)) is true.
+6514:RESULT not event(ChainBroken(l_1,LINK_2A)) is true.
+8094:Fatal error: out of memory
+# END 2026-09-29T00:01:37Z
+# START 2026-09-29T00:09:35Z F1234_cc02d_all blob=e97048a717c05509f93ed0ccfa6836972758c412 availMB=27877 box=3600s
+F1234_cc02d_all rc=0 seconds=54 peakRSSkB=72864 results=44 blob=e97048a717c05509f93ed0ccfa6836972758c412 availMB_at_start=27877
+4079:RESULT not event(StandingReport(ESTABLISHED,TERMINAL_DISPOSITION_SHOWN,k_1,t_8,a_1)) is false.
+4400:RESULT not event(StandingReport(ABSENT,SUPERSEDED,k_1,t_8,a_1)) is false.
+4647:RESULT not event(StandingReport(ABSENT,NO_TERMINAL_DISPOSITION_EVIDENCE,k_1,t_8,a_1)) is false.
+4964:RESULT not event(StandingReport(ABSENT,ISSUANCE_REFUSED,k_1,t_8,a_1)) is false.
+5256:RESULT not event(StandingReport(ABSENT,STANDING_EVIDENCE_MISMATCH,k_1,t_8,a_1)) is false.
+# END 2026-09-29T00:10:29Z
+# NOTE 2026-09-29T00:10:44Z: parse checks of T2 and T3 (timeout 5 s each, machine idle): see REPORT.md; T2 no longer reports 'Unterminated comment' (the file carries '( *k' with a space).
+# START 2026-09-29T00:10:47Z T1_cc02d_1a_redundantHyp blob=e8542d0c520c0b9850f33172699feaf692cf59e0 availMB=27701 box=3600s
+T1_cc02d_1a_redundantHyp rc=124 seconds=3600 peakRSSkB=6974820 results=0 blob=e8542d0c520c0b9850f33172699feaf692cf59e0 availMB_at_start=27701
+# END 2026-09-29T01:10:47Z
+# START 2026-09-29T01:10:47Z T2_cc02d_1a_nounif_fp blob=43298e6fd5f61e30f688d30ad337bfbc36e3d804 availMB=27935 box=3600s
+T2_cc02d_1a_nounif_fp rc=124 seconds=3601 peakRSSkB=8172144 results=0 blob=43298e6fd5f61e30f688d30ad337bfbc36e3d804 availMB_at_start=27935
+# END 2026-09-29T02:10:48Z
+# START 2026-09-29T02:10:48Z T3_cc02d_1a_nounif_dsksfp blob=6e790770c41af49a11fd37bfd2bac34579674e04 availMB=27943 box=3600s
+T3_cc02d_1a_nounif_dsksfp rc=124 seconds=3600 peakRSSkB=6181652 results=0 blob=6e790770c41af49a11fd37bfd2bac34579674e04 availMB_at_start=27943
+# END 2026-09-29T03:10:48Z
+# START 2026-09-29T03:11:12Z W1_capd_witness blob=45fa69f096df6a0b06110b2463d13c1aab998890 availMB=27923 box=3600s
+W1_capd_witness rc=0 seconds=49 peakRSSkB=145800 results=9 blob=45fa69f096df6a0b06110b2463d13c1aab998890 availMB_at_start=27923
+4058:RESULT not event(HonestChain(L2,t_8)) is true.
+4502:RESULT not event(HonestAccepted(k_1,fb_8)) is false.
+5059:RESULT not event(HonestWrappedAccepted(kH_7,fb_8,kW)) is false.
+5524:RESULT not event(HonestStandingEstablished(k_1,aid_4)) is false.
+6044:RESULT not event(HonestWrappedStandingAgreed(a_1,l_1)) is false.
+# END 2026-09-29T03:12:01Z
+# START 2026-09-29T03:12:24Z C12_cc02d_c1 blob=04a148f91bea68235e6ecf47f3f184cd7d0a754b availMB=27888 box=3600s
+C12_cc02d_c1 rc=134 seconds=2058 peakRSSkB=9898364 results=0 blob=04a148f91bea68235e6ecf47f3f184cd7d0a754b availMB_at_start=27888
+3237:Fatal error: out of memory
+# END 2026-09-29T03:46:42Z
+# START 2026-09-29T03:46:42Z C123_cc02d_c1 blob=1e0c92be37e6d751f3077583394b5a6f8a19b5e7 availMB=27912 box=3600s
+C123_cc02d_c1 rc=134 seconds=2116 peakRSSkB=9897924 results=0 blob=1e0c92be37e6d751f3077583394b5a6f8a19b5e7 availMB_at_start=27912
+3128:Fatal error: out of memory
+# END 2026-09-29T04:21:58Z
+CHAIN2 DONE

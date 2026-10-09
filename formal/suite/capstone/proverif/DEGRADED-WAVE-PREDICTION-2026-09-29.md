@@ -1,0 +1,11 @@
+# Degraded wave, remaining eighteen companions — prediction written BEFORE the runs (owner instance, 2026-09-29 04:30 UTC)
+
+**Decision (owner instance).** The eighteen case-(d) companions not yet observed under ladder 2 are run in their registered, unablated form, three at a time, each to its registered box (65700 s), on ubuntu24. Ablation is registered (PREDICTIONS.md §3) only on an observed timeout, and the builder's diagnosis (`dev/abl_d/REPORT.md`) shows the ablation order does not dispose of the degraded failures anyway; so the honest record for these eighteen is an observation each, not a prediction. The 4740-min ceiling is already exceeded and the accounting will say so.
+
+**The eighteen.** Interrupted by the 2026-09-28 host crash (unrun): `cap_cc07ii_d`, `cap_cc08_d`, `cap_cc08i_d`. Never launched: `cap_cc08ii_d`, `cap_cc09_d`, `cap_cc10_d`, `cap_cc11abl6_d`, `cap_cc11_d`, `cap_cc11q4_d`, `cap_cc12_d`, `cap_cc13i_d`, `cap_cc13ii_d`, `cap_cc15i_d`, `cap_cc15ii_d`, `cap_cc15iii_d`, `cap_cc16_d`, `cap_cc17_d`, `cap_cc18_d`.
+
+**Prediction, from the diagnosis and nothing else (the builder's words):** "Likely to time out: those whose mutation opens the `dsks` route or the honest-possession route. From their MUTATES lines, not run: C-C7(ii), C-C8, C-C8(ii), C-C17. May land as `capstone_d` did (1.8 h): the standing, type and scope mutations, C-C9 through C-C18." The owner adds no prediction of its own. `cap_cc08i_d` had landed links 1a and 2a and was on link 2b conjunct 1 when the crash took it; the diagnosis puts it on neither route, and the owner records no prediction for it.
+
+**Not run again unablated:** `cap_cc05_d` (rc=143 by the 80 GB guard at 76.5 GB, diagnosed as the same mechanism failure as its five timed-out siblings) carries a `.mechfail` marker so the runner records it as MECHFAIL-MEMORY instead of spending another 18 h; the five rc=124 siblings are skipped by the runner as landed-with-outcome.
+
+**The six observed failures** (`cap_cc02_d`, `cap_cc03_d`, `cap_cc04_d`, `cap_cc06_d`, `cap_cc07i_d` rc=124; `cap_cc05_d` rc=143) are recorded as §3 mechanism-viability timeouts, and their disposal is ROUTED TO THE AUTHOR with the diagnosis, because §3's two disposals (ablation, change of tactic) both fail here and the registration has no third. That routing is drafted in RESULTS.md when the ladder completes, not here.

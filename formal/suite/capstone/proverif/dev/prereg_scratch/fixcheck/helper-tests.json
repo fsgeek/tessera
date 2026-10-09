@@ -1,0 +1,194 @@
+[
+  {
+    "test": "per-query trace",
+    "got": [
+      [
+        "false",
+        true
+      ],
+      [
+        "true",
+        false
+      ]
+    ],
+    "want": [
+      [
+        "false",
+        true
+      ],
+      [
+        "true",
+        false
+      ]
+    ],
+    "ok": true
+  },
+  {
+    "test": "negative green",
+    "got": "OK",
+    "want": "OK",
+    "ok": true
+  },
+  {
+    "test": "negative red",
+    "got": "RED",
+    "want": "RED",
+    "ok": true
+  },
+  {
+    "test": "positive traced red",
+    "got": "OK",
+    "want": "OK",
+    "ok": true
+  },
+  {
+    "test": "positive untraced red",
+    "got": "INCONCLUSIVE",
+    "want": "INCONCLUSIVE",
+    "ok": true
+  },
+  {
+    "test": "positive green",
+    "got": "CAVEAT_GREEN_A46",
+    "want": "CAVEAT_GREEN_A46",
+    "ok": true
+  },
+  {
+    "test": "rc nonzero",
+    "got": "INCONCLUSIVE",
+    "want": "INCONCLUSIVE",
+    "ok": true
+  },
+  {
+    "test": "provenance mismatch",
+    "got": "PROVENANCE",
+    "want": "PROVENANCE",
+    "ok": true
+  },
+  {
+    "test": "fallback predicate -",
+    "got": true,
+    "want": true,
+    "ok": true
+  },
+  {
+    "test": "fallback predicate T",
+    "got": false,
+    "want": false,
+    "ok": true
+  },
+  {
+    "test": "fallback predicate T,L",
+    "got": false,
+    "want": false,
+    "ok": true
+  },
+  {
+    "test": "fallback predicate L",
+    "got": false,
+    "want": false,
+    "ok": true
+  },
+  {
+    "test": "fallback predicate H",
+    "got": false,
+    "want": false,
+    "ok": true
+  },
+  {
+    "test": "A84 rc=124 safety true + witness",
+    "got": "UNCOUNTABLE_rc=124",
+    "want": "UNCOUNTABLE_rc=124",
+    "ok": true
+  },
+  {
+    "test": "A84 rc=124 safety false+trace",
+    "got": "UNCOUNTABLE_rc=124",
+    "want": "UNCOUNTABLE_rc=124",
+    "ok": true
+  },
+  {
+    "test": "A84 prov mismatch",
+    "got": "UNCOUNTABLE_PROVENANCE",
+    "want": "UNCOUNTABLE_PROVENANCE",
+    "ok": true
+  },
+  {
+    "test": "A84 only one result",
+    "got": "UNCOUNTABLE_RESULT_SET",
+    "want": "UNCOUNTABLE_RESULT_SET",
+    "ok": true
+  },
+  {
+    "test": "A84 three results",
+    "got": "UNCOUNTABLE_RESULT_SET",
+    "want": "UNCOUNTABLE_RESULT_SET",
+    "ok": true
+  },
+  {
+    "test": "A84 safety false no trace",
+    "got": "C-Q6k=NOT_SHOWN A8.4w=REACHABLE_WITH_TRACE",
+    "want": "C-Q6k=NOT_SHOWN A8.4w=REACHABLE_WITH_TRACE",
+    "ok": true
+  },
+  {
+    "test": "A84 safety false trace",
+    "got": "C-Q6k=false+trace A8.4w=REACHABLE_WITH_TRACE",
+    "want": "C-Q6k=false+trace A8.4w=REACHABLE_WITH_TRACE",
+    "ok": true
+  },
+  {
+    "test": "A84 green + reachable witness",
+    "got": "C-Q6k=true GREEN_NONVACUOUS_ELIGIBLE A8.4w=REACHABLE_WITH_TRACE",
+    "want": "C-Q6k=true GREEN_NONVACUOUS_ELIGIBLE A8.4w=REACHABLE_WITH_TRACE",
+    "ok": true
+  },
+  {
+    "test": "A84 green + untraced witness",
+    "got": "C-Q6k=true GREEN_WITHHELD_non_vacuity_not_shown A8.4w=INCONCLUSIVE_non_vacuity_not_shown",
+    "want": "C-Q6k=true GREEN_WITHHELD_non_vacuity_not_shown A8.4w=INCONCLUSIVE_non_vacuity_not_shown",
+    "ok": true
+  },
+  {
+    "test": "A84 green + unreachable witness",
+    "got": "C-Q6k=true GREEN_WITHHELD_non_vacuity_not_shown A8.4w=UNREACHABLE_prediction_falsified",
+    "want": "C-Q6k=true GREEN_WITHHELD_non_vacuity_not_shown A8.4w=UNREACHABLE_prediction_falsified",
+    "ok": true
+  },
+  {
+    "test": "set scan: indented set rejected (lib)",
+    "got": true,
+    "want": true,
+    "ok": true
+  },
+  {
+    "test": "set scan: tab/newline-split set rejected",
+    "got": true,
+    "want": true,
+    "ok": true
+  },
+  {
+    "test": "set scan: mid-line set rejected",
+    "got": true,
+    "want": true,
+    "ok": true
+  },
+  {
+    "test": "set scan: extra after allowed rejected",
+    "got": true,
+    "want": true,
+    "ok": true
+  },
+  {
+    "test": "set scan: indented allowed accepted",
+    "got": false,
+    "want": false,
+    "ok": true
+  },
+  {
+    "test": "set scan: commented set ignored",
+    "got": false,
+    "want": false,
+    "ok": true
+  }
+]

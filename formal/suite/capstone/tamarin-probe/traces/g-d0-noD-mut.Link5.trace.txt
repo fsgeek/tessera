@@ -1,0 +1,71 @@
+EXPLORATORY PROBE 2026-10-04 — non-discharging; not part of any registration
+Extracted from runs/g-d0-noD-mut.Link5.proof.spthy (Tamarin 1.12.0 / Maude 3.5.1). Model: see runs/attempts.tsv row 'g-d0-noD-mut Link5'.
+
+lemma Link5:
+  all-traces "¬(∃ l #i. ChainBroken( l, 'LINK_5' ) @ #i)"
+/*
+guarded formula characterizing all counter-examples:
+"∃ l #i. (ChainBroken( l, 'LINK_5' ) @ #i)"
+*/
+simplify
+solve( ChainBroken( l, 'LINK_5' ) @ #i )
+  case Link5Judge_kfp
+  solve( !Link5( l, t, kX, <'framed', otJ, algJ, idJ, kfpJ, mhJ, cvJ, plJ>
+         ) ▶₀ #i )
+    case AttestTwo_accept_case_1
+    solve( !KU( sign(<'STMT_DIGEST', 
+                      h(<'authTuple', idJ, fp(pk(skH_)), <'signers1', fp(pk(skH_.1))>, algJ, 
+                         vert_>)
+                     >,
+                     ~skS)
+           ) @ #vk.11 )
+      case c_sign
+      solve( !KU( sign(<'BYTES', 'framed', 'OT_ATTEST', algJ, idJ, kfpJ, mhJ, 
+                        cvJ, plJ>,
+                       skH_)
+             ) @ #vk.4 )
+        case c_sign
+        solve( !KU( sign(<'BYTES', 'framed', 'OT_ATTEST', algJ, idJ, kfpxB, mhB, 
+                          cvJ, plJ>,
+                         skH_.1)
+               ) @ #vk.10 )
+          case c_sign
+          solve( !KU( sign(<'POSS', 'authTuple', idJ, fp(pk(skH_)), 
+                            <'signers1', fp(pk(skH_.1))>, algJ, vert_>,
+                           skH_)
+                 ) @ #vk.17 )
+            case c_sign
+            solve( !KU( sign(<'POSS', 'authTuple', idJ, fp(pk(skH_)), 
+                              <'signers1', fp(pk(skH_.1))>, algJ, vert_>,
+                             skH_.1)
+                   ) @ #vk.22 )
+              case c_sign
+              solve( !KU( pk(skH_) ) @ #vk.19 )
+                case Init_case_1
+                solve( !KU( fp(pk(~skS)) ) @ #vk.76 )
+                  case c_fp
+                  solve( !KU( h(<'authTuple', idJ, fp(pk(~skS)), 
+                                 <'signers1', fp(pk(skH_))>, algJ, vert_>)
+                         ) @ #vk.84 )
+                    case ForeignIssuer_case_1
+                    solve( !KU( pk(skH_) ) @ #vk.25 )
+                      case Init_case_1
+                      solve( !KU( ~skS ) @ #vk.80 )
+                        case Init
+                        solve( !KU( pk(~skI) ) @ #vk.84 )
+                          case Init
+                          SOLVED // trace found
+                        qed
+                      qed
+                    qed
+                  qed
+                qed
+              qed
+            qed
+          qed
+        qed
+      qed
+    qed
+  qed
+qed
+

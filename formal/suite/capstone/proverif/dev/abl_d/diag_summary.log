@@ -1,0 +1,78 @@
+== D2_cc03d_1a_verbose (cap_cc03_d.pv, link1a only, verboseRules, box 300s) secs=300
+no RESULT
+196504 rules inserted. Base: 28950 rules (1301 with conclusion selected). Queue: 18825 rules.
+clauses=196504 with_dsks=214 (0%) with_stageCh=27607 stageCh_and_dsks=0 concl_stageCh=12628
+  46260 attacker sign BYTES
+  40270 attacker h authTuple
+  34293 attacker fp pk
+  14092 attacker sign POSS
+  12284 attacker sign STMT_DIGEST
+   8590 attacker(skS[])
+   7221 attacker pk k_1
+   5231 attacker pk skI
+== D3_cc07id_1a_verbose (cap_cc07i_d.pv, link1a only, verboseRules, box 300s) secs=300
+no RESULT
+205582 rules inserted. Base: 45421 rules (1153 with conclusion selected). Queue: 15021 rules.
+clauses=205582 with_dsks=78765 (38%) with_stageCh=65366 stageCh_and_dsks=30307 concl_stageCh=17456
+  58366 attacker fp pk
+  30771 attacker h authTuple
+  23830 attacker sign BYTES
+  21187 attacker sign POSS
+  18532 attacker sign STMT_DIGEST
+  10802 attacker(skS[])
+   8100 attacker pk k_1
+   3626 attacker pk dsks
+== D4_cc06d_1a_verbose (cap_cc06_d.pv, link1a only, verboseRules, box 300s) secs=300
+no RESULT
+110409 rules inserted. Base: 54426 rules (221 with conclusion selected). Queue: 13100 rules.
+clauses=110410 with_dsks=80705 (73%) with_stageCh=102393 stageCh_and_dsks=78476 concl_stageCh=1585
+  37921 attacker sign POSS
+  25092 attacker fp pk
+  10239 attacker pk dsks
+   8560 attacker pk k_1
+   7119 attacker sign BYTES
+   5848 attacker dsks sign
+   3230 attacker h authTuple
+   2353 mess stageCh
+== D5_cc05d_c1_verbose (cap_cc05_d.pv, conj1 only, verboseRules, box 300s) secs=300
+no RESULT
+111855 rules inserted. Base: 25201 rules (439 with conclusion selected). Queue: 15347 rules.
+clauses=111855 with_dsks=93813 (84%) with_stageCh=87675 stageCh_and_dsks=80547 concl_stageCh=254
+  22611 attacker fp pk
+  18231 attacker sign BYTES
+  15648 attacker sign POSS
+  14191 attacker pk dsks
+  14168 attacker dsks sign
+   6709 mess stageCh
+   5384 attacker h authTuple
+   3435 attacker pk k_1
+== D6_capd_c1_verbose (capstone_d.pv, conj1 only, verboseRules, box 300s) secs=293
+no RESULT
+129925 rules inserted. Base: 20511 rules (1962 with conclusion selected). Queue: 2176 rules.
+clauses=129926 with_dsks=204 (0%) with_stageCh=7685 stageCh_and_dsks=0 concl_stageCh=811
+  28320 attacker fp pk
+  25775 attacker h authTuple
+  18877 attacker sign BYTES
+  13065 attacker sign POSS
+  10914 attacker pk k_1
+   6646 attacker sign STMT_DIGEST
+   6337 attacker(skS[])
+   2406 attacker(skI[])
+== D0/D1 summaries recomputed 2026-09-28T21:53:59Z by the resuming agent from the scratchpad traces D0.out / D1.out with diag.sh's own awk (the original run predates diag.sh's summary step)
+-- D0
+161643 rules inserted. Base: 25085 rules (492 with conclusion selected). Queue: 6519 rules.
+no RESULT
+clauses=161643 with_dsks=137406 (85%) with_stageCh=59084 stageCh_and_dsks=51484 concl_stageCh=5422
+-- D1
+1 rules inserted. Base: 1 rules (0 with conclusion selected). Queue: 0 rules.
+RESULT not event(ChainBroken(l_1,LINK_1A)) is true.
+clauses=35046 with_dsks=206 (1%) with_stageCh=7428 stageCh_and_dsks=0 concl_stageCh=811
+== two-signer share of DSKS-bearing clauses (clause lines after 'Rule with')
+D0 clauses=161643 dsks=137406 dsks&signers1=137175 dsks&slotB=fp(pk(dsks..))=103778
+D1 clauses=35046 dsks=206 dsks&signers1=79 dsks&slotB=fp(pk(dsks..))=0
+D2_cc03d_1a_verbose clauses=196504 dsks=214 dsks&signers1=83 dsks&slotB=fp(pk(dsks..))=0
+D3_cc07id_1a_verbose clauses=205582 dsks=78765 dsks&signers1=73601 dsks&slotB=fp(pk(dsks..))=40783
+D4_cc06d_1a_verbose clauses=110410 dsks=80705 dsks&signers1=77369 dsks&slotB=fp(pk(dsks..))=37806
+D5_cc05d_c1_verbose clauses=111855 dsks=93813 dsks&signers1=90466 dsks&slotB=fp(pk(dsks..))=68670
+D1 clauses=35046 signers1=26837 POSS-over-fp(pk(sk*))=0 OT_WRAPPER=24333
+D2_cc03d_1a_verbose clauses=196504 signers1=185668 POSS-over-fp(pk(sk*))=185204 OT_WRAPPER=160455

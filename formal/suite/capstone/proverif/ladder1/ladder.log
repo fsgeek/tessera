@@ -1,0 +1,108 @@
+# capstone ladder — ProVerif 2.05 — -lib ../../lib/tessera_theory.pvl
+# model: capstone.pv blob c6969b4cc2f2e30be7a7a950af7609ea75e4c700
+#
+# LADDER RESTARTS, recorded in full in RESULTS.md ("Ladder restarts").  The
+# runner was restarted six times on 2026-09-19 between 17:50 and 18:40 UTC.  The
+# sixth restart is NOT scheduling: capstone.pv itself was repaired (BF-3, the
+# §1.3 front-end contract), so its blob changed and EVERY earlier run was
+# discarded -- their .out files deleted and their ladder.log lines removed.
+# Two SIGKILL (`rc=137`) lines written by the kills were removed BY HAND; that
+# edit, and the earlier one like it, are disclosed in RESULTS.md.  NO RESULT IN
+# THIS FILE COMES FROM A KILLED RUN OR FROM A SUPERSEDED MODEL.  Everything
+# below the header line that follows is from one launch, fully detached.
+# capstone ladder — 2026-09-19T18:33:57Z — ProVerif 2.05 — -lib ../../lib/tessera_theory.pvl
+# model: capstone.pv blob c6969b4cc2f2e30be7a7a950af7609ea75e4c700
+capstone rc=0 seconds=374 box=71100s blob=c6969b4cc2f2e30be7a7a950af7609ea75e4c700
+capstone_b rc=0 seconds=392 box=71100s blob=65503ff3ce59eb62df36cd4cb74502ae391e86c0
+# wave 1 complete (correct form, cases a and b)
+cap_cc07i_a rc=143 seconds=1869 box=71100s blob=dc832a2fb092afe657d92ca2b23531219d5a7eda
+cap_cc06_a rc=143 seconds=1869 box=71100s blob=545e5c93fee184ffc17946934bc68340c1f8e7dd
+cap_cc02_a rc=143 seconds=1869 box=71100s blob=c873de562b487a73b2c5c5e4796799f573538f4b
+cap_cc05_a rc=143 seconds=1869 box=71100s blob=9553504d16d361a87c0fd5f0e4ba6fdca46fe921
+cap_cc04_a rc=143 seconds=1869 box=71100s blob=b75ffb09de4a21ebfb81b6c71bf5f8f8a0c40c6e
+cap_cc03_a rc=143 seconds=1869 box=71100s blob=71ca214b335275ec359188ea4e30420eaaac6624
+cap_cc01_c rc=143 seconds=2732 box=71100s blob=ee786ce258980d317d3c48b1818006df19d785d5
+capstone_d rc=0 seconds=4257 box=65700s blob=d4f0851db6cd81e760c5cb847664b558a194911c
+# capstone ladder — 2026-09-19T20:11:43Z — ProVerif 2.05 — -lib ../../lib/tessera_theory.pvl
+# model: capstone.pv blob c6969b4cc2f2e30be7a7a950af7609ea75e4c700
+# wave 1 complete (correct form, cases a and b)
+# correct form, case d, complete
+cap_cc03_a rc=0 seconds=2724 peakRSSkB=3003228 box=71100s blob=71ca214b335275ec359188ea4e30420eaaac6624
+cap_cc04_a rc=0 seconds=4670 peakRSSkB=5388572 box=71100s blob=b75ffb09de4a21ebfb81b6c71bf5f8f8a0c40c6e
+cap_cc02_a rc=0 seconds=5809 peakRSSkB=7071004 box=71100s blob=c873de562b487a73b2c5c5e4796799f573538f4b
+cap_cc05_a rc=137 seconds=3633 peakRSSkB=15565072 box=71100s blob=9553504d16d361a87c0fd5f0e4ba6fdca46fe921
+cap_cc07i_a rc=137 seconds=7409 peakRSSkB=17500684 box=71100s blob=dc832a2fb092afe657d92ca2b23531219d5a7eda
+cap_cc06_a rc=0 seconds=15228 peakRSSkB=21769120 box=71100s blob=545e5c93fee184ffc17946934bc68340c1f8e7dd
+cap_cc08i_a rc=0 seconds=1453 peakRSSkB=1996248 box=71100s blob=aa0393691751df77d9a4f107278f72a955abe9ca
+cap_cc08_a rc=0 seconds=2483 peakRSSkB=3068220 box=71100s blob=69bef9c616c7c3c2b21cee488c805add5f34c12f
+cap_cc07ii_a rc=137 seconds=8938 peakRSSkB=30723792 box=71100s blob=7c0be5b5cb21da04e4afd824526c533ee86deb7a
+cap_cc09_a rc=0 seconds=297 peakRSSkB=472816 box=71100s blob=4399e08d839bc072adf5561f23ed0a80806eb433
+cap_cc08ii_a rc=0 seconds=638 peakRSSkB=1946236 box=71100s blob=6693ff18840f962746189df7e9ccefac37729802
+cap_cc10_a rc=0 seconds=3131 peakRSSkB=20091540 box=71100s blob=e7b7da99d043aa3cd4d6fc3dd75a68cc89fcce17
+cap_cc10iso_a rc=0 seconds=385 peakRSSkB=1061200 box=71100s blob=befaea669fec8f37f458279dedbfabc36591edea
+cap_cc11abl6_a rc=0 seconds=435 peakRSSkB=1219928 box=71100s blob=9d12106ced11d707a0ee7f58086b7b8fc18d4b72
+cap_cc11_a rc=0 seconds=467 peakRSSkB=1231800 box=71100s blob=ae887ef812b480705a1bc640584aedef7420c211
+cap_cc13i_a rc=0 seconds=389 peakRSSkB=1133884 box=71100s blob=1300437b31b66a2f092af63d521a6edc0725689f
+cap_cc11q4_a rc=0 seconds=457 peakRSSkB=1249616 box=71100s blob=407dea09337a84d6549632ab7d1dfee9891607ad
+cap_cc12_a rc=0 seconds=481 peakRSSkB=1278788 box=71100s blob=1548b4cfef2556ef38e48141fbda611661d2590b
+cap_cc15i_a rc=0 seconds=380 peakRSSkB=705032 box=71100s blob=133ad05fbe21d3ddc2dfb5af4df42d987006b66d
+cap_cc13ii_a rc=0 seconds=1340 peakRSSkB=3922244 box=71100s blob=7f2ec452c2f157bf5378469a2c29d33a0a0998d2
+cap_cc14_a rc=137 seconds=11649 peakRSSkB=30977812 box=71100s blob=6ed862086dbb01af57a12a8bca40e584c7820b22
+cap_cc15iii_a rc=0 seconds=487 peakRSSkB=1229664 box=71100s blob=d42ba7972e6c7cdbad29d1635469a0eb9b425724
+cap_cc15ii_a rc=0 seconds=502 peakRSSkB=1230512 box=71100s blob=a017f519a0d687cbf4b4c175df111fa2722dd765
+cap_cc16_a rc=0 seconds=524 peakRSSkB=947884 box=71100s blob=b80681f4ecfae4db371b6c2c39068def8cc7f70e
+cap_cc18_a rc=0 seconds=410 peakRSSkB=1246964 box=71100s blob=dfed3db392bdba3a430b0c99b29fb222540d0d46
+cap_cc17_a rc=137 seconds=15785 peakRSSkB=31160620 box=71100s blob=5c783913d33f2d35fb033206fbbe7acee0d23130
+# wave 3 complete (companions, case a)
+cap_cc03_b rc=0 seconds=2717 peakRSSkB=2981872 box=71100s blob=5b317c876ef76b93641b6eb2b7a2291211d2d4c8
+cap_cc04_b rc=0 seconds=4413 peakRSSkB=5366200 box=71100s blob=329d264042d928e04b75c6bb16996a0abc4db73f
+cap_cc02_b rc=0 seconds=5403 peakRSSkB=6742836 box=71100s blob=41105e29b80d798cb8050dbb722c060e4e7af217
+cap_cc05_b rc=137 seconds=3144 peakRSSkB=16361456 box=71100s blob=1c41913242ca62dff3bb090dd5006cc8d471b750
+cap_cc06_b rc=137 seconds=6732 peakRSSkB=20838352 box=71100s blob=8ee212a581a927d59afcc3ae331713750505b8ce
+cap_cc07i_b rc=143 seconds=12975 peakRSSkB=30423588 box=71100s blob=f325f66a819b45f740edea85258821b2576ab8bf
+cap_cc07ii_b rc=143 seconds=654 peakRSSkB=3835876 box=71100s blob=384e7efd3a5083a2a01a06c82990a387a20257e2
+cap_cc08i_b rc=0 seconds=1541 peakRSSkB=1947232 box=71100s blob=f8b65eacb9537ccaf2d6c6e610b26858a27f78f1
+cap_cc08ii_b rc=143 seconds=23 peakRSSkB=175792 box=71100s blob=f395e663a6d271c737760586aca3b7d67b67d817
+cap_cc09_b rc=143 seconds=23 peakRSSkB=140384 box=71100s blob=ecb2f42a4854224d001ae5bb501a41a45df8609f
+cap_cc10_b rc=143 seconds=23 peakRSSkB=296276 box=71100s blob=d8df5a1b4e6d93da57dc1107934ea10c6c6e3933
+# MACHINE CHANGE 2026-09-20T19:11:23Z: resumed on wam-desktop (ubuntu24; Hyper-V guest, dynamic memory max 96 GB, 64 cores; Ubuntu 24.04), ProVerif 2.05 binary copied from wam-nuc and validated there (capstone.pv: 47 RESULT lines identical); JOBS=2 (96 GB / >31 GB largest observed run); every earlier line is wam-nuc history; runs with rc=137/143 are rerun here per the runner rule
+# capstone ladder — 2026-09-20T19:11:23Z — ProVerif 2.05 — -lib ../../lib/tessera_theory.pvl
+# model: capstone.pv blob c6969b4cc2f2e30be7a7a950af7609ea75e4c700
+# wave 1 complete (correct form, cases a and b)
+# correct form, case d, complete
+# RELAUNCH 2026-09-20T19:12:31Z: run_ladder.sh wave counter fixed to count running jobs only (scheduling); JOBS=2
+# capstone ladder — 2026-09-20T19:12:31Z — ProVerif 2.05 — -lib ../../lib/tessera_theory.pvl
+# model: capstone.pv blob c6969b4cc2f2e30be7a7a950af7609ea75e4c700
+# wave 1 complete (correct form, cases a and b)
+# correct form, case d, complete
+cap_cc05_a rc=0 seconds=17934 peakRSSkB=23162052 box=71100s blob=9553504d16d361a87c0fd5f0e4ba6fdca46fe921
+cap_cc07i_a rc=124 seconds=71105 peakRSSkB=64988588 box=71100s blob=dc832a2fb092afe657d92ca2b23531219d5a7eda
+cap_cc14_a rc=143 seconds=13667 peakRSSkB=80310108 box=71100s blob=6ed862086dbb01af57a12a8bca40e584c7820b22
+cap_cc07ii_a rc=143 seconds=25426 peakRSSkB=80131372 box=71100s blob=7c0be5b5cb21da04e4afd824526c533ee86deb7a
+cap_cc17_a rc=0 seconds=29856 peakRSSkB=56854904 box=71100s blob=5c783913d33f2d35fb033206fbbe7acee0d23130
+# wave 3 complete (companions, case a)
+cap_cc05_b rc=0 seconds=15191 peakRSSkB=22515252 box=71100s blob=1c41913242ca62dff3bb090dd5006cc8d471b750
+cap_cc06_b rc=0 seconds=18171 peakRSSkB=22555536 box=71100s blob=8ee212a581a927d59afcc3ae331713750505b8ce
+cap_cc07ii_b rc=143 seconds=24435 peakRSSkB=80044452 box=71100s blob=384e7efd3a5083a2a01a06c82990a387a20257e2
+cap_cc07i_b rc=124 seconds=71105 peakRSSkB=66335336 box=71100s blob=f325f66a819b45f740edea85258821b2576ab8bf
+cap_cc08ii_b rc=0 seconds=633 peakRSSkB=1991364 box=71100s blob=f395e663a6d271c737760586aca3b7d67b67d817
+cap_cc08_b rc=0 seconds=2672 peakRSSkB=2962784 box=71100s blob=84007b5c50f345e11af92d0f86f20e66d7399152
+cap_cc09_b rc=0 seconds=283 peakRSSkB=478508 box=71100s blob=ecb2f42a4854224d001ae5bb501a41a45df8609f
+cap_cc10_b rc=0 seconds=4113 peakRSSkB=19656608 box=71100s blob=d8df5a1b4e6d93da57dc1107934ea10c6c6e3933
+cap_cc10iso_b rc=0 seconds=338 peakRSSkB=1056332 box=71100s blob=b455b81d0c445734d667b70abdcedf0ada5b13db
+cap_cc11abl6_b rc=0 seconds=407 peakRSSkB=1258756 box=71100s blob=9f578f2d7275b40efce9cbdcda359e09c15b9df4
+cap_cc11q4_b rc=0 seconds=433 peakRSSkB=1244048 box=71100s blob=a5d00625a1cc48b9535f4ba7ed7bcf94707c1905
+cap_cc11_b rc=0 seconds=458 peakRSSkB=1232360 box=71100s blob=66eadecb10a44f02bf024c7028f6d717187bc043
+cap_cc13i_b rc=0 seconds=347 peakRSSkB=1138104 box=71100s blob=a2be31da4433322935dc8f2bd0af0349dd7f5cdf
+cap_cc12_b rc=0 seconds=466 peakRSSkB=1279772 box=71100s blob=ad1848e75b4682f993f0911de5d567649f3d8ca0
+cap_cc13ii_b rc=0 seconds=1459 peakRSSkB=3899204 box=71100s blob=48adaf7c21caef7f2460e603ba096ae773553e89
+cap_cc14_b rc=143 seconds=13186 peakRSSkB=80621176 box=71100s blob=4acb5bc2ca44796bc47abb1bd9c32e95451219b9
+cap_cc15i_b rc=0 seconds=367 peakRSSkB=711708 box=71100s blob=8868cb3fdcebfcdbaf001ddde5993e1ae4a96f32
+cap_cc15ii_b rc=0 seconds=493 peakRSSkB=1262660 box=71100s blob=a11248bf35175de990addbc81198b1f9149d331f
+cap_cc15iii_b rc=0 seconds=478 peakRSSkB=1255076 box=71100s blob=2efae44f570fdf8a0f2bafa34a509ec19e0aa129
+cap_cc16_b rc=0 seconds=545 peakRSSkB=948036 box=71100s blob=25ef4e3d026daa96c795b41b9095e4c2be204954
+cap_cc18_b rc=0 seconds=459 peakRSSkB=1205524 box=71100s blob=15f53b5048382ccbc4b29056a18671e7bf5f7530
+cap_cc17_b rc=0 seconds=33601 peakRSSkB=54461436 box=71100s blob=ab6221accd77a69caacdb328960f34e2d3721df4
+# wave 4 complete (companions, case b)
+cap_cc03_d rc=124 seconds=65701 peakRSSkB=17712484 box=65700s blob=a7bb187d2cc38efe6c42e8402a38f9fafa6bf686
+cap_cc02_d rc=124 seconds=65706 peakRSSkB=76032700 box=65700s blob=f91ce6b684528b753f2f19d1f6c17098e85b7b35

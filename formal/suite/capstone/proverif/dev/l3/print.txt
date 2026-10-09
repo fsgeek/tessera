@@ -1,0 +1,392 @@
+| Registered query | Registered prediction (`PREDICTIONS.md` line) | Case | Observed (`.out` line, verdict) | Outcome in the registered vocabulary |
+|---|---|---|---|---|
+| C-Q1 link 1a | green, p ~ 0.8 (`:362`) | (a) | `capstone.out:2561` `is true` — GREEN | **as registered** |
+| C-Q1 link 1a | green, p ~ 0.8 (`:362`) | (b) | `capstone_b.out:2562` `is true` — GREEN | **as registered** |
+| C-Q1 link 1a | green, p ~ 0.8 (`:362`) | (c) | `cap_cc01_c.out:2720` `is true` — GREEN | **as registered** |
+| C-Q1 link 1a | green, p ~ 0.8 (`:362`) | (d) | `capstone_d.out:2558` `is true` — GREEN | **as registered** |
+| C-Q1 link 1b | `is true` in (a) and (b), p ~ 0.8; `is false` in (c) (`:379`) | (a) | `capstone.out:2728` `is true` — GREEN | **as registered** |
+| C-Q1 link 1b | `is true` in (a) and (b), p ~ 0.8; `is false` in (c) (`:379`) | (b) | `capstone_b.out:2731` `is true` — GREEN | **as registered** |
+| C-Q1 link 1b | `is true` in (a) and (b), p ~ 0.8; `is false` in (c) (`:379`) | (c) | `cap_cc01_c.out:3278` `is false` — RED | **as registered** |
+| C-Q1 link 2a | green, p ~ 0.8 (`:408`) | (a) | `capstone.out:2793` `is true` — GREEN | **as registered** |
+| C-Q1 link 2a | green, p ~ 0.8 (`:408`) | (b) | `capstone_b.out:2797` `is true` — GREEN | **as registered** |
+| C-Q1 link 2a | green, p ~ 0.8 (`:408`) | (c) | `cap_cc01_c.out:3500` `is true` — GREEN | **as registered** |
+| C-Q1 link 2a | green, p ~ 0.8 (`:408`) | (d) | `capstone_d.out:2738` `is true` — GREEN | **as registered** |
+| link 2b one-signer conj. | all three conjuncts `is true`, p ~ 0.55 (`:447`) | (a) | `capstone.out:2945` `is true` — GREEN | **as registered** |
+| link 2b one-signer conj. | all three conjuncts `is true`, p ~ 0.55 (`:447`) | (b) | `capstone_b.out:2950` `is true` — GREEN | **as registered** |
+| link 2b one-signer conj. | all three conjuncts `is true`, p ~ 0.55 (`:447`) | (c) | `cap_cc01_c.out:4839` `is true` — GREEN | **as registered** |
+| link 2b one-signer conj. | all three conjuncts `is true`, p ~ 0.55 (`:447`) | (d) | `capstone_d.out:3839` `is true` — GREEN | **as registered** |
+| link 2b slot-A conj. | all three conjuncts `is true`, p ~ 0.55 (`:447`) | (a) | `capstone.out:3097` `is true` — GREEN | **as registered** |
+| link 2b slot-A conj. | all three conjuncts `is true`, p ~ 0.55 (`:447`) | (b) | `capstone_b.out:3103` `is true` — GREEN | **as registered** |
+| link 2b slot-A conj. | all three conjuncts `is true`, p ~ 0.55 (`:447`) | (c) | `cap_cc01_c.out:6178` `is true` — GREEN | **as registered** |
+| link 2b slot-A conj. | all three conjuncts `is true`, p ~ 0.55 (`:447`) | (d) | `capstone_d.out:4940` `is true` — GREEN | **as registered** |
+| link 2b slot-B conj. | all three conjuncts `is true`, p ~ 0.55 (`:447`) | (a) | `capstone.out:3249` `is true` — GREEN | **as registered** |
+| link 2b slot-B conj. | all three conjuncts `is true`, p ~ 0.55 (`:447`) | (b) | `capstone_b.out:3256` `is true` — GREEN | **as registered** |
+| link 2b slot-B conj. | all three conjuncts `is true`, p ~ 0.55 (`:447`) | (c) | `cap_cc01_c.out:7517` `is true` — GREEN | **as registered** |
+| link 2b slot-B conj. | all three conjuncts `is true`, p ~ 0.55 (`:447`) | (d) | `capstone_d.out:6041` `is true` — GREEN | **as registered** |
+| C-Q7 | green, p ~ 0.8 (`:1371`) | (a) | `capstone.out:3314` `is true` — GREEN | **as registered** |
+| C-Q7 | green, p ~ 0.8 (`:1371`) | (b) | `capstone_b.out:3322` `is true` — GREEN | **as registered** |
+| C-Q7 | green, p ~ 0.8 (`:1371`) | (c) | `cap_cc01_c.out:7739` `is true` — GREEN | **as registered** |
+| C-Q7 | green, p ~ 0.8 (`:1371`) | (d) | `capstone_d.out:6221` `is true` — GREEN | **as registered** |
+| C-Q8 | green, p ~ 0.75 (`:1391`) | (a) | `capstone.out:3379` `is true` — GREEN | **as registered** |
+| C-Q8 | green, p ~ 0.75 (`:1391`) | (b) | `capstone_b.out:3388` `is true` — GREEN | **as registered** |
+| C-Q8 | green, p ~ 0.75 (`:1391`) | (c) | `cap_cc01_c.out:7961` `is true` — GREEN | **as registered** |
+| C-Q8 | green, p ~ 0.75 (`:1391`) | (d) | `capstone_d.out:6401` `is true` — GREEN | **as registered** |
+| C-Q9 | green, p ~ 0.8 (`:1408`) | (a) | `capstone.out:3444` `is true` — GREEN | **as registered** |
+| C-Q9 | green, p ~ 0.8 (`:1408`) | (b) | `capstone_b.out:3454` `is true` — GREEN | **as registered** |
+| C-Q9 | green, p ~ 0.8 (`:1408`) | (c) | `cap_cc01_c.out:8183` `is true` — GREEN | **as registered** |
+| C-Q9 | green, p ~ 0.8 (`:1408`) | (d) | `capstone_d.out:6581` `is true` — GREEN | **as registered** |
+| link 3 | green, p ~ 0.8 (`:466`) | (a) | `capstone.out:3509` `is true` — GREEN | **as registered** |
+| link 3 | green, p ~ 0.8 (`:466`) | (b) | `capstone_b.out:3520` `is true` — GREEN | **as registered** |
+| link 3 | green, p ~ 0.8 (`:466`) | (c) | `cap_cc01_c.out:8405` `is true` — GREEN | **as registered** |
+| link 3 | green, p ~ 0.8 (`:466`) | (d) | `capstone_d.out:6761` `is true` — GREEN | **as registered** |
+| link 4 | green, p ~ 0.75 (`:479`) | (a) | `capstone.out:3574` `is true` — GREEN | **as registered** |
+| link 4 | green, p ~ 0.75 (`:479`) | (b) | `capstone_b.out:3586` `is true` — GREEN | **as registered** |
+| link 4 | green, p ~ 0.75 (`:479`) | (c) | `cap_cc01_c.out:8627` `is true` — GREEN | **as registered** |
+| link 4 | green, p ~ 0.75 (`:479`) | (d) | `capstone_d.out:6941` `is true` — GREEN | **as registered** |
+| link 5 | green, p ~ 0.65 (`:509`) | (a) | `capstone.out:3639` `is true` — GREEN | **as registered** |
+| link 5 | green, p ~ 0.65 (`:509`) | (b) | `capstone_b.out:3652` `is true` — GREEN | **as registered** |
+| link 5 | green, p ~ 0.65 (`:509`) | (c) | `cap_cc01_c.out:8849` `is true` — GREEN | **as registered** |
+| link 5 | green, p ~ 0.65 (`:509`) | (d) | `capstone_d.out:7121` `is true` — GREEN | **as registered** |
+| link 6a | green, p ~ 0.85 (`:527`) | (a) | `capstone.out:3704` `is true` — GREEN | **as registered** |
+| link 6a | green, p ~ 0.85 (`:527`) | (b) | `capstone_b.out:3718` `is true` — GREEN | **as registered** |
+| link 6a | green, p ~ 0.85 (`:527`) | (c) | `cap_cc01_c.out:9071` `is true` — GREEN | **as registered** |
+| link 6a | green, p ~ 0.85 (`:527`) | (d) | `capstone_d.out:7301` `is true` — GREEN | **as registered** |
+| link 6b | green, p ~ 0.8 (`:583`) | (a) | `capstone.out:3769` `is true` — GREEN | **as registered** |
+| link 6b | green, p ~ 0.8 (`:583`) | (b) | `capstone_b.out:3784` `is true` — GREEN | **as registered** |
+| link 6b | green, p ~ 0.8 (`:583`) | (c) | `cap_cc01_c.out:9293` `is true` — GREEN | **as registered** |
+| link 6b | green, p ~ 0.8 (`:583`) | (d) | `capstone_d.out:7481` `is true` — GREEN | **as registered** |
+| C-Q2 | green, p ~ 0.65 (`:599`) | (a) | `capstone.out:3834` `is true` — GREEN | **as registered** |
+| C-Q2 | green, p ~ 0.65 (`:599`) | (b) | `capstone_b.out:3850` `is true` — GREEN | **as registered** |
+| C-Q3 `ReattributedA` | green, p ~ 0.8 (`:615`) | (a) | `capstone.out:3899` `is true` — GREEN | **as registered** |
+| C-Q3 `ReattributedA` | green, p ~ 0.8 (`:615`) | (b) | `capstone_b.out:3916` `is true` — GREEN | **as registered** |
+| C-Q3 `ReattributedA` | green, p ~ 0.8 (`:615`) | (c) | `cap_cc01_c.out:9737` `is true` — GREEN | **as registered** |
+| C-Q3 `ReattributedA` | green, p ~ 0.8 (`:615`) | (d) | `capstone_d.out:7661` `is true` — GREEN | **as registered** |
+| C-Q3 `ReattributedB` | green, p ~ 0.8 (`:615`) | (a) | `capstone.out:3964` `is true` — GREEN | **as registered** |
+| C-Q3 `ReattributedB` | green, p ~ 0.8 (`:615`) | (b) | `capstone_b.out:3982` `is true` — GREEN | **as registered** |
+| C-Q3 `ReattributedB` | green, p ~ 0.8 (`:615`) | (c) | `cap_cc01_c.out:9959` `is true` — GREEN | **as registered** |
+| C-Q3 `ReattributedB` | green, p ~ 0.8 (`:615`) | (d) | `capstone_d.out:7841` `is true` — GREEN | **as registered** |
+| C-Q4 `Rescoped` | both green, p ~ 0.75 (`:630`) | (a) | `capstone.out:4029` `is true` — GREEN | **as registered** |
+| C-Q4 `Rescoped` | both green, p ~ 0.75 (`:630`) | (b) | `capstone_b.out:4048` `is true` — GREEN | **as registered** |
+| C-Q4 `Rescoped` | both green, p ~ 0.75 (`:630`) | (c) | `cap_cc01_c.out:10181` `is true` — GREEN | **as registered** |
+| C-Q4 `Rescoped` | both green, p ~ 0.75 (`:630`) | (d) | `capstone_d.out:8021` `is true` — GREEN | **as registered** |
+| C-Q4 `InnerSigTransplanted` | both green, p ~ 0.75 (`:630`) | (a) | `capstone.out:4094` `is true` — GREEN | **as registered** |
+| C-Q4 `InnerSigTransplanted` | both green, p ~ 0.75 (`:630`) | (b) | `capstone_b.out:4114` `is true` — GREEN | **as registered** |
+| C-Q4 `InnerSigTransplanted` | both green, p ~ 0.75 (`:630`) | (c) | `cap_cc01_c.out:10403` `is true` — GREEN | **as registered** |
+| C-Q4 `InnerSigTransplanted` | both green, p ~ 0.75 (`:630`) | (d) | `capstone_d.out:8201` `is true` — GREEN | **as registered** |
+| C-Q5 | green, p ~ 0.8 (`:689`) | (a) | `capstone.out:4159` `is true` — GREEN | **as registered** |
+| C-Q5 | green, p ~ 0.8 (`:689`) | (b) | `capstone_b.out:4180` `is true` — GREEN | **as registered** |
+| C-Q5 | green, p ~ 0.8 (`:689`) | (c) | `cap_cc01_c.out:10625` `is true` — GREEN | **as registered** |
+| C-Q5 | green, p ~ 0.8 (`:689`) | (d) | `capstone_d.out:8381` `is true` — GREEN | **as registered** |
+| `HonestComplete` (1-signer) | reachable, p ~ 0.85 (`:699`) | (a) | `capstone.out:4566` `is false` — REACHABLE | **as registered** |
+| `HonestComplete` (1-signer) | reachable, p ~ 0.85 (`:699`) | (b) | `capstone_b.out:4588` `is false` — REACHABLE | **as registered** |
+| `HonestComplete` (1-signer) | reachable, p ~ 0.85 (`:699`) | (c) | `cap_cc01_c.out:11192` `is false` — REACHABLE | **as registered** |
+| `HonestComplete` (1-signer) | reachable, p ~ 0.85 (`:699`) | (d) | `capstone_d.out:8881` `is false` — REACHABLE | **as registered** |
+| `HonestComplete` (2-signer) | reachable, p ~ 0.85 (`:699`) | (a) | `capstone.out:5016` `is false` — REACHABLE | **as registered** |
+| `HonestComplete` (2-signer) | reachable, p ~ 0.85 (`:699`) | (b) | `capstone_b.out:5039` `is false` — REACHABLE | **as registered** |
+| `HonestComplete` (2-signer) | reachable, p ~ 0.85 (`:699`) | (c) | `cap_cc01_c.out:11802` `is false` — REACHABLE | **as registered** |
+| `HonestComplete` (2-signer) | reachable, p ~ 0.85 (`:699`) | (d) | `capstone_d.out:9424` `is false` — REACHABLE | **as registered** |
+| C-Q10 | green, p ~ 0.85 (`:1459`) | (a) | `capstone.out:5081` `is true` — GREEN | **as registered** |
+| C-Q10 | green, p ~ 0.85 (`:1459`) | (b) | `capstone_b.out:5105` `is true` — GREEN | **as registered** |
+| C-Q10 | green, p ~ 0.85 (`:1459`) | (d) | `capstone_d.out:9604` `is true` — GREEN | **as registered** |
+| C-Q6 c1 unrestricted | all three conjuncts hold, p ~ 0.5 (unrestricted form strict only) (`:1324`) | (a) | `capstone.out:5171` `is true` — GREEN | **as registered** |
+| C-Q6 c1 unrestricted | all three conjuncts hold, p ~ 0.5 (unrestricted form strict only) (`:1324`) | (b) | `capstone_b.out:5196` `is true` — GREEN | **as registered** |
+| C-Q6 c1 `skI` | green in (a), (b) and (d) (`:1233`) | (a) | `capstone.out:5249` `is true` — GREEN | **as registered** |
+| C-Q6 c1 `skI` | green in (a), (b) and (d) (`:1233`) | (b) | `capstone_b.out:5275` `is true` — GREEN | **as registered** |
+| C-Q6 c1 `skI` | green in (a), (b) and (d) (`:1233`) | (d) | `capstone_d.out:9797` `is true` — GREEN | **as registered** |
+| C-Q6 c1 `skI2` | green in (a), (b) and (d) (`:1233`) | (a) | `capstone.out:5327` `is true` — GREEN | **as registered** |
+| C-Q6 c1 `skI2` | green in (a), (b) and (d) (`:1233`) | (b) | `capstone_b.out:5354` `is true` — GREEN | **as registered** |
+| C-Q6 c1 `skI2` | green in (a), (b) and (d) (`:1233`) | (d) | `capstone_d.out:9990` `is true` — GREEN | **as registered** |
+| C-Q6 c2 | unreachable in (a), (b) and (d) (`:1245`) | (a) | `capstone.out:5392` `is true` — GREEN | **as registered** |
+| C-Q6 c2 | unreachable in (a), (b) and (d) (`:1245`) | (b) | `capstone_b.out:5420` `is true` — GREEN | **as registered** |
+| C-Q6 c2 | unreachable in (a), (b) and (d) (`:1245`) | (d) | `capstone_d.out:10170` `is true` — GREEN | **as registered** |
+| C-Q6 c3 `ScopeMisreported` | unreachable in (a), (b) and (d) (`:1289`) | (a) | `capstone.out:5457` `is true` — GREEN | **as registered** |
+| C-Q6 c3 `ScopeMisreported` | unreachable in (a), (b) and (d) (`:1289`) | (b) | `capstone_b.out:5486` `is true` — GREEN | **as registered** |
+| C-Q6 c3 `ScopeMisreported` | unreachable in (a), (b) and (d) (`:1289`) | (d) | `capstone_d.out:10351` `is true` — GREEN | **as registered** |
+| `Accept(S) => IssuerSigned` | green in (a)/(b) p ~ 0.85; RED in (c) p ~ 0.9; degraded `AcceptS` form registered RED in (d), the A4.6 cost (`:1569, 1580`) | (a) | `capstone.out:5554` `is true` — GREEN | **as registered** |
+| `Accept(S) => IssuerSigned` | green in (a)/(b) p ~ 0.85; RED in (c) p ~ 0.9; degraded `AcceptS` form registered RED in (d), the A4.6 cost (`:1569, 1580`) | (b) | `capstone_b.out:5585` `is true` — GREEN | **as registered** |
+| `Accept(S) => IssuerSigned` | green in (a)/(b) p ~ 0.85; RED in (c) p ~ 0.9; degraded `AcceptS` form registered RED in (d), the A4.6 cost (`:1569, 1580`) | (c) | `cap_cc01_c.out:14277` `is false` — RED | **as registered** |
+| `Accept(S) => IssuerSigned` | green in (a)/(b) p ~ 0.85; RED in (c) p ~ 0.9; degraded `AcceptS` form registered RED in (d), the A4.6 cost (`:1569, 1580`) | (d) | `capstone_d.out:10976` `is false` — RED | **as registered** |
+| `AcceptedUnderHonestKey => IssuerSigned` | green, p ~ 0.85 (`:1570`) | (a) | `capstone.out:5649` `is true` — GREEN | **as registered** |
+| `AcceptedUnderHonestKey => IssuerSigned` | green, p ~ 0.85 (`:1570`) | (b) | `capstone_b.out:5681` `is true` — GREEN | **as registered** |
+| `AcceptedUnderHonestKey => IssuerSigned` | green, p ~ 0.85 (`:1570`) | (c) | `cap_cc01_c.out:14743` `is true` — GREEN | **as registered** |
+| `AcceptedUnderHonestKey => IssuerSigned` | green, p ~ 0.85 (`:1570`) | (d) | `capstone_d.out:11354` `is true` — GREEN | **as registered** |
+| `Stripped` | green, p ~ 0.8 (`:1571`) | (a) | `capstone.out:5714` `is true` — GREEN | **as registered** |
+| `Stripped` | green, p ~ 0.8 (`:1571`) | (b) | `capstone_b.out:5747` `is true` — GREEN | **as registered** |
+| `Stripped` | green, p ~ 0.8 (`:1571`) | (c) | `cap_cc01_c.out:14965` `is true` — GREEN | **as registered** |
+| `Stripped` | green, p ~ 0.8 (`:1571`) | (d) | `capstone_d.out:11534` `is true` — GREEN | **as registered** |
+| `SignerForged` | green, p ~ 0.8 (`:1572`) | (a) | `capstone.out:5779` `is true` — GREEN | **as registered** |
+| `SignerForged` | green, p ~ 0.8 (`:1572`) | (b) | `capstone_b.out:5813` `is true` — GREEN | **as registered** |
+| `SignerForged` | green, p ~ 0.8 (`:1572`) | (c) | `cap_cc01_c.out:15187` `is true` — GREEN | **as registered** |
+| `SignerForged` | green, p ~ 0.8 (`:1572`) | (d) | `capstone_d.out:11714` `is true` — GREEN | **as registered** |
+| `Spliced` | green, p ~ 0.75 (`:1573`) | (a) | `capstone.out:5844` `is true` — GREEN | **as registered** |
+| `Spliced` | green, p ~ 0.75 (`:1573`) | (b) | `capstone_b.out:5879` `is true` — GREEN | **as registered** |
+| `Spliced` | green, p ~ 0.75 (`:1573`) | (c) | `cap_cc01_c.out:15409` `is true` — GREEN | **as registered** |
+| `Spliced` | green, p ~ 0.75 (`:1573`) | (d) | `capstone_d.out:11894` `is true` — GREEN | **as registered** |
+| `TypeConfused` | green, p ~ 0.85 (`:1574`) | (a) | `capstone.out:5909` `is true` — GREEN | **as registered** |
+| `TypeConfused` | green, p ~ 0.85 (`:1574`) | (b) | `capstone_b.out:5945` `is true` — GREEN | **as registered** |
+| `TypeConfused` | green, p ~ 0.85 (`:1574`) | (c) | `cap_cc01_c.out:15631` `is true` — GREEN | **as registered** |
+| `TypeConfused` | green, p ~ 0.85 (`:1574`) | (d) | `capstone_d.out:12074` `is true` — GREEN | **as registered** |
+| `VersionLied` | green, p ~ 0.85 (`:1575`) | (a) | `capstone.out:5974` `is true` — GREEN | **as registered** |
+| `VersionLied` | green, p ~ 0.85 (`:1575`) | (b) | `capstone_b.out:6011` `is true` — GREEN | **as registered** |
+| `VersionLied` | green, p ~ 0.85 (`:1575`) | (c) | `cap_cc01_c.out:15853` `is true` — GREEN | **as registered** |
+| `VersionLied` | green, p ~ 0.85 (`:1575`) | (d) | `capstone_d.out:12254` `is true` — GREEN | **as registered** |
+| `HonestChain(L0)` | reachable in all four cases, p ~ 0.85 (`:1487`) | (a) | `capstone.out:6416` `is false` — REACHABLE | **as registered** |
+| `HonestChain(L0)` | reachable in all four cases, p ~ 0.85 (`:1487`) | (b) | `capstone_b.out:6454` `is false` — REACHABLE | **as registered** |
+| `HonestChain(L0)` | reachable in all four cases, p ~ 0.85 (`:1487`) | (c) | `cap_cc01_c.out:16456` `is false` — REACHABLE | **as registered** |
+| `HonestChain(L0)` | reachable in all four cases, p ~ 0.85 (`:1487`) | (d) | `capstone_d.out:12789` `is false` — REACHABLE | **as registered** |
+| `HonestChain(L1)` | reachable in all four cases, p ~ 0.85 (`:1487`) | (a) | `capstone.out:6920` `is false` — REACHABLE | **as registered** |
+| `HonestChain(L1)` | reachable in all four cases, p ~ 0.85 (`:1487`) | (b) | `capstone_b.out:6959` `is false` — REACHABLE | **as registered** |
+| `HonestChain(L1)` | reachable in all four cases, p ~ 0.85 (`:1487`) | (c) | `cap_cc01_c.out:17121` `is false` — REACHABLE | **as registered** |
+| `HonestChain(L1)` | reachable in all four cases, p ~ 0.85 (`:1487`) | (d) | `capstone_d.out:13387` `is false` — REACHABLE | **as registered** |
+| `HonestChain(L2)` | reachable in all four cases, p ~ 0.85 (`:1487`) | (a) | `capstone.out:7590` `is false` — REACHABLE | **as registered** |
+| `HonestChain(L2)` | reachable in all four cases, p ~ 0.85 (`:1487`) | (b) | `capstone_b.out:7630` `is false` — REACHABLE | **as registered** |
+| `HonestChain(L2)` | reachable in all four cases, p ~ 0.85 (`:1487`) | (c) | `cap_cc01_c.out:17950` `is false` — REACHABLE | **as registered** |
+| `HonestChain(L2)` | reachable in all four cases, p ~ 0.85 (`:1487`) | (d) | `capstone_d.out:14145` `is false` — REACHABLE | **as registered** |
+| `HonestAccepted` | reachable in all four cases, p ~ 0.85 (`:1487`) | (a) | `capstone.out:8032` `is false` — REACHABLE | **as registered** |
+| `HonestAccepted` | reachable in all four cases, p ~ 0.85 (`:1487`) | (b) | `capstone_b.out:8073` `is false` — REACHABLE | **as registered** |
+| `HonestAccepted` | reachable in all four cases, p ~ 0.85 (`:1487`) | (c) | `cap_cc01_c.out:18552` `is false` — REACHABLE | **as registered** |
+| `HonestAccepted` | reachable in all four cases, p ~ 0.85 (`:1487`) | (d) | `capstone_d.out:14680` `is false` — REACHABLE | **as registered** |
+| `HonestWrappedAccepted` | reachable in all four cases, p ~ 0.85 (`:1487`) | (a) | `capstone.out:8616` `is false` — REACHABLE | **as registered** |
+| `HonestWrappedAccepted` | reachable in all four cases, p ~ 0.85 (`:1487`) | (b) | `capstone_b.out:8658` `is false` — REACHABLE | **as registered** |
+| `HonestWrappedAccepted` | reachable in all four cases, p ~ 0.85 (`:1487`) | (c) | `cap_cc01_c.out:19272` `is false` — REACHABLE | **as registered** |
+| `HonestWrappedAccepted` | reachable in all four cases, p ~ 0.85 (`:1487`) | (d) | `capstone_d.out:15328` `is false` — REACHABLE | **as registered** |
+| `HonestStandingEstablished` | reachable in all four cases, p ~ 0.85 (`:1487`) | (a) | `capstone.out:9138` `is false` — REACHABLE; trace at `L1` (`:9130`) | **as registered** |
+| `HonestStandingEstablished` | reachable in all four cases, p ~ 0.85 (`:1487`) | (b) | `capstone_b.out:9181` `is false` — REACHABLE; trace at `L1` (`:9173`) | **as registered** |
+| `HonestStandingEstablished` | reachable in all four cases, p ~ 0.85 (`:1487`) | (c) | `cap_cc01_c.out:19954` `is false` — REACHABLE; trace at `L1` (`:19946`) | **as registered** |
+| `HonestStandingEstablished` | reachable in all four cases, p ~ 0.85 (`:1487`) | (d) | `capstone_d.out:15945` `is false` — REACHABLE; trace at `L1` (`:15937`) | **as registered** |
+| `HonestWrappedStandingAgreed` | reachable in all four cases, p ~ 0.85 (`:1487`) | (a) | `capstone.out:9804` `is false` — REACHABLE; trace at `L1` (`:9800`) | **as registered** |
+| `HonestWrappedStandingAgreed` | reachable in all four cases, p ~ 0.85 (`:1487`) | (b) | `capstone_b.out:9849` `is false` — REACHABLE; trace at `L1` (`:9845`) | **as registered** |
+| `HonestWrappedStandingAgreed` | reachable in all four cases, p ~ 0.85 (`:1487`) | (c) | `cap_cc01_c.out:20834` `is false` — REACHABLE; trace at `L1` (`:20830`) | **as registered** |
+| `HonestWrappedStandingAgreed` | reachable in all four cases, p ~ 0.85 (`:1487`) | (d) | `capstone_d.out:16744` `is false` — REACHABLE; trace at `L1` (`:16740`) | **as registered** |
+| S1 | reachable in every correct-form run (`:1516`) | (a) | `capstone.out:10260` `is false` — REACHABLE | **as registered** |
+| S1 | reachable in every correct-form run (`:1516`) | (b) | `capstone_b.out:10305` `is false` — REACHABLE | **as registered** |
+| S1 | reachable in every correct-form run (`:1516`) | (d) | `capstone_d.out:17223` `is false` — REACHABLE | **as registered** |
+| S2 | reachable in every correct-form run (`:1516`) | (a) | `capstone.out:10714` `is false` — REACHABLE | **as registered** |
+| S2 | reachable in every correct-form run (`:1516`) | (b) | `capstone_b.out:10759` `is false` — REACHABLE | **as registered** |
+| S2 | reachable in every correct-form run (`:1516`) | (d) | `capstone_d.out:17703` `is false` — REACHABLE | **as registered** |
+| S3 | reachable in every correct-form run (`:1516`) | (a) | `capstone.out:11029` `is false` — REACHABLE | **as registered** |
+| S3 | reachable in every correct-form run (`:1516`) | (b) | `capstone_b.out:11074` `is false` — REACHABLE | **as registered** |
+| S3 | reachable in every correct-form run (`:1516`) | (d) | `capstone_d.out:18110` `is false` — REACHABLE | **as registered** |
+| S4 | reachable in every correct-form run (`:1516`) | (a) | `capstone.out:11481` `is false` — REACHABLE | **as registered** |
+| S4 | reachable in every correct-form run (`:1516`) | (b) | `capstone_b.out:11526` `is false` — REACHABLE | **as registered** |
+| S4 | reachable in every correct-form run (`:1516`) | (d) | `capstone_d.out:18586` `is false` — REACHABLE | **as registered** |
+| MISMATCH | reachable in every correct-form run (`:1516`) | (a) | `capstone.out:11846` `is false` — REACHABLE | **as registered** |
+| MISMATCH | reachable in every correct-form run (`:1516`) | (b) | `capstone_b.out:11891` `is false` — REACHABLE | **as registered** |
+| MISMATCH | reachable in every correct-form run (`:1516`) | (d) | `capstone_d.out:19037` `is false` — REACHABLE | **as registered** |
+
+**Tally:** 173 cells as registered, 0 missed, 0 not declared, 0 from a run that did not land.
+
+| Companion / configuration | Case | `rc`, seconds, peak (ladder 3 log line) | Inside the box of its predicted-red query? | Observed reds (`.out` line) | Witnesses |
+|---|---|---|---|---|---|
+| **C-C1** — C-C1, §4 `:1770` | (c) | `rc=0`, 4569 s, 6.2 GiB peak (`ladder.log:94`) | **no**, 4569 s > 30 min (retained `Accept => IssuerSigned`) | C-Q1 link 1b `:3278`, `Accept(S) => IssuerSigned` `:14277`; *not stated for (c):* C-Q6 c1 unrestricted `:12621` | all 14 declared reachable; standing traces at `L1`/`L1` |
+| **C-C2** — C-C2, §4 `:1771` | (a) | `rc=0`, 512 s, 0.6 GiB peak (`ladder.log:11`) | yes, 512 s <= 45 min (C-Q3) | none | all 14 declared reachable; standing traces at `L1`/`L1` |
+| **C-C2** — C-C2, §4 `:1771` | (b) | `rc=0`, 429 s, 0.6 GiB peak (`ladder.log:38`) | yes, 429 s <= 45 min (C-Q3) | none | all 14 declared reachable; standing traces at `L1`/`L1` |
+| **C-C2** — C-C2, §4 `:1771` | (d) | not run (`ladder.log:69`); ladder 2, history: timeout (mechanism-viability failure), 65702 s, 21.8 GiB (`ladder2/ladder.log:64`) | - (not run) | **not run under this blob** — no result | - |
+| **C-C3** — C-C3, §4 `:1772` | (a) | `rc=0`, 269 s, 0.4 GiB peak (`ladder.log:9`) | yes, 269 s <= 45 min (C-Q5 / link 3) | C-Q9 `:3795`, link 3 `:4199` | all 14 declared reachable; standing traces at `L1`/`L1` |
+| **C-C3** — C-C3, §4 `:1772` | (b) | `rc=0`, 267 s, 0.4 GiB peak (`ladder.log:36`) | yes, 267 s <= 45 min (C-Q5 / link 3) | C-Q9 `:3804`, link 3 `:4209` | all 14 declared reachable; standing traces at `L1`/`L1` |
+| **C-C3** — C-C3, §4 `:1772` | (d) | not run (`ladder.log:70`); ladder 2, history: timeout (mechanism-viability failure), 65703 s, 26.3 GiB (`ladder2/ladder.log:65`) | - (not run) | **not run under this blob** — no result | - |
+| **C-C4** — C-C4, §4 `:1773` | (a) | `rc=0`, 413 s, 0.5 GiB peak (`ladder.log:10`) | yes, 413 s <= 45 min (link 6b / C-Q3) | none | all 14 declared reachable; standing traces at `L1`/`L1` |
+| **C-C4** — C-C4, §4 `:1773` | (b) | `rc=0`, 374 s, 0.5 GiB peak (`ladder.log:37`) | yes, 374 s <= 45 min (link 6b / C-Q3) | none | all 14 declared reachable; standing traces at `L1`/`L1` |
+| **C-C4** — C-C4, §4 `:1773` | (d) | not run (`ladder.log:71`); ladder 2, history: timeout (mechanism-viability failure), 65702 s, 46.9 GiB (`ladder2/ladder.log:63`) | - (not run) | **not run under this blob** — no result | - |
+| **C-C5** — C-C5, §4 `:1774` | (a) | `rc=0`, 485 s, 0.8 GiB peak (`ladder.log:12`) | yes, 485 s <= 45 min (link 4) | C-Q8 `:4393`, link 4 `:4998`, `Accept(S) => IssuerSigned` `:7809`, `AcceptedUnderHonestKey => IssuerSigned` `:8280` | all 14 declared reachable; standing traces at `L1`/`L1` |
+| **C-C5** — C-C5, §4 `:1774` | (b) | `rc=0`, 452 s, 0.8 GiB peak (`ladder.log:39`) | yes, 452 s <= 45 min (link 4) | C-Q8 `:4333`, link 4 `:4917`, `Accept(S) => IssuerSigned` `:7601`, `AcceptedUnderHonestKey => IssuerSigned` `:8065` | all 14 declared reachable; standing traces at `L1`/`L1` |
+| **C-C5** — C-C5, §4 `:1774` | (d) | not run (`ladder.log:72`); ladder 2, history: terminated by memory guard, classified as mechanism failure (memory), 64899 s, 76.5 GiB (`ladder2/ladder.log:66`, `ladder2/ladder.log:78`) | - (not run) | **not run under this blob** — no result | - |
+| **C-C6** — C-C6, §4 `:1775` | (a) | `rc=0`, 1682 s, 1.1 GiB peak (`ladder.log:13`) | yes, 1682 s <= 45 min (C-Q7 / link 4) | none | all 14 declared reachable; standing traces at `L1`/`L1` |
+| **C-C6** — C-C6, §4 `:1775` | (b) | `rc=0`, 1522 s, 1.1 GiB peak (`ladder.log:40`) | yes, 1522 s <= 45 min (C-Q7 / link 4) | none | all 14 declared reachable; standing traces at `L1`/`L1` |
+| **C-C6** — C-C6, §4 `:1775` | (d) | not run (`ladder.log:73`); ladder 2, history: timeout (mechanism-viability failure), 65702 s, 25.8 GiB (`ladder2/ladder.log:67`) | - (not run) | **not run under this blob** — no result | - |
+| **C-C7(i)** — C-C7(i), §4 `:1776` | (a) | `rc=0`, 2196 s, 3.1 GiB peak (`ladder.log:14`) | **no**, 2196 s > 30 min (retained honest-key authorship) | C-Q8 `:9385`, link 4 `:10116`, `Accept(S) => IssuerSigned` `:13678`, `AcceptedUnderHonestKey => IssuerSigned` `:14185` | all 14 declared reachable; standing traces at `L1`/`L1` |
+| **C-C7(i)** — C-C7(i), §4 `:1776` | (b) | `rc=0`, 2199 s, 3.2 GiB peak (`ladder.log:41`) | **no**, 2199 s > 30 min (retained honest-key authorship) | C-Q8 `:9393`, link 4 `:10127`, `Accept(S) => IssuerSigned` `:13707`, `AcceptedUnderHonestKey => IssuerSigned` `:14215` | all 14 declared reachable; standing traces at `L1`/`L1` |
+| **C-C7(i)** — C-C7(i), §4 `:1776` | (d) | not run (`ladder.log:74`); ladder 2, history: timeout (mechanism-viability failure), 65702 s, 28.3 GiB (`ladder2/ladder.log:68`) | - (not run) | **not run under this blob** — no result | - |
+| **C-C7(ii)** — C-C7(ii), §4 `:1776` | (a) | `rc=0`, 9512 s, 8.7 GiB peak (`ladder.log:17`) | **no**, 9512 s > 45 min (link 4) | C-Q8 `:12156`, link 4 `:13412`, `Accept(S) => IssuerSigned` `:20301`, `AcceptedUnderHonestKey => IssuerSigned` `:21156` | all 14 declared reachable; standing traces at `L1`/`L1` |
+| **C-C7(ii)** — C-C7(ii), §4 `:1776` | (b) | `rc=0`, 10549 s, 8.5 GiB peak (`ladder.log:44`) | **no**, 10549 s > 45 min (link 4) | C-Q8 `:12002`, link 4 `:13202`, `Accept(S) => IssuerSigned` `:19758`, `AcceptedUnderHonestKey => IssuerSigned` `:20595` | all 14 declared reachable; standing traces at `L1`/`L1` |
+| **C-C7(ii)** — C-C7(ii), §4 `:1776` | (d) | not run (`ladder.log:75`); ladder 2, history: timeout (mechanism-viability failure), 65702 s, 27.4 GiB (`ladder2/ladder.log:79`) | - (not run) | **not run under this blob** — no result | - |
+| **C-C8** — C-C8, §4 `:1777` | (a) | `rc=0`, 264 s, 0.4 GiB peak (`ladder.log:15`) | yes, 264 s <= 45 min (C-Q5 / link 3) | C-Q9 `:3795`, link 3 `:4199` | all 14 declared reachable; standing traces at `L1`/`L1` |
+| **C-C8** — C-C8, §4 `:1777` | (b) | `rc=0`, 256 s, 0.4 GiB peak (`ladder.log:42`) | yes, 256 s <= 45 min (C-Q5 / link 3) | C-Q9 `:3804`, link 3 `:4209` | all 14 declared reachable; standing traces at `L1`/`L1` |
+| **C-C8** — C-C8, §4 `:1777` | (d) | not run (`ladder.log:76`); ladder 2, history: timeout (mechanism-viability failure), 65703 s, 29.3 GiB (`ladder2/ladder.log:80`) | - (not run) | **not run under this blob** — no result | - |
+| **C-C8-i** — C-C8-i, §9(2) `:2546` | (a) | `rc=0`, 264 s, 0.4 GiB peak (`ladder.log:16`) | yes, 264 s <= 60 min (C-Q9 (§9(2))) | none | all 14 declared reachable; standing traces at `L1`/`L1` |
+| **C-C8-i** — C-C8-i, §9(2) `:2546` | (b) | `rc=0`, 256 s, 0.4 GiB peak (`ladder.log:43`) | yes, 256 s <= 60 min (C-Q9 (§9(2))) | none | all 14 declared reachable; standing traces at `L1`/`L1` |
+| **C-C8-i** — C-C8-i, §9(2) `:2546` | (d) | not run (`ladder.log:77`); ladder 2, history: terminated by memory guard, classified as mechanism failure (memory), 48680 s, 76.5 GiB (`ladder2/ladder.log:83`) | - (not run) | **not run under this blob** — no result | - |
+| **C-C8-ii** — C-C8-ii, §9(2) `:2547` | (a) | `rc=0`, 265 s, 0.4 GiB peak (`ladder.log:19`) | yes, 265 s <= 60 min (C-Q9 (§9(2))) | C-Q9 `:3806`, link 3 `:4210` | all 14 declared reachable; standing traces at `L1`/`L1` |
+| **C-C8-ii** — C-C8-ii, §9(2) `:2547` | (b) | `rc=0`, 255 s, 0.3 GiB peak (`ladder.log:46`) | yes, 255 s <= 60 min (C-Q9 (§9(2))) | C-Q9 `:3815`, link 3 `:4220` | all 14 declared reachable; standing traces at `L1`/`L1` |
+| **C-C8-ii** — C-C8-ii, §9(2) `:2547` | (d) | not run (`ladder.log:78`); ladder 2, history: terminated by memory guard, classified as mechanism failure (memory), 39900 s, 76.6 GiB (`ladder2/ladder.log:82`) | - (not run) | **not run under this blob** — no result | - |
+| **C-C9** — C-C9, §4 `:1778` | (a) | `rc=0`, 240 s, 0.2 GiB peak (`ladder.log:18`) | yes, 240 s <= 30 min (retained `Stripped`) | link 2b slot-B conj. `:3505`, `Stripped` `:6176` | all 14 declared reachable; standing traces at `L1`/`L1` |
+| **C-C9** — C-C9, §4 `:1778` | (b) | `rc=0`, 246 s, 0.2 GiB peak (`ladder.log:45`) | yes, 246 s <= 30 min (retained `Stripped`) | link 2b slot-B conj. `:3534`, `Stripped` `:6305` | all 14 declared reachable; standing traces at `L1`/`L1` |
+| **C-C9** — C-C9, §4 `:1778` | (d) | `rc=0`, 1323 s, 1.3 GiB peak (`ladder.log:79`) | yes, 1323 s <= 30 min (retained `Stripped`) | link 2b slot-B conj. `:4576`, `Accept(S) => IssuerSigned` `:8075`, `Stripped` `:8749` | all 14 declared reachable; standing traces at `L1`/`L1` |
+| **C-C10** — C-C10, §4 `:1779` | (a) | `rc=0`, 4012 s, 6.1 GiB peak (`ladder.log:20`) | **no**, 4012 s > 30 min (retained `Accept => IssuerSigned`) | C-Q1 link 1a `:3004`, C-Q1 link 1b `:3505`, C-Q6 c1 unrestricted `:11510`, `Accept(S) => IssuerSigned` `:12920` | all 14 declared reachable; standing traces at `L1`/`L1` |
+| **C-C10** — C-C10, §4 `:1779` | (b) | `rc=0`, 3654 s, 6.2 GiB peak (`ladder.log:55`) | **no**, 3654 s > 30 min (retained `Accept => IssuerSigned`) | C-Q1 link 1a `:3004`, C-Q1 link 1b `:3505`, C-Q6 c1 unrestricted `:11510`, `Accept(S) => IssuerSigned` `:12920` | all 14 declared reachable; standing traces at `L1`/`L1` |
+| **C-C10** — C-C10, §4 `:1779` | (d) | `rc=0`, 2908 s, 5.8 GiB peak (`ladder.log:80`) | **no**, 2908 s > 30 min (retained `Accept => IssuerSigned`) | C-Q1 link 1a `:2813`, `Accept(S) => IssuerSigned` `:9739` | all 14 declared reachable; standing traces at `L1`/`L1` |
+| **C-C10 isolation control** — C-C10 isolation control, §4 `:1779` | (a) | `rc=0`, 194 s, 0.3 GiB peak (`ladder.log:21`) | yes, 194 s <= 45 min (link 1a) | C-Q1 link 1a `:2861` | all 14 declared reachable; standing traces at `L1`/`L1` |
+| **C-C10 isolation control** — C-C10 isolation control, §4 `:1779` | (b) | `rc=0`, 182 s, 0.3 GiB peak (`ladder.log:53`) | yes, 182 s <= 45 min (link 1a) | C-Q1 link 1a `:2861` | all 14 declared reachable; standing traces at `L1`/`L1` |
+| **C-C11** — C-C11 (Q2), §4 `:1805` | (a) | `rc=0`, 291 s, 0.3 GiB peak (`ladder.log:23`) | yes, 291 s <= 90 min (C-Q6) | C-Q6 c1 unrestricted `:5640`, C-Q6 c1 `skI` `:6181`, C-Q6 c1 `skI2` `:6714` | all 14 declared reachable; standing traces at `L1`/`L1` |
+| **C-C11** — C-C11 (Q2), §4 `:1805` | (b) | `rc=0`, 268 s, 0.4 GiB peak (`ladder.log:56`) | yes, 268 s <= 90 min (C-Q6) | C-Q6 c1 unrestricted `:5662`, C-Q6 c1 `skI` `:6203`, C-Q6 c1 `skI2` `:6736` | all 14 declared reachable; standing traces at `L1`/`L1` |
+| **C-C11** — C-C11 (Q2), §4 `:1805` | (d) | `rc=0`, 4248 s, 5.8 GiB peak (`ladder.log:84`) | yes, 4248 s <= 90 min (C-Q6) | C-Q6 c1 `skI` `:10394`, C-Q6 c1 `skI2` `:11048`, `Accept(S) => IssuerSigned` `:12043` | all 14 declared reachable; standing traces at `L1`/`L1` |
+| **C-C11 alt. Q4** — C-C11 alternate Q4, §4 `:1805` | (a) | `rc=0`, 299 s, 0.4 GiB peak (`ladder.log:25`) | yes, 299 s <= 90 min (C-Q6) | C-Q6 c1 unrestricted `:5620`, C-Q6 c1 `skI` `:6137`, C-Q6 c1 `skI2` `:6646` | UNREACHABLE: S2 `:11702`, S4 `:12094`; standing traces at `L1`/`L1` |
+| **C-C11 alt. Q4** — C-C11 alternate Q4, §4 `:1805` | (b) | `rc=0`, 288 s, 0.4 GiB peak (`ladder.log:57`) | yes, 288 s <= 90 min (C-Q6) | C-Q6 c1 unrestricted `:5644`, C-Q6 c1 `skI` `:6162`, C-Q6 c1 `skI2` `:6672` | UNREACHABLE: S2 `:11747`, S4 `:12141`; standing traces at `L1`/`L1` |
+| **C-C11 alt. Q4** — C-C11 alternate Q4, §4 `:1805` | (d) | `rc=0`, 3710 s, 5.9 GiB peak (`ladder.log:82`) | yes, 3710 s <= 90 min (C-Q6) | C-Q6 c1 `skI` `:10239`, C-Q6 c1 `skI2` `:10843`, `Accept(S) => IssuerSigned` `:11835` | UNREACHABLE: S2 `:18311`, S4 `:18909`; standing traces at `L1`/`L1` |
+| **C-C11 alt. abl6** — C-C11 alternate abl6, §4 `:1805` | (a) | `rc=0`, 261 s, 0.3 GiB peak (`ladder.log:22`) | yes, 261 s <= 90 min (C-Q6) | C-Q6 c1 unrestricted `:5558`, C-Q6 c1 `skI` `:5996`, C-Q6 c1 `skI2` `:6426` | all 14 declared reachable; standing traces at `L1`/`L1` |
+| **C-C11 alt. abl6** — C-C11 alternate abl6, §4 `:1805` | (b) | `rc=0`, 237 s, 0.3 GiB peak (`ladder.log:54`) | yes, 237 s <= 90 min (C-Q6) | C-Q6 c1 unrestricted `:5630`, C-Q6 c1 `skI` `:6071`, C-Q6 c1 `skI2` `:6504` | all 14 declared reachable; standing traces at `L1`/`L1` |
+| **C-C11 alt. abl6** — C-C11 alternate abl6, §4 `:1805` | (d) | `rc=0`, 3446 s, 5.9 GiB peak (`ladder.log:81`) | yes, 3446 s <= 90 min (C-Q6) | C-Q6 c1 `skI` `:9971`, C-Q6 c1 `skI2` `:10485`, `Accept(S) => IssuerSigned` `:11452` | all 14 declared reachable; standing traces at `L1`/`L1` |
+| **C-C12** — C-C12, §4 `:1806` | (a) | `rc=0`, 456 s, 0.3 GiB peak (`ladder.log:26`) | yes, 456 s <= 90 min (C-Q6) | C-Q6 c1 unrestricted `:6262`, C-Q6 c2 `:6968` | all 14 declared reachable; standing traces at `L1`/`L1` |
+| **C-C12** — C-C12, §4 `:1806` | (b) | `rc=0`, 453 s, 0.3 GiB peak (`ladder.log:58`) | yes, 453 s <= 90 min (C-Q6) | C-Q6 c1 unrestricted `:6358`, C-Q6 c2 `:7076` | all 14 declared reachable; standing traces at `L1`/`L1` |
+| **C-C12** — C-C12, §4 `:1806` | (d) | `rc=0`, 3818 s, 5.9 GiB peak (`ladder.log:83`) | yes, 3818 s <= 90 min (C-Q6) | C-Q6 c2 `:10789`, `Accept(S) => IssuerSigned` `:11635` | all 14 declared reachable; standing traces at `L1`/`L1` |
+| **C-C13(i)** — C-C13(i), §9(1) `:2501` | (a) | `rc=0`, 236 s, 0.4 GiB peak (`ladder.log:24`) | yes, 236 s <= 30 min (retained `TypeConfused`) | link 6a `:4042`, `TypeConfused` `:6460` | all 14 declared reachable; standing traces at `L1`/`L1` |
+| **C-C13(i)** — C-C13(i), §9(1) `:2501` | (b) | `rc=0`, 218 s, 0.4 GiB peak (`ladder.log:59`) | yes, 218 s <= 30 min (retained `TypeConfused`) | link 6a `:4046`, `TypeConfused` `:6467` | all 14 declared reachable; standing traces at `L1`/`L1` |
+| **C-C13(i)** — C-C13(i), §9(1) `:2501` | (d) | `rc=0`, 3419 s, 6.7 GiB peak (`ladder.log:85`) | **no**, 3419 s > 30 min (retained `TypeConfused`) | link 6a `:7600`, `Accept(S) => IssuerSigned` `:11026`, `TypeConfused` `:12376` | all 14 declared reachable; standing traces at `L1`/`L1` |
+| **C-C13(ii)** — C-C13(ii), §9(1) `:2501` | (a) | `rc=0`, 634 s, 1.0 GiB peak (`ladder.log:28`) | yes, 634 s <= 30 min (retained `TypeConfused`) | link 6a `:5147`, `TypeConfused` `:8444` | all 14 declared reachable; standing traces at `L1`/`L1` |
+| **C-C13(ii)** — C-C13(ii), §9(1) `:2501` | (b) | `rc=0`, 592 s, 1.0 GiB peak (`ladder.log:60`) | yes, 592 s <= 30 min (retained `TypeConfused`) | link 6a `:5169`, `TypeConfused` `:8505` | all 14 declared reachable; standing traces at `L1`/`L1` |
+| **C-C13(ii)** — C-C13(ii), §9(1) `:2501` | (d) | `rc=0`, 7794 s, 9.1 GiB peak (`ladder.log:87`) | **no**, 7794 s > 30 min (retained `TypeConfused`) | link 6a `:10560`, `Accept(S) => IssuerSigned` `:15552`, `TypeConfused` `:17767` | all 14 declared reachable; standing traces at `L1`/`L1` |
+| **C-C14** — C-C14, §9(1) `:2502` | (a) | `rc=0`, 41003 s, 31.7 GiB peak (`ladder.log:29`) | **no**, 41003 s > 30 min (retained `Accept => IssuerSigned`) | C-Q1 link 1a `:3495`, C-Q1 link 1b `:4727`, C-Q2 `:30492`, C-Q6 c1 unrestricted `:37364`, `Accept(S) => IssuerSigned` `:41388` | all 14 declared reachable; standing traces at `L1`/`L1` |
+| **C-C14** — C-C14, §9(1) `:2502` | (b) | `rc=0`, 39596 s, 31.9 GiB peak (`ladder.log:61`) | **no**, 39596 s > 30 min (retained `Accept => IssuerSigned`) | C-Q1 link 1a `:3501`, C-Q1 link 1b `:4739`, C-Q2 `:30584`, C-Q6 c1 unrestricted `:37512`, `Accept(S) => IssuerSigned` `:41570` | all 14 declared reachable; standing traces at `L1`/`L1` |
+| **C-C15(i)** — C-C15(i), §9(1) `:2503` | (a) | `rc=0`, 276 s, 0.4 GiB peak (`ladder.log:27`) | yes, 276 s <= 30 min (retained `SignerForged`) | C-Q1 link 1a `:3341`, C-Q1 link 1b `:3889`, C-Q1 link 2a `:4444`, C-Q9 `:5545`, link 3 `:6102`, link 5 `:6729`, C-Q2 `:7722`, C-Q5 `:8571`, `SignerForged` `:10755` | all 14 declared reachable; standing traces at `L1`/`L1` |
+| **C-C15(i)** — C-C15(i), §9(1) `:2503` | (b) | `rc=0`, 261 s, 0.4 GiB peak (`ladder.log:63`) | yes, 261 s <= 30 min (retained `SignerForged`) | C-Q1 link 1a `:3342`, C-Q1 link 1b `:3892`, C-Q1 link 2a `:4448`, C-Q9 `:5558`, link 3 `:6116`, link 5 `:6745`, C-Q2 `:7741`, C-Q5 `:8595`, `SignerForged` `:10791` | all 14 declared reachable; standing traces at `L1`/`L1` |
+| **C-C15(i)** — C-C15(i), §9(1) `:2503` | (d) | `rc=0`, 7495 s, 12.4 GiB peak (`ladder.log:86`) | **no**, 7495 s > 30 min (retained `SignerForged`) | C-Q1 link 1a `:3263`, C-Q1 link 2a `:3870`, C-Q7 `:9951`, C-Q9 `:10804`, link 3 `:11413`, link 5 `:12268`, link 6b `:13123`, C-Q3 `ReattributedA` `:13785`, C-Q3 `ReattributedB` `:14486`, C-Q4 `Rescoped` `:15148`, C-Q4 `InnerSigTransplanted` `:15850`, C-Q5 `:16563`, C-Q6 c3 `ScopeMisreported` `:19689`, `Accept(S) => IssuerSigned` `:20442`, `SignerForged` `:21714` | all 14 declared reachable; standing traces at `L1`/`L1` |
+| **C-C15(ii)** — C-C15(ii), §9(1) `:2503` | (a) | `rc=0`, 270 s, 0.4 GiB peak (`ladder.log:30`) | yes, 270 s <= 45 min (link 6b) | link 6b `:4638`, C-Q4 `Rescoped` `:5484`, C-Q6 c3 `ScopeMisreported` `:7590` | all 14 declared reachable; standing traces at `L1`/`L1` |
+| **C-C15(ii)** — C-C15(ii), §9(1) `:2503` | (b) | `rc=0`, 259 s, 0.4 GiB peak (`ladder.log:62`) | yes, 259 s <= 45 min (link 6b) | link 6b `:4652`, C-Q4 `Rescoped` `:5502`, C-Q6 c3 `ScopeMisreported` `:7618` | all 14 declared reachable; standing traces at `L1`/`L1` |
+| **C-C15(ii)** — C-C15(ii), §9(1) `:2503` | (d) | `rc=0`, 3941 s, 5.8 GiB peak (`ladder.log:88`) | **no**, 3941 s > 45 min (link 6b) | link 6b `:8365`, C-Q4 `Rescoped` `:9529`, C-Q6 c3 `ScopeMisreported` `:12646`, `Accept(S) => IssuerSigned` `:13296` | all 14 declared reachable; standing traces at `L1`/`L1` |
+| **C-C15(iii)** — C-C15(iii), §9(1) `:2503` | (a) | `rc=0`, 318 s, 0.4 GiB peak (`ladder.log:32`) | yes, 318 s <= 45 min (link 6b) | link 6b `:4745`, C-Q4 `Rescoped` `:5577`, C-Q6 c3 `ScopeMisreported` `:7731`, observer `ScopeIdentityOnly` `:8481` | all 14 declared reachable; standing traces at `L1`/`L1` |
+| **C-C15(iii)** — C-C15(iii), §9(1) `:2503` | (b) | `rc=0`, 291 s, 0.4 GiB peak (`ladder.log:64`) | yes, 291 s <= 45 min (link 6b) | link 6b `:4777`, C-Q4 `Rescoped` `:5617`, C-Q6 c3 `ScopeMisreported` `:7791`, observer `ScopeIdentityOnly` `:8545` | all 14 declared reachable; standing traces at `L1`/`L1` |
+| **C-C15(iii)** — C-C15(iii), §9(1) `:2503` | (d) | `rc=0`, 4154 s, 5.7 GiB peak (`ladder.log:89`) | **no**, 4154 s > 45 min (link 6b) | link 6b `:8495`, C-Q4 `Rescoped` `:9565`, C-Q6 c3 `ScopeMisreported` `:12704`, `Accept(S) => IssuerSigned` `:14378`, observer `ScopeIdentityOnly` `:13731` | all 14 declared reachable; standing traces at `L1`/`L1` |
+| **C-C16** — C-C16, §9(3) `:2609` | (a) | `rc=0`, 275 s, 0.3 GiB peak (`ladder.log:31`) | yes, 275 s <= 30 min (retained `Spliced`) | link 5 `:4014`, `Spliced` `:6605` | all 14 declared reachable; standing traces at `L1`/`L1` |
+| **C-C16** — C-C16, §9(3) `:2609` | (b) | `rc=0`, 251 s, 0.3 GiB peak (`ladder.log:65`) | yes, 251 s <= 30 min (retained `Spliced`) | link 5 `:4026`, `Spliced` `:6638` | all 14 declared reachable; standing traces at `L1`/`L1` |
+| **C-C16** — C-C16, §9(3) `:2609` | (d) | `rc=0`, 6261 s, 8.2 GiB peak (`ladder.log:90`) | **no**, 6261 s > 30 min (retained `Spliced`) | link 5 `:10261`, `Accept(S) => IssuerSigned` `:15027`, `Spliced` `:16433` | all 14 declared reachable; standing traces at `L1`/`L1` |
+| **C-C17** — C-C17, §9(4) `:2666` | (a) | `rc=0`, 27085 s, 18.8 GiB peak (`ladder.log:34`) | **no**, 27085 s > 30 min (retained `SignerForged`) | C-Q1 link 2a `:6530`, `Accept(S) => IssuerSigned` `:26679`, `SignerForged` `:28301` | all 14 declared reachable; standing traces at `L1`/`L1` |
+| **C-C17** — C-C17, §9(4) `:2666` | (b) | `rc=0`, 25996 s, 18.5 GiB peak (`ladder.log:67`) | **no**, 25996 s > 30 min (retained `SignerForged`) | C-Q1 link 2a `:6551`, `Accept(S) => IssuerSigned` `:26808`, `SignerForged` `:28443` | all 14 declared reachable; standing traces at `L1`/`L1` |
+| **C-C17** — C-C17, §9(4) `:2666` | (d) | not run (`ladder.log:91`); ladder 2, history: terminated by memory guard, classified as mechanism failure (memory), 64379 s, 76.6 GiB (`ladder2/ladder.log:95`) | - (not run) | **not run under this blob** — no result | - |
+| **C-C18** — C-C18, §9(5) `:2725` | (a) | `rc=0`, 265 s, 0.4 GiB peak (`ladder.log:33`) | yes, 265 s <= 30 min (C-Q10) | C-Q10 `:5384`, C-Q6 c1 unrestricted `:5780`, C-Q6 c1 `skI` `:6176` | all 14 declared reachable; standing traces at `L1`/`L1` |
+| **C-C18** — C-C18, §9(5) `:2725` | (b) | `rc=0`, 266 s, 0.3 GiB peak (`ladder.log:66`) | yes, 266 s <= 30 min (C-Q10) | C-Q10 `:5422`, C-Q6 c1 unrestricted `:5819`, C-Q6 c1 `skI` `:6216` | all 14 declared reachable; standing traces at `L1`/`L1` |
+| **C-C18** — C-C18, §9(5) `:2725` | (d) | `rc=0`, 3498 s, 5.9 GiB peak (`ladder.log:92`) | **no**, 3498 s > 30 min (C-Q10) | C-Q10 `:9889`, C-Q6 c1 `skI` `:10372`, `Accept(S) => IssuerSigned` `:11556` | all 14 declared reachable; standing traces at `L1`/`L1` |
+
+| Companion / configuration (registration) | Case | Required red in this case, per its Cases cell (everything else declared must be green; every witness reachable) | Verdict against §4 / §9 | Divergences, exactly (broken-fixture-or-finding items under §4, listed and not resolved) | Note from the Cases cell |
+|---|---|---|---|---|---|
+| **C-C1** — C-C1, §4 `:1770` | (c) | `Accept(S) => IssuerSigned`; C-Q1 link 1b | **AS REGISTERED** | none |  |
+| **C-C2** — C-C2, §4 `:1771` | (a) | none (green throughout) | **AS REGISTERED** | none | strict: set (1)'s C-Q3 and link 5 registered GREEN (three lists) |
+| **C-C2** — C-C2, §4 `:1771` | (b) | none (green throughout) | **AS REGISTERED** | none | as (a), predicted on channel symmetry |
+| **C-C2** — C-C2, §4 `:1771` | (d) | C-Q3 `ReattributedA` or C-Q3 `ReattributedB`; link 5; baseline `AcceptS => IssuerSigned` | **not run under this blob** | none: no result to compare |  |
+| **C-C3** — C-C3, §4 `:1772` | (a) | C-Q9; link 3 | **AS REGISTERED** | none | strict MIXED: C-Q5 green |
+| **C-C3** — C-C3, §4 `:1772` | (b) | C-Q9; link 3 | **AS REGISTERED** | none | as (a), predicted |
+| **C-C3** — C-C3, §4 `:1772` | (d) | C-Q5; C-Q9; link 3; baseline `AcceptS => IssuerSigned` | **not run under this blob** | none: no result to compare |  |
+| **C-C4** — C-C4, §4 `:1773` | (a) | FORK: {C-Q4 `Rescoped`; C-Q4 `InnerSigTransplanted`; C-Q3 `ReattributedA` or C-Q3 `ReattributedB`; link 6b; link 5} or green throughout | **AS REGISTERED** (fork branch: green throughout) | none | registered FORK: the five reds, or green throughout (predicted configuration-level reading) |
+| **C-C4** — C-C4, §4 `:1773` | (b) | FORK: {C-Q4 `Rescoped`; C-Q4 `InnerSigTransplanted`; C-Q3 `ReattributedA` or C-Q3 `ReattributedB`; link 6b; link 5} or green throughout | **AS REGISTERED** (fork branch: green throughout) | none | registered FORK, as (a) |
+| **C-C4** — C-C4, §4 `:1773` | (d) | C-Q4 `Rescoped`; C-Q4 `InnerSigTransplanted`; C-Q3 `ReattributedA` or C-Q3 `ReattributedB`; link 6b; link 5; baseline `AcceptS => IssuerSigned` | **not run under this blob** | none: no result to compare |  |
+| **C-C5** — C-C5, §4 `:1774` | (a) | C-Q8; link 4 | **DIVERGENT** | **red not registered in this case:** `Accept(S) => IssuerSigned` `:7809`; **red not registered in this case:** `AcceptedUnderHonestKey => IssuerSigned` `:8280` | strict MIXED: `InnerSigTransplanted` descended green |
+| **C-C5** — C-C5, §4 `:1774` | (b) | C-Q8; link 4 | **DIVERGENT** | **red not registered in this case:** `Accept(S) => IssuerSigned` `:7601`; **red not registered in this case:** `AcceptedUnderHonestKey => IssuerSigned` `:8065` | strict MIXED, descended |
+| **C-C5** — C-C5, §4 `:1774` | (d) | C-Q4 `InnerSigTransplanted`; C-Q8; link 4; baseline `AcceptS => IssuerSigned` | **not run under this blob** | none: no result to compare |  |
+| **C-C6** — C-C6, §4 `:1775` | (a) | none (green throughout) | **AS REGISTERED** | none | green control, predicted (round 9 disposition 4) |
+| **C-C6** — C-C6, §4 `:1775` | (b) | none (green throughout) | **AS REGISTERED** | none | green control, predicted |
+| **C-C6** — C-C6, §4 `:1775` | (d) | C-Q7; C-Q4 `InnerSigTransplanted`; C-Q8; link 4; baseline `AcceptS => IssuerSigned` | **not run under this blob** | none: no result to compare |  |
+| **C-C7(i)** — C-C7(i), §4 `:1776` | (a) | C-Q8; link 4; `AcceptedUnderHonestKey => IssuerSigned`; `Accept(S) => IssuerSigned` | **AS REGISTERED** | none |  |
+| **C-C7(i)** — C-C7(i), §4 `:1776` | (b) | C-Q8; link 4; `AcceptedUnderHonestKey => IssuerSigned`; `Accept(S) => IssuerSigned` | **AS REGISTERED** | none |  |
+| **C-C7(i)** — C-C7(i), §4 `:1776` | (d) | C-Q8; link 4; `AcceptedUnderHonestKey => IssuerSigned`; baseline `AcceptS => IssuerSigned` | **not run under this blob** | none: no result to compare |  |
+| **C-C7(ii)** — C-C7(ii), §4 `:1776` | (a) | C-Q8; link 4; `AcceptedUnderHonestKey => IssuerSigned`; `Accept(S) => IssuerSigned` | **AS REGISTERED** | none | C-Q7 GREEN in strict, a registered per-case outcome |
+| **C-C7(ii)** — C-C7(ii), §4 `:1776` | (b) | C-Q8; link 4; `AcceptedUnderHonestKey => IssuerSigned`; `Accept(S) => IssuerSigned` | **AS REGISTERED** | none |  |
+| **C-C7(ii)** — C-C7(ii), §4 `:1776` | (d) | C-Q8; link 4; C-Q7; `AcceptedUnderHonestKey => IssuerSigned`; baseline `AcceptS => IssuerSigned` | **not run under this blob** | none: no result to compare |  |
+| **C-C8** — C-C8, §4 `:1777` | (a) | C-Q9; link 3 | **AS REGISTERED** | none | (beta)-only strict split: C-Q5 and link 5 green |
+| **C-C8** — C-C8, §4 `:1777` | (b) | C-Q9; link 3 | **AS REGISTERED** | none | as (a), descended (cap22i) |
+| **C-C8** — C-C8, §4 `:1777` | (d) | C-Q9; C-Q5; link 3; link 5; baseline `AcceptS => IssuerSigned` | **not run under this blob** | none: no result to compare |  |
+| **C-C8-i** — C-C8-i, §9(2) `:2546` | (a) | none (green throughout) | **AS REGISTERED** | none | isolation result: all green |
+| **C-C8-i** — C-C8-i, §9(2) `:2546` | (b) | none (green throughout) | **AS REGISTERED** | none | isolation result: all green |
+| **C-C8-i** — C-C8-i, §9(2) `:2546` | (d) | none (green throughout); baseline `AcceptS => IssuerSigned`; left open: link 5 | **not run under this blob** | none: no result to compare | link 5's `mh` half 'stays the registered (d) red' (:2546) is ambiguous for this configuration |
+| **C-C8-ii** — C-C8-ii, §9(2) `:2547` | (a) | C-Q9; left open: link 3 | **AS REGISTERED** | none | link 3 not named in the cell; §3 link 3 says its producer 'is C-Q9' (:464) |
+| **C-C8-ii** — C-C8-ii, §9(2) `:2547` | (b) | C-Q9; left open: link 3 | **AS REGISTERED** | none | as (a) |
+| **C-C8-ii** — C-C8-ii, §9(2) `:2547` | (d) | C-Q9; baseline `AcceptS => IssuerSigned`; left open: link 3 | **not run under this blob** | none: no result to compare | as (a) |
+| **C-C9** — C-C9, §4 `:1778` | (a) | link 2b slot-B conj.; `Stripped` | **AS REGISTERED** | none |  |
+| **C-C9** — C-C9, §4 `:1778` | (b) | link 2b slot-B conj.; `Stripped` | **AS REGISTERED** | none |  |
+| **C-C9** — C-C9, §4 `:1778` | (d) | link 2b slot-B conj.; `Stripped`; baseline `AcceptS => IssuerSigned` | **AS REGISTERED** | none |  |
+| **C-C10** — C-C10, §4 `:1779` | (a) | C-Q1 link 1a; C-Q1 link 1b; `Accept(S) => IssuerSigned` | **DIVERGENT** | **red not registered in this case:** C-Q6 c1 unrestricted `:11510` |  |
+| **C-C10** — C-C10, §4 `:1779` | (b) | C-Q1 link 1a; C-Q1 link 1b; `Accept(S) => IssuerSigned` | **DIVERGENT** | **red not registered in this case:** C-Q6 c1 unrestricted `:11510` |  |
+| **C-C10** — C-C10, §4 `:1779` | (d) | C-Q1 link 1a; baseline `AcceptS => IssuerSigned` | **AS REGISTERED** | none |  |
+| **C-C10 isolation control** — C-C10 isolation control, §4 `:1779` | (a) | C-Q1 link 1a | **AS REGISTERED** | none | MIXED control: link 1a red, link 1b green |
+| **C-C10 isolation control** — C-C10 isolation control, §4 `:1779` | (b) | C-Q1 link 1a | **AS REGISTERED** | none |  |
+| **C-C11** — C-C11 (Q2), §4 `:1805` | (a) | C-Q6 c1 unrestricted; C-Q6 c1 `skI`; C-Q6 c1 `skI2` | **AS REGISTERED** | none |  |
+| **C-C11** — C-C11 (Q2), §4 `:1805` | (b) | C-Q6 c1 unrestricted; C-Q6 c1 `skI`; C-Q6 c1 `skI2` | **AS REGISTERED** | none |  |
+| **C-C11** — C-C11 (Q2), §4 `:1805` | (d) | C-Q6 c1 `skI`; C-Q6 c1 `skI2`; baseline `AcceptS => IssuerSigned` | **AS REGISTERED** | none | (d) predicted; unrestricted form not asserted |
+| **C-C11 alt. Q4** — C-C11 alternate Q4, §4 `:1805` | (a) | C-Q6 c1 unrestricted; C-Q6 c1 `skI`; C-Q6 c1 `skI2`; registered UNREACHABLE: S2, S4 | **AS REGISTERED** | none |  |
+| **C-C11 alt. Q4** — C-C11 alternate Q4, §4 `:1805` | (b) | C-Q6 c1 unrestricted; C-Q6 c1 `skI`; C-Q6 c1 `skI2`; registered UNREACHABLE: S2, S4 | **AS REGISTERED** | none |  |
+| **C-C11 alt. Q4** — C-C11 alternate Q4, §4 `:1805` | (d) | C-Q6 c1 `skI`; C-Q6 c1 `skI2`; baseline `AcceptS => IssuerSigned`; registered UNREACHABLE: S2, S4 | **AS REGISTERED** | none |  |
+| **C-C11 alt. abl6** — C-C11 alternate abl6, §4 `:1805` | (a) | C-Q6 c1 unrestricted; C-Q6 c1 `skI`; C-Q6 c1 `skI2` | **AS REGISTERED** | none |  |
+| **C-C11 alt. abl6** — C-C11 alternate abl6, §4 `:1805` | (b) | C-Q6 c1 unrestricted; C-Q6 c1 `skI`; C-Q6 c1 `skI2` | **AS REGISTERED** | none |  |
+| **C-C11 alt. abl6** — C-C11 alternate abl6, §4 `:1805` | (d) | C-Q6 c1 `skI`; C-Q6 c1 `skI2`; baseline `AcceptS => IssuerSigned` | **AS REGISTERED** | none |  |
+| **C-C12** — C-C12, §4 `:1806` | (a) | C-Q6 c2; C-Q6 c1 unrestricted | **AS REGISTERED** | none | unrestricted form red as the registered consequence (§3 C-Q6 §(6)) |
+| **C-C12** — C-C12, §4 `:1806` | (b) | C-Q6 c2; C-Q6 c1 unrestricted | **AS REGISTERED** | none |  |
+| **C-C12** — C-C12, §4 `:1806` | (d) | C-Q6 c2; baseline `AcceptS => IssuerSigned` | **AS REGISTERED** | none |  |
+| **C-C13(i)** — C-C13(i), §9(1) `:2501` | (a) | link 6a; `TypeConfused` | **AS REGISTERED** | none |  |
+| **C-C13(i)** — C-C13(i), §9(1) `:2501` | (b) | link 6a; `TypeConfused` | **AS REGISTERED** | none |  |
+| **C-C13(i)** — C-C13(i), §9(1) `:2501` | (d) | link 6a; `TypeConfused`; baseline `AcceptS => IssuerSigned` | **AS REGISTERED** | none |  |
+| **C-C13(ii)** — C-C13(ii), §9(1) `:2501` | (a) | link 6a; `TypeConfused` | **AS REGISTERED** | none | per-layer claim (wrapper layers only) not observable: B-2 |
+| **C-C13(ii)** — C-C13(ii), §9(1) `:2501` | (b) | link 6a; `TypeConfused` | **AS REGISTERED** | none |  |
+| **C-C13(ii)** — C-C13(ii), §9(1) `:2501` | (d) | link 6a; `TypeConfused`; baseline `AcceptS => IssuerSigned` | **AS REGISTERED** | none |  |
+| **C-C14** — C-C14, §9(1) `:2502` | (a) | C-Q2; C-Q1 link 1a; C-Q1 link 1b; `Accept(S) => IssuerSigned` | **DIVERGENT** | **red not registered in this case:** C-Q6 c1 unrestricted `:37364` | the spike's one combined formula; 'this file predicts no different answer than all three' |
+| **C-C14** — C-C14, §9(1) `:2502` | (b) | C-Q2; C-Q1 link 1a; C-Q1 link 1b; `Accept(S) => IssuerSigned` | **DIVERGENT** | **red not registered in this case:** C-Q6 c1 unrestricted `:37512` |  |
+| **C-C15(i)** — C-C15(i), §9(1) `:2503` | (a) | C-Q9; link 3; C-Q1 link 1a; C-Q1 link 1b; C-Q1 link 2a; link 5; C-Q5; `SignerForged`; left open: C-Q6 c3 `ScopeMisreported` | **DIVERGENT** | **red not registered in this case:** C-Q2 `:7722` | strict: the eight (seven relations) descended red; `Rescoped`, `InnerSigTransplanted`, C-Q3, `TypeConfused`, C-Q7, C-Q8 descended green; link 6b not produced in strict; C-Q6 c3 for (i) in strict is not case-assigned (set (1) says both configurations red it; the D11 sentence says the key half is severed by nothing the strict fixture can present) |
+| **C-C15(i)** — C-C15(i), §9(1) `:2503` | (b) | C-Q9; link 3; C-Q1 link 1a; C-Q1 link 1b; C-Q1 link 2a; link 5; C-Q5; `SignerForged`; left open: C-Q6 c3 `ScopeMisreported` | **DIVERGENT** | **red not registered in this case:** C-Q2 `:7741` | as (a) |
+| **C-C15(i)** — C-C15(i), §9(1) `:2503` | (d) | link 6b; C-Q4 `Rescoped`; C-Q3 `ReattributedA` or C-Q3 `ReattributedB`; link 5; C-Q7; C-Q4 `InnerSigTransplanted`; C-Q6 c3 `ScopeMisreported`; C-Q1 link 1a; C-Q1 link 2a; C-Q5; `SignerForged`; C-Q9; link 3; baseline `AcceptS => IssuerSigned` | **AS REGISTERED** | none | (d): set (1) plus the round-10/11 predicted reds (the eight less link 1b); `InnerSigTransplanted` from set (1)'s set-completeness note |
+| **C-C15(ii)** — C-C15(ii), §9(1) `:2503` | (a) | FORK: {link 6b; C-Q4 `Rescoped`; C-Q6 c3 `ScopeMisreported`} or green throughout | **AS REGISTERED** (fork branch: the registered reds) | none | registered FORK, predicted neither way: red if the depth-2 honest route exists, else green throughout |
+| **C-C15(ii)** — C-C15(ii), §9(1) `:2503` | (b) | FORK: {link 6b; C-Q4 `Rescoped`; C-Q6 c3 `ScopeMisreported`} or green throughout | **AS REGISTERED** (fork branch: the registered reds) | none | FORK, as (a) |
+| **C-C15(ii)** — C-C15(ii), §9(1) `:2503` | (d) | link 6b; C-Q4 `Rescoped`; C-Q6 c3 `ScopeMisreported`; baseline `AcceptS => IssuerSigned` | **AS REGISTERED** | none |  |
+| **C-C15(iii)** — C-C15(iii), §9(1) `:2503` | (a) | C-Q4 `Rescoped`; link 6b; C-Q6 c3 `ScopeMisreported`; observer `ScopeIdentityOnly` | **AS REGISTERED** | none |  |
+| **C-C15(iii)** — C-C15(iii), §9(1) `:2503` | (b) | C-Q4 `Rescoped`; link 6b; C-Q6 c3 `ScopeMisreported`; observer `ScopeIdentityOnly` | **AS REGISTERED** | none |  |
+| **C-C15(iii)** — C-C15(iii), §9(1) `:2503` | (d) | C-Q4 `Rescoped`; link 6b; C-Q6 c3 `ScopeMisreported`; observer `ScopeIdentityOnly`; baseline `AcceptS => IssuerSigned` | **AS REGISTERED** | none |  |
+| **C-C16** — C-C16, §9(3) `:2609` | (a) | link 5; `Spliced` | **AS REGISTERED** | none |  |
+| **C-C16** — C-C16, §9(3) `:2609` | (b) | link 5; `Spliced` | **AS REGISTERED** | none |  |
+| **C-C16** — C-C16, §9(3) `:2609` | (d) | link 5; `Spliced`; baseline `AcceptS => IssuerSigned` | **AS REGISTERED** | none |  |
+| **C-C17** — C-C17, §9(4) `:2666` | (a) | C-Q1 link 2a; `SignerForged` | **DIVERGENT** | **red not registered in this case:** `Accept(S) => IssuerSigned` `:26679` | `PossessionTransplanted` (set 1) is not a capstone query: B-3 |
+| **C-C17** — C-C17, §9(4) `:2666` | (b) | C-Q1 link 2a; `SignerForged` | **DIVERGENT** | **red not registered in this case:** `Accept(S) => IssuerSigned` `:26808` |  |
+| **C-C17** — C-C17, §9(4) `:2666` | (d) | C-Q1 link 2a; `SignerForged`; baseline `AcceptS => IssuerSigned` | **not run under this blob** | none: no result to compare |  |
+| **C-C18** — C-C18, §9(5) `:2725` | (a) | C-Q10; C-Q6 c1 `skI`; C-Q6 c1 unrestricted | **AS REGISTERED** | none |  |
+| **C-C18** — C-C18, §9(5) `:2725` | (b) | C-Q10; C-Q6 c1 `skI`; C-Q6 c1 unrestricted | **AS REGISTERED** | none |  |
+| **C-C18** — C-C18, §9(5) `:2725` | (d) | C-Q10; C-Q6 c1 `skI`; baseline `AcceptS => IssuerSigned` | **AS REGISTERED** | none |  |
+
+**Counts, per case** (one row per configuration file): (a): 21 as registered, 5 divergent, 0 not run under this blob; (b): 21 as registered, 5 divergent, 0 not run under this blob; (c): 1 as registered, 0 divergent, 0 not run under this blob; (d): 13 as registered, 0 divergent, 11 not run under this blob.
+
+| Row | Producer query; GREEN in the correct model? (`capstone.out`, case (a)) | Severing companion(s) | The severing key, per case, observed; and whether the registration expects it red in that case |
+|---|---|---|---|
+| **D1** | S-P3 Q2 `Reattributed` — C-Q3 `ReattributedA` `capstone.out:3899` `is true`; C-Q3 `ReattributedB` `capstone.out:3964` `is true` | C-C2 | `cap_cc02_a`: C-Q3 `ReattributedA` `:4430` green (registered green in this case); C-Q3 `ReattributedB` `:4528` green (registered green in this case); link 5 `:4038` green (registered green in this case)<br>`cap_cc02_b`: C-Q3 `ReattributedA` `:4254` green (registered green in this case); C-Q3 `ReattributedB` `:4341` green (registered green in this case); link 5 `:3906` green (registered green in this case)<br>`cap_cc02_d`: **not run under this blob** (`ladder.log:69`; ladder 2, history: timeout (mechanism-viability failure), 65702 s, 21.8 GiB (`ladder2/ladder.log:64`)) |
+| **D2** | S-P3 Q2 `Reattributed` (C-Q4 `Rescoped`) — C-Q4 `Rescoped` `capstone.out:4029` `is true` | C-C4 | `cap_cc04_a`: C-Q4 `Rescoped` `:4413` green (registered FORK: red, or the configuration green throughout)<br>`cap_cc04_b`: C-Q4 `Rescoped` `:4283` green (registered FORK: red, or the configuration green throughout)<br>`cap_cc04_d`: **not run under this blob** (`ladder.log:71`; ladder 2, history: timeout (mechanism-viability failure), 65702 s, 46.9 GiB (`ladder2/ladder.log:63`)) |
+| **D3** | S-P3 Q1(ii) chain correspondence — `Accept(S) => IssuerSigned` `capstone.out:5554` `is true` | C-C1 | `cap_cc01_c`: `Accept(S) => IssuerSigned` `:14277` **RED** (registered red) |
+| **D4** | link 1b: S-P3 Q1(ii); link 1a: structural — C-Q1 link 1a `capstone.out:2561` `is true`; C-Q1 link 1b `capstone.out:2728` `is true` | C-C1, C-C10 | `cap_cc01_c`: C-Q1 link 1b `:3278` **RED** (registered red); C-Q1 link 1a `:2720` green (registered green in this case)<br>`cap_cc10_a`: C-Q1 link 1b `:3505` **RED** (registered red); C-Q1 link 1a `:3004` **RED** (registered red)<br>`cap_cc10_b`: C-Q1 link 1b `:3505` **RED** (registered red); C-Q1 link 1a `:3004` **RED** (registered red)<br>`cap_cc10_d`: C-Q1 link 1a `:2813` **RED** (registered red) |
+| **D5** | **C-Q7** — C-Q7 `capstone.out:3314` `is true` | C-C5 | `cap_cc05_a`: C-Q4 `InnerSigTransplanted` `:5734` green (registered green in this case)<br>`cap_cc05_b`: C-Q4 `InnerSigTransplanted` `:5597` green (registered green in this case)<br>`cap_cc05_d`: **not run under this blob** (`ladder.log:72`; ladder 2, history: terminated by memory guard, classified as mechanism failure (memory), 64899 s, 76.5 GiB (`ladder2/ladder.log:66`, `ladder2/ladder.log:78`)) |
+| **D6** | **C-Q8**, structural — C-Q8 `capstone.out:3379` `is true` | C-C7(i), C-C7(ii) | `cap_cc07i_a`: C-Q8 `:9385` **RED** (registered red); link 4 `:10116` **RED** (registered red)<br>`cap_cc07i_b`: C-Q8 `:9393` **RED** (registered red); link 4 `:10127` **RED** (registered red)<br>`cap_cc07i_d`: **not run under this blob** (`ladder.log:74`; ladder 2, history: timeout (mechanism-viability failure), 65702 s, 28.3 GiB (`ladder2/ladder.log:68`))<br>`cap_cc07ii_a`: C-Q8 `:12156` **RED** (registered red); link 4 `:13412` **RED** (registered red)<br>`cap_cc07ii_b`: C-Q8 `:12002` **RED** (registered red); link 4 `:13202` **RED** (registered red)<br>`cap_cc07ii_d`: **not run under this blob** (`ladder.log:75`; ladder 2, history: timeout (mechanism-viability failure), 65702 s, 27.4 GiB (`ladder2/ladder.log:79`)) |
+| **D7** | S-P2 `Stripped` / `SignerForged` + Q6 `Spliced` — `Stripped` `capstone.out:5714` `is true`; `SignerForged` `capstone.out:5779` `is true`; `Spliced` `capstone.out:5844` `is true` | C-C9, C-C16, C-C17 | `cap_cc09_a`: link 2b slot-B conj. `:3505` **RED** (registered red); link 5 `:3859` green (registered green in this case); C-Q1 link 2a `:2765` green (registered green in this case)<br>`cap_cc09_b`: link 2b slot-B conj. `:3534` **RED** (registered red); link 5 `:3912` green (registered green in this case); C-Q1 link 2a `:2779` green (registered green in this case)<br>`cap_cc09_d`: link 2b slot-B conj. `:4576` **RED** (registered red); link 5 `:5266` green (registered green in this case); C-Q1 link 2a `:2602` green (registered green in this case)<br>`cap_cc16_a`: link 2b slot-B conj. `:3241` green (registered green in this case); link 5 `:4014` **RED** (registered red); C-Q1 link 2a `:2776` green (registered green in this case)<br>`cap_cc16_b`: link 2b slot-B conj. `:3247` green (registered green in this case); link 5 `:4026` **RED** (registered red); C-Q1 link 2a `:2779` green (registered green in this case)<br>`cap_cc16_d`: link 2b slot-B conj. `:8430` green (registered green in this case); link 5 `:10261` **RED** (registered red); C-Q1 link 2a `:2850` green (registered green in this case)<br>`cap_cc17_a`: link 2b slot-B conj. `:17719` green (registered green in this case); link 5 `:19693` green (registered green in this case); C-Q1 link 2a `:6530` **RED** (registered red)<br>`cap_cc17_b`: link 2b slot-B conj. `:17755` green (registered green in this case); link 5 `:19753` green (registered green in this case); C-Q1 link 2a `:6551` **RED** (registered red)<br>`cap_cc17_d`: **not run under this blob** (`ladder.log:91`; ladder 2, history: terminated by memory guard, classified as mechanism failure (memory), 64379 s, 76.6 GiB (`ladder2/ladder.log:95`)) |
+| **D8** | S-P7 `TypeConfused` — `TypeConfused` `capstone.out:5909` `is true` | C-C13(i), C-C13(ii) | `cap_cc13i_a`: link 6a `:4042` **RED** (registered red)<br>`cap_cc13i_b`: link 6a `:4046` **RED** (registered red)<br>`cap_cc13i_d`: link 6a `:7600` **RED** (registered red)<br>`cap_cc13ii_a`: link 6a `:5147` **RED** (registered red)<br>`cap_cc13ii_b`: link 6a `:5169` **RED** (registered red)<br>`cap_cc13ii_d`: link 6a `:10560` **RED** (registered red) |
+| **D9** | first-link Q4 `TwoWorldsBroken` — C-Q2 `capstone.out:3834` `is true` | C-C14 | `cap_cc14_a`: C-Q2 `:30492` **RED** (registered red)<br>`cap_cc14_b`: C-Q2 `:30584` **RED** (registered red) |
+| **D10** | **C-Q9** — C-Q9 `capstone.out:3444` `is true` | C-C3, C-C8 | `cap_cc03_a`: C-Q5 `:4849` green (registered green in this case); C-Q9 `:3795` **RED** (registered red)<br>`cap_cc03_b`: C-Q5 `:4869` green (registered green in this case); C-Q9 `:3804` **RED** (registered red)<br>`cap_cc03_d`: **not run under this blob** (`ladder.log:70`; ladder 2, history: timeout (mechanism-viability failure), 65703 s, 26.3 GiB (`ladder2/ladder.log:65`))<br>`cap_cc08_a`: C-Q5 `:4849` green (registered green in this case); C-Q9 `:3795` **RED** (registered red)<br>`cap_cc08_b`: C-Q5 `:4869` green (registered green in this case); C-Q9 `:3804` **RED** (registered red)<br>`cap_cc08_d`: **not run under this blob** (`ladder.log:76`; ladder 2, history: timeout (mechanism-viability failure), 65703 s, 29.3 GiB (`ladder2/ladder.log:80`)) |
+| **D11** | S-P7 `Rescoped` (link 6b) — link 6b `capstone.out:3769` `is true` | C-C15(i), C-C15(ii), C-C15(iii) | `cap_cc15i_a`: link 6b `:6873` green (registered green in this case)<br>`cap_cc15i_b`: link 6b `:6891` green (registered green in this case)<br>`cap_cc15i_d`: link 6b `:13123` **RED** (registered red)<br>`cap_cc15ii_a`: link 6b `:4638` **RED** (registered FORK: red, or the configuration green throughout)<br>`cap_cc15ii_b`: link 6b `:4652` **RED** (registered FORK: red, or the configuration green throughout)<br>`cap_cc15ii_d`: link 6b `:8365` **RED** (registered red)<br>`cap_cc15iii_a`: link 6b `:4745` **RED** (registered red)<br>`cap_cc15iii_b`: link 6b `:4777` **RED** (registered red)<br>`cap_cc15iii_d`: link 6b `:8495` **RED** (registered red) |
+| **D12** | S-STANDING `Established => Designated` — C-Q6 c1 `skI` `capstone.out:5249` `is true` | C-C11 | `cap_cc11_a`: C-Q6 c1 `skI` `:6181` **RED** (registered red)<br>`cap_cc11_b`: C-Q6 c1 `skI` `:6203` **RED** (registered red)<br>`cap_cc11_d`: C-Q6 c1 `skI` `:10394` **RED** (registered red) |
+| **D13** | S-STANDING `StandingUnentitled` — C-Q6 c2 `capstone.out:5392` `is true` | C-C12 | `cap_cc12_a`: C-Q6 c2 `:6968` **RED** (registered red)<br>`cap_cc12_b`: C-Q6 c2 `:7076` **RED** (registered red)<br>`cap_cc12_d`: C-Q6 c2 `:10789` **RED** (registered red) |
+
+*No file is in the exception table: every file is either identical or not run.*
+
+**Identical byte for byte, every keyed verdict the same (69 files, 3207 verdicts):** `cap_cc01_c`, `cap_cc02_a`, `cap_cc02_b`, `cap_cc03_a`, `cap_cc03_b`, `cap_cc04_a`, `cap_cc04_b`, `cap_cc05_a`, `cap_cc05_b`, `cap_cc06_a`, `cap_cc06_b`, `cap_cc07i_a`, `cap_cc07i_b`, `cap_cc07ii_a`, `cap_cc07ii_b`, `cap_cc08_a`, `cap_cc08_b`, `cap_cc08i_a`, `cap_cc08i_b`, `cap_cc08ii_a`, `cap_cc08ii_b`, `cap_cc09_a`, `cap_cc09_b`, `cap_cc09_d`, `cap_cc10_a`, `cap_cc10_b`, `cap_cc10_d`, `cap_cc10iso_a`, `cap_cc10iso_b`, `cap_cc11_a`, `cap_cc11_b`, `cap_cc11_d`, `cap_cc11abl6_a`, `cap_cc11abl6_b`, `cap_cc11abl6_d`, `cap_cc11q4_a`, `cap_cc11q4_b`, `cap_cc11q4_d`, `cap_cc12_a`, `cap_cc12_b`, `cap_cc12_d`, `cap_cc13i_a`, `cap_cc13i_b`, `cap_cc13i_d`, `cap_cc13ii_a`, `cap_cc13ii_b`, `cap_cc13ii_d`, `cap_cc14_a`, `cap_cc14_b`, `cap_cc15i_a`, `cap_cc15i_b`, `cap_cc15i_d`, `cap_cc15ii_a`, `cap_cc15ii_b`, `cap_cc15ii_d`, `cap_cc15iii_a`, `cap_cc15iii_b`, `cap_cc15iii_d`, `cap_cc16_a`, `cap_cc16_b`, `cap_cc16_d`, `cap_cc17_a`, `cap_cc17_b`, `cap_cc18_a`, `cap_cc18_b`, `cap_cc18_d`, `capstone`, `capstone_b`, `capstone_d`.
+
+**Not run under ladder 3 (11 files):** `cap_cc02_d`, `cap_cc03_d`, `cap_cc04_d`, `cap_cc05_d`, `cap_cc06_d`, `cap_cc07i_d`, `cap_cc07ii_d`, `cap_cc08_d`, `cap_cc08i_d`, `cap_cc08ii_d`, `cap_cc17_d`.
+
+**Tally, per file:** 69 identical byte for byte, 0 identical after normalisation, 0 different, 0 new, 11 not run under ladder 3. **Per query** (files landed in both): 3207 verdicts the same, 0 changed, 0 new, 0 gone. **No verdict changed, so none needs a BF to explain it, and none is UNEXPLAINED.**
+
+- `cap_cc02_d` (ladder 2, timeout): no RESULT line before the run ended
+- `cap_cc03_d` (ladder 2, timeout): no RESULT line before the run ended
+- `cap_cc04_d` (ladder 2, timeout): C-Q1 link 1a `ladder2/cap_cc04_d.out:3676` `is true`, C-Q1 link 2a `ladder2/cap_cc04_d.out:4990` `is true`, link 2b one-signer conj. `ladder2/cap_cc04_d.out:14784` `is true`
+- `cap_cc05_d` (ladder 2, memory): C-Q1 link 1a `ladder2/cap_cc05_d.out:5020` `is true`, C-Q1 link 2a `ladder2/cap_cc05_d.out:7672` `is true`
+- `cap_cc06_d` (ladder 2, timeout): no RESULT line before the run ended
+- `cap_cc07i_d` (ladder 2, timeout): no RESULT line before the run ended
+- `cap_cc07ii_d` (ladder 2, timeout): no RESULT line before the run ended
+- `cap_cc08_d` (ladder 2, timeout): no RESULT line before the run ended
+- `cap_cc08i_d` (ladder 2, memory): C-Q1 link 1a `ladder2/cap_cc08i_d.out:4220` `is true`, C-Q1 link 2a `ladder2/cap_cc08i_d.out:6090` `is true`
+- `cap_cc08ii_d` (ladder 2, memory): C-Q1 link 1a `ladder2/cap_cc08ii_d.out:4559` `is true`, C-Q1 link 2a `ladder2/cap_cc08ii_d.out:6750` `is true`
+- `cap_cc17_d` (ladder 2, memory): C-Q1 link 1a `ladder2/cap_cc17_d.out:3739` `is true`, C-Q1 link 2a `ladder2/cap_cc17_d.out:5433` `is false`
+
+CEILING {'CEIL': 284400, 's1': 625756, 's2': 966137, 's3': 246509, 'tot': 1838402, 'by3': {'0': 246509, 'NOT-RUN': 0}, 'n3': {'0': 69, 'NOT-RUN': 11}, 'pct1': 220.0267229254571, 'pct2': 339.7106188466948, 'pct3': 86.67686357243319, 'pct': 646.4142053445851, 'x': 6.464142053445851, 'over': 1554002}
+NOTRUN_DUPS []
+LAYER_TALLY {('W-HonestStanding', 'L1'): 69, ('W-Agreed', 'L1'): 69}
+LANDED 69 NOTRUN 11 STEMS 80
+DIV ('cap_cc05_a', '**red not registered in this case:** `Accept(S) => IssuerSigned` `:7809`')
+DIV ('cap_cc05_a', '**red not registered in this case:** `AcceptedUnderHonestKey => IssuerSigned` `:8280`')
+DIV ('cap_cc05_b', '**red not registered in this case:** `Accept(S) => IssuerSigned` `:7601`')
+DIV ('cap_cc05_b', '**red not registered in this case:** `AcceptedUnderHonestKey => IssuerSigned` `:8065`')
+DIV ('cap_cc10_a', '**red not registered in this case:** C-Q6 c1 unrestricted `:11510`')
+DIV ('cap_cc10_b', '**red not registered in this case:** C-Q6 c1 unrestricted `:11510`')
+DIV ('cap_cc14_a', '**red not registered in this case:** C-Q6 c1 unrestricted `:37364`')
+DIV ('cap_cc14_b', '**red not registered in this case:** C-Q6 c1 unrestricted `:37512`')
+DIV ('cap_cc15i_a', '**red not registered in this case:** C-Q2 `:7722`')
+DIV ('cap_cc15i_b', '**red not registered in this case:** C-Q2 `:7741`')
+DIV ('cap_cc17_a', '**red not registered in this case:** `Accept(S) => IssuerSigned` `:26679`')
+DIV ('cap_cc17_b', '**red not registered in this case:** `Accept(S) => IssuerSigned` `:26808`')

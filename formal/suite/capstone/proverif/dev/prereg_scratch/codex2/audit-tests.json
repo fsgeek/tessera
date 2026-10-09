@@ -1,0 +1,91 @@
+[
+  {
+    "test": "baseline",
+    "rc": 0,
+    "failures": []
+  },
+  {
+    "test": "blob_mismatch",
+    "rc": 1,
+    "failures": [
+      "FAIL gen/cap_cc02_d__depth0__cq3a.pv: blob mismatch",
+      "FAIL checked count slice blobs: 106 != manifest 107",
+      "FAIL checked count slice == slice.py output: 106 != manifest 107",
+      "FAIL checked count exact prefix: 106 != manifest 107"
+    ]
+  },
+  {
+    "test": "prefix_alteration",
+    "rc": 1,
+    "failures": [
+      "FAIL gen/cap_cc02_d__depth0__cq3a.pv: differs from slice.py output",
+      "FAIL checked count slice == slice.py output: 106 != manifest 107",
+      "FAIL checked count exact prefix: 106 != manifest 107",
+      "FAIL checked count components: 106 != manifest 107"
+    ]
+  },
+  {
+    "test": "component_alteration",
+    "rc": 1,
+    "failures": [
+      "FAIL gen/cap_cc02_d__depth0__cq3a.pv: differs from slice.py output",
+      "FAIL checked count slice == slice.py output: 106 != manifest 107",
+      "FAIL checked count exact prefix: 106 != manifest 107",
+      "FAIL checked count components: 106 != manifest 107"
+    ]
+  },
+  {
+    "test": "query_alteration",
+    "rc": 1,
+    "failures": [
+      "FAIL gen/cap_cc02_d__depth0__cq3a.pv: differs from slice.py output",
+      "FAIL checked count slice == slice.py output: 106 != manifest 107",
+      "FAIL checked count exact prefix: 106 != manifest 107",
+      "FAIL checked count components: 106 != manifest 107"
+    ]
+  },
+  {
+    "test": "prohibited_slice",
+    "rc": 1,
+    "failures": [
+      "FAIL gen/cap_cc02_d__depth0__cq3a.pv: differs from slice.py output",
+      "FAIL checked count slice == slice.py output: 106 != manifest 107",
+      "FAIL checked count exact prefix: 106 != manifest 107",
+      "FAIL checked count components: 106 != manifest 107"
+    ]
+  },
+  {
+    "test": "unexpected_set_slice",
+    "rc": 1,
+    "failures": [
+      "FAIL gen/cap_cc02_d__depth0__cq3a.pv: differs from slice.py output",
+      "FAIL checked count slice == slice.py output: 106 != manifest 107",
+      "FAIL checked count exact prefix: 106 != manifest 107",
+      "FAIL checked count components: 106 != manifest 107"
+    ]
+  },
+  {
+    "test": "prohibited_library",
+    "rc": 1,
+    "failures": [
+      "FAIL lib: prohibited constructs [(197, 'phase')]"
+    ]
+  },
+  {
+    "test": "unexpected_set_library",
+    "rc": 1,
+    "failures": [
+      "FAIL lib: unexpected set lines ['set maxDepth = 1.']"
+    ]
+  },
+  {
+    "test": "indented_set_library",
+    "rc": 0,
+    "failures": []
+  },
+  {
+    "test": "control_expectation_tamper",
+    "rc": 0,
+    "failures": []
+  }
+]

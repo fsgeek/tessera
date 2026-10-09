@@ -1,0 +1,8 @@
+(* TOY syntax check only: two-event premise, equality conclusion. Not derived from any capstone file. *)
+free c: channel.
+type key.
+event Std(bitstring, key).
+event Acc(bitstring, key).
+query a: bitstring, k1: key, k2: key; event(Std(a, k1)) && event(Acc(a, k2)) ==> k1 = k2.
+process
+  ( in(c, (a: bitstring, k1: key, k2: key)); event Std(a, k1); event Acc(a, k2) )

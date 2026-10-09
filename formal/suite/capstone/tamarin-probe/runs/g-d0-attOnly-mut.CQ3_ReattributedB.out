@@ -1,0 +1,33 @@
+EXPLORATORY PROBE 2026-10-04 — non-discharging; not part of any registration
+maude tool: 'maude'
+ checking version: 3.5.1. OK.
+ checking installation: OK.
+[Theory cap_cc02_d_probe] Theory loaded
+[Theory cap_cc02_d_probe] Theory translated
+[Theory cap_cc02_d_probe] Theory closed
+[Saturating Sources] Step 1 (Max 5)
+[Saturating Sources] Done
+
+==============================================================================
+summary of summaries:
+
+analyzed: cap_cc02_d.depth0.attOnly.spthy
+
+  output:          runs/g-d0-attOnly-mut.CQ3_ReattributedB.proof.spthy
+  processing time: 73.06s
+  
+  WARNING: 1 wellformedness check failed!
+           The analysis results might be wrong!
+  
+  CQ3_ReattributedA (all-traces): analysis incomplete (1 steps)
+  CQ3_ReattributedB (all-traces): falsified - found trace (16 steps)
+  Link5 (all-traces): analysis incomplete (1 steps)
+  Link5_frameToKey_only (all-traces): analysis incomplete (1 steps)
+  Link1a (all-traces): analysis incomplete (1 steps)
+  A46_AcceptS_IssuerSigned (all-traces): analysis incomplete (1 steps)
+  W_HonestAccepted (exists-trace): analysis incomplete (1 steps)
+  W_HonestChain_L0 (exists-trace): analysis incomplete (1 steps)
+  W_HonestChain_L1 (exists-trace): analysis incomplete (1 steps)
+  W_HonestComplete2 (exists-trace): analysis incomplete (1 steps)
+
+==============================================================================

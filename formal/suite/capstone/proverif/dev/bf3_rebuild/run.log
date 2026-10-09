@@ -1,0 +1,17 @@
+# REPAIR 2026-10-01, skeptic S-12.  DIAGNOSTIC SCRATCH, NOT A LADDER RESULT; not counted in the ceiling.
+# Built by: python3 mk_bf3_rebuild.py   (prints the four hashes below; asserts the first two)
+#   ladder-1 text       c6969b4cc2f2e30be7a7a950af7609ea75e4c700  (= ladder 1's capstone.pv)
+#   degraded(ladder-1)  d4f0851db6cd81e760c5cb847664b558a194911c  (= ladder1/ladder.log:25 capstone_d blob)
+#   capstone_pre_bf3    61d3be57c4327dd84e578b3d79e9b9e0aad5253b
+#   capstone_d_pre_bf3  4c9a7e1565ca7be9a9fe04c67b239fa48dd5299d
+# Run (wam-nuc, 2026-10-01, default selection function, no `set selFun` line):
+#   ulimit -v 10485760; timeout 600 nice -n 19 proverif -lib ../../../../lib/tessera_theory.pvl capstone_d_pre_bf3.pv > capstone_d_pre_bf3.out
+capstone_d_pre_bf3 rc=0 seconds=356 peakRSSkB=2689840
+# RESULT lines: 44.  Against ladder 2's capstone_d.out, exactly ONE differs (RESULT 25 of 44):
+#   rebuild : RESULT not event(ScopeMisreported(a_1,l_1,k_1,ii,ka_1,ia_1)) is false.   (capstone_d_pre_bf3.out:5796)
+#   ladder 2: RESULT not event(ScopeMisreported(a_1,l_1,k_1,ii,ka_1,ia_1)) is true.    (capstone_d.out:10341)
+# Trace (capstone_d_pre_bf3.out:5784-5796): standing path reports (aid_7, L0, pk(a_16), a_15) over
+#   authTuple(a_15, fp(pk(a_16)), ...); envelope path reports (aid_7, L0, pk(a_4), a_3) over
+#   authTuple(a_3, fp(pk(a_4)), signers0, a_2, a_5); goal ScopeMisreported(aid_7,L0,pk(a_16),a_15,pk(a_4),a_3).
+# The skeptic's /tmp/bf3/capstone_d_old.pv (blob 7d14ec3a...) differs from capstone_d_pre_bf3.pv in
+# whitespace only (three reads written on one line); its 44 RESULT lines are identical to this run's.

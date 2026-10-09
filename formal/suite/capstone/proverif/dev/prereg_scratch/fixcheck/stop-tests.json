@@ -1,0 +1,262 @@
+[
+  {
+    "test": "stop race: launches after queued waiters + stop",
+    "got": 1,
+    "want": 1,
+    "ok": true
+  },
+  {
+    "test": "stop race: cancelled workers return None",
+    "got": [
+      false,
+      true,
+      true,
+      true
+    ],
+    "want": [
+      false,
+      true,
+      true,
+      true
+    ],
+    "ok": true
+  },
+  {
+    "test": "stop race: waiters woken promptly (<1.4s of first run end)",
+    "got": true,
+    "want": true,
+    "ok": true
+  },
+  {
+    "test": "stop race: memory fully released",
+    "got": 8,
+    "want": 8,
+    "ok": true
+  },
+  {
+    "test": "post-stop run_one refused",
+    "got": null,
+    "want": null,
+    "ok": true
+  },
+  {
+    "test": "post-stop: no launch, no out file",
+    "got": [
+      0,
+      []
+    ],
+    "want": [
+      0,
+      []
+    ],
+    "ok": true
+  },
+  {
+    "test": "post-stop: memory untouched",
+    "got": 8,
+    "want": 8,
+    "ok": true
+  },
+  {
+    "test": "model tampered before launch: refused",
+    "got": null,
+    "want": null,
+    "ok": true
+  },
+  {
+    "test": "model tampered: stopped, no launch",
+    "got": [
+      true,
+      0
+    ],
+    "want": [
+      true,
+      0
+    ],
+    "ok": true
+  },
+  {
+    "test": "model tampered: the OTHER row is also refused (shared stop)",
+    "got": null,
+    "want": null,
+    "ok": true
+  },
+  {
+    "test": "model tampered: actual hash logged",
+    "got": true,
+    "want": true,
+    "ok": true
+  },
+  {
+    "test": "model tampered: memory released",
+    "got": 8,
+    "want": 8,
+    "ok": true
+  },
+  {
+    "test": "library changed before launch: refused",
+    "got": [
+      null,
+      0
+    ],
+    "want": [
+      null,
+      0
+    ],
+    "ok": true
+  },
+  {
+    "test": "change during run: prov False and batch stopped",
+    "got": [
+      false,
+      true
+    ],
+    "want": [
+      false,
+      true
+    ],
+    "ok": true
+  },
+  {
+    "test": "change during run: next launch refused",
+    "got": [
+      null,
+      1
+    ],
+    "want": [
+      null,
+      1
+    ],
+    "ok": true
+  },
+  {
+    "test": "orphan subprocess killed on return",
+    "got": false,
+    "want": false,
+    "ok": true
+  },
+  {
+    "test": "normal stub run: rc0, prov OK, one RESULT, not stopped",
+    "got": [
+      0,
+      true,
+      1,
+      false
+    ],
+    "want": [
+      0,
+      true,
+      1,
+      false
+    ],
+    "ok": true
+  },
+  {
+    "test": "pool_run: at most first job wave launched (jobs=3 but 8G budget => 1 at a time)",
+    "got": 1,
+    "want": 1,
+    "ok": true
+  },
+  {
+    "test": "pool_run: stopped with reason",
+    "got": "red",
+    "want": "red",
+    "ok": true
+  },
+  {
+    "test": "claim: clean dir ok",
+    "got": null,
+    "want": null,
+    "ok": true
+  },
+  {
+    "test": "claim: second concurrent claim refused",
+    "got": [
+      null,
+      true
+    ],
+    "want": [
+      null,
+      true
+    ],
+    "ok": true
+  },
+  {
+    "test": "claim: after release ok",
+    "got": null,
+    "want": null,
+    "ok": true
+  },
+  {
+    "test": "claim: lock still held by fd3 -> refused first",
+    "got": [
+      null,
+      true
+    ],
+    "want": [
+      null,
+      true
+    ],
+    "ok": true
+  },
+  {
+    "test": "claim: EMPTY counted.log refused",
+    "got": true,
+    "want": true,
+    "ok": true
+  },
+  {
+    "test": "claim: non-empty out/ refused",
+    "got": true,
+    "want": true,
+    "ok": true
+  },
+  {
+    "test": "claim: second PROCESS refused cleanly",
+    "got": "another batch holds the lock; refusing",
+    "want": "another batch holds the lock; refusing",
+    "ok": true
+  },
+  {
+    "test": "jobs=0 rejected",
+    "got": true,
+    "want": true,
+    "ok": true
+  },
+  {
+    "test": "jobs=-3 rejected",
+    "got": true,
+    "want": true,
+    "ok": true
+  },
+  {
+    "test": "jobs=2 accepted",
+    "got": 2,
+    "want": 2,
+    "ok": true
+  },
+  {
+    "test": "timeout has --kill-after=10s before the box",
+    "got": [
+      "--kill-after=10s",
+      "1800"
+    ],
+    "want": [
+      "--kill-after=10s",
+      "1800"
+    ],
+    "ok": true
+  },
+  {
+    "test": "_cmd hook not reachable from main (only run_one signature)",
+    "got": false,
+    "want": false,
+    "ok": true
+  },
+  {
+    "test": "no environment override in runner",
+    "got": false,
+    "want": false,
+    "ok": true
+  }
+]
