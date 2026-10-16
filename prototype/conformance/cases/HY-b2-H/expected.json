@@ -1,0 +1,40 @@
+{
+ "T": "2026-11-10T12:20:00Z",
+ "_meta": {
+  "ambiguities": [],
+  "ambiguous_fields": [],
+  "cite": [
+   "P:120-126",
+   "P:884-888",
+   "P:1461",
+   "P:1464-1469",
+   "P:1475-1479",
+   "P:741-750",
+   "HC (b)"
+  ],
+  "derivation": "Both slots decode under rule O (codec-known, unselected: P:120-122); the kms slot carries a rule-O packet by an unrelated P-256 key, the gpg signature and possession are over other bytes. Row 5.1 passes under either EA-31 reading (installation format; or skipped), 5.2 passes (manifest fingerprint is the ML-DSA SPKI's). 6.x pass. Row 7.1 unperformable (classical id is not the catalog id). Rows 9.x blocked by 7.1, so no SIG_INVALID / POSSESSION_INVALID although none of the signatures would verify; M5 contributes ALG_UNKNOWN, not SCHEMA.",
+  "group": "hybrid routing",
+  "id": "HY-b2-H",
+  "installation": "hybrid",
+  "issuer_preship": {
+   "chain_order_h_git_plus_5_lt_h_receipt": true,
+   "git_anchored": true,
+   "receipt_anchored": true,
+   "receipt_c1": true,
+   "receipt_c2": true,
+   "receipt_c3": true,
+   "snapshot_anchored": true,
+   "snapshot_c1": true,
+   "snapshot_c2": true,
+   "snapshot_c3": true,
+   "window": true
+  },
+  "kind": "bundle",
+  "title": "(b) Classical-id frames, rule-O signatures that do not verify, kms key in the installation's format (ML-DSA-65 SPKI)"
+ },
+ "historical_security": "NOT_EVALUATED",
+ "reason": "ALG_UNKNOWN",
+ "revocation": "NOT_EVALUATED",
+ "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+ "verdict": "UNVERIFIABLE"
+}

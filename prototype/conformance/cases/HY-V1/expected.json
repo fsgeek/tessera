@@ -1,0 +1,41 @@
+{
+ "T": "2026-11-10T12:20:00Z",
+ "_meta": {
+  "ambiguities": [],
+  "ambiguous_fields": [],
+  "cite": [
+   "P:114-119",
+   "P:134-136",
+   "P:148",
+   "P:878-880",
+   "P:884-888",
+   "P:905-907",
+   "HS \u00a71-\u00a73",
+   "A9.6 (A9:351-362)"
+  ],
+  "derivation": "Honest issue path (P\u00a74) under the hybrid installation: the pair id is the catalog id, keys.kms is the supplement's DER SPKI (HS \u00a73), S_kms and the kms possession proof are 3309-byte pure ML-DSA-65 signatures (empty context) obtained from mu = SHAKE256(SHAKE256(pk,64) || 00 00 || F, 64) (HS \u00a71, the issuer's only path) and verified over F itself by `cryptography` before freezing. Every row passes.",
+  "group": "hybrid positive",
+  "id": "HY-V1",
+  "installation": "hybrid",
+  "issuer_preship": {
+   "chain_order_h_git_plus_5_lt_h_receipt": true,
+   "git_anchored": true,
+   "receipt_anchored": true,
+   "receipt_c1": true,
+   "receipt_c2": true,
+   "receipt_c3": true,
+   "snapshot_anchored": true,
+   "snapshot_c1": true,
+   "snapshot_c2": true,
+   "snapshot_c3": true,
+   "window": true
+  },
+  "kind": "bundle",
+  "title": "Full hybrid receipt through the issuer: kms ML-DSA-65 (rule R, EXTERNAL_MU), gpg P-256 (rule O); 779 / 778-byte frames"
+ },
+ "historical_security": "NOT_EVALUATED",
+ "reason": "OK",
+ "revocation": "NOT_EVALUATED",
+ "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+ "verdict": "VALID_STRICT"
+}

@@ -1,0 +1,55 @@
+{
+ "T": "2026-11-10T12:20:00Z",
+ "_meta": {
+  "ambiguities": [],
+  "ambiguous_fields": [],
+  "cite": [
+   "P:697-708",
+   "P:727-731",
+   "P:549-550",
+   "P:1470",
+   "A9:32",
+   "A9:68",
+   "P:253-256",
+   "P:269-272",
+   "P:1442-1447",
+   "A9:143",
+   "A9:153",
+   "prototype/mutation/REPORT.md obs. 3"
+  ],
+  "derivation": "common.issuer = manifest issuer = wamason-attacker.com, a domain the attacker legitimately controls: com signs its DS, so DNSSEC validates _tessera-v1.<issuer> (owner rebuilt from the signed issuer, P:549-550) and the TXT names the attacker's keys. The attacker also holds the repository key, so the commit verifies under the configured entry for D. Only the pinned-D gate fails: row 8.1 INVALID / ISSUER_NOT_PINNED (P:704-708). Under M2 (P:727-731) the git condition may also be read as unmet for D = common.issuer; that row is UNVERIFIABLE at worst and 8.1's INVALID is reported either way.",
+  "group": "authority isolation",
+  "id": "AUTH-vi",
+  "installation": "classical",
+  "isolation": {
+   "attacker_holds": "its own domain's DNS and the repository key",
+   "only_failing_rows": [
+    "8.1"
+   ],
+   "selfcheck_fails": [
+    "issuer_pinned"
+   ],
+   "twin": "AUTH-vi-T"
+  },
+  "issuer_preship": {
+   "chain_order_h_git_plus_5_lt_h_receipt": true,
+   "git_anchored": true,
+   "receipt_anchored": true,
+   "receipt_c1": true,
+   "receipt_c2": true,
+   "receipt_c3": true,
+   "snapshot_anchored": true,
+   "snapshot_c1": true,
+   "snapshot_c2": true,
+   "snapshot_c3": true,
+   "window": true
+  },
+  "kind": "bundle",
+  "title": "Attacker-keyed receipt for its own domain wamason-attacker.com, with a trusted DNSSEC path and a git assertion under the configured repository key"
+ },
+ "historical_security": "NOT_EVALUATED",
+ "reason": "ISSUER_NOT_PINNED",
+ "revocation": "NOT_EVALUATED",
+ "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+ "verdict": "INVALID"
+}

@@ -1,0 +1,2 @@
+# Disposition (owner, 2026-10-13)
+All six findings accepted, with Codex's exact replacement text applied to A9 (F1 reliance; F2 verdict stability plus A9.7 row 29 and the P4 note; F3 row 15 and "Named and not changed"; F4 append-only and repository entries; F5 first window only, rotation as a future registration; F6 git object_format descriptor). F1 also records the author's adoption, 2026-10-13, kind CORRECT, with his words. F3 ENCODING-V1:441 and F6 V1-PROFILE §5 were already reconciled by the repair agent, which ran concurrently with this review.

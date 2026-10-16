@@ -1,0 +1,39 @@
+{
+ "T": "2026-11-10T12:20:00Z",
+ "_meta": {
+  "ambiguities": [],
+  "ambiguous_fields": [],
+  "cite": [
+   "P:892-899",
+   "P:1472",
+   "P:1477",
+   "P:120-126",
+   "HC (b)"
+  ],
+  "derivation": "Rule O decodes both slots (classical id is codec-known, P:120-122), row 3.1 passes. The classical id is not the hybrid catalog id, so the installed-spec key rule does not apply (P:892-899, owner decision on EA-31): row 5.1 is not evaluated (P:1472), so the P-256 kms SPKI is not KEY_FORMAT. Row 7.1 is unperformable (P:1477): ALG_UNKNOWN; signature and possession rows are blocked by 7.1.",
+  "group": "hybrid routing",
+  "id": "HY-b1-H",
+  "installation": "hybrid",
+  "issuer_preship": {
+   "chain_order_h_git_plus_5_lt_h_receipt": true,
+   "git_anchored": true,
+   "receipt_anchored": true,
+   "receipt_c1": true,
+   "receipt_c2": true,
+   "receipt_c3": true,
+   "snapshot_anchored": true,
+   "snapshot_c1": true,
+   "snapshot_c2": true,
+   "snapshot_c3": true,
+   "window": true
+  },
+  "kind": "bundle",
+  "owner_decision": "EA-31, 2026-10-14: unsupported well-formed alg gives UNVERIFIABLE / ALG_UNKNOWN; key format not evaluated (profile \u00a78 scope note, row 5.1)",
+  "title": "(b) Classical-id receipt as a fallback issuer emits it (P-256 kms SPKI, valid rule-O signatures) under the hybrid installation"
+ },
+ "historical_security": "NOT_EVALUATED",
+ "reason": "ALG_UNKNOWN",
+ "revocation": "NOT_EVALUATED",
+ "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+ "verdict": "UNVERIFIABLE"
+}

@@ -1,0 +1,103 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "CreateTaggedSigningKeysOnly",
+      "Effect": "Allow",
+      "Action": [
+        "kms:CreateKey",
+        "kms:TagResource"
+      ],
+      "Resource": "*",
+      "Condition": {
+        "StringEquals": {
+          "aws:RequestedRegion": "REGION",
+          "aws:RequestTag/project": "tessera",
+          "kms:KeyUsage": "SIGN_VERIFY"
+        },
+        "ForAllValues:StringEquals": {
+          "aws:TagKeys": [
+            "project",
+            "purpose"
+          ]
+        },
+        "StringEqualsIfExists": {
+          "kms:KeySpec": [
+            "ML_DSA_65",
+            "ECC_NIST_P256"
+          ]
+        }
+      }
+    },
+    {
+      "Sid": "UseAndRetireOnlyTesseraKeys",
+      "Effect": "Allow",
+      "Action": [
+        "kms:Sign",
+        "kms:GetPublicKey",
+        "kms:DescribeKey",
+        "kms:ScheduleKeyDeletion",
+        "kms:CancelKeyDeletion",
+        "kms:CreateAlias"
+      ],
+      "Resource": "*",
+      "Condition": {
+        "StringEquals": {
+          "aws:RequestedRegion": "REGION",
+          "aws:ResourceTag/project": "tessera"
+        }
+      }
+    },
+    {
+      "Sid": "AliasesForTesseraKeys",
+      "Effect": "Allow",
+      "Action": [
+        "kms:CreateAlias"
+      ],
+      "Resource": "arn:aws:kms:REGION:ACCOUNT_ID:alias/tessera-*",
+      "Condition": {
+        "StringEquals": {
+          "aws:RequestedRegion": "REGION"
+        }
+      }
+    },
+    {
+      "Sid": "ReadOnlyListing",
+      "Effect": "Allow",
+      "Action": [
+        "kms:ListKeys",
+        "kms:ListAliases",
+        "kms:ListResourceTags"
+      ],
+      "Resource": "*",
+      "Condition": {
+        "StringEquals": {
+          "aws:RequestedRegion": "REGION"
+        }
+      }
+    },
+    {
+      "Sid": "NoRetaggingForeignKeys",
+      "Effect": "Deny",
+      "Action": [
+        "kms:TagResource",
+        "kms:UntagResource"
+      ],
+      "Resource": "*",
+      "Condition": {
+        "Null": {
+          "aws:ResourceTag/project": "false"
+        },
+        "StringNotEquals": {
+          "aws:ResourceTag/project": "tessera"
+        }
+      }
+    },
+    {
+      "Sid": "NoUntagging",
+      "Effect": "Deny",
+      "Action": "kms:UntagResource",
+      "Resource": "*"
+    }
+  ]
+}

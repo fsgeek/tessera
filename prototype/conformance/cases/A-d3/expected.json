@@ -1,0 +1,37 @@
+{
+ "T": "2026-11-10T12:20:00Z",
+ "_meta": {
+  "ambiguities": [
+   "EA-27"
+  ],
+  "ambiguous_fields": [],
+  "cite": [
+   "P:956",
+   "P:263",
+   "RES L-17"
+  ],
+  "derivation": "One attacker key fills both slots; DNS publishes the honest keys (row 15.1 INVALID); git absent (row 2.2 UNVERIFIABLE MEMBER_MISSING:git). INVALID dominates UNVERIFIABLE (P:263); reported reason is the first failed row (P:1333-1335).",
+  "group": "A9.1 mapping",
+  "id": "A-d3",
+  "issuer_preship": {
+   "chain_order_h_git_plus_5_lt_h_receipt": true,
+   "git_anchored": true,
+   "receipt_anchored": true,
+   "receipt_c1": true,
+   "receipt_c2": true,
+   "receipt_c3": true,
+   "snapshot_anchored": true,
+   "snapshot_c1": true,
+   "snapshot_c2": true,
+   "snapshot_c3": true,
+   "window": true
+  },
+  "kind": "bundle",
+  "title": "Case d3 / L-17: clone with one key (both slots) and one channel (git absent)"
+ },
+ "historical_security": "NOT_EVALUATED",
+ "reason": "DNS_KEY_MISMATCH",
+ "revocation": "NOT_EVALUATED",
+ "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+ "verdict": "INVALID"
+}

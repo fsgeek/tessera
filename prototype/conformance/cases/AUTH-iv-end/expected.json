@@ -1,0 +1,53 @@
+{
+ "T": "2026-11-10T12:20:00Z",
+ "_meta": {
+  "ambiguities": [],
+  "ambiguous_fields": [],
+  "cite": [
+   "P:668-677",
+   "P:1502",
+   "P:1419",
+   "A9:333-338",
+   "P:253-256",
+   "P:269-272",
+   "P:1442-1447",
+   "A9:143",
+   "A9:153",
+   "prototype/mutation/REPORT.md obs. 3"
+  ],
+  "derivation": "The attacker holds the retired repository key and the DNS credential. The configured entry is finalized [2026-10-01, 2026-11-01T00:00:00Z]; T_git = 2026-11-02T00:20:00Z. The entry verifies but its interval excludes T_git: INVALID / GIT_SIGNER_OUTSIDE_INTERVAL (row 14.7).",
+  "group": "authority isolation",
+  "id": "AUTH-iv-end",
+  "installation": "classical",
+  "isolation": {
+   "attacker_holds": "the DNS credential and the retired repository key",
+   "only_failing_rows": [
+    "14.7"
+   ],
+   "selfcheck_fails": [
+    "repo_interval"
+   ],
+   "twin": "AUTH-iv-end-T"
+  },
+  "issuer_preship": {
+   "chain_order_h_git_plus_5_lt_h_receipt": true,
+   "git_anchored": true,
+   "receipt_anchored": true,
+   "receipt_c1": true,
+   "receipt_c2": true,
+   "receipt_c3": true,
+   "snapshot_anchored": true,
+   "snapshot_c1": true,
+   "snapshot_c2": true,
+   "snapshot_c3": true,
+   "window": true
+  },
+  "kind": "bundle",
+  "title": "Attacker-keyed receipt; git assertion by the configured key after its finalized signing_end"
+ },
+ "historical_security": "NOT_EVALUATED",
+ "reason": "GIT_SIGNER_OUTSIDE_INTERVAL",
+ "revocation": "NOT_EVALUATED",
+ "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+ "verdict": "INVALID"
+}

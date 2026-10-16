@@ -1,0 +1,28 @@
+A manifest decodes: PASS
+B manifest decodes: PASS
+A small kms frame decodes as attest (758 B): PASS
+B small kms frame decodes as attest (758 B): PASS
+A small gpg frame decodes as attest (757 B): PASS
+B small gpg frame decodes as attest (757 B): PASS
+A small kms ML-DSA-65 verifies over its exact frame: PASS
+B small kms ML-DSA-65 verifies over its exact frame: PASS
+cryptography + dilithium-py small kms: PASS
+A small mu equals SHAKE256(SHAKE256(pk,64)||00 00||F,64) recomputed by B-style hashing: PASS
+A small receipt (codec + both signatures): PASS
+B small receipt (codec + both signatures): PASS
+A big kms frame decodes as attest (6753 B): PASS
+B big kms frame decodes as attest (6753 B): PASS
+A big gpg frame decodes as attest (6752 B): PASS
+B big gpg frame decodes as attest (6752 B): PASS
+A big kms ML-DSA-65 verifies over its exact frame: PASS
+B big kms ML-DSA-65 verifies over its exact frame: PASS
+cryptography + dilithium-py big kms: PASS
+A big mu equals SHAKE256(SHAKE256(pk,64)||00 00||F,64) recomputed by B-style hashing: PASS
+A big receipt (codec + both signatures): PASS
+B big receipt (codec + both signatures): PASS
+A possession kms: PASS
+B possession kms: PASS
+A possession gpg: PASS
+B possession gpg: PASS
+cryptography + dilithium-py possession kms: PASS
+PASS

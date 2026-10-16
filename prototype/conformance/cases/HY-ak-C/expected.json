@@ -1,0 +1,39 @@
+{
+ "T": "2026-11-10T12:20:00Z",
+ "_meta": {
+  "ambiguities": [],
+  "ambiguous_fields": [],
+  "cite": [
+   "P:892-899",
+   "P:1472",
+   "P:1477",
+   "P:127-130",
+   "HC (a)"
+  ],
+  "derivation": "The bundle is HY-V1's issue (pair id, ML-DSA-65 SPKI) under the classical release. The pair id is not the classical catalog id, so the installed-spec key rule does not apply (P:892-899, owner decision on EA-31): row 5.1 is available only when row 7.1's alg is catalog-supported (P:1472), and key format, fingerprint, signature and possession checks are not evaluated. No row fails; the first unperformable is row 7.1 (P:1477): ALG_UNKNOWN, before 8.3's SPEC_UNKNOWN. An examiner holding the wrong installation is told 'cannot evaluate', not 'invalid'.",
+  "group": "hybrid routing",
+  "id": "HY-ak-C",
+  "installation": "classical",
+  "issuer_preship": {
+   "chain_order_h_git_plus_5_lt_h_receipt": true,
+   "git_anchored": true,
+   "receipt_anchored": true,
+   "receipt_c1": true,
+   "receipt_c2": true,
+   "receipt_c3": true,
+   "snapshot_anchored": true,
+   "snapshot_c1": true,
+   "snapshot_c2": true,
+   "snapshot_c3": true,
+   "window": true
+  },
+  "kind": "bundle",
+  "owner_decision": "EA-31, 2026-10-14: unsupported well-formed alg gives UNVERIFIABLE / ALG_UNKNOWN; key format not evaluated (profile \u00a78 scope note, row 5.1)",
+  "title": "(a) A genuine hybrid receipt (ML-DSA-65 SPKI in keys.kms, hybrid spec hash) presented to the classical installation"
+ },
+ "historical_security": "NOT_EVALUATED",
+ "reason": "ALG_UNKNOWN",
+ "revocation": "NOT_EVALUATED",
+ "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+ "verdict": "UNVERIFIABLE"
+}

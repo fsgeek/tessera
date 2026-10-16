@@ -1,0 +1,4 @@
+Full review of docs/h2-record-2026-10-13.md (repo /home/tony/projects/tessera). Read the whole file.
+Check: (1) every quoted line and file:line citation against the source (docs/phase-0-prereg.md, docs/phase-0-prereg-amendment-9.md, prototype/TRIAGE.md, docs/V1-SCHEDULE.md); (2) whether the attributions in §2 "Direction stayed with the author" are supported by the repo record (A9 §A9.0 quotes, DECISION docs) or overstated — name any item the record attributes to the AI instead; (3) whether §3's outcome overclaims or underclaims relative to H2's registered falsification test; (4) anything a hostile reader of the public repo would call self-serving.
+Quotes attributed to the author dated 2026-10-13 come from a live session and are not in the repo; do not flag them as unsourced, only flag internal inconsistency.
+Write findings, each with severity and a proposed fix, to docs/reviews/h2-record/CODEX-REVIEW.md. Edit nothing else.

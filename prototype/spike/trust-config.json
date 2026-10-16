@@ -1,0 +1,26 @@
+{
+ "_note": "THROWAWAY spike trust configuration. Ships with the verifier; never taken from a bundle. Times UTC. Publication, signing and reliance periods are recorded separately (A9.5); the verifier's root rule reads only signing_valid_from and reliance_valid_until.",
+ "version": "spike-2",
+ "issuer_domain": "wamason.com",
+ "root_ksks": [
+  {"name": "KSK-2017", "key_tag": 20326, "algorithm": 8, "ds_digest_sha256": "E06D44B80B8F1D39A95C0B0D7C65D08458E880409BBC683457104237C7F8EC8D",
+   "published_from": "2018-10-11T00:00:00Z", "published_until": "2027-03-22T00:00:00Z",
+   "signing_valid_from": "2018-10-11T00:00:00Z", "signing_valid_until": "2026-10-11T00:00:00Z",
+   "signing_source": "IANA: the root zone begins using KSK-2024 on 2026-10-11 and KSK-2017 ceases signing then (SPIKE-REPORT.md, KSK-2024 re-capture; https://www.iana.org/dnssec/files and https://www.iana.org/news/2026/root-zone-begins-using-new-ksk-2026 as cited in docs/reviews/v1-profile/CODEX-REVIEW.md F2). Corroborated by out-ksk2024/dns-snapshot.json: the root DNSKEY set's only RRSIG is by 38696, inception 2026-10-11T00:00:00Z.",
+   "max_root_dnskey_rrsig_validity_s": 1814400,
+   "max_validity_source": "Observed, archived captures: out/dns-snapshot.json (captured 2026-10-09) root DNSKEY RRSIG by 20326, inception 2026-10-01T00:00:00Z, expiration 2026-10-22T00:00:00Z = 21 d (1814400 s), the only KSK-2017 root DNSKEY RRSIG archived. Corroborating: out-ksk2024/dns-snapshot.json (captured 2026-10-12) RRSIG by 38696, 2026-10-11T00:00:00Z to 2026-11-01T00:00:00Z = 21 d. Maximum of observed windows; one KSK-2017 signature observed.",
+   "reliance_valid_until": "2026-11-01T00:00:00Z",
+   "reliance_rule": "A9.5 (OWNER DECISION 2026-10-13, after docs/reviews/v1-profile/ F2): reliance end = signing_valid_until + max_root_dnskey_rrsig_validity_s = 2026-10-11T00:00:00Z + 21 d. Replaces the withdrawn 2026-10-11T23:59:59Z end-of-day cutoff.",
+   "publication_source": "IANA root-anchors.xml; revoked 2027-01-11 and removed from root DNSKEY 2027-03-22 (V1 derivation draft section 1). Publication and revocation are informational; the verifier does not read them."},
+  {"name": "KSK-2024", "key_tag": 38696, "algorithm": 8, "ds_digest_sha256": "683D2D0ACB8C9B712A1948B27F741219298D0A450D612C483AF444A4C0FB2B16",
+   "published_from": null, "published_until": null,
+   "signing_valid_from": "2026-10-11T00:00:00Z", "signing_valid_until": null,
+   "signing_source": "IANA root-anchors.xml; first signs the root DNSKEY RRset 2026-10-11 (SPIKE-REPORT.md, KSK-2024 re-capture).",
+   "max_root_dnskey_rrsig_validity_s": 1814400,
+   "max_validity_source": "Observed: out-ksk2024/dns-snapshot.json root DNSKEY RRSIG by 38696, 2026-10-11T00:00:00Z to 2026-11-01T00:00:00Z = 21 d.",
+   "reliance_valid_until": null,
+   "reliance_rule": "Open while signing: reliance end is fixed only when a signing end is recorded (A9.5).",
+   "publication_source": "published_from not recorded in the spike; publication is informational only and not used by the verifier."}
+ ],
+ "params": {"delta_s": 259200, "epsilon_s": 86400, "k": 6}
+}

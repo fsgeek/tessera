@@ -1,0 +1,2847 @@
+[
+ {
+  "id": "A-a",
+  "group": "A9.1 mapping",
+  "title": "Honest receipt as shipped (cases a, g)",
+  "kind": "bundle",
+  "expected": "VALID_STRICT / OK",
+  "ambiguities": []
+ },
+ {
+  "id": "A-e",
+  "group": "A9.1 mapping",
+  "title": "Case e: a's bytes; slot-B key revoked out of band inside (declared, anchor]",
+  "kind": "bundle",
+  "expected": "VALID_STRICT / OK",
+  "ambiguities": []
+ },
+ {
+  "id": "A-e2",
+  "group": "A9.1 mapping",
+  "title": "Case e': slot-B key revoked before declared (out of band)",
+  "kind": "bundle",
+  "expected": "VALID_STRICT / OK",
+  "ambiguities": []
+ },
+ {
+  "id": "A-f",
+  "group": "A9.1 mapping",
+  "title": "Case f: impostor's content through the honest service",
+  "kind": "bundle",
+  "expected": "VALID_STRICT / OK",
+  "ambiguities": []
+ },
+ {
+  "id": "A-i",
+  "group": "A9.1 mapping",
+  "title": "Case i: content = a contract plus two valid party signatures",
+  "kind": "bundle",
+  "expected": "VALID_STRICT / OK",
+  "ambiguities": []
+ },
+ {
+  "id": "A-i2",
+  "group": "A9.1 mapping",
+  "title": "Case i': as i, one party signature does not verify",
+  "kind": "bundle",
+  "expected": "VALID_STRICT / OK",
+  "ambiguities": []
+ },
+ {
+  "id": "A-b",
+  "group": "A9.1 mapping",
+  "title": "Case b: reattribution under attacker keys, honest DNS and git evidence",
+  "kind": "bundle",
+  "expected": "INVALID / DNS_KEY_MISMATCH",
+  "ambiguities": [
+   "EA-27"
+  ]
+ },
+ {
+  "id": "A-d3",
+  "group": "A9.1 mapping",
+  "title": "Case d3 / L-17: clone with one key (both slots) and one channel (git absent)",
+  "kind": "bundle",
+  "expected": "INVALID / DNS_KEY_MISMATCH",
+  "ambiguities": [
+   "EA-27"
+  ]
+ },
+ {
+  "id": "L-01",
+  "group": "dispatch",
+  "title": "Non-JSON bytes",
+  "kind": "bundle",
+  "expected": "UNVERIFIABLE / OUT_OF_PROFILE",
+  "ambiguities": [
+   "EA-05"
+  ]
+ },
+ {
+  "id": "L-01b",
+  "group": "dispatch",
+  "title": "Duplicate top-level member names (ENC 1.4 check 4)",
+  "kind": "bundle",
+  "expected": "UNVERIFIABLE / OUT_OF_PROFILE",
+  "ambiguities": [
+   "EA-05"
+  ]
+ },
+ {
+  "id": "L-01c",
+  "group": "dispatch",
+  "title": "UTF-8 BOM before the container",
+  "kind": "bundle",
+  "expected": "UNVERIFIABLE / OUT_OF_PROFILE",
+  "ambiguities": [
+   "EA-05"
+  ]
+ },
+ {
+  "id": "L-01d",
+  "group": "dispatch",
+  "title": "Invalid UTF-8 inside a string",
+  "kind": "bundle",
+  "expected": "UNVERIFIABLE / OUT_OF_PROFILE",
+  "ambiguities": [
+   "EA-05"
+  ]
+ },
+ {
+  "id": "L-02",
+  "group": "dispatch",
+  "title": "Container over 2^27 bytes (valid JSON, padded)",
+  "kind": "bundle",
+  "expected": "UNVERIFIABLE / OUT_OF_PROFILE",
+  "ambiguities": [
+   "EA-05"
+  ]
+ },
+ {
+  "id": "L-02b",
+  "group": "dispatch",
+  "title": "Container of exactly 2^27 bytes (control: passes D1, then unknown member)",
+  "kind": "bundle",
+  "expected": "INVALID / CONTAINER_SCHEMA",
+  "ambiguities": []
+ },
+ {
+  "id": "L-03",
+  "group": "dispatch",
+  "title": "Top-level `profile` absent",
+  "kind": "bundle",
+  "expected": "UNVERIFIABLE / OUT_OF_PROFILE",
+  "ambiguities": [
+   "EA-05"
+  ]
+ },
+ {
+  "id": "L-03b",
+  "group": "dispatch",
+  "title": "Top-level `profile` = other label",
+  "kind": "bundle",
+  "expected": "UNVERIFIABLE / OUT_OF_PROFILE",
+  "ambiguities": [
+   "EA-05"
+  ]
+ },
+ {
+  "id": "L-04",
+  "group": "dispatch",
+  "title": "Two layers (case c, two-layer transplant)",
+  "kind": "bundle",
+  "expected": "UNVERIFIABLE / OUT_OF_PROFILE",
+  "ambiguities": [
+   "EA-05"
+  ]
+ },
+ {
+  "id": "L-04b",
+  "group": "dispatch",
+  "title": "Zero layers",
+  "kind": "bundle",
+  "expected": "UNVERIFIABLE / OUT_OF_PROFILE",
+  "ambiguities": [
+   "EA-05"
+  ]
+ },
+ {
+  "id": "L-05",
+  "group": "dispatch",
+  "title": "Renewal wrapper (case h)",
+  "kind": "bundle",
+  "expected": "UNVERIFIABLE / OUT_OF_PROFILE",
+  "ambiguities": [
+   "EA-05",
+   "EA-07"
+  ]
+ },
+ {
+  "id": "L-06",
+  "group": "dispatch",
+  "title": "Case d1: a's bundle under a degraded request",
+  "kind": "bundle",
+  "expected": "UNVERIFIABLE / OUT_OF_PROFILE",
+  "ambiguities": [
+   "EA-02",
+   "EA-04",
+   "EA-05"
+  ]
+ },
+ {
+  "id": "L-06s",
+  "group": "dispatch",
+  "title": "Case d1: the same bytes, strict request",
+  "kind": "bundle",
+  "expected": "VALID_STRICT / OK",
+  "ambiguities": []
+ },
+ {
+  "id": "L-07",
+  "group": "container",
+  "title": "Re-indented container",
+  "kind": "bundle",
+  "expected": "INVALID / JSON_NONCANONICAL",
+  "ambiguities": []
+ },
+ {
+  "id": "L-08",
+  "group": "container",
+  "title": "Unknown member in the layer",
+  "kind": "bundle",
+  "expected": "INVALID / CONTAINER_SCHEMA",
+  "ambiguities": []
+ },
+ {
+  "id": "L-09",
+  "group": "container",
+  "title": "Case d2: `git` absent",
+  "kind": "bundle",
+  "expected": "UNVERIFIABLE / MEMBER_MISSING:git",
+  "ambiguities": []
+ },
+ {
+  "id": "L-10",
+  "group": "container",
+  "title": "Nested `git.ots` absent",
+  "kind": "bundle",
+  "expected": "UNVERIFIABLE / MEMBER_MISSING:git.ots",
+  "ambiguities": []
+ },
+ {
+  "id": "L-11",
+  "group": "container",
+  "title": "`git.object_format` absent",
+  "kind": "bundle",
+  "expected": "UNVERIFIABLE / GIT_OBJECT_FORMAT_MISSING",
+  "ambiguities": []
+ },
+ {
+  "id": "L-12",
+  "group": "container",
+  "title": "`git.object_format` = \"sha256\"",
+  "kind": "bundle",
+  "expected": "UNVERIFIABLE / GIT_OBJECT_FORMAT",
+  "ambiguities": []
+ },
+ {
+  "id": "L-13",
+  "group": "container",
+  "title": "Header height key \"01\"",
+  "kind": "bundle",
+  "expected": "INVALID / CONTAINER_SCHEMA",
+  "ambiguities": []
+ },
+ {
+  "id": "L-14",
+  "group": "container",
+  "title": "Header height 4294967296",
+  "kind": "bundle",
+  "expected": "INVALID / CONTAINER_SCHEMA",
+  "ambiguities": []
+ },
+ {
+  "id": "L-15",
+  "group": "container",
+  "title": "`issuer_record` absent",
+  "kind": "bundle",
+  "expected": "VALID_STRICT / OK",
+  "ambiguities": []
+ },
+ {
+  "id": "L-16",
+  "group": "container",
+  "title": "`issuer_record.policy_version` malformed",
+  "kind": "bundle",
+  "expected": "INVALID / CONTAINER_SCHEMA",
+  "ambiguities": []
+ },
+ {
+  "id": "F03-a",
+  "group": "container",
+  "title": "`issuer_record: {}`",
+  "kind": "bundle",
+  "expected": "INVALID / CONTAINER_SCHEMA",
+  "ambiguities": []
+ },
+ {
+  "id": "F03-b",
+  "group": "container",
+  "title": "`keys: null`",
+  "kind": "bundle",
+  "expected": "INVALID / CONTAINER_SCHEMA",
+  "ambiguities": []
+ },
+ {
+  "id": "F03-c",
+  "group": "container",
+  "title": "`vectors` absent and `preamble` non-string",
+  "kind": "bundle",
+  "expected": "INVALID / CONTAINER_SCHEMA",
+  "ambiguities": []
+ },
+ {
+  "id": "F03-d",
+  "group": "container",
+  "title": "`git.object_format: null`",
+  "kind": "bundle",
+  "expected": "INVALID / CONTAINER_SCHEMA",
+  "ambiguities": []
+ },
+ {
+  "id": "F03-e",
+  "group": "container",
+  "title": "`dns.ots` and `git.ots` both absent",
+  "kind": "bundle",
+  "expected": "UNVERIFIABLE / MEMBER_MISSING:dns.ots",
+  "ambiguities": []
+ },
+ {
+  "id": "F03-f",
+  "group": "container",
+  "title": "Base64 member with nonzero pad bits",
+  "kind": "bundle",
+  "expected": "INVALID / CONTAINER_SCHEMA",
+  "ambiguities": []
+ },
+ {
+  "id": "F03-g",
+  "group": "container",
+  "title": "A JSON number inside the container",
+  "kind": "bundle",
+  "expected": "INVALID / CONTAINER_SCHEMA",
+  "ambiguities": []
+ },
+ {
+  "id": "F03-h",
+  "group": "container",
+  "title": "`receipt_anchor.txid` in uppercase hex",
+  "kind": "bundle",
+  "expected": "INVALID / CONTAINER_SCHEMA",
+  "ambiguities": []
+ },
+ {
+  "id": "F03-i",
+  "group": "container",
+  "title": "`git.trees` with three elements",
+  "kind": "bundle",
+  "expected": "INVALID / CONTAINER_SCHEMA",
+  "ambiguities": []
+ },
+ {
+  "id": "F03-j",
+  "group": "container",
+  "title": "`possession.kms` absent",
+  "kind": "bundle",
+  "expected": "UNVERIFIABLE / MEMBER_MISSING:possession.kms",
+  "ambiguities": []
+ },
+ {
+  "id": "L-18",
+  "group": "binding forms",
+  "title": "binding_forms [\"STMT_DIGEST\"]",
+  "kind": "bundle",
+  "expected": "UNVERIFIABLE / BINDING_FORM_UNSUPPORTED",
+  "ambiguities": []
+ },
+ {
+  "id": "L-19",
+  "group": "binding forms",
+  "title": "binding_forms [\"STMT_OTHER\"]",
+  "kind": "bundle",
+  "expected": "UNVERIFIABLE / BINDING_FORM_UNKNOWN",
+  "ambiguities": []
+ },
+ {
+  "id": "L-20",
+  "group": "binding forms",
+  "title": "binding_forms [\"STMT_DIGEST\",\"STMT_DIRECT\"]",
+  "kind": "bundle",
+  "expected": "UNVERIFIABLE / BINDING_FORM_UNSUPPORTED",
+  "ambiguities": []
+ },
+ {
+  "id": "L-21",
+  "group": "algorithm",
+  "title": "Branch-not-taken alg (hybrid pair id placeholder), rule-O signature bytes",
+  "kind": "bundle",
+  "expected": "UNVERIFIABLE / ALG_UNKNOWN",
+  "ambiguities": [
+   "EA-09"
+  ]
+ },
+ {
+  "id": "ALG-01",
+  "group": "algorithm",
+  "title": "Unknown-alg canary with opaque 300-byte signatures",
+  "kind": "bundle",
+  "expected": "UNVERIFIABLE / ALG_UNKNOWN",
+  "ambiguities": []
+ },
+ {
+  "id": "ALG-02",
+  "group": "algorithm",
+  "title": "Unknown alg with an empty kms signature (codec-invalid)",
+  "kind": "bundle",
+  "expected": "INVALID / SIG_EMPTY",
+  "ambiguities": []
+ },
+ {
+  "id": "ALG-03",
+  "group": "algorithm",
+  "title": "Unknown alg with a 65537-byte gpg signature (codec-invalid)",
+  "kind": "bundle",
+  "expected": "INVALID / LENGTH_CAP",
+  "ambiguities": []
+ },
+ {
+  "id": "ALG-04",
+  "group": "algorithm",
+  "title": "Frames carry an unknown alg; manifest carries the catalog alg",
+  "kind": "bundle",
+  "expected": "INVALID / RECEIPT_MANIFEST_MISMATCH",
+  "ambiguities": []
+ },
+ {
+  "id": "ALG-05",
+  "group": "algorithm",
+  "title": "Frames carry the catalog alg; manifest carries an unknown alg",
+  "kind": "bundle",
+  "expected": "INVALID / RECEIPT_MANIFEST_MISMATCH",
+  "ambiguities": []
+ },
+ {
+  "id": "L-22",
+  "group": "spec binding",
+  "title": "Wrong common.spec.id",
+  "kind": "bundle",
+  "expected": "INVALID / SPEC_ID",
+  "ambiguities": []
+ },
+ {
+  "id": "L-23",
+  "group": "spec binding",
+  "title": "Unknown spec hash (self-consistent bundled spec)",
+  "kind": "bundle",
+  "expected": "UNVERIFIABLE / SPEC_UNKNOWN",
+  "ambiguities": []
+ },
+ {
+  "id": "F12-a",
+  "group": "spec binding",
+  "title": "Unknown spec plus altered bundled preamble",
+  "kind": "bundle",
+  "expected": "INVALID / BUNDLE_OBJECT_HASH",
+  "ambiguities": []
+ },
+ {
+  "id": "F12-b",
+  "group": "spec binding",
+  "title": "Unknown spec plus unmatched dependency-manifest bytes",
+  "kind": "bundle",
+  "expected": "UNVERIFIABLE / SPEC_UNKNOWN",
+  "ambiguities": []
+ },
+ {
+  "id": "L-24",
+  "group": "spec binding",
+  "title": "Signed vectors_sha256 != catalog (bundled vectors self-consistent)",
+  "kind": "bundle",
+  "expected": "INVALID / SPEC_OBJECT_MISMATCH",
+  "ambiguities": []
+ },
+ {
+  "id": "L-24b",
+  "group": "spec binding",
+  "title": "Signed preamble_sha256 != catalog",
+  "kind": "bundle",
+  "expected": "INVALID / SPEC_OBJECT_MISMATCH",
+  "ambiguities": []
+ },
+ {
+  "id": "L-25",
+  "group": "spec binding",
+  "title": "Bundled preamble bytes altered",
+  "kind": "bundle",
+  "expected": "INVALID / BUNDLE_OBJECT_HASH",
+  "ambiguities": []
+ },
+ {
+  "id": "L-25b",
+  "group": "spec binding",
+  "title": "Bundled spec bytes altered",
+  "kind": "bundle",
+  "expected": "INVALID / BUNDLE_OBJECT_HASH",
+  "ambiguities": []
+ },
+ {
+  "id": "L-25c",
+  "group": "spec binding",
+  "title": "Bundled dependency manifest altered",
+  "kind": "bundle",
+  "expected": "INVALID / BUNDLE_OBJECT_HASH",
+  "ambiguities": []
+ },
+ {
+  "id": "L-26",
+  "group": "pinned D",
+  "title": "issuer = other domain, git absent",
+  "kind": "bundle",
+  "expected": "INVALID / ISSUER_NOT_PINNED",
+  "ambiguities": []
+ },
+ {
+  "id": "L-26b",
+  "group": "pinned D",
+  "title": "issuer = other domain, all evidence present",
+  "kind": "bundle",
+  "expected": "INVALID / ISSUER_NOT_PINNED",
+  "ambiguities": []
+ },
+ {
+  "id": "L-27",
+  "group": "chain order",
+  "title": "T_git = declared + 1 s (> declared), h_git + 5 < h_receipt",
+  "kind": "bundle",
+  "expected": "VALID_STRICT / OK",
+  "ambiguities": []
+ },
+ {
+  "id": "L-28",
+  "group": "chain order",
+  "title": "T_git > receipt T, h_git + 5 < h_receipt",
+  "kind": "bundle",
+  "expected": "VALID_STRICT / OK",
+  "ambiguities": []
+ },
+ {
+  "id": "L-29",
+  "group": "chain order",
+  "title": "h_git + 5 = h_receipt - 1 (r = g + 6)",
+  "kind": "bundle",
+  "expected": "VALID_STRICT / OK",
+  "ambiguities": []
+ },
+ {
+  "id": "L-30",
+  "group": "chain order",
+  "title": "h_git + 5 = h_receipt (r = g + 5)",
+  "kind": "bundle",
+  "expected": "INVALID / GIT_NOT_PRECOMMITTED",
+  "ambiguities": []
+ },
+ {
+  "id": "L-31",
+  "group": "chain order",
+  "title": "Codex F01 schedule: receipt h nTime 11:55, declared 12:00, git at j > h nTime 11:59",
+  "kind": "bundle",
+  "expected": "INVALID / GIT_NOT_PRECOMMITTED",
+  "ambiguities": []
+ },
+ {
+  "id": "L-32",
+  "group": "time",
+  "title": "Nonmonotone pair at c1: h1 < h2, nTime(h1) = declared - eps - 1, nTime(h2) = declared - eps",
+  "kind": "bundle",
+  "expected": "INVALID / TIME_BEFORE_DECLARED_EPSILON",
+  "ambiguities": []
+ },
+ {
+  "id": "L-32r",
+  "group": "time",
+  "title": "Reverse pair: nTime(h1) = declared - eps, nTime(h2) = declared - eps - 1",
+  "kind": "bundle",
+  "expected": "VALID_STRICT / OK",
+  "ambiguities": []
+ },
+ {
+  "id": "L-33",
+  "group": "time",
+  "title": "Nonmonotone pair at c2: nTime(h1) = declared + delta + 1, nTime(h2) = declared + delta",
+  "kind": "bundle",
+  "expected": "INVALID / TIME_AFTER_DECLARED_DELTA",
+  "ambiguities": []
+ },
+ {
+  "id": "L-33r",
+  "group": "time",
+  "title": "Reverse pair at c2 boundary",
+  "kind": "bundle",
+  "expected": "VALID_STRICT / OK",
+  "ambiguities": []
+ },
+ {
+  "id": "L-34",
+  "group": "time",
+  "title": "Nonmonotone pair at not-after: nTime(h1) = not-after + 1, nTime(h2) = not-after",
+  "kind": "bundle",
+  "expected": "INVALID / ISSUANCE_WINDOW",
+  "ambiguities": []
+ },
+ {
+  "id": "L-34r",
+  "group": "time",
+  "title": "Reverse pair at not-after",
+  "kind": "bundle",
+  "expected": "VALID_STRICT / OK",
+  "ambiguities": []
+ },
+ {
+  "id": "W-01",
+  "group": "time",
+  "title": "declared = issuance-not-before (inclusive)",
+  "kind": "bundle",
+  "expected": "VALID_STRICT / OK",
+  "ambiguities": []
+ },
+ {
+  "id": "W-02",
+  "group": "time",
+  "title": "declared = issuance-not-before - 1 s",
+  "kind": "bundle",
+  "expected": "INVALID / ISSUANCE_WINDOW",
+  "ambiguities": []
+ },
+ {
+  "id": "L-35",
+  "group": "time",
+  "title": "Two qualifying attestations at the same height",
+  "kind": "bundle",
+  "expected": "VALID_STRICT / OK",
+  "ambiguities": []
+ },
+ {
+  "id": "L-36",
+  "group": "time",
+  "title": "confirmed_at = declared + delta",
+  "kind": "bundle",
+  "expected": "VALID_STRICT / OK",
+  "ambiguities": []
+ },
+ {
+  "id": "L-36b",
+  "group": "time",
+  "title": "confirmed_at = declared + delta + 1",
+  "kind": "bundle",
+  "expected": "INVALID / CONFIRMATION_LATE",
+  "ambiguities": []
+ },
+ {
+  "id": "L-37",
+  "group": "time",
+  "title": "Fifth successor inside delta, sixth outside (h+6 header supplied)",
+  "kind": "bundle",
+  "expected": "VALID_STRICT / OK",
+  "ambiguities": []
+ },
+ {
+  "id": "L-38",
+  "group": "time",
+  "title": "confirmed_at < T (nonmonotone)",
+  "kind": "bundle",
+  "expected": "VALID_STRICT / OK",
+  "ambiguities": []
+ },
+ {
+  "id": "L-39",
+  "group": "time",
+  "title": "Qualifying branch plus an attestation at q > h with no headers",
+  "kind": "bundle",
+  "expected": "VALID_STRICT / OK",
+  "ambiguities": []
+ },
+ {
+  "id": "L-40",
+  "group": "time",
+  "title": "Plus an attestation at q < h with partial pinned headers (q, q+1)",
+  "kind": "bundle",
+  "expected": "VALID_STRICT / OK",
+  "ambiguities": []
+ },
+ {
+  "id": "L-41",
+  "group": "time",
+  "title": "Plus an attestation at q whose supplied header is unpinned",
+  "kind": "bundle",
+  "expected": "UNVERIFIABLE / HEADERS_NOT_COVERED",
+  "ambiguities": []
+ },
+ {
+  "id": "L-42",
+  "group": "time",
+  "title": "Plus a contradicted branch at q (pinned header, merkle != message)",
+  "kind": "bundle",
+  "expected": "INVALID / OTS_MERKLE_MISMATCH",
+  "ambiguities": []
+ },
+ {
+  "id": "L-43",
+  "group": "time",
+  "title": "Pending-only receipt proof",
+  "kind": "bundle",
+  "expected": "UNVERIFIABLE / ANCHOR_PENDING_ONLY",
+  "ambiguities": []
+ },
+ {
+  "id": "L-43b",
+  "group": "time",
+  "title": "Bitcoin attestation without its headers",
+  "kind": "bundle",
+  "expected": "UNVERIFIABLE / HEADERS_MISSING",
+  "ambiguities": []
+ },
+ {
+  "id": "L-44",
+  "group": "time",
+  "title": "Holder-upgraded proof: original witness plus new branches without headers",
+  "kind": "bundle",
+  "expected": "VALID_STRICT / OK",
+  "ambiguities": []
+ },
+ {
+  "id": "L-45",
+  "group": "time",
+  "title": "Missing intermediate height between supplied headers",
+  "kind": "bundle",
+  "expected": "VALID_STRICT / OK",
+  "ambiguities": []
+ },
+ {
+  "id": "L-46",
+  "group": "time",
+  "title": "Adjacent supplied pair with wrong prev (pinned)",
+  "kind": "bundle",
+  "expected": "INVALID / HEADER_CHAIN_BROKEN",
+  "ambiguities": []
+ },
+ {
+  "id": "L-47",
+  "group": "time",
+  "title": "Supplied header at a pinned height with another hash",
+  "kind": "bundle",
+  "expected": "INVALID / HEADER_CONFLICTS_PIN",
+  "ambiguities": []
+ },
+ {
+  "id": "L-48",
+  "group": "time",
+  "title": "h..h+5 segment crosses a 2016-block boundary (901152)",
+  "kind": "bundle",
+  "expected": "VALID_STRICT / OK",
+  "ambiguities": []
+ },
+ {
+  "id": "L-49",
+  "group": "time",
+  "title": "Receipt passes c3, snapshot fails c3",
+  "kind": "bundle",
+  "expected": "INVALID / SNAPSHOT_TIME",
+  "ambiguities": []
+ },
+ {
+  "id": "SNAP-c1",
+  "group": "time",
+  "title": "Snapshot T_snap = declared - eps - 1",
+  "kind": "bundle",
+  "expected": "INVALID / SNAPSHOT_TIME",
+  "ambiguities": []
+ },
+ {
+  "id": "SNAP-c1b",
+  "group": "time",
+  "title": "Snapshot T_snap = declared - eps (boundary)",
+  "kind": "bundle",
+  "expected": "VALID_STRICT / OK",
+  "ambiguities": []
+ },
+ {
+  "id": "SNAP-c2",
+  "group": "time",
+  "title": "Snapshot T_snap = declared + delta + 1",
+  "kind": "bundle",
+  "expected": "INVALID / SNAPSHOT_TIME",
+  "ambiguities": []
+ },
+ {
+  "id": "L-50",
+  "group": "trust config",
+  "title": "Config hash not compiled into the release",
+  "kind": "bundle",
+  "expected": "TRUST_CONFIG_UNAUTHENTICATED",
+  "ambiguities": []
+ },
+ {
+  "id": "L-50b",
+  "group": "trust config",
+  "title": "Compiled config that fails the 15.5 schema (root_ksks unsorted)",
+  "kind": "bundle",
+  "expected": "TRUST_CONFIG_UNAUTHENTICATED",
+  "ambiguities": []
+ },
+ {
+  "id": "L-50c",
+  "group": "trust config",
+  "title": "Compiled config whose repository key is not a valid P-256 point",
+  "kind": "bundle",
+  "expected": "TRUST_CONFIG_UNAUTHENTICATED",
+  "ambiguities": []
+ },
+ {
+  "id": "L-50d",
+  "group": "trust config",
+  "title": "Compiled config containing a JSON number",
+  "kind": "bundle",
+  "expected": "TRUST_CONFIG_UNAUTHENTICATED",
+  "ambiguities": []
+ },
+ {
+  "id": "L-51",
+  "group": "trust config",
+  "title": "Captured repository signer signs a config (own KSK, repository key, pins)",
+  "kind": "bundle",
+  "expected": "TRUST_CONFIG_UNAUTHENTICATED",
+  "ambiguities": []
+ },
+ {
+  "id": "L-52a",
+  "group": "trust config",
+  "title": "Captured DNS credential (wamason.com ZSK) signs a config",
+  "kind": "bundle",
+  "expected": "TRUST_CONFIG_UNAUTHENTICATED",
+  "ambiguities": []
+ },
+ {
+  "id": "L-52b",
+  "group": "trust config",
+  "title": "Issuing AWS account (kms signer) signs a config",
+  "kind": "bundle",
+  "expected": "TRUST_CONFIG_UNAUTHENTICATED",
+  "ambiguities": []
+ },
+ {
+  "id": "L-53",
+  "group": "release checker",
+  "title": "Changing L of a closed KSK",
+  "kind": "release_check",
+  "expected": "REJECT",
+  "ambiguities": []
+ },
+ {
+  "id": "L-54",
+  "group": "release checker",
+  "title": "Closing KSK-B so that its reliance end (end + L) < previous as_of",
+  "kind": "release_check",
+  "expected": "REJECT",
+  "ambiguities": []
+ },
+ {
+  "id": "L-54b",
+  "group": "release checker",
+  "title": "Closing the repository key below previous as_of",
+  "kind": "release_check",
+  "expected": "REJECT",
+  "ambiguities": []
+ },
+ {
+  "id": "L-54c",
+  "group": "release checker",
+  "title": "Closing KSK-B with end + L >= previous as_of (control)",
+  "kind": "release_check",
+  "expected": "ACCEPT",
+  "ambiguities": []
+ },
+ {
+  "id": "L-55a",
+  "group": "release checker",
+  "title": "as_of decreasing",
+  "kind": "release_check",
+  "expected": "REJECT",
+  "ambiguities": []
+ },
+ {
+  "id": "L-55b",
+  "group": "release checker",
+  "title": "Existing pin hash changed",
+  "kind": "release_check",
+  "expected": "REJECT",
+  "ambiguities": []
+ },
+ {
+  "id": "L-55c",
+  "group": "release checker",
+  "title": "Entry removed (KSK-A)",
+  "kind": "release_check",
+  "expected": "REJECT",
+  "ambiguities": []
+ },
+ {
+  "id": "L-56c",
+  "group": "release checker",
+  "title": "Pin append (new heights)",
+  "kind": "release_check",
+  "expected": "ACCEPT",
+  "ambiguities": []
+ },
+ {
+  "id": "L-56a",
+  "group": "trust config",
+  "title": "Pin append, before: h* segment supplied but unpinned",
+  "kind": "bundle",
+  "expected": "UNVERIFIABLE / HEADERS_NOT_COVERED",
+  "ambiguities": []
+ },
+ {
+  "id": "L-56b",
+  "group": "trust config",
+  "title": "Pin append, after: the same bundle under the appended config",
+  "kind": "bundle",
+  "expected": "VALID_STRICT / OK",
+  "ambiguities": []
+ },
+ {
+  "id": "L-57",
+  "group": "trust config",
+  "title": "Snapshot after as_of under the open KSK-B",
+  "kind": "bundle",
+  "expected": "UNVERIFIABLE / TRUST_HORIZON",
+  "ambiguities": []
+ },
+ {
+  "id": "L-57b",
+  "group": "trust config",
+  "title": "Git T_git after as_of under the open repository key",
+  "kind": "bundle",
+  "expected": "UNVERIFIABLE / TRUST_HORIZON",
+  "ambiguities": []
+ },
+ {
+  "id": "L-57c",
+  "group": "trust config",
+  "title": "Mixed root: finalized KSK-A outside reliance + open KSK-B after as_of",
+  "kind": "bundle",
+  "expected": "UNVERIFIABLE / TRUST_HORIZON",
+  "ambiguities": []
+ },
+ {
+  "id": "L-58",
+  "group": "trust config",
+  "title": "Presented root KSK-B with REVOKE set (signing with it)",
+  "kind": "bundle",
+  "expected": "UNVERIFIABLE / NO_TRUSTED_KSK_USABLE",
+  "ambiguities": []
+ },
+ {
+  "id": "L-59",
+  "group": "trust config",
+  "title": "Presented root KSK-B RDATA differs from config (flags 256)",
+  "kind": "bundle",
+  "expected": "UNVERIFIABLE / NO_TRUSTED_KSK_USABLE",
+  "ambiguities": []
+ },
+ {
+  "id": "L-60",
+  "group": "trust config",
+  "title": "Rollover control: KSK-A published but not signing",
+  "kind": "bundle",
+  "expected": "VALID_STRICT / OK",
+  "ambiguities": []
+ },
+ {
+  "id": "L-61a",
+  "group": "trust config",
+  "title": "Failing trusted candidate (KSK-A, corrupt) sorted first, KSK-B validates",
+  "kind": "bundle",
+  "expected": "VALID_STRICT / OK",
+  "ambiguities": [
+   "EA-08"
+  ]
+ },
+ {
+  "id": "L-61b",
+  "group": "trust config",
+  "title": "Failing trusted candidate (KSK-B, corrupt) sorted second, KSK-A validates",
+  "kind": "bundle",
+  "expected": "VALID_STRICT / OK",
+  "ambiguities": [
+   "EA-08"
+  ]
+ },
+ {
+  "id": "L-62a",
+  "group": "trust config",
+  "title": "Honest old root: KSK-A signed before retirement, anchored after, within reliance",
+  "kind": "bundle",
+  "expected": "VALID_STRICT / OK",
+  "ambiguities": []
+ },
+ {
+  "id": "L-62b",
+  "group": "trust config",
+  "title": "Same old-root evidence (window Oct 1-22) anchored after reliance",
+  "kind": "bundle",
+  "expected": "INVALID / RRSIG_NOT_VALID_AT_EVAL_TIME",
+  "ambiguities": [
+   "EA-14"
+  ]
+ },
+ {
+  "id": "L-63",
+  "group": "trust config",
+  "title": "Retired KSK-A, RRSIG window valid, T_snap outside reliance",
+  "kind": "bundle",
+  "expected": "INVALID / KSK_OUTSIDE_RELIANCE_PERIOD",
+  "ambiguities": []
+ },
+ {
+  "id": "F15-a",
+  "group": "trust config",
+  "title": "KSK-A policy signing_start boundary: T_snap = 2018-10-11T16:00:00Z",
+  "kind": "bundle",
+  "expected": "VALID_STRICT / OK",
+  "ambiguities": []
+ },
+ {
+  "id": "F15-b",
+  "group": "trust config",
+  "title": "KSK-A policy signing_start boundary: T_snap = 2018-10-11T15:59:59Z",
+  "kind": "bundle",
+  "expected": "INVALID / KSK_OUTSIDE_RELIANCE_PERIOD",
+  "ambiguities": []
+ },
+ {
+  "id": "L-64",
+  "group": "DNSSEC",
+  "title": "Mixed DS types 2 and 4, only type 4 matching",
+  "kind": "bundle",
+  "expected": "VALID_STRICT / OK",
+  "ambiguities": []
+ },
+ {
+  "id": "L-65",
+  "group": "DNSSEC",
+  "title": "DS type 4 only, matching",
+  "kind": "bundle",
+  "expected": "VALID_STRICT / OK",
+  "ambiguities": []
+ },
+ {
+  "id": "L-66",
+  "group": "DNSSEC",
+  "title": "DS type 1 only (matching selectors)",
+  "kind": "bundle",
+  "expected": "UNVERIFIABLE / DNSSEC_ALGORITHM_UNSUPPORTED",
+  "ambiguities": []
+ },
+ {
+  "id": "L-67",
+  "group": "DNSSEC",
+  "title": "Supported nonmatching DS plus unsupported DS",
+  "kind": "bundle",
+  "expected": "UNVERIFIABLE / DNSSEC_ALGORITHM_UNSUPPORTED",
+  "ambiguities": []
+ },
+ {
+  "id": "L-68",
+  "group": "DNSSEC",
+  "title": "All DS supported (type 2), none matching",
+  "kind": "bundle",
+  "expected": "INVALID / DNSKEY_DS_MISMATCH",
+  "ambiguities": []
+ },
+ {
+  "id": "L-68b",
+  "group": "DNSSEC",
+  "title": "All DS supported (types 2 and 4), none matching",
+  "kind": "bundle",
+  "expected": "INVALID / DNSKEY_DS_MISMATCH",
+  "ambiguities": []
+ },
+ {
+  "id": "L-69",
+  "group": "DNSSEC",
+  "title": "TXT: valid alg-13 RRSIG plus an alg-15 RRSIG",
+  "kind": "bundle",
+  "expected": "VALID_STRICT / OK",
+  "ambiguities": []
+ },
+ {
+  "id": "L-70",
+  "group": "DNSSEC",
+  "title": "TXT signed only by an alg-15 key present in the zone's DNSKEY set",
+  "kind": "bundle",
+  "expected": "UNVERIFIABLE / DNSSEC_ALGORITHM_UNSUPPORTED",
+  "ambiguities": []
+ },
+ {
+  "id": "L-70b",
+  "group": "DNSSEC",
+  "title": "TXT signed only by an alg-15 key absent from the zone (unrelated unsupported RRSIG)",
+  "kind": "bundle",
+  "expected": "UNVERIFIABLE / DNS_EVIDENCE_MISSING",
+  "ambiguities": [
+   "EA-11"
+  ]
+ },
+ {
+  "id": "L-71a",
+  "group": "DNSSEC",
+  "title": "TXT RRset without its witness RRSIG",
+  "kind": "bundle",
+  "expected": "UNVERIFIABLE / DNS_EVIDENCE_MISSING",
+  "ambiguities": []
+ },
+ {
+  "id": "L-71b",
+  "group": "DNSSEC",
+  "title": "Root DNSKEY without RRSIG",
+  "kind": "bundle",
+  "expected": "UNVERIFIABLE / NO_TRUSTED_KSK_USABLE",
+  "ambiguities": []
+ },
+ {
+  "id": "L-72",
+  "group": "DNSSEC",
+  "title": "Sequence ending before the TXT group",
+  "kind": "bundle",
+  "expected": "UNVERIFIABLE / DNS_EVIDENCE_MISSING",
+  "ambiguities": []
+ },
+ {
+  "id": "L-73a",
+  "group": "DNSSEC",
+  "title": "Truncated RR (last RDATA one byte short)",
+  "kind": "bundle",
+  "expected": "INVALID / SNAPSHOT_FORMAT",
+  "ambiguities": []
+ },
+ {
+  "id": "L-73b",
+  "group": "DNSSEC",
+  "title": "Forbidden RR type (A at wamason.com)",
+  "kind": "bundle",
+  "expected": "INVALID / SNAPSHOT_FORMAT",
+  "ambiguities": []
+ },
+ {
+  "id": "L-73c",
+  "group": "DNSSEC",
+  "title": "Duplicate RR in the wamason.com DNSKEY group",
+  "kind": "bundle",
+  "expected": "INVALID / SNAPSHOT_FORMAT",
+  "ambiguities": []
+ },
+ {
+  "id": "L-73d",
+  "group": "DNSSEC",
+  "title": "Misordered groups (com DNSKEY before com DS)",
+  "kind": "bundle",
+  "expected": "INVALID / SNAPSHOT_FORMAT",
+  "ambiguities": []
+ },
+ {
+  "id": "L-74",
+  "group": "DNSSEC",
+  "title": "Uppercase signer name inside TXT RRSIG RDATA",
+  "kind": "bundle",
+  "expected": "INVALID / SNAPSHOT_FORMAT",
+  "ambiguities": []
+ },
+ {
+  "id": "L-74e",
+  "group": "DNSSEC",
+  "title": "Valid TXT witness plus uppercase-signer TXT RRSIG (inception one day earlier: sorts first)",
+  "kind": "bundle",
+  "expected": "INVALID / SNAPSHOT_FORMAT",
+  "ambiguities": []
+ },
+ {
+  "id": "L-74l",
+  "group": "DNSSEC",
+  "title": "Valid TXT witness plus uppercase-signer TXT RRSIG (inception one second later: sorts last)",
+  "kind": "bundle",
+  "expected": "INVALID / SNAPSHOT_FORMAT",
+  "ambiguities": []
+ },
+ {
+  "id": "L-74v",
+  "group": "DNSSEC",
+  "title": "Valid TXT witness plus uppercase-signer TXT RRSIG (same inception: issuer sort order)",
+  "kind": "bundle",
+  "expected": "INVALID / SNAPSHOT_FORMAT",
+  "ambiguities": []
+ },
+ {
+  "id": "L-75",
+  "group": "DNSSEC",
+  "title": "Wildcard TXT RRSIG (Labels 2 < 3) as the only witness",
+  "kind": "bundle",
+  "expected": "INVALID / DNS_WILDCARD",
+  "ambiguities": []
+ },
+ {
+  "id": "F07-a",
+  "group": "DNSSEC",
+  "title": "Valid explicit TXT witness plus a wildcard RRSIG",
+  "kind": "bundle",
+  "expected": "INVALID / DNS_WILDCARD",
+  "ambiguities": []
+ },
+ {
+  "id": "L-76",
+  "group": "DNSSEC",
+  "title": "Malformed TXT value (v=tessera2) with DNSSEC unperformable (root unsigned)",
+  "kind": "bundle",
+  "expected": "INVALID / DNS_VERSION",
+  "ambiguities": []
+ },
+ {
+  "id": "L-77",
+  "group": "DNSSEC",
+  "title": "Empty snapshot body",
+  "kind": "bundle",
+  "expected": "INVALID / LENGTH_CAP",
+  "ambiguities": [
+   "EA-20"
+  ]
+ },
+ {
+  "id": "L-78",
+  "group": "DNSSEC",
+  "title": "Extra expired TXT RRSIG beside a valid one",
+  "kind": "bundle",
+  "expected": "VALID_STRICT / OK",
+  "ambiguities": []
+ },
+ {
+  "id": "L-79",
+  "group": "DNSSEC",
+  "title": "TXT RRSIG inception exactly 2^31 from T_snap",
+  "kind": "bundle",
+  "expected": "INVALID / RRSIG_TIME_AMBIGUOUS",
+  "ambiguities": []
+ },
+ {
+  "id": "L-80",
+  "group": "DNSSEC",
+  "title": "TXT RRSIG inception > expiration",
+  "kind": "bundle",
+  "expected": "INVALID / RRSIG_INTERVAL_REVERSED",
+  "ambiguities": []
+ },
+ {
+  "id": "L-81",
+  "group": "DNSSEC",
+  "title": "TXT RRSIG inception = expiration = T_snap",
+  "kind": "bundle",
+  "expected": "VALID_STRICT / OK",
+  "ambiguities": []
+ },
+ {
+  "id": "L-82",
+  "group": "DNSSEC",
+  "title": "2106 rollover: RRSIG expirations wrap past 2^32 around T_snap",
+  "kind": "bundle",
+  "expected": "VALID_STRICT / OK",
+  "ambiguities": [
+   "EA-13"
+  ]
+ },
+ {
+  "id": "DNS-sig",
+  "group": "DNSSEC",
+  "title": "TXT RRSIG cryptographically invalid",
+  "kind": "bundle",
+  "expected": "INVALID / DNSSEC_SIGNATURE_INVALID",
+  "ambiguities": []
+ },
+ {
+  "id": "DNS-expired",
+  "group": "DNSSEC",
+  "title": "Only TXT RRSIG expired at T_snap",
+  "kind": "bundle",
+  "expected": "INVALID / RRSIG_NOT_VALID_AT_EVAL_TIME",
+  "ambiguities": []
+ },
+ {
+  "id": "DNS-rootsig",
+  "group": "DNSSEC",
+  "title": "Root RRSIG by KSK-B cryptographically invalid",
+  "kind": "bundle",
+  "expected": "INVALID / TRUSTED_KSK_SIGNATURE_INVALID",
+  "ambiguities": []
+ },
+ {
+  "id": "F05-a",
+  "group": "DNSSEC",
+  "title": "TXT signer DNSKEY has Zone Key flag clear",
+  "kind": "bundle",
+  "expected": "INVALID / DNSSEC_KEY_MISMATCH",
+  "ambiguities": []
+ },
+ {
+  "id": "F05-b",
+  "group": "DNSSEC",
+  "title": "TXT signer DNSKEY has protocol 2",
+  "kind": "bundle",
+  "expected": "INVALID / DNSSEC_KEY_MISMATCH",
+  "ambiguities": []
+ },
+ {
+  "id": "F05-c",
+  "group": "DNSSEC",
+  "title": "TXT RRSIG Labels 4 > owner label count 3",
+  "kind": "bundle",
+  "expected": "INVALID / DNSSEC_RRSIG_METADATA",
+  "ambiguities": []
+ },
+ {
+  "id": "F05-d",
+  "group": "DNSSEC",
+  "title": "TXT RRSIG alg 13 with a 63-byte signature",
+  "kind": "bundle",
+  "expected": "INVALID / DNSSEC_FORMAT",
+  "ambiguities": []
+ },
+ {
+  "id": "F05-e",
+  "group": "DNSSEC",
+  "title": "Parent-blocked child (DS type 1 only) with a locally invalid TXT signature",
+  "kind": "bundle",
+  "expected": "INVALID / DNSSEC_SIGNATURE_INVALID",
+  "ambiguities": []
+ },
+ {
+  "id": "F05-f",
+  "group": "DNSSEC",
+  "title": "TXT RRSIG key tag matching no DNSKEY",
+  "kind": "bundle",
+  "expected": "INVALID / DNSSEC_KEY_MISMATCH",
+  "ambiguities": []
+ },
+ {
+  "id": "F06-a",
+  "group": "DNSSEC",
+  "title": "Root-only -> TXT (TXT signed directly by the root ZSK)",
+  "kind": "bundle",
+  "expected": "VALID_STRICT / OK",
+  "ambiguities": []
+ },
+ {
+  "id": "F06-b",
+  "group": "DNSSEC",
+  "title": "Missing last DNSKEY group (wamason.com DNSKEY)",
+  "kind": "bundle",
+  "expected": "UNVERIFIABLE / DNS_EVIDENCE_MISSING",
+  "ambiguities": []
+ },
+ {
+  "id": "F06-c",
+  "group": "DNSSEC",
+  "title": "Missing DS group (wamason.com DS)",
+  "kind": "bundle",
+  "expected": "UNVERIFIABLE / DNS_EVIDENCE_MISSING",
+  "ambiguities": []
+ },
+ {
+  "id": "F06-d",
+  "group": "DNSSEC",
+  "title": "Missing root DNSKEY group",
+  "kind": "bundle",
+  "expected": "UNVERIFIABLE / NO_TRUSTED_KSK_USABLE",
+  "ambiguities": []
+ },
+ {
+  "id": "F06-e",
+  "group": "DNSSEC",
+  "title": "Wrong-owner TXT (_tessera-v2.wamason.com)",
+  "kind": "bundle",
+  "expected": "INVALID / DNS_OWNER",
+  "ambiguities": []
+ },
+ {
+  "id": "F06-f",
+  "group": "DNSSEC",
+  "title": "Malformed TXT character-string (length byte runs past RDATA)",
+  "kind": "bundle",
+  "expected": "INVALID / DNS_RDATA",
+  "ambiguities": []
+ },
+ {
+  "id": "F06-g",
+  "group": "DNSSEC",
+  "title": "TXT RDATA with two character-strings",
+  "kind": "bundle",
+  "expected": "INVALID / DNS_STRINGS",
+  "ambiguities": []
+ },
+ {
+  "id": "F06-h",
+  "group": "DNSSEC",
+  "title": "Two TXT RRs at the owner",
+  "kind": "bundle",
+  "expected": "INVALID / DNS_RRSET",
+  "ambiguities": []
+ },
+ {
+  "id": "F07-b",
+  "group": "DNSSEC",
+  "title": "Primary-key tie (same tag/inception/expiration/signature), canonical RDATA order",
+  "kind": "bundle",
+  "expected": "VALID_STRICT / OK",
+  "ambiguities": []
+ },
+ {
+  "id": "F07-c",
+  "group": "DNSSEC",
+  "title": "Primary-key tie in the reverse order",
+  "kind": "bundle",
+  "expected": "INVALID / SNAPSHOT_FORMAT",
+  "ambiguities": []
+ },
+ {
+  "id": "F07-d",
+  "group": "DNSSEC",
+  "title": "Duplicate TXT RRSIG",
+  "kind": "bundle",
+  "expected": "INVALID / SNAPSHOT_FORMAT",
+  "ambiguities": []
+ },
+ {
+  "id": "DNS-wlen",
+  "group": "DNS record",
+  "title": "Window of 90 days + 1 s in both channels",
+  "kind": "bundle",
+  "expected": "INVALID / DNS_WINDOW_LENGTH",
+  "ambiguities": []
+ },
+ {
+  "id": "DNS-wlen90",
+  "group": "DNS record",
+  "title": "Window of exactly 90 days (control)",
+  "kind": "bundle",
+  "expected": "VALID_STRICT / OK",
+  "ambiguities": []
+ },
+ {
+  "id": "DNS-keys",
+  "group": "DNS record",
+  "title": "Both channels publish another kms fingerprint",
+  "kind": "bundle",
+  "expected": "INVALID / DNS_KEY_MISMATCH",
+  "ambiguities": []
+ },
+ {
+  "id": "DNS-profile",
+  "group": "DNS record",
+  "title": "Both channels publish profile=tessera-v1-other",
+  "kind": "bundle",
+  "expected": "INVALID / DNS_PROFILE",
+  "ambiguities": []
+ },
+ {
+  "id": "CH-01",
+  "group": "DNS record",
+  "title": "Git blob carries a different window than DNS",
+  "kind": "bundle",
+  "expected": "INVALID / CHANNEL_VALUE_MISMATCH",
+  "ambiguities": []
+ },
+ {
+  "id": "CH-02",
+  "group": "DNS record",
+  "title": "Git blob = DNS value plus trailing LF",
+  "kind": "bundle",
+  "expected": "INVALID / CHANNEL_VALUE_MISMATCH",
+  "ambiguities": [
+   "EA-21"
+  ]
+ },
+ {
+  "id": "SNAP-stamp",
+  "group": "proofs",
+  "title": "Snapshot proof digest = SHA256(body), not of the ENC 6 envelope",
+  "kind": "bundle",
+  "expected": "INVALID / SNAPSHOT_STAMP_MISMATCH",
+  "ambiguities": []
+ },
+ {
+  "id": "SNAP-pending",
+  "group": "proofs",
+  "title": "Snapshot proof pending-only",
+  "kind": "bundle",
+  "expected": "UNVERIFIABLE / SNAPSHOT_NOT_ANCHORED",
+  "ambiguities": []
+ },
+ {
+  "id": "SNAP-shape",
+  "group": "proofs",
+  "title": "Snapshot proof: digest double-hashed then a transaction (txid-subset shape fails)",
+  "kind": "bundle",
+  "expected": "INVALID / OTS_TX_SHAPE",
+  "ambiguities": []
+ },
+ {
+  "id": "GIT-shape",
+  "group": "proofs",
+  "title": "Git proof: digest double-hashed then a transaction",
+  "kind": "bundle",
+  "expected": "INVALID / OTS_TX_SHAPE",
+  "ambiguities": []
+ },
+ {
+  "id": "GIT-pending",
+  "group": "proofs",
+  "title": "Git proof pending-only",
+  "kind": "bundle",
+  "expected": "UNVERIFIABLE / GIT_NOT_ANCHORED",
+  "ambiguities": []
+ },
+ {
+  "id": "GIT-stamp",
+  "group": "proofs",
+  "title": "Git proof digest over the commit id without LF",
+  "kind": "bundle",
+  "expected": "INVALID / GIT_STAMP_MISMATCH",
+  "ambiguities": []
+ },
+ {
+  "id": "L-83",
+  "group": "OTS",
+  "title": "receipt_anchor.txid != path-derived txid",
+  "kind": "bundle",
+  "expected": "INVALID / ANCHOR_TXID_MISMATCH",
+  "ambiguities": []
+ },
+ {
+  "id": "L-84",
+  "group": "OTS",
+  "title": "Codex F09 proof: digest double-hashed into a commitment, then a real transaction",
+  "kind": "bundle",
+  "expected": "INVALID / ANCHOR_TXID_MISMATCH",
+  "ambiguities": []
+ },
+ {
+  "id": "L-85",
+  "group": "OTS",
+  "title": "SegWit-serialized transaction preimage",
+  "kind": "bundle",
+  "expected": "INVALID / ANCHOR_TXID_MISMATCH",
+  "ambiguities": []
+ },
+ {
+  "id": "F09-a",
+  "group": "OTS",
+  "title": "Transaction with non-shortest CompactSize input count",
+  "kind": "bundle",
+  "expected": "INVALID / ANCHOR_TXID_MISMATCH",
+  "ambiguities": []
+ },
+ {
+  "id": "F09-b",
+  "group": "OTS",
+  "title": "Multi-input / multi-output, non-125-byte transaction (control)",
+  "kind": "bundle",
+  "expected": "VALID_STRICT / OK",
+  "ambiguities": []
+ },
+ {
+  "id": "F09-c",
+  "group": "OTS",
+  "title": "Non-conventional merkle suffix (single sha256)",
+  "kind": "bundle",
+  "expected": "INVALID / ANCHOR_TXID_MISMATCH",
+  "ambiguities": []
+ },
+ {
+  "id": "F08-a",
+  "group": "OTS",
+  "title": "Two paths at the selected height: one satisfies the txid subset, one does not",
+  "kind": "bundle",
+  "expected": "VALID_STRICT / OK",
+  "ambiguities": []
+ },
+ {
+  "id": "L-86",
+  "group": "OTS",
+  "title": "Redundant LEB128 (height varuint with an extra zero group)",
+  "kind": "bundle",
+  "expected": "INVALID / OTS_FORMAT",
+  "ambiguities": []
+ },
+ {
+  "id": "L-87a",
+  "group": "OTS",
+  "title": "SHA-1 op (0x02)",
+  "kind": "bundle",
+  "expected": "INVALID / OTS_FORMAT",
+  "ambiguities": []
+ },
+ {
+  "id": "L-87b",
+  "group": "OTS",
+  "title": "RIPEMD-160 op (0x03)",
+  "kind": "bundle",
+  "expected": "INVALID / OTS_FORMAT",
+  "ambiguities": []
+ },
+ {
+  "id": "L-87c",
+  "group": "OTS",
+  "title": "Unknown attestation tag",
+  "kind": "bundle",
+  "expected": "INVALID / OTS_FORMAT",
+  "ambiguities": []
+ },
+ {
+  "id": "L-87d",
+  "group": "OTS",
+  "title": "Depth bound exceeded (pending branch at depth 257)",
+  "kind": "bundle",
+  "expected": "INVALID / OTS_FORMAT",
+  "ambiguities": []
+ },
+ {
+  "id": "L-87e",
+  "group": "OTS",
+  "title": "Depth bound edge (pending branch at depth 256, control)",
+  "kind": "bundle",
+  "expected": "VALID_STRICT / OK",
+  "ambiguities": [
+   "EA-26"
+  ]
+ },
+ {
+  "id": "F09-d",
+  "group": "OTS",
+  "title": "Bitcoin attestation message of 33 bytes",
+  "kind": "bundle",
+  "expected": "INVALID / OTS_FORMAT",
+  "ambiguities": []
+ },
+ {
+  "id": "F09-e",
+  "group": "OTS",
+  "title": "Pending payload not consumed (extra byte after the URI)",
+  "kind": "bundle",
+  "expected": "INVALID / OTS_FORMAT",
+  "ambiguities": []
+ },
+ {
+  "id": "F09-f",
+  "group": "OTS",
+  "title": "Receipt proof with exactly 65536 op items (bound edge, control)",
+  "kind": "bundle",
+  "expected": "VALID_STRICT / OK",
+  "ambiguities": []
+ },
+ {
+  "id": "F09-g",
+  "group": "OTS",
+  "title": "Receipt proof with 65537 op items",
+  "kind": "bundle",
+  "expected": "INVALID / OTS_FORMAT",
+  "ambiguities": []
+ },
+ {
+  "id": "F09-h",
+  "group": "OTS",
+  "title": "Receipt proof with exactly 4096 attestations (bound edge, control)",
+  "kind": "bundle",
+  "expected": "VALID_STRICT / OK",
+  "ambiguities": []
+ },
+ {
+  "id": "F09-i",
+  "group": "OTS",
+  "title": "Receipt proof with 4097 attestations",
+  "kind": "bundle",
+  "expected": "INVALID / OTS_FORMAT",
+  "ambiguities": []
+ },
+ {
+  "id": "L-88",
+  "group": "OTS",
+  "title": "Receipt OTS digest != SHA256(a_sig): S_gpg re-serialized after stamping",
+  "kind": "bundle",
+  "expected": "INVALID / RECEIPT_ANCHOR_MISMATCH",
+  "ambiguities": []
+ },
+ {
+  "id": "SNAP-otsfmt",
+  "group": "OTS",
+  "title": "Snapshot proof with redundant LEB128",
+  "kind": "bundle",
+  "expected": "INVALID / OTS_FORMAT",
+  "ambiguities": []
+ },
+ {
+  "id": "L-89",
+  "group": "git",
+  "title": "Merge commit with two distinct parents",
+  "kind": "bundle",
+  "expected": "VALID_STRICT / OK",
+  "ambiguities": []
+ },
+ {
+  "id": "L-90",
+  "group": "git",
+  "title": "Repeated identical parent",
+  "kind": "bundle",
+  "expected": "INVALID / GIT_COMMIT_FORMAT",
+  "ambiguities": []
+ },
+ {
+  "id": "L-91a",
+  "group": "git",
+  "title": "`encoding` header",
+  "kind": "bundle",
+  "expected": "INVALID / GIT_COMMIT_FORMAT",
+  "ambiguities": []
+ },
+ {
+  "id": "L-91b",
+  "group": "git",
+  "title": "Second `gpgsig`",
+  "kind": "bundle",
+  "expected": "INVALID / GIT_COMMIT_FORMAT",
+  "ambiguities": []
+ },
+ {
+  "id": "L-91c",
+  "group": "git",
+  "title": "Unsigned commit (no gpgsig)",
+  "kind": "bundle",
+  "expected": "INVALID / GIT_COMMIT_FORMAT",
+  "ambiguities": []
+ },
+ {
+  "id": "L-91d",
+  "group": "git",
+  "title": "`gpgsig-sha256` header",
+  "kind": "bundle",
+  "expected": "INVALID / GIT_COMMIT_FORMAT",
+  "ambiguities": []
+ },
+ {
+  "id": "L-92a",
+  "group": "git",
+  "title": "Armor header line",
+  "kind": "bundle",
+  "expected": "INVALID / GIT_SIG_FORMAT",
+  "ambiguities": []
+ },
+ {
+  "id": "L-92b",
+  "group": "git",
+  "title": "Armor CRC mismatch",
+  "kind": "bundle",
+  "expected": "INVALID / GIT_SIG_FORMAT",
+  "ambiguities": []
+ },
+ {
+  "id": "L-92c",
+  "group": "git",
+  "title": "77-character base64 line",
+  "kind": "bundle",
+  "expected": "INVALID / GIT_SIG_FORMAT",
+  "ambiguities": []
+ },
+ {
+  "id": "L-92d",
+  "group": "git",
+  "title": "Armor without CRC line (control)",
+  "kind": "bundle",
+  "expected": "VALID_STRICT / OK",
+  "ambiguities": []
+ },
+ {
+  "id": "L-92e",
+  "group": "git",
+  "title": "Armor base64 with nonzero pad bits",
+  "kind": "bundle",
+  "expected": "INVALID / GIT_SIG_FORMAT",
+  "ambiguities": []
+ },
+ {
+  "id": "L-92f",
+  "group": "git",
+  "title": "Git signature type 0x01 (text)",
+  "kind": "bundle",
+  "expected": "INVALID / GIT_SIG_FORMAT",
+  "ambiguities": []
+ },
+ {
+  "id": "L-92g",
+  "group": "git",
+  "title": "Git signature with an unknown critical hashed subpacket",
+  "kind": "bundle",
+  "expected": "INVALID / GIT_SIG_FORMAT",
+  "ambiguities": []
+ },
+ {
+  "id": "L-93a",
+  "group": "git",
+  "title": "Root tree entries not in git order",
+  "kind": "bundle",
+  "expected": "INVALID / GIT_TREE_FORMAT",
+  "ambiguities": []
+ },
+ {
+  "id": "L-93b",
+  "group": "git",
+  "title": "Tree mode 040000",
+  "kind": "bundle",
+  "expected": "INVALID / GIT_TREE_FORMAT",
+  "ambiguities": []
+ },
+ {
+  "id": "L-95",
+  "group": "git",
+  "title": "Signer verifies, T_git outside a finalized interval",
+  "kind": "bundle",
+  "expected": "INVALID / GIT_SIGNER_OUTSIDE_INTERVAL",
+  "ambiguities": []
+ },
+ {
+  "id": "L-96",
+  "group": "git",
+  "title": "No configured signer verifies (commit signed by another key)",
+  "kind": "bundle",
+  "expected": "UNVERIFIABLE / GIT_SIGNER_NOT_CONFIGURED",
+  "ambiguities": []
+ },
+ {
+  "id": "GIT-prefix",
+  "group": "git",
+  "title": "Git signature hash prefix wrong",
+  "kind": "bundle",
+  "expected": "UNVERIFIABLE / GIT_SIGNER_NOT_CONFIGURED",
+  "ambiguities": []
+ },
+ {
+  "id": "GIT-path-a",
+  "group": "git",
+  "title": "Blob at tessera-v1/key-assertion.txt",
+  "kind": "bundle",
+  "expected": "INVALID / GIT_PATH",
+  "ambiguities": []
+ },
+ {
+  "id": "GIT-path-b",
+  "group": "git",
+  "title": "Leaf mode 100755",
+  "kind": "bundle",
+  "expected": "INVALID / GIT_PATH",
+  "ambiguities": []
+ },
+ {
+  "id": "GIT-path-c",
+  "group": "git",
+  "title": "Commit names a tree id other than trees[0]",
+  "kind": "bundle",
+  "expected": "INVALID / GIT_PATH",
+  "ambiguities": [
+   "EA-22"
+  ]
+ },
+ {
+  "id": "GIT-path-d",
+  "group": "git",
+  "title": "git.trees in the order [sub, root]",
+  "kind": "bundle",
+  "expected": "INVALID / GIT_PATH",
+  "ambiguities": []
+ },
+ {
+  "id": "L-97",
+  "group": "signature profile",
+  "title": "Hashed creation time marked critical",
+  "kind": "bundle",
+  "expected": "VALID_STRICT / OK",
+  "ambiguities": []
+ },
+ {
+  "id": "L-98",
+  "group": "signature profile",
+  "title": "Critical bit on the unhashed issuer key ID",
+  "kind": "bundle",
+  "expected": "VALID_STRICT / OK",
+  "ambiguities": []
+ },
+ {
+  "id": "L-99",
+  "group": "signature profile",
+  "title": "Unknown critical hashed subpacket",
+  "kind": "bundle",
+  "expected": "INVALID / SIG_POLICY",
+  "ambiguities": []
+ },
+ {
+  "id": "L-100",
+  "group": "signature profile",
+  "title": "Hashed signature-expiration (type 3)",
+  "kind": "bundle",
+  "expected": "INVALID / SIG_POLICY",
+  "ambiguities": []
+ },
+ {
+  "id": "L-101",
+  "group": "signature profile",
+  "title": "Two type-2 subpackets",
+  "kind": "bundle",
+  "expected": "INVALID / SIG_POLICY",
+  "ambiguities": []
+ },
+ {
+  "id": "L-102a",
+  "group": "signature profile",
+  "title": "Type 2 with 3 data octets",
+  "kind": "bundle",
+  "expected": "INVALID / SIG_POLICY",
+  "ambiguities": []
+ },
+ {
+  "id": "L-102b",
+  "group": "signature profile",
+  "title": "Type 2 with 5 data octets",
+  "kind": "bundle",
+  "expected": "INVALID / SIG_POLICY",
+  "ambiguities": []
+ },
+ {
+  "id": "L-103",
+  "group": "signature profile",
+  "title": "No type 2",
+  "kind": "bundle",
+  "expected": "INVALID / SIG_POLICY",
+  "ambiguities": []
+ },
+ {
+  "id": "L-104a",
+  "group": "signature profile",
+  "title": "Subpacket length 191, one-octet (shortest) form",
+  "kind": "bundle",
+  "expected": "VALID_STRICT / OK",
+  "ambiguities": []
+ },
+ {
+  "id": "L-104b",
+  "group": "signature profile",
+  "title": "Subpacket length 192, two-octet (shortest) form",
+  "kind": "bundle",
+  "expected": "VALID_STRICT / OK",
+  "ambiguities": []
+ },
+ {
+  "id": "L-104c",
+  "group": "signature profile",
+  "title": "Subpacket length 191 in five-octet form",
+  "kind": "bundle",
+  "expected": "INVALID / SIG_FORMAT",
+  "ambiguities": []
+ },
+ {
+  "id": "L-104d",
+  "group": "signature profile",
+  "title": "Subpacket length 192 in five-octet form",
+  "kind": "bundle",
+  "expected": "INVALID / SIG_FORMAT",
+  "ambiguities": []
+ },
+ {
+  "id": "F10-a",
+  "group": "signature profile",
+  "title": "Zero-data critical type 33",
+  "kind": "bundle",
+  "expected": "INVALID / SIG_POLICY",
+  "ambiguities": []
+ },
+ {
+  "id": "F10-b",
+  "group": "signature profile",
+  "title": "Two type-33 subpackets",
+  "kind": "bundle",
+  "expected": "INVALID / SIG_POLICY",
+  "ambiguities": []
+ },
+ {
+  "id": "F10-c",
+  "group": "signature profile",
+  "title": "Hashed type 16 inconsistent with type 33",
+  "kind": "bundle",
+  "expected": "INVALID / SIG_POLICY",
+  "ambiguities": []
+ },
+ {
+  "id": "F10-d",
+  "group": "signature profile",
+  "title": "Hashed type 16 with 7 octets",
+  "kind": "bundle",
+  "expected": "INVALID / SIG_POLICY",
+  "ambiguities": []
+ },
+ {
+  "id": "F10-e",
+  "group": "signature profile",
+  "title": "Type 33 whose first octet is 05",
+  "kind": "bundle",
+  "expected": "INVALID / SIG_POLICY",
+  "ambiguities": []
+ },
+ {
+  "id": "F10-f",
+  "group": "signature profile",
+  "title": "Wrong hash-prefix octets on the gpg receipt signature",
+  "kind": "bundle",
+  "expected": "INVALID / SIG_INVALID",
+  "ambiguities": []
+ },
+ {
+  "id": "F10-g",
+  "group": "signature profile",
+  "title": "r = n in the gpg receipt signature",
+  "kind": "bundle",
+  "expected": "INVALID / SIG_POLICY",
+  "ambiguities": [
+   "EA-23"
+  ]
+ },
+ {
+  "id": "SIG-type1",
+  "group": "signature profile",
+  "title": "Receipt signature type 0x01",
+  "kind": "bundle",
+  "expected": "INVALID / SIG_FORMAT",
+  "ambiguities": []
+ },
+ {
+  "id": "SIG-newhdr",
+  "group": "signature profile",
+  "title": "Receipt signature with OpenPGP-format header 0xC2",
+  "kind": "bundle",
+  "expected": "INVALID / SIG_PACKET",
+  "ambiguities": []
+ },
+ {
+  "id": "POS-a",
+  "group": "possession",
+  "title": "kms possession signature over another document",
+  "kind": "bundle",
+  "expected": "INVALID / POSSESSION_INVALID",
+  "ambiguities": []
+ },
+ {
+  "id": "POS-b",
+  "group": "possession",
+  "title": "gpg possession signature with hashed type 3",
+  "kind": "bundle",
+  "expected": "INVALID / SIG_POLICY",
+  "ambiguities": []
+ },
+ {
+  "id": "POS-c",
+  "group": "possession",
+  "title": "gpg possession signature with header 0xC2",
+  "kind": "bundle",
+  "expected": "INVALID / SIG_PACKET",
+  "ambiguities": []
+ },
+ {
+  "id": "L-105",
+  "group": "keys",
+  "title": "ML-DSA-65 SPKI in keys.kms under the fallback",
+  "kind": "bundle",
+  "expected": "INVALID / KEY_FORMAT",
+  "ambiguities": [
+   "EA-24"
+  ]
+ },
+ {
+  "id": "KEY-a",
+  "group": "keys",
+  "title": "keys.gpg is another valid key",
+  "kind": "bundle",
+  "expected": "INVALID / KEY_MISMATCH",
+  "ambiguities": []
+ },
+ {
+  "id": "KEY-b",
+  "group": "keys",
+  "title": "keys.gpg with the 0x99 prefix",
+  "kind": "bundle",
+  "expected": "INVALID / KEY_FORMAT",
+  "ambiguities": []
+ },
+ {
+  "id": "KEY-c",
+  "group": "keys",
+  "title": "keys.gpg point off the curve",
+  "kind": "bundle",
+  "expected": "INVALID / KEY_FORMAT",
+  "ambiguities": []
+ },
+ {
+  "id": "KEY-d",
+  "group": "keys",
+  "title": "Both slots carry other valid keys",
+  "kind": "bundle",
+  "expected": "INVALID / KEY_MISMATCH",
+  "ambiguities": []
+ },
+ {
+  "id": "RC-a",
+  "group": "receipt consistency",
+  "title": "Frames disagree on content; manifest issuer also mismatches",
+  "kind": "bundle",
+  "expected": "INVALID / RECEIPT_COMMON_MISMATCH",
+  "ambiguities": []
+ },
+ {
+  "id": "RC-b",
+  "group": "receipt consistency",
+  "title": "Bad common.manifest_sha256",
+  "kind": "bundle",
+  "expected": "INVALID / RECEIPT_MANIFEST_MISMATCH",
+  "ambiguities": []
+ },
+ {
+  "id": "RC-c",
+  "group": "receipt consistency",
+  "title": "Frames swapped between slots (each signed by its slot key)",
+  "kind": "bundle",
+  "expected": "INVALID / RECEIPT_SLOT",
+  "ambiguities": []
+ },
+ {
+  "id": "RC-d",
+  "group": "receipt consistency",
+  "title": "Common issuer != manifest issuer",
+  "kind": "bundle",
+  "expected": "INVALID / RECEIPT_MANIFEST_MISMATCH",
+  "ambiguities": []
+ },
+ {
+  "id": "CODEC-a",
+  "group": "codec",
+  "title": "Frame canonicalization version 2",
+  "kind": "bundle",
+  "expected": "INVALID / CV_UNKNOWN",
+  "ambiguities": []
+ },
+ {
+  "id": "CODEC-b",
+  "group": "codec",
+  "title": "Anchor count byte 3",
+  "kind": "bundle",
+  "expected": "INVALID / ANCHOR_COUNT",
+  "ambiguities": []
+ },
+ {
+  "id": "CODEC-c",
+  "group": "codec",
+  "title": "Withdrawn frame-only anchor tag",
+  "kind": "bundle",
+  "expected": "INVALID / TAG_UNKNOWN",
+  "ambiguities": []
+ },
+ {
+  "id": "CODEC-d",
+  "group": "codec",
+  "title": "Trailing byte after the second signature in a_sig",
+  "kind": "bundle",
+  "expected": "INVALID / TRAILING",
+  "ambiguities": []
+ },
+ {
+  "id": "CODEC-e",
+  "group": "codec",
+  "title": "Signed common.profile other than tessera-v1-strict",
+  "kind": "bundle",
+  "expected": "INVALID / SCHEMA",
+  "ambiguities": []
+ },
+ {
+  "id": "CODEC-f",
+  "group": "codec",
+  "title": "First a_sig frame carries the manifest tag",
+  "kind": "bundle",
+  "expected": "INVALID / TAG_MISMATCH",
+  "ambiguities": []
+ },
+ {
+  "id": "L-106",
+  "group": "aggregation",
+  "title": "KEY_MISMATCH plus a bad git signature (CRC)",
+  "kind": "bundle",
+  "expected": "INVALID / KEY_MISMATCH",
+  "ambiguities": []
+ },
+ {
+  "id": "L-107",
+  "group": "aggregation",
+  "title": "Unknown alg plus an independent failure (preamble altered)",
+  "kind": "bundle",
+  "expected": "INVALID / BUNDLE_OBJECT_HASH",
+  "ambiguities": []
+ },
+ {
+  "id": "L-108",
+  "group": "aggregation",
+  "title": "Bad attestation signature plus a usable receipt anchor",
+  "kind": "bundle",
+  "expected": "INVALID / SIG_INVALID",
+  "ambiguities": []
+ },
+ {
+  "id": "L-109",
+  "group": "aggregation",
+  "title": "Receipt proof with a contradicted lower branch",
+  "kind": "bundle",
+  "expected": "INVALID / OTS_MERKLE_MISMATCH",
+  "ambiguities": []
+ },
+ {
+  "id": "AGG-a",
+  "group": "aggregation",
+  "title": "POSSESSION_INVALID + DNS_WILDCARD + GIT_PATH",
+  "kind": "bundle",
+  "expected": "INVALID / POSSESSION_INVALID",
+  "ambiguities": []
+ },
+ {
+  "id": "AGG-b",
+  "group": "aggregation",
+  "title": "SNAPSHOT_TIME + GIT_COMMIT_FORMAT",
+  "kind": "bundle",
+  "expected": "INVALID / SNAPSHOT_TIME",
+  "ambiguities": []
+ },
+ {
+  "id": "AGG-c",
+  "group": "aggregation",
+  "title": "SPEC_UNKNOWN + GIT_PATH",
+  "kind": "bundle",
+  "expected": "INVALID / GIT_PATH",
+  "ambiguities": []
+ },
+ {
+  "id": "AGG-d",
+  "group": "aggregation",
+  "title": "MEMBER_MISSING:git + ALG_UNKNOWN",
+  "kind": "bundle",
+  "expected": "UNVERIFIABLE / MEMBER_MISSING:git",
+  "ambiguities": []
+ },
+ {
+  "id": "AGG-e",
+  "group": "aggregation",
+  "title": "TXT absent + git pending-only",
+  "kind": "bundle",
+  "expected": "UNVERIFIABLE / DNS_EVIDENCE_MISSING",
+  "ambiguities": []
+ },
+ {
+  "id": "AGG-f",
+  "group": "aggregation",
+  "title": "ISSUANCE_WINDOW + BUNDLE_OBJECT_HASH",
+  "kind": "bundle",
+  "expected": "INVALID / ISSUANCE_WINDOW",
+  "ambiguities": []
+ },
+ {
+  "id": "AGG-g",
+  "group": "aggregation",
+  "title": "HEADER_CONFLICTS_PIN + SIG_INVALID",
+  "kind": "bundle",
+  "expected": "INVALID / SIG_INVALID",
+  "ambiguities": []
+ },
+ {
+  "id": "AGG-h",
+  "group": "aggregation",
+  "title": "DNS_KEY_MISMATCH + CHANNEL_VALUE_MISMATCH + ISSUANCE_WINDOW",
+  "kind": "bundle",
+  "expected": "INVALID / DNS_KEY_MISMATCH",
+  "ambiguities": []
+ },
+ {
+  "id": "L-110a",
+  "group": "field grammar",
+  "title": "declared_issue_time year 0000",
+  "kind": "bundle",
+  "expected": "INVALID / SCHEMA",
+  "ambiguities": []
+ },
+ {
+  "id": "L-110b",
+  "group": "field grammar",
+  "title": "declared_issue_time year 0001 (codec accepts)",
+  "kind": "bundle",
+  "expected": "INVALID / TIME_AFTER_DECLARED_DELTA",
+  "ambiguities": []
+ },
+ {
+  "id": "L-110c",
+  "group": "field grammar",
+  "title": "declared_issue_time year 9999 (codec accepts)",
+  "kind": "bundle",
+  "expected": "INVALID / TIME_BEFORE_DECLARED_EPSILON",
+  "ambiguities": []
+ },
+ {
+  "id": "L-110d",
+  "group": "field grammar",
+  "title": "Numeric top label in issuer (wamason.123)",
+  "kind": "bundle",
+  "expected": "INVALID / ISSUER_NOT_PINNED",
+  "ambiguities": []
+ },
+ {
+  "id": "L-111a",
+  "group": "numbers",
+  "title": "Content with ES-boundary numbers (1e21, 5e-324, 1.2345678901234568e20, 9.8, 100)",
+  "kind": "bundle",
+  "expected": "VALID_STRICT / OK",
+  "ambiguities": []
+ },
+ {
+  "id": "L-111b",
+  "group": "numbers",
+  "title": "Payload number -0",
+  "kind": "bundle",
+  "expected": "INVALID / JSON_NUMBER",
+  "ambiguities": []
+ },
+ {
+  "id": "L-111c",
+  "group": "numbers",
+  "title": "Payload number spelled 1E2 (value-preserving, non-canonical)",
+  "kind": "bundle",
+  "expected": "INVALID / JSON_NONCANONICAL",
+  "ambiguities": []
+ },
+ {
+  "id": "HY-a1-C",
+  "group": "hybrid routing",
+  "title": "(a1) Pair id before registration: 3309-byte kms signature (genuine ML-DSA-65 bytes), rule-O gpg",
+  "kind": "bundle",
+  "expected": "UNVERIFIABLE / ALG_UNKNOWN",
+  "ambiguities": [],
+  "installation": "classical"
+ },
+ {
+  "id": "HY-a2-C",
+  "group": "hybrid routing",
+  "title": "(a2) Pair id before registration: rule-O packets in both slots (kms 119-byte class)",
+  "kind": "bundle",
+  "expected": "UNVERIFIABLE / ALG_UNKNOWN",
+  "ambiguities": [],
+  "installation": "classical"
+ },
+ {
+  "id": "HY-a3-C",
+  "group": "hybrid routing",
+  "title": "(a3) Pair id before registration: arbitrary 1-byte kms and 65536-byte gpg signatures and possession proofs",
+  "kind": "bundle",
+  "expected": "UNVERIFIABLE / ALG_UNKNOWN",
+  "ambiguities": [],
+  "installation": "classical"
+ },
+ {
+  "id": "HY-a4-C",
+  "group": "hybrid routing",
+  "title": "(a) Pair id before registration: empty kms signature",
+  "kind": "bundle",
+  "expected": "INVALID / SIG_EMPTY",
+  "ambiguities": [],
+  "installation": "classical"
+ },
+ {
+  "id": "HY-a5-C",
+  "group": "hybrid routing",
+  "title": "(a) Pair id before registration: 65537-byte gpg signature",
+  "kind": "bundle",
+  "expected": "INVALID / LENGTH_CAP",
+  "ambiguities": [],
+  "installation": "classical"
+ },
+ {
+  "id": "HY-ak-C",
+  "group": "hybrid routing",
+  "title": "(a) A genuine hybrid receipt (ML-DSA-65 SPKI in keys.kms, hybrid spec hash) presented to the classical installation",
+  "kind": "bundle",
+  "expected": "UNVERIFIABLE / ALG_UNKNOWN",
+  "ambiguities": [],
+  "installation": "classical"
+ },
+ {
+  "id": "HY-b1-H",
+  "group": "hybrid routing",
+  "title": "(b) Classical-id receipt as a fallback issuer emits it (P-256 kms SPKI, valid rule-O signatures) under the hybrid installation",
+  "kind": "bundle",
+  "expected": "UNVERIFIABLE / ALG_UNKNOWN",
+  "ambiguities": [],
+  "installation": "hybrid"
+ },
+ {
+  "id": "HY-b2-H",
+  "group": "hybrid routing",
+  "title": "(b) Classical-id frames, rule-O signatures that do not verify, kms key in the installation's format (ML-DSA-65 SPKI)",
+  "kind": "bundle",
+  "expected": "UNVERIFIABLE / ALG_UNKNOWN",
+  "ambiguities": [],
+  "installation": "hybrid"
+ },
+ {
+  "id": "HY-c1-C",
+  "group": "hybrid routing",
+  "title": "(c) Classical-id receipt, XA-19 shape: kms packet under an OpenPGP-format 0xC2 header (classical installation)",
+  "kind": "bundle",
+  "expected": "INVALID / SIG_PACKET",
+  "ambiguities": [],
+  "installation": "classical"
+ },
+ {
+  "id": "HY-c2-C",
+  "group": "hybrid routing",
+  "title": "(c) Classical-id receipt, XA-22 shape: kms signature type 0x01 (classical installation)",
+  "kind": "bundle",
+  "expected": "INVALID / SIG_FORMAT",
+  "ambiguities": [],
+  "installation": "classical"
+ },
+ {
+  "id": "HY-c3-C",
+  "group": "hybrid routing",
+  "title": "(c) Classical-id receipt, XA-14 shape: kms signature of 1025 bytes (above the rule-O cap 1024) (classical installation)",
+  "kind": "bundle",
+  "expected": "INVALID / LENGTH_CAP",
+  "ambiguities": [],
+  "installation": "classical"
+ },
+ {
+  "id": "HY-c4-C",
+  "group": "hybrid routing",
+  "title": "(c) Classical-id receipt, XA-11 shape: empty kms signature (classical installation)",
+  "kind": "bundle",
+  "expected": "INVALID / SIG_EMPTY",
+  "ambiguities": [],
+  "installation": "classical"
+ },
+ {
+  "id": "HY-c1-H",
+  "group": "hybrid routing",
+  "title": "(c) Classical-id receipt, XA-19 shape: kms packet under an OpenPGP-format 0xC2 header (hybrid installation)",
+  "kind": "bundle",
+  "expected": "INVALID / SIG_PACKET",
+  "ambiguities": [],
+  "installation": "hybrid"
+ },
+ {
+  "id": "HY-c2-H",
+  "group": "hybrid routing",
+  "title": "(c) Classical-id receipt, XA-22 shape: kms signature type 0x01 (hybrid installation)",
+  "kind": "bundle",
+  "expected": "INVALID / SIG_FORMAT",
+  "ambiguities": [],
+  "installation": "hybrid"
+ },
+ {
+  "id": "HY-c3-H",
+  "group": "hybrid routing",
+  "title": "(c) Classical-id receipt, XA-14 shape: kms signature of 1025 bytes (above the rule-O cap 1024) (hybrid installation)",
+  "kind": "bundle",
+  "expected": "INVALID / LENGTH_CAP",
+  "ambiguities": [],
+  "installation": "hybrid"
+ },
+ {
+  "id": "HY-c4-H",
+  "group": "hybrid routing",
+  "title": "(c) Classical-id receipt, XA-11 shape: empty kms signature (hybrid installation)",
+  "kind": "bundle",
+  "expected": "INVALID / SIG_EMPTY",
+  "ambiguities": [],
+  "installation": "hybrid"
+ },
+ {
+  "id": "HY-d1-C",
+  "group": "hybrid routing",
+  "title": "(d) Frames and manifest all carry KMS-MLDSA65-PURE-GPG-OPENPGP4-ECDSA-P256-SHA384 (near-miss pair id (P8 XHR-09)); classical installation",
+  "kind": "bundle",
+  "expected": "UNVERIFIABLE / ALG_UNKNOWN",
+  "ambiguities": [],
+  "installation": "classical"
+ },
+ {
+  "id": "HY-d2-C",
+  "group": "hybrid routing",
+  "title": "(d) Frames and manifest all carry X-UNKNOWN-ALG-1 (P8 A-02); classical installation",
+  "kind": "bundle",
+  "expected": "UNVERIFIABLE / ALG_UNKNOWN",
+  "ambiguities": [],
+  "installation": "classical"
+ },
+ {
+  "id": "HY-d1-H",
+  "group": "hybrid routing",
+  "title": "(d) Frames and manifest all carry KMS-MLDSA65-PURE-GPG-OPENPGP4-ECDSA-P256-SHA384 (near-miss pair id (P8 XHR-09)); hybrid installation",
+  "kind": "bundle",
+  "expected": "UNVERIFIABLE / ALG_UNKNOWN",
+  "ambiguities": [],
+  "installation": "hybrid"
+ },
+ {
+  "id": "HY-d2-H",
+  "group": "hybrid routing",
+  "title": "(d) Frames and manifest all carry X-UNKNOWN-ALG-1 (P8 A-02); hybrid installation",
+  "kind": "bundle",
+  "expected": "UNVERIFIABLE / ALG_UNKNOWN",
+  "ambiguities": [],
+  "installation": "hybrid"
+ },
+ {
+  "id": "HY-e1-C",
+  "group": "hybrid routing",
+  "title": "(e1) kms frame pair id, gpg frame classical id, manifest pair id (M9 shape, P8 XHR-08); classical installation",
+  "kind": "bundle",
+  "expected": "INVALID / RECEIPT_COMMON_MISMATCH",
+  "ambiguities": [],
+  "installation": "classical"
+ },
+ {
+  "id": "HY-e2-C",
+  "group": "hybrid routing",
+  "title": "(e2) Both frames pair id, manifest classical id; classical installation",
+  "kind": "bundle",
+  "expected": "INVALID / RECEIPT_MANIFEST_MISMATCH",
+  "ambiguities": [],
+  "installation": "classical"
+ },
+ {
+  "id": "HY-e3-C",
+  "group": "hybrid routing",
+  "title": "(e3) Both frames X-UNKNOWN-ALG-1, manifest X-UNKNOWN-ALG-2; classical installation",
+  "kind": "bundle",
+  "expected": "INVALID / RECEIPT_MANIFEST_MISMATCH",
+  "ambiguities": [],
+  "installation": "classical"
+ },
+ {
+  "id": "HY-e1-H",
+  "group": "hybrid routing",
+  "title": "(e1) kms frame pair id, gpg frame classical id, manifest pair id (M9 shape, P8 XHR-08); hybrid installation",
+  "kind": "bundle",
+  "expected": "INVALID / RECEIPT_COMMON_MISMATCH",
+  "ambiguities": [],
+  "installation": "hybrid"
+ },
+ {
+  "id": "HY-e2-H",
+  "group": "hybrid routing",
+  "title": "(e2) Both frames pair id, manifest classical id; hybrid installation",
+  "kind": "bundle",
+  "expected": "INVALID / RECEIPT_MANIFEST_MISMATCH",
+  "ambiguities": [],
+  "installation": "hybrid"
+ },
+ {
+  "id": "HY-e3-H",
+  "group": "hybrid routing",
+  "title": "(e3) Both frames X-UNKNOWN-ALG-1, manifest X-UNKNOWN-ALG-2; hybrid installation",
+  "kind": "bundle",
+  "expected": "INVALID / RECEIPT_MANIFEST_MISMATCH",
+  "ambiguities": [],
+  "installation": "hybrid"
+ },
+ {
+  "id": "HY-V1",
+  "group": "hybrid positive",
+  "title": "Full hybrid receipt through the issuer: kms ML-DSA-65 (rule R, EXTERNAL_MU), gpg P-256 (rule O); 779 / 778-byte frames",
+  "kind": "bundle",
+  "expected": "VALID_STRICT / OK",
+  "ambiguities": [],
+  "installation": "hybrid"
+ },
+ {
+  "id": "HY-V2",
+  "group": "hybrid positive",
+  "title": "Full hybrid receipt with frames over 4096 bytes (6753 / 6752), signed by external mu",
+  "kind": "bundle",
+  "expected": "VALID_STRICT / OK",
+  "ambiguities": [],
+  "installation": "hybrid"
+ },
+ {
+  "id": "HY-N1",
+  "group": "hybrid semantics",
+  "title": "Pair id with a P-256 SPKI in keys.kms (fingerprints consistent; 3309-byte kms signature)",
+  "kind": "bundle",
+  "expected": "INVALID / KEY_FORMAT",
+  "ambiguities": [],
+  "installation": "hybrid"
+ },
+ {
+  "id": "HY-N2",
+  "group": "hybrid semantics",
+  "title": "kms ML-DSA-65 signature over another frame (anchor rebuilt)",
+  "kind": "bundle",
+  "expected": "INVALID / SIG_INVALID",
+  "ambiguities": [],
+  "installation": "hybrid"
+ },
+ {
+  "id": "HY-N3",
+  "group": "hybrid semantics",
+  "title": "kms possession proof over other bytes",
+  "kind": "bundle",
+  "expected": "INVALID / POSSESSION_INVALID",
+  "ambiguities": [],
+  "installation": "hybrid"
+ },
+ {
+  "id": "HY-N4",
+  "group": "hybrid semantics",
+  "title": "kms signature truncated to 3308 bytes",
+  "kind": "bundle",
+  "expected": "INVALID / SIG_FORMAT",
+  "ambiguities": [],
+  "installation": "hybrid"
+ },
+ {
+  "id": "HY-N5",
+  "group": "hybrid semantics",
+  "title": "kms signature with a trailing byte (3310 bytes)",
+  "kind": "bundle",
+  "expected": "INVALID / LENGTH_CAP",
+  "ambiguities": [],
+  "installation": "hybrid"
+ },
+ {
+  "id": "HY-N6",
+  "group": "hybrid semantics",
+  "title": "kms signature valid under the nonempty context 'tessera-v1' (XHR-13)",
+  "kind": "bundle",
+  "expected": "INVALID / SIG_INVALID",
+  "ambiguities": [],
+  "installation": "hybrid"
+ },
+ {
+  "id": "AUTH-i",
+  "group": "authority isolation",
+  "title": "Attacker-keyed receipt, re-stamped; both channels publish the legitimate keys",
+  "kind": "bundle",
+  "expected": "INVALID / DNS_KEY_MISMATCH",
+  "ambiguities": [],
+  "installation": "classical"
+ },
+ {
+  "id": "AUTH-i-T",
+  "group": "authority isolation",
+  "title": "Honest twin of AUTH-i: the same attacker keys, published in DNS and git (the attacker holds both channel credentials)",
+  "kind": "bundle",
+  "expected": "VALID_STRICT / OK",
+  "ambiguities": [],
+  "installation": "classical"
+ },
+ {
+  "id": "AUTH-ii-root",
+  "group": "authority isolation",
+  "title": "Attacker-keyed receipt; DNS: the attacker's own root, com and wamason.com zones (no configured root KSK); git assertion valid",
+  "kind": "bundle",
+  "expected": "UNVERIFIABLE / NO_TRUSTED_KSK_USABLE",
+  "ambiguities": [],
+  "installation": "classical"
+ },
+ {
+  "id": "AUTH-ii-root-T",
+  "group": "authority isolation",
+  "title": "Honest twin of AUTH-ii-root: the TXT signed under the trusted path (the honest wamason.com ZSK)",
+  "kind": "bundle",
+  "expected": "VALID_STRICT / OK",
+  "ambiguities": [],
+  "installation": "classical"
+ },
+ {
+  "id": "AUTH-ii-ds",
+  "group": "authority isolation",
+  "title": "Attacker-keyed receipt; DNS: honest root and com, the honest wamason.com DS, the attacker's own wamason.com DNSKEY set; git assertion valid",
+  "kind": "bundle",
+  "expected": "INVALID / DNSKEY_DS_MISMATCH",
+  "ambiguities": [],
+  "installation": "classical"
+ },
+ {
+  "id": "AUTH-ii-ds-T",
+  "group": "authority isolation",
+  "title": "Honest twin of AUTH-ii-ds: the TXT signed under the trusted path (the honest wamason.com ZSK)",
+  "kind": "bundle",
+  "expected": "VALID_STRICT / OK",
+  "ambiguities": [],
+  "installation": "classical"
+ },
+ {
+  "id": "AUTH-ii-zsk",
+  "group": "authority isolation",
+  "title": "Attacker-keyed receipt; DNS: honest chain to the wamason.com DNSKEY set; TXT signed by an attacker key outside it; git assertion valid",
+  "kind": "bundle",
+  "expected": "INVALID / DNSSEC_KEY_MISMATCH",
+  "ambiguities": [],
+  "installation": "classical"
+ },
+ {
+  "id": "AUTH-ii-zsk-T",
+  "group": "authority isolation",
+  "title": "Honest twin of AUTH-ii-zsk: the TXT signed under the trusted path (the honest wamason.com ZSK)",
+  "kind": "bundle",
+  "expected": "VALID_STRICT / OK",
+  "ambiguities": [],
+  "installation": "classical"
+ },
+ {
+  "id": "AUTH-ii-tag",
+  "group": "authority isolation",
+  "title": "Attacker-keyed receipt; DNS: as ii-zsk, but the attacker's RRSIG carries the honest ZSK's key tag; git assertion valid",
+  "kind": "bundle",
+  "expected": "INVALID / DNSSEC_SIGNATURE_INVALID",
+  "ambiguities": [],
+  "installation": "classical"
+ },
+ {
+  "id": "AUTH-ii-tag-T",
+  "group": "authority isolation",
+  "title": "Honest twin of AUTH-ii-tag: the TXT signed under the trusted path (the honest wamason.com ZSK)",
+  "kind": "bundle",
+  "expected": "VALID_STRICT / OK",
+  "ambiguities": [],
+  "installation": "classical"
+ },
+ {
+  "id": "AUTH-iii",
+  "group": "authority isolation",
+  "title": "Attacker-keyed receipt; DNS valid; git assertion signed by the attacker's own repository key",
+  "kind": "bundle",
+  "expected": "UNVERIFIABLE / GIT_SIGNER_NOT_CONFIGURED",
+  "ambiguities": [],
+  "installation": "classical"
+ },
+ {
+  "id": "AUTH-iii-T",
+  "group": "authority isolation",
+  "title": "Honest twin of AUTH-iii: the commit signed by the configured repository key",
+  "kind": "bundle",
+  "expected": "VALID_STRICT / OK",
+  "ambiguities": [],
+  "installation": "classical"
+ },
+ {
+  "id": "AUTH-iv-end",
+  "group": "authority isolation",
+  "title": "Attacker-keyed receipt; git assertion by the configured key after its finalized signing_end",
+  "kind": "bundle",
+  "expected": "INVALID / GIT_SIGNER_OUTSIDE_INTERVAL",
+  "ambiguities": [],
+  "installation": "classical"
+ },
+ {
+  "id": "AUTH-iv-end-T",
+  "group": "authority isolation",
+  "title": "Honest twin of AUTH-iv-end: the same finalized entry ending 2026-11-03T00:00:00Z (after T_git)",
+  "kind": "bundle",
+  "expected": "VALID_STRICT / OK",
+  "ambiguities": [],
+  "installation": "classical"
+ },
+ {
+  "id": "AUTH-iv-start",
+  "group": "authority isolation",
+  "title": "Attacker-keyed receipt; git assertion by the configured key before its signing_start (open entry)",
+  "kind": "bundle",
+  "expected": "INVALID / GIT_SIGNER_OUTSIDE_INTERVAL",
+  "ambiguities": [],
+  "installation": "classical"
+ },
+ {
+  "id": "AUTH-iv-start-T",
+  "group": "authority isolation",
+  "title": "Honest twin of AUTH-iv-start: the open entry starting 2026-11-01T00:00:00Z (before T_git)",
+  "kind": "bundle",
+  "expected": "VALID_STRICT / OK",
+  "ambiguities": [],
+  "installation": "classical"
+ },
+ {
+  "id": "AUTH-v-eq",
+  "group": "authority isolation",
+  "title": "Attacker-keyed receipt; git assertion anchored at h_receipt - 5 (not 6 blocks before)",
+  "kind": "bundle",
+  "expected": "INVALID / GIT_NOT_PRECOMMITTED",
+  "ambiguities": [],
+  "installation": "classical"
+ },
+ {
+  "id": "AUTH-v-eq-T",
+  "group": "authority isolation",
+  "title": "Honest twin of AUTH-v-eq: h_git = 900018 (h_git + 5 < h_receipt)",
+  "kind": "bundle",
+  "expected": "VALID_STRICT / OK",
+  "ambiguities": [],
+  "installation": "classical"
+ },
+ {
+  "id": "AUTH-v-after",
+  "group": "authority isolation",
+  "title": "Attacker-keyed receipt; git assertion anchored after the receipt (h_git = h_receipt + 3)",
+  "kind": "bundle",
+  "expected": "INVALID / GIT_NOT_PRECOMMITTED",
+  "ambiguities": [],
+  "installation": "classical"
+ },
+ {
+  "id": "AUTH-v-after-T",
+  "group": "authority isolation",
+  "title": "Honest twin of AUTH-v-after: the assertion anchored at 900018",
+  "kind": "bundle",
+  "expected": "VALID_STRICT / OK",
+  "ambiguities": [],
+  "installation": "classical"
+ },
+ {
+  "id": "AUTH-vi",
+  "group": "authority isolation",
+  "title": "Attacker-keyed receipt for its own domain wamason-attacker.com, with a trusted DNSSEC path and a git assertion under the configured repository key",
+  "kind": "bundle",
+  "expected": "INVALID / ISSUER_NOT_PINNED",
+  "ambiguities": [],
+  "installation": "classical"
+ },
+ {
+  "id": "AUTH-vi-T",
+  "group": "authority isolation",
+  "title": "Honest twin of AUTH-vi: issuer = wamason.com with the wamason.com chain",
+  "kind": "bundle",
+  "expected": "VALID_STRICT / OK",
+  "ambiguities": [],
+  "installation": "classical"
+ }
+]

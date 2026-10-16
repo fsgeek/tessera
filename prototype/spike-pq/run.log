@@ -1,0 +1,25 @@
+ver:cryptography = 50.0.2
+ver:dilithium-py = 1.4.0
+ver:slh-dsa = 0.2.5
+ver:pqcrypto = 1.0.0
+python = 3.14.6
+frame_len_2KB_content = (2402, 2401)
+mldsa65 pk/sig sizes = (1952, 3309)
+(2) cryptography-sign -> dilithium-py-verify = True
+(2) tamper rejected = True
+(2) dilithium-py-sign -> cryptography-verify = True
+big_frame_len = 6354
+(3) mu manual == dilithium-py prehash = True
+(3) cryptography sign_mu sig len = 3309
+(3) mu-sig verifies as normal ML-DSA over full msg (cryptography verify) = True
+(3) mu-sig verifies (dilithium-py verify, independent) = True
+(3) cryptography verify_mu(mu) ok = True
+(3) dilithium-py sign_external_mu -> cryptography verify full msg = True
+(1) sha2_128s sig_len/verify/tamper_verify = (7856, True, False)
+    sha2_128s times keygen/sign/verify s = (0.75, 2.93, 0.0)
+(1) sha2_128f sig_len/verify/tamper_verify = (17088, True, False)
+    sha2_128f times keygen/sign/verify s = (0.01, 0.14, 0.01)
+(4) anchor size ML-DSA-65 + sha2_128s = 16011
+    sha256 = 46279a4f5cb1ac026cbf2b7284cdc5fe48c47ba3c9723e61ce0c190de18da77f
+(4) anchor size ML-DSA-65 + sha2_128f = 25243
+    sha256 = c56e970dc69506dcbed19a856f9a42ebcf9ad181f763f0a4bb0eb6357f43b206

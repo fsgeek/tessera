@@ -1,0 +1,12 @@
+warning: `VIRTUAL_ENV=/home/tony/projects/tessera/.venv` does not match the project environment path `.venv` and will be ignored; use `--active` to target the active environment instead
+captured e4a7deb4-f90a-4cac-85d3-6de71f2886bb ML_DSA_65 AWS_KMS
+key_spec/origin: ('ML_DSA_65', 'AWS_KMS')
+pk/sig sizes: (1952, 3309, 3309)
+RAW small: cryptography: True
+RAW small: dilithium-py: True
+MU big (full msg): cryptography: True
+MU big (full msg): dilithium-py: True
+tamper small rejected (both): True
+tamper big rejected (both): True
+RAW > 4096 at KMS: REJECTED: hen calling the Sign operation: 1 validation error detected: Value at 'message' failed to satisfy constraint: Member must have length less than or equal to 4096
+PASS

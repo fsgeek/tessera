@@ -1,0 +1,57 @@
+{
+ "T": "2026-11-10T12:20:00Z",
+ "_meta": {
+  "ambiguities": [],
+  "ambiguous_fields": [],
+  "cite": [
+   "P:466-469",
+   "P:470-484",
+   "P:557-561",
+   "P:590-593",
+   "P:1042-1043",
+   "P:1493",
+   "P:555-556",
+   "A9:309-324",
+   "P:253-256",
+   "P:269-272",
+   "P:1442-1447",
+   "A9:143",
+   "A9:153",
+   "prototype/mutation/REPORT.md obs. 3"
+  ],
+  "derivation": "The attacker captured the repository key (the git assertion naming its keys verifies under the configured entry within its interval, chain order holds) but not the DNS credential. Root group: no candidate is signed by a configured KSK -> 'no configured candidate' -> UNVERIFIABLE / NO_TRUSTED_KSK_USABLE (P:477-484). Every child RRset's parent is blocked and its candidates are locally valid (table row 4, P:590-593): unperformable with no reason of its own. The presented TXT parses (13.6), and its keys equal the manifest's (15.1 passes, P:1494, P:1504); git passes. No row fails; first unperformable 13.5.",
+  "group": "authority isolation",
+  "id": "AUTH-ii-root",
+  "installation": "classical",
+  "isolation": {
+   "attacker_holds": "the repository key (git channel), not the DNS credential",
+   "only_failing_rows": [
+    "13.5"
+   ],
+   "selfcheck_fails": [
+    "dnssec"
+   ],
+   "twin": "AUTH-ii-root-T"
+  },
+  "issuer_preship": {
+   "chain_order_h_git_plus_5_lt_h_receipt": true,
+   "git_anchored": true,
+   "receipt_anchored": true,
+   "receipt_c1": true,
+   "receipt_c2": true,
+   "receipt_c3": true,
+   "snapshot_anchored": true,
+   "snapshot_c1": true,
+   "snapshot_c2": true,
+   "snapshot_c3": true,
+   "window": true
+  },
+  "kind": "bundle",
+  "title": "Attacker-keyed receipt; DNS: the attacker's own root, com and wamason.com zones (no configured root KSK); git assertion valid"
+ },
+ "historical_security": "NOT_EVALUATED",
+ "reason": "NO_TRUSTED_KSK_USABLE",
+ "revocation": "NOT_EVALUATED",
+ "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+ "verdict": "UNVERIFIABLE"
+}

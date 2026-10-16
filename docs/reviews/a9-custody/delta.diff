@@ -1,0 +1,25 @@
+299,300c299,301
+<   signature per ENCODING-V1 §5.2 rule R; slot `gpg` is **P-256** OpenPGP (rule O), signed via gpg on
+<   author-controlled hardware outside AWS, key generated non-exportable, pulling from a queue with no inbound path.
+---
+>   signature per ENCODING-V1 §5.2 rule R; slot `gpg` is **P-256** OpenPGP (rule O), signed by a
+>   non-exportable, hardware-protected key in a failure domain independent of the issuing AWS account (*slot-2
+>   custody*, below), pulling from a queue with no inbound path.
+319c320
+<   `gpg` slot on author-controlled hardware, key generated non-exportable. The signature-inclusive anchor and the
+---
+>   `gpg` slot under slot-2 custody. The signature-inclusive anchor and the
+320a322,328
+> - **Slot-2 custody (OWNER DECISION 2026-10-13).** The `gpg`-slot key is generated non-exportable in hardware outside
+>   the issuing AWS account: a token on author-controlled hardware, or an HSM-backed key at a provider other than AWS.
+>   The owner chooses between them, and records the choice, dated, in the profile before the 30 Oct freeze. The choice
+>   takes into account measured token throughput and issuance availability, and the author's concern about scalability
+>   (2026-10-13: *"Scalability is a real, legitimate, concern"*). Either choice satisfies the author's key-protection
+>   requirement (A9.0) and leaves C1–C7 unchanged. The key's authority is evidenced by the key-publication record in
+>   both cases.
+371,372c379,380
+< With the hybrid the slots differ in algorithm (lattice and elliptic curve) and custody (cloud HSM and
+< author-controlled hardware); under the fallback a P-256 break defeats both slots.
+---
+> With the hybrid the slots differ in algorithm (lattice and elliptic curve) and custody (AWS KMS and the
+> slot-2 custody); under the fallback a P-256 break defeats both slots.

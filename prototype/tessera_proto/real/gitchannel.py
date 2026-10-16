@@ -18,7 +18,9 @@ is the OTS anchor, and its integrity rests on SHA-1. Nothing in it shows the com
 from __future__ import annotations
 
 import base64
+import datetime
 import hashlib
+import re
 import subprocess
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -133,3 +135,117 @@ def verify_offline(ev: CommitEvidence, pubkey_packets: bytes) -> dict:
             "sig_creation_time": ev.signature.creation_time, "committer_time": committer_time,
             "hash_alg": ev.signature.hash_alg, "pk_alg": ev.signature.pk_alg,
             "archive_bytes": ev.archive_bytes}
+
+
+# --- full path verification (Track 3 step 11; INSTRUMENT code, A9.2: not evidence for any claim) ---
+# What the spec fixes: the blob carries the SAME canonical value as the DNS TXT record (ENCODING-V1 s7.2, D-17), whose
+# ABNF is s7 "Value grammar". What it leaves open ("not P8's", s7.2; "the git blob path", out-of-scope list): the path,
+# and any byte framing around the value (e.g. a trailing LF). Here: the path is a caller argument, and NO framing is
+# accepted (blob == value, byte for byte). The value contains no issuer domain D, so none is extracted from it.
+KEY_VALUE_RE = re.compile(
+    rb"v=tessera1;profile=tessera-v1-strict;kms=([0-9a-f]{64});gpg=([0-9a-f]{64})"
+    rb";issuance-not-before=(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z)"
+    rb";issuance-not-after=(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z)")
+MAX_WINDOW_S = 7_776_000
+
+
+class GitPathError(Exception):
+    def __init__(self, reason: str, detail: str = ""):
+        super().__init__(f"{reason}: {detail}" if detail else reason)
+        self.reason = reason
+
+
+def _entries(tree_body: bytes) -> list[tuple[str, str, str]]:
+    out, i = [], 0
+    while i < len(tree_body):
+        sp = tree_body.find(b" ", i)
+        nul = tree_body.find(b"\0", sp + 1) if sp >= 0 else -1
+        if sp < 0 or nul < 0 or nul + 21 > len(tree_body):
+            raise GitPathError("TREE_MALFORMED")
+        out.append((tree_body[i:sp].decode("ascii", "replace"), tree_body[sp + 1:nul].decode("utf-8", "replace"),
+                    tree_body[nul + 1:nul + 21].hex()))
+        i = nul + 21
+    return out
+
+
+def _utc(s: bytes) -> int:
+    try:
+        d = datetime.datetime.strptime(s.decode(), "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=datetime.timezone.utc)
+    except ValueError as e:
+        raise GitPathError("KEY_VALUE", f"time {s!r}") from e
+    return int(d.timestamp())
+
+
+def parse_key_value(blob: bytes) -> dict:
+    """Exact parse of the s7 value grammar; no trimming, no tolerant parsing."""
+    m = KEY_VALUE_RE.fullmatch(blob)     # fullmatch: a trailing LF or any extra byte fails
+    if m is None:
+        raise GitPathError("KEY_SYNTAX")
+    nb, na = _utc(m.group(3)), _utc(m.group(4))
+    if na <= nb:
+        raise GitPathError("KEY_WINDOW")
+    if na - nb > MAX_WINDOW_S:
+        raise GitPathError("KEY_WINDOW_LENGTH")
+    return {"kms": m.group(1).decode(), "gpg": m.group(2).decode(),
+            "issuance_not_before": m.group(3).decode(), "issuance_not_after": m.group(4).decode()}
+
+
+def verify_key_path(commit_id: str, commit_raw: bytes, path_objects: list[tuple[str, str, bytes]], path: str) -> dict:
+    """commit -> root tree -> each subtree -> blob, all from presented bytes (no git). Raises GitPathError(reason).
+    path_objects = [root tree, subtree..., blob], one object per path component plus the root."""
+    parts = path.split("/")
+    if any(p in ("", ".", "..") for p in parts):
+        raise GitPathError("PATH_COMPONENT", path)
+    if object_id("commit", commit_raw) != commit_id:
+        raise GitPathError("COMMIT_ID_MISMATCH")
+    first = commit_raw.split(b"\n", 1)[0].split(b" ")
+    if len(first) != 2 or first[0] != b"tree" or not re.fullmatch(rb"[0-9a-f]{40}", first[1]):
+        raise GitPathError("COMMIT_NO_TREE")
+    if len(path_objects) != len(parts) + 1:
+        raise GitPathError("PATH_OBJECTS_COUNT")
+    want = first[1].decode()
+    for depth, part in enumerate(parts):
+        typ, oid, body = path_objects[depth]
+        if typ != "tree":
+            raise GitPathError("OBJECT_TYPE", f"depth {depth} is {typ}")
+        if oid != want:
+            raise GitPathError("LINK_MISMATCH", f"depth {depth}: expected {want}, presented {oid}")
+        if object_id("tree", body) != oid:
+            raise GitPathError("TREE_ID_MISMATCH", f"depth {depth}")
+        hits = [(m, o) for m, n, o in _entries(body) if n == part]
+        if not hits:
+            raise GitPathError("PATH_NOT_FOUND", part)
+        if len(hits) > 1:
+            raise GitPathError("PATH_AMBIGUOUS", part)
+        mode, want = hits[0]
+        if mode != ("40000" if depth < len(parts) - 1 else "100644"):
+            raise GitPathError("ENTRY_MODE", f"{part}: {mode}")
+    typ, oid, body = path_objects[-1]
+    if typ != "blob":
+        raise GitPathError("OBJECT_TYPE", f"leaf is {typ}")
+    if oid != want:
+        raise GitPathError("BLOB_SUBSTITUTED", f"tree names {want}, presented {oid}")
+    if object_id("blob", body) != oid:
+        raise GitPathError("BLOB_ID_MISMATCH")
+    return {"blob_id": oid, "path": path, **parse_key_value(body)}
+
+
+# --- profile composition (docs/reviews/v1-profile/ F7, 2026-10-13; INSTRUMENT code, A9.2) ---
+# V1-PROFILE §6.3 fixes the path (OWNER DECISION 2026-10-13) and A9 requires the git value to equal the DNS value.
+# This composition pins the path and compares the blob with the DNSSEC-validated TXT value byte for byte.
+# COVERAGE LIMIT, stated: it does NOT verify `gpgsig` under the pinned repository key, the OTS stamp on the commit id,
+# or signed issuer == pinned D. Those remain the job of a composition that does not yet exist (F7).
+PROFILE_KEY_PATH = "tessera-v1/key-assertion"
+
+
+def verify_profile_key_assertion(commit_id: str, commit_raw: bytes, path_objects: list[tuple[str, str, bytes]],
+                                 dns_txt_strings: list[bytes] | tuple[bytes, ...]) -> dict:
+    """Fixed-path git key assertion plus cross-channel equality. `dns_txt_strings` are the character-strings of the
+    ONE validated TXT RR (ENC §7: one RRset, one RR, one character-string). Raises GitPathError(reason)."""
+    if len(dns_txt_strings) != 1:
+        raise GitPathError("DNS_TXT_SHAPE", f"{len(dns_txt_strings)} character-strings")
+    dns_value = bytes(dns_txt_strings[0])
+    r = verify_key_path(commit_id, commit_raw, path_objects, PROFILE_KEY_PATH)
+    if path_objects[-1][2] != dns_value:     # raw bytes; no parse-then-compare, no normalization
+        raise GitPathError("DNS_GIT_MISMATCH")
+    return {**r, "dns_value_equal": True}

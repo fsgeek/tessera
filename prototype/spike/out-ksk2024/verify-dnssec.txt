@@ -1,0 +1,55 @@
+DNSKEY tags [38696, 8763, 20326] [<Flag.SEP|ZONE: 257>, <Flag.ZONE: 256>, <Flag.SEP|ZONE: 257>]
+root RRSIG tag 38696 2026-10-11T00:00:00Z 2026-11-01T00:00:00Z
+== two-KSK DNSSEC verdict: FAIL | pubkey: UNPERFORMABLE
+  FAIL          DNSSEC.root.KSK-2017 in_signing_period=True key_present_and_matches_pinned_digest=True signed_root_DNSKEY=False
+  PASS          DNSSEC.root.KSK-2024 in_signing_period=True key_present_and_matches_pinned_digest=True signed_root_DNSKEY=True
+  PASS          DNSSEC.root.dnskey_rrset validated by KSK-2024 (38696)
+  PASS          DNSSEC.com..ds signed by .
+  PASS          DNSSEC.com..dnskey_matches_ds tags=[19718]
+  PASS          DNSSEC.com..dnskey_selfsigned 
+  PASS          DNSSEC.wamason.com..ds signed by com.
+  PASS          DNSSEC.wamason.com..dnskey_matches_ds tags=[2371]
+  PASS          DNSSEC.wamason.com..dnskey_selfsigned 
+  PASS          DNSSEC.target.SOA owner=wamason.com. signed by wamason.com.
+  PASS          DNSSEC.target.NS owner=wamason.com. signed by wamason.com.
+  PASS          DNSSEC.target.TXT owner=wamason.com. signed by wamason.com.
+  PASS          DNSSEC.keyrecord_absent._tessera.wamason.com. TXT authenticated NODATA: NSEC type bitmap lacks TXT/CNAME
+  PASS          DNSSEC.keyrecord_absent.tessera.wamason.com. TXT authenticated NODATA: NSEC type bitmap lacks TXT/CNAME
+  UNPERFORMABLE DNSKEY_PUBLICATION.key_txt_record_present NO key-publication TXT record exists in the zone: C4(i) cannot establish K for D
+  used root DNSKEY 38696 2026-10-11T00:00:00Z 2026-11-01T00:00:00Z
+  used com. DS 8763 2026-10-11T16:00:00Z 2026-10-24T17:00:00Z
+  used com. DNSKEY 19718 2026-10-04T13:57:35Z 2026-10-19T14:02:35Z
+  used wamason.com. DS 41446 2026-10-09T21:07:27Z 2026-10-16T22:17:27Z
+  used wamason.com. DNSKEY 2371 2026-10-08T22:14:00Z 2026-12-08T22:14:00Z
+  used wamason.com SOA 34505 2026-10-10T23:06:44Z 2026-10-13T01:06:44Z
+  used wamason.com NS 34505 2026-10-10T23:06:44Z 2026-10-13T01:06:44Z
+  used wamason.com TXT 34505 2026-10-10T23:06:44Z 2026-10-13T01:06:44Z
+  used _tessera.wamason.com. TXT NSEC 34505 2026-10-10T23:06:44Z 2026-10-13T01:06:44Z
+  used tessera.wamason.com. TXT NSEC 34505 2026-10-10T23:06:44Z 2026-10-13T01:06:44Z
+  joint 2026-10-11T16:00:00Z 2026-10-13T01:06:44Z
+== KSK-2024-only DNSSEC verdict: PASS | pubkey: UNPERFORMABLE
+  PASS          DNSSEC.root.KSK-2024 in_signing_period=True key_present_and_matches_pinned_digest=True signed_root_DNSKEY=True
+  PASS          DNSSEC.root.dnskey_rrset validated by KSK-2024 (38696)
+  PASS          DNSSEC.com..ds signed by .
+  PASS          DNSSEC.com..dnskey_matches_ds tags=[19718]
+  PASS          DNSSEC.com..dnskey_selfsigned 
+  PASS          DNSSEC.wamason.com..ds signed by com.
+  PASS          DNSSEC.wamason.com..dnskey_matches_ds tags=[2371]
+  PASS          DNSSEC.wamason.com..dnskey_selfsigned 
+  PASS          DNSSEC.target.SOA owner=wamason.com. signed by wamason.com.
+  PASS          DNSSEC.target.NS owner=wamason.com. signed by wamason.com.
+  PASS          DNSSEC.target.TXT owner=wamason.com. signed by wamason.com.
+  PASS          DNSSEC.keyrecord_absent._tessera.wamason.com. TXT authenticated NODATA: NSEC type bitmap lacks TXT/CNAME
+  PASS          DNSSEC.keyrecord_absent.tessera.wamason.com. TXT authenticated NODATA: NSEC type bitmap lacks TXT/CNAME
+  UNPERFORMABLE DNSKEY_PUBLICATION.key_txt_record_present NO key-publication TXT record exists in the zone: C4(i) cannot establish K for D
+  used root DNSKEY 38696 2026-10-11T00:00:00Z 2026-11-01T00:00:00Z
+  used com. DS 8763 2026-10-11T16:00:00Z 2026-10-24T17:00:00Z
+  used com. DNSKEY 19718 2026-10-04T13:57:35Z 2026-10-19T14:02:35Z
+  used wamason.com. DS 41446 2026-10-09T21:07:27Z 2026-10-16T22:17:27Z
+  used wamason.com. DNSKEY 2371 2026-10-08T22:14:00Z 2026-12-08T22:14:00Z
+  used wamason.com SOA 34505 2026-10-10T23:06:44Z 2026-10-13T01:06:44Z
+  used wamason.com NS 34505 2026-10-10T23:06:44Z 2026-10-13T01:06:44Z
+  used wamason.com TXT 34505 2026-10-10T23:06:44Z 2026-10-13T01:06:44Z
+  used _tessera.wamason.com. TXT NSEC 34505 2026-10-10T23:06:44Z 2026-10-13T01:06:44Z
+  used tessera.wamason.com. TXT NSEC 34505 2026-10-10T23:06:44Z 2026-10-13T01:06:44Z
+  joint 2026-10-11T16:00:00Z 2026-10-13T01:06:44Z

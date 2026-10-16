@@ -1,0 +1,36 @@
+{
+ "T": "2026-11-10T12:20:00Z",
+ "_meta": {
+  "ambiguities": [],
+  "ambiguous_fields": [],
+  "cite": [
+   "P:1294-1295",
+   "P:1330-1336 (diff-1 F-1)",
+   "P:1485",
+   "RES L-74"
+  ],
+  "derivation": "Row 13.2 [diff-1 F-1]: a domain-name field inside RDATA not in canonical form (uppercase signer name) is SNAPSHOT_FORMAT whatever other witnesses the body carries; the valid explicit witness does not make the extra candidate informational. Fail-closed.",
+  "group": "DNSSEC",
+  "id": "L-74e",
+  "issuer_preship": {
+   "chain_order_h_git_plus_5_lt_h_receipt": true,
+   "git_anchored": true,
+   "receipt_anchored": true,
+   "receipt_c1": true,
+   "receipt_c2": true,
+   "receipt_c3": true,
+   "snapshot_anchored": true,
+   "snapshot_c1": true,
+   "snapshot_c2": true,
+   "snapshot_c3": true,
+   "window": true
+  },
+  "kind": "bundle",
+  "title": "Valid TXT witness plus uppercase-signer TXT RRSIG (inception one day earlier: sorts first)"
+ },
+ "historical_security": "NOT_EVALUATED",
+ "reason": "SNAPSHOT_FORMAT",
+ "revocation": "NOT_EVALUATED",
+ "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+ "verdict": "INVALID"
+}

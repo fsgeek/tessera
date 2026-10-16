@@ -1,0 +1,161 @@
+(* ==================================================================== *)
+(* S-P3.H3 — the hybrid pair: two required signers, MIXED schemes.      *)
+(* Variant: BROKEN COMPANION: slot A (rule R) frame unbound            *)
+(*                                                                      *)
+(* STATUS: PROPOSED (owner instance, 2026-10-14), for the A9.6 pass     *)
+(* condition "the mixed-format pairing passes R-3.12 and P3's model".   *)
+(* Derived from S-P3.Q5 (sp3_q5_multikey_correct.pv, recut 3) by        *)
+(* exactly these changes, nothing else:                                 *)
+(*   (1) slot A (V1 slot kms) signs with a SECOND, model-local          *)
+(*       signature family signR/checksignR (rule R: raw ML-DSA-65),     *)
+(*       with its OWN registered DSKS capability dsksR, of the same     *)
+(*       shape as the library's dsks (D-4). Slot B (V1 slot gpg) keeps  *)
+(*       the library family sign/checksign (rule O: OpenPGP P-256).     *)
+(*       Conservative: ML-DSA is not assumed to resist key             *)
+(*       substitution; both families grant DSKS.                       *)
+(*   (2) both frames carry ONE algorithm value algPair (the pair id),   *)
+(*       and the tuple's alg field is algPair (R-3.12: the six non-     *)
+(*       fingerprint fields are equal; alg names both slot schemes).    *)
+(*   (3) the verifier selects the rule by (alg, slot): checksignR for   *)
+(*       slot A, checksign for slot B, for both the possession proof    *)
+(*       and the attestation signature.                                 *)
+(*   (4) the honest fixture is unchanged in shape: two manifests, each  *)
+(*       with its own A (rule R) and B (rule O) keys.                   *)
+(*                                                                      *)
+(* BROKEN COMPANION (cf. S-P3.Q5 companion 2, mirrored to slot A, the   *)
+(* rule-R slot). A's frame carries no issuer id, fingerprint or         *)
+(* manifest hash. Exists to show the judge for the rule-R slot is live: *)
+(* discharges nothing.                                                  *)
+(* Prediction (written 2026-10-14 before the first run of any H model): *)
+(* ReattributedA REACHABLE (p~0.75), by impersonation colliding with    *)
+(* honest bytes as in S-P3 F2 (DSKS not needed); ReattributedB and      *)
+(* PossessionTransplanted unreachable. Recut (p~0.2); timeout (0.05).   *)
+(* Derived from sp3_h1_hybrid_correct.pv by the one edit marked in   *)
+(* the verifier or signer below; it shows only what its prediction     *)
+(* names.                                                               *)
+(* Run: proverif -lib ../../../lib/tessera_theory.pvl sp3_h3_companion_unboundA_R.pv *)
+(* ==================================================================== *)
+
+(* --- model-local declarations (library terms are not redeclared) ---- *)
+fun framed(bitstring, bitstring, bitstring, bitstring, bitstring, bitstring, bitstring): bitstring [data].
+  (* objType, alg, issuerId, kfp, manifestHash, canonVer, payload *)
+free objTypeH: bitstring.
+free canonVerH: bitstring.
+free issuerId2: bitstring.
+free algPair: bitstring.              (* the hybrid pair id; public *)
+fun framedU(bitstring, bitstring, bitstring, bitstring): bitstring [data].
+  (* BROKEN: objType, alg, canonVer, payload; no id, kfp or mh *)
+
+(* rule R family: raw ML-DSA-65 (slot A / kms), with its own DSKS capability *)
+fun signR(bitstring, skey): bitstring.
+fun dsksR(bitstring, bitstring): skey.
+fun checksignR(bitstring, pkey): bitstring
+  reduc forall m: bitstring, k: skey;
+          checksignR(signR(m, k), pk(k)) = m
+  otherwise forall m: bitstring, k: skey, r: bitstring;
+          checksignR(signR(m, k), pk(dsksR(signR(m, k), r))) = m.
+
+free honestChA: channel [private].
+free honestChB: channel [private].
+free acceptCh: channel [private].
+free honestPossCh: channel [private].
+free possCh: channel [private].
+event ReattributedA(pkey, pkey, bitstring).
+event ReattributedB(pkey, pkey, bitstring).
+event PossessionTransplanted(pkey, bitstring).
+event HonestAccepted(pkey, bitstring).
+event Accept2(bitstring, bitstring, pkey, pkey, bitstring, bitstring).
+
+query kX: pkey, kH: pkey, fb: bitstring;
+  event(ReattributedA(kX, kH, fb)).
+query kX: pkey, kH: pkey, fb: bitstring;
+  event(ReattributedB(kX, kH, fb)).
+query kX: pkey, p: bitstring;
+  event(PossessionTransplanted(kX, p)).
+(* N1 honest-flow witness: must be REACHABLE *)
+query k: pkey, fb: bitstring;
+  event(HonestAccepted(k, fb)).
+(* N1 vacuity witness: must be REACHABLE *)
+query ev: bitstring, t: bitstring, kA: pkey, kB: pkey, fa: bitstring, fb: bitstring;
+  event(Accept2(ev, t, kA, kB, fa, fb)).
+
+let AuthorityS(skS: skey, t: bitstring) =
+  event AuthorityPublishedDNS(t);
+  out(c, sign((STMT_DIGEST, h(t)), skS)).
+
+(* Slot A (kms): rule R for possession and attestation *)
+let SignerA(sk: skey, id: bitstring, m: bitstring) =
+  in(c, payload: bitstring);
+  event IssuerPossession(pk(sk));
+  let ppf = signR((POSS, m), sk) in
+  ( out(honestPossCh, (pk(sk), ppf))
+  | out(c, ppf);
+  let fb = framedU(objTypeH, algPair, canonVerH, payload) in
+  event IssuerSigned(pk(sk), fb);
+  ( out(honestChA, (pk(sk), fb))
+  | out(c, signR((BYTES, fb), sk)) ) ).
+
+(* Slot B (gpg): rule O, the library family *)
+let SignerB(sk: skey, id: bitstring, m: bitstring) =
+  in(c, payload: bitstring);
+  event IssuerPossession(pk(sk));
+  let ppf = sign((POSS, m), sk) in
+  ( out(honestPossCh, (pk(sk), ppf))
+  | out(c, ppf);
+  let fb = framed(objTypeH, algPair, id, fp(pk(sk)), h(m), canonVerH, payload) in
+  event IssuerSigned(pk(sk), fb);
+  ( out(honestChB, (pk(sk), fb))
+  | out(c, sign((BYTES, fb), sk)) ) ).
+
+let VerifierS(pkS: pkey) =
+  in(c, (t: bitstring, ev: bitstring,
+         kA: pkey, kB: pkey, ppfA: bitstring, ppfB: bitstring,
+         sgA: bitstring, sgB: bitstring, fa: bitstring, fb: bitstring));
+  let (=STMT_DIGEST, =h(t)) = checksign(ev, pkS) in
+  let authTuple(id, kfprA, kfprB, alg, ver) = t in
+  if alg = algPair then                        (* the rule table: (algPair, A) = R, (algPair, B) = O *)
+  if fp(kA) = kfprA then
+  if fp(kB) = kfprB then
+  let (=POSS, =t) = checksignR(ppfA, kA) in
+  let (=POSS, =t) = checksign(ppfB, kB) in
+  let (=BYTES, =fa) = checksignR(sgA, kA) in
+  let (=BYTES, =fb) = checksign(sgB, kB) in
+  let framedU(ota, =alg, cva, pla) = fa in
+  let framed(otb, =alg, =id, =fp(kB), mhb, cvb, plb) = fb in
+  if mhb = h(t) then
+  event Accept2(ev, t, kA, kB, fa, fb);
+  ( out(possCh, (kA, ppfA)) | out(possCh, (kB, ppfB))
+  | out(acceptCh, (kA, id, fa)) | out(acceptCh, (kB, id, fb)) ).
+
+let JudgeA =
+  in(honestChA, (kH: pkey, fbHon: bitstring));
+  in(acceptCh, (kX: pkey, id: bitstring, =fbHon));
+  if kX = kH then event HonestAccepted(kX, fbHon)
+  else event ReattributedA(kX, kH, fbHon).
+
+let JudgeB =
+  in(honestChB, (kH: pkey, fbHon: bitstring));
+  in(acceptCh, (kX: pkey, id: bitstring, =fbHon));
+  if kX = kH then event HonestAccepted(kX, fbHon)
+  else event ReattributedB(kX, kH, fbHon).
+
+let PossJudge =
+  in(honestPossCh, (kH: pkey, p: bitstring));
+  in(possCh, (kX: pkey, =p));
+  if kX = kH then 0
+  else event PossessionTransplanted(kX, p).
+
+process
+  new skS: skey;
+  new skA: skey; new skB: skey; new skA2: skey; new skB2: skey;
+  let m  = authTuple(issuerId,  fp(pk(skA)),  fp(pk(skB)),  algPair, verH) in
+  let m2 = authTuple(issuerId2, fp(pk(skA2)), fp(pk(skB2)), algPair, verH) in
+  out(c, pk(skS)); out(c, pk(skA)); out(c, pk(skB)); out(c, pk(skA2)); out(c, pk(skB2));
+  out(c, m); out(c, m2);
+  (* DEGRADED MODE, SOLE CHANNEL COMPROMISED: its signing key is public *)
+  out(c, skS);
+  ( !AuthorityS(skS, m) | !AuthorityS(skS, m2)
+  | !SignerA(skA, issuerId, m)  | !SignerB(skB, issuerId, m)
+  | !SignerA(skA2, issuerId2, m2) | !SignerB(skB2, issuerId2, m2)
+  | !VerifierS(pk(skS))
+  | !JudgeA | !JudgeB | !PossJudge )

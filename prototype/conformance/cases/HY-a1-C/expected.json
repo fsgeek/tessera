@@ -1,0 +1,43 @@
+{
+ "T": "2026-11-10T12:20:00Z",
+ "_meta": {
+  "ambiguities": [],
+  "ambiguous_fields": [],
+  "cite": [
+   "P:114-119",
+   "P:120-126",
+   "P:1469",
+   "P:127-130",
+   "P:225-228",
+   "P:280-283",
+   "P:1461",
+   "P:1475-1479",
+   "P:741-750",
+   "HC (a)"
+  ],
+  "derivation": "Pair id is absent from the classical installation's codec registry (P:127-130): both slots use the opaque codec (nonempty, <= 65536) and accept. kms key is a valid P-256 SPKI with its manifest fingerprint (rows 5.1, 5.2 pass under either EA-31 reading). Rows 6.x pass (one alg everywhere). Row 7.1 unperformable: ALG_UNKNOWN; rows 9.1/9.2/9.4/9.5 are blocked by 7.1 (no SIG_*/POSSESSION_INVALID); M5's alg condition contributes ALG_UNKNOWN, not SCHEMA (P:748-750). No row fails; first unperformable = 7.1.",
+  "group": "hybrid routing",
+  "id": "HY-a1-C",
+  "installation": "classical",
+  "issuer_preship": {
+   "chain_order_h_git_plus_5_lt_h_receipt": true,
+   "git_anchored": true,
+   "receipt_anchored": true,
+   "receipt_c1": true,
+   "receipt_c2": true,
+   "receipt_c3": true,
+   "snapshot_anchored": true,
+   "snapshot_c1": true,
+   "snapshot_c2": true,
+   "snapshot_c3": true,
+   "window": true
+  },
+  "kind": "bundle",
+  "title": "(a1) Pair id before registration: 3309-byte kms signature (genuine ML-DSA-65 bytes), rule-O gpg"
+ },
+ "historical_security": "NOT_EVALUATED",
+ "reason": "ALG_UNKNOWN",
+ "revocation": "NOT_EVALUATED",
+ "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+ "verdict": "UNVERIFIABLE"
+}

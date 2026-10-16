@@ -1,0 +1,26 @@
+51c51,52
+< contents. Both keys are under one controller.
+---
+> contents; or against compromise of the verifier's distribution, meaning its release and the trust configuration
+> compiled into it (an explicit external assumption, A9.5). Both keys are under one controller.
+130c131,132
+< channels authenticated these keys for D, with a pre-committed issuance window, at the stated evidence times; that
+---
+> channels authenticated these keys for D, with an issuance window the git channel committed, in chain order, before
+> the receipt's anchor, at the stated evidence times; that
+141,143c143,145
+< | C4 Authority | DNSSEC (owner name D, evaluated at the snapshot's own anchored time) and the anchored git key assertion (full commit→tree→blob path) authenticated K for D, with the issuance window, at their evidence times. The verifier fixes the required set. | Revocation not evaluated. Not public publication of the commit. Neither channel commits to any receipt (CODEX-REVIEW 3). |
+< | C5 Time | The frames **and their exact signatures** existed no later than T, the earliest verified attestation in the presented OTS proof; the three-conjunct predicate holds at k = 6. | Presentation-sensitive T. No lower bound, no priority. Header times are chain-time proxies. Reorganization deeper than k is a residual. |
+< | C6 Without Tessera | The verdict is a pure function of the bundle, the published verifier and its distributed trust configuration. | Custody is the holder's. Dead-project reconstruction not demonstrated. Anchors beyond the newest pin are `UNVERIFIABLE`. |
+---
+> | C4 Authority | DNSSEC (owner name D, evaluated at the snapshot's own anchored time) and the anchored git key assertion (full commit→tree→blob path) authenticated K for D, with the issuance window, at their evidence times. **Chain-order pre-commitment** (OWNER DECISION 2026-10-14, BROADEN; `docs/reviews/spec-sufficiency/` F01): the git assertion's selected anchor height plus 5 is lower than the receipt's selected anchor height, so the window was confirmed at k = 6 in the chain before the receipt was anchored. The verifier fixes the required set. | Revocation not evaluated. Not public publication of the commit. Neither channel commits to any receipt (CODEX-REVIEW 3). Pre-commitment is chain order, not UTC (A2.1); DNSSEC evidence establishes no publication before issue. |
+> | C5 Time | The frames **and their exact signatures** existed no later than T, the verified attestation at the lowest block height in the presented OTS proof (both T and its confirmations come from that attestation; OWNER DECISION 2026-10-14, F03: header times are not monotone, so "earliest" means chain order); the three-conjunct predicate holds at k = 6. | Presentation-sensitive T. No lower bound, no priority. Header times are chain-time proxies. Reorganization deeper than k is a residual. |
+> | C6 Without Tessera | The verdict is a pure function of the bundle, the published verifier and its distributed trust configuration. | Custody is the holder's. Dead-project reconstruction not demonstrated. A selected anchor (C5) beyond the newest pin is `UNVERIFIABLE`. Every supplied header must be pinned. An unselected attestation without its headers supplies no fact and is not a failure (OWNER DECISION 2026-10-14, F02). |
+323a326,332
+> - **Trust-configuration authority** (OWNER DECISION 2026-10-14, after `docs/reviews/spec-sufficiency/` F04). The
+>   trust configuration is authenticated independently of the bundle and of both authority-channel credentials. Each
+>   verifier release compiles in the hash of its configuration. Releases are authenticated by a key that neither the
+>   DNS credential, the repository key nor the issuing AWS account can use; the dated custody record names that key
+>   and its access boundary. Capture of an authority-channel credential grants no ability to sign a release,
+>   authorize a configuration hash, or replace the compiled trust root. CI is not the authenticity check. Compromise
+>   of the release key is distribution compromise, a stated boundary.

@@ -1,0 +1,37 @@
+{
+ "T": "2026-11-10T12:20:00Z",
+ "_meta": {
+  "ambiguities": [
+   "EA-14"
+  ],
+  "ambiguous_fields": [],
+  "cite": [
+   "P:395-397",
+   "P:429-440",
+   "RES L-62"
+  ],
+  "derivation": "Must not pass. The candidate verifies but its RRSIG window excludes T_snap (Nov 10): time class, which ranks before nothing else here.",
+  "group": "trust config",
+  "id": "L-62b",
+  "issuer_preship": {
+   "chain_order_h_git_plus_5_lt_h_receipt": true,
+   "git_anchored": true,
+   "receipt_anchored": true,
+   "receipt_c1": true,
+   "receipt_c2": true,
+   "receipt_c3": true,
+   "snapshot_anchored": true,
+   "snapshot_c1": true,
+   "snapshot_c2": true,
+   "snapshot_c3": true,
+   "window": true
+  },
+  "kind": "bundle",
+  "title": "Same old-root evidence (window Oct 1-22) anchored after reliance"
+ },
+ "historical_security": "NOT_EVALUATED",
+ "reason": "RRSIG_NOT_VALID_AT_EVAL_TIME",
+ "revocation": "NOT_EVALUATED",
+ "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+ "verdict": "INVALID"
+}

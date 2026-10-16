@@ -1,0 +1,36 @@
+[a: attest frame, declared time now] enqueued req-e9c75c88753f4eea93ef3171514b5a60 (sqs 0b7995b7-17f5-47e6-9db0-001156dfb63c), frame 776 B sha256 fd8b05948a4fb875...
+[a: attest frame, declared time now] SIGNED  after 16.3 s; signer clock 2026-10-14T03:54:22Z
+[a: manifest (possession)] enqueued req-418c4510f7f74a43ac378a29149ef5e8 (sqs 476e3d74-06ac-4d8c-bf67-235902c38a8b), frame 296 B sha256 91e2dfab80d25160...
+[a: manifest (possession)] SIGNED  after 3.2 s; signer clock 2026-10-14T03:54:25Z
+  slot-2 sig: P8 A rule-O codec (gen.decode_sig, slot gpg): True
+  slot-2 sig: P8 B rule-O codec (check.sig_check, slot gpg): True
+  slot-2 sig: A ECDSA verify over its frame (gen.verify_openpgp4): True
+  slot-2 sig: B ECDSA verify over its frame (check.pgp4_verify): True
+  slot-2 sig: tampered frame rejected by A and B: True
+  receipt (manifest, both frames, both sigs, A_sig): A accepts with keys: True
+  receipt: B accepts with keys: True
+  receipt with slot-2 sig swapped for the possession sig: A and B reject: True
+  kms sig (EXTERNAL_MU) verifies over the full frame: cryptography + dilithium-py: True
+  possession gpg (via signer): A: True
+  possession gpg (via signer): B: True
+  possession kms: A and B: True
+  declared_issue_time: 2026-10-14T03:54:04Z
+  signer clock at signing: 2026-10-14T03:54:22Z
+  frame f1 length / sha256: 776 / fd8b05948a4fb875f0f186e2d444f19e845124297976fe34d9ce88d62fe8205d
+  slot-2 sig length / sha256: 119 / 3bccd051fde66c58e5a5ce139eb0ff303a7bdd951908b4a1cda845aff132790e
+  anchor sha256: ab722ecfa96c1ef15d24415cf6cf4fca7a61bcac1bda7d5161a2ce2e29f7c92a
+  (a) PASS
+[b: declared time 25 h in the past] enqueued req-27fcdf765135441cadd487a515f0a362 (sqs 04e1f7e9-0b11-4e9d-818d-edf1cac32524), frame 780 B sha256 c861a7170361e7e1...
+[b: declared time 25 h in the past] REFUSED DECLARED_TIME_OUTSIDE_EPSILON after 47.4 s; signer clock 2026-10-14T03:55:22Z
+  expected REFUSED/DECLARED_TIME_OUTSIDE_EPSILON: PASS; detail: declared 2026-10-13T02:54:35Z, signer clock 2026-10-14T03:55:22Z, difference -90047 s, epsilon 86400 s
+  (b) PASS
+[c1: wrong tag tessera-v1/receipt (not in T)] enqueued req-627ec67e998c48bd8da5e25066ba35de (sqs 2a0ce620-7644-4542-abce-d22c4a9bbc99), frame 777 B sha256 54942d856948af8d...
+[c1: wrong tag tessera-v1/receipt (not in T)] REFUSED TAG_UNKNOWN after 55.3 s; signer clock 2026-10-14T03:56:22Z
+  expected REFUSED/TAG_UNKNOWN: PASS; detail: TAG_UNKNOWN: b'tessera-v1/receipt'
+[c2: tag tessera-v1/receipt-anchor-sig (in T, not signable)] enqueued req-bce77657a2b4455bbb8fb78306b5a5bd (sqs b3495e73-5ca4-484b-b1d2-36f606fdb6ef), frame 788 B sha256 dcf0f4fcc931616f...
+[c2: tag tessera-v1/receipt-anchor-sig (in T, not signable)] REFUSED TAG_MISMATCH after 3.2 s; signer clock 2026-10-14T03:56:26Z
+  expected REFUSED/TAG_MISMATCH: PASS; detail: TAG_MISMATCH: b'tessera-v1/receipt-anchor-sig' where b'tessera-v1/attest' expected
+[c3: wrong key_fp (the kms slot's fingerprint)] enqueued req-078228a3a3a948b1af17576a6e454925 (sqs a229a594-3348-426f-8d69-4fb8d7e4c2e1), frame 777 B sha256 ba37c7c5c3918ab7...
+[c3: wrong key_fp (the kms slot's fingerprint)] REFUSED KEY_FP_MISMATCH after 3.5 s; signer clock 2026-10-14T03:56:31Z
+  expected REFUSED/KEY_FP_MISMATCH: PASS; detail: spki-sha256:d1b35a0e5273912ee85c7f88ee97929cef311e7854ad30c58faa3e0250c4a7a4
+  (c) PASS

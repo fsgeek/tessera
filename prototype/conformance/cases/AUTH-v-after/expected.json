@@ -1,0 +1,51 @@
+{
+ "T": "2026-11-10T12:20:00Z",
+ "_meta": {
+  "ambiguities": [],
+  "ambiguous_fields": [],
+  "cite": [
+   "P:709-717",
+   "P:1503",
+   "A9:143",
+   "P:253-256",
+   "P:269-272",
+   "P:1442-1447",
+   "A9:153",
+   "prototype/mutation/REPORT.md obs. 3"
+  ],
+  "derivation": "The assertion is anchored at 900027 > h_receipt = 900024 (T_git 12:50 after T 12:20). No clock comparison is made between T_git and declared (P:716-717); chain order fails: row 14.8.",
+  "group": "authority isolation",
+  "id": "AUTH-v-after",
+  "installation": "classical",
+  "isolation": {
+   "attacker_holds": "both channel credentials (publication after the receipt)",
+   "only_failing_rows": [
+    "14.8"
+   ],
+   "selfcheck_fails": [
+    "chain_order"
+   ],
+   "twin": "AUTH-v-after-T"
+  },
+  "issuer_preship": {
+   "chain_order_h_git_plus_5_lt_h_receipt": false,
+   "git_anchored": true,
+   "receipt_anchored": true,
+   "receipt_c1": true,
+   "receipt_c2": true,
+   "receipt_c3": true,
+   "snapshot_anchored": true,
+   "snapshot_c1": true,
+   "snapshot_c2": true,
+   "snapshot_c3": true,
+   "window": true
+  },
+  "kind": "bundle",
+  "title": "Attacker-keyed receipt; git assertion anchored after the receipt (h_git = h_receipt + 3)"
+ },
+ "historical_security": "NOT_EVALUATED",
+ "reason": "GIT_NOT_PRECOMMITTED",
+ "revocation": "NOT_EVALUATED",
+ "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+ "verdict": "INVALID"
+}

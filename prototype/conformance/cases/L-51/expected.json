@@ -1,0 +1,17 @@
+{
+ "_meta": {
+  "ambiguities": [],
+  "ambiguous_fields": [],
+  "cite": [
+   "P:372-373",
+   "P:357-364",
+   "RES L-51"
+  ],
+  "derivation": "Release signed by the repository key, not the release key: the config hash is not compiled in by an authentic release. The config is a superset of the honest one, so a verifier that skipped authentication would return VALID_STRICT.",
+  "group": "trust config",
+  "id": "L-51",
+  "kind": "bundle",
+  "title": "Captured repository signer signs a config (own KSK, repository key, pins)"
+ },
+ "refusal": "TRUST_CONFIG_UNAUTHENTICATED"
+}

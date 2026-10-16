@@ -2012,3 +2012,37 @@ one line each, not repaired.)*
 - The ~50 minutes `cap_cc10_b` spent before the 2026-10-02 crash have no `seconds=` line and are not in the ceiling, as with ladder 2's three crash-interrupted runs.
 - Ladder-3 run times differ from ladder 2's on the same machine in both directions (e.g. `cap_cc07i_a` 12 423 → 2 196 s, `capstone_d` 6 388 → 3 805 s, `cap_cc01_c` 4 279 → 4 569 s); not diagnosed. Only D6's (Q) cell depends on it.
 - Historical sections (Ladder restarts before ladder 3, BF-1 to BF-4, Recuts, Blocked B-1 to B-4, the degraded wave, the C-C8 disposition's "5.6-fold") keep ladder-2/ladder-1 citations and figures as written; their file prefixes were corrected where the log moved, nothing else.
+
+---
+
+## Slice batch (A8.3/A8.4), 2026-10-09
+
+*(Added 2026-10-09 by the AI collaborator. Registration: `SLICE-PREREG-2026-10-09.md`, frozen at `d379062`. Log:
+`proverif/slice/counted.log`. Reading: `READ-SLICE-RESULTS-2026-10-09.md`. Out files: `proverif/slice/out/`. A slice
+red is a red of the full (d) file by trace inclusion. It descends no green, witness or set (2). The cells of
+sections 1–3 above are unchanged, and the (d) files themselves stay *not run under this blob*.)*
+
+Control gate closed (`counted.log:85`): 41 controls, 39 green; A4.6 red with trace at both depths (`capstone_d__depth0__a46.out:2067`, `__depth1__a46.out:2437`).
+**Rows shown: 30 of 33.** The three rows not shown are 12, 14 and 15. Each has a red only at L0, which fails (L).
+
+| Companion (d) | Case-(d) slice cell (out file : `RESULT` line, each preceded by its own `A trace has been found.`) |
+|---|---|
+| **C-C2** (D1) | C-Q3 `ReattributedA` **RED** `cap_cc02_d__depth0__cq3a.out:2398`; `ReattributedB` **RED** `__cq3b.out:2398`; link 5 (T) **RED** `cap_cc02_d__depth0__link5.out:2340` (also `…depth0.cone__link5.out:788`). `kfp ≠ fp(kX)` at the accepted L0 frame (`:2318`); `mh` is also broken |
+| **C-C3** (D10) | C-Q5 **RED** `cap_cc03_d__depth0__cq5.out:2201`; C-Q9 **RED** `__cq9.out:2129`; link 3 **RED** `__link3.out:2197` |
+| **C-C4** (D2) | C-Q4 `Rescoped` **RED** `cap_cc04_d__depth1__cq4r.out:3105`; `InnerSigTransplanted` **RED** `__cq4s.out:3153`; C-Q3 `ReattributedA` **RED** `__cq3a.out:2978`; `ReattributedB` **RED** `__cq3b.out:3018`; link 6b **RED** `__link6b.out:3067`; link 5 (T, L) **not shown**: red at L0 only (`__link5.out:2907, :2923`; `…depth1.cone__link5.out:1074, :1090`) |
+| **C-C5** (D5) | C-Q4 `InnerSigTransplanted` **RED** `cap_cc05_d__depth1__cq4s.out:3918`; C-Q8 (L) **not shown**: red at L0 only (`__cq8.out:3682, :3698`; `…depth1.cone__cq8.out:1229, :1245`); link 4 (L) **not shown**: red at L0 only (`__link4.out:3723, :3741`; `…depth1.cone__link4.out:1229, :1247`) |
+| **C-C6** (D5, D6) | C-Q7 **RED** `cap_cc06_d__depth0__cq7.out:2849`; C-Q4 `InnerSigTransplanted` **RED** `cap_cc06_d__depth1.cone__cq4s.out:1886` (primary timed out, `counted.log:110`); C-Q8 **RED** `__depth0__cq8.out:2835`; link 4 **RED** `__depth0__link4.out:2837` |
+| **C-C7(i)** (D6) | C-Q8 **RED** `cap_cc07i_d__depth0__cq8.out:2104`; link 4 **RED** `__link4.out:2122`; `AcceptedUnderHonestKey ⟹ IssuerSigned` **RED** `cap_cc07i_d__depth1__auhk.out:2690` |
+| **C-C7(ii)** (D6) | C-Q8 **RED** `cap_cc07ii_d__depth0__cq8.out:2482`; link 4 **RED** `__link4.out:2497`; C-Q7, composed, **RED** `__depth0__cq7.out:2497`; `AcceptedUnderHonestKey ⟹ IssuerSigned`, composed, **RED** `__depth0__auhk.out:2511` (both primaries timed out, `counted.log:118-119`); honest-filtered C-Q8: no query, not shown |
+| **C-C8** (D10) | C-Q9 **RED** `cap_cc08_d__depth0__cq9.out:2129`; C-Q5 **RED** `__cq5.out:2201`; link 3 **RED** `__link3.out:2197`; link 5 (H) **RED** `__link5.out:2195` (also `…depth0.cone__link5.out:692`). Honest `skI2` frame, `kfp = fp(kX)`, `mh ≠ h(t)` (`:2179`) |
+| **C-C8-i** | **not run under this blob**; greens carried on family evidence |
+| **C-C8-ii** (D10 isolation) | C-Q9 **RED** by construction `cap_cc08ii_d__depth0__cq9.out:2117`; required C-Q5 green: **not run under this blob**, family evidence |
+| **C-C17** (D7 membership) | link 2a **RED** `cap_cc17_d__depth0__link2a.out:2159`; `SignerForged` **RED** `cap_cc17_d__depth1__sf.out:2663`; `PossessionTransplanted`: no query, not shown |
+| **C-C15(i)** (D11, C-Q6) | C-Q6k (A8.4) **RED** `a84_cap_cc15i_d.out:3870`: established under `pk(skI2)` at L1 (`:3865`), inner signature verified under a captor wrapper key `pk(dsks(sgI, a_11))` (`:3843`) |
+
+**A8.4 greens.** C-Q6k is `is true`, each with its own reachable A8.4w trace, in 12 files. The C-Q6k line is given
+first, then the A8.4w line, all in `a84_<src>.out`:
+- `capstone` 2640 / 3294; `capstone_b` 2642 / 3298; `cap_cc01_c` 3369 / 4343; `capstone_d` 3184 / 4064;
+- `cap_cc15i_a` 2883 / 3511; `cap_cc15i_b` 2884 / 3513;
+- `cap_cc15ii_a` 2956 / 3613; `cap_cc15ii_b` 2957 / 3615; `cap_cc15ii_d` 3491 / 4379;
+- `cap_cc15iii_a` 2966 / 3634; `cap_cc15iii_b` 2969 / 3640; `cap_cc15iii_d` 3504 / 4406.

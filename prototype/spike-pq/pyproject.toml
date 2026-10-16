@@ -1,0 +1,13 @@
+[project]
+name = "spike-pq"
+version = "0.1.0"
+requires-python = ">=3.14"
+dependencies = [
+    "cryptography>=50.0.2",
+    "dilithium-py>=1.4.0",
+    "pqcrypto>=1.0.0",
+    "slh-dsa>=0.2.5",
+]
+
+[tool.uv.workspace]
+members = []

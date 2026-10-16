@@ -1,0 +1,21 @@
+{
+ "_note": "THROWAWAY spike trust configuration. Ships with the verifier; never taken from a bundle. Times UTC.",
+ "version": "spike-1",
+ "issuer_domain": "wamason.com",
+ "root_ksks": [
+  {
+   "name": "KSK-2024",
+   "key_tag": 38696,
+   "algorithm": 8,
+   "ds_digest_sha256": "683D2D0ACB8C9B712A1948B27F741219298D0A450D612C483AF444A4C0FB2B16",
+   "signing_valid_from": "2026-10-11T00:00:00Z",
+   "signing_valid_until": null,
+   "source": "IANA root-anchors.xml; first signs the root DNSKEY RRset 2026-10-11"
+  }
+ ],
+ "params": {
+  "delta_s": 259200,
+  "epsilon_s": 86400,
+  "k": 6
+ }
+}

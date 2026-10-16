@@ -1,0 +1,54 @@
+{
+ "T": "2026-11-10T12:20:00Z",
+ "_meta": {
+  "ambiguities": [],
+  "ambiguous_fields": [],
+  "cite": [
+   "P:594-598",
+   "P:466-467",
+   "P:1493",
+   "P:555-556",
+   "A9:309-324",
+   "P:253-256",
+   "P:269-272",
+   "P:1442-1447",
+   "A9:143",
+   "A9:153",
+   "prototype/mutation/REPORT.md obs. 3"
+  ],
+  "derivation": "The attacker captured the repository key (the git assertion naming its keys verifies under the configured entry within its interval, chain order holds) but not the DNS credential. The selector matches the honest wamason.com ZSK, so the candidate is checked against it and fails cryptographically: INVALID / DNSSEC_SIGNATURE_INVALID (row 5). A key tag is a selector, not proof of authorship.",
+  "group": "authority isolation",
+  "id": "AUTH-ii-tag",
+  "installation": "classical",
+  "isolation": {
+   "attacker_holds": "the repository key (git channel), not the DNS credential",
+   "only_failing_rows": [
+    "13.5"
+   ],
+   "selfcheck_fails": [
+    "dnssec"
+   ],
+   "twin": "AUTH-ii-tag-T"
+  },
+  "issuer_preship": {
+   "chain_order_h_git_plus_5_lt_h_receipt": true,
+   "git_anchored": true,
+   "receipt_anchored": true,
+   "receipt_c1": true,
+   "receipt_c2": true,
+   "receipt_c3": true,
+   "snapshot_anchored": true,
+   "snapshot_c1": true,
+   "snapshot_c2": true,
+   "snapshot_c3": true,
+   "window": true
+  },
+  "kind": "bundle",
+  "title": "Attacker-keyed receipt; DNS: as ii-zsk, but the attacker's RRSIG carries the honest ZSK's key tag; git assertion valid"
+ },
+ "historical_security": "NOT_EVALUATED",
+ "reason": "DNSSEC_SIGNATURE_INVALID",
+ "revocation": "NOT_EVALUATED",
+ "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+ "verdict": "INVALID"
+}

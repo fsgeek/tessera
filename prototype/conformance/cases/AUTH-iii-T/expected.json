@@ -1,0 +1,41 @@
+{
+ "T": "2026-11-10T12:20:00Z",
+ "_meta": {
+  "ambiguities": [],
+  "ambiguous_fields": [],
+  "cite": [
+   "P:668-670",
+   "P:671-677",
+   "P:1502",
+   "A9:333-338",
+   "P:269-272"
+  ],
+  "derivation": "Same issue with the configured repository key; every row passes. (selfcheck: repo_interval is blocked by repo_signer in the attack, so both are named.)",
+  "group": "authority isolation",
+  "id": "AUTH-iii-T",
+  "installation": "classical",
+  "isolation": {
+   "twin_of": "AUTH-iii"
+  },
+  "issuer_preship": {
+   "chain_order_h_git_plus_5_lt_h_receipt": true,
+   "git_anchored": true,
+   "receipt_anchored": true,
+   "receipt_c1": true,
+   "receipt_c2": true,
+   "receipt_c3": true,
+   "snapshot_anchored": true,
+   "snapshot_c1": true,
+   "snapshot_c2": true,
+   "snapshot_c3": true,
+   "window": true
+  },
+  "kind": "bundle",
+  "title": "Honest twin of AUTH-iii: the commit signed by the configured repository key"
+ },
+ "historical_security": "NOT_EVALUATED",
+ "reason": "OK",
+ "revocation": "NOT_EVALUATED",
+ "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+ "verdict": "VALID_STRICT"
+}

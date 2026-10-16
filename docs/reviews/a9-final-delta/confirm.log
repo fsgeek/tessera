@@ -1,0 +1,1152 @@
+Reading additional input from stdin...
+OpenAI Codex v0.162.1
+--------
+workdir: /home/tony/projects/tessera
+model: gpt-6.1-sol
+provider: openai
+approval: never
+sandbox: danger-full-access
+reasoning effort: none
+reasoning summaries: none
+session id: 01a13644-6bb7-7ac2-ac72-32693e74049b
+--------
+user
+Repo /home/tony/projects/tessera. Confirmation pass only. docs/reviews/a9-final-delta/fixes.diff applies your six findings in docs/reviews/a9-final-delta/CODEX-REVIEW.md to docs/phase-0-prereg-amendment-9.md (disposition: DISPOSITION.md). For each finding say APPLIED / NOT APPLIED / APPLIED WITH DEFECT. Check that the added author-adoption sentence in the root-KSK rule doesn't overclaim, that row 29 renders as a valid table row, and that the surrounding paragraphs still read coherently. Do not raise new design issues unless they are severity HIGH. Write the result to docs/reviews/a9-final-delta/CONFIRMATION.md and edit nothing else.
+codex
+I’ll check the six findings against the diff, disposition, and amendment, then write only `CONFIRMATION.md`. I’ll also check the root-KSK adoption sentence, row 29’s table structure, and paragraph coherence.
+exec
+/bin/bash -lc "cat /home/tony/.codex/plugins/cache/openai-curated-remote/superpowers/6.4.2/skills/using-superpowers/SKILL.md; rg -n 'Amendment 9|A9|formal-review' /home/tony/.codex/memories/MEMORY.md; rg --files -g AGENTS.md -g '*CONFIRMATION*' -g '*CODEX-REVIEW*' -g '*DISPOSITION*' -g fixes.diff" in /home/tony/projects/tessera
+ succeeded in 0ms:
+---
+name: using-superpowers
+description: Use when starting any conversation - establishes how to find and use skills, requiring skill invocation before ANY response including clarifying questions
+---
+
+<SUBAGENT-STOP>
+If you were dispatched as a subagent to execute a specific task, ignore this skill.
+</SUBAGENT-STOP>
+
+<EXTREMELY-IMPORTANT>
+If you think there is even a 1% chance a skill might apply to what you are doing, you ABSOLUTELY MUST invoke the skill.
+
+IF A SKILL APPLIES TO YOUR TASK, YOU DO NOT HAVE A CHOICE. YOU MUST USE IT.
+
+This is not negotiable. You cannot rationalize your way out of this.
+</EXTREMELY-IMPORTANT>
+
+## The Rule
+
+**Invoke relevant or requested skills BEFORE any response or action** — including clarifying questions, exploring the codebase, or checking files. If it turns out wrong for the situation, you don't have to use it.
+
+**Before entering plan mode:** if you haven't already brainstormed, invoke the brainstorming skill first.
+
+Then announce "Using [skill] to [purpose]" and follow the skill exactly. If it has a checklist, create a todo per item.
+
+## Skill Priority
+
+When multiple skills apply, process skills come first — they set the approach, then implementation skills (frontend-design, etc.) carry it out. Brainstorming and systematic-debugging are Superpowers' most common process skills, but the rule holds for any of them.
+
+- "Let's build X" → superpowers:brainstorming first, then implementation skills.
+- "Fix this bug" → superpowers:systematic-debugging first, then domain skills.
+
+## Red Flags
+
+These thoughts mean STOP—you're rationalizing:
+
+| Thought | Reality |
+|---------|---------|
+| "This is just a simple question" | Questions are tasks. Check for skills. |
+| "I need more context first" | Skill check comes BEFORE clarifying questions. |
+| "Let me explore the codebase first" | Skills tell you HOW to explore. Check first. |
+| "I can check git/files quickly" | Files lack conversation context. Check for skills. |
+| "Let me gather information first" | Skills tell you HOW to gather information. |
+| "This doesn't need a formal skill" | If a skill exists, use it. |
+| "I remember this skill" | Skills evolve. Read current version. |
+| "This doesn't count as a task" | Action = task. Check for skills. |
+| "The skill is overkill" | Simple things become complex. Use it. |
+| "I'll just do this one thing first" | Check BEFORE doing anything. |
+| "This feels productive" | Undisciplined action wastes time. Skills prevent this. |
+| "I know what that means" | Knowing the concept ≠ using the skill. Invoke it. |
+
+## Platform Adaptation
+
+If your harness appears here, read its reference file for special instructions:
+
+- Claude Code: `references/claude-code-tools.md`
+- Codex: `references/codex-tools.md`
+- Pi: `references/pi-tools.md`
+- Antigravity: `references/antigravity-tools.md`
+- Hermes Agent: `references/hermes-tools.md`
+- Muse: `references/muse-tools.md`
+
+## User Instructions
+
+User instructions (CLAUDE.md, AGENTS.md, GEMINI.md, etc, direct requests) take precedence over skills, which in turn override default behavior. Only skip skill workflows or instructions when your human partner has explicitly told you to.
+44:applies_to: cwd=/home/tony/projects/tessera; reuse_rule=use for Amendment 9/V1 governance discussions; draft recommendations and schedules are time-specific, so recheck the cited artifact and adoption state.
+54:- V1, Amendment 9, Q1, Q2, Q3, Q4, `V1-DERIVATION-DRAFT.md`, `V1-SCHEDULE.md`, revocation, `NOT_EVALUATED`, 4 December, non-expert integrator, P8, DNSSEC, AWS
+64:- Q1-Q4 are at `docs/V1-DERIVATION-DRAFT.md:245-249`; the success definition is in `docs/V1-SCHEDULE.md`. Q1 proposes Amendment 9's narrowed V1 profile; Q2 sets the 4 December test of zero unsafe accepts on the registered mapping, with false rejects only in explicitly registered cases. [Task 1]
+70:- Q1 overlaps Q2 and Q3. Before seeking approval of Amendment 9, present the underlying claim, acceptance criterion, and revocation choice separately. [Task 1]
+96:- Related skill: skills/tessera-formal-review/SKILL.md. [Task 1]
+130:- Related skill: skills/tessera-formal-review/SKILL.md. [Task 1]
+180:- Related skill: skills/tessera-formal-review/SKILL.md. [Task 1][Task 2]
+docs/reviews/h2-record/CODEX-REVIEW.md
+docs/reviews/h2-record/DISPOSITION.md
+docs/reviews/anchor-signatures/CODEX-REVIEW.md
+docs/reviews/anchor-signatures/DISPOSITION.md
+docs/reviews/a9-custody/CODEX-REVIEW.md
+docs/reviews/a9-custody/DISPOSITION.md
+docs/reviews/v1-profile/CODEX-REVIEW.md
+docs/reviews/v1-profile/DISPOSITION.md
+docs/reviews/amendment-9/CODEX-REVIEW.md
+docs/reviews/amendment-9/DISPOSITION.md
+docs/reviews/v1-derivation/CODEX-REVIEW.md
+docs/reviews/a9-final-delta/fixes.diff
+docs/reviews/a9-final-delta/CODEX-REVIEW.md
+docs/reviews/a9-final-delta/DISPOSITION.md
+formal/tla/falsification-2026-09-06/P4/CODEX-REVIEW.md
+formal/tla/falsification-2026-09-06/P5P6/CODEX-REVIEW.md
+formal/tla/falsification-2026-09-06/P5c/CODEX-REVIEW.md
+formal/suite/s-p7/proverif/falsification-2026-09-06/CODEX-REVIEW.md
+formal/suite/s-p1/proverif/falsification-2026-09-06/CODEX-REVIEW.md
+formal/suite/s-standing/proverif/falsification-2026-09-06/CODEX-REVIEW.md
+formal/suite/s-p2/proverif/falsification-2026-09-06/CODEX-REVIEW.md
+
+exec
+/bin/bash -lc 'cat /home/tony/.codex/memories/skills/tessera-formal-review/SKILL.md; cat docs/reviews/a9-final-delta/CODEX-REVIEW.md docs/reviews/a9-final-delta/DISPOSITION.md docs/reviews/a9-final-delta/fixes.diff; git status --short; ls -a | head' in /home/tony/projects/tessera
+ succeeded in 0ms:
+---
+name: tessera-formal-review
+description: Review a Tessera formal model or capstone-ledger claim with bounded conclusions, producer/consumer evidence, and direct artifact checks.
+argument-hint: "[artifact or review question]"
+user-invocable: false
+allowed-tools: Read, Grep, Glob, Bash
+---
+
+# Tessera formal review
+
+## When to use
+
+Use for a read-only review of Tessera ProVerif/TLA+ artifacts, S-P3, or `LEDGER.md` capstone claims. Do not use it to silently amend adopted artifacts, decide unresolved policy questions, or convert a scratch probe, companion, or viability run into discharge.
+
+## Inputs and context
+
+1. Establish the exact artifact, registered property/amendment, current adoption/status record, and requested decision.
+2. Read the relevant model and its header, predictions/results, theory library, and any routed review record. Amendments outrank trackers.
+3. Recheck live branch/status and preserve unrelated pre-existing work as user-owned.
+
+## Procedure
+
+1. Explain local terms before testing conclusions. Translate the review as: claim -> adversary -> load-bearing check -> assumptions -> non-claims -> validation evidence.
+2. State the model boundary precisely: which keys/channels are compromised, which signed bytes or frames are reused, and which attacks are outside scope.
+3. Run the registered command when practical, preserving tool version and exact result polarity. For S-P3 Q2 use:
+   ```sh
+   proverif -lib formal/suite/lib/tessera_theory.pvl formal/suite/s-p3/proverif/sp3_q2_degraded_compromised.pv
+   ```
+4. For `LEDGER.md`, read the full relevant contract and combined-consequences table, not a single section. Translate each producer/consumer relation into which component supplies information and which relies on it.
+5. For every claimed cross-model join, identify the registered producer query and a broken companion whose mutation makes the consuming query fail. If severing the producer does not affect the consumer's registered query, call the relation complementary or capstone-internal rather than cross-model.
+6. Check relation scope structurally. A key/signature transplant query cannot establish exact signing-to-presented-bytes binding: C-Q8 must inspect accepted `(key, signature, presented bytes)` triples. Require C-Q9 separately for possession over the accepted manifest, and an acceptance/execution identifier for C-Q1 completeness.
+7. For composition, ask whether all checks run on one acceptance path. A wrapper can attest that it saw a bundle, but cannot repair an original attestation that was already forgeable; separate envelope validity, standing, authorship, and adjudicator judgment.
+8. Separate registered evidence, scratch-probe evidence, header fidelity, property coverage, symbolic proof, concrete cryptographic/security claims, cross-formalism claims, and implementation conformance in the conclusion.
+
+## Efficiency plan
+
+- Start with the requested artifact plus its adjacent predictions/results and governing amendment; for a capstone review, also read the complete ledger contract and combined-consequences table.
+- Cache the claim/adversary/boundary table while comparing the model, header, and review record.
+- Stop and ask for a decision when an apparent inconsistency is a policy choice or the adoption state is unclear.
+
+## Pitfalls and fixes
+
+- Symptom: a bounded Q2 result is described as stolen-key or chain-takeover resistance. Cause: attacker scope expanded in prose. Fix: say it tests reattribution of existing honest signed bytes under explicitly modeled DSKS substitution; rotation/succession remains separate.
+- Symptom: a green companion/probe, bounded TLC run, or family-local query is treated as capstone discharge. Fix: preserve the distinction between scratch/negative-control evidence, registered coverage, cross-formalism proof, and final discharge.
+- Symptom: a ledger says “all findings accepted” or “exactly one red query.” Cause: scope/polarity was not checked. Fix: inspect the producer and consumer directly; record expected failed, retained, and witness sets when a mutation affects several queries.
+- Symptom: a copied check is called cross-model. Fix: sever the producer and require the registered consumer query to fail; otherwise label it complementary/capstone-internal.
+- Symptom: an accepted key/signature relation is used to claim exact presented-byte binding. Fix: inspect the complete accepted triple structurally and retain C-Q9's separate manifest-possession obligation.
+
+## Verification checklist
+
+- Confirm the command, model/library paths, and reported query results.
+- For capstone claims, confirm the producer query, consumer query, severing companion polarity, and whether evidence is registered rather than scratch-only.
+- Name explicit assumptions and non-claims, including concrete encoding/framing obligations when symbolic `fp` or `h` is used.
+- Confirm C-Q1 has an acceptance identifier, per-slot reports, same-acceptance completeness, strict/degraded distinction, evidence binding, possession, byte binding, type, and innermost-scope links.
+- Confirm conclusions do not move tracker/discharge status without recorded prerequisites, frozen predictions, joins, and agreement gates.
+# Codex review — A9 final owner delta
+
+2026-10-13. **Artifact: PROPOSED, unsigned A9; author read/sign next.** Reviewed A9 in full, the preserved pre-revision text and `delta.diff`, both custody/profile CODEX reviews and dispositions, V1–V2 compatibility analysis, ENCODING-V1's governing signature, DNS/window and git sections, and the earlier registered sentences identified below. Current profile wording was checked for reconciliation. Only this review file was edited.
+
+**Verdict: resolve the six findings below before signing.** The custody enforcement and deadline repairs faithfully implement their source findings. The new root rule correctly makes candidate failures informational and acceptance existential. The reliance-period extension is a defensible acceptance policy, but its security tradeoff is not yet stated honestly. Verdict stability is substantially improved but remains underspecified at and after an algorithm cutoff and lacks its required A9.7 row. No implementation conformance, deployed custody, rotation model result or P8 discharge is established by this review.
+
+Severity: **HIGH** = misleading security boundary; **MEDIUM** = normative ambiguity, missing amendment registration or freeze/evidence inconsistency; **LOW** = editorial clarification. Locations below refer to the inspected A9, not the historical line numbers used by its source reviews.
+
+## F1 — HIGH: reliance limits acceptance in chain time, not the signing date or a finite UTC forgery exposure
+
+**Location:** A9:296–303; A9.4:258–263; opening adversary/boundaries; source profile F2 and disposition.
+
+Extending reliance beyond signing retirement admits authentic cached root signatures, as intended. It also admits a *newly forged* root DNSKEY signature made with a stolen retired KSK during that extension, provided its presented RRSIG validity covers the snapshot's anchored time and the rest of the required evidence succeeds. Signed inception/expiration values cannot prove the private key signed before retirement: a thief chooses those values. “Evidence it signed while signing stays usable for that long and no longer” implies that provenance was checked when the predicate checks only the anchored time, signature and configured eligibility. This is an authority-channel limitation, not a demonstrated full V1 receipt forgery; both authority channels and the attestation signatures remain required.
+
+The extension bounds eligible **snapshot chain time** by signing-end plus the configured maximum lifetime. A9 already discloses that A2.1 gives no finite backward-skew bound for T; the same issue must not disappear for the snapshot anchor. Thus there is no established finite UTC exposure bound. Historical KSK safety remains assumed, not evaluated. Moreover, a maximum observed in archived captures is a policy value, not proof of the maximum over all signatures the root ever issued. The source disposition is candid about using observed windows; A9's universal “maximum ... it made” is stronger.
+
+**Exact proposed fix:** replace the reliance-period definition/explanation at :297–300 with:
+
+> Each KSK entry records signing-start, signing-end and a sourced reliance lifetime L, with the reliance interval [signing-start, signing-end + L]. L is the registered acceptance-policy value derived from the cited root DNSKEY RRSIG validity evidence; a largest observed lifetime is labelled observed, not asserted to be a proven global maximum. A candidate must also satisfy cryptographic validation and the selected RRSIG's inception/expiration checks at the snapshot's own verified anchored time. This extension permits authentic pre-retirement evidence anchored later; it does not establish that signing occurred before retirement. A thief of a retired KSK can manufacture eligible root evidence during the extension. Exposure is bounded by the reliance endpoint in snapshot chain time, not by a finite UTC duration under A2.1. Historical authority-key safety and the continuing anchor/history assumptions remain necessary and are not evaluated by V1.
+
+Retain the following existential/order-independent sentences. Record concrete sourced L and interval endpoint conventions in the pre-freeze trust configuration. If the intent instead is to prove pre-retirement signing, that requires a pre-retirement commitment to the exact signature; the current predicate does not do so.
+
+## F2 — MEDIUM: algorithm cutoff rule has an undefined branch and changes A3 without an A9.7 row
+
+**Location:** A9:265–277 and A9.7; A3:503–508; source compatibility §2.4.
+
+The delta contains the requested phrases “per-algorithm cutoff compared with T” and “reported separately”. It preserves the same-input contract and the C7 missing-capture companion. But it says only that T *before* a cutoff preserves the V1 verdict. At equality or after it, it is unclear whether the V1 verdict changes, despite the next sentence saying historical-security results never replace that verdict. Authentication of the cutoff is stated in the historical-security paragraph but omitted from the new policy rule. Key-theft cutoffs must remain separate too. A cutoff is not a demonstration that security held earlier, especially with A2.1 uncertainty.
+
+This restriction also narrows A3 §A3.6.2's registered `INVALID` case, “an identifier prohibited by applicable policy”. A9's table has no replacement for that sentence. Row 25 concerns hybrid deployment; row 28 concerns waivers. Neither registers this change. A9 explicitly says the P4 partition is unchanged, so the scope of this narrowing must be explained.
+
+**Exact proposed fix:** replace :271–274 with:
+
+> Later algorithm policy enters the separate historical-security assessment only as an authenticated per-algorithm cutoff compared with T, with A2.1's chain-time uncertainty; authenticated per-key theft cutoffs are assessed separately there as well. It never overwrites the V1 verdict or its six stable fields, whether T is before, equal to or after a cutoff. A receipt whose T precedes an algorithm's cutoff keeps its V1 verdict; that comparison alone does not establish historical safety. Later revocation, standing, renewal and historical-security results are reported separately, together with later adverse evidence. The V1 verdict continues to apply the algorithm policy registered for its governing V1 specification, including its original malformed, unsupported and prohibited-identifier cases.
+
+Keep the existing same-input contract, non-repudiation disclaimer and C7 evidence clause verbatim. Add A9.7 row 29:
+
+| 29 | “an identifier prohibited by applicable policy” | `phase-0-prereg-amendment-3.md:503-508` | A9.4: V1's registered algorithm policy determines its verdict; later algorithm prohibition/cutoff results belong to a separate assessment and cannot overwrite that verdict | R |
+
+Update the table count and “Named and not changed” P4 sentence to: `the P4 check-result partition (later algorithm-policy effects are narrowed by row 29)`. This preserves a historical V1 verification result while allowing a relying party to reject a transaction on the separate adverse assessment. It does not promise continuing cryptographic truth after a break.
+
+## F3 — MEDIUM: provider-neutral custody conflicts with the retained registered “local GPG” placement
+
+**Location:** A9:341–360; A9.7 row 15 and “Named and not changed”; original prereg:292–294. Source custody F3/disposition.
+
+The policy signer, credential boundary, dedicated use, hybrid deadline and limited independence text faithfully implement custody F1/F2/F4. C3 still honestly allows queue-based misuse of both slots by an AWS takeover; external policy prevents bypassing the clock check, not adversarial current-time issuance. No new independent approval or control is claimed.
+
+However, row 15 explicitly says “The ‘local GPG’ placement is kept”, and the later inventory calls that placement unchanged. A9.6 now permits an HSM and policy signer at another cloud provider. That replaces the earlier registered placement, even though the fingerprint scheme and rule O stay unchanged. A first-time reader encounters two incompatible deployment requirements.
+
+**Exact proposed fix:** replace the row-15 sentence `The "local GPG" placement is kept.` with:
+
+> The registered local-GPG placement is replaced for V1 by A9.6's slot-2 custody alternatives, both through the external policy signer; rule O and the gpg fingerprint scheme are retained.
+
+Delete `the "local GPG" placement (phase-0-prereg.md:292-294)` from “Named and not changed”. Row 15 already cites that source range, so no extra row is necessary.
+
+**Unfinished source reconciliation:** ENCODING-V1:441 still says `rule O (P-256, hardware token; owner decision 2026-10-12 replaced SLH-DSA)`, despite custody disposition saying this repair was delegated. The exact source-review replacement remains appropriate: `rule O (OpenPGP P-256; slot-2 custody per A9.6; owner decision 2026-10-12 replaced SLH-DSA)`. A9 binds this file at signing, so delegation is not evidence that the reconciliation is done. This is a prose custody correction, not a signature-byte or vector change.
+
+## F4 — MEDIUM: repository-key period borrows an ambiguous KSK rule; append-only updates do not by themselves preserve every verdict
+
+**Location:** A9:304–308 and :269–271; compatibility §2.1/§2.5.
+
+The repository key has a *signing period*, while the “same existential rule as the KSKs” now tests a *reliance period*. A repository signature has no DNSKEY RRSIG lifetime from which to derive L. The governing evaluation time is also unstated here. The source recommendation specifies the commit's anchored time, not receipt T or snapshot time.
+
+Keeping all keys/pins preserves old evidence availability. It does not guarantee full verdict identity under every enlarged configuration: adding a previously absent pin/key can turn UNVERIFIABLE into VALID_STRICT. Closing a previously open-ended period can also exclude inputs that were eligible before. The existing identical-input contract is sound; distinguish it from the weaker compatibility guarantee for compatible extensions. “A closed period never changes” alone leaves this update case undefined.
+
+**Exact proposed fix:** replace :304–307 through “forever” with:
+
+> Trust configuration entries are append-only: KSKs, header pins and repository keys are never removed, and finalized period endpoints never change. Repository trust entries name D, the key and an inclusive signing interval; the git assertion passes this trust check if some configured entry for D verifies gpgsig and its interval contains the signed commit's own verified anchored time. Repository entries have no KSK-style reliance extension. Unknown material cannot establish this required check. Append-only extensions preserve previously usable trust witnesses; newly covered evidence can improve an earlier UNVERIFIABLE result. Exact stable-field identity remains the contract for identical declared inputs. Closing an open period must not retrospectively exclude evidence previously accepted under that entry; the pre-freeze configuration records the endpoint/update convention explicitly.
+
+Retain the rollover control after this replacement. If retrospective closure is deliberately wanted, it belongs in the separate adverse assessment and needs a visible exception to the stability promise; it is not an append-only edit in the semantic sense.
+
+## F5 — MEDIUM: sequential replacement is structurally compatible, but the registration and evidence obligation need a precise boundary
+
+**Location:** A9:375–385; ENCODING-V1 §7/§7.1; compatibility §2.3.
+
+The error-code statements are correct: §7 requires one TXT RR (`DNS_RRSET`) and reconstructs exactly `_tessera-v1.<common.issuer>` (`DNS_OWNER`); §7 rejection order checks OWNER before RRSET. This assumes the alleged per-key names actually differ from that required name. Extra records elsewhere do not themselves violate this RRset check.
+
+Sequential replacement fits the frozen **prose** verifier rules: each receipt supplies its own historical snapshot/commit, the same owner/path can contain a different pair of fingerprints, and each individual window satisfies the ≤90-day and C4 checks. There is no current-record lookup or successor relation to check. This is structural compatibility, not a tested frozen service verifier or P10/capstone result. The verifier also does not check cross-receipt non-overlap. At the shared endpoint, both inclusive windows can contain that instant; `next.not-before >= old.not-after` in the source is not literal non-overlap under ENC's inclusive rules.
+
+A9 presently says both “no successor key under this amendment” and that sequential replacement is registered after unnamed vectors/model check. It does not name the registration record, model/property, or whether this is a 30 Oct obligation. That lets a reader confuse a permitted future mechanism with an already registered operating plan.
+
+**Exact proposed fix:** replace :376–380 after the `DNS_WINDOW_LENGTH` parenthesis with:
+
+> This amendment registers the first issuance window only; it does not yet authorize successor issuance. A future sequential-replacement registration may retain the frozen V1 byte/check profile: the same DNS owner and git path, new keys, and a new window with next.not-before > previous.not-after (both endpoints are inclusive). Each receipt carries its own historical snapshot and commit. Multiple TXT records at the required owner fail DNS_RRSET; a substituted per-key owner name fails DNS_OWNER. The V1 verifier checks each receipt's window, not non-overlap between receipts. Before successor issuance, the owner records a dated rotation registration naming the two-window positive/negative vectors and the model, checked property and result establishing the intended issuance invariant. This future rotation evidence is not added to the 30 Oct first-window gate. Without that registration, issuance stops at the first window's end.
+
+If the intended decision is to register rotation *now*, replace the “first window only” policy explicitly and assign the named vectors/model obligation to 30 Oct instead. Neither policy is established by the current compatibility inference alone.
+
+## F6 — MEDIUM: git-format policy has no evidence schema or verdict contract, and the revised trust policy still conflicts with the profile
+
+**Location:** A9:291–295; ENCODING-V1 §7.2 and out-of-scope list; V1-PROFILE §2.1/§5; compatibility §2.9; profile disposition F2.
+
+Accepting SHA-1 only is faithful to the source recommendation. It does not change receipt frames, A_sig, signature serialization, the canonical TXT/git blob, or an existing SHA-1 commit/stamp. No existing P8 vector needs to change just to declare that policy. A later spec-file edit naturally changes the spec hash bound into *new* receipts; that is not a change to the frame grammar or old signed bytes.
+
+But “git evidence names its object format” does not define a member name/type, missing-field behavior, unsupported-format verdict, or exact stamp bytes. ENCODING-V1 does **not** define the git evidence container. §7.2 fixes the signed-commit target and describes lowercase id plus LF as a repository convention. The field belongs in the bundle's git-evidence schema when V1-PROFILE §2.1/G-26's container/member encoding is settled, with the normative check in its git-channel section. Putting it into the closed signed common schema or the 255-byte key-publication grammar would change P8, unnecessarily.
+
+**Exact proposed fix:** append to A9's git-format paragraph:
+
+> The pre-freeze bundle schema (V1-PROFILE §2.1, G-26) defines the git-evidence member object_format as the string "sha1". It is an evidence descriptor, not a new signed-frame or key-publication field. A missing descriptor gives UNVERIFIABLE / GIT_OBJECT_FORMAT_MISSING; an unsupported value gives UNVERIFIABLE / GIT_OBJECT_FORMAT. The verifier recomputes the SHA-1 object ids from the raw commit/tree/blob bytes, so this descriptor cannot override their interpretation. For V1 the stamped message is exactly 40 lowercase ASCII hex digits naming the signed commit id followed by one LF byte. The schema/check specification and conformance cases are fixed before the 30 Oct profile freeze; no P8 frame or key-publication vector changes are required.
+
+Also reconcile V1-PROFILE §5 before the freeze: it still requires a signing-period root predicate (:197–198), the withdrawn `2026-10-11T23:59:59Z` cutoff (:203–208), and the corresponding outside-signing-period reason (:209–211). **Exact replacement instruction:** replace the root predicate and period-policy paragraphs with A9.5's reliance predicate and the sourced interval definitions after F1; replace `KSK_OUTSIDE_SIGNING_PERIOD` with `KSK_OUTSIDE_RELIANCE_PERIOD` and require a verified signature before that reason, as source F3 requires. Mark this as a dated correction, preserving the old policy in the review record. Without this reconciliation a first-time reader following A9's sources finds two normative root policies. This review does not claim the delegated repair or instrument repairs were completed.
+
+## Source fidelity and requested-check disposition
+
+| Revision/check | Result |
+|---|---|
+| Custody F1 policy signer, F2 deployed-slot deadline, F4 limited independence | Faithfully incorporated; no change to C1–C7's substance, rule O or C3's single-controller adversary. F3 registration/encoding reconciliation remains F3 above. |
+| Profile F1 existential/order-independent root result | Faithfully incorporated in prose; bad-first/good-second controls in both orders still need recorded evidence, not an inference from this edit. |
+| Profile F2 reliance instead of retirement cutoff | Implements the disposed policy, but not its forgery/observed-maximum tradeoff; F1. Honest old-root/new-leaf after-retirement fixture remains required by the disposition. |
+| Profile F3–F7 implementation findings | Not represented as solved by A9. Their accepted code/test repairs must retain their own evidence. No blanket claim that this prose delta implements the entire profile review. |
+| Compatibility stability / append-only / repo periods | Direction is faithful; boundary and period precision remain F2/F4. Existing same-input contract and C7 companion remain present. C7 companion is assigned to 20 Nov, not 30 Oct. |
+| Rotation | DNS_RRSET/DNS_OWNER verified against ENC; sequential compatibility is structural only, with inclusive-endpoint and registration caveats in F5. |
+| Git object format | No signed-layout or P8-vector change needed; missing evidence-schema location and exact policy in F6. Host/default forecasts are attributed author statements, not independently verified facts needed for the check. |
+| A9.7 coverage | New earlier-amendment algorithm-policy row required; existing row 15 must explicitly replace local placement. Revisions to unsigned A9's own earlier draft do not themselves require earlier-amendment rows. |
+| 30 Oct | Custody choice and unchanged hybrid deadline fit the gate. New root/repository trust and git-format semantics must be resolved in its frozen profile/configuration; existing required rollover evidence must include the accepted controls. Future rotation is not silently added to this gate. |
+
+No web or model/test execution was needed to establish these textual findings. External forecasts and IANA claims were treated as attributed source material, not freshly verified operational facts. No adversary counterexample here is promoted to a checked formal result. A9 remains unsigned; the author's signature and all exit/deployment evidence remain outstanding.
+# Disposition (owner, 2026-10-13)
+All six findings accepted, with Codex's exact replacement text applied to A9 (F1 reliance; F2 verdict stability plus A9.7 row 29 and the P4 note; F3 row 15 and "Named and not changed"; F4 append-only and repository entries; F5 first window only, rotation as a future registration; F6 git object_format descriptor). F1 also records the author's adoption, 2026-10-13, kind CORRECT, with his words. F3 ENCODING-V1:441 and F6 V1-PROFILE §5 were already reconciled by the repair agent, which ran concurrently with this review.
+271,274c271,278
+<   key. Algorithm policy applies only as a per-algorithm cutoff compared with T: a receipt whose T precedes an
+<   algorithm's cutoff keeps its V1 verdict. Revocation, standing and historical-security results from later profiles
+<   are reported separately and never replace the V1 verdict. Later adverse evidence feeds that separate, stronger
+<   assessment. This
+---
+>   key. Later algorithm policy enters the separate historical-security assessment only as an authenticated
+>   per-algorithm cutoff compared with T, with A2.1's chain-time uncertainty; authenticated per-key theft cutoffs are
+>   assessed separately there as well. It never overwrites the V1 verdict or its six stable fields, whether T is
+>   before, equal to or after a cutoff. A receipt whose T precedes an algorithm's cutoff keeps its V1 verdict; that
+>   comparison alone does not establish historical safety. Later revocation, standing, renewal and historical-security
+>   results are reported separately, together with later adverse evidence. The V1 verdict continues to apply the
+>   algorithm policy registered for its governing V1 specification, including its original malformed, unsupported and
+>   prohibited-identifier cases (A9.7 row 29). This
+295a300,306
+>   The pre-freeze bundle schema (V1-PROFILE §2.1, G-26) defines the git-evidence member `object_format` as the string
+>   `"sha1"`. It is an evidence descriptor, not a new signed-frame or key-publication field. A missing descriptor gives
+>   `UNVERIFIABLE / GIT_OBJECT_FORMAT_MISSING`; an unsupported value gives `UNVERIFIABLE / GIT_OBJECT_FORMAT`. The
+>   verifier recomputes the SHA-1 object ids from the raw commit/tree/blob bytes, so this descriptor cannot override
+>   their interpretation. For V1 the stamped message is exactly 40 lowercase ASCII hex digits naming the signed commit
+>   id followed by one LF byte. The schema/check specification and conformance cases are fixed before the 30 Oct
+>   profile freeze; no P8 frame or key-publication vector changes are required.
+297,300c308,320
+<   period contains that time validates it**. A KSK's reliance period runs from the start of its signing period to the
+<   end of its signing period plus the maximum validity of the root DNSKEY RRSIGs it made, recorded with its source:
+<   evidence it signed while signing stays usable for that long and no longer (OWNER DECISION 2026-10-13, after
+<   `docs/reviews/v1-profile/` F2). The rule is existential and order-independent: a candidate that fails is
+---
+>   period contains that time validates it**. Each KSK entry records signing-start, signing-end and a sourced reliance
+>   lifetime L, with the reliance interval [signing-start, signing-end + L]. L is the registered acceptance-policy
+>   value derived from the cited root DNSKEY RRSIG validity evidence; a largest observed lifetime is labelled observed,
+>   not asserted to be a proven global maximum. A candidate must also satisfy cryptographic validation and the selected
+>   RRSIG's inception/expiration checks at the snapshot's own verified anchored time. This extension permits authentic
+>   pre-retirement evidence anchored later; it does not establish that signing occurred before retirement. A thief of
+>   a retired KSK can manufacture eligible root evidence during the extension. Exposure is bounded by the reliance
+>   endpoint in snapshot chain time, not by a finite UTC duration under A2.1. Historical authority-key safety and the
+>   continuing anchor/history assumptions remain necessary and are not evaluated by V1. **AUTHOR ADOPTED, 2026-10-13**
+>   (`docs/reviews/v1-profile/` F2; kind CORRECT: the withdrawn cutoff claimed a protection DNSSEC itself does not
+>   supply, since resolvers accept a retired KSK's signatures until they expire). The author: *"I'd argue that the
+>   'narrowing of protection' wasn't a real narrowing, it was us admitting the real level of protection given the
+>   constraints of the project."* The rule is existential and order-independent: a candidate that fails is
+304,307c324,332
+< - **Trust configuration is append-only** (OWNER DECISION 2026-10-13). KSKs, header pins and repository keys are never
+<   removed, and a closed period never changes. The repository key carries a signing period and is evaluated by the
+<   same existential rule as the KSKs, so it can be replaced without failing old receipts or trusting a retired key
+<   forever. **Rollover control:** a snapshot taken while one trusted KSK is published but not signing must pass
+---
+> - **Trust configuration is append-only** (OWNER DECISION 2026-10-13). Trust configuration entries are append-only: KSKs, header
+>   pins and repository keys are never removed, and finalized period endpoints never change. Repository trust entries
+>   name D, the key and an inclusive signing interval; the git assertion passes this trust check if some configured
+>   entry for D verifies gpgsig and its interval contains the signed commit's own verified anchored time. Repository
+>   entries have no KSK-style reliance extension. Unknown material cannot establish this required check. Append-only
+>   extensions preserve previously usable trust witnesses; newly covered evidence can improve an earlier UNVERIFIABLE
+>   result. Exact stable-field identity remains the contract for identical declared inputs. Closing an open period must
+>   not retrospectively exclude evidence previously accepted under that entry; the pre-freeze configuration records the
+>   endpoint/update convention explicitly. **Rollover control:** a snapshot taken while one trusted KSK is published but not signing must pass
+376,380c401,409
+<   rejected, `DNS_WINDOW_LENGTH`). V1 has a single window. There is no overlap and no successor key under this
+<   amendment. Before the window ends, either a rotation mechanism is registered or issuance stops. The only rotation the
+<   frozen V1 verifier accepts is sequential replacement: the same owner name and path, a new key, non-overlapping
+<   windows. Multiple records fail `DNS_RRSET` and per-key owner names fail `DNS_OWNER`. Sequential replacement is
+<   registered only after vectors for two consecutive windows and a model check.
+---
+>   rejected, `DNS_WINDOW_LENGTH`). This amendment registers the first issuance window only; it does not yet
+>   authorize successor issuance. A future sequential-replacement registration may retain the frozen V1 byte/check
+>   profile: the same DNS owner and git path, new keys, and a new window with next.not-before > previous.not-after (both
+>   endpoints are inclusive). Each receipt carries its own historical snapshot and commit. Multiple TXT records at the
+>   required owner fail `DNS_RRSET`; a substituted per-key owner name fails `DNS_OWNER`. The V1 verifier checks each
+>   receipt's window, not non-overlap between receipts. Before successor issuance, the owner records a dated rotation
+>   registration naming the two-window positive/negative vectors and the model, checked property and result
+>   establishing the intended issuance invariant. This future rotation evidence is not added to the 30 Oct
+>   first-window gate. Without that registration, issuance stops at the first window's end.
+441c470
+< | 15 | KMS and local GPG "independent failure domains"; *paraphrase:* they fail for uncorrelated reasons (source: "They fail for *uncorrelated* reasons"), so durability does not rest on any single domain surviving; and "two independent signatures whose validity does not share a failure domain" | `phase-0-prereg.md:292-299`, `:304-305` | Narrowed to C3's non-claim: separate technical failure domains under a single controller; no separation of control or independent fates; under the fallback both slots share P-256's failure. The "local GPG" placement is kept. The spec's restatements (`implementation-spec.md:226`, `:604-610`) follow this row as consequences; they are not new author rulings | R |
+---
+> | 15 | KMS and local GPG "independent failure domains"; *paraphrase:* they fail for uncorrelated reasons (source: "They fail for *uncorrelated* reasons"), so durability does not rest on any single domain surviving; and "two independent signatures whose validity does not share a failure domain" | `phase-0-prereg.md:292-299`, `:304-305` | Narrowed to C3's non-claim: separate technical failure domains under a single controller; no separation of control or independent fates; under the fallback both slots share P-256's failure. The registered local-GPG placement is replaced for V1 by A9.6's slot-2 custody alternatives, both through the external policy signer; rule O and the gpg fingerprint scheme are retained. The spec's restatements (`implementation-spec.md:226`, `:604-610`) follow this row as consequences; they are not new author rulings | R |
+454a484
+> | 29 | "an identifier prohibited by applicable policy" | `phase-0-prereg-amendment-3.md:503-508` | A9.4: V1's registered algorithm policy determines its verdict; later algorithm prohibition/cutoff results belong to a separate assessment and cannot overwrite that verdict | R |
+469,470c499
+< (`phase-0-prereg-amendment-3.md:473-476`; V1 is not the production version); the "local GPG" placement
+< (`phase-0-prereg.md:292-294`); A1's monotonic key lifecycle (`phase-0-prereg-amendment-1.md:216-224`; any rotation
+---
+> (`phase-0-prereg-amendment-3.md:473-476`; V1 is not the production version); A1's monotonic key lifecycle (`phase-0-prereg-amendment-1.md:216-224`; any rotation
+472c501
+< break-chain attacks (`:203-205`); the P4 partition; A2.1's predicate; the credibility line; §8's "does not proceed"
+---
+> break-chain attacks (`:203-205`); the P4 check-result partition (later algorithm-policy effects are narrowed by row 29); A2.1's predicate; the credibility line; §8's "does not proceed"
+ M formal/suite/capstone/RESULTS.md
+ M prototype/tessera_proto/real/gitchannel.py
+?? docs/V1-DERIVATION-DRAFT.md
+?? docs/V1-OPERATIONS-RUNBOOK.md
+?? docs/V1-PROFILE.md
+?? docs/V1-SCHEDULE.md
+?? docs/V1-TESTER-BRIEF.md
+?? docs/V1-V2-COMPATIBILITY.md
+?? docs/guarantee-tiers-DRAFT.md
+?? docs/h2-record-2026-10-13.md
+?? docs/handoff-2026-10-13-resumed-session.md
+?? docs/phase-0-prereg-amendment-9.md
+?? docs/phase-0-prereg-amendment-9.pdf
+?? docs/reviews/a9-custody/
+?? docs/reviews/a9-final-delta/
+?? docs/reviews/amendment-9/
+?? docs/reviews/anchor-signatures/
+?? docs/reviews/h2-record/
+?? docs/reviews/v1-derivation/
+?? docs/reviews/v1-profile/
+?? formal/p8/
+?? formal/suite/capstone/READ-SLICE-RESULTS-2026-10-09.md
+?? formal/suite/capstone/proverif/slice/batch.console.log
+?? formal/suite/capstone/proverif/slice/counted.log
+?? prototype/spike-pq/
+?? prototype/spike/
+?? prototype/tests/test_gitpath.py
+.
+..
+.claude
+.codex
+.git
+.gitattributes
+.gitignore
+.qhaway.db
+.qhaway.json
+.venv
+
+codex
+I’m using the skill guidance to keep conclusions tied to the inspected text. The diff contains the six requested replacements; I’m checking the live amendment and the two delegated source repairs for omissions or conflicting wording.
+exec
+/bin/bash -lc "nl -ba docs/phase-0-prereg-amendment-9.md | sed -n '240,520p'; nl -ba docs/ENCODING-V1.md | sed -n '432,447p'; nl -ba docs/V1-PROFILE.md | sed -n '180,235p'; ls docs/reviews/a9-final-delta; find .. -name AGENTS.md -print; nl -ba /home/tony/.codex/memories/MEMORY.md | sed -n '40,48p'; cat /home/tony/.codex/plugins/cache/openai-curated-remote/superpowers/6.4.2/skills/verification-before-completion/SKILL.md" in /home/tony/projects/tessera
+ succeeded in 899ms:
+   240	| PQ on the portable leg (A3 §A3.6) | **Production version** |
+   241	
+   242	**V2 drivers: candidate capabilities, recorded for context.** They create no obligation and need no amendment to
+   243	drop. None is promised, scheduled or gating.
+   244	1. **Separation of control:** independently evidenced custodians, each holding one share of a threshold (m-of-n)
+   245	   signing set, so that no single controller can mint. It is what would retire C3's single-controller non-claim.
+   246	2. **Party identity use cases:** receipts whose evidence concerns the identity of the parties in `content`, beyond
+   247	   what cases i/i′ give (V1 carries such evidence but never checks it).
+   248	3. **Renewal:** as in *Wrapping and renewal* above.
+   249	4. **Revocation evaluation:** as in *Long-term validation* above, and the B(ii) add-on service.
+   250	
+   251	## A9.4 Revocation and historical security: not evaluated — AUTHOR DECISION B; OWNER DECISION for historical security. A weakening under A1 §A1.1.
+   252	
+   253	- **Weakened.** For V1 bundles, `VALID_STRICT` evaluates neither P6 condition: `key_authorized(declared_issue_time)`
+   254	  against effective revocation, and no revocation effective at or before `max(anchor_time, declared_issue_time)`
+   255	  (A4.3). Every report carries `revocation: NOT_EVALUATED` next to the verdict. *Why:* under the registered text
+   256	  a verifier that cannot evaluate revocation returns `UNVERIFIABLE` for every receipt.
+   257	- **Historical security.** Every report carries `historical_security: NOT_EVALUATED`. V1 does not evaluate whether
+   258	  a signing algorithm or key was safe when it signed. The documentation names what a later examiner must supply:
+   259	  an authenticated safe-before cutoff per algorithm and per key, compared against T with A2.1's chain-time
+   260	  uncertainty (CODEX-REVIEW 8). A surviving PQ attestation slot prevents a P-256 break alone from supplying every
+   261	  required attestation signature. An ML-DSA-65 cutoff and the classical slot remain; historical authority, per-key
+   262	  custody and continuing commitment and history security remain assumptions. A PQ slot never removes the need for
+   263	  a theft cutoff.
+   264	- **Issuer duty.** The V1 issuer never re-authorizes a key (R-5.24). V1 defines no revocation publication.
+   265	- **Contract for later verifiers.** Missing status capture does not by itself invalidate a V1 receipt. A later
+   266	  verifier given a V1 bundle, under the same governing V1 specification, policy, trust configuration and other
+   267	  declared inputs, returns the same verdict and values in the stable field set (A9.1), and never a weaker verdict
+   268	  because of missing status capture. **Verdict stability** (OWNER DECISION 2026-10-13, `docs/V1-V2-COMPATIBILITY.md`): a V1
+   269	  bundle is always evaluated under its signed `common.spec`. Trust configurations are append-only (A9.5), so a
+   270	  later configuration cannot turn a V1 verdict into `UNVERIFIABLE` by dropping a KSK, a header pin or a repository
+   271	  key. Later algorithm policy enters the separate historical-security assessment only as an authenticated
+   272	  per-algorithm cutoff compared with T, with A2.1's chain-time uncertainty; authenticated per-key theft cutoffs are
+   273	  assessed separately there as well. It never overwrites the V1 verdict or its six stable fields, whether T is
+   274	  before, equal to or after a cutoff. A receipt whose T precedes an algorithm's cutoff keeps its V1 verdict; that
+   275	  comparison alone does not establish historical safety. Later revocation, standing, renewal and historical-security
+   276	  results are reported separately, together with later adverse evidence. The V1 verdict continues to apply the
+   277	  algorithm policy registered for its governing V1 specification, including its original malformed, unsupported and
+   278	  prohibited-identifier cases (A9.7 row 29). This
+   279	  binds later verifiers and profiles; it is not a property V1 itself demonstrates. **This is not
+   280	  non-repudiation.** Evidence (C7): for an otherwise valid, fully performable bundle where missing status capture
+   281	  is the sole difference, a companion returning `INVALID` or `UNVERIFIABLE` must go red.
+   282	
+   283	## A9.5 Strict-only, standalone; the receipt anchor — OWNER DECISIONS 2026-10-12 except where marked
+   284	
+   285	- **Dispatch.** Out-of-profile input gives `UNVERIFIABLE / OUT_OF_PROFILE` at dispatch; A4.2 precedence holds inside.
+   286	- **H1a's suite.** Forge, tamper, backdate, break-chain, strip-one-signature, out-of-profile, the A9.1 mapping.
+   287	  Degradation and wrapper instances move to their capabilities.
+   288	- **Receipt anchor.** OTS stamps `SHA256(A_sig)`, tag `tessera-v1/receipt-anchor-sig`, which commits to both frames
+   289	  and their exact detached signatures in manifest slot order (ENCODING-V1 §5, D-8, D-14). The verifier verifies the
+   290	  committed signature bytes only. The frame-only layout is withdrawn, with no fallback.
+   291	- **Issue order (D-15).** Fix manifest and metadata; build frames; sign; verify; **freeze** the signature bytes;
+   292	  **stamp** `A_sig` (one stamp per receipt, R-3.42); obtain confirmation; ship. A signature made after T cannot fit
+   293	  the anchor. A retry that changes any committed byte needs a fresh stamp. Signature identifiers stay independent
+   294	  of signature bytes; the anchor digest may commit to them; nothing is normalized after stamping.
+   295	- **Git stamp target (D-16).** The git channel's OTS stamp targets the **signed commit's object id**, never a tree,
+   296	  blob or unsigned commit. The verifier recomputes the id, verifies `gpgsig`, follows commit→tree→blob, and checks
+   297	  the stamped id. SHA-1 linkage remains a stated residual. The git evidence names its object format, and V1
+   298	  accepts only `sha1`: the key-assertion repository stays in SHA-1 format at a host that supports it, whatever
+   299	  git's default becomes (the author, 2026-10-13: Git 3 moves to SHA-256 in 2027; GitHub does not support it).
+   300	  The pre-freeze bundle schema (V1-PROFILE §2.1, G-26) defines the git-evidence member `object_format` as the string
+   301	  `"sha1"`. It is an evidence descriptor, not a new signed-frame or key-publication field. A missing descriptor gives
+   302	  `UNVERIFIABLE / GIT_OBJECT_FORMAT_MISSING`; an unsupported value gives `UNVERIFIABLE / GIT_OBJECT_FORMAT`. The
+   303	  verifier recomputes the SHA-1 object ids from the raw commit/tree/blob bytes, so this descriptor cannot override
+   304	  their interpretation. For V1 the stamped message is exactly 40 lowercase ASCII hex digits naming the signed commit
+   305	  id followed by one LF byte. The schema/check specification and conformance cases are fixed before the 30 Oct
+   306	  profile freeze; no P8 frame or key-publication vector changes are required.
+   307	- **Root-KSK rule.** The root DNSKEY set is valid at the snapshot's anchored time **if some trusted KSK whose reliance
+   308	  period contains that time validates it**. Each KSK entry records signing-start, signing-end and a sourced reliance
+   309	  lifetime L, with the reliance interval [signing-start, signing-end + L]. L is the registered acceptance-policy
+   310	  value derived from the cited root DNSKEY RRSIG validity evidence; a largest observed lifetime is labelled observed,
+   311	  not asserted to be a proven global maximum. A candidate must also satisfy cryptographic validation and the selected
+   312	  RRSIG's inception/expiration checks at the snapshot's own verified anchored time. This extension permits authentic
+   313	  pre-retirement evidence anchored later; it does not establish that signing occurred before retirement. A thief of
+   314	  a retired KSK can manufacture eligible root evidence during the extension. Exposure is bounded by the reliance
+   315	  endpoint in snapshot chain time, not by a finite UTC duration under A2.1. Historical authority-key safety and the
+   316	  continuing anchor/history assumptions remain necessary and are not evaluated by V1. **AUTHOR ADOPTED, 2026-10-13**
+   317	  (`docs/reviews/v1-profile/` F2; kind CORRECT: the withdrawn cutoff claimed a protection DNSSEC itself does not
+   318	  supply, since resolvers accept a retired KSK's signatures until they expire). The author: *"I'd argue that the
+   319	  'narrowing of protection' wasn't a real narrowing, it was us admitting the real level of protection given the
+   320	  constraints of the project."* The rule is existential and order-independent: a candidate that fails is
+   321	  informational, and the result is computed once, after every eligible key has been tried (F1). A trusted KSK that
+   322	  is published but did not sign is informational, never a failure. The trust configuration records signing and
+   323	  reliance periods separately from publication and revocation dates.
+   324	- **Trust configuration is append-only** (OWNER DECISION 2026-10-13). Trust configuration entries are append-only: KSKs, header
+   325	  pins and repository keys are never removed, and finalized period endpoints never change. Repository trust entries
+   326	  name D, the key and an inclusive signing interval; the git assertion passes this trust check if some configured
+   327	  entry for D verifies gpgsig and its interval contains the signed commit's own verified anchored time. Repository
+   328	  entries have no KSK-style reliance extension. Unknown material cannot establish this required check. Append-only
+   329	  extensions preserve previously usable trust witnesses; newly covered evidence can improve an earlier UNVERIFIABLE
+   330	  result. Exact stable-field identity remains the contract for identical declared inputs. Closing an open period must
+   331	  not retrospectively exclude evidence previously accepted under that entry; the pre-freeze configuration records the
+   332	  endpoint/update convention explicitly. **Rollover control:** a snapshot taken while one trusted KSK is published but not signing must pass
+   333	  (SPIKE-REPORT, KSK-2024 re-capture; without it every receipt from 2026-10-11 would be falsely rejected).
+   334	- **Custody.** V1 offers no renewal. Long-horizon validity depends on the dependency manifest and on the holder
+   335	  keeping the exact bytes (a mirror that alters a signature byte breaks its copy, CODEX-REVIEW 5).
+   336	
+   337	## A9.6 Signers, the issuance window, and what they guarantee — OWNER DECISIONS 2026-10-12
+   338	
+   339	**Signer profile, conditional.** The hybrid records the author's stated preference (2026-10-12: *"I think we
+   340	should build our V1 with a PQ implementation"*). It is not a claim requirement: no sentence of C1–C7 needs it. It
+   341	is the first item cut if 30 Oct slips (A9.2).
+   342	- **If the hybrid spike passes by 21 Oct:** slot `kms` is AWS KMS **ML-DSA-65** (FIPS 204, in KMS's HSMs), raw
+   343	  signature per ENCODING-V1 §5.2 rule R; slot `gpg` is **P-256** OpenPGP (rule O), signed by a
+   344	  non-exportable, hardware-protected key in a separate technical key-custody domain outside the issuing AWS account
+   345	  (*slot-2 custody*, below), pulling from a queue with no inbound path.
+   346	  One pair algorithm identifier names both slot schemes (`common.alg` is shared, R-3.12). This adopts for V1 the
+   347	  hybrid A3 §A3.6 deferred.
+   348	- *Pass condition* (OWNER DECISION 2026-10-12, fixed after an offline pre-spike, `prototype/spike-pq/`, which the
+   349	  author commits, and before the KMS spike):
+   350	  - the pair identifier is registered with its mode and context;
+   351	  - the mixed-format pairing passes R-3.12 and P3's model;
+   352	  - a real KMS ML-DSA-65 signature over a V1 frame (external μ above 4 KB) verifies offline in two
+   353	    implementations;
+   354	  - a real P-256 signature from the `gpg` slot as deployed verifies offline;
+   355	  - the full selected byte profile is specified and tested: attestation **and manifest-possession** verification
+   356	    for both slots, slot key and fingerprint encodings, key-use assumptions appropriate to each slot (PROOF's
+   357	    OpenPGP type-0x00 assumption does not describe the raw ML-DSA slot), and golden and rejection vectors with an
+   358	    agreement run for rule R.
+   359	
+   360	  All of it by 21 Oct, or the fallback is taken automatically. The offline pre-spike is feasibility evidence only
+   361	  (approximate JCS, no real KMS, a bare SLH-DSA portable slot rather than this pair); it does not satisfy the
+   362	  condition.
+   363	- **Registered fallback, otherwise:** both slots classical P-256 under P4': KMS-backed OpenPGP P-256, plus the
+   364	  `gpg` slot under slot-2 custody. The signature-inclusive anchor and the
+   365	  issuance window are retained unchanged.
+   366	- **Slot-2 custody (OWNER DECISION 2026-10-13).** The `gpg`-slot key is generated non-exportable in hardware outside
+   367	  the issuing AWS account: a token on author-controlled hardware, or an HSM-backed key at a provider other than AWS.
+   368	  The owner chooses between them, and records the choice, dated, in the profile before the 30 Oct freeze. The choice
+   369	  takes into account measured token throughput and issuance availability, and the author's concern about scalability
+   370	  (2026-10-13: *"Scalability is a real, legitimate, concern"*). Either choice satisfies the author's key-protection
+   371	  requirement (A9.0) and leaves C1–C7 unchanged. The key's authority is evidenced by the key-publication record in
+   372	  both cases.
+   373	  - *Policy signer.* In either custody option, a queue-pulling policy signer outside the issuing AWS account
+   374	    validates the complete V1 frame and enforces the declared-time check using its own clock before requesting a
+   375	    signature. The issuing AWS account can enqueue frames but cannot invoke the slot-2 key directly, change that
+   376	    policy or clock, or obtain the policy signer's key-use credentials. The slot-2 key is dedicated to V1 tagged
+   377	    type-0x00 documents (attestation and manifest-possession). The dated custody record names this enforcement
+   378	    boundary and its access policy. Non-exportability protects against key export, not signing misuse through the
+   379	    permitted queue path.
+   380	  - *Deadline.* For the hybrid, the final custody implementation must have completed the deployed-slot
+   381	    pass-condition evidence by 21 Oct. The owner may defer selection until before 30 Oct only among custody
+   382	    implementations that each met that deadline; otherwise the registered fallback is taken. A custody selection
+   383	    changes neither rule O nor any claim, pass condition or exit obligation.
+   384	  - *Limit.* Separate technical custody does not imply independent availability, independent signing fates,
+   385	    separate control or independent approval of content; C3 applies to both options.
+   386	- **Branch registration.** If the hybrid branch is taken, the owner registers, before the 30 Oct freeze, a dated
+   387	  **branch-registration supplement** bounded to the pair identifier with its mode and context, the ENCODING-V1 §5.2
+   388	  edit for rule R, and the completed pass-condition evidence, naming the exact ENCODING-V1 and specification
+   389	  hashes. The signing-commit baseline plus that supplement governs the hybrid branch. This amendment authorizes
+   390	  that supplement and nothing else in it; it needs no further amendment and no further author approval. Either
+   391	  way, the owner records the branch taken, dated, in ENCODING-V1 §5.2 and the profile before the freeze.
+   392	- **Declared-time check (issuer side, not a verifier rule).** The `gpg`-slot signer refuses a frame whose
+   393	  `declared_issue_time` is outside ε (A9.2) of its own clock. Whoever controls the queue (an AWS takeover) still
+   394	  has signing capability for both slots; the check limits that to minting at the current time. For an HSM-backed key,
+   395	  this refusal is enforced by the policy signer, not by the HSM's generic signing API. Separation of control stays a
+   396	  V2 driver (A9.3).
+   397	
+   398	**Issuance window.** The key-publication record carries `issuance-not-before` and `issuance-not-after`, **both
+   399	mandatory**, identical in DNS and the git blob (ENCODING-V1 §7, §7.1, D-17).
+   400	- **Registered invariant: `issuance-not-after − issuance-not-before ≤ 90 days`** (a record that violates it is
+   401	  rejected, `DNS_WINDOW_LENGTH`). This amendment registers the first issuance window only; it does not yet
+   402	  authorize successor issuance. A future sequential-replacement registration may retain the frozen V1 byte/check
+   403	  profile: the same DNS owner and git path, new keys, and a new window with next.not-before > previous.not-after (both
+   404	  endpoints are inclusive). Each receipt carries its own historical snapshot and commit. Multiple TXT records at the
+   405	  required owner fail `DNS_RRSET`; a substituted per-key owner name fails `DNS_OWNER`. The V1 verifier checks each
+   406	  receipt's window, not non-overlap between receipts. Before successor issuance, the owner records a dated rotation
+   407	  registration naming the two-window positive/negative vectors and the model, checked property and result
+   408	  establishing the intended issuance invariant. This future rotation evidence is not added to the 30 Oct
+   409	  first-window gate. Without that registration, issuance stops at the first window's end.
+   410	- **Verifier rule (C4).** A receipt is `INVALID / ISSUANCE_WINDOW` unless the declared issue time is not earlier
+   411	  than not-before and the verified chain-time T is not later than not-after, with T as registered and no margin.
+   412	  T itself is not compared with not-before.
+   413	- **Issuer invariant.** An attempt whose T would exceed not-after is not shipped. The stop margin, the window's
+   414	  actual dates and the rotation plan are operating numbers, not registered (`docs/V1-OPERATIONS-RUNBOOK.md`).
+   415	- A published window cannot be shortened; detection changes no V1 verdict.
+   416	- The relying-party documentation states: `ISSUANCE_WINDOW` can result from presenting a later proof; ask the
+   417	  holder for the issuer's original proof.
+   418	
+   419	**Exit.** The exit procedure is not part of this instrument; it is in the operations runbook. No V1 verifier rule
+   420	consults any end-of-issuance statement (OWNER DECISION 2026-10-12).
+   421	
+   422	**The two product guarantees, stated conditionally (CODEX-REVIEW 7).** Guarantee 2 is the C4 window rule, stated
+   423	as a property; a finding against it is a C4 finding for the closure rule (A9.2). Guarantee 1 is not computed.
+   424	1. **Past receipts survive later compromise.** A receipt whose exact signatures are anchored by T cannot have
+   425	   signatures manufactured after an adversary gains signing capability for every required slot substituted into
+   426	   it, while SHA-256, the OTS commitment and the pinned chain history stay secure. Its historical authenticity also
+   427	   needs the signing and key-use assumptions to have held before T, authentic historical authority, and no relevant
+   428	   compromise before T; V1 does not evaluate these (`historical_security: NOT_EVALUATED`). A later key theft or
+   429	   algorithm break does not by itself invalidate such a receipt. It does not cure earlier theft, unauthorized
+   430	   signing before T, misissuance or whole-author-sphere capture, and does not prove that the issuer itself obtained
+   431	   the stamp or issued the bundle uniquely.
+   432	2. **Signing capability mints only inside the window, in chain time.** Even signing capability for every required
+   433	   slot cannot make a receipt pass V1 with verified T after its authenticated not-after, under continuing anchor
+   434	   and history assumptions and provided the authority channels are not also captured (republishing a window is a
+   435	   new authority event; whole capture is R-2.15). Translating this into a finite UTC cutoff requires an additional,
+   436	   explicit backward-skew assumption that V1 does not establish: A2.1 registers no finite bound on B − C, and
+   437	   neither ε nor S is one. Inside the window, such an adversary mints receipts that pass; the window cannot be
+   438	   shortened, and detecting misuse is the B(ii) add-on, not V1.
+   439	
+   440	**C3 non-claim.** The two keys are *separate technical failure domains under a single controller; no separation of
+   441	control or independent fates.* The `gpg` signer signs frames delivered by the AWS-side issuer, so capture of the
+   442	issuing account confers signing capability for both slots; the non-exportable key prevents key export, not misuse.
+   443	With the hybrid the slots differ in algorithm (lattice and elliptic curve) and custody (AWS KMS and the
+   444	slot-2 custody); under the fallback a P-256 break defeats both slots.
+   445	
+   446	## A9.7 What changed
+   447	
+   448	**Registered sentences changed.** Kind: **W** weakened, **C** capability not offered by V1, **G** gate or trigger
+   449	moved, **H** hypothesis withdrawn, **T** test registration, **R** replaced or narrowed for V1, **K** clarified. Every
+   450	change applies to `tessera-v1-strict` only; each sentence stays standing and governs everything else. Paths are
+   451	`docs/` unless given. Quotation marks mark exact source words; *paraphrase* marks the rest. The file:line column
+   452	is the source citation; the replacement column points into this amendment.
+   453	
+   454	| # | Registered sentence | file:line | Replacement for V1 | Kind |
+   455	|---|---|---|---|---|
+   456	| 1 | "Before any code, the central guarantee is established by a machine-checked formal model and proof … No time bound … the Phase 1 / H1b clock does not start until Band 0 is resolved" | `phase-0-prereg.md:102-107` | A9.2's single code gate; P8 by prose proof plus vectors, time-boxed, not machine-checked; the 30 Oct ceiling and slip rule replace "No time bound"; H1b withdrawn | W |
+   457	| 2 | "Band 0 (H0) must be resolved before Phase 1 begins"; "Only then does **Phase 1a** begin …, marked by an explicit, dated, signed commit declaring the build runway open" | `phase-0-prereg.md:714-732` | The prerequisite changes: the recorded 30 Oct V1 exit (A9.2), not H0's resolution, opens Phase 1a for V1-profile code only; H0 stays unresolved. The explicit, dated, signed opening commit remains | G |
+   458	| 3 | Capstone gate: every ledgered cross-model assumption discharged with a broken companion | `phase-0-prereg-amendment-3.md:220-231` | Strict correct-form rows only; case (d), divergences and withheld results stay with the capstone | G |
+   459	| 4 | "Done when (v1 product)" and the kill criterion | `phase-0-prereg.md:589-617` | Not V1; kept as the later product done-line | C |
+   460	| 5 | H1a red-bar "for each attack family … and each degradation scenario" | `phase-0-prereg.md:203-208` | A9.5's suite; degradation cases move to their capability | G |
+   461	| 6 | H1b: LocalStack, 1/sec, within 7 days of the H1a freeze | `phase-0-prereg.md:210-224` | Withdrawn for V1, not falsified | H |
+   462	| 7 | P6: `key_authorized(declared) ∧ no revocation effective at or before anchor_time` | `phase-0-prereg-amendment-1.md:199-214` | Not evaluated; `revocation: NOT_EVALUATED` (A9.4) | W |
+   463	| 8 | A4.3's rewritten revocation-after-anchor sentence | `phase-0-prereg-amendment-4.md:111-123` | As row 7 | W |
+   464	| 9 | §4.4 "Revocation is time-relative … `INVALID`" | `phase-0-prereg.md:537-546` | As row 7 | W |
+   465	| 10 | Standing mechanism modelled "before Band 0 exit" | `formal/spike/FIRST-LINK-SPIKE.md:50-56` | Moves to Protocol standing | G |
+   466	| 11 | Standing invariant | `phase-0-prereg-amendment-3.md:531-557` | No TLR; standing `ABSENT/NOT_ISSUED_IN_PROFILE`, reported separately | C |
+   467	| 12 | Refusal-record decomposition, commitment, companions | `phase-0-prereg-amendment-3.md:572-581`, `:816-828` | Bounded local refusal returned by the API | C |
+   468	| 13 | Integrated lifecycle model green before the H1a crypto-core freeze | `phase-0-prereg-amendment-3.md:783-806` | Trigger moves to Wrapping and renewal; the 30 Oct profile freeze is not the crypto-core freeze | G |
+   469	| 14 | Custodial renewal "before the old mechanism becomes unreliable" | `phase-0-prereg-amendment-3.md:273-278` | No renewal; custody and dependency manifest stated (A9.5) | C |
+   470	| 15 | KMS and local GPG "independent failure domains"; *paraphrase:* they fail for uncorrelated reasons (source: "They fail for *uncorrelated* reasons"), so durability does not rest on any single domain surviving; and "two independent signatures whose validity does not share a failure domain" | `phase-0-prereg.md:292-299`, `:304-305` | Narrowed to C3's non-claim: separate technical failure domains under a single controller; no separation of control or independent fates; under the fallback both slots share P-256's failure. The registered local-GPG placement is replaced for V1 by A9.6's slot-2 custody alternatives, both through the external policy signer; rule O and the gpg fingerprint scheme are retained. The spec's restatements (`implementation-spec.md:226`, `:604-610`) follow this row as consequences; they are not new author rulings | R |
+   471	| 16 | A8.4's new query ("a new query, predicted red under C-C15(i) … run with A8.3's batch") and its spec edits (O-74, R-6.44 innermost) | `phase-0-prereg-amendment-8.md:95-98`, `:100-106` | Postponed with standing; A8 remains the source record | G |
+   472	| 17 | Prototype scenario expectations | `prototype/consumers/scenarios.py:72-133` | Kept as history; A9.1's mapping registered prospectively | T |
+   473	| 18 | Dead-project (clean-room) demonstration | `phase-0-prereg-amendment-3.md:371-378` | Not run for V1; the dead-service test is | G |
+   474	| 19 | Forward-link successor slot registered "before format freeze with a slot-bearing golden vector" | `implementation-spec.md:651-656`; `formal/spike/standing-probe/AMENDMENTS-2026-08-31.md:159-206` | Not in V1; a later profile carries it | C, G |
+   475	| 20 | §4.7 review recency attested (hard rule) | `phase-0-prereg.md:564-572` | Not offered by V1; moves with the product done-line | C |
+   476	| 21 | Custodial parameter schema and clock roles ratified at Band 0 | `phase-0-prereg-amendment-3.md:435-451` | Trigger moves to Wrapping and renewal | G |
+   477	| 22 | "numbers must be exactly representable as IEEE 754 doubles … string-encoded, never a JSON number"; restated in A7's canonical-payload reading ("under the precision rule of the original §4.3") | `phase-0-prereg.md:501-505`; `phase-0-prereg-amendment-7.md:33-39` | A9.8's value-preserving rule | R |
+   478	| 23 | Rejection of "numbers not exactly representable as IEEE 754 doubles" | `phase-0-prereg-amendment-1.md:268-270` | A9.8's value-preserving rule | R |
+   479	| 24 | "signatures and anchors commit to a framed envelope" (R-3.9); restated in A7 ("Signatures and anchors commit to the signed frame") | `phase-0-prereg-amendment-1.md:255-264`; `phase-0-prereg-amendment-7.md:33-39` | Signatures commit to frames; the receipt anchor commits to frames plus their exact signatures (A9.5) | K |
+   480	| 25 | "Hybrid classical+PQ dual signing is explicitly deferred to a deployment profile or later amendment" | `phase-0-prereg-amendment-3.md:480-482` | If the spike passes, V1 is that deployment profile, governed with the branch-registration supplement (A9.6); otherwise unchanged | R (conditional) |
+   481	| 26 | P7's amended discharge: the verdict-independence half by S-P7 Q4's control and companions and "one H1a conformance vector" on the band-1 docket | `phase-0-prereg-amendment-6.md:43-57` | The wrapper half and its H1a vector move to Wrapping and renewal (A9.3); P7's type-separation half stays on the 30 Oct gate | G |
+   482	| 27 | The waived-evidence observation record; "The record format is an H1a obligation, entered on the band-1 docket" | `phase-0-prereg-amendment-5.md:145-154` | Moves to Degraded verification (A9.3, "A5.3 record") | G |
+   483	| 28 | The degraded-policy semantics (waiver lattice) | `phase-0-prereg-amendment-1.md:301-327` | Not offered by V1: strict only, no waiver policy (A9.1); moves to Degraded verification | C |
+   484	| 29 | "an identifier prohibited by applicable policy" | `phase-0-prereg-amendment-3.md:503-508` | A9.4: V1's registered algorithm policy determines its verdict; later algorithm prohibition/cutoff results belong to a separate assessment and cannot overwrite that verdict | R |
+   485	
+   486	**Changed in effect (not counted below).** "the public git commit publishing the same fingerprints"
+   487	(`phase-0-prereg-amendment-1.md:434-438`) and "public repositories" (`phase-0-prereg.md:300-302`). C4 does not
+   488	establish public publication. **OWNER DECISION 2026-10-12: public publication remains an issuer duty, and the
+   489	verifier does not prove that it happened.** Reason: the author's standard for authority capture is *visible*
+   490	(2026-10-08). A key assertion nobody can see cannot make a capture visible, so publishing the repository is what
+   491	lets a third party notice a substituted key. The verifier cannot check this duty; the relying-party text says so.
+   492	
+   493	**Process readings changed in effect** (clerk readings, not registered theorem statements; listed so the change is
+   494	visible, and not counted as registered changes; acknowledged in `V1-DERIVATION-DRAFT.md:212-216`):
+   495	- E10's extraction timing moves to 13 Nov (`formal/BAND0-EXIT.md:69-70`, `:96-97`).
+   496	- The exit-status reading for V1 (`implementation-spec.md:2197-2198`): the 30 Oct exit is V1's, not Band 0's.
+   497	
+   498	**Named and not changed:** "The PQ signature implementation … gates the production version"
+   499	(`phase-0-prereg-amendment-3.md:473-476`; V1 is not the production version); A1's monotonic key lifecycle (`phase-0-prereg-amendment-1.md:216-224`; any rotation
+   500	issues a new key); H3's three cost numbers (`phase-0-prereg.md:232-248`); the red-bar/CI rule (`:548-553`);
+   501	break-chain attacks (`:203-205`); the P4 check-result partition (later algorithm-policy effects are narrowed by row 29); A2.1's predicate; the credibility line; §8's "does not proceed"
+   502	clause.
+   503	
+   504	**In sum:** two weakenings (P6, rows 7–9; the code rule, row 1); one hypothesis withdrawn (H1b, row 6); eleven gates
+   505	or triggers moved (rows 2, 3, 5, 10, 13, 16, 18, 19, 21, 26, 27); seven capabilities not offered (rows 4, 11, 12,
+   506	14, 19, 20, 28); one claim narrowed (row 15); four sentences replaced or clarified for V1 (rows 22–25); one test
+   507	registration changed (row 17). Twenty-eight rows, plus one disposition left open and two process readings. A8
+   508	remains the source record.
+   509	
+   510	## A9.8 The number rule, for the V1 profile — OWNER DECISION (ENCODING-V1 D-1); supersedes rows 22–23
+   511	
+   512	prereg §4.3 and A1 P8 reject a number not exactly representable as an IEEE 754 double. That rule does not compose
+   513	with RFC 8785: it accepts inputs whose canonical form it then rejects (ENCODING-V1 §1.2). For `tessera-v1-strict`
+   514	it is replaced by: **accept a number exactly when RFC 8785's canonical serialization preserves its value; reject
+   515	otherwise.** Proof: `formal/p8/PROOF.md` Lemma 3. Vectors: `formal/p8/vectors/`.
+   516	
+   517	---
+   518	
+   519	## Open items, not decided by this amendment
+   520	
+nl: docs/ENCODING-V1.md: No such file or directory
+   180	
+   181	- `revocation: NOT_EVALUATED`. [A9:248-252]
+   182	- `historical_security: NOT_EVALUATED`. The documentation names what a later examiner must supply: an authenticated
+   183	  safe-before cutoff per algorithm and per key, compared with T and A2.1's chain-time uncertainty. [A9:253-259]
+   184	- Standing: `ABSENT/NOT_ISSUED_IN_PROFILE`, reported separately and never folded in. [A9:166-167; SPEC R-1.16:163]
+   185	- No aggregate checkmark. [SPEC R-5.47:1419]
+   186	- Relying-party text must say that `INVALID / ISSUANCE_WINDOW` can come from presenting a later proof, and that the
+   187	  holder should be asked for the issuer's original proof. [A9:344-345]
+   188	- Relying-party text must say that the verifier cannot check public publication of the git commit. [A9:413-418]
+   189	
+   190	## 4. Issue order (issuer side, binding on the build)
+   191	
+   192	1. Fix the manifest and common metadata, including `declared_issue_time`.
+   193	2. Build both frames.
+   194	3. Sign each frame.
+   195	4. Verify both signatures with the exact bytes to be committed.
+   196	5. Freeze the signature bytes. Any re-framing happens before this point.
+   197	6. Build `A_sig` and stamp its SHA-256. One stamp per receipt.
+   198	7. Obtain and validate the confirmation and time evidence.
+   199	8. Ship the complete receipt.
+   200	
+   201	[ENC §5.4:515-525; A9:278-281] That is eight steps in both sources. A retry that changes any committed byte needs a
+   202	fresh stamp. The frame-only anchor is withdrawn, with no fallback. [A9:277; ENC §5.1:407-414]
+   203	
+   204	Issuer duties that are not verifier rules: an attempt whose T would exceed not-after is not shipped [A9:341-342]; the
+   205	`gpg` signer refuses a frame whose `declared_issue_time` is more than ε from its clock [A9:327-330]; the issuer never
+   206	re-authorizes a key [A9:260]; public publication of the commit stays an issuer duty [A9:413-418]; the issuer
+   207	re-captures the DNSSEC snapshot before shipping if it fails the snapshot rule [DD:94].
+   208	
+   209	## 5. Trust configuration
+   210	
+   211	It ships with the verifier and is never read from the bundle. [A9:148; SPEC R-5.8:1217; SPEC R-2.17:262] It holds:
+   212	
+   213	| # | Item | Source |
+   214	|---|---|---|
+   215	| 1 | Root KSK-2017 | [A9:148-149; DD:66] |
+   216	| 2 | Root KSK-2024 | [A9:148-149; DD:66] |
+   217	| 3 | The pair (D, repository root key), with D = `wamason.com` | OWNER PROFILE DECISION 2026-10-13 (section 6.3); [A9:63-65] |
+   218	| 4 | A signed, versioned set of pinned mainnet header hashes | [A9:149; DD:66] |
+   219	| 5 | The parameters δ, ε, k | [A9:217; SPEC R-5.8:1217] |
+   220	
+   221	- **Root KSKs, three periods each.** The trust configuration records each KSK's signing and reliance periods
+   222	  separately from its publication and revocation dates. [A9:153; A9:302-303] The instrument spike found that
+   223	  conflating signing with publication falsely rejected every snapshot from 2026-10-11. [SR:73-78]
+   224	- **Root rule.** The root DNSKEY set is valid at the snapshot's anchored time if some trusted KSK whose **reliance
+   225	  period** contains that time validates it. A KSK's reliance period runs from the start of its signing period to the
+   226	  end of its signing period plus the maximum validity of the root DNSKEY RRSIGs it made, recorded with its source:
+   227	  evidence it signed while signing stays usable for that long and no longer. The rule is existential and
+   228	  order-independent: a candidate that fails is informational, and the result is computed once, after every eligible
+   229	  key has been tried. A trusted KSK that is published but did not sign is informational, never a failure.
+   230	  [A9.5, A9:296-303, OWNER DECISION 2026-10-13 after `docs/reviews/v1-profile/` F1, F2]
+   231	- **Rollover control (required vector).** A snapshot taken while one trusted KSK is published but not signing must
+   232	  pass. [A9:307-308] Further required vectors (`docs/reviews/v1-profile/` F1, F2 dispositions): a failing trusted
+   233	  candidate listed before a validating one, in both trust-list orders, must pass; an honest old root signed before
+   234	  retirement and anchored after retirement but within reliance must pass, and the same evidence after reliance must
+   235	  not.
+A9-before-2026-10-13.md
+CODEX-BRIEF.md
+CODEX-REVIEW.md
+DISPOSITION.md
+codex.log
+confirm.log
+delta.diff
+fixes.diff
+../promptguard/openspec/AGENTS.md
+../promptguard/AGENTS.md
+../promptguard2/openspec/AGENTS.md
+../promptguard2/AGENTS.md
+../teaching/2025/CPSC416-2025W-T2/AGENTS.md
+../teaching/2025/CPSC436C-2025W-T1/capstone_clones/u410266/frontend/AGENTS.md
+../teaching/2025/CPSC436C-2025W-T1/capstone_clones/u466684/AGENTS.md
+../teaching/2025/CPSC436C-2025W-T1/capstone_clones/u421168/frontend/AGENTS.md
+../teaching/2025/CPSC436C-2025W-T1/capstone_clones/u411995/AGENTS.md
+../teaching/2025/CPSC436C-2025W-T1/capstone_clones/u466685/AGENTS.md
+../teaching/2025/CPSC436C-2025W-T1/capstone_clones/u444982/AGENTS.md
+../teaching/2025/CPSC436C-2025W-T1/AGENTS.md
+../teaching/2025/CPSC436C-2025W-T1/tmp/capstone_code_repos/CPSC436C-2025W-T1_capstone_deho/AGENTS.md
+../teaching/2025/CPSC436C-2025W-T1/tmp/capstone_code_repos/CPSC436C-2025W-T1_capstone-final-project/frontend/AGENTS.md
+../teaching/2025/CPSC436C-2025W-T2/AGENTS.md
+../teaching/2025/CPSC436C-2025W-T2/tmp/capstone/jh51/AGENTS.md
+../mallku/AGENTS.md
+../eidolon/.worktrees/nines-rc-reviewer-pass/AGENTS.md
+../eidolon/AGENTS.md
+    40	
+    41	# Task Group: Tessera V1 scope and approval decision map
+    42	
+    43	scope: Explain proposed V1 decisions in plain language before asking the author to approve a narrowed scope, acceptance criterion, revocation treatment, or tester.
+    44	applies_to: cwd=/home/tony/projects/tessera; reuse_rule=use for Amendment 9/V1 governance discussions; draft recommendations and schedules are time-specific, so recheck the cited artifact and adoption state.
+    45	
+    46	## Task 1: Explain unexplained V1 Q1-Q4 before user approval, success
+    47	
+    48	### rollout_summary_files
+---
+name: verification-before-completion
+description: Use when about to claim work is complete, fixed, or passing, before committing or creating PRs - requires running verification commands and confirming output before making any success claims; evidence before assertions always
+---
+
+# Verification Before Completion
+
+## Overview
+
+**Core principle:** Evidence before claims, always.
+
+**Violating the letter of this rule is violating the spirit of this rule.**
+
+## The Iron Law
+
+```
+NO COMPLETION CLAIMS WITHOUT FRESH VERIFICATION EVIDENCE
+```
+
+If you haven't run the verification command in this message, you cannot claim it passes.
+
+## The Gate Function
+
+```
+BEFORE claiming any status or expressing satisfaction:
+
+1. IDENTIFY: What command proves this claim?
+2. RUN: Execute the FULL command (fresh, complete)
+3. READ: Full output, check exit code, count failures
+4. VERIFY: Does output confirm the claim?
+   - If NO: State actual status with evidence
+   - If YES: State claim WITH evidence
+5. ONLY THEN: Make the claim
+
+Skip any step = lying, not verifying
+```
+
+## Common Failures
+
+| Claim | Requires | Not Sufficient |
+|-------|----------|----------------|
+| Tests pass | Test command output: 0 failures | Previous run, "should pass" |
+| Linter clean | Linter output: 0 errors | Partial check, extrapolation |
+| Build succeeds | Build command: exit 0 | Linter passing, logs look good |
+| Bug fixed | Test original symptom: passes | Code changed, assumed fixed |
+| Regression test works | Red-green cycle verified | Test passes once |
+| Agent completed | VCS diff shows changes | Agent reports "success" |
+| Requirements met | Line-by-line checklist | Tests passing |
+
+## Red Flags - STOP
+
+- Using "should", "probably", "seems to"
+- Expressing satisfaction before verification ("Great!", "Perfect!", "Done!", etc.)
+- About to commit/push/PR without verification
+- Trusting agent success reports
+- Relying on partial verification
+- Thinking "just this once"
+- Tired and wanting work over
+- **ANY wording implying success without having run verification**
+
+## Rationalization Prevention
+
+| Excuse | Reality |
+|--------|---------|
+| "Should work now" | RUN the verification |
+| "I'm confident" | Confidence ≠ evidence |
+| "Just this once" | No exceptions |
+| "Linter passed" | Linter ≠ compiler |
+| "Agent said success" | Verify independently |
+| "I'm tired" | Exhaustion ≠ excuse |
+| "Partial check is enough" | Partial proves nothing |
+| "Different words so rule doesn't apply" | Spirit over letter |
+
+## Key Patterns
+
+**Tests:**
+```
+✅ [Run test command] [See: 34/34 pass] "All tests pass"
+❌ "Should pass now" / "Looks correct"
+```
+
+**Regression tests (TDD Red-Green):**
+```
+✅ Write → Run (pass) → Revert fix → Run (MUST FAIL) → Restore → Run (pass)
+❌ "I've written a regression test" (without red-green verification)
+```
+
+**Build:**
+```
+✅ [Run build] [See: exit 0] "Build passes"
+❌ "Linter passed" (linter doesn't check compilation)
+```
+
+**Requirements:**
+```
+✅ Re-read plan → Create checklist → Verify each → Report gaps or completion
+❌ "Tests pass, phase complete"
+```
+
+**Agent delegation:**
+```
+✅ Agent reports success → Check VCS diff → Verify changes → Report actual state
+❌ Trust agent report
+```
+
+## When To Apply
+
+**ALWAYS before:**
+- ANY variation of success/completion claims
+- ANY expression of satisfaction
+- ANY positive statement about work state
+- Committing, PR creation, task completion
+- Moving to next task
+- Delegating to agents
+
+**Rule applies to:**
+- Exact phrases
+- Paraphrases and synonyms
+- Implications of success
+- ANY communication suggesting completion/correctness
+
+exec
+/bin/bash -lc "rg --files | rg 'ENCODING-V1.md"'$'"'; sed -n '235,255p' docs/V1-PROFILE.md; sed -n '438,456p' docs/phase-0-prereg-amendment-9.md; rg -n 'rule O \\(OpenPGP|slot-2 custody per|kind CORRECT|until they expire' formal/p8/ENCODING-V1.md docs/reviews/v1-profile/DISPOSITION.md; python - <<'PY'
+import importlib.util
+for m in ['markdown_it','markdown','mistune']:
+ print(m, bool(importlib.util.find_spec(m)))
+PY" in /home/tony/projects/tessera
+ succeeded in 0ms:
+formal/p8/ENCODING-V1.md
+  not.
+- **Known facts for the periods.** KSK-2024 signs the root from 2026-10-11. KSK-2017 is revoked 2027-01-11 and
+  removed 2027-03-22. [DD:66; SR:70-71] **OWNER PROFILE DECISION 2026-10-13** (values under the A9.5 rule):
+  - KSK-2017 signing period ends **2026-10-11T00:00:00Z**: IANA, the root zone begins using KSK-2024 on 2026-10-11
+    and KSK-2017 ceases signing (SR:70-71; IANA sources as cited in `docs/reviews/v1-profile/CODEX-REVIEW.md` F2).
+    Corroborated by the 2026-10-12 capture, whose only root DNSKEY RRSIG is by KSK-2024 with inception
+    2026-10-11T00:00:00Z.
+  - Maximum root DNSKEY RRSIG validity: **21 days**, from the archived captures. `prototype/spike/out/dns-snapshot.json`
+    (captured 2026-10-09): the KSK-2017 RRSIG runs 2026-10-01T00:00:00Z to 2026-10-22T00:00:00Z (21 d), the only
+    KSK-2017 root RRSIG archived. `prototype/spike/out-ksk2024/dns-snapshot.json` (captured 2026-10-12): the KSK-2024
+    RRSIG runs 2026-10-11T00:00:00Z to 2026-11-01T00:00:00Z (21 d), corroborating. One KSK-2017 signature is the
+    whole observed sample.
+  - KSK-2017 reliance period ends **2026-11-01T00:00:00Z** (= 2026-10-11T00:00:00Z + 21 d). KSK-2024's reliance end
+    stays open until its signing end is recorded.
+  - The earlier end-of-day cutoff (2026-10-11T23:59:59Z) is **withdrawn**: it rejected authentic pre-retirement
+    evidence anchored later (`docs/reviews/v1-profile/` F2). Extending reliance also extends a retired-key
+    compromise window; A9.4 leaves historical key safety unevaluated either way.
+  - Implemented in `prototype/spike/trust-config.json` (`signing_source`, `max_validity_source`, `reliance_rule`).
+- **No usable trusted KSK — OWNER PROFILE DECISION 2026-10-13** (under R-2.26; repaired after
+  `docs/reviews/v1-profile/` F1, F3). Each candidate signature is classified separately, and only after every trusted
+  KSK has been tried:
+   shortened, and detecting misuse is the B(ii) add-on, not V1.
+
+**C3 non-claim.** The two keys are *separate technical failure domains under a single controller; no separation of
+control or independent fates.* The `gpg` signer signs frames delivered by the AWS-side issuer, so capture of the
+issuing account confers signing capability for both slots; the non-exportable key prevents key export, not misuse.
+With the hybrid the slots differ in algorithm (lattice and elliptic curve) and custody (AWS KMS and the
+slot-2 custody); under the fallback a P-256 break defeats both slots.
+
+## A9.7 What changed
+
+**Registered sentences changed.** Kind: **W** weakened, **C** capability not offered by V1, **G** gate or trigger
+moved, **H** hypothesis withdrawn, **T** test registration, **R** replaced or narrowed for V1, **K** clarified. Every
+change applies to `tessera-v1-strict` only; each sentence stays standing and governs everything else. Paths are
+`docs/` unless given. Quotation marks mark exact source words; *paraphrase* marks the rest. The file:line column
+is the source citation; the replacement column points into this amendment.
+
+| # | Registered sentence | file:line | Replacement for V1 | Kind |
+|---|---|---|---|---|
+| 1 | "Before any code, the central guarantee is established by a machine-checked formal model and proof … No time bound … the Phase 1 / H1b clock does not start until Band 0 is resolved" | `phase-0-prereg.md:102-107` | A9.2's single code gate; P8 by prose proof plus vectors, time-boxed, not machine-checked; the 30 Oct ceiling and slip rule replace "No time bound"; H1b withdrawn | W |
+formal/p8/ENCODING-V1.md:441:| a hybrid pair id, registered only if the 21 Oct spike passes (not assigned here) | rule R, ML-DSA-65 (FIPS 204) | rule O (OpenPGP P-256; slot-2 custody per A9.6; owner decision 2026-10-12 replaced SLH-DSA) | `kms`: exactly 3309; `gpg`: 1024 |
+markdown_it False
+markdown False
+mistune False
+
+codex
+Two requested details remain incomplete: A9.7 still says “Twenty-eight rows” and counts four replacements despite the added row 29; V1-PROFILE §5 still uses the provenance and global-maximum wording F1 asked to remove. The ENCODING-V1 custody correction is present. I’m checking row 29’s structure and recording these as defects in F2 and F6.
+exec
+/bin/bash -lc "sed -n '255,269p' docs/V1-PROFILE.md; command -v pandoc; .venv/bin/python - <<'PY'
+import importlib.util
+for m in ['markdown_it','markdown','mistune']:
+ print(m, bool(importlib.util.find_spec(m)))
+PY" in /home/tony/projects/tessera
+ succeeded in 0ms:
+  KSK has been tried:
+  - a signature that verifies under a trusted KSK, is within its own RRSIG window, and whose KSK's reliance period
+    contains the snapshot's anchored time: the set is valid, whatever the other candidates show;
+  - otherwise, a signature that **verifies** but whose KSK's reliance period excludes that time:
+    `INVALID / KSK_OUTSIDE_RELIANCE_PERIOD`;
+  - otherwise, a signature that verifies but is outside its own inception/expiration window at that time: `INVALID`
+    (`RRSIG_NOT_VALID_AT_EVAL_TIME` in the instrument);
+  - otherwise, a signature bearing a trusted KSK's tag that does not verify: `INVALID`
+    (`TRUSTED_KSK_SIGNATURE_INVALID` in the instrument). A key tag is a selector, not proof of authorship, so a
+    forged tag never produces the reliance reason;
+  - otherwise (signed only by keys the trust configuration does not hold, or the RRset, RRSIG or message missing):
+    `UNVERIFIABLE / NO_TRUSTED_KSK_USABLE`.
+  - A snapshot without its own anchor is `UNVERIFIABLE / SNAPSHOT_NOT_ANCHORED`; no stand-in time is used. Missing
+    snapshot evidence of any kind is `UNVERIFIABLE`, never an exception, unless another required check fails.
+- **Unlisted rollover.** The periods are those known at release. A snapshot taken after an unlisted rollover is
+/usr/bin/pandoc
+markdown_it False
+markdown False
+mistune False
+
+exec
+/bin/bash -lc "python - <<'PY'
+import subprocess
+from pathlib import Path
+s=Path('docs/phase-0-prereg-amendment-9.md').read_text()
+a=s.index('| # | Registered sentence'); b=s.index('\\n\\n',a)
+h=subprocess.run(['pandoc','-f','gfm','-t','html'],input=s[a:b],text=True,capture_output=True,check=True).stdout
+from html.parser import HTMLParser
+class Rows(HTMLParser):
+ def __init__(self): super().__init__(); self.rows=[]; self.row=None; self.cell=None
+ def handle_starttag(self,t,a):
+  if t=='tr': self.row=[]
+  if t in ('td','th'): self.cell=''
+ def handle_data(self,d):
+  if self.cell is not None: self.cell+=d
+ def handle_endtag(self,t):
+  if t in ('td','th'): self.row.append(self.cell); self.cell=None
+  if t=='tr': self.rows.append(self.row); self.row=None
+p=Rows();p.feed(h)
+assert len(p.rows)==30
+assert all(len(r)==5 for r in p.rows)
+assert p.rows[-1][0]=='29' and p.rows[-1][-1]=='R'
+print('Pandoc GFM render: 29 body rows, all five cells; row 29:',p.rows[-1])
+PY" in /home/tony/projects/tessera
+ succeeded in 0ms:
+Pandoc GFM render: 29 body rows, all five cells; row 29: ['29', '"an identifier prohibited by applicable policy"', 'phase-0-prereg-amendment-3.md:503-508', "A9.4: V1's registered algorithm policy determines its verdict; later\nalgorithm prohibition/cutoff results belong to a separate assessment and\ncannot overwrite that verdict", 'R']
+
+apply patch
+patch: completed
+/home/tony/projects/tessera/docs/reviews/a9-final-delta/CONFIRMATION.md
+diff --git a/docs/reviews/a9-final-delta/CONFIRMATION.md b/docs/reviews/a9-final-delta/CONFIRMATION.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..4945969e54f5ac2c98f9f249947f5858db9b906a
+--- /dev/null
++++ b/docs/reviews/a9-final-delta/CONFIRMATION.md
+@@ -0,0 +1,20 @@
++# Confirmation — A9 final delta
++
++2026-10-13. Confirmation pass only against `CODEX-REVIEW.md`, `DISPOSITION.md`, `fixes.diff`, and the live amendment. The delegated F3/F6 source reconciliations were also inspected. Only this file was edited. This is textual confirmation, not implementation, model-result, freeze or signing approval.
++
++| Finding | Status | Confirmation |
++|---|---|---|
++| F1 — Reliance boundary | APPLIED | A9:307–323 contains the requested sourced policy lifetime, observed/global-maximum distinction, signature/window checks, retired-key forgery disclosure, chain-time rather than finite UTC bound, and unevaluated assumptions. The existential/order-independent rule remains. |
++| F2 — Algorithm cutoff and registration | APPLIED WITH DEFECT | A9:265–281 covers before/equal/after cutoff, authenticated algorithm and separate key-theft cutoffs, governing V1 policy, unchanged stable fields and separate adverse assessment. The same-input contract, non-repudiation disclaimer and C7 clause remain. Row 29 and the P4 qualification are present. However, A9:504–508 still counts **four** replaced/clarified sentences (rows 22–25) and **Twenty-eight rows**. The requested count update was omitted: include row 29, giving five replaced/clarified sentences (rows 22–25, 29) and twenty-nine rows. |
++| F3 — Custody placement | APPLIED | Row 15 explicitly replaces local-GPG placement with A9.6's two custody alternatives through the external policy signer, retaining rule O and the fingerprint scheme. The unchanged-placement inventory entry is removed. `formal/p8/ENCODING-V1.md:441` contains the exact requested OpenPGP P-256 / slot-2 custody correction. |
++| F4 — Repository intervals and append-only compatibility | APPLIED | A9:324–333 specifies D, key, inclusive signing interval and the commit's own verified anchored time; excludes a KSK reliance extension; distinguishes preserved witnesses from improved UNVERIFIABLE results and identical-input stability; and forbids retrospective exclusion when closing an open period. The rollover control remains. |
++| F5 — First window and future rotation | APPLIED | A9:398–409 registers first-window issuance only, uses strict separation of inclusive windows, scopes the DNS errors correctly, distinguishes per-receipt verification from cross-receipt non-overlap, names the dated future registration/evidence obligation, and keeps it outside the 30 Oct first-window gate. |
++| F6 — Git descriptor and profile reconciliation | APPLIED WITH DEFECT | A9:295–306 contains the requested evidence member/type, missing/unsupported verdicts, recomputation rule, exact stamped bytes and pre-freeze specification/conformance obligation without a P8 layout change. V1-PROFILE §5 now uses reliance, withdraws the earlier cutoff, and requires a verified signature for `KSK_OUTSIDE_RELIANCE_PERIOD`. However, `docs/V1-PROFILE.md:224–230` still says “maximum validity ... it made” and “evidence it signed while signing stays usable for that long and no longer”. These are the provenance/global-maximum claims removed by F1. Its sourced interval explanation at :236–250 still calls 21 days the maximum, although it candidly identifies the single-signature observed sample. F6's requested reconciliation with the sourced definitions **after F1** is therefore incomplete; align these passages with A9:308–316's acceptance-policy lifetime and limitations, preserving the dated correction record. |
++
++## Requested additional checks
++
++- **Author adoption sentence:** No security overclaim in context. A9:316–320 records dated adoption, kind CORRECT, and attributed author words. The resolver explanation does not erase the immediately preceding disclosure that a stolen retired KSK can manufacture eligible evidence, that pre-retirement signing is unproved, or that no finite UTC exposure bound is established. Read it as the rationale for this policy correction, not a guarantee that every resolver accepts every retired-key signature regardless of trust state or other validation checks.
++- **Row 29 rendering:** PASS. Rendered the complete A9.7 table with Pandoc's GFM reader and parsed the resulting HTML: 29 body rows, each with five cells; row 29 retains its source citation, complete replacement text and final `R` cell. The stale prose count is the F2 defect, not a table syntax defect.
++- **Surrounding coherence:** A9.4–A9.7 remain coherent: the cutoff paragraph joins to “This binds later verifiers”, the root rule proceeds from limitations/adoption to existential evaluation, the repository rule retains its rollover control, and first-window registration leads into the existing verifier/issuer rules. The summary's count is stale (F2); the linked profile retains conflicting reliance explanations (F6). No further coherence defect was identified.
++
++No new design issues are raised. The six dispositions are substantially implemented, with the two bounded defects above remaining.
+
+exec
+/bin/bash -lc 'cat docs/reviews/a9-final-delta/CONFIRMATION.md; git status --short -- docs/reviews/a9-final-delta/CONFIRMATION.md' in /home/tony/projects/tessera
+ succeeded in 0ms:
+# Confirmation — A9 final delta
+
+2026-10-13. Confirmation pass only against `CODEX-REVIEW.md`, `DISPOSITION.md`, `fixes.diff`, and the live amendment. The delegated F3/F6 source reconciliations were also inspected. Only this file was edited. This is textual confirmation, not implementation, model-result, freeze or signing approval.
+
+| Finding | Status | Confirmation |
+|---|---|---|
+| F1 — Reliance boundary | APPLIED | A9:307–323 contains the requested sourced policy lifetime, observed/global-maximum distinction, signature/window checks, retired-key forgery disclosure, chain-time rather than finite UTC bound, and unevaluated assumptions. The existential/order-independent rule remains. |
+| F2 — Algorithm cutoff and registration | APPLIED WITH DEFECT | A9:265–281 covers before/equal/after cutoff, authenticated algorithm and separate key-theft cutoffs, governing V1 policy, unchanged stable fields and separate adverse assessment. The same-input contract, non-repudiation disclaimer and C7 clause remain. Row 29 and the P4 qualification are present. However, A9:504–508 still counts **four** replaced/clarified sentences (rows 22–25) and **Twenty-eight rows**. The requested count update was omitted: include row 29, giving five replaced/clarified sentences (rows 22–25, 29) and twenty-nine rows. |
+| F3 — Custody placement | APPLIED | Row 15 explicitly replaces local-GPG placement with A9.6's two custody alternatives through the external policy signer, retaining rule O and the fingerprint scheme. The unchanged-placement inventory entry is removed. `formal/p8/ENCODING-V1.md:441` contains the exact requested OpenPGP P-256 / slot-2 custody correction. |
+| F4 — Repository intervals and append-only compatibility | APPLIED | A9:324–333 specifies D, key, inclusive signing interval and the commit's own verified anchored time; excludes a KSK reliance extension; distinguishes preserved witnesses from improved UNVERIFIABLE results and identical-input stability; and forbids retrospective exclusion when closing an open period. The rollover control remains. |
+| F5 — First window and future rotation | APPLIED | A9:398–409 registers first-window issuance only, uses strict separation of inclusive windows, scopes the DNS errors correctly, distinguishes per-receipt verification from cross-receipt non-overlap, names the dated future registration/evidence obligation, and keeps it outside the 30 Oct first-window gate. |
+| F6 — Git descriptor and profile reconciliation | APPLIED WITH DEFECT | A9:295–306 contains the requested evidence member/type, missing/unsupported verdicts, recomputation rule, exact stamped bytes and pre-freeze specification/conformance obligation without a P8 layout change. V1-PROFILE §5 now uses reliance, withdraws the earlier cutoff, and requires a verified signature for `KSK_OUTSIDE_RELIANCE_PERIOD`. However, `docs/V1-PROFILE.md:224–230` still says “maximum validity ... it made” and “evidence it signed while signing stays usable for that long and no longer”. These are the provenance/global-maximum claims removed by F1. Its sourced interval explanation at :236–250 still calls 21 days the maximum, although it candidly identifies the single-signature observed sample. F6's requested reconciliation with the sourced definitions **after F1** is therefore incomplete; align these passages with A9:308–316's acceptance-policy lifetime and limitations, preserving the dated correction record. |
+
+## Requested additional checks
+
+- **Author adoption sentence:** No security overclaim in context. A9:316–320 records dated adoption, kind CORRECT, and attributed author words. The resolver explanation does not erase the immediately preceding disclosure that a stolen retired KSK can manufacture eligible evidence, that pre-retirement signing is unproved, or that no finite UTC exposure bound is established. Read it as the rationale for this policy correction, not a guarantee that every resolver accepts every retired-key signature regardless of trust state or other validation checks.
+- **Row 29 rendering:** PASS. Rendered the complete A9.7 table with Pandoc's GFM reader and parsed the resulting HTML: 29 body rows, each with five cells; row 29 retains its source citation, complete replacement text and final `R` cell. The stale prose count is the F2 defect, not a table syntax defect.
+- **Surrounding coherence:** A9.4–A9.7 remain coherent: the cutoff paragraph joins to “This binds later verifiers”, the root rule proceeds from limitations/adoption to existential evaluation, the repository rule retains its rollover control, and first-window registration leads into the existing verifier/issuer rules. The summary's count is stale (F2); the linked profile retains conflicting reliance explanations (F6). No further coherence defect was identified.
+
+No new design issues are raised. The six dispositions are substantially implemented, with the two bounded defects above remaining.
+?? docs/reviews/a9-final-delta/CONFIRMATION.md
+
+diff --git a/docs/reviews/a9-final-delta/CONFIRMATION.md b/docs/reviews/a9-final-delta/CONFIRMATION.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..4945969e54f5ac2c98f9f249947f5858db9b906a
+--- /dev/null
++++ b/docs/reviews/a9-final-delta/CONFIRMATION.md
+@@ -0,0 +1,20 @@
++# Confirmation — A9 final delta
++
++2026-10-13. Confirmation pass only against `CODEX-REVIEW.md`, `DISPOSITION.md`, `fixes.diff`, and the live amendment. The delegated F3/F6 source reconciliations were also inspected. Only this file was edited. This is textual confirmation, not implementation, model-result, freeze or signing approval.
++
++| Finding | Status | Confirmation |
++|---|---|---|
++| F1 — Reliance boundary | APPLIED | A9:307–323 contains the requested sourced policy lifetime, observed/global-maximum distinction, signature/window checks, retired-key forgery disclosure, chain-time rather than finite UTC bound, and unevaluated assumptions. The existential/order-independent rule remains. |
++| F2 — Algorithm cutoff and registration | APPLIED WITH DEFECT | A9:265–281 covers before/equal/after cutoff, authenticated algorithm and separate key-theft cutoffs, governing V1 policy, unchanged stable fields and separate adverse assessment. The same-input contract, non-repudiation disclaimer and C7 clause remain. Row 29 and the P4 qualification are present. However, A9:504–508 still counts **four** replaced/clarified sentences (rows 22–25) and **Twenty-eight rows**. The requested count update was omitted: include row 29, giving five replaced/clarified sentences (rows 22–25, 29) and twenty-nine rows. |
++| F3 — Custody placement | APPLIED | Row 15 explicitly replaces local-GPG placement with A9.6's two custody alternatives through the external policy signer, retaining rule O and the fingerprint scheme. The unchanged-placement inventory entry is removed. `formal/p8/ENCODING-V1.md:441` contains the exact requested OpenPGP P-256 / slot-2 custody correction. |
++| F4 — Repository intervals and append-only compatibility | APPLIED | A9:324–333 specifies D, key, inclusive signing interval and the commit's own verified anchored time; excludes a KSK reliance extension; distinguishes preserved witnesses from improved UNVERIFIABLE results and identical-input stability; and forbids retrospective exclusion when closing an open period. The rollover control remains. |
++| F5 — First window and future rotation | APPLIED | A9:398–409 registers first-window issuance only, uses strict separation of inclusive windows, scopes the DNS errors correctly, distinguishes per-receipt verification from cross-receipt non-overlap, names the dated future registration/evidence obligation, and keeps it outside the 30 Oct first-window gate. |
++| F6 — Git descriptor and profile reconciliation | APPLIED WITH DEFECT | A9:295–306 contains the requested evidence member/type, missing/unsupported verdicts, recomputation rule, exact stamped bytes and pre-freeze specification/conformance obligation without a P8 layout change. V1-PROFILE §5 now uses reliance, withdraws the earlier cutoff, and requires a verified signature for `KSK_OUTSIDE_RELIANCE_PERIOD`. However, `docs/V1-PROFILE.md:224–230` still says “maximum validity ... it made” and “evidence it signed while signing stays usable for that long and no longer”. These are the provenance/global-maximum claims removed by F1. Its sourced interval explanation at :236–250 still calls 21 days the maximum, although it candidly identifies the single-signature observed sample. F6's requested reconciliation with the sourced definitions **after F1** is therefore incomplete; align these passages with A9:308–316's acceptance-policy lifetime and limitations, preserving the dated correction record. |
++
++## Requested additional checks
++
++- **Author adoption sentence:** No security overclaim in context. A9:316–320 records dated adoption, kind CORRECT, and attributed author words. The resolver explanation does not erase the immediately preceding disclosure that a stolen retired KSK can manufacture eligible evidence, that pre-retirement signing is unproved, or that no finite UTC exposure bound is established. Read it as the rationale for this policy correction, not a guarantee that every resolver accepts every retired-key signature regardless of trust state or other validation checks.
++- **Row 29 rendering:** PASS. Rendered the complete A9.7 table with Pandoc's GFM reader and parsed the resulting HTML: 29 body rows, each with five cells; row 29 retains its source citation, complete replacement text and final `R` cell. The stale prose count is the F2 defect, not a table syntax defect.
++- **Surrounding coherence:** A9.4–A9.7 remain coherent: the cutoff paragraph joins to “This binds later verifiers”, the root rule proceeds from limitations/adoption to existential evaluation, the repository rule retains its rollover control, and first-window registration leads into the existing verifier/issuer rules. The summary's count is stale (F2); the linked profile retains conflicting reliance explanations (F6). No further coherence defect was identified.
++
++No new design issues are raised. The six dispositions are substantially implemented, with the two bounded defects above remaining.
+
+codex
+Wrote [CONFIRMATION.md](/home/tony/projects/tessera/docs/reviews/a9-final-delta/CONFIRMATION.md). Edited nothing else.
+
+- F1, F3, F4, F5: **APPLIED**
+- F2: **APPLIED WITH DEFECT** — summary counts omit row 29.
+- F6: **APPLIED WITH DEFECT** — profile retains wording F1 removed.
+
+Author adoption does not overclaim in context. Row 29 renders correctly. Surrounding amendment prose remains coherent.
+
+
+diff --git a/docs/reviews/a9-final-delta/CONFIRMATION.md b/docs/reviews/a9-final-delta/CONFIRMATION.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..4945969e54f5ac2c98f9f249947f5858db9b906a
+--- /dev/null
++++ b/docs/reviews/a9-final-delta/CONFIRMATION.md
+@@ -0,0 +1,20 @@
++# Confirmation — A9 final delta
++
++2026-10-13. Confirmation pass only against `CODEX-REVIEW.md`, `DISPOSITION.md`, `fixes.diff`, and the live amendment. The delegated F3/F6 source reconciliations were also inspected. Only this file was edited. This is textual confirmation, not implementation, model-result, freeze or signing approval.
++
++| Finding | Status | Confirmation |
++|---|---|---|
++| F1 — Reliance boundary | APPLIED | A9:307–323 contains the requested sourced policy lifetime, observed/global-maximum distinction, signature/window checks, retired-key forgery disclosure, chain-time rather than finite UTC bound, and unevaluated assumptions. The existential/order-independent rule remains. |
++| F2 — Algorithm cutoff and registration | APPLIED WITH DEFECT | A9:265–281 covers before/equal/after cutoff, authenticated algorithm and separate key-theft cutoffs, governing V1 policy, unchanged stable fields and separate adverse assessment. The same-input contract, non-repudiation disclaimer and C7 clause remain. Row 29 and the P4 qualification are present. However, A9:504–508 still counts **four** replaced/clarified sentences (rows 22–25) and **Twenty-eight rows**. The requested count update was omitted: include row 29, giving five replaced/clarified sentences (rows 22–25, 29) and twenty-nine rows. |
++| F3 — Custody placement | APPLIED | Row 15 explicitly replaces local-GPG placement with A9.6's two custody alternatives through the external policy signer, retaining rule O and the fingerprint scheme. The unchanged-placement inventory entry is removed. `formal/p8/ENCODING-V1.md:441` contains the exact requested OpenPGP P-256 / slot-2 custody correction. |
++| F4 — Repository intervals and append-only compatibility | APPLIED | A9:324–333 specifies D, key, inclusive signing interval and the commit's own verified anchored time; excludes a KSK reliance extension; distinguishes preserved witnesses from improved UNVERIFIABLE results and identical-input stability; and forbids retrospective exclusion when closing an open period. The rollover control remains. |
++| F5 — First window and future rotation | APPLIED | A9:398–409 registers first-window issuance only, uses strict separation of inclusive windows, scopes the DNS errors correctly, distinguishes per-receipt verification from cross-receipt non-overlap, names the dated future registration/evidence obligation, and keeps it outside the 30 Oct first-window gate. |
++| F6 — Git descriptor and profile reconciliation | APPLIED WITH DEFECT | A9:295–306 contains the requested evidence member/type, missing/unsupported verdicts, recomputation rule, exact stamped bytes and pre-freeze specification/conformance obligation without a P8 layout change. V1-PROFILE §5 now uses reliance, withdraws the earlier cutoff, and requires a verified signature for `KSK_OUTSIDE_RELIANCE_PERIOD`. However, `docs/V1-PROFILE.md:224–230` still says “maximum validity ... it made” and “evidence it signed while signing stays usable for that long and no longer”. These are the provenance/global-maximum claims removed by F1. Its sourced interval explanation at :236–250 still calls 21 days the maximum, although it candidly identifies the single-signature observed sample. F6's requested reconciliation with the sourced definitions **after F1** is therefore incomplete; align these passages with A9:308–316's acceptance-policy lifetime and limitations, preserving the dated correction record. |
++
++## Requested additional checks
++
++- **Author adoption sentence:** No security overclaim in context. A9:316–320 records dated adoption, kind CORRECT, and attributed author words. The resolver explanation does not erase the immediately preceding disclosure that a stolen retired KSK can manufacture eligible evidence, that pre-retirement signing is unproved, or that no finite UTC exposure bound is established. Read it as the rationale for this policy correction, not a guarantee that every resolver accepts every retired-key signature regardless of trust state or other validation checks.
++- **Row 29 rendering:** PASS. Rendered the complete A9.7 table with Pandoc's GFM reader and parsed the resulting HTML: 29 body rows, each with five cells; row 29 retains its source citation, complete replacement text and final `R` cell. The stale prose count is the F2 defect, not a table syntax defect.
++- **Surrounding coherence:** A9.4–A9.7 remain coherent: the cutoff paragraph joins to “This binds later verifiers”, the root rule proceeds from limitations/adoption to existential evaluation, the repository rule retains its rollover control, and first-window registration leads into the existing verifier/issuer rules. The summary's count is stale (F2); the linked profile retains conflicting reliance explanations (F6). No further coherence defect was identified.
++
++No new design issues are raised. The six dispositions are substantially implemented, with the two bounded defects above remaining.
+
+tokens used
+36,739
+Wrote [CONFIRMATION.md](/home/tony/projects/tessera/docs/reviews/a9-final-delta/CONFIRMATION.md). Edited nothing else.
+
+- F1, F3, F4, F5: **APPLIED**
+- F2: **APPLIED WITH DEFECT** — summary counts omit row 29.
+- F6: **APPLIED WITH DEFECT** — profile retains wording F1 removed.
+
+Author adoption does not overclaim in context. Row 29 renders correctly. Surrounding amendment prose remains coherent.
+
+

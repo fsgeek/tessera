@@ -1,0 +1,52 @@
+{
+ "T": "2026-11-10T12:20:00Z",
+ "_meta": {
+  "ambiguities": [],
+  "ambiguous_fields": [],
+  "cite": [
+   "P:671-679",
+   "P:519-521",
+   "P:1502",
+   "P:253-256",
+   "P:269-272",
+   "P:1442-1447",
+   "A9:143",
+   "A9:153",
+   "prototype/mutation/REPORT.md obs. 3"
+  ],
+  "derivation": "The configured entry is open from 2026-11-03T00:00:00Z (<= as_of); T_git = 2026-11-02T00:20:00Z precedes it. A verifying entry with T_git before signing_start is INVALID / GIT_SIGNER_OUTSIDE_INTERVAL, open entries included (A08, P:677-679); the horizon covers only T_git > as_of.",
+  "group": "authority isolation",
+  "id": "AUTH-iv-start",
+  "installation": "classical",
+  "isolation": {
+   "attacker_holds": "the DNS credential and the repository key, used before its registered start",
+   "only_failing_rows": [
+    "14.7"
+   ],
+   "selfcheck_fails": [
+    "repo_interval"
+   ],
+   "twin": "AUTH-iv-start-T"
+  },
+  "issuer_preship": {
+   "chain_order_h_git_plus_5_lt_h_receipt": true,
+   "git_anchored": true,
+   "receipt_anchored": true,
+   "receipt_c1": true,
+   "receipt_c2": true,
+   "receipt_c3": true,
+   "snapshot_anchored": true,
+   "snapshot_c1": true,
+   "snapshot_c2": true,
+   "snapshot_c3": true,
+   "window": true
+  },
+  "kind": "bundle",
+  "title": "Attacker-keyed receipt; git assertion by the configured key before its signing_start (open entry)"
+ },
+ "historical_security": "NOT_EVALUATED",
+ "reason": "GIT_SIGNER_OUTSIDE_INTERVAL",
+ "revocation": "NOT_EVALUATED",
+ "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+ "verdict": "INVALID"
+}

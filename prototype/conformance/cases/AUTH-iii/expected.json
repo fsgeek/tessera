@@ -1,0 +1,54 @@
+{
+ "T": "2026-11-10T12:20:00Z",
+ "_meta": {
+  "ambiguities": [],
+  "ambiguous_fields": [],
+  "cite": [
+   "P:668-670",
+   "P:671-677",
+   "P:1502",
+   "A9:333-338",
+   "P:253-256",
+   "P:269-272",
+   "P:1442-1447",
+   "A9:143",
+   "A9:153",
+   "prototype/mutation/REPORT.md obs. 3"
+  ],
+  "derivation": "The attacker holds the DNS credential (the TXT naming its keys validates) and signs the key-assertion commit with its own repository key, not configured for D. Commit, path and git stamp are well formed and qualify; chain order holds. Row 14.7: no configured entry verifies -> UNVERIFIABLE / GIT_SIGNER_NOT_CONFIGURED ('unknown material cannot establish this required check', A9.5). No row fails.",
+  "group": "authority isolation",
+  "id": "AUTH-iii",
+  "installation": "classical",
+  "isolation": {
+   "attacker_holds": "the DNS credential, not the repository key",
+   "only_failing_rows": [
+    "14.7"
+   ],
+   "selfcheck_fails": [
+    "repo_interval",
+    "repo_signer"
+   ],
+   "twin": "AUTH-iii-T"
+  },
+  "issuer_preship": {
+   "chain_order_h_git_plus_5_lt_h_receipt": true,
+   "git_anchored": true,
+   "receipt_anchored": true,
+   "receipt_c1": true,
+   "receipt_c2": true,
+   "receipt_c3": true,
+   "snapshot_anchored": true,
+   "snapshot_c1": true,
+   "snapshot_c2": true,
+   "snapshot_c3": true,
+   "window": true
+  },
+  "kind": "bundle",
+  "title": "Attacker-keyed receipt; DNS valid; git assertion signed by the attacker's own repository key"
+ },
+ "historical_security": "NOT_EVALUATED",
+ "reason": "GIT_SIGNER_NOT_CONFIGURED",
+ "revocation": "NOT_EVALUATED",
+ "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+ "verdict": "UNVERIFIABLE"
+}

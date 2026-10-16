@@ -1,0 +1,53 @@
+{
+ "T": "2026-11-10T12:20:00Z",
+ "_meta": {
+  "ambiguities": [],
+  "ambiguous_fields": [],
+  "cite": [
+   "P:578-600",
+   "P:1493",
+   "P:555-556",
+   "A9:309-324",
+   "P:253-256",
+   "P:269-272",
+   "P:1442-1447",
+   "A9:143",
+   "A9:153",
+   "prototype/mutation/REPORT.md obs. 3"
+  ],
+  "derivation": "The attacker captured the repository key (the git assertion naming its keys verifies under the configured entry within its interval, chain order holds) but not the DNS credential. Root, com DS, com DNSKEY and the wamason.com DS validate. The wamason.com DNSKEY RRset's only candidate verifies and is time-valid but no child DNSKEY matches the validated DS: row 5's DNSKEY_DS_MISMATCH (P:594-598). Whatever the TXT's own outcome, 13.5 reports in zone order (tie key, P:1493), so the wamason.com DNSKEY reason is first.",
+  "group": "authority isolation",
+  "id": "AUTH-ii-ds",
+  "installation": "classical",
+  "isolation": {
+   "attacker_holds": "the repository key (git channel), not the DNS credential",
+   "only_failing_rows": [
+    "13.5"
+   ],
+   "selfcheck_fails": [
+    "dnssec"
+   ],
+   "twin": "AUTH-ii-ds-T"
+  },
+  "issuer_preship": {
+   "chain_order_h_git_plus_5_lt_h_receipt": true,
+   "git_anchored": true,
+   "receipt_anchored": true,
+   "receipt_c1": true,
+   "receipt_c2": true,
+   "receipt_c3": true,
+   "snapshot_anchored": true,
+   "snapshot_c1": true,
+   "snapshot_c2": true,
+   "snapshot_c3": true,
+   "window": true
+  },
+  "kind": "bundle",
+  "title": "Attacker-keyed receipt; DNS: honest root and com, the honest wamason.com DS, the attacker's own wamason.com DNSKEY set; git assertion valid"
+ },
+ "historical_security": "NOT_EVALUATED",
+ "reason": "DNSKEY_DS_MISMATCH",
+ "revocation": "NOT_EVALUATED",
+ "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+ "verdict": "INVALID"
+}

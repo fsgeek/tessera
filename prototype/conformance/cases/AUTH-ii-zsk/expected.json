@@ -1,0 +1,55 @@
+{
+ "T": "2026-11-10T12:20:00Z",
+ "_meta": {
+  "ambiguities": [],
+  "ambiguous_fields": [],
+  "cite": [
+   "P:594-600",
+   "P:604-605",
+   "P:609-613",
+   "P:1493",
+   "P:555-556",
+   "A9:309-324",
+   "P:253-256",
+   "P:269-272",
+   "P:1442-1447",
+   "A9:143",
+   "A9:153",
+   "prototype/mutation/REPORT.md obs. 3"
+  ],
+  "derivation": "The attacker captured the repository key (the git assertion naming its keys verifies under the configured entry within its interval, chain order holds) but not the DNS credential. The TXT's only witness is a supported (alg 13) RRSIG whose signer name, algorithm and key tag match no DNSKEY in the validated wamason.com set: 'present supported witness with no matching eligible DNSKEY' -> INVALID / DNSSEC_KEY_MISMATCH (fail-closed unmatched selector, P:604-605; supported algorithm, so not the EA-11 rule of P:609-613).",
+  "group": "authority isolation",
+  "id": "AUTH-ii-zsk",
+  "installation": "classical",
+  "isolation": {
+   "attacker_holds": "the repository key (git channel), not the DNS credential",
+   "only_failing_rows": [
+    "13.5"
+   ],
+   "selfcheck_fails": [
+    "dnssec"
+   ],
+   "twin": "AUTH-ii-zsk-T"
+  },
+  "issuer_preship": {
+   "chain_order_h_git_plus_5_lt_h_receipt": true,
+   "git_anchored": true,
+   "receipt_anchored": true,
+   "receipt_c1": true,
+   "receipt_c2": true,
+   "receipt_c3": true,
+   "snapshot_anchored": true,
+   "snapshot_c1": true,
+   "snapshot_c2": true,
+   "snapshot_c3": true,
+   "window": true
+  },
+  "kind": "bundle",
+  "title": "Attacker-keyed receipt; DNS: honest chain to the wamason.com DNSKEY set; TXT signed by an attacker key outside it; git assertion valid"
+ },
+ "historical_security": "NOT_EVALUATED",
+ "reason": "DNSSEC_KEY_MISMATCH",
+ "revocation": "NOT_EVALUATED",
+ "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+ "verdict": "INVALID"
+}

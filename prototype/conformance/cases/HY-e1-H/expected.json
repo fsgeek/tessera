@@ -1,0 +1,38 @@
+{
+ "T": "2026-11-10T12:20:00Z",
+ "_meta": {
+  "ambiguities": [],
+  "ambiguous_fields": [],
+  "cite": [
+   "P:123-124",
+   "P:751-759",
+   "P:1467",
+   "P:269-272",
+   "HC (e)"
+  ],
+  "derivation": "Each slot decodes under its own frame's alg (P:120-121): kms pair id (opaque under classical, rule R under hybrid; a 3309-byte ML-DSA signature under hybrid), gpg classical (rule O); row 3.1 passes. The common byte substrings differ in alg: row 6.2 RECEIPT_COMMON_MISMATCH, INVALID whatever the support state of the ids (P:123-124), outranking 7.1.",
+  "group": "hybrid routing",
+  "id": "HY-e1-H",
+  "installation": "hybrid",
+  "issuer_preship": {
+   "chain_order_h_git_plus_5_lt_h_receipt": true,
+   "git_anchored": true,
+   "receipt_anchored": true,
+   "receipt_c1": true,
+   "receipt_c2": true,
+   "receipt_c3": true,
+   "snapshot_anchored": true,
+   "snapshot_c1": true,
+   "snapshot_c2": true,
+   "snapshot_c3": true,
+   "window": true
+  },
+  "kind": "bundle",
+  "title": "(e1) kms frame pair id, gpg frame classical id, manifest pair id (M9 shape, P8 XHR-08); hybrid installation"
+ },
+ "historical_security": "NOT_EVALUATED",
+ "reason": "RECEIPT_COMMON_MISMATCH",
+ "revocation": "NOT_EVALUATED",
+ "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+ "verdict": "INVALID"
+}

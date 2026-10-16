@@ -1,0 +1,98 @@
+8c8,12
+< > the owner's dispositions in `docs/reviews/amendment-9/DISPOSITION.md`. Layered on the original and Amendments 1–8.
+---
+> > the owner's dispositions in `docs/reviews/amendment-9/DISPOSITION.md`. Revised again 2026-10-13 by the owner (A9.4 verdict stability;
+> > A9.5 root-KSK reliance periods, append-only trust configuration, git object format; A9.6 slot-2 custody and its
+> > policy signer, sequential rotation), from `docs/reviews/a9-custody/`, `docs/reviews/v1-profile/` and
+> > `docs/V1-V2-COMPATIBILITY.md`; the pre-revision text is kept in `docs/reviews/a9-final-delta/`.
+> > Layered on the original and Amendments 1–8.
+149c153
+<   publication and signing periods; the repository key; a signed, versioned set of pinned mainnet header hashes.
+---
+>   publication, signing and reliance periods; the repository key; a signed, versioned set of pinned mainnet header hashes.
+264,265c268,274
+<   because of missing status capture. Given a different trust configuration or policy (newer header pins, a
+<   prohibited algorithm), the result may change. Later adverse evidence feeds a separate, stronger assessment. This
+---
+>   because of missing status capture. **Verdict stability** (OWNER DECISION 2026-10-13, `docs/V1-V2-COMPATIBILITY.md`): a V1
+>   bundle is always evaluated under its signed `common.spec`. Trust configurations are append-only (A9.5), so a
+>   later configuration cannot turn a V1 verdict into `UNVERIFIABLE` by dropping a KSK, a header pin or a repository
+>   key. Algorithm policy applies only as a per-algorithm cutoff compared with T: a receipt whose T precedes an
+>   algorithm's cutoff keeps its V1 verdict. Revocation, standing and historical-security results from later profiles
+>   are reported separately and never replace the V1 verdict. Later adverse evidence feeds that separate, stronger
+>   assessment. This
+284,288c293,307
+<   the stamped id. SHA-1 linkage remains a stated residual.
+< - **Root-KSK rule.** The root DNSKEY set is valid at the snapshot's anchored time **if some trusted KSK whose signing
+<   period contains that time validates it**. A trusted KSK that is published but did not sign is informational,
+<   never a failure. The trust configuration records signing periods separately from publication and revocation
+<   dates. **Rollover control:** a snapshot taken while one trusted KSK is published but not signing must pass
+---
+>   the stamped id. SHA-1 linkage remains a stated residual. The git evidence names its object format, and V1
+>   accepts only `sha1`: the key-assertion repository stays in SHA-1 format at a host that supports it, whatever
+>   git's default becomes (the author, 2026-10-13: Git 3 moves to SHA-256 in 2027; GitHub does not support it).
+> - **Root-KSK rule.** The root DNSKEY set is valid at the snapshot's anchored time **if some trusted KSK whose reliance
+>   period contains that time validates it**. A KSK's reliance period runs from the start of its signing period to the
+>   end of its signing period plus the maximum validity of the root DNSKEY RRSIGs it made, recorded with its source:
+>   evidence it signed while signing stays usable for that long and no longer (OWNER DECISION 2026-10-13, after
+>   `docs/reviews/v1-profile/` F2). The rule is existential and order-independent: a candidate that fails is
+>   informational, and the result is computed once, after every eligible key has been tried (F1). A trusted KSK that
+>   is published but did not sign is informational, never a failure. The trust configuration records signing and
+>   reliance periods separately from publication and revocation dates.
+> - **Trust configuration is append-only** (OWNER DECISION 2026-10-13). KSKs, header pins and repository keys are never
+>   removed, and a closed period never changes. The repository key carries a signing period and is evaluated by the
+>   same existential rule as the KSKs, so it can be replaced without failing old receipts or trusting a retired key
+>   forever. **Rollover control:** a snapshot taken while one trusted KSK is published but not signing must pass
+299,300c318,320
+<   signature per ENCODING-V1 §5.2 rule R; slot `gpg` is **P-256** OpenPGP (rule O), signed via gpg on
+<   author-controlled hardware outside AWS, key generated non-exportable, pulling from a queue with no inbound path.
+---
+>   signature per ENCODING-V1 §5.2 rule R; slot `gpg` is **P-256** OpenPGP (rule O), signed by a
+>   non-exportable, hardware-protected key in a separate technical key-custody domain outside the issuing AWS account
+>   (*slot-2 custody*, below), pulling from a queue with no inbound path.
+319c339
+<   `gpg` slot on author-controlled hardware, key generated non-exportable. The signature-inclusive anchor and the
+---
+>   `gpg` slot under slot-2 custody. The signature-inclusive anchor and the
+320a341,360
+> - **Slot-2 custody (OWNER DECISION 2026-10-13).** The `gpg`-slot key is generated non-exportable in hardware outside
+>   the issuing AWS account: a token on author-controlled hardware, or an HSM-backed key at a provider other than AWS.
+>   The owner chooses between them, and records the choice, dated, in the profile before the 30 Oct freeze. The choice
+>   takes into account measured token throughput and issuance availability, and the author's concern about scalability
+>   (2026-10-13: *"Scalability is a real, legitimate, concern"*). Either choice satisfies the author's key-protection
+>   requirement (A9.0) and leaves C1–C7 unchanged. The key's authority is evidenced by the key-publication record in
+>   both cases.
+>   - *Policy signer.* In either custody option, a queue-pulling policy signer outside the issuing AWS account
+>     validates the complete V1 frame and enforces the declared-time check using its own clock before requesting a
+>     signature. The issuing AWS account can enqueue frames but cannot invoke the slot-2 key directly, change that
+>     policy or clock, or obtain the policy signer's key-use credentials. The slot-2 key is dedicated to V1 tagged
+>     type-0x00 documents (attestation and manifest-possession). The dated custody record names this enforcement
+>     boundary and its access policy. Non-exportability protects against key export, not signing misuse through the
+>     permitted queue path.
+>   - *Deadline.* For the hybrid, the final custody implementation must have completed the deployed-slot
+>     pass-condition evidence by 21 Oct. The owner may defer selection until before 30 Oct only among custody
+>     implementations that each met that deadline; otherwise the registered fallback is taken. A custody selection
+>     changes neither rule O nor any claim, pass condition or exit obligation.
+>   - *Limit.* Separate technical custody does not imply independent availability, independent signing fates,
+>     separate control or independent approval of content; C3 applies to both options.
+329,330c369,371
+<   has signing capability for both slots; the check limits that to minting at the current time. Separation of
+<   control stays a V2 driver (A9.3).
+---
+>   has signing capability for both slots; the check limits that to minting at the current time. For an HSM-backed key,
+>   this refusal is enforced by the policy signer, not by the HSM's generic signing API. Separation of control stays a
+>   V2 driver (A9.3).
+336,337c377,380
+<   amendment. Before the window ends, either a rotation mechanism is registered (multiple records or per-key owner
+<   names) or issuance stops.
+---
+>   amendment. Before the window ends, either a rotation mechanism is registered or issuance stops. The only rotation the
+>   frozen V1 verifier accepts is sequential replacement: the same owner name and path, a new key, non-overlapping
+>   windows. Multiple records fail `DNS_RRSET` and per-key owner names fail `DNS_OWNER`. Sequential replacement is
+>   registered only after vectors for two consecutive windows and a model check.
+371,372c414,415
+< With the hybrid the slots differ in algorithm (lattice and elliptic curve) and custody (cloud HSM and
+< author-controlled hardware); under the fallback a P-256 break defeats both slots.
+---
+> With the hybrid the slots differ in algorithm (lattice and elliptic curve) and custody (AWS KMS and the
+> slot-2 custody); under the fallback a P-256 break defeats both slots.

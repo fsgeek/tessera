@@ -1,0 +1,47 @@
+PASS          SIG.A.signature  
+PASS          BYTES.A.frame_wellformed  []
+PASS          BYTES.A.signer_fp_in_slot  
+PASS          SIG.B.signature  
+PASS          BYTES.B.frame_wellformed  []
+PASS          BYTES.B.signer_fp_in_slot  
+PASS          BYTES.common_equal  
+PASS          BYTES.tuple_matches_keys  
+PASS          BYTES.manifest_hash  
+PASS          AUTH.owner_name_bound  signed issuer_id=wamason.com trust D=wamason.com
+PASS          SIG.A.possession  
+PASS          SIG.B.possession  
+PASS          BYTES.anchor_preimage_rebuilt  
+PASS          PINS.header_hashes_present  pins sha256=f921694e0a7e60ff.. n=9
+PASS          OTS.receipt.digest_matches  
+PASS          OTS.receipt.att@970687  merkle root ok; PoW+linkage ok; 6 headers equal pins; nTime=2026-10-09T22:53:30Z
+PASS          OTS.receipt.att@970690  merkle root ok; PoW+linkage ok; 6 headers equal pins; nTime=2026-10-09T23:20:43Z
+PASS          OTS.snapshot.digest_matches  
+PASS          OTS.snapshot.att@970690  merkle root ok; PoW+linkage ok; 6 headers equal pins; nTime=2026-10-09T23:20:43Z
+PASS          OTS.snapshot.att@970687  merkle root ok; PoW+linkage ok; 6 headers equal pins; nTime=2026-10-09T22:53:30Z
+PASS          TIME.receipt.c1_T>=declared-eps  T-declared=1224s
+PASS          TIME.receipt.c2_T<=declared+delta  
+PASS          TIME.receipt.c3_conf<=declared+delta  confirmed_at-declared=4106s
+PASS          TIME.snapshot.c1_T>=declared-eps  T-declared=1208s
+PASS          TIME.snapshot.c2_T<=declared+delta  
+PASS          TIME.snapshot.c3_conf<=declared+delta  confirmed_at-declared=4090s
+PASS          DNSSEC.root.KSK-2017  in_signing_period=True key_present_and_matches_pinned_digest=True signed_root_DNSKEY=True
+SKIP          DNSSEC.root.KSK-2024  in_signing_period=False key_present_and_matches_pinned_digest=True signed_root_DNSKEY=False
+PASS          DNSSEC.root.dnskey_rrset  validated by KSK-2017 (20326)
+PASS          DNSSEC.com..ds  signed by .
+PASS          DNSSEC.com..dnskey_matches_ds  tags=[19718]
+PASS          DNSSEC.com..dnskey_selfsigned  
+PASS          DNSSEC.wamason.com..ds  signed by com.
+PASS          DNSSEC.wamason.com..dnskey_matches_ds  tags=[2371]
+PASS          DNSSEC.wamason.com..dnskey_selfsigned  
+PASS          DNSSEC.target.SOA  owner=wamason.com. signed by wamason.com.
+PASS          DNSSEC.target.NS  owner=wamason.com. signed by wamason.com.
+PASS          DNSSEC.target.TXT  owner=wamason.com. signed by wamason.com.
+PASS          DNSSEC.keyrecord_absent._tessera.wamason.com. TXT  authenticated NODATA: NSEC type bitmap lacks TXT/CNAME
+PASS          DNSSEC.keyrecord_absent.tessera.wamason.com. TXT  authenticated NODATA: NSEC type bitmap lacks TXT/CNAME
+UNPERFORMABLE DNSKEY_PUBLICATION.key_txt_record_present  NO key-publication TXT record exists in the zone: C4(i) cannot establish K for D
+PASS          DNSSEC.eval_time_inside_every_used_RRSIG_window  eval=2026-10-09T22:53:30Z [snapshot's anchored time T_snap] joint window [2026-10-09T21:07:27Z, 2026-10-10T23:33:22Z] = 26.4 h over 10 RRSIGs
+PASS          DNSSEC.T_snap_inside_joint_window  T_snap=2026-10-09T22:53:30Z
+PASS          NETWORK.socket_attempts_zero  attempts=0
+
+GROUPS {"SIG": "PASS", "BYTES": "PASS", "AUTH": "PASS", "DNSSEC": "PASS", "DNSKEY_PUBLICATION": "UNPERFORMABLE", "OTS.receipt": "PASS", "OTS.snapshot": "PASS", "TIME": "PASS", "NETWORK": "PASS"}
+eval_time 2026-10-09T22:53:30Z - snapshot's anchored time T_snap

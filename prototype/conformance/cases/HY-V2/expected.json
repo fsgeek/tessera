@@ -1,0 +1,42 @@
+{
+ "T": "2026-11-10T12:20:00Z",
+ "_meta": {
+  "ambiguities": [],
+  "ambiguous_fields": [],
+  "cite": [
+   "P:114-119",
+   "P:134-136",
+   "P:148",
+   "P:878-880",
+   "P:884-888",
+   "P:905-907",
+   "HS \u00a71-\u00a73",
+   "A9.6 (A9:351-362)",
+   "A9:361-362"
+  ],
+  "derivation": "As HY-V1 with content padded so both attestation frames exceed the 4096-byte KMS RAW limit (the genuine capture's F-G3 is 6753 bytes); the kms signature is made from mu, as A9.6's pass condition requires above 4 KB, and is an ordinary signature over F.",
+  "group": "hybrid positive",
+  "id": "HY-V2",
+  "installation": "hybrid",
+  "issuer_preship": {
+   "chain_order_h_git_plus_5_lt_h_receipt": true,
+   "git_anchored": true,
+   "receipt_anchored": true,
+   "receipt_c1": true,
+   "receipt_c2": true,
+   "receipt_c3": true,
+   "snapshot_anchored": true,
+   "snapshot_c1": true,
+   "snapshot_c2": true,
+   "snapshot_c3": true,
+   "window": true
+  },
+  "kind": "bundle",
+  "title": "Full hybrid receipt with frames over 4096 bytes (6753 / 6752), signed by external mu"
+ },
+ "historical_security": "NOT_EVALUATED",
+ "reason": "OK",
+ "revocation": "NOT_EVALUATED",
+ "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+ "verdict": "VALID_STRICT"
+}
