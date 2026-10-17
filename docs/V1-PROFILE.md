@@ -897,6 +897,9 @@ issuer == pinned D together with the path (`docs/reviews/v1-profile/` F7).
   hybrid installation, is "cannot evaluate", never "invalid". Rationale: an examiner holding the wrong installation
   must not be told that an honest receipt is forged. EA-24 still holds when the receipt's alg IS the fallback id
   and its kms key is ML-DSA: that is a malformed fallback receipt.
+  **Branch taken: HYBRID (registered 2026-10-16, A9.6).** Pair id `KMS-MLDSA65-PURE-GPG-OPENPGP4-ECDSA-P256-SHA256`;
+  supplement `formal/p8/HYBRID-SUPPLEMENT.md`; record `formal/p8/HYBRID-REGISTRATION-RECORD.md`; ENCODING-V1 §5.2
+  edited per supplement §7. The V1 installation's catalog alg is this id.
   **Codec registry per installation (OWNER DECISION 2026-10-14, differential run 4).** An installation's codec
   registry is the ENCODING-V1 baseline plus only the supplement(s) that installation registered. A fallback
   installation, which has no hybrid supplement, does not know the hybrid pair id: frames bearing it use the opaque

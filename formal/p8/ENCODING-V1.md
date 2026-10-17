@@ -438,7 +438,7 @@ The rule is chosen by `(common.alg, slot)`:
 | `common.alg` | slot `kms` | slot `gpg` | Cap per `S` |
 |---|---|---|---|
 | `OPENPGP4-ECDSA-P256-SHA256` (the classical V1 signers) | rule O | rule O | 1024 bytes |
-| a hybrid pair id, registered only if the 21 Oct spike passes (not assigned here) | rule R, ML-DSA-65 (FIPS 204) | rule O (OpenPGP P-256; slot-2 custody per A9.6; owner decision 2026-10-12 replaced SLH-DSA) | `kms`: exactly 3309; `gpg`: 1024 |
+| `KMS-MLDSA65-PURE-GPG-OPENPGP4-ECDSA-P256-SHA256` (hybrid pair id; registered by the branch-registration supplement of 2026-10-16, A9.6) | rule R: ML-DSA-65 (FIPS 204), pure, empty context | rule O (OpenPGP P-256; slot-2 custody per A9.6) | `kms`: exactly 3309; `gpg`: 1024 |
 | any other well-formed id (§3.2) | opaque | opaque | 1 to 65536 bytes; no inner rule. Stage (c) gives `UNVERIFIABLE` (canary, A-02) |
 
 **Rule O (OpenPGP v4 signature, ECDSA P-256, SHA-256; RFC 9580 §4.2, §5.2.3).**
@@ -481,12 +481,23 @@ Type `0x01` (text) is `SIG_FORMAT` (D-10). The codec does not interpret subpacke
 - `S` is the raw signature byte string that the standard's signing algorithm outputs (the FIPS 204 `sigEncode`
   output; the FIPS 205 signature). It has no header and no wrapper.
 - Its length is **exactly** the parameter set's signature size. Any other nonzero length gives `SIG_FORMAT`.
-- The signed message is the frame itself. The spike used pure signing with an empty context. The algorithm id's
-  registration fixes the mode, the context and the parameter set.
-- This revision fixes no PQ id and no parameter set.
-- *Consequence to record:* `common.alg` is one value, equal across slots (§0). A PQ registration must therefore
-  name the **pair** of slot schemes (ML-DSA-65 for `kms` with OpenPGP P-256 for `gpg`) as a single id.
-- Rule R has no vectors yet. They are added when an id is registered.
+- The signed message is the frame itself (`F_manifest` for a possession proof). No trailer, no transformation.
+- **Registered pair (branch-registration supplement of 2026-10-16, A9.6).** `KMS-MLDSA65-PURE-GPG-OPENPGP4-ECDSA-P256-SHA256`:
+  slot `kms` is ML-DSA-65 (FIPS 204) in pure mode with the empty context, so the FIPS 204 message representative is
+  `0x00 ‖ 0x00 ‖ F`; slot `gpg` is rule O. `S_kms` is exactly 3309 bytes. Length 0 gives `SIG_EMPTY`, above 3309
+  `LENGTH_CAP`, any other length `SIG_FORMAT`. The codec reads no byte of `S_kms`: a malformed hint encoding or an
+  out-of-range `z` is a verification failure (`SIG_INVALID`; `POSSESSION_INVALID` for possession), not a codec code.
+- The issuer obtains `S_kms` (attestation and possession) from KMS with `MessageType EXTERNAL_MU` only, sending
+  μ = SHAKE256(SHAKE256(pk, 64) ‖ 0x00 ‖ 0x00 ‖ F, 64), pk the raw 1952-byte key (RFC 9881 Appendix D). The result is
+  an ordinary pure signature over `F`. The verifier never sees μ and verifies over `F`.
+- The kms key under this id is the exact DER SubjectPublicKeyInfo with OID 2.16.840.1.101.3.4.3.18 and no parameters
+  (22-byte prefix `308207b2300b0609608648016503040312038207a100`, then the 1952-byte key); anything else is
+  `KEY_FORMAT` (RFC 9881 §§2, 4). Its fingerprint is §3.3's `spki-sha256`, unchanged. Key-use assumption (K-R) of
+  the supplement replaces PROOF (K) for this slot; the supplement carries both definitions.
+- *Consequence to record:* `common.alg` is one value, equal across slots (§0), naming the pair in slot order.
+- Vectors: `vectors/hybrid-golden.json` and `vectors/hybrid-reject.json`; agreement run and differential fuzz as in
+  PROOF §5 (supplement §8).
+- **Branch recorded:** hybrid, 2026-10-16 (A9.6).
 
 ### 5.3 Verification uses the committed bytes, and only those
 
