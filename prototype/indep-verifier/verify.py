@@ -14,6 +14,7 @@ from dnssec import interval,parse_snapshot,txt_value,validate_snapshot
 from git_channel import dearmor,object_id,parse_commit,parse_tree,verify_path
 from policy import parse_catalog,parse_trust
 import release_constants as release
+import release_auth
 import sha1dc
 
 SLOTS=('kms','gpg')
@@ -287,10 +288,12 @@ def verify_bundle(bundle,config,catalog,request='strict',diagnostics=False):
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--trust',required=True); parser.add_argument('--bundle',required=True); parser.add_argument('--catalog')
+    parser.add_argument('--test-release'); parser.add_argument('--test-release-key'); parser.add_argument('--production',action='store_true')
     args=parser.parse_args()
     try:
         demand(sys.version_info[:2]==(3,14),'RUNTIME_UNSUPPORTED')
         demand(unicodedata.unidata_version==release.UNICODE_VERSION,'UNICODE_TABLES_UNSUPPORTED')
+        release_auth.authenticate(args.test_release,args.test_release_key,args.production)
         trust=Path(args.trust).read_bytes()
         demand(release.TRUST_SHA256 is not None and shahex(trust)==release.TRUST_SHA256,'TRUST_CONFIG_UNAUTHENTICATED')
         config=parse_trust(trust)

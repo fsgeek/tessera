@@ -6,6 +6,7 @@ the git-framed object bytes and reports its prescribed collision return. Pin rec
 prototype/vendor/SHA1DC-PIN.md.
 """
 import hashlib
+import json
 import subprocess
 from pathlib import Path
 
@@ -13,6 +14,14 @@ UPSTREAM_COMMIT = 'a06f1adbe5522f3c939cd6a3f13d5ec7f4c1a988'
 BINARY = Path(__file__).resolve().parent.parent / 'vendor' / 'sha1collisiondetection' / 'bin' / 'sha1dcsum'
 # Local build pin of BINARY (compiler-dependent); see the pin record.
 BINARY_SHA256 = '3fa8472a23ff8ecc6c91b5193bc6e6e7a7ef1a1bbfbbff769a89bda0634dd5fb'
+# packaging/install.sh builds the pinned source on the installing machine (the hash is compiler-dependent) and
+# records the binary path and its SHA-256 in sha1dc_build.json beside this file. That record replaces the two
+# values above; the source digests and known-answer checks were verified by the installer.
+_RECORD = Path(__file__).resolve().parent / 'sha1dc_build.json'
+if _RECORD.exists():
+    _r = json.loads(_RECORD.read_text())
+    if _r.get('upstream_commit') == UPSTREAM_COMMIT:
+        BINARY, BINARY_SHA256 = Path(_r['binary']), _r['binary_sha256']
 
 
 class Unavailable(Exception):

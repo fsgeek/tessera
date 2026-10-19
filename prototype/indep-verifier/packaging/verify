@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+# Run the installed verifier: pinned Python 3.14 environment, arguments passed through unchanged.
+IND="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+exec "$IND/.venv/bin/python" "$IND/verify.py" "$@"

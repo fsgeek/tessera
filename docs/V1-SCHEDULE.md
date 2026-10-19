@@ -25,7 +25,7 @@ may land. Finishing early is the expected case, not a bonus.
 | 16 Oct | V1 definition and claim adopted. Band 0 re-scoped by amendment to the formal foundation for V1's claims, with design-level guarantees registered as future obligations. |
 | 30 Oct | V1 profile frozen. P8 encoding settled (prose proof plus golden vectors). Spec fixes landed: malleability, issuer-name binding, anchor-time rule, revocation "not evaluated by the verifier", verifier-fixed required set. The DNS channel works for the issuer's domain. |
 | 20 Nov | V1 issuing on AWS through an API (KMS + GPG). Model-derived conformance vectors run against it. |
-| 4 Dec | Relying-party test (non-expert integrator, documentation only) and 2106-examiner test (Tessera off) pass. **Ship or stop: the author's decision.** |
+| 4 Dec | Relying-party test (non-expert integrator, documentation only) and dead-service test (Tessera off; A9:216. Renamed 2026-10-19 by the owner: V1 tests exit survival, not an 80-year horizon; `docs/decisions/2026-10-19-horizon-cost.md`) pass. **Ship or stop: the author's decision.** |
 
 **Slip rule.** If a milestone slips by more than a week, it is not extended quietly. The owner runs the tail
 procedure on what is blocking it and brings the author one choice: cut scope or stop.

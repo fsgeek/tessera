@@ -4,10 +4,32 @@ This is differential-testing code under A9.2, not a service verifier and not
 C-row discharge evidence. Read [REPORT.md](REPORT.md) and
 [AMBIGUITIES.md](AMBIGUITIES.md) before interpreting its results.
 
-**This build cannot return VALID_STRICT for a complete bundle:** the required
-pinned SHA-1DC detector is not supplied by the allowed normative inputs. Row
-14.4 is explicitly unperformable. The distributed release is also deliberately
-unprovisioned: no real trust configuration or frozen catalog was provided.
+**VALID_STRICT is returnable when the pinned SHA-1DC detector is built.** The first build had no detector and
+could not (row 14.4). The owner pinned one on 2026-10-14 (`../vendor/SHA1DC-PIN.md`) and `sha1dc.py` runs it; with
+it built, a complete honest bundle returns `VALID_STRICT / OK` (checked 2026-10-19: all 100 tests pass with it, the
+synthetic fixture and the TEST-release CLI test both return VALID_STRICT). Without the binary, row 14.4 gives
+`UNVERIFIABLE / INDEPENDENT_SHA1DC_UNAVAILABLE`. The distributed release is still deliberately unprovisioned: no
+real trust configuration or frozen catalog exists, and the release-signature format is OPEN (profile 14.2 item 2).
+
+## One-command install (TEST release tooling)
+
+```sh
+packaging/install.sh
+packaging/verify --test-release R.json --test-release-key K.json --trust TRUST.json --bundle BUNDLE.json
+```
+
+`install.sh` creates `.venv` (Python 3.14, Unicode 16.0.0, pinned `requirements.txt`), checks the six pinned
+SHA-1DC source digests, builds the detector in `packaging/build/`, runs known-answer checks (plain SHA-1 passes,
+the SHAttered PDF is detected), records the local binary hash in `sha1dc_build.json`, and runs the test suite.
+
+## Release authentication (profile 3.5; A10.4.2)
+
+`release_auth.py` verifies a `tessera-v1-test-release/1` record (raw ECDSA P-256 over SHA-256 of the JCS body)
+under a TEST key given by `--test-release/--test-release-key` or `TESSERA_V1_TEST_RELEASE`/`..._KEY`. Only an
+authentic release provisions the trust hash and catalog (in memory). A bad signature, foreign signer, wrong key,
+tampered body or catalog mismatch is a startup refusal with no verdict. `--production` refuses any TEST override
+or TEST-format release (`TEST_AUTHORITY_REFUSED`); no production release format exists yet, so production mode
+accepts only a `build_release.py` binding. A TEST signature never authenticates a production release.
 
 ## Local environment and tests
 
@@ -73,7 +95,7 @@ python build_release.py --trust examples/trust.json --catalog examples/catalog.j
 python verify.py --trust examples/trust.json --bundle examples/bundle.json
 ```
 
-Expected reason: `INDEPENDENT_SHA1DC_UNAVAILABLE`, with the fixture's receipt T.
+Expected: with the detector built, the fixture's receipt T with a verdict reflecting the fabricated evidence; without it, `INDEPENDENT_SHA1DC_UNAVAILABLE`.
 Unit tests temporarily provision generated release bindings and restore the
 original constants in `finally`; they do not bind your instrument to their
 random test keys. Test signatures and keys are generated locally, without any
