@@ -57,6 +57,10 @@ Each of these is a deliberate limit, not a missing feature.
 - **Anything after a Bitcoin reorganization of 6 or more blocks.**
 - **Renewal, degraded modes, or wrappers.** These are refused (`UNVERIFIABLE`), including honest ones (cases d2, h:
   the two registered false rejects).
+- **One receipt per presentation.** A receipt id (SHA-256 of `A_sig`) names a receipt, not a presentation. Signing
+  is randomized, so the same honest frames can carry more than one valid signature set and therefore more than one
+  valid receipt, each with its own T. Each still meets G1–G11. (Owner, 2026-10-19, from finding E-02 of the first
+  real run.)
 - **Stability of T and U across different proofs.** A different proof or pin set can select a different block.
 - **Protection for a checker who skips authenticating the verifier release** or runs a substituted one.
 
