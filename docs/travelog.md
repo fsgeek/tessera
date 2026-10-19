@@ -225,8 +225,8 @@ I haven't done a good job of keeping this up to date.  Last week we exhausted th
 
 Today has been going over everything, reviewing, revising, pressure testing.  The work is slow going because decisions are presented with historical context - useful, but making parsing it more complex.  One task that arose as a result of this is to build a "clean" design spec that can point at other artifacts but should be a complete, stand-alone document describing the design, with the why and graphic detail about how we got there kept separately.
 
-I haven't done a great job of maintaining this, have I.  Last week we bumped into the token cap for the subscription, largely due to injudicious use of Fable model for everything in heavy workflows.   Since then we have switched to a more balanced approach and I 
-think that it is working better. 
+I haven't done a great job of maintaining this, have I.  Last week we bumped into the token cap for the subscription, largely due to injudicious use of Fable model for everything in heavy workflows.   Since then we have switched to a more balanced approach and I
+think that it is working better.
 
 ## September 13, 2026
 
@@ -235,3 +235,21 @@ It seems the travelog was trounced on by something, adding in random text and tr
 At any rate, Claude tells me that I have yet another decision, framed as a binary (LEAN4 or prose + vectors) and I'll have to go push back on it.  The propensity of LLMs to frame things as binary choices is common and I suspect an artifact of the training, but at the same time it helps me stay vigilant - like working with a predictable colleague, whose weaknesses are well-known.
 
 
+## October 19, 2026
+
+This morning Claude asked me about why I hadn't been maintaining the travelog.  I had to admit that it had fallen off my list of things to do, which is longer than I'd like.  That's a lame excuse.
+
+My sense, reported to Claude in that initial conversation, is that there hasn't been much to say because while the project itself has changed, the changes feel like no real progress.  Upon reflection, however, I think that is unfair.
+
+Probably the most significant progress was when I convinced Claude that it would be OK to write a throw-away prototype to see if we are missing anything.  It agreed to that so the repository (at least locally) contains a prototype that pointed out missing information, implicit assumptions, and raised questions about practical matters.
+
+Here is what I learned from this: using formal methods in a vacuum sounded rigorous initially but I think might not be the right way to do so for future projects (or even perhaps moving forward on this project.) Here's what I would suggest instead:
+
+1. Define the service contract - what are you delivering, and what can a client of the service expect in terms of guarantees
+2. Define the threat/failure model - what failures are tolerated, what threat actors are considered and (perhaps most important) what guarantees are _not_ provided.
+3. Use the threat/failure model to build at least two families of tests: (i) the formal methods tests that guarantee the service contract given the threat/failure model; and (ii) the implementation tests that guarantee the service contract given the threat/failure model.  The key here is that those tests should be designed so the pairing is visible because when they deviate you want to be able to review them and see if the failure is the contract, the model, or the implementation.
+4. Iterate between these. I would suggest contract changes need the most scrutiny.  Deviations between formal model and implementation need to be analyzed and repaired so they are consistent with one another.
+
+Why?  Because a formal model is invalid if what it models is not what is being built. An implementation without a formal model is a projection of the requirements into code and we know does not work for complex projects.  This type of pairing can also be used in decomposed cases.  In some ways this is an attempt to ensure the resulting implementation is a member of the explainable Rashomon set of possible instantiations of that contract.  I doubt it is perfect, but I think it will be better than what we've been using.
+
+Fair credit for some of this: the recent work in the authority and eidolon projects have led to these findings, where the hard part - the service guarantees in failure cases - seems to be the part that is under-delivered.  This suggests complexity (and associated costs) without actual benefit.

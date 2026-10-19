@@ -10,13 +10,18 @@ must be defended cold. The secondary objective is commercial viability
 as attestation-as-a-service; that upside is measured separately and is
 not allowed to expand the demonstration’s scope.
 
-**Credibility line (non-negotiable):** AI here contributes mechanics,
-pushback, and rigor — drafting, modeling, adversarial review, even
-recommendations. What it never contributes is ownership: every
-load-bearing decision is read cold by the author, ratified or
-overridden, and defensible by the author without the AI in the room.
-Anything less proves the deskilling failure mode this project exists
-to refuse.
+**Credibility line** (as registered, `docs/phase-0-prereg.md` §1):
+every architecture decision here is the human author (Tony) in
+collaboration with AI agents. The purpose of the AI agents is to
+accelerate the typing, push back on my decisions, clarify them, but not
+to _make_ those decisions without consultation.
+
+Since 17 September 2026 an AI instance owns the project day to day, by
+the author's delegation; decisions it makes are labelled OWNER DECISION
+in the record, and the author's are labelled as his. An earlier wording
+of this paragraph, which was not the registered text, was read as
+requiring the author to reconstruct every decision unaided. The author
+never intended that requirement, and it is not one.
 
 Tony Mason  
 Initiated 10 June 2026  
