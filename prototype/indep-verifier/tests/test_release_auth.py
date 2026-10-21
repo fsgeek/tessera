@@ -115,8 +115,8 @@ class ReleaseAuthTests(unittest.TestCase):
     def test_cli_test_release_gives_verdict_and_refusals_give_none(self):
         ok = self.cli('--test-release', self.p('release.json'), '--test-release-key', self.p('key.json'))
         self.assertEqual(ok.returncode, 0, ok.stderr)
-        self.assertEqual(json.loads(ok.stdout)['T'], '2026-10-14T12:00:00Z')
-        self.assertEqual(json.loads(ok.stdout)['verdict'], 'VALID_STRICT')
+        self.assertEqual(json.loads(ok.stdout)['stable']['T'], '2026-10-14T12:00:00Z')
+        self.assertEqual(json.loads(ok.stdout)['stable']['verdict'], 'VALID_STRICT')
         for rel, key in [('foreign.json', 'key.json'), ('release.json', 'otherkey.json')]:
             bad = self.cli('--test-release', self.p(rel), '--test-release-key', self.p(key))
             self.assertEqual((bad.returncode, bad.stdout, bad.stderr.strip()), (2, '', 'TRUST_CONFIG_UNAUTHENTICATED'))

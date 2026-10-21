@@ -347,6 +347,7 @@ class HybridProfileTests(unittest.TestCase):
                             with self.subTest(alg=alg,length=length,suffix=suffix):
                                 run=subprocess.run(command+suffix,capture_output=True)
                                 self.assertEqual(run.returncode,0,run.stderr.decode())
-                                result=codec.parse_json(run.stdout.strip(),canonical=True)
+                                whole=codec.parse_json(run.stdout.strip(),canonical=True)
+                                self.assertEqual(set(whole),{'stable','utc_assessment'}); result=whole['stable']
                                 self.assertEqual((result['verdict'],result['reason']),expected); self.assertEqual(len(result),6)
         finally: constants.write_bytes(original)

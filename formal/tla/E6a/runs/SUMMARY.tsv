@@ -1,0 +1,496 @@
+run	module	instance	invariants	result	red_on	states
+main	E6a_AlgVerdict	V1	ALL	GREEN	-	7938 distinct states
+sanity	E6a_AlgVerdict	V1	NeverInStrict	RED	NeverInStrict	n/a
+sanity	E6a_AlgVerdict	V1	NeverInDegraded	GREEN	-	7938 distinct states
+sanity	E6a_AlgVerdict	V1	NeverInInvalid	RED	NeverInInvalid	n/a
+sanity	E6a_AlgVerdict	V1	NeverOutOfProfile	RED	NeverOutOfProfile	n/a
+sanity	E6a_AlgVerdict	V1	NeverAlgUnknown	RED	NeverAlgUnknown	n/a
+sanity	E6a_AlgVerdict	V1	NeverUnknownOpaqueBadSig	RED	NeverUnknownOpaqueBadSig	n/a
+sanity	E6a_AlgVerdict	V1	NeverMixedFailedUnknown	RED	NeverMixedFailedUnknown	n/a
+sanity	E6a_AlgVerdict	V1	NeverUnknownEmptySig	RED	NeverUnknownEmptySig	n/a
+sanity	E6a_AlgVerdict	V1	NeverMissingSignature	RED	NeverMissingSignature	n/a
+sanity	E6a_AlgVerdict	V1	NeverMemberMissing	RED	NeverMemberMissing	n/a
+sanity	E6a_AlgVerdict	V1	NeverMissingEvPlusUnknown	RED	NeverMissingEvPlusUnknown	n/a
+sanity	E6a_AlgVerdict	V1	NeverDefectPlusMissingEv	RED	NeverDefectPlusMissingEv	n/a
+sanity	E6a_AlgVerdict	V1	NeverWaivedAbsentDegraded	GREEN	-	7938 distinct states
+broken-all	E6a_Broken_FailOpen	V1	ALL	RED	UnknownAlgGivesUnverifiable	n/a
+matrix	E6a_Broken_FailOpen	V1	TypeOK	GREEN	-	7938 distinct states
+matrix	E6a_Broken_FailOpen	V1	DispatchTerminal	GREEN	-	7938 distinct states
+matrix	E6a_Broken_FailOpen	V1	OutOfProfileOnlyAtDispatch	GREEN	-	7938 distinct states
+matrix	E6a_Broken_FailOpen	V1	UnknownAlgGivesUnverifiable	RED	UnknownAlgGivesUnverifiable	n/a
+matrix	E6a_Broken_FailOpen	V1	UnknownAlgNeverValid	RED	UnknownAlgNeverValid	n/a
+matrix	E6a_Broken_FailOpen	V1	InvalidAlgFormsGiveInvalid	GREEN	-	7938 distinct states
+matrix	E6a_Broken_FailOpen	V1	KnownAlgBadSigInvalid	GREEN	-	7938 distinct states
+matrix	E6a_Broken_FailOpen	V1	AlgUnknownReasonExact	RED	AlgUnknownReasonExact	n/a
+matrix	E6a_Broken_FailOpen	V1	MixedFailedUnknownInvalid	GREEN	-	7938 distinct states
+matrix	E6a_Broken_FailOpen	V1	MixedFailedMissingEvidenceInvalid	GREEN	-	7938 distinct states
+matrix	E6a_Broken_FailOpen	V1	MissingSignatureInvalid	GREEN	-	7938 distinct states
+matrix	E6a_Broken_FailOpen	V1	MissingEvidenceUnverifiable	GREEN	-	7938 distinct states
+matrix	E6a_Broken_FailOpen	V1	MissingEvidenceNeverValid	GREEN	-	7938 distinct states
+matrix	E6a_Broken_FailOpen	V1	InvalidNeedsDefect	GREEN	-	7938 distinct states
+matrix	E6a_Broken_FailOpen	V1	ReasonMatchesVerdict	GREEN	-	7938 distinct states
+matrix	E6a_Broken_FailOpen	V1	ExactInvalidIn	GREEN	-	7938 distinct states
+matrix	E6a_Broken_FailOpen	V1	ExactUnverifiableIn	RED	ExactUnverifiableIn	n/a
+matrix	E6a_Broken_FailOpen	V1	ExactStrictIn	RED	ExactStrictIn	n/a
+matrix	E6a_Broken_FailOpen	V1	ExactDegradedIn	GREEN	-	7938 distinct states
+matrix	E6a_Broken_FailOpen	V1	NoDegradedWithoutWaivable	GREEN	-	7938 distinct states
+matrix	E6a_Broken_FailOpen	V1	AgreesWithP4	GREEN	-	7938 distinct states
+matrix	E6a_Broken_FailOpen	V1	P4_Partition	GREEN	-	7938 distinct states
+matrix	E6a_Broken_FailOpen	V1	P4_Monotonicity	GREEN	-	7938 distinct states
+matrix	E6a_Broken_FailOpen	V1	P4_NoSilentPromotion	GREEN	-	7938 distinct states
+matrix	E6a_Broken_FailOpen	V1	P4_ValidNeedsNonWaivablePass	GREEN	-	7938 distinct states
+matrix	E6a_Broken_FailOpen	V1	P4_StrictMeansEverything	GREEN	-	7938 distinct states
+matrix	E6a_Broken_FailOpen	V1	P4_DegradedNeedsExplicitWaiver	GREEN	-	7938 distinct states
+matrix	E6a_Broken_FailOpen	V1	P4_UnverifiableIsHonest	GREEN	-	7938 distinct states
+matrix	E6a_Broken_FailOpen	V1	P4_ExactInvalid	GREEN	-	7938 distinct states
+matrix	E6a_Broken_FailOpen	V1	P4_ExactUnverifiable	GREEN	-	7938 distinct states
+matrix	E6a_Broken_FailOpen	V1	P4_ExactStrict	GREEN	-	7938 distinct states
+matrix	E6a_Broken_FailOpen	V1	P4_ExactDegraded	GREEN	-	7938 distinct states
+broken-all	E6a_Broken_MalformedAsUnknown	V1	ALL	RED	InvalidAlgFormsGiveInvalid	n/a
+matrix	E6a_Broken_MalformedAsUnknown	V1	TypeOK	GREEN	-	7938 distinct states
+matrix	E6a_Broken_MalformedAsUnknown	V1	DispatchTerminal	GREEN	-	7938 distinct states
+matrix	E6a_Broken_MalformedAsUnknown	V1	OutOfProfileOnlyAtDispatch	GREEN	-	7938 distinct states
+matrix	E6a_Broken_MalformedAsUnknown	V1	UnknownAlgGivesUnverifiable	GREEN	-	7938 distinct states
+matrix	E6a_Broken_MalformedAsUnknown	V1	UnknownAlgNeverValid	GREEN	-	7938 distinct states
+matrix	E6a_Broken_MalformedAsUnknown	V1	InvalidAlgFormsGiveInvalid	RED	InvalidAlgFormsGiveInvalid	n/a
+matrix	E6a_Broken_MalformedAsUnknown	V1	KnownAlgBadSigInvalid	GREEN	-	7938 distinct states
+matrix	E6a_Broken_MalformedAsUnknown	V1	AlgUnknownReasonExact	RED	AlgUnknownReasonExact	n/a
+matrix	E6a_Broken_MalformedAsUnknown	V1	MixedFailedUnknownInvalid	RED	MixedFailedUnknownInvalid	n/a
+matrix	E6a_Broken_MalformedAsUnknown	V1	MixedFailedMissingEvidenceInvalid	RED	MixedFailedMissingEvidenceInvalid	n/a
+matrix	E6a_Broken_MalformedAsUnknown	V1	MissingSignatureInvalid	GREEN	-	7938 distinct states
+matrix	E6a_Broken_MalformedAsUnknown	V1	MissingEvidenceUnverifiable	GREEN	-	7938 distinct states
+matrix	E6a_Broken_MalformedAsUnknown	V1	MissingEvidenceNeverValid	GREEN	-	7938 distinct states
+matrix	E6a_Broken_MalformedAsUnknown	V1	InvalidNeedsDefect	GREEN	-	7938 distinct states
+matrix	E6a_Broken_MalformedAsUnknown	V1	ReasonMatchesVerdict	GREEN	-	7938 distinct states
+matrix	E6a_Broken_MalformedAsUnknown	V1	ExactInvalidIn	RED	ExactInvalidIn	n/a
+matrix	E6a_Broken_MalformedAsUnknown	V1	ExactUnverifiableIn	RED	ExactUnverifiableIn	n/a
+matrix	E6a_Broken_MalformedAsUnknown	V1	ExactStrictIn	GREEN	-	7938 distinct states
+matrix	E6a_Broken_MalformedAsUnknown	V1	ExactDegradedIn	GREEN	-	7938 distinct states
+matrix	E6a_Broken_MalformedAsUnknown	V1	NoDegradedWithoutWaivable	GREEN	-	7938 distinct states
+matrix	E6a_Broken_MalformedAsUnknown	V1	AgreesWithP4	GREEN	-	7938 distinct states
+matrix	E6a_Broken_MalformedAsUnknown	V1	P4_Partition	GREEN	-	7938 distinct states
+matrix	E6a_Broken_MalformedAsUnknown	V1	P4_Monotonicity	GREEN	-	7938 distinct states
+matrix	E6a_Broken_MalformedAsUnknown	V1	P4_NoSilentPromotion	GREEN	-	7938 distinct states
+matrix	E6a_Broken_MalformedAsUnknown	V1	P4_ValidNeedsNonWaivablePass	GREEN	-	7938 distinct states
+matrix	E6a_Broken_MalformedAsUnknown	V1	P4_StrictMeansEverything	GREEN	-	7938 distinct states
+matrix	E6a_Broken_MalformedAsUnknown	V1	P4_DegradedNeedsExplicitWaiver	GREEN	-	7938 distinct states
+matrix	E6a_Broken_MalformedAsUnknown	V1	P4_UnverifiableIsHonest	GREEN	-	7938 distinct states
+matrix	E6a_Broken_MalformedAsUnknown	V1	P4_ExactInvalid	GREEN	-	7938 distinct states
+matrix	E6a_Broken_MalformedAsUnknown	V1	P4_ExactUnverifiable	GREEN	-	7938 distinct states
+matrix	E6a_Broken_MalformedAsUnknown	V1	P4_ExactStrict	GREEN	-	7938 distinct states
+matrix	E6a_Broken_MalformedAsUnknown	V1	P4_ExactDegraded	GREEN	-	7938 distinct states
+broken-all	E6a_Broken_MissingSigAsEvidence	V1	ALL	RED	MixedFailedMissingEvidenceInvalid	n/a
+matrix	E6a_Broken_MissingSigAsEvidence	V1	TypeOK	GREEN	-	7938 distinct states
+matrix	E6a_Broken_MissingSigAsEvidence	V1	DispatchTerminal	GREEN	-	7938 distinct states
+matrix	E6a_Broken_MissingSigAsEvidence	V1	OutOfProfileOnlyAtDispatch	GREEN	-	7938 distinct states
+matrix	E6a_Broken_MissingSigAsEvidence	V1	UnknownAlgGivesUnverifiable	GREEN	-	7938 distinct states
+matrix	E6a_Broken_MissingSigAsEvidence	V1	UnknownAlgNeverValid	GREEN	-	7938 distinct states
+matrix	E6a_Broken_MissingSigAsEvidence	V1	InvalidAlgFormsGiveInvalid	GREEN	-	7938 distinct states
+matrix	E6a_Broken_MissingSigAsEvidence	V1	KnownAlgBadSigInvalid	GREEN	-	7938 distinct states
+matrix	E6a_Broken_MissingSigAsEvidence	V1	AlgUnknownReasonExact	RED	AlgUnknownReasonExact	n/a
+matrix	E6a_Broken_MissingSigAsEvidence	V1	MixedFailedUnknownInvalid	RED	MixedFailedUnknownInvalid	n/a
+matrix	E6a_Broken_MissingSigAsEvidence	V1	MixedFailedMissingEvidenceInvalid	RED	MixedFailedMissingEvidenceInvalid	n/a
+matrix	E6a_Broken_MissingSigAsEvidence	V1	MissingSignatureInvalid	RED	MissingSignatureInvalid	n/a
+matrix	E6a_Broken_MissingSigAsEvidence	V1	MissingEvidenceUnverifiable	GREEN	-	7938 distinct states
+matrix	E6a_Broken_MissingSigAsEvidence	V1	MissingEvidenceNeverValid	GREEN	-	7938 distinct states
+matrix	E6a_Broken_MissingSigAsEvidence	V1	InvalidNeedsDefect	GREEN	-	7938 distinct states
+matrix	E6a_Broken_MissingSigAsEvidence	V1	ReasonMatchesVerdict	GREEN	-	7938 distinct states
+matrix	E6a_Broken_MissingSigAsEvidence	V1	ExactInvalidIn	RED	ExactInvalidIn	n/a
+matrix	E6a_Broken_MissingSigAsEvidence	V1	ExactUnverifiableIn	RED	ExactUnverifiableIn	n/a
+matrix	E6a_Broken_MissingSigAsEvidence	V1	ExactStrictIn	GREEN	-	7938 distinct states
+matrix	E6a_Broken_MissingSigAsEvidence	V1	ExactDegradedIn	GREEN	-	7938 distinct states
+matrix	E6a_Broken_MissingSigAsEvidence	V1	NoDegradedWithoutWaivable	GREEN	-	7938 distinct states
+matrix	E6a_Broken_MissingSigAsEvidence	V1	AgreesWithP4	GREEN	-	7938 distinct states
+matrix	E6a_Broken_MissingSigAsEvidence	V1	P4_Partition	GREEN	-	7938 distinct states
+matrix	E6a_Broken_MissingSigAsEvidence	V1	P4_Monotonicity	GREEN	-	7938 distinct states
+matrix	E6a_Broken_MissingSigAsEvidence	V1	P4_NoSilentPromotion	GREEN	-	7938 distinct states
+matrix	E6a_Broken_MissingSigAsEvidence	V1	P4_ValidNeedsNonWaivablePass	GREEN	-	7938 distinct states
+matrix	E6a_Broken_MissingSigAsEvidence	V1	P4_StrictMeansEverything	GREEN	-	7938 distinct states
+matrix	E6a_Broken_MissingSigAsEvidence	V1	P4_DegradedNeedsExplicitWaiver	GREEN	-	7938 distinct states
+matrix	E6a_Broken_MissingSigAsEvidence	V1	P4_UnverifiableIsHonest	GREEN	-	7938 distinct states
+matrix	E6a_Broken_MissingSigAsEvidence	V1	P4_ExactInvalid	GREEN	-	7938 distinct states
+matrix	E6a_Broken_MissingSigAsEvidence	V1	P4_ExactUnverifiable	GREEN	-	7938 distinct states
+matrix	E6a_Broken_MissingSigAsEvidence	V1	P4_ExactStrict	GREEN	-	7938 distinct states
+matrix	E6a_Broken_MissingSigAsEvidence	V1	P4_ExactDegraded	GREEN	-	7938 distinct states
+broken-all	E6a_Broken_MissingEvidenceAsFail	V1	ALL	RED	MissingEvidenceUnverifiable	n/a
+matrix	E6a_Broken_MissingEvidenceAsFail	V1	TypeOK	GREEN	-	7938 distinct states
+matrix	E6a_Broken_MissingEvidenceAsFail	V1	DispatchTerminal	GREEN	-	7938 distinct states
+matrix	E6a_Broken_MissingEvidenceAsFail	V1	OutOfProfileOnlyAtDispatch	GREEN	-	7938 distinct states
+matrix	E6a_Broken_MissingEvidenceAsFail	V1	UnknownAlgGivesUnverifiable	RED	UnknownAlgGivesUnverifiable	n/a
+matrix	E6a_Broken_MissingEvidenceAsFail	V1	UnknownAlgNeverValid	GREEN	-	7938 distinct states
+matrix	E6a_Broken_MissingEvidenceAsFail	V1	InvalidAlgFormsGiveInvalid	GREEN	-	7938 distinct states
+matrix	E6a_Broken_MissingEvidenceAsFail	V1	KnownAlgBadSigInvalid	GREEN	-	7938 distinct states
+matrix	E6a_Broken_MissingEvidenceAsFail	V1	AlgUnknownReasonExact	GREEN	-	7938 distinct states
+matrix	E6a_Broken_MissingEvidenceAsFail	V1	MixedFailedUnknownInvalid	GREEN	-	7938 distinct states
+matrix	E6a_Broken_MissingEvidenceAsFail	V1	MixedFailedMissingEvidenceInvalid	GREEN	-	7938 distinct states
+matrix	E6a_Broken_MissingEvidenceAsFail	V1	MissingSignatureInvalid	GREEN	-	7938 distinct states
+matrix	E6a_Broken_MissingEvidenceAsFail	V1	MissingEvidenceUnverifiable	RED	MissingEvidenceUnverifiable	n/a
+matrix	E6a_Broken_MissingEvidenceAsFail	V1	MissingEvidenceNeverValid	GREEN	-	7938 distinct states
+matrix	E6a_Broken_MissingEvidenceAsFail	V1	InvalidNeedsDefect	RED	InvalidNeedsDefect	n/a
+matrix	E6a_Broken_MissingEvidenceAsFail	V1	ReasonMatchesVerdict	GREEN	-	7938 distinct states
+matrix	E6a_Broken_MissingEvidenceAsFail	V1	ExactInvalidIn	RED	ExactInvalidIn	n/a
+matrix	E6a_Broken_MissingEvidenceAsFail	V1	ExactUnverifiableIn	RED	ExactUnverifiableIn	n/a
+matrix	E6a_Broken_MissingEvidenceAsFail	V1	ExactStrictIn	GREEN	-	7938 distinct states
+matrix	E6a_Broken_MissingEvidenceAsFail	V1	ExactDegradedIn	GREEN	-	7938 distinct states
+matrix	E6a_Broken_MissingEvidenceAsFail	V1	NoDegradedWithoutWaivable	GREEN	-	7938 distinct states
+matrix	E6a_Broken_MissingEvidenceAsFail	V1	AgreesWithP4	GREEN	-	7938 distinct states
+matrix	E6a_Broken_MissingEvidenceAsFail	V1	P4_Partition	GREEN	-	7938 distinct states
+matrix	E6a_Broken_MissingEvidenceAsFail	V1	P4_Monotonicity	GREEN	-	7938 distinct states
+matrix	E6a_Broken_MissingEvidenceAsFail	V1	P4_NoSilentPromotion	GREEN	-	7938 distinct states
+matrix	E6a_Broken_MissingEvidenceAsFail	V1	P4_ValidNeedsNonWaivablePass	GREEN	-	7938 distinct states
+matrix	E6a_Broken_MissingEvidenceAsFail	V1	P4_StrictMeansEverything	GREEN	-	7938 distinct states
+matrix	E6a_Broken_MissingEvidenceAsFail	V1	P4_DegradedNeedsExplicitWaiver	GREEN	-	7938 distinct states
+matrix	E6a_Broken_MissingEvidenceAsFail	V1	P4_UnverifiableIsHonest	GREEN	-	7938 distinct states
+matrix	E6a_Broken_MissingEvidenceAsFail	V1	P4_ExactInvalid	GREEN	-	7938 distinct states
+matrix	E6a_Broken_MissingEvidenceAsFail	V1	P4_ExactUnverifiable	GREEN	-	7938 distinct states
+matrix	E6a_Broken_MissingEvidenceAsFail	V1	P4_ExactStrict	GREEN	-	7938 distinct states
+matrix	E6a_Broken_MissingEvidenceAsFail	V1	P4_ExactDegraded	GREEN	-	7938 distinct states
+broken-all	E6a_Broken_UnknownDominates	V1	ALL	RED	AlgUnknownReasonExact	n/a
+matrix	E6a_Broken_UnknownDominates	V1	TypeOK	GREEN	-	7938 distinct states
+matrix	E6a_Broken_UnknownDominates	V1	DispatchTerminal	GREEN	-	7938 distinct states
+matrix	E6a_Broken_UnknownDominates	V1	OutOfProfileOnlyAtDispatch	GREEN	-	7938 distinct states
+matrix	E6a_Broken_UnknownDominates	V1	UnknownAlgGivesUnverifiable	GREEN	-	7938 distinct states
+matrix	E6a_Broken_UnknownDominates	V1	UnknownAlgNeverValid	GREEN	-	7938 distinct states
+matrix	E6a_Broken_UnknownDominates	V1	InvalidAlgFormsGiveInvalid	RED	InvalidAlgFormsGiveInvalid	n/a
+matrix	E6a_Broken_UnknownDominates	V1	KnownAlgBadSigInvalid	RED	KnownAlgBadSigInvalid	n/a
+matrix	E6a_Broken_UnknownDominates	V1	AlgUnknownReasonExact	RED	AlgUnknownReasonExact	n/a
+matrix	E6a_Broken_UnknownDominates	V1	MixedFailedUnknownInvalid	RED	MixedFailedUnknownInvalid	n/a
+matrix	E6a_Broken_UnknownDominates	V1	MixedFailedMissingEvidenceInvalid	RED	MixedFailedMissingEvidenceInvalid	n/a
+matrix	E6a_Broken_UnknownDominates	V1	MissingSignatureInvalid	RED	MissingSignatureInvalid	n/a
+matrix	E6a_Broken_UnknownDominates	V1	MissingEvidenceUnverifiable	RED	MissingEvidenceUnverifiable	n/a
+matrix	E6a_Broken_UnknownDominates	V1	MissingEvidenceNeverValid	GREEN	-	7938 distinct states
+matrix	E6a_Broken_UnknownDominates	V1	InvalidNeedsDefect	GREEN	-	7938 distinct states
+matrix	E6a_Broken_UnknownDominates	V1	ReasonMatchesVerdict	GREEN	-	7938 distinct states
+matrix	E6a_Broken_UnknownDominates	V1	ExactInvalidIn	RED	ExactInvalidIn	n/a
+matrix	E6a_Broken_UnknownDominates	V1	ExactUnverifiableIn	RED	ExactUnverifiableIn	n/a
+matrix	E6a_Broken_UnknownDominates	V1	ExactStrictIn	GREEN	-	7938 distinct states
+matrix	E6a_Broken_UnknownDominates	V1	ExactDegradedIn	GREEN	-	7938 distinct states
+matrix	E6a_Broken_UnknownDominates	V1	NoDegradedWithoutWaivable	GREEN	-	7938 distinct states
+matrix	E6a_Broken_UnknownDominates	V1	AgreesWithP4	RED	AgreesWithP4	n/a
+matrix	E6a_Broken_UnknownDominates	V1	P4_Partition	GREEN	-	7938 distinct states
+matrix	E6a_Broken_UnknownDominates	V1	P4_Monotonicity	GREEN	-	7938 distinct states
+matrix	E6a_Broken_UnknownDominates	V1	P4_NoSilentPromotion	GREEN	-	7938 distinct states
+matrix	E6a_Broken_UnknownDominates	V1	P4_ValidNeedsNonWaivablePass	GREEN	-	7938 distinct states
+matrix	E6a_Broken_UnknownDominates	V1	P4_StrictMeansEverything	GREEN	-	7938 distinct states
+matrix	E6a_Broken_UnknownDominates	V1	P4_DegradedNeedsExplicitWaiver	GREEN	-	7938 distinct states
+matrix	E6a_Broken_UnknownDominates	V1	P4_UnverifiableIsHonest	GREEN	-	7938 distinct states
+matrix	E6a_Broken_UnknownDominates	V1	P4_ExactInvalid	GREEN	-	7938 distinct states
+matrix	E6a_Broken_UnknownDominates	V1	P4_ExactUnverifiable	GREEN	-	7938 distinct states
+matrix	E6a_Broken_UnknownDominates	V1	P4_ExactStrict	GREEN	-	7938 distinct states
+matrix	E6a_Broken_UnknownDominates	V1	P4_ExactDegraded	GREEN	-	7938 distinct states
+broken-all	E6a_Broken_UnknownAsOutOfProfile	V1	ALL	RED	OutOfProfileOnlyAtDispatch	n/a
+matrix	E6a_Broken_UnknownAsOutOfProfile	V1	TypeOK	GREEN	-	7938 distinct states
+matrix	E6a_Broken_UnknownAsOutOfProfile	V1	DispatchTerminal	GREEN	-	7938 distinct states
+matrix	E6a_Broken_UnknownAsOutOfProfile	V1	OutOfProfileOnlyAtDispatch	RED	OutOfProfileOnlyAtDispatch	n/a
+matrix	E6a_Broken_UnknownAsOutOfProfile	V1	UnknownAlgGivesUnverifiable	GREEN	-	7938 distinct states
+matrix	E6a_Broken_UnknownAsOutOfProfile	V1	UnknownAlgNeverValid	GREEN	-	7938 distinct states
+matrix	E6a_Broken_UnknownAsOutOfProfile	V1	InvalidAlgFormsGiveInvalid	RED	InvalidAlgFormsGiveInvalid	n/a
+matrix	E6a_Broken_UnknownAsOutOfProfile	V1	KnownAlgBadSigInvalid	RED	KnownAlgBadSigInvalid	n/a
+matrix	E6a_Broken_UnknownAsOutOfProfile	V1	AlgUnknownReasonExact	RED	AlgUnknownReasonExact	n/a
+matrix	E6a_Broken_UnknownAsOutOfProfile	V1	MixedFailedUnknownInvalid	RED	MixedFailedUnknownInvalid	n/a
+matrix	E6a_Broken_UnknownAsOutOfProfile	V1	MixedFailedMissingEvidenceInvalid	RED	MixedFailedMissingEvidenceInvalid	n/a
+matrix	E6a_Broken_UnknownAsOutOfProfile	V1	MissingSignatureInvalid	RED	MissingSignatureInvalid	n/a
+matrix	E6a_Broken_UnknownAsOutOfProfile	V1	MissingEvidenceUnverifiable	RED	MissingEvidenceUnverifiable	n/a
+matrix	E6a_Broken_UnknownAsOutOfProfile	V1	MissingEvidenceNeverValid	GREEN	-	7938 distinct states
+matrix	E6a_Broken_UnknownAsOutOfProfile	V1	InvalidNeedsDefect	GREEN	-	7938 distinct states
+matrix	E6a_Broken_UnknownAsOutOfProfile	V1	ReasonMatchesVerdict	GREEN	-	7938 distinct states
+matrix	E6a_Broken_UnknownAsOutOfProfile	V1	ExactInvalidIn	RED	ExactInvalidIn	n/a
+matrix	E6a_Broken_UnknownAsOutOfProfile	V1	ExactUnverifiableIn	RED	ExactUnverifiableIn	n/a
+matrix	E6a_Broken_UnknownAsOutOfProfile	V1	ExactStrictIn	GREEN	-	7938 distinct states
+matrix	E6a_Broken_UnknownAsOutOfProfile	V1	ExactDegradedIn	GREEN	-	7938 distinct states
+matrix	E6a_Broken_UnknownAsOutOfProfile	V1	NoDegradedWithoutWaivable	GREEN	-	7938 distinct states
+matrix	E6a_Broken_UnknownAsOutOfProfile	V1	AgreesWithP4	RED	AgreesWithP4	n/a
+matrix	E6a_Broken_UnknownAsOutOfProfile	V1	P4_Partition	GREEN	-	7938 distinct states
+matrix	E6a_Broken_UnknownAsOutOfProfile	V1	P4_Monotonicity	GREEN	-	7938 distinct states
+matrix	E6a_Broken_UnknownAsOutOfProfile	V1	P4_NoSilentPromotion	GREEN	-	7938 distinct states
+matrix	E6a_Broken_UnknownAsOutOfProfile	V1	P4_ValidNeedsNonWaivablePass	GREEN	-	7938 distinct states
+matrix	E6a_Broken_UnknownAsOutOfProfile	V1	P4_StrictMeansEverything	GREEN	-	7938 distinct states
+matrix	E6a_Broken_UnknownAsOutOfProfile	V1	P4_DegradedNeedsExplicitWaiver	GREEN	-	7938 distinct states
+matrix	E6a_Broken_UnknownAsOutOfProfile	V1	P4_UnverifiableIsHonest	GREEN	-	7938 distinct states
+matrix	E6a_Broken_UnknownAsOutOfProfile	V1	P4_ExactInvalid	GREEN	-	7938 distinct states
+matrix	E6a_Broken_UnknownAsOutOfProfile	V1	P4_ExactUnverifiable	GREEN	-	7938 distinct states
+matrix	E6a_Broken_UnknownAsOutOfProfile	V1	P4_ExactStrict	GREEN	-	7938 distinct states
+matrix	E6a_Broken_UnknownAsOutOfProfile	V1	P4_ExactDegraded	GREEN	-	7938 distinct states
+broken-all	E6a_Broken_DispatchFallthrough	V1	ALL	RED	DispatchTerminal	n/a
+matrix	E6a_Broken_DispatchFallthrough	V1	TypeOK	GREEN	-	7938 distinct states
+matrix	E6a_Broken_DispatchFallthrough	V1	DispatchTerminal	RED	DispatchTerminal	n/a
+matrix	E6a_Broken_DispatchFallthrough	V1	OutOfProfileOnlyAtDispatch	GREEN	-	7938 distinct states
+matrix	E6a_Broken_DispatchFallthrough	V1	UnknownAlgGivesUnverifiable	GREEN	-	7938 distinct states
+matrix	E6a_Broken_DispatchFallthrough	V1	UnknownAlgNeverValid	GREEN	-	7938 distinct states
+matrix	E6a_Broken_DispatchFallthrough	V1	InvalidAlgFormsGiveInvalid	GREEN	-	7938 distinct states
+matrix	E6a_Broken_DispatchFallthrough	V1	KnownAlgBadSigInvalid	GREEN	-	7938 distinct states
+matrix	E6a_Broken_DispatchFallthrough	V1	AlgUnknownReasonExact	RED	AlgUnknownReasonExact	n/a
+matrix	E6a_Broken_DispatchFallthrough	V1	MixedFailedUnknownInvalid	GREEN	-	7938 distinct states
+matrix	E6a_Broken_DispatchFallthrough	V1	MixedFailedMissingEvidenceInvalid	GREEN	-	7938 distinct states
+matrix	E6a_Broken_DispatchFallthrough	V1	MissingSignatureInvalid	GREEN	-	7938 distinct states
+matrix	E6a_Broken_DispatchFallthrough	V1	MissingEvidenceUnverifiable	GREEN	-	7938 distinct states
+matrix	E6a_Broken_DispatchFallthrough	V1	MissingEvidenceNeverValid	GREEN	-	7938 distinct states
+matrix	E6a_Broken_DispatchFallthrough	V1	InvalidNeedsDefect	RED	InvalidNeedsDefect	n/a
+matrix	E6a_Broken_DispatchFallthrough	V1	ReasonMatchesVerdict	GREEN	-	7938 distinct states
+matrix	E6a_Broken_DispatchFallthrough	V1	ExactInvalidIn	GREEN	-	7938 distinct states
+matrix	E6a_Broken_DispatchFallthrough	V1	ExactUnverifiableIn	GREEN	-	7938 distinct states
+matrix	E6a_Broken_DispatchFallthrough	V1	ExactStrictIn	GREEN	-	7938 distinct states
+matrix	E6a_Broken_DispatchFallthrough	V1	ExactDegradedIn	GREEN	-	7938 distinct states
+matrix	E6a_Broken_DispatchFallthrough	V1	NoDegradedWithoutWaivable	GREEN	-	7938 distinct states
+matrix	E6a_Broken_DispatchFallthrough	V1	AgreesWithP4	GREEN	-	7938 distinct states
+matrix	E6a_Broken_DispatchFallthrough	V1	P4_Partition	GREEN	-	7938 distinct states
+matrix	E6a_Broken_DispatchFallthrough	V1	P4_Monotonicity	GREEN	-	7938 distinct states
+matrix	E6a_Broken_DispatchFallthrough	V1	P4_NoSilentPromotion	GREEN	-	7938 distinct states
+matrix	E6a_Broken_DispatchFallthrough	V1	P4_ValidNeedsNonWaivablePass	GREEN	-	7938 distinct states
+matrix	E6a_Broken_DispatchFallthrough	V1	P4_StrictMeansEverything	GREEN	-	7938 distinct states
+matrix	E6a_Broken_DispatchFallthrough	V1	P4_DegradedNeedsExplicitWaiver	GREEN	-	7938 distinct states
+matrix	E6a_Broken_DispatchFallthrough	V1	P4_UnverifiableIsHonest	GREEN	-	7938 distinct states
+matrix	E6a_Broken_DispatchFallthrough	V1	P4_ExactInvalid	GREEN	-	7938 distinct states
+matrix	E6a_Broken_DispatchFallthrough	V1	P4_ExactUnverifiable	GREEN	-	7938 distinct states
+matrix	E6a_Broken_DispatchFallthrough	V1	P4_ExactStrict	GREEN	-	7938 distinct states
+matrix	E6a_Broken_DispatchFallthrough	V1	P4_ExactDegraded	GREEN	-	7938 distinct states
+main	E6a_AlgVerdict	General	ALL	GREEN	-	15876 distinct states
+sanity	E6a_AlgVerdict	General	NeverInStrict	RED	NeverInStrict	n/a
+sanity	E6a_AlgVerdict	General	NeverInDegraded	RED	NeverInDegraded	n/a
+sanity	E6a_AlgVerdict	General	NeverInInvalid	RED	NeverInInvalid	n/a
+sanity	E6a_AlgVerdict	General	NeverOutOfProfile	RED	NeverOutOfProfile	n/a
+sanity	E6a_AlgVerdict	General	NeverAlgUnknown	RED	NeverAlgUnknown	n/a
+sanity	E6a_AlgVerdict	General	NeverUnknownOpaqueBadSig	RED	NeverUnknownOpaqueBadSig	n/a
+sanity	E6a_AlgVerdict	General	NeverMixedFailedUnknown	RED	NeverMixedFailedUnknown	n/a
+sanity	E6a_AlgVerdict	General	NeverUnknownEmptySig	RED	NeverUnknownEmptySig	n/a
+sanity	E6a_AlgVerdict	General	NeverMissingSignature	RED	NeverMissingSignature	n/a
+sanity	E6a_AlgVerdict	General	NeverMemberMissing	RED	NeverMemberMissing	n/a
+sanity	E6a_AlgVerdict	General	NeverMissingEvPlusUnknown	RED	NeverMissingEvPlusUnknown	n/a
+sanity	E6a_AlgVerdict	General	NeverDefectPlusMissingEv	RED	NeverDefectPlusMissingEv	n/a
+sanity	E6a_AlgVerdict	General	NeverWaivedAbsentDegraded	RED	NeverWaivedAbsentDegraded	n/a
+broken-all	E6a_Broken_FailOpen	General	ALL	RED	UnknownAlgGivesUnverifiable	n/a
+matrix	E6a_Broken_FailOpen	General	TypeOK	GREEN	-	15876 distinct states
+matrix	E6a_Broken_FailOpen	General	DispatchTerminal	GREEN	-	15876 distinct states
+matrix	E6a_Broken_FailOpen	General	OutOfProfileOnlyAtDispatch	GREEN	-	15876 distinct states
+matrix	E6a_Broken_FailOpen	General	UnknownAlgGivesUnverifiable	RED	UnknownAlgGivesUnverifiable	n/a
+matrix	E6a_Broken_FailOpen	General	UnknownAlgNeverValid	RED	UnknownAlgNeverValid	n/a
+matrix	E6a_Broken_FailOpen	General	InvalidAlgFormsGiveInvalid	GREEN	-	15876 distinct states
+matrix	E6a_Broken_FailOpen	General	KnownAlgBadSigInvalid	GREEN	-	15876 distinct states
+matrix	E6a_Broken_FailOpen	General	AlgUnknownReasonExact	RED	AlgUnknownReasonExact	n/a
+matrix	E6a_Broken_FailOpen	General	MixedFailedUnknownInvalid	GREEN	-	15876 distinct states
+matrix	E6a_Broken_FailOpen	General	MixedFailedMissingEvidenceInvalid	GREEN	-	15876 distinct states
+matrix	E6a_Broken_FailOpen	General	MissingSignatureInvalid	GREEN	-	15876 distinct states
+matrix	E6a_Broken_FailOpen	General	MissingEvidenceUnverifiable	GREEN	-	15876 distinct states
+matrix	E6a_Broken_FailOpen	General	MissingEvidenceNeverValid	GREEN	-	15876 distinct states
+matrix	E6a_Broken_FailOpen	General	InvalidNeedsDefect	GREEN	-	15876 distinct states
+matrix	E6a_Broken_FailOpen	General	ReasonMatchesVerdict	GREEN	-	15876 distinct states
+matrix	E6a_Broken_FailOpen	General	ExactInvalidIn	GREEN	-	15876 distinct states
+matrix	E6a_Broken_FailOpen	General	ExactUnverifiableIn	RED	ExactUnverifiableIn	n/a
+matrix	E6a_Broken_FailOpen	General	ExactStrictIn	RED	ExactStrictIn	n/a
+matrix	E6a_Broken_FailOpen	General	ExactDegradedIn	RED	ExactDegradedIn	n/a
+matrix	E6a_Broken_FailOpen	General	NoDegradedWithoutWaivable	GREEN	-	15876 distinct states
+matrix	E6a_Broken_FailOpen	General	AgreesWithP4	GREEN	-	15876 distinct states
+matrix	E6a_Broken_FailOpen	General	P4_Partition	GREEN	-	15876 distinct states
+matrix	E6a_Broken_FailOpen	General	P4_Monotonicity	GREEN	-	15876 distinct states
+matrix	E6a_Broken_FailOpen	General	P4_NoSilentPromotion	GREEN	-	15876 distinct states
+matrix	E6a_Broken_FailOpen	General	P4_ValidNeedsNonWaivablePass	GREEN	-	15876 distinct states
+matrix	E6a_Broken_FailOpen	General	P4_StrictMeansEverything	GREEN	-	15876 distinct states
+matrix	E6a_Broken_FailOpen	General	P4_DegradedNeedsExplicitWaiver	GREEN	-	15876 distinct states
+matrix	E6a_Broken_FailOpen	General	P4_UnverifiableIsHonest	GREEN	-	15876 distinct states
+matrix	E6a_Broken_FailOpen	General	P4_ExactInvalid	GREEN	-	15876 distinct states
+matrix	E6a_Broken_FailOpen	General	P4_ExactUnverifiable	GREEN	-	15876 distinct states
+matrix	E6a_Broken_FailOpen	General	P4_ExactStrict	GREEN	-	15876 distinct states
+matrix	E6a_Broken_FailOpen	General	P4_ExactDegraded	GREEN	-	15876 distinct states
+broken-all	E6a_Broken_MalformedAsUnknown	General	ALL	RED	InvalidAlgFormsGiveInvalid	n/a
+matrix	E6a_Broken_MalformedAsUnknown	General	TypeOK	GREEN	-	15876 distinct states
+matrix	E6a_Broken_MalformedAsUnknown	General	DispatchTerminal	GREEN	-	15876 distinct states
+matrix	E6a_Broken_MalformedAsUnknown	General	OutOfProfileOnlyAtDispatch	GREEN	-	15876 distinct states
+matrix	E6a_Broken_MalformedAsUnknown	General	UnknownAlgGivesUnverifiable	GREEN	-	15876 distinct states
+matrix	E6a_Broken_MalformedAsUnknown	General	UnknownAlgNeverValid	GREEN	-	15876 distinct states
+matrix	E6a_Broken_MalformedAsUnknown	General	InvalidAlgFormsGiveInvalid	RED	InvalidAlgFormsGiveInvalid	n/a
+matrix	E6a_Broken_MalformedAsUnknown	General	KnownAlgBadSigInvalid	GREEN	-	15876 distinct states
+matrix	E6a_Broken_MalformedAsUnknown	General	AlgUnknownReasonExact	RED	AlgUnknownReasonExact	n/a
+matrix	E6a_Broken_MalformedAsUnknown	General	MixedFailedUnknownInvalid	RED	MixedFailedUnknownInvalid	n/a
+matrix	E6a_Broken_MalformedAsUnknown	General	MixedFailedMissingEvidenceInvalid	RED	MixedFailedMissingEvidenceInvalid	n/a
+matrix	E6a_Broken_MalformedAsUnknown	General	MissingSignatureInvalid	GREEN	-	15876 distinct states
+matrix	E6a_Broken_MalformedAsUnknown	General	MissingEvidenceUnverifiable	GREEN	-	15876 distinct states
+matrix	E6a_Broken_MalformedAsUnknown	General	MissingEvidenceNeverValid	GREEN	-	15876 distinct states
+matrix	E6a_Broken_MalformedAsUnknown	General	InvalidNeedsDefect	GREEN	-	15876 distinct states
+matrix	E6a_Broken_MalformedAsUnknown	General	ReasonMatchesVerdict	GREEN	-	15876 distinct states
+matrix	E6a_Broken_MalformedAsUnknown	General	ExactInvalidIn	RED	ExactInvalidIn	n/a
+matrix	E6a_Broken_MalformedAsUnknown	General	ExactUnverifiableIn	RED	ExactUnverifiableIn	n/a
+matrix	E6a_Broken_MalformedAsUnknown	General	ExactStrictIn	GREEN	-	15876 distinct states
+matrix	E6a_Broken_MalformedAsUnknown	General	ExactDegradedIn	GREEN	-	15876 distinct states
+matrix	E6a_Broken_MalformedAsUnknown	General	NoDegradedWithoutWaivable	GREEN	-	15876 distinct states
+matrix	E6a_Broken_MalformedAsUnknown	General	AgreesWithP4	GREEN	-	15876 distinct states
+matrix	E6a_Broken_MalformedAsUnknown	General	P4_Partition	GREEN	-	15876 distinct states
+matrix	E6a_Broken_MalformedAsUnknown	General	P4_Monotonicity	GREEN	-	15876 distinct states
+matrix	E6a_Broken_MalformedAsUnknown	General	P4_NoSilentPromotion	GREEN	-	15876 distinct states
+matrix	E6a_Broken_MalformedAsUnknown	General	P4_ValidNeedsNonWaivablePass	GREEN	-	15876 distinct states
+matrix	E6a_Broken_MalformedAsUnknown	General	P4_StrictMeansEverything	GREEN	-	15876 distinct states
+matrix	E6a_Broken_MalformedAsUnknown	General	P4_DegradedNeedsExplicitWaiver	GREEN	-	15876 distinct states
+matrix	E6a_Broken_MalformedAsUnknown	General	P4_UnverifiableIsHonest	GREEN	-	15876 distinct states
+matrix	E6a_Broken_MalformedAsUnknown	General	P4_ExactInvalid	GREEN	-	15876 distinct states
+matrix	E6a_Broken_MalformedAsUnknown	General	P4_ExactUnverifiable	GREEN	-	15876 distinct states
+matrix	E6a_Broken_MalformedAsUnknown	General	P4_ExactStrict	GREEN	-	15876 distinct states
+matrix	E6a_Broken_MalformedAsUnknown	General	P4_ExactDegraded	GREEN	-	15876 distinct states
+broken-all	E6a_Broken_MissingSigAsEvidence	General	ALL	RED	MixedFailedMissingEvidenceInvalid	n/a
+matrix	E6a_Broken_MissingSigAsEvidence	General	TypeOK	GREEN	-	15876 distinct states
+matrix	E6a_Broken_MissingSigAsEvidence	General	DispatchTerminal	GREEN	-	15876 distinct states
+matrix	E6a_Broken_MissingSigAsEvidence	General	OutOfProfileOnlyAtDispatch	GREEN	-	15876 distinct states
+matrix	E6a_Broken_MissingSigAsEvidence	General	UnknownAlgGivesUnverifiable	GREEN	-	15876 distinct states
+matrix	E6a_Broken_MissingSigAsEvidence	General	UnknownAlgNeverValid	GREEN	-	15876 distinct states
+matrix	E6a_Broken_MissingSigAsEvidence	General	InvalidAlgFormsGiveInvalid	GREEN	-	15876 distinct states
+matrix	E6a_Broken_MissingSigAsEvidence	General	KnownAlgBadSigInvalid	GREEN	-	15876 distinct states
+matrix	E6a_Broken_MissingSigAsEvidence	General	AlgUnknownReasonExact	RED	AlgUnknownReasonExact	n/a
+matrix	E6a_Broken_MissingSigAsEvidence	General	MixedFailedUnknownInvalid	RED	MixedFailedUnknownInvalid	n/a
+matrix	E6a_Broken_MissingSigAsEvidence	General	MixedFailedMissingEvidenceInvalid	RED	MixedFailedMissingEvidenceInvalid	n/a
+matrix	E6a_Broken_MissingSigAsEvidence	General	MissingSignatureInvalid	RED	MissingSignatureInvalid	n/a
+matrix	E6a_Broken_MissingSigAsEvidence	General	MissingEvidenceUnverifiable	GREEN	-	15876 distinct states
+matrix	E6a_Broken_MissingSigAsEvidence	General	MissingEvidenceNeverValid	GREEN	-	15876 distinct states
+matrix	E6a_Broken_MissingSigAsEvidence	General	InvalidNeedsDefect	GREEN	-	15876 distinct states
+matrix	E6a_Broken_MissingSigAsEvidence	General	ReasonMatchesVerdict	GREEN	-	15876 distinct states
+matrix	E6a_Broken_MissingSigAsEvidence	General	ExactInvalidIn	RED	ExactInvalidIn	n/a
+matrix	E6a_Broken_MissingSigAsEvidence	General	ExactUnverifiableIn	RED	ExactUnverifiableIn	n/a
+matrix	E6a_Broken_MissingSigAsEvidence	General	ExactStrictIn	GREEN	-	15876 distinct states
+matrix	E6a_Broken_MissingSigAsEvidence	General	ExactDegradedIn	GREEN	-	15876 distinct states
+matrix	E6a_Broken_MissingSigAsEvidence	General	NoDegradedWithoutWaivable	GREEN	-	15876 distinct states
+matrix	E6a_Broken_MissingSigAsEvidence	General	AgreesWithP4	GREEN	-	15876 distinct states
+matrix	E6a_Broken_MissingSigAsEvidence	General	P4_Partition	GREEN	-	15876 distinct states
+matrix	E6a_Broken_MissingSigAsEvidence	General	P4_Monotonicity	GREEN	-	15876 distinct states
+matrix	E6a_Broken_MissingSigAsEvidence	General	P4_NoSilentPromotion	GREEN	-	15876 distinct states
+matrix	E6a_Broken_MissingSigAsEvidence	General	P4_ValidNeedsNonWaivablePass	GREEN	-	15876 distinct states
+matrix	E6a_Broken_MissingSigAsEvidence	General	P4_StrictMeansEverything	GREEN	-	15876 distinct states
+matrix	E6a_Broken_MissingSigAsEvidence	General	P4_DegradedNeedsExplicitWaiver	GREEN	-	15876 distinct states
+matrix	E6a_Broken_MissingSigAsEvidence	General	P4_UnverifiableIsHonest	GREEN	-	15876 distinct states
+matrix	E6a_Broken_MissingSigAsEvidence	General	P4_ExactInvalid	GREEN	-	15876 distinct states
+matrix	E6a_Broken_MissingSigAsEvidence	General	P4_ExactUnverifiable	GREEN	-	15876 distinct states
+matrix	E6a_Broken_MissingSigAsEvidence	General	P4_ExactStrict	GREEN	-	15876 distinct states
+matrix	E6a_Broken_MissingSigAsEvidence	General	P4_ExactDegraded	GREEN	-	15876 distinct states
+broken-all	E6a_Broken_MissingEvidenceAsFail	General	ALL	RED	MissingEvidenceUnverifiable	n/a
+matrix	E6a_Broken_MissingEvidenceAsFail	General	TypeOK	GREEN	-	15876 distinct states
+matrix	E6a_Broken_MissingEvidenceAsFail	General	DispatchTerminal	GREEN	-	15876 distinct states
+matrix	E6a_Broken_MissingEvidenceAsFail	General	OutOfProfileOnlyAtDispatch	GREEN	-	15876 distinct states
+matrix	E6a_Broken_MissingEvidenceAsFail	General	UnknownAlgGivesUnverifiable	RED	UnknownAlgGivesUnverifiable	n/a
+matrix	E6a_Broken_MissingEvidenceAsFail	General	UnknownAlgNeverValid	GREEN	-	15876 distinct states
+matrix	E6a_Broken_MissingEvidenceAsFail	General	InvalidAlgFormsGiveInvalid	GREEN	-	15876 distinct states
+matrix	E6a_Broken_MissingEvidenceAsFail	General	KnownAlgBadSigInvalid	GREEN	-	15876 distinct states
+matrix	E6a_Broken_MissingEvidenceAsFail	General	AlgUnknownReasonExact	GREEN	-	15876 distinct states
+matrix	E6a_Broken_MissingEvidenceAsFail	General	MixedFailedUnknownInvalid	GREEN	-	15876 distinct states
+matrix	E6a_Broken_MissingEvidenceAsFail	General	MixedFailedMissingEvidenceInvalid	GREEN	-	15876 distinct states
+matrix	E6a_Broken_MissingEvidenceAsFail	General	MissingSignatureInvalid	GREEN	-	15876 distinct states
+matrix	E6a_Broken_MissingEvidenceAsFail	General	MissingEvidenceUnverifiable	RED	MissingEvidenceUnverifiable	n/a
+matrix	E6a_Broken_MissingEvidenceAsFail	General	MissingEvidenceNeverValid	GREEN	-	15876 distinct states
+matrix	E6a_Broken_MissingEvidenceAsFail	General	InvalidNeedsDefect	RED	InvalidNeedsDefect	n/a
+matrix	E6a_Broken_MissingEvidenceAsFail	General	ReasonMatchesVerdict	GREEN	-	15876 distinct states
+matrix	E6a_Broken_MissingEvidenceAsFail	General	ExactInvalidIn	RED	ExactInvalidIn	n/a
+matrix	E6a_Broken_MissingEvidenceAsFail	General	ExactUnverifiableIn	RED	ExactUnverifiableIn	n/a
+matrix	E6a_Broken_MissingEvidenceAsFail	General	ExactStrictIn	GREEN	-	15876 distinct states
+matrix	E6a_Broken_MissingEvidenceAsFail	General	ExactDegradedIn	GREEN	-	15876 distinct states
+matrix	E6a_Broken_MissingEvidenceAsFail	General	NoDegradedWithoutWaivable	GREEN	-	15876 distinct states
+matrix	E6a_Broken_MissingEvidenceAsFail	General	AgreesWithP4	GREEN	-	15876 distinct states
+matrix	E6a_Broken_MissingEvidenceAsFail	General	P4_Partition	GREEN	-	15876 distinct states
+matrix	E6a_Broken_MissingEvidenceAsFail	General	P4_Monotonicity	GREEN	-	15876 distinct states
+matrix	E6a_Broken_MissingEvidenceAsFail	General	P4_NoSilentPromotion	GREEN	-	15876 distinct states
+matrix	E6a_Broken_MissingEvidenceAsFail	General	P4_ValidNeedsNonWaivablePass	GREEN	-	15876 distinct states
+matrix	E6a_Broken_MissingEvidenceAsFail	General	P4_StrictMeansEverything	GREEN	-	15876 distinct states
+matrix	E6a_Broken_MissingEvidenceAsFail	General	P4_DegradedNeedsExplicitWaiver	GREEN	-	15876 distinct states
+matrix	E6a_Broken_MissingEvidenceAsFail	General	P4_UnverifiableIsHonest	GREEN	-	15876 distinct states
+matrix	E6a_Broken_MissingEvidenceAsFail	General	P4_ExactInvalid	GREEN	-	15876 distinct states
+matrix	E6a_Broken_MissingEvidenceAsFail	General	P4_ExactUnverifiable	GREEN	-	15876 distinct states
+matrix	E6a_Broken_MissingEvidenceAsFail	General	P4_ExactStrict	GREEN	-	15876 distinct states
+matrix	E6a_Broken_MissingEvidenceAsFail	General	P4_ExactDegraded	GREEN	-	15876 distinct states
+broken-all	E6a_Broken_UnknownDominates	General	ALL	RED	AlgUnknownReasonExact	n/a
+matrix	E6a_Broken_UnknownDominates	General	TypeOK	GREEN	-	15876 distinct states
+matrix	E6a_Broken_UnknownDominates	General	DispatchTerminal	GREEN	-	15876 distinct states
+matrix	E6a_Broken_UnknownDominates	General	OutOfProfileOnlyAtDispatch	GREEN	-	15876 distinct states
+matrix	E6a_Broken_UnknownDominates	General	UnknownAlgGivesUnverifiable	GREEN	-	15876 distinct states
+matrix	E6a_Broken_UnknownDominates	General	UnknownAlgNeverValid	GREEN	-	15876 distinct states
+matrix	E6a_Broken_UnknownDominates	General	InvalidAlgFormsGiveInvalid	RED	InvalidAlgFormsGiveInvalid	n/a
+matrix	E6a_Broken_UnknownDominates	General	KnownAlgBadSigInvalid	RED	KnownAlgBadSigInvalid	n/a
+matrix	E6a_Broken_UnknownDominates	General	AlgUnknownReasonExact	RED	AlgUnknownReasonExact	n/a
+matrix	E6a_Broken_UnknownDominates	General	MixedFailedUnknownInvalid	RED	MixedFailedUnknownInvalid	n/a
+matrix	E6a_Broken_UnknownDominates	General	MixedFailedMissingEvidenceInvalid	RED	MixedFailedMissingEvidenceInvalid	n/a
+matrix	E6a_Broken_UnknownDominates	General	MissingSignatureInvalid	RED	MissingSignatureInvalid	n/a
+matrix	E6a_Broken_UnknownDominates	General	MissingEvidenceUnverifiable	RED	MissingEvidenceUnverifiable	n/a
+matrix	E6a_Broken_UnknownDominates	General	MissingEvidenceNeverValid	GREEN	-	15876 distinct states
+matrix	E6a_Broken_UnknownDominates	General	InvalidNeedsDefect	GREEN	-	15876 distinct states
+matrix	E6a_Broken_UnknownDominates	General	ReasonMatchesVerdict	GREEN	-	15876 distinct states
+matrix	E6a_Broken_UnknownDominates	General	ExactInvalidIn	RED	ExactInvalidIn	n/a
+matrix	E6a_Broken_UnknownDominates	General	ExactUnverifiableIn	RED	ExactUnverifiableIn	n/a
+matrix	E6a_Broken_UnknownDominates	General	ExactStrictIn	GREEN	-	15876 distinct states
+matrix	E6a_Broken_UnknownDominates	General	ExactDegradedIn	GREEN	-	15876 distinct states
+matrix	E6a_Broken_UnknownDominates	General	NoDegradedWithoutWaivable	GREEN	-	15876 distinct states
+matrix	E6a_Broken_UnknownDominates	General	AgreesWithP4	RED	AgreesWithP4	n/a
+matrix	E6a_Broken_UnknownDominates	General	P4_Partition	GREEN	-	15876 distinct states
+matrix	E6a_Broken_UnknownDominates	General	P4_Monotonicity	GREEN	-	15876 distinct states
+matrix	E6a_Broken_UnknownDominates	General	P4_NoSilentPromotion	GREEN	-	15876 distinct states
+matrix	E6a_Broken_UnknownDominates	General	P4_ValidNeedsNonWaivablePass	GREEN	-	15876 distinct states
+matrix	E6a_Broken_UnknownDominates	General	P4_StrictMeansEverything	GREEN	-	15876 distinct states
+matrix	E6a_Broken_UnknownDominates	General	P4_DegradedNeedsExplicitWaiver	GREEN	-	15876 distinct states
+matrix	E6a_Broken_UnknownDominates	General	P4_UnverifiableIsHonest	GREEN	-	15876 distinct states
+matrix	E6a_Broken_UnknownDominates	General	P4_ExactInvalid	GREEN	-	15876 distinct states
+matrix	E6a_Broken_UnknownDominates	General	P4_ExactUnverifiable	GREEN	-	15876 distinct states
+matrix	E6a_Broken_UnknownDominates	General	P4_ExactStrict	GREEN	-	15876 distinct states
+matrix	E6a_Broken_UnknownDominates	General	P4_ExactDegraded	GREEN	-	15876 distinct states
+broken-all	E6a_Broken_UnknownAsOutOfProfile	General	ALL	RED	OutOfProfileOnlyAtDispatch	n/a
+matrix	E6a_Broken_UnknownAsOutOfProfile	General	TypeOK	GREEN	-	15876 distinct states
+matrix	E6a_Broken_UnknownAsOutOfProfile	General	DispatchTerminal	GREEN	-	15876 distinct states
+matrix	E6a_Broken_UnknownAsOutOfProfile	General	OutOfProfileOnlyAtDispatch	RED	OutOfProfileOnlyAtDispatch	n/a
+matrix	E6a_Broken_UnknownAsOutOfProfile	General	UnknownAlgGivesUnverifiable	GREEN	-	15876 distinct states
+matrix	E6a_Broken_UnknownAsOutOfProfile	General	UnknownAlgNeverValid	GREEN	-	15876 distinct states
+matrix	E6a_Broken_UnknownAsOutOfProfile	General	InvalidAlgFormsGiveInvalid	RED	InvalidAlgFormsGiveInvalid	n/a
+matrix	E6a_Broken_UnknownAsOutOfProfile	General	KnownAlgBadSigInvalid	RED	KnownAlgBadSigInvalid	n/a
+matrix	E6a_Broken_UnknownAsOutOfProfile	General	AlgUnknownReasonExact	RED	AlgUnknownReasonExact	n/a
+matrix	E6a_Broken_UnknownAsOutOfProfile	General	MixedFailedUnknownInvalid	RED	MixedFailedUnknownInvalid	n/a
+matrix	E6a_Broken_UnknownAsOutOfProfile	General	MixedFailedMissingEvidenceInvalid	RED	MixedFailedMissingEvidenceInvalid	n/a
+matrix	E6a_Broken_UnknownAsOutOfProfile	General	MissingSignatureInvalid	RED	MissingSignatureInvalid	n/a
+matrix	E6a_Broken_UnknownAsOutOfProfile	General	MissingEvidenceUnverifiable	RED	MissingEvidenceUnverifiable	n/a
+matrix	E6a_Broken_UnknownAsOutOfProfile	General	MissingEvidenceNeverValid	GREEN	-	15876 distinct states
+matrix	E6a_Broken_UnknownAsOutOfProfile	General	InvalidNeedsDefect	GREEN	-	15876 distinct states
+matrix	E6a_Broken_UnknownAsOutOfProfile	General	ReasonMatchesVerdict	GREEN	-	15876 distinct states
+matrix	E6a_Broken_UnknownAsOutOfProfile	General	ExactInvalidIn	RED	ExactInvalidIn	n/a
+matrix	E6a_Broken_UnknownAsOutOfProfile	General	ExactUnverifiableIn	RED	ExactUnverifiableIn	n/a
+matrix	E6a_Broken_UnknownAsOutOfProfile	General	ExactStrictIn	GREEN	-	15876 distinct states
+matrix	E6a_Broken_UnknownAsOutOfProfile	General	ExactDegradedIn	GREEN	-	15876 distinct states
+matrix	E6a_Broken_UnknownAsOutOfProfile	General	NoDegradedWithoutWaivable	GREEN	-	15876 distinct states
+matrix	E6a_Broken_UnknownAsOutOfProfile	General	AgreesWithP4	RED	AgreesWithP4	n/a
+matrix	E6a_Broken_UnknownAsOutOfProfile	General	P4_Partition	GREEN	-	15876 distinct states
+matrix	E6a_Broken_UnknownAsOutOfProfile	General	P4_Monotonicity	GREEN	-	15876 distinct states
+matrix	E6a_Broken_UnknownAsOutOfProfile	General	P4_NoSilentPromotion	GREEN	-	15876 distinct states
+matrix	E6a_Broken_UnknownAsOutOfProfile	General	P4_ValidNeedsNonWaivablePass	GREEN	-	15876 distinct states
+matrix	E6a_Broken_UnknownAsOutOfProfile	General	P4_StrictMeansEverything	GREEN	-	15876 distinct states
+matrix	E6a_Broken_UnknownAsOutOfProfile	General	P4_DegradedNeedsExplicitWaiver	GREEN	-	15876 distinct states
+matrix	E6a_Broken_UnknownAsOutOfProfile	General	P4_UnverifiableIsHonest	GREEN	-	15876 distinct states
+matrix	E6a_Broken_UnknownAsOutOfProfile	General	P4_ExactInvalid	GREEN	-	15876 distinct states
+matrix	E6a_Broken_UnknownAsOutOfProfile	General	P4_ExactUnverifiable	GREEN	-	15876 distinct states
+matrix	E6a_Broken_UnknownAsOutOfProfile	General	P4_ExactStrict	GREEN	-	15876 distinct states
+matrix	E6a_Broken_UnknownAsOutOfProfile	General	P4_ExactDegraded	GREEN	-	15876 distinct states
+broken-all	E6a_Broken_DispatchFallthrough	General	ALL	RED	DispatchTerminal	n/a
+matrix	E6a_Broken_DispatchFallthrough	General	TypeOK	GREEN	-	15876 distinct states
+matrix	E6a_Broken_DispatchFallthrough	General	DispatchTerminal	RED	DispatchTerminal	n/a
+matrix	E6a_Broken_DispatchFallthrough	General	OutOfProfileOnlyAtDispatch	GREEN	-	15876 distinct states
+matrix	E6a_Broken_DispatchFallthrough	General	UnknownAlgGivesUnverifiable	GREEN	-	15876 distinct states
+matrix	E6a_Broken_DispatchFallthrough	General	UnknownAlgNeverValid	GREEN	-	15876 distinct states
+matrix	E6a_Broken_DispatchFallthrough	General	InvalidAlgFormsGiveInvalid	GREEN	-	15876 distinct states
+matrix	E6a_Broken_DispatchFallthrough	General	KnownAlgBadSigInvalid	GREEN	-	15876 distinct states
+matrix	E6a_Broken_DispatchFallthrough	General	AlgUnknownReasonExact	RED	AlgUnknownReasonExact	n/a
+matrix	E6a_Broken_DispatchFallthrough	General	MixedFailedUnknownInvalid	GREEN	-	15876 distinct states
+matrix	E6a_Broken_DispatchFallthrough	General	MixedFailedMissingEvidenceInvalid	GREEN	-	15876 distinct states
+matrix	E6a_Broken_DispatchFallthrough	General	MissingSignatureInvalid	GREEN	-	15876 distinct states
+matrix	E6a_Broken_DispatchFallthrough	General	MissingEvidenceUnverifiable	GREEN	-	15876 distinct states
+matrix	E6a_Broken_DispatchFallthrough	General	MissingEvidenceNeverValid	GREEN	-	15876 distinct states
+matrix	E6a_Broken_DispatchFallthrough	General	InvalidNeedsDefect	RED	InvalidNeedsDefect	n/a
+matrix	E6a_Broken_DispatchFallthrough	General	ReasonMatchesVerdict	GREEN	-	15876 distinct states
+matrix	E6a_Broken_DispatchFallthrough	General	ExactInvalidIn	GREEN	-	15876 distinct states
+matrix	E6a_Broken_DispatchFallthrough	General	ExactUnverifiableIn	GREEN	-	15876 distinct states
+matrix	E6a_Broken_DispatchFallthrough	General	ExactStrictIn	GREEN	-	15876 distinct states
+matrix	E6a_Broken_DispatchFallthrough	General	ExactDegradedIn	GREEN	-	15876 distinct states
+matrix	E6a_Broken_DispatchFallthrough	General	NoDegradedWithoutWaivable	GREEN	-	15876 distinct states
+matrix	E6a_Broken_DispatchFallthrough	General	AgreesWithP4	GREEN	-	15876 distinct states
+matrix	E6a_Broken_DispatchFallthrough	General	P4_Partition	GREEN	-	15876 distinct states
+matrix	E6a_Broken_DispatchFallthrough	General	P4_Monotonicity	GREEN	-	15876 distinct states
+matrix	E6a_Broken_DispatchFallthrough	General	P4_NoSilentPromotion	GREEN	-	15876 distinct states
+matrix	E6a_Broken_DispatchFallthrough	General	P4_ValidNeedsNonWaivablePass	GREEN	-	15876 distinct states
+matrix	E6a_Broken_DispatchFallthrough	General	P4_StrictMeansEverything	GREEN	-	15876 distinct states
+matrix	E6a_Broken_DispatchFallthrough	General	P4_DegradedNeedsExplicitWaiver	GREEN	-	15876 distinct states
+matrix	E6a_Broken_DispatchFallthrough	General	P4_UnverifiableIsHonest	GREEN	-	15876 distinct states
+matrix	E6a_Broken_DispatchFallthrough	General	P4_ExactInvalid	GREEN	-	15876 distinct states
+matrix	E6a_Broken_DispatchFallthrough	General	P4_ExactUnverifiable	GREEN	-	15876 distinct states
+matrix	E6a_Broken_DispatchFallthrough	General	P4_ExactStrict	GREEN	-	15876 distinct states
+matrix	E6a_Broken_DispatchFallthrough	General	P4_ExactDegraded	GREEN	-	15876 distinct states
+p4-rerun	P4_VerifierStates	-	main	GREEN	-	1944 distinct states
+p4-rerun	P4_VerifierStates	-	sanity	RED	VerdictNeverDegraded,VerdictNeverInvalid,VerdictNeverStrict,VerdictNeverUnverifiable	1944 distinct states
+p4-rerun	P4_VerifierStates_Broken	-	P4_VerifierStates_Broken	RED	StrictMeansEverything	n/a
+p4-rerun	P4_VerifierStates_Broken	-	P4_VerifierStates_Broken_Green	RED	NoSilentPromotion	n/a
+p4-rerun	P4_VerifierStates_Broken	-	P4_VerifierStates_Broken_Green2	GREEN	-	1944 distinct states

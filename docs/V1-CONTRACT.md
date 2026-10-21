@@ -18,8 +18,7 @@ running and without our help.
 distribution assumptions (A9:32–52, A9:128–136). In particular: nobody misused the service's signing capability,
 SHA-256 and OpenTimestamps hold, and the checker's verifier release is authentic.
 
-When those hold, a checker who has the receipt, the published verifier, its trust configuration and the archived
-listing evidence (A10:527–550) can establish:
+When those hold, a checker who has the receipt, the published verifier and its trust configuration can establish:
 
 | # | Guarantee | Source |
 |---|---|---|
@@ -31,12 +30,11 @@ listing evidence (A10:527–550) can establish:
 | G6 | **A real-time bound, under an unchecked assumption.** A-UTC says at least one of that block and its 5 successors has a time stamp at most 2 hours behind when it was made. If A-UTC holds, the bytes existed before U (the latest of those 6 times, plus 2 hours). U is reported separately and never changes the verdict. | A10.1.1 |
 | G7 | **Window, two checks only.** The declared issue time is not before the keys' window opened, and the chain time T is not after it closed. This does not prove the signing happened inside the window. | C4, A10.2 |
 | G8 | **No Tessera needed.** The verdict depends only on the inputs above. | C6 |
-| G9 | **A typed verdict.** Once the trust configuration is authenticated, the verifier returns `VALID_STRICT`, `INVALID` or `UNVERIFIABLE`, with a reason code and `revocation: NOT_EVALUATED`, `historical_security: NOT_EVALUATED`, `standing: ABSENT/NOT_ISSUED_IN_PROFILE`. Missing required evidence prevents acceptance. A valid receipt still leaves everything in §3 unestablished. If the trust configuration is not authenticated, there is no receipt verdict. | C7, A10:558 |
+| G9 | **A typed verdict.** Once the trust configuration is authenticated, the verifier returns `VALID_STRICT`, `INVALID` or `UNVERIFIABLE`, with a reason code and `revocation: NOT_EVALUATED`, `historical_security: NOT_EVALUATED`, `standing: ABSENT/NOT_ISSUED_IN_PROFILE`. Missing required evidence prevents acceptance. A valid receipt still leaves everything in §3 unestablished. If the trust configuration is not authenticated, there is no receipt verdict. | C7; A9.5 trust-configuration authority; V1-PROFILE §5 (`TRUST_CONFIG_UNAUTHENTICATED`) |
 | G10 | **Honest receipts cannot be moved.** If an attacker takes over the DNS and git authority records while the service's own keys stay secret and unmisused, it cannot move honestly signed frames to other keys or bytes, or change their signer sets, whether they were signed before or after the takeover. | A10.4 |
-| G11 | **Attacker's own new keys rejected, with the listing.** A checker whose verifier release comes from a trustworthy release authority rejects receipts under keys not in that release's service-key listing for the exact domain, key pair and window, provided the first listing was confirmed before the receipt's anchor. | A10.4.1 |
-
-If the listing is cut for schedule reasons (A10 row 33), G11 goes. G10 then holds only while the independent
-release boundary of A9.5 holds, and new receipts under an attacker's keys may pass.
+**No G11.** The service-key listing (A10.4.1) was cut from V1 on 2026-10-19 under A10 row 33
+(`docs/decisions/2026-10-19-listing-cut.md`). G10 holds while the independent release boundary of A9.5 holds.
+**New receipts under an attacker's own keys pass when both authority channels are captured.**
 
 ## 3. Not guaranteed
 
@@ -59,7 +57,7 @@ Each of these is a deliberate limit, not a missing feature.
   the two registered false rejects).
 - **One receipt per presentation.** A receipt id (SHA-256 of `A_sig`) names a receipt, not a presentation. Signing
   is randomized, so the same honest frames can carry more than one valid signature set and therefore more than one
-  valid receipt, each with its own T. Each still meets G1–G11. (Owner, 2026-10-19, from finding E-02 of the first
+  valid receipt, each with its own T. Each still meets G1–G10. (Owner, 2026-10-19, from finding E-02 of the first
   real run.)
 - **Stability of T and U across different proofs.** A different proof or pin set can select a different block.
 - **Protection for a checker who skips authenticating the verifier release** or runs a substituted one.
@@ -68,12 +66,12 @@ Each of these is a deliberate limit, not a missing feature.
 
 | Failure or attacker | What still holds |
 |---|---|
-| Tessera disappears | Everything in §2, if the holder kept the receipt and the listing evidence. Reconstruction after the project dies is not demonstrated. |
+| Tessera disappears | Everything in §2, if the holder kept the receipt and the verifier release. Reconstruction after the project dies is not demonstrated. |
 | Attacker alters a receipt or moves its signatures | Rejected (G1, G3, G10). |
 | Attacker uses its own keys, authority records not captured | Rejected: the required authority evidence does not name them (G4). |
-| Attacker captures both DNS and git authority records | Honest receipts protected (G10). New receipts under its keys **pass** unless the listing rejects them (G11). |
+| Attacker captures both DNS and git authority records | Honest receipts protected (G10). New receipts under its own keys **pass** (the listing was cut). |
 | Attacker captures the issuing AWS account | **Not protected.** It can issue receipts that verify. |
-| Attacker steals the release key | Past listings stay protected only for a checker with trusted conforming verifier code, the preserved listing evidence and independently authenticated Bitcoin history. A thief can still publish new bad releases. |
+| Attacker steals the release key | Not protected: it can publish releases with a trust configuration of its choosing. This is distribution compromise, which A9 excludes (A9:47–52). A checker who installs no later release is unaffected. |
 | Bitcoin miners lie about time | G5 holds (chain order). G6 holds only under A-UTC. |
 | Bitcoin reorganizes fewer than 6 blocks | G5 holds. |
 
@@ -90,16 +88,15 @@ yet checked case by case.
 | G3 | P2, P3 | signature profile, possession, hybrid semantics, hybrid routing, hybrid positive, keys, receipt consistency |
 | G4 | P10, S-P3: abstract authority and key binding only | DNSSEC, DNS record, git, chain order, authority isolation, pinned D |
 | G5 | P5, P5c: temporal and confirmation rules. Existence before the block is an assumption, not modelled. | OTS, proofs, time |
-| G6 | none | none (the `utc_assessment` wrapper is not built) |
+| G6 | none | UTC assessment (UTC-01..UTC-10: honest, nonmonotone ×2, 2106 boundary, lowest-height segment, reported with INVALID and UNVERIFIABLE, null with T null ×3); `prototype/indep-verifier/tests/test_utc_assessment.py` (11 tests, including the real-1 receipt's headers 972187..972192); `prototype/e2e/tests/test_driver_dry.py::test_dry_run_utc_assessment`. Built 2026-10-19 (profile §7.4). A-UTC itself is unchecked by design |
 | G7 | none (P5/P5c model related rules, not these endpoints) | time |
 | G8 | P9: contract and code inspection; no discharging model is required | offline reproducibility vectors not built (`release checker` tests configuration updates) |
 | G9 | P4 | dispatch, aggregation, A9.1 mapping, container (d2), trust config |
 | G10 | S-P3 (honest-material key binding) | none named; honest-material transplant tests to be identified or built |
-| G11 | none | none (listing not built) |
 
 **Gaps this table shows.**
-- Model and tests both missing: G6, G11.
-- Model missing: G7's endpoints, and concrete authority (G4 beyond the abstract model).
+- Model missing: G6 (tests added 2026-10-19; A-UTC is an assumption, not a modelled property), G7's endpoints, and
+  concrete authority (G4 beyond the abstract model).
 - Tests missing: G8's offline reproducibility vectors, G10's honest-material transplant cases.
 
 ## 6. What the tester does (4 December)

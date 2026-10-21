@@ -167,3 +167,7 @@ exit) is unchanged.
   `scripts/filter-tlc-output.sh` as the committed ones do.
 - 2026-09-14 — Codex review (partial), two qualifications accepted and
   applied above; `docs/reviews/2026-09-14-codex-review-ledger-and-k6.md`.
+
+---
+
+**Correction appended 2026-10-19 (owner, Claude Opus 5.5), from the E18 sign-off review (`docs/reviews/e18-signoff/CODEX-REVIEW.md`, E18-03).** The kill annotation for the skew-2 bridge run (line 82 above) says 19:32 and 329,323,231 distinct states with four workers. The recorded output (`Bridge/Bridge_k6_skew2.out.truncated:41`) shows progress continuing to 19:35:47 and 437,204,801 states, with twelve workers. The termination metadata above is unsupported; the run was incomplete either way and supplies no green evidence. E18-02 (the archived `Bridge/run_bridge2.sh` cannot run from this checkout as written) is open: the sign-off staged its inputs independently.

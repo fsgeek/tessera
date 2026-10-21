@@ -189,6 +189,28 @@ L-06/L-06s, d2 is L-09, c is L-04, h is L-05), and the review controls named in 
    require unique `key` (P:1308) and a commit carries one `gpgsig`, so two entries cannot both verify one commit.
    The root mixed case is built (L-57c).
 
+## Owner dispositions of the two unbuilt cases (OWNER 2026-10-19, §14.2 item 8)
+
+Both are recorded as not built, with the verdict each case would carry, so the freeze record can cite them. Neither
+needs more work before the freeze; neither is evidence the rule works in the case's own shape.
+
+- **L-94 (SHA-1DC collision-pattern object). OWNER 2026-10-19: not built; the freeze record states it as a coverage
+  gap.** Expected verdict if built: `INVALID / GIT_SHA1_COLLISION` (profile row 14.4). Why not built: a git-framed
+  instance needs a fresh chosen-prefix SHA-1 collision computation; the 12-byte git header shifts the published
+  SHAttered blocks off alignment and the framed object passes detection (`prototype/vendor/SHA1DC-PIN.md`, table).
+  What stands in its place: the pinned detector's behaviour on the raw SHAttered object is demonstrated in that
+  pin record (detected), and the independent verifier calls the same pinned detector on every git-framed object
+  (row 14.4). The unbuilt part is the end-to-end git-framed rejection, so the claim is "detector pinned and
+  demonstrated", not "row 14.4 rejects a collision in a bundle".
+- **F04 repository "mixed" case (open-horizon and finalized entries both verifying). OWNER 2026-10-19: not
+  constructible, dispositioned as vacuous in the git channel.** Expected verdict if it could be built:
+  `UNVERIFIABLE / TRUST_HORIZON`, because the candidate-precedence rule (profile section 6.3, r2-F04) ranks the open
+  horizon class before finalized interval failure. Why it cannot be built: trust-config repository entries need
+  unique `key` (P:1308) and a commit carries one `gpgsig`, so two entries cannot both verify one commit. The rule's
+  precedence is exercised where two classes can coexist: root KSKs (L-57c, `TRUST_HORIZON` over
+  `KSK_OUTSIDE_RELIANCE_PERIOD`), and each repository class alone (L-95 and the open-versus-finalized single-entry
+  cases).
+
 ## EXPECTATION-AMBIGUITIES
 
 Ids are stable labels, not contiguous. Each is a point where deriving an expectation needed a reading the profile does not force. The case's

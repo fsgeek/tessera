@@ -144,7 +144,8 @@ def catalog(spec, vectors, preamble, deps):
         "D": "wamason.com", "TEST": "TEST freeze catalog (prototype/e2e); not the frozen catalog",
         "alg": gen.ALG_HYBRID, "alg_prohibited": [], "binding_forms": ["STMT_DIRECT"], "delta_s": str(U.DELTA),
         "dependency_manifest_sha256": sha256hex(deps), "dnssec_algorithms": ["13", "8"], "ds_digest_types": ["2", "4"],
-        "epsilon_s": str(U.EPS), "k": str(U.K), "preamble_sha256": sha256hex(preamble), "spec_id": U.SPEC_ID,
+        "epsilon_s": str(U.EPS), "k": str(U.K), "utc_delta_s": str(U.UTC_DELTA_S), "utc_m": str(U.UTC_M),
+        "preamble_sha256": sha256hex(preamble), "spec_id": U.SPEC_ID,
         "spec_sha256": sha256hex(spec), "vectors_sha256": sha256hex(vectors),
     }
 

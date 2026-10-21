@@ -1,0 +1,38 @@
+progress valid-values 0
+progress valid-values 1000
+progress valid-values 2000
+progress valid-values 3000
+progress valid-values 4000
+progress valid-values 5000
+progress valid-values 6000
+progress valid-values 7000
+progress valid-values 8000
+progress valid-values 9000
+progress valid-values 10000
+progress valid-values 11000
+{
+  "seed": "0x50384620261019",
+  "elapsed_seconds": 92.708,
+  "counts": {
+    "vector-payload": 32,
+    "vector-frame": 14,
+    "vector-anchor": 6,
+    "vector-reject-content": 33,
+    "vector-reject-frame-attest": 47,
+    "vector-reject-frame-manifest": 4,
+    "vector-reject-anchor": 46,
+    "generated-payload": 12000,
+    "valid-frame": 12000,
+    "mutant-ingest": 20000,
+    "mutant-frame": 20000,
+    "mutant-anchor": 20000,
+    "sig": 12000,
+    "valid-anchor": 10000,
+    "real-anchor": 1,
+    "real-frame": 2
+  },
+  "unique_payload_structures": 7966,
+  "unique_anchor_tuples": 9754,
+  "collision_count": 0
+}
+disagreement classes [('mutant-ingest', 'JSON_SYNTAX', 'JSON_ENCODING')]

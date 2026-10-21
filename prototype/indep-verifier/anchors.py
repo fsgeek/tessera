@@ -101,6 +101,7 @@ class Selected:
     time: int
     confirmed: int
     paths: list
+    latest: int=0  # max nTime over h..h+5 as an unbounded int (A10.1.1; profile 7.4)
 
 def select(proof,headers,pins):
     contradicted=[]; qualifying=[]
@@ -114,4 +115,5 @@ def select(proof,headers,pins):
     if not qualifying: return None,bool(contradicted)
     height=min(a.height for a in qualifying)
     return Selected(height,int.from_bytes(headers[height][68:72],'little'),
-                    int.from_bytes(headers[height+5][68:72],'little'),[a for a in qualifying if a.height==height]),bool(contradicted)
+                    int.from_bytes(headers[height+5][68:72],'little'),[a for a in qualifying if a.height==height],
+                    max(int.from_bytes(headers[i][68:72],'little') for i in range(height,height+6))),bool(contradicted)

@@ -1,0 +1,40 @@
+TLC2 Version 2026.07.31.184830 (rev: 30cc360)
+Running breadth-first search Model-Checking with fp 114 and seed -3187782958484691585 with 1 worker on 12 cores with 7068MB heap and 64MB offheap memory [pid: 297486] (Linux 6.8.0-139-generic amd64, Ubuntu 21.0.12.1 64bit, MSBDiskFPSet, DiskStateQueue).
+Parsing file /home/tony/projects/tessera/formal/tla/E6a/E6a_Broken_DispatchFallthrough.tla
+Parsing file /home/tony/projects/tessera/formal/tla/E6a/E6a_Base.tla
+Parsing file /tmp/tlc-15681055874032933170/_TLCTrace.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/_TLCTrace.tla)
+Parsing file /tmp/tlc-15681055874032933170/FiniteSets.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/FiniteSets.tla)
+Parsing file /home/tony/projects/tessera/formal/tla/E6a/E6a_Props.tla
+Parsing file /home/tony/projects/tessera/formal/tla/P4_VerifierStates.tla
+Parsing file /tmp/tlc-15681055874032933170/Naturals.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Naturals.tla)
+Parsing file /tmp/tlc-15681055874032933170/Sequences.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Sequences.tla)
+Parsing file /tmp/tlc-15681055874032933170/TLC.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/TLC.tla)
+Parsing file /tmp/tlc-15681055874032933170/TLCExt.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/TLCExt.tla)
+Parsing file /tmp/tlc-15681055874032933170/Integers.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Integers.tla)
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module P4_VerifierStates
+Semantic processing of module E6a_Base
+Semantic processing of module TLC
+Semantic processing of module Integers
+Semantic processing of module TLCExt
+Semantic processing of module _TLCTrace
+Semantic processing of module E6a_Props
+Semantic processing of module E6a_Broken_DispatchFallthrough
+Linting of module P4_VerifierStates
+Linting of module E6a_Base
+Linting of module TLCExt
+Linting of module _TLCTrace
+Linting of module E6a_Props
+Linting of module E6a_Broken_DispatchFallthrough
+Starting... (2026-10-19 20:49:11)
+Computing initial states...
+Error: Invariant DispatchTerminal is violated by the initial state:
+/\ sig = (kms :> "absent" @@ gpg :> "absent")
+/\ alg = (kms :> "supported" @@ gpg :> "supported")
+/\ waived = {}
+/\ ev = (dns :> "absent" @@ git :> "absent")
+/\ dispatch = "out"
+
+Finished in 00s at (2026-10-19 20:49:11)

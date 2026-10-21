@@ -87,7 +87,7 @@ def authentic_release():
 FIELD_MAP = {'alg': 'alg', 'alg_prohibited': 'alg_prohibited', 'binding_forms': 'binding_forms',
              'D': 'issuer_domain', 'delta_s': 'delta_s', 'dependency_manifest_sha256': 'dependency_manifest_sha256',
              'dnssec_algorithms': 'dnssec_algorithms', 'ds_digest_types': 'ds_digest_types',
-             'epsilon_s': 'epsilon_s', 'k': 'k', 'preamble_sha256': 'preamble_sha256',
+             'epsilon_s': 'epsilon_s', 'k': 'k', 'utc_delta_s': 'utc_delta_s', 'utc_m': 'utc_m', 'preamble_sha256': 'preamble_sha256',
              'spec_sha256': 'spec_sha256', 'vectors_sha256': 'vectors_sha256'}
 # Universe fields with no A02 slot; each is checked to equal what indep already hard-codes, else stop.
 INDEP_SPEC_ID = 'tessera-v1-strict/verification-spec/1'   # indep verify.py row 8.2 constant

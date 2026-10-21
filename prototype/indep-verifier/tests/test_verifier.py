@@ -123,6 +123,11 @@ class VerificationTests(unittest.TestCase):
             self.assertEqual(cm.exception.code,'TRUST_CONFIG_UNAUTHENTICATED')
         c=copy.deepcopy(self.catalog); c['entries'][0]['k']='7'
         with self.assertRaises(Fault): parse_catalog(jcs(c))
+        for f,v in (('utc_delta_s','7201'),('utc_m','5')):   # A10.1.1: catalog must equal the built-in check values
+            c=copy.deepcopy(self.catalog); c['entries'][0][f]=v
+            with self.assertRaises(Fault): parse_catalog(jcs(c))
+        c=copy.deepcopy(self.catalog); del c['entries'][0]['utc_m']
+        with self.assertRaises(Fault): parse_catalog(jcs(c))
     def test_append_only(self):
         old=parse_trust(jcs(self.trust)); new=copy.deepcopy(self.trust)
         new['version']='2'; new['previous_sha256']=shahex(jcs(self.trust))
@@ -166,7 +171,8 @@ class TemporalAndCliTests(unittest.TestCase):
                     run=subprocess.run(command+suffix,capture_output=True)
                     self.assertEqual(run.returncode,0,run.stderr.decode()); self.assertEqual(run.stderr,b'')
                     from codec import parse_json
-                    report=parse_json(run.stdout.strip(),canonical=True)
+                    whole=parse_json(run.stdout.strip(),canonical=True)
+                    self.assertEqual(set(whole),{'stable','utc_assessment'}); report=whole['stable']
                     self.assertEqual(set(report),{'verdict','reason','T','revocation','historical_security','standing'})
                     self.assertEqual(report['reason'],POSITIVE[1])
                 t['as_of']='2026-10-21T00:00:00Z'; (root/'trust.json').write_bytes(jcs(t))

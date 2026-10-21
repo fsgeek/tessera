@@ -18,6 +18,16 @@ class ParserTests(unittest.TestCase):
         self.code('JSON_STRING', parse_json, b'"e\\u0301"')
         self.code('JSON_NUMBER', parse_json, b'-0')
         self.code('JSON_NUMBER', parse_json, b'9007199254740993')
+    def test_p8_falsification_regressions(self):
+        # prototype/p8-falsify/REPORT.md P8F-02/P8F-03/P8F-04: lock in I's side of each reproduction.
+        self.assertEqual(jcs(parse_json(b'0e'+b'9'*4301,max_depth=62)),b'0')
+        self.assertEqual(jcs(parse_json(b'1e'+b'0'*4301,max_depth=62)),b'1')
+        self.code('JSON_NUMBER', parse_json, b'1e'+b'9'*4301)
+        self.code('JSON_NONCANONICAL', parse_json, b'0e'+b'9'*4301, True)
+        self.code('JSON_ENCODING', parse_json, b'\xef\xbb\xbf\xff')
+        self.code('JSON_SYNTAX', parse_json, b'\xef\xbb\xbf{}')
+        p=b'"'+b'a'*(2**24-1)+b'"'
+        self.code('LENGTH_CAP', read_frame, frame('tessera-v1/attest',p), 'tessera-v1/attest')
     def test_json_numbers(self):
         for raw, expected in [(b'9.80',b'9.8'),(b'1E2',b'100'),(b'1e21',b'1e+21'),
                               (b'5e-324',b'5e-324'),(b'1e-6',b'0.000001')]:

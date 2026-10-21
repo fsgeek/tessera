@@ -1,0 +1,73 @@
+{
+  "counts": {
+    "anchor-real-single-bit": 40720,
+    "frame-real-single-bit": 12920,
+    "anchor-real-truncation": 5090,
+    "anchor-real-extension": 256,
+    "signature-nested-length": 81,
+    "signature-mpi-bitcount": 1032,
+    "signature-packet-length": 8,
+    "anchor-mixed-rules": 9,
+    "frame-tag-length": 512,
+    "anchor-tag-length": 256
+  },
+  "histograms": {
+    "anchor-real-single-bit": {
+      "TAG_UNKNOWN / TAG_UNKNOWN": 528,
+      "ANCHOR_COUNT / ANCHOR_COUNT": 8,
+      "LENGTH_CAP / LENGTH_CAP": 78,
+      "TRUNCATED / TRUNCATED": 89,
+      "TRAILING / TRAILING": 26,
+      "CV_UNKNOWN / CV_UNKNOWN": 32,
+      "JSON_SYNTAX / JSON_SYNTAX": 2316,
+      "JSON_ENCODING / JSON_ENCODING": 1567,
+      "SCHEMA / SCHEMA": 4972,
+      "JSON_NONCANONICAL / JSON_NONCANONICAL": 152,
+      "OK / OK": 30813,
+      "SIG_FORMAT / SIG_FORMAT": 132,
+      "SIG_PACKET / SIG_PACKET": 7
+    },
+    "frame-real-single-bit": {
+      "TAG_UNKNOWN / TAG_UNKNOWN": 288,
+      "CV_UNKNOWN / CV_UNKNOWN": 32,
+      "LENGTH_CAP / LENGTH_CAP": 16,
+      "TRUNCATED / TRUNCATED": 39,
+      "TRAILING / TRAILING": 9,
+      "JSON_SYNTAX / JSON_SYNTAX": 2316,
+      "JSON_ENCODING / JSON_ENCODING": 1567,
+      "SCHEMA / SCHEMA": 4972,
+      "JSON_NONCANONICAL / JSON_NONCANONICAL": 152,
+      "OK / OK": 3529
+    },
+    "anchor-real-truncation": {
+      "TRUNCATED / TRUNCATED": 5090
+    },
+    "anchor-real-extension": {
+      "TRAILING / TRAILING": 256
+    },
+    "signature-nested-length": {
+      "SIG_FORMAT / SIG_FORMAT": 80,
+      "OK / OK": 1
+    },
+    "signature-mpi-bitcount": {
+      "SIG_FORMAT / SIG_FORMAT": 519,
+      "OK / OK": 513
+    },
+    "signature-packet-length": {
+      "OK / OK": 4,
+      "LENGTH_CAP / LENGTH_CAP": 4
+    },
+    "anchor-mixed-rules": {
+      "OK / OK": 9
+    },
+    "frame-tag-length": {
+      "TAG_UNKNOWN / TAG_UNKNOWN": 510,
+      "OK / OK": 2
+    },
+    "anchor-tag-length": {
+      "TAG_UNKNOWN / TAG_UNKNOWN": 255,
+      "OK / OK": 1
+    }
+  },
+  "disagreements": []
+}

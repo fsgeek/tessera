@@ -1,0 +1,353 @@
+
+<!doctype html>
+<html>
+<head>
+	<title>DNSSEC Trust Anchors and Rollovers</title>
+
+	<meta charset="utf-8" />
+	<meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	
+    <link rel="stylesheet" href="/static/css/iana_website.68dd615b61e5.css"/>
+    <link rel="shortcut icon" type="image/ico" href="/static/img/bookmark_icon.e14a2530b3e9.ico"/>
+    <script type="text/javascript" src="/static/js/jquery.a8e7cabd4d49.js"></script>
+    <script type="text/javascript" src="/static/js/dtable.46ee921d4414.js" defer></script>
+    <script type="text/javascript" src="/static/js/relative-time.afe302b05f0d.js" defer></script>
+
+	
+</head>
+
+<body>
+
+
+
+<header>
+    <div id="header">
+        <div id="logo">
+            <a href="/"><img src="/static/img/iana-logo-header.426b3ac01d35.svg" alt="Homepage"/></a>
+        </div>
+        <div class="navigation">
+            <ul>
+                <li><a href="/domains">Domains</a></li>
+                <li><a href="/protocols">Protocols</a></li>
+                <li><a href="/numbers">Numbers</a></li>
+                <li><a href="/about">About</a></li>
+            </ul>
+        </div>
+    </div>
+    
+    
+</header>
+
+
+<div id="body">
+
+
+<article class="hemmed sidenav">
+
+    <main>
+    
+
+	<h1>Trust Anchors and Rollovers</h1>
+
+    <p>The Root Key Signing Key (KSK) acts as the trust anchor for DNSSEC for the Domain Name System. This trust
+        anchor is configured in DNSSEC-aware resolvers to facilitate validation of DNS data.</p>
+    
+    <p>This page contains data on the trust anchors for the DNS, as well as information on operational
+        plans to change these keys (events known as <b>key rollovers</b>).</p>
+    
+    <h2>Root Zone Trust Anchors</h2>
+    <p>IANA distributes an XML file containing the details of the trust anchor set, which validating resolvers
+        can use to verify DNS root zone data. A description of these files and considerations for updating the trust anchor
+        are described in <a href="/go/rfc9718">DNSSEC Trust Anchor Publication for the Root Zone</a>
+        (RFC 9718).</p>
+
+        <div class="dtable-wrap"><table class="dtable">
+        <thead>
+        <tr>
+            <th>File</th>
+            <th>Description</th>
+        </tr>
+        </thead><tbody>
+        <tr>
+            <td><a href="https://data.iana.org/root-anchors/root-anchors.xml"><b>root-anchors.xml</b></a></td>
+            <td>DNS Root Trust Anchors<br/><div class="small-note">Updated 2024-11-05</div></td>
+        </tr>
+        <tr>
+            <td><a href="https://data.iana.org/root-anchors/root-anchors.p7s">root-anchors.p7s</a></td>
+            <td>Signature to verify the DNS Root Trust Anchors file (S/MIME)<br/><div class="small-note">Updated 2025-08-04</div></td>
+        </tr>
+        <tr>
+            <td><a href="https://data.iana.org/root-anchors/icannbundle.pem">icannbundle.pem</a></td>
+            <td>Certificates for validating S/MIME signature; known as the ICANN CA<br/><div class="small-note">Updated 2026-05-28</div></td>
+        </tr>
+    </tbody></table></div>
+
+    <p>Validators should keep this data up-to-date. Consider the following:</p>
+    <ul>
+        <li>Operators of validating resolvers and other end-users of the
+            DNSSEC trust anchors should follow their vendor's instructions for updating the trust anchors. Vendors will
+            differ in how and when they distribute updates according to their requirements for distributing trust anchors.
+        </li>
+        <li>Many software packages and systems will be configured to automatically update their trust anchors using the
+            mechanism described in <a href="/go/rfc5011">Automated Updates of DNS Security (DNSSEC) Trust Anchors</a> (RFC
+            5011). This mechanism establishes trust for the new key based on a period of observing the new key in the DNS
+            root zone, signed by the current key.</li>
+        <li>Software vendors often package and distribute up-to-date trust anchors through their regular software update
+            mechanisms.</li>
+    </ul>
+
+    <p>IANA provides a <a href="https://github.com/iana-org/get-trust-anchor">standalone tool</a> that retrieves the root
+        trust anchors and verifies their accuracy, providing the root zone trust anchors in both DS and DNSKEY formats.</p>
+
+    <h2>Rollovers</h2>
+
+    <p>The process of changing the signing key is known as a rollover. Rollovers are an important process in the
+        management of DNSSEC, ensuring the ongoing security of the protocol as the cryptographic landscape evolves.
+        Important dates regarding the current rollover are shown below:</p>
+
+    <div class="dtable-wrap">
+        <table class="dtable">
+            <thead>
+                <tr>
+                    <th>Event</th>
+                    <th>Expected Date</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Publication of KSK-2024</td>
+                    <td>11&nbsp;January&nbsp;2025</td>
+                    <td>KSK-2024 was introduced in the DNS root zone.</td>
+                </tr>
+                <tr>
+                    <td>RFC 5011 Trust of KSK-2024</td>
+                    <td>10&nbsp;February&nbsp;2025</td>
+                    <td>KSK-2024 should begin to be trusted by resolvers that follow the mechanisms described 
+                        in RFC 5011.</td>
+                </tr>
+                <tr>
+                    <td>Rollover to KSK-2024</td>
+                    <td>11&nbsp;October&nbsp;2026</td>
+                    <td>KSK-2024 is now signing the zone; KSK-2017 is no longer signing the zone. 
+                        <b>Validating resolvers must have updated trust anchors to continue validating the root zone.</b></td>
+                </tr>
+                <tr>
+                    <td>Revocation of KSK-2017</td>
+                    <td>11&nbsp;January&nbsp;2027</td>
+                    <td>KSK-2017 is scheduled to be published in the root zone with the REVOKE bit set, 
+                        allowing resolvers that follow RFC 5011 to revoke it as a trust anchor.</td>
+                </tr>
+                <tr>
+                    <td>Removal of KSK-2017</td>
+                    <td>22&nbsp;March&nbsp;2027</td>
+                    <td>KSK-2017 is scheduled to be removed from the root zone following its revocation.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <p>We plan an idealized three-year rollover interval, publishing the key in the DNS for about two years in a standby
+        state before the rollover. Generation of the successor key follows each rollover.</p>
+    
+    <p>The three-year rollover strikes a responsible balance ensuring that procedures and software remain sufficiently
+        agile to adopt new keys as they are commissioned, while not introducing too much operational complexity through
+        overly-frequent changes to the KSK. The standby period will allow a lengthy pre-publication and consequently
+        allow for the new KSK's earlier use if there is a need to expedite a rollover. More information on the schedule and
+        motivation is available in our <a
+            href="https://www.icann.org/en/system/files/files/proposal-future-rz-ksk-rollovers-01nov19-en.pdf">Proposal for
+            Future Root Zone KSK Rollovers</a>.</p>
+    
+    <h2>Key status</h2>
+    <p>
+        This table provides information on the keys generated for Root Zone KSK operations. Software implementers
+        should rely on the XML trust anchors file for normative parameters on keys.
+    </p>
+    
+    <figure>
+    <div class="dtable-wrap"><table class="dtable">
+        <thead>
+        <tr>
+            <th>Informal Name</th>
+            <th>Status</th>
+            <th>Details</th>
+        </tr>
+        </thead><tbody>
+        <tr>
+            <td class="label">KSK-2024</td>
+            <td><span class="status-green">Active</span></td>
+            <td>Generated <a href="/dnssec/ceremonies/53-2">2024-04-26</a> (<a href="/reports/2024/root-ksk-2024.pdf">attestation</a>)
+                with key tag 38696 (0x9728) and label <span class="label">Kmyv6jo</span>. Signing since 2026-10-11.</td>
+        </tr>
+        <tr>
+            <td class="label">KSK-2017</td>
+            <td><span class="status-blue">Post-Publication</span></td>
+            <td>Generated <a href="/dnssec/ceremonies/27">2016-10-27</a> (<a href="/reports/2017/root-ksk-2017.pdf">attestation</a>)
+                with key tag 20326 (0x4F66) and label <span class="label">Klajeyz</span>. Signed between 2018-10-11 and 2026-10-11. Remains a valid trust anchor.</td>
+        </tr>
+        <tr>
+            <td class="label">KSK-2023</td>
+            <td><span class="status-grey">Abandoned</span></td>
+            <td>Generated <a href="/dnssec/ceremonies/49">2023-04-27</a> (<a href="/reports/2023/root-ksk-2023.pdf">attestation</a>)
+                with key tag 46211 (0xB483) and label <span class="label">Kmrfl3b</span>. Will not be used, superseded by KSK-2024.</td>
+        </tr>
+        <tr>
+            <td class="label">KSK-2010</td>
+            <td><span class="status-grey">Retired</span></td>
+            <td>Generated <a href="/dnssec/ceremonies/1">2010-06-16</a> (<a href="/reports/2010/root-ksk-2010.pdf">attestation</a>)
+                with key tag 19036 (0x4A5C) and label <span class="label">Kjqmt7v</span>. Signed between 2010-07-15 and 2018-10-11.
+                Revoked 2019-01-11. Removed 2019-03-22.</td>
+        </tr>
+    </tbody></table></div>
+    <figcaption>The hexadecimal key tag corresponds to the key identifier used in trust anchor signaling data, as defined in
+        <a href="/go/rfc8145">Signaling Trust Anchor Knowledge in DNSSEC</a> (RFC 8145). The label matches the key identifier found in
+        the DNS Root Trust Anchors XML file, described above.</figcaption>
+    </figure>
+
+    <h2>Stay informed</h2>
+    <p>Operational announcements regarding trust anchors and rollovers are published on the
+        <a href="https://lists.icann.org/postorius/lists/root-dnssec-announce.icann.org/">root-dnssec-announce
+        mailing list</a>. A separate
+        <a href="https://lists.icann.org/postorius/lists/ksk-rollover.icann.org/">ksk-rollover mailing list</a> is
+        a forum for discussion specific to rollovers.</p>
+    <p>Major updates will also be communicated through <a href="https://www.icann.org/en/announcements">ICANN’s
+        announcement channels</a>.</p>
+
+
+    </main>
+
+    <nav id="sidenav">
+    
+
+<div class="navigation_box">
+    <h2>Domain Names</h2>
+    <ul>
+        <li id="nav_dom_top"><a href="/domains">Overview</a></li>
+        <li id="nav_dom_root"><a href="/domains/root">Root Zone Management</a></li>
+        <ul id="nav_dom_root_sub">
+            <li id="nav_dom_root_top"><a href="/domains/root">Overview</a></li>
+            <li id="nav_dom_root_db"><a href="/domains/root/db">Top-Level Domains</a></li>
+            <li id="nav_dom_root_files"><a href="/domains/root/files">Files and Downloads</a></li>
+            <li id="nav_dom_root_manage"><a href="/domains/root/manage">Manage Delegations</a></li>
+            <li id="nav_dom_root_procedures"><a href="/domains/root/help">Instructions &amp; Guides</a></li>
+        </ul>
+        <li id="nav_dom_int"><a href="/domains/int">.INT Registry</a></li>
+        <ul id="nav_dom_int_sub">
+            <li id="nav_dom_int_top"><a href="/domains/int">Overview</a></li>
+            <li id="nav_dom_int_manage"><a href="/domains/int/manage">Register/modify an .INT domain</a></li>
+            <li id="nav_dom_int_policy"><a href="/domains/int/policy">Eligibility</a></li>
+        </ul>
+        <li id="nav_dom_arpa"><a href="/domains/arpa">.ARPA Registry</a></li>
+        <li id="nav_dom_idn"><a href="/domains/idn-tables">IDN Practices Repository</a></li>
+        <ul id="nav_dom_idn_sub">
+            <li id="nav_dom_idn_top"><a href="/domains/idn-tables">Overview</a></li>
+            <!-- <li id="nav_dom_idn_tables"><a href="/domains/idn-tables/db">Tables</a></li> -->
+            <li id="nav_dom_idn_submit"><a href="/help/idn-repository-procedure">Submit a table</a></li>
+        </ul>
+        <li id="nav_dom_lgr"><a href="/domains/lgrs">Label Generation Rulesets</a></li>
+        <ul id="nav_dom_lgr_sub">
+            <li id="nav_dom_lgr_top"><a href="/domains/lgrs">Overview</a></li>
+            <li id="nav_dom_lgr_root"><a href="/domains/lgrs/root-zone">Root Zone Ruleset</a></li>
+            <li id="nav_dom_lgr_reference"><a href="/domains/lgrs/reference">Reference Rulesets</a></li>
+        </ul>
+        <li id="nav_dom_dnssec"><a href="/dnssec">Root Key Signing Key (DNSSEC)</a></li>
+        <ul id="nav_dom_dnssec_sub">
+            <li id="nav_dom_dnssec_top"><a href="/dnssec">Overview</a></li>
+            <li id="nav_dom_dnssec_ksk"><a href="/dnssec/files">Trust Anchors and Rollovers</a></li>
+            <li id="nav_dom_dnssec_ceremonies"><a href="/dnssec/ceremonies">Key Signing Ceremonies</a></li>
+            <li id="nav_dom_dnssec_dps"><a href="/dnssec/procedures">Policies &amp; Procedures</a></li>
+            <li id="nav_dom_dnssec_tcrs"><a href="/dnssec/tcrs">Community Representatives</a></li>
+
+        </ul>
+        <li id="nav_dom_special"><a href="/domains/reserved">Reserved Domains</a></li>
+    </ul>
+</div>
+
+
+    </nav>
+
+</article>
+
+
+</div>
+
+<footer>
+    <div id="footer">
+        <table class="navigation">
+            <tr>
+                <td class="section"><a href="/domains">Domain&nbsp;Names</a></td>
+                <td class="subsection">
+                    <ul>
+                        <li><a href="/domains/root">Root Zone Registry</a></li>
+                        <li><a href="/domains/int">.INT Registry</a></li>
+                        <li><a href="/domains/arpa">.ARPA Registry</a></li>
+                        <li><a href="/domains/idn-tables">IDN Repository</a></li>
+                    </ul>
+                </td>
+            </tr>
+            <tr>
+                <td class="section"><a href="/numbers">Number&nbsp;Resources</a></td>
+                <td class="subsection">
+                    <ul>
+                        <li><a href="/numbers/registries">Number Registries</a></li>
+                        <li><a href="/numbers/allocations/">RIR Allocation Data</a></li>
+                        <li><a href="/help/abuse">Abuse Information</a></li>
+                    </ul>
+                </td>
+            </tr>
+            <tr>
+                <td class="section"><a href="/protocols">Protocols</a></td>
+                <td class="subsection">
+                    <ul>
+                        <li><a href="/protocols">Protocol Registries</a></li>
+                        <li><a href="/time-zones">Time Zone Database</a></li>
+                    </ul>
+                </td>
+            </tr>
+            <tr>
+                <td class="section"><a href="/about">About&nbsp;Us</a></td>
+                <td class="subsection">
+                    <ul>
+                        <li><a href="/news">News</a></li>
+                        <li><a href="/performance">Performance</a></li>
+                        <li><a href="/about/organization">The Organization</a></li>
+                        <li><a href="/archive">Archive</a></li>
+                        <li><a href="/contact">Contact Us</a></li>
+                    </ul>
+                </td>
+            </tr>
+        </table>
+        <div id="custodian">
+            <p>The IANA functions coordinate the Internet’s globally unique identifiers, and
+                are provided by <a href="https://pti.icann.org">Public Technical Identifiers</a>, an affiliate of
+                <a href="https://www.icann.org/">ICANN</a>.</p>
+        </div>
+        <div id="legalnotice">
+            <ul>
+                <li><a href="https://www.icann.org/privacy/policy">Privacy Policy</a></li>
+                <li><a href="https://www.icann.org/privacy/tos">Terms of Service</a></li>
+                
+            </ul>
+        </div>
+    </div>
+</footer>
+
+
+
+<script>
+$(document).ready(function() {
+	$("#nav_dom_idn_sub").hide()
+	$("#nav_dom_lgr_sub").hide()
+	$("#nav_dom_root_sub").hide()
+	$("#nav_dom_int_sub").hide()
+	$("#nav_dom_tools_sub").hide()
+	$("#nav_dom_dnssec").addClass("selected")
+	$("#nav_dom_dnssec_ksk").addClass("selected")
+});
+</script>
+
+
+</body>
+
+</html>

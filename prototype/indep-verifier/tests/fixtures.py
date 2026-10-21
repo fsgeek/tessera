@@ -37,7 +37,7 @@ def rrset(owner,typ,rdatas,key,keydata,signer,t):
     data=prefix+b''.join(rr(owner,typ,r) for r in sorted(rdatas)); r,s=utils.decode_dss_signature(key.sign(data,ec.ECDSA(hashes.SHA256())))
     return b''.join(rr(owner,typ,r) for r in sorted(rdatas))+rr(owner,46,prefix+r.to_bytes(32,'big')+s.to_bytes(32,'big'))
 
-def stamp(target,height,t,headers,pins,confirmation=None):
+def stamp(target,height,t,headers,pins,confirmation=None,times=None):
     digest=sha(target)
     # Append/prepend builds a transaction containing the current OTS message.
     prefix=bytes(4)+b'\x01'+bytes(36)+b'\x00'+bytes(4)+b'\x01'+bytes(8)+b'\x22\x6a\x20'
@@ -47,13 +47,14 @@ def stamp(target,height,t,headers,pins,confirmation=None):
     prev=bytes(32)
     for i in range(height,height+6):
         when=t if i==height or confirmation is None else confirmation
+        if times is not None: when=times[i-height]  # per-header nTime (UTC assessment tests)
         header=b'\x01\x00\x00\x00'+prev+(root if i==height else bytes(32))+when.to_bytes(4,'little')+bytes(8)
         headers[str(i)]=header.hex(); pins[str(i)]=sha256d(header)[::-1].hex(); prev=sha256d(header)
     return proof,sha256d(transaction)[::-1].hex()
 
 def make_fixture(common_overrides=None, manifest_overrides=None, gpg_common_overrides=None,
                  window_start='2026-10-01T00:00:00Z',window_end='2026-11-01T00:00:00Z',objects_overrides=None,
-                 hybrid=False,kms_signer=None,kms_possession_signer=None):
+                 hybrid=False,kms_signer=None,kms_possession_signer=None,receipt_times=None):
     alg='KMS-MLDSA65-PURE-GPG-OPENPGP4-ECDSA-P256-SHA256' if hybrid else ALG
     t=utc('2026-10-14T12:00:00Z'); kms=mldsa.MLDSA65PrivateKey.generate() if hybrid else ec.generate_private_key(ec.SECP256R1()); gpg=ec.generate_private_key(ec.SECP256R1())
     repo=ec.generate_private_key(ec.SECP256R1()); root=ec.generate_private_key(ec.SECP256R1()); zone=ec.generate_private_key(ec.SECP256R1())
@@ -86,7 +87,7 @@ def make_fixture(common_overrides=None, manifest_overrides=None, gpg_common_over
     siglines=armor.split(b'\n'); encoded=siglines[2]; siglines=siglines[:2]+[encoded[i:i+76] for i in range(0,len(encoded),76)]+siglines[3:]
     header,message=unsigned.split(b'\n\n',1); commit=header+b'\ngpgsig '+siglines[0]+b'\n'+b'\n'.join(b' '+x for x in siglines[1:])+b'\n\n'+message
     headers={}; pins={}
-    receipt_ots,txid=stamp(anchor,120,t,headers,pins)
+    receipt_ots,txid=stamp(anchor,120,t,headers,pins,times=receipt_times)
     envelope=b'\x1a'+b'tessera-v1/dnssec-snapshot'+len(body).to_bytes(4,'big')+body
     dns_ots,_=stamp(envelope,110,t,headers,pins)
     git_ots,_=stamp((object_id('commit',commit)+'\n').encode(),100,t+10,headers,pins)
@@ -95,6 +96,6 @@ def make_fixture(common_overrides=None, manifest_overrides=None, gpg_common_over
     trust={'format':'tessera-v1-trust/1','profile':PROFILE,'version':'1','previous_sha256':'0'*64,'as_of':'2026-10-20T00:00:00Z','issuer_domain':'wamason.com','header_pins':pins,
            'root_ksks':[{'name':'test-root','key_tag':str(keytag(root_data)),'algorithm':'13','dnskey_rdata':enc(root_data),'ds_sha256':shahex(b'\x00'+root_data),'signing_start':'2026-01-01T00:00:00Z','signing_end':None,'reliance_lifetime_s':'1814400','publication':None,'revocation':None,'sources':sources}],
            'repository_keys':[{'domain':'wamason.com','key':enc(gpgkey(repo)),'signing_start':'2026-01-01T00:00:00Z','signing_end':None,'sources':sources}]}
-    entry={'spec_sha256':shahex(objects['spec']),'vectors_sha256':shahex(objects['vectors']),'preamble_sha256':shahex(objects['preamble']),'dependency_manifest_sha256':shahex(objects['dependency_manifest']),'alg':alg,'alg_prohibited':[],'binding_forms':['STMT_DIRECT'],'issuer_domain':'wamason.com','delta_s':'259200','epsilon_s':'86400','k':'6','dnssec_algorithms':['8','13'],'ds_digest_types':['2','4']}
+    entry={'spec_sha256':shahex(objects['spec']),'vectors_sha256':shahex(objects['vectors']),'preamble_sha256':shahex(objects['preamble']),'dependency_manifest_sha256':shahex(objects['dependency_manifest']),'alg':alg,'alg_prohibited':[],'binding_forms':['STMT_DIRECT'],'issuer_domain':'wamason.com','delta_s':'259200','epsilon_s':'86400','k':'6','utc_delta_s':'7200','utc_m':'6','dnssec_algorithms':['8','13'],'ds_digest_types':['2','4']}
     catalog={'format':'tessera-v1-independent-catalog/1','entries':[entry]}
     return {'layers':[layer],'profile':PROFILE},trust,catalog

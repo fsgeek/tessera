@@ -6,7 +6,10 @@ from dnssec import dnskey,keytag
 TRUST_KEYS={'format','profile','version','previous_sha256','as_of','issuer_domain','header_pins','root_ksks','repository_keys'}
 KSK_KEYS={'name','key_tag','algorithm','dnskey_rdata','ds_sha256','signing_start','signing_end','reliance_lifetime_s','publication','revocation','sources'}
 REPO_KEYS={'domain','key','signing_end','signing_start','sources'}
-CAT_KEYS={'spec_sha256','vectors_sha256','preamble_sha256','dependency_manifest_sha256','alg','alg_prohibited','binding_forms','issuer_domain','delta_s','epsilon_s','k','dnssec_algorithms','ds_digest_types'}
+CAT_KEYS={'spec_sha256','vectors_sha256','preamble_sha256','dependency_manifest_sha256','alg','alg_prohibited','binding_forms','issuer_domain','delta_s','epsilon_s','k','utc_delta_s','utc_m','dnssec_algorithms','ds_digest_types'}
+
+# Built-in A10.1.1 values: a check that the catalog carries them (fail closed), never the source of the bound.
+UTC_DELTA_S=7200; UTC_M=6
 
 def closed(obj,keys): demand(isinstance(obj,dict) and set(obj)==keys,'TRUST_CONFIG_UNAUTHENTICATED')
 def dec(value,low=0,high=4294967295):
@@ -65,7 +68,7 @@ def parse_catalog(raw):
         for field in ('spec_sha256','vectors_sha256','preamble_sha256','dependency_manifest_sha256'): hex64(e[field])
         demand(isinstance(e['alg'],str) and re.fullmatch(r'[A-Z0-9][A-Z0-9-]{0,63}',e['alg']),'CATALOG_UNAUTHENTICATED')
         demand(e['alg_prohibited']==[] and e['binding_forms']==['STMT_DIRECT'] and e['issuer_domain']=='wamason.com','CATALOG_UNAUTHENTICATED')
-        demand(e['delta_s']=='259200' and e['epsilon_s']=='86400' and e['k']=='6' and e['dnssec_algorithms']==['8','13'] and e['ds_digest_types']==['2','4'],'CATALOG_UNAUTHENTICATED')
+        demand(e['delta_s']=='259200' and e['epsilon_s']=='86400' and e['k']=='6' and e['utc_delta_s']==str(UTC_DELTA_S) and e['utc_m']==str(UTC_M) and e['dnssec_algorithms']==['8','13'] and e['ds_digest_types']==['2','4'],'CATALOG_UNAUTHENTICATED')
         return {e['spec_sha256']:e}
     except (Fault,TypeError,ValueError,KeyError): raise Fault('CATALOG_UNAUTHENTICATED') from None
 

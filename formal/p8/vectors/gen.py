@@ -93,12 +93,12 @@ def _reject_constant(name):
 
 def _parse_tree(data):
     """Bytes -> tree of dict-as-pairs-list / list / str / _Num / bool / None. Syntax only."""
-    if data.startswith(b"\xef\xbb\xbf"):
-        raise Reject("JSON_SYNTAX", "byte-order mark")
-    try:
+    try:                                # ENCODING-V1 §1.4: strict UTF-8 over the whole input first (P8F-03)
         text = data.decode("utf-8", errors="strict")
     except UnicodeDecodeError as e:
         raise Reject("JSON_ENCODING", str(e))
+    if text.startswith("\ufeff"):
+        raise Reject("JSON_SYNTAX", "byte-order mark")
     try:
         return json.loads(
             text,
@@ -150,7 +150,9 @@ def number_value(lit):
     decimal value of RFC 8785's serialization of the nearest double, and the literal is not a
     negative zero. Returns the double."""
     mant, _, exp = lit.lower().partition("e")
-    if exp and abs(int(exp)) > 100000:          # Decimal cannot hold the exponent; decide directly
+    mag = exp.lstrip("+-").lstrip("0")         # no int() of an unbounded exponent (P8F-02)
+    if len(mag) > 18:   # 10^18 and beyond: Decimal cannot hold it, and with at most 2^24 mantissa digits no nonzero
+        # literal is a finite nonzero double (the old bound 100000 also rejected 1 + 200000 zeros + e-200000)
         if mant.strip("-0.") == "":
             if lit.startswith("-"):
                 raise Reject("JSON_NUMBER", "negative zero")
@@ -203,6 +205,8 @@ def jcs(value):
 
 def decode_payload(data):
     """In-frame payload bytes -> value. Exactly canonical, nothing normalized."""
+    if len(data) > MAX_PAYLOAD:                 # ENCODING-V1 §1.1 size limit, as the frame gives it (P8F-04)
+        raise Reject("LENGTH_CAP", "payload above 2^24 bytes")
     v = ingest(data, max_depth=MAX_DEPTH_PAYLOAD)
     if jcs(v) != data:
         raise Reject("JSON_NONCANONICAL", "payload is not its own RFC 8785 serialization")

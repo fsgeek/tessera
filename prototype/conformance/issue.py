@@ -434,6 +434,14 @@ def expected_T(c):
     return c.chain.ntime(h)
 
 
+def expected_U(c):
+    """A10.1.1 / profile 7.4: U = 7200 + max nTime(h* .. h*+5), unbounded int; None exactly when T is None."""
+    if expected_T(c) is None:
+        return None
+    h, _ = selected(c, "receipt")
+    return U.UTC_DELTA_S + max(c.chain.ntime(i) for i in range(h, h + U.UTC_M))
+
+
 def preship(c):
     """Honest-issuer pre-ship checks (P§4). Values: True / False."""
     d = U.ts(c.declared)

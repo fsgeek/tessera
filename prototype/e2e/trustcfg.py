@@ -39,8 +39,9 @@ ROOT_URLS = {"root-anchors.xml": "https://data.iana.org/root-anchors/root-anchor
 ARCHIVE = WORK / "root-anchors"
 SPIKE_CAPTURES = [PROTO / "spike" / "out" / "dns-snapshot.json", PROTO / "spike" / "out-ksk2024" / "dns-snapshot.json"]
 POLICY = {   # name -> (signing_start, signing_end, publication, revocation): profile §5 PROPOSED values
-    20326: ("KSK-2017", "2018-10-11T16:00:00Z", "2026-10-11T00:00:00Z", "2017-08-11T00:00:00Z", "2027-01-11T00:00:00Z"),
-    38696: ("KSK-2024", "2026-10-11T00:00:00Z", None, None, None),   # publication: informational, left unsourced
+    # 2026-10-19: KSK-2017 publication corrected from 2017-08-11 to 2017-07-11 (ICANN); sources in formal/trust-sources/
+    20326: ("KSK-2017", "2018-10-11T16:00:00Z", "2026-10-11T00:00:00Z", "2017-07-11T00:00:00Z", "2027-01-11T00:00:00Z"),
+    38696: ("KSK-2024", "2026-10-11T00:00:00Z", None, "2025-01-11T00:00:00Z", None),   # publication sourced: formal/trust-sources/VALUES.md
 }
 RELIANCE_L = "1814400"
 

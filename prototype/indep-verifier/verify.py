@@ -1,5 +1,5 @@
 #!/usr/bin/env python3.14
-"""Independent V1 differential instrument. Emits only the stable six on stdout."""
+"""Independent V1 differential instrument. Emits {"stable": the stable six, "utc_assessment": A10.1.1} on stdout."""
 import argparse
 import re
 import sys
@@ -12,7 +12,7 @@ from codec import (ALG,PROFILE,Fault,Literal,b64,demand,frame,isotime,jcs,parse_
 from anchors import parse_ots,select,sha256d,tx_path
 from dnssec import interval,parse_snapshot,txt_value,validate_snapshot
 from git_channel import dearmor,object_id,parse_commit,parse_tree,verify_path
-from policy import parse_catalog,parse_trust
+from policy import parse_catalog,parse_trust,UTC_DELTA_S,UTC_M
 import release_constants as release
 import release_auth
 import sha1dc
@@ -58,6 +58,15 @@ class Ledger:
 def stable(verdict,reason,t=None):
     return {'historical_security':'NOT_EVALUATED','reason':reason,'revocation':'NOT_EVALUATED',
             'standing':'ABSENT/NOT_ISSUED_IN_PROFILE','T':isotime(t) if t is not None else None,'verdict':verdict}
+
+UTC_ASSUMPTION='A-UTC-7200-6'
+# A10.1.1 / profile 7.4: conditional UTC assessment. Outside the stable six; never enters a verdict.
+
+def utc_assessment(selected=None,catalog=None):
+    # Null exactly when T is null: callers pass the selected anchor only when T is reported.
+    # Python ints never wrap, so 7200 + max(uint32 nTime) is the 64-bit sum without reduction mod 2^32.
+    bound=None if selected is None else isotime(int(next(iter(catalog.values()))['utc_delta_s'])+selected.latest)
+    return {'assumption_id':UTC_ASSUMPTION,'utc_upper_bound':bound}
 
 BINARY={'a_sig','manifest','spec','vectors','preamble','dependency_manifest'}
 NESTED={'possession':{'kms','gpg'},'keys':{'kms','gpg'},'receipt_anchor':{'ots','txid'},
@@ -143,12 +152,18 @@ def anchor_checks(ledger,row,data,expected,headers,pins,kind,txid=None):
     # T requires grammar, digest, no contradiction, qualifying; NOT tx shape.
     return AnchorResult(selected,digest_ok and not contradicted and selected is not None)
 
-def verify_bundle(bundle,config,catalog,request='strict',diagnostics=False):
-    if len(bundle)>2**27: return stable('UNVERIFIABLE','OUT_OF_PROFILE')
+def verify_bundle(bundle,config,catalog,request='strict',diagnostics=False,utc=False):
+    result,ledger,assessment=_evaluate(bundle,config,catalog,request)
+    if utc: return (result,assessment,ledger) if diagnostics else (result,assessment)
+    return (result,ledger) if diagnostics else result
+
+def _evaluate(bundle,config,catalog,request):
+    # Dispatch-terminal outcomes evaluate nothing: T and U are both null (profile 3.4, 7.4).
+    if len(bundle)>2**27: return stable('UNVERIFIABLE','OUT_OF_PROFILE'),None,utc_assessment(catalog=catalog)
     try: obj=parse_json(bundle,numbers=False)
-    except Fault: return stable('UNVERIFIABLE','OUT_OF_PROFILE')
-    if not isinstance(obj,dict) or obj.get('profile')!=PROFILE: return stable('UNVERIFIABLE','OUT_OF_PROFILE')
-    if not isinstance(obj.get('layers'),list) or len(obj['layers'])!=1 or request!='strict': return stable('UNVERIFIABLE','OUT_OF_PROFILE')
+    except Fault: return stable('UNVERIFIABLE','OUT_OF_PROFILE'),None,utc_assessment(catalog=catalog)
+    if not isinstance(obj,dict) or obj.get('profile')!=PROFILE: return stable('UNVERIFIABLE','OUT_OF_PROFILE'),None,utc_assessment(catalog=catalog)
+    if not isinstance(obj.get('layers'),list) or len(obj['layers'])!=1 or request!='strict': return stable('UNVERIFIABLE','OUT_OF_PROFILE'),None,utc_assessment(catalog=catalog)
     ledger=Ledger()
     for row in ('1.1','1.2','1.3','1.4'): ledger.add(row,True,'')
     try: ledger.add('2.1',jcs(obj)==bundle,'JSON_NONCANONICAL')
@@ -283,7 +298,8 @@ def verify_bundle(bundle,config,catalog,request='strict',diagnostics=False):
         if entries[i] and 'dependency_manifest' in raw:
             ledger.add('17.4',shahex(raw['dependency_manifest'])==entries[i]['dependency_manifest_sha256'],'BUNDLE_OBJECT_HASH',(i,))
     result=ledger.report(t)
-    return (result,ledger) if diagnostics else result
+    # U uses the same selected h* and the same usability condition as T; it never touches the ledger.
+    return result,ledger,utc_assessment(receipt.selected if receipt.usable else None,catalog)
 
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
@@ -303,7 +319,9 @@ def main():
         catalog=parse_catalog(catalog_raw)
         # Bound the read, not just the later parse.
         with open(args.bundle,'rb') as f: bundle=f.read(2**27+1)
-        print(jcs(verify_bundle(bundle,config,catalog)).decode())
+        result,assessment=verify_bundle(bundle,config,catalog,utc=True)
+        # Stable six under `stable` (EA-03); utc_assessment beside it, never inside it (profile 3.4, 7.4).
+        print(jcs({'stable':result,'utc_assessment':assessment}).decode())
         return 0
     except Fault as e: print(e.code,file=sys.stderr); return 2
     except OSError as e: print('INPUT_IO_ERROR: '+str(e),file=sys.stderr); return 2

@@ -18,6 +18,10 @@ Verifier output (EA-03): stdout must contain one JSON object holding the six sta
 `report`. A startup refusal (no verdict) must exit nonzero and mention TRUST_CONFIG_UNAUTHENTICATED on stdout or
 stderr, with no six-field object.
 
+UTC assessment (A10.1.1; profile 7.4): where expected.json carries `utc_assessment`, the verifier's output object
+must carry an equal `utc_assessment` object beside (never inside) the six-field object; a mismatch is a DISAGREE on
+field `utc_assessment`. Cases without it are not checked for it.
+
 Release-checker cases (L-53..L-56c) run only with --release-checker: `CMD --previous P --next N`, expected to
 print ACCEPT or REJECT (EA-12).
 
@@ -112,6 +116,11 @@ def run_case(case_dir, verifier, tmp, timeout, env_base):
                 "stderr": err[-400:]}
     stable, whole = got
     diffs = [f for f in FIELDS if stable.get(f) != exp[f]]
+    got_utc = None
+    if "utc_assessment" in exp:
+        got_utc = whole.get("utc_assessment") if whole is not stable else None
+        if got_utc != exp["utc_assessment"] or "utc_assessment" in stable:
+            diffs.append("utc_assessment")
     if "detail" in meta:
         d = stable.get("detail", whole.get("detail"))
         if d is not None and d != meta["detail"]:
@@ -122,8 +131,11 @@ def run_case(case_dir, verifier, tmp, timeout, env_base):
         outcome = "AMBIG-ONLY"
     else:
         outcome = "DISAGREE"
-    return {"id": meta["id"], "outcome": outcome, "diffs": diffs,
-            "expected": {f: exp[f] for f in FIELDS}, "got": {f: stable.get(f) for f in FIELDS},
+    ex = {f: exp[f] for f in FIELDS}
+    gt = {f: stable.get(f) for f in FIELDS}
+    if "utc_assessment" in exp:
+        ex["utc_assessment"], gt["utc_assessment"] = exp["utc_assessment"], got_utc
+    return {"id": meta["id"], "outcome": outcome, "diffs": diffs, "expected": ex, "got": gt,
             "ambiguities": meta.get("ambiguities", [])}
 
 

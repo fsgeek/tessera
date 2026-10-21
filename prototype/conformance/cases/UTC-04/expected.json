@@ -1,0 +1,40 @@
+{
+ "T": "2026-11-10T12:20:00Z",
+ "_meta": {
+  "ambiguities": [],
+  "ambiguous_fields": [],
+  "cite": [
+   "P:7.4",
+   "A10:287-293",
+   "A10:300-311",
+   "A10:307-311"
+  ],
+  "derivation": "U = 4294974495 = 2106-02-07T08:28:15Z (A10's own example), not a 1970 time. c1-c3 use h* and h*+5 only.",
+  "group": "UTC assessment",
+  "id": "UTC-04",
+  "issuer_preship": {
+   "chain_order_h_git_plus_5_lt_h_receipt": true,
+   "git_anchored": true,
+   "receipt_anchored": true,
+   "receipt_c1": true,
+   "receipt_c2": true,
+   "receipt_c3": true,
+   "snapshot_anchored": true,
+   "snapshot_c1": true,
+   "snapshot_c2": true,
+   "snapshot_c3": true,
+   "window": true
+  },
+  "kind": "bundle",
+  "title": "max nTime = 4294967295 at h*+3: 64-bit sum, no reduction mod 2^32"
+ },
+ "historical_security": "NOT_EVALUATED",
+ "reason": "OK",
+ "revocation": "NOT_EVALUATED",
+ "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+ "utc_assessment": {
+  "assumption_id": "A-UTC-7200-6",
+  "utc_upper_bound": "2106-02-07T08:28:15Z"
+ },
+ "verdict": "VALID_STRICT"
+}

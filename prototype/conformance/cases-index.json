@@ -2843,5 +2843,97 @@
   "expected": "VALID_STRICT / OK",
   "ambiguities": [],
   "installation": "classical"
+ },
+ {
+  "id": "UTC-01",
+  "group": "UTC assessment",
+  "title": "Honest receipt: U = max nTime(h*..h*+5) + 7200 s",
+  "kind": "bundle",
+  "expected": "VALID_STRICT / OK",
+  "ambiguities": [],
+  "utc_upper_bound": "2026-11-10T15:10:00Z"
+ },
+ {
+  "id": "UTC-02",
+  "group": "UTC assessment",
+  "title": "Nonmonotone: max nTime at h*+2, above h*+5",
+  "kind": "bundle",
+  "expected": "VALID_STRICT / OK",
+  "ambiguities": [],
+  "utc_upper_bound": "2026-11-10T17:00:00Z"
+ },
+ {
+  "id": "UTC-03",
+  "group": "UTC assessment",
+  "title": "Nonmonotone: h* carries the max (confirmed_at < T)",
+  "kind": "bundle",
+  "expected": "VALID_STRICT / OK",
+  "ambiguities": [],
+  "utc_upper_bound": "2026-11-10T16:00:00Z"
+ },
+ {
+  "id": "UTC-04",
+  "group": "UTC assessment",
+  "title": "max nTime = 4294967295 at h*+3: 64-bit sum, no reduction mod 2^32",
+  "kind": "bundle",
+  "expected": "VALID_STRICT / OK",
+  "ambiguities": [],
+  "utc_upper_bound": "2106-02-07T08:28:15Z"
+ },
+ {
+  "id": "UTC-05",
+  "group": "UTC assessment",
+  "title": "Two qualifying branches: U from the lowest-height segment only",
+  "kind": "bundle",
+  "expected": "VALID_STRICT / OK",
+  "ambiguities": [],
+  "utc_upper_bound": "2026-11-10T15:10:00Z"
+ },
+ {
+  "id": "UTC-06",
+  "group": "UTC assessment",
+  "title": "INVALID with T non-null: U still reported",
+  "kind": "bundle",
+  "expected": "INVALID / CONFIRMATION_LATE",
+  "ambiguities": [],
+  "utc_upper_bound": "2026-11-13T14:00:01Z"
+ },
+ {
+  "id": "UTC-07",
+  "group": "UTC assessment",
+  "title": "UNVERIFIABLE with T non-null: U still reported",
+  "kind": "bundle",
+  "expected": "UNVERIFIABLE / HEADERS_NOT_COVERED",
+  "ambiguities": [],
+  "utc_upper_bound": "2026-11-10T15:10:00Z"
+ },
+ {
+  "id": "UTC-08",
+  "group": "UTC assessment",
+  "title": "No qualifying attestation: T null, U null",
+  "kind": "bundle",
+  "expected": "UNVERIFIABLE / HEADERS_MISSING",
+  "ambiguities": [],
+  "utc_upper_bound": null
+ },
+ {
+  "id": "UTC-09",
+  "group": "UTC assessment",
+  "title": "Receipt digest mismatch: anchor selected but T null, so U null",
+  "kind": "bundle",
+  "expected": "INVALID / RECEIPT_ANCHOR_MISMATCH",
+  "ambiguities": [],
+  "utc_upper_bound": null
+ },
+ {
+  "id": "UTC-10",
+  "group": "UTC assessment",
+  "title": "Dispatch-terminal (non-JSON): T null, U null",
+  "kind": "bundle",
+  "expected": "UNVERIFIABLE / OUT_OF_PROFILE",
+  "ambiguities": [
+   "EA-05"
+  ],
+  "utc_upper_bound": null
  }
 ]

@@ -21,6 +21,7 @@ PROFILE = gen.PROFILE
 D = "wamason.com"                     # P§6.3: profile constant D (the test universe uses the real name, TEST keys)
 SPEC_ID = "tessera-v1-strict/verification-spec/1"
 DELTA, EPS, K = 72 * 3600, 24 * 3600, 6
+UTC_DELTA_S, UTC_M = 7200, 6   # A10:284-285, profile 13 note 15: frozen in the catalog
 U32 = 1 << 32
 
 
@@ -651,6 +652,8 @@ def catalog(installation="classical"):
         "ds_digest_types": ["2", "4"],
         "epsilon_s": str(EPS),
         "k": str(K),
+        "utc_delta_s": str(UTC_DELTA_S),
+        "utc_m": str(UTC_M),
         "preamble_sha256": hashlib.sha256(PREAMBLE_BYTES).hexdigest(),
         "spec_id": SPEC_ID,
         "spec_sha256": hashlib.sha256(SPEC_BYTES).hexdigest(),

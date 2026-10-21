@@ -40,15 +40,16 @@ STABLE = {"revocation": "NOT_EVALUATED", "historical_security": "NOT_EVALUATED",
 
 def case(cid, group, title, verdict=None, reason=None, T="auto", cite=(), why="", amb=(), amb_fields=(),
          detail=None, refusal=None, request=None, kind="bundle", installation=None, isolation=None, alt=None,
-         owner_decision=None):
-    """installation: None (the classical universe, as for every pre-2026-10-14 case) or "classical" / "hybrid"
+         owner_decision=None, utc="omit"):
+    """utc: "omit" (no UTC-assessment expectation, every pre-2026-10-19 case), None (utc_upper_bound null) or the
+    expected RFC 3339 utc_upper_bound (A10.1.1; profile 7.4). installation: None (the classical universe, as for every pre-2026-10-14 case) or "classical" / "hybrid"
     (written to _meta; "hybrid" also writes catalog.json). isolation: authority-isolation metadata (_meta).
     alt: the outcome under the alternative reading of an ambiguity (_meta.alternative)."""
     def deco(fn):
         CASES.append(dict(id=cid, group=group, title=title, verdict=verdict, reason=reason, T=T, cite=list(cite),
                           why=why, amb=list(amb), amb_fields=list(amb_fields), detail=detail, refusal=refusal,
                           request=request, kind=kind, fn=fn, installation=installation, isolation=isolation,
-                          alt=alt, owner_decision=owner_decision))
+                          alt=alt, owner_decision=owner_decision, utc=utc))
         return fn
     return deco
 
@@ -2413,6 +2414,80 @@ _auth_pair(
     "issuer = wamason.com with the wamason.com chain", "Every row passes.")
 
 
+# ======================================================================================== UTC assessment
+# A10.1.1 (AUTHOR ADOPTED 2026-10-18); profile 7.4 [OWNER 2026-10-19]. U = 7200 + max nTime(h* .. h*+5), outside the
+# stable six, null exactly when T is null, never changes the verdict. Default receipt segment HB+24 .. HB+29 has
+# nTime TB+20min .. TB+70min (issue.py ntime), so the honest U is TB + 70 min + 2 h = 15:10:00Z.
+UTC_ASSUMPTION = "A-UTC-7200-6"
+UCITE = ["P:7.4", "A10:287-293", "A10:300-311"]
+
+
+@case("UTC-01", "UTC assessment", "Honest receipt: U = max nTime(h*..h*+5) + 7200 s", "VALID_STRICT", "OK",
+      cite=UCITE, why="Monotone segment: max is nTime(h*+5) = TB+70min.", utc="2026-11-10T15:10:00Z")
+def _(): return I.issue()
+
+
+@case("UTC-02", "UTC assessment", "Nonmonotone: max nTime at h*+2, above h*+5", "VALID_STRICT", "OK",
+      cite=UCITE, why="nTime(HB+26) = TB+3h; U uses the max over all six, not nTime(h*+5).",
+      utc="2026-11-10T17:00:00Z")
+def _(): return I.issue(times={HB + 26: TB + 3 * HOUR})
+
+
+@case("UTC-03", "UTC assessment", "Nonmonotone: h* carries the max (confirmed_at < T)", "VALID_STRICT", "OK",
+      cite=UCITE + ["P:730-731"], why="nTime(h*) = TB+2h > successors; no monotonicity check; U = T + 7200.",
+      utc="2026-11-10T16:00:00Z")
+def _(): return I.issue(times={HB + 24: TB + 2 * HOUR})
+
+
+@case("UTC-04", "UTC assessment", "max nTime = 4294967295 at h*+3: 64-bit sum, no reduction mod 2^32",
+      "VALID_STRICT", "OK", cite=UCITE + ["A10:307-311"],
+      why="U = 4294974495 = 2106-02-07T08:28:15Z (A10's own example), not a 1970 time. c1-c3 use h* and h*+5 only.",
+      utc="2106-02-07T08:28:15Z")
+def _(): return I.issue(times={HB + 27: 4294967295})
+
+
+@case("UTC-05", "UTC assessment", "Two qualifying branches: U from the lowest-height segment only",
+      "VALID_STRICT", "OK", cite=UCITE + ["P:713-718"],
+      why="h* = HB+24 (lowest height); nTime(HB+33) = TB+5h lies only in the HB+30 segment and must not enter U.",
+      utc="2026-11-10T15:10:00Z")
+def _(): return I.issue(receipt_branches=[{"h": HB + 24}, {"h": HB + 30}], times={HB + 33: TB + 5 * HOUR})
+
+
+@case("UTC-06", "UTC assessment", "INVALID with T non-null: U still reported", "INVALID", "CONFIRMATION_LATE",
+      cite=UCITE + ["A10:303-304"], why="As L-36b: nTime(h*+5) = declared + delta + 1 is the max; U is reported and "
+      "establishes no valid receipt.", utc="2026-11-13T14:00:01Z")
+def _(): return I.issue(times={HB + 29: TB + DELTA + 1}, adversarial=True)
+
+
+@case("UTC-07", "UTC assessment", "UNVERIFIABLE with T non-null: U still reported", "UNVERIFIABLE",
+      "HEADERS_NOT_COVERED", cite=UCITE + ["A10:303-304"], why="As L-41: an unpinned extra header; T and U from h*.",
+      utc="2026-11-10T15:10:00Z")
+def _(): return I.issue(receipt_branches=[{"h": HB + 24}, {"h": HB + 36, "headers": [HB + 36]}],
+                        pins_exclude=[HB + 36])
+
+
+@case("UTC-08", "UTC assessment", "No qualifying attestation: T null, U null", "UNVERIFIABLE", "HEADERS_MISSING",
+      T=None, cite=UCITE, why="As L-43b.", utc=None)
+def _(): return I.issue(receipt_branches=[{"h": HB + 24, "headers": False}], adversarial=True)
+
+
+@case("UTC-09", "UTC assessment", "Receipt digest mismatch: anchor selected but T null, so U null", "INVALID",
+      "RECEIPT_ANCHOR_MISMATCH", T=None, cite=UCITE + ["P:291-293"],
+      why="As L-88: the proof's file digest is not SHA256(a_sig); T is null, so U is null although h* exists.",
+      utc=None)
+def _():
+    def f(c):
+        s2 = tc.pgp_sign(c.F_gpg, c.gpg, c.sig_time,
+                         unhashed=tc.gnupg_unhashed(c.gpg) + sp(20, b"\x80\x00\x00\x00\x00\x04\x00\x04TESTtest"))
+        layer(c)["a_sig"] = b64(gen.encode_anchor(c.F_kms, c.S_kms, c.F_gpg, s2))
+    return I.issue(adversarial=True, hooks=hk(layer=f))
+
+
+@case("UTC-10", "UTC assessment", "Dispatch-terminal (non-JSON): T null, U null", "UNVERIFIABLE", "OUT_OF_PROFILE",
+      T=None, cite=UCITE + ["P:209-210"], amb=["EA-05"], why="As L-01: D1 evaluates nothing.", utc=None)
+def _(): return {"bundle": b"TEST: this is not a JSON text\n"}
+
+
 # ======================================================================================== writer
 def write_case(spec):
     cid = spec["id"]
@@ -2474,6 +2549,16 @@ def write_case(spec):
         else:
             T = spec["T"]
         exp = {"verdict": spec["verdict"], "reason": spec["reason"], "T": T, **STABLE, "_meta": meta}
+        if spec["utc"] != "omit":
+            # Hand-stated value; cross-checked against the issuer plan's own header times where one exists.
+            # (Where the case states T = null, the issuer plan cannot see why, e.g. a digest mismatch; the null rule
+            # below governs.)
+            if not isinstance(res, dict) and T is not None:
+                Uv = I.expected_U(res)
+                assert (Uv is None and spec["utc"] is None) or (Uv is not None and U.rfc3339(Uv) == spec["utc"]), \
+                    (cid, Uv, spec["utc"])
+            assert (spec["utc"] is None) == (T is None), (cid, "U null exactly when T null")
+            exp["utc_assessment"] = {"assumption_id": UTC_ASSUMPTION, "utc_upper_bound": spec["utc"]}
     (d / "expected.json").write_text(json.dumps(exp, indent=1, sort_keys=True) + "\n")
     return exp
 
@@ -2499,7 +2584,8 @@ def main():
     (HERE / "universe-catalog-hybrid.json").write_text(json.dumps(U.catalog("hybrid"), indent=1, sort_keys=True) + "\n")
     index = [{"id": s["id"], "group": s["group"], "title": s["title"], "kind": s["kind"],
               "expected": (s["refusal"] if s["refusal"] else f'{s["verdict"]} / {s["reason"]}'),
-              "ambiguities": s["amb"], **({"installation": s["installation"]} if s["installation"] else {})}
+              "ambiguities": s["amb"], **({"installation": s["installation"]} if s["installation"] else {}),
+              **({"utc_upper_bound": s["utc"]} if s["utc"] != "omit" else {})}
              for s in CASES]
     (HERE / "cases-index.json").write_text(json.dumps(index, indent=1) + "\n")
     print(f"{n} cases written")

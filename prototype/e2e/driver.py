@@ -238,17 +238,57 @@ def st_frames(r):
     return {"declared_issue_time": declared, "f_kms_len": len(r.p("frames", "f_kms.bin").read_bytes())}
 
 
+SIG_FILES = ("s_kms.bin", "s_gpg.bin", "p_kms.bin", "p_gpg.bin")
+
+
+def _sign_jobs(r):
+    fm, fk, fg = (r.p("frames", n).read_bytes() for n in ("manifest.bin", "f_kms.bin", "f_gpg.bin"))
+    return (("s_kms.bin", fk, 0), ("s_gpg.bin", fg, 1), ("p_kms.bin", fm, 0), ("p_gpg.bin", fm, 1))
+
+
+def _verified_set_on_disk(r, kms, gpg):
+    """E-02(c): the four frozen signatures, if all exist and each verifies over its exact bytes; else None."""
+    if not all(r.p("sigs", n).exists() for n in SIG_FILES):
+        return None
+    out = {}
+    for name, msg, slot in _sign_jobs(r):
+        b = r.p("sigs", name).read_bytes()
+        try:
+            gen.decode_sig(b, gen.ALG_HYBRID, slot)
+        except gen.Reject:
+            return None
+        if not (kms, gpg)[slot].verify(msg, b):
+            return None
+        out[name] = b
+    return out
+
+
 def st_sign(r):
     kms, gpg = r.signers()
     k = r.keys()
     if kms.fp != k["kms_fp"] or gpg.fp != k["gpg_fp"]:
         raise IssueRefused("signer keys changed since the keys stage")
-    fm, fk, fg = (r.p("frames", n).read_bytes() for n in ("manifest.bin", "f_kms.bin", "f_gpg.bin"))
-    out = {"s_kms.bin": kms.sign(fk), "s_gpg.bin": gpg.sign(fg), "p_kms.bin": kms.sign(fm), "p_gpg.bin": gpg.sign(fm)}
-    for name, msg, s, slot in (("s_kms.bin", fk, kms, 0), ("s_gpg.bin", fg, gpg, 1), ("p_kms.bin", fm, kms, 0),
-                               ("p_gpg.bin", fm, gpg, 1)):
+    ledger = SG.Ledger(r.d)
+    kms.ledger = gpg.ledger = ledger
+    have = _verified_set_on_disk(r, kms, gpg)
+    if have is not None:                         # idempotent per frame: no KMS call, no queue request, no trigger
+        log("sign: complete verified signature set already on disk; reusing it")
+        return {**{n: sha256hex(b) for n, b in have.items()}, "reused": True}
+    for name, msg, _ in _sign_jobs(r):           # stale or partial files are about to be replaced: keep their hashes
+        f = r.p("sigs", name)
+        if f.exists():
+            ledger.signature_hashes("replaced-on-disk", sha256hex(msg), sha256hex(f.read_bytes()), file=name)
+    jobs = _sign_jobs(r)
+    out = {}
+    out["s_kms.bin"] = kms.sign(jobs[0][1])
+    out["p_kms.bin"] = kms.sign(jobs[2][1])
+    if hasattr(gpg, "sign_batch"):               # one request batch, one slot-2 trigger
+        out["s_gpg.bin"], out["p_gpg.bin"] = gpg.sign_batch([jobs[1][1], jobs[3][1]])
+    else:
+        out["s_gpg.bin"], out["p_gpg.bin"] = gpg.sign(jobs[1][1]), gpg.sign(jobs[3][1])
+    for name, msg, slot in jobs:
         gen.decode_sig(out[name], gen.ALG_HYBRID, slot)              # slot rule codec (R for kms, O for gpg)
-        if not s.verify(msg, out[name]):
+        if not (kms, gpg)[slot].verify(msg, out[name]):
             raise IssueRefused(f"step 4: {name} does not verify over its exact bytes")
     for n, b in out.items():                                           # step 5: frozen
         write_atomic(r.p("sigs", n), bytes(b))
@@ -447,7 +487,11 @@ def st_verify(r):
     write_json(r.p("verdict.json"), res)
     if rc != 0:
         raise IssueRefused(f"verifier refused to run (exit {rc}): {err}")
-    v = json.loads(out)
+    whole = json.loads(out)
+    # The verifier prints {"stable": six, "utc_assessment": {...}} (profile 3.5, 7.4); U never enters the verdict.
+    v = dict(whole.get("stable", whole))
+    if "utc_assessment" in whole:
+        v["utc_assessment"] = whole["utc_assessment"]
     log("independent verifier:", out)
     if v["verdict"] != "VALID_STRICT":
         raise IssueRefused(f"verdict {v['verdict']} / {v['reason']}")
@@ -493,7 +537,8 @@ def init(d, mode, kms_key_id=None, not_before=None, not_after=None, freeze_dir=N
         "content": content or {"TEST": "Tessera V1 end-to-end pipeline proof; not a keepsake", "run": d.name,
                                "mode": mode},
         "signers": {"kind": "test"} if mode == "dry" else {"kind": "real", "kms_key_id": kms_key_id,
-                                                           "aws_profile": "tessera", "region": "us-east-2"},
+                                                           "aws_profile": "tessera", "region": "us-east-2",
+                                                           "trigger_slot2": True},
         "dns": {"kind": "stub"} if mode == "dry" else {"kind": "real", "server": dns_server},
         "ots": {"kind": "stub" if mode == "dry" else "real"},
         "roots": {"kind": "test"} if mode == "dry" else {"kind": "real", "archive": str(trustcfg.ARCHIVE)},

@@ -1,13 +1,42 @@
 # P8 for `tessera-v1-strict`: injectivity, boundary-unambiguity, type separation
 
-> **STATUS: DRAFT, 2026-10-09; revised 2026-10-12 (see CHANGELOG).** Owner instance (Claude Opus 5.5). This is a
+> **STATUS: DRAFT, 2026-10-09; revised 2026-10-12 and 2026-10-19 (see CHANGELOG).** Owner instance (Claude Opus 5.5). This is a
 > rigorous prose proof, the A1 §A1.4 option "rigorous prose proof plus the golden-vector and rejection suites". It
 > covers the encoding in `ENCODING-V1.md` (cited as **E§n**) and V1 only. It is not machine-checked. The evidence
-> that goes with it is in `vectors/` (§5). It is waiting for its time-boxed falsification pass (V1-DERIVATION §5,
-> step 2).
+> that goes with it is in `vectors/` (§5). Its time-boxed falsification pass (V1-DERIVATION §5, step 2) ran
+> 2026-10-19 (`docs/reviews/p8-falsification/`, `prototype/p8-falsify/REPORT.md`): **SURVIVED WITH GAPS**. No
+> encoding collision or accepted-decode disagreement was found. The gaps were P8F-01 (Lemma 9 overclaimed), P8F-02
+> to P8F-04 (implementation B outside the stated domain and codes) and the text defects P8F-05 to P8F-07; all are
+> now repaired (`docs/reviews/p8-falsification/DISPOSITION.md`). This records no author acceptance.
 
 **CHANGELOG**
 
+- **2026-10-19 (profile review, `docs/reviews/profile-2026-10-19/`).** Tagged `[OWNER 2026-10-19, PR-nn]` in
+  place. No lemma, theorem part (a)–(c), vector or code changes.
+  - **NARROW-CLAIM (PR-01).** Theorem (iv)(d)'s time relations are to mining of the selected inclusion block, not to
+    T: T is that block's header time, not a UTC upper bound (A10.1; A10 rows 5–9). A UTC statement is separate and
+    conditional on A-UTC (A10.1.1). The old "after T" sentence was false in UTC for a backward-skewed header.
+  - CORRECT (PR-13): the exponent-repair justification's connective ("finite or nonzero" → "finite, nonzero").
+- **2026-10-19 (P8 falsification repairs).** Source: `prototype/p8-falsify/REPORT.md`; disposition
+  `docs/reviews/p8-falsification/DISPOSITION.md`. Tagged `[OWNER 2026-10-19, P8F-nn]` in place.
+  - **NARROW-CLAIM (P8F-01).** Lemma 9 no longer infers `F' = F` from one signature packet verifying over both. The
+    review built two distinct accepted frames, with distinct SHA-256 digests, over which one rule-O packet verifies
+    under one chosen P-256 key; collision resistance does not exclude this. Lemma 9 now states only the valid
+    byte-split: `F ‖ T` determines `F` and `T`. It no longer uses (H), so §2's (H) bullet drops it. Remark 10 keeps
+    its byte disjointness and no longer concludes that a reused key's signature cannot be read over a foreign
+    document; that is a signature-scheme property, not P8's (§4 "What is not claimed"). No theorem part changes:
+    (ii) used only the byte split, and (iv) never used Lemma 9.
+  - CORRECT (P8F-05): Lemma 9's trailer is `12 + h` bytes and its final u32 is `6 + h`.
+  - CORRECT (P8F-06): Lemma 4's final coverage clause is replaced by the common-extent statement.
+  - Implementations B and A repaired (P8F-02 oversized exponents, P8F-03 first-failing-category order, P8F-04
+    standalone payload cap); regression tests in `vectors/test_check.py` and `prototype/indep-verifier/tests/test_parsers.py`.
+    No vector, reason code or count changes. §5 records the reruns.
+- **2026-10-19 (owner wording edits; no lemma changes).** Source: V1-PROFILE §14.2 item 9 (G38) and
+  `docs/reviews/levadura-contradictions/DISPOSITION.md`. §6's "Number rule D-1 is not registered yet" bullet is
+  replaced: A9.8 registers it. §6's rule-R bullet is annotated as superseded for the hybrid branch by
+  HYBRID-SUPPLEMENT §8 and kept as baseline text, as the supplement directs. ENCODING-V1's 2026-10-19 edits are
+  wording only and change no set in §1, so no lemma, theorem part or vector count changes. Tagged
+  `[OWNER 2026-10-19]` in place.
 - **2026-10-12: signature-inclusive receipt anchor.** Source: `docs/reviews/anchor-signatures/CODEX-REVIEW.md`
   findings 4, 5, 6, 9 and 10 (`DISPOSITION.md`). The domain is extended to exact signatures (§1: `Sig`, `Anc`,
   accepted receipts).
@@ -96,7 +125,7 @@ stated codes. Lemma 3 shows this for payloads, and Lemmas 5–8 (with 7a) for th
   §3.2.2.3) is a decimal literal whose round-half-even nearest double is `d`. Decimal-to-double conversion is
   correctly rounded (IEEE 754). The ECMAScript specification requires both. The implementations rely on them
   through `rfc8785` (A) and through `repr` and `float` (B).
-- **(H) SHA-256 collision resistance.** This is used **only** in Theorem part (iv) and Lemma 9, for the
+- **(H) SHA-256 collision resistance.** This is used **only** in Theorem part (iv), for the
   hash-carried bindings and the anchor digest, which since 2026-10-12 also carries the exact signatures. Parts
   (i)–(iii) are unconditional.
   - **SHA-256 is the only hash function V1's encoding relies on.** Both fingerprint slots are SHA-256: of the SPKI
@@ -188,8 +217,9 @@ reordered members, is rejected (XF-23 to XF-30). It is not repaired. Normalizati
 `header(t) = [|t|] ‖ t`. For distinct `t, t' ∈ T`, no byte string begins with both `header(t)` and `header(t')`.
 
 *Proof.* If `|t| ≠ |t'|`, the two headers differ in byte 0. If `|t| = |t'|`, then `t ≠ t'` differ at some
-position `j < |t|`, so the headers differ in byte `1 + j`. Either way the difference falls within the first
-`1 + max(|t|, |t'|)` bytes, which both headers cover. ∎
+position `j < |t|`, so the headers differ in byte `1 + j`. Either way the difference falls at a position both
+headers cover (byte 0, or byte `1 + j < 1 + |t| = 1 + |t'|`). ∎ [OWNER 2026-10-19, P8F-06] *(Was: "within the
+first `1 + max(|t|, |t'|)` bytes, which both headers cover"; headers of unequal length do not both cover that.)*
 
 So the tag is read first (a length byte, then that many bytes), before any other field is interpreted. The decoder
 compares it with the expected construction and rejects a mismatch (`TAG_MISMATCH`) or a tag outside T
@@ -311,18 +341,30 @@ That tag is not in T, so the decoder rejects it at its header (Lemma 4, `TAG_UNK
 **Lemma 8 (snapshot preimage).** `S(·)` is a bijection from snapshot bodies of 1 to 2^24 bytes onto `Snp`. The
 proof is Lemma 5's with an opaque body.
 
-**Lemma 9 (the OpenPGP signed data recovers the frame).** For a v4 OpenPGP signature of type 0x00 over document
-`F`, the hashed input is `F ‖ T`, where `T = 04 00 pa ha ‖ u16 h ‖ sub ‖ 04 FF ‖ u32(6 + h)` (E§3.5). If the same
-signature packet verifies for `F'`, and SHA-256 has no collision on these inputs, then `F' = F`.
+**Lemma 9 (the OpenPGP hash input splits uniquely; narrowed 2026-10-19, P8F-01).** For a v4 OpenPGP signature of
+type 0x00 over document `F`, the hashed input is `F ‖ T`, where `T = 04 00 pa ha ‖ u16 h ‖ sub ‖ 04 FF ‖ u32(6 + h)`
+(E§3.5) and `|sub| = h`. The map `(F, T) ↦ F ‖ T` is injective over valid trailers: if `F ‖ T = F' ‖ T'` for valid
+trailers `T` and `T'`, then `F = F'` and `T = T'`. In particular, for the trailer `T` that a signature packet fixes,
+`F ‖ T = F' ‖ T` implies `F = F'`.
 
-*Proof.* The signature packet fixes `T`, because the hashed subpackets are inside the packet. Verification computes
-the hash of `F' ‖ T`. If `F' ‖ T ≠ F ‖ T`, a hash match is a collision. Otherwise `F' = F`, because `T` is a common
-suffix of known length. Even if an adversary rewrote the hashed area to `T'`, the last four bytes of any valid
-trailer state its own length. Two decompositions `F ‖ T = F' ‖ T'` share those last four bytes, so `|T| = |T'|`,
-so `F = F'`.
+*Proof.* A valid trailer ends with `u32(6 + h)`, where `6 + h` is the length of its hashed header `04 00 pa ha ‖ u16
+h ‖ sub`. The whole trailer is that header, the two bytes `04 FF` and the four length bytes, so `|T| = 12 + h`:
+the final u32 plus six. Two decompositions `F ‖ T = F' ‖ T'` share their last four bytes, so `6 + h = 6 + h'` and
+`|T| = |T'|`. Both trailers are then the same-length suffix of one string, so `T = T'` and `F = F'`. (Corrected
+2026-10-19, P8F-05: the final u32 is the hashed-header length, not the trailer's own length; the split is the
+final u32 plus six.)
 
 Type 0x01 is excluded because text mode rewrites line-ending bytes, and those bytes occur in frame headers and
 lengths. ∎
+
+*What Lemma 9 does not say (NARROW-CLAIM, P8F-01).* Until 2026-10-19 this lemma also claimed that if one signature
+packet verifies for `F` and for `F'`, then under (H) `F' = F`. That does not follow: verification does not
+establish that the two hashes are equal. The falsification review built two distinct accepted attestation frames
+whose SHA-256 digests of `F ‖ T` differ (agreeing only in OpenPGP's left 16 bits) and one rule-O packet that
+verifies over both under one chosen P-256 key (`prototype/p8-falsify/lemma9-witness.json`). Whether one signature
+can verify over two different documents is a property of the signature scheme and of how the key was generated
+(P1, P3), not of the encoding. P8 does not claim it. Theorem (ii) uses only the split above; Theorem (iv) never
+used Lemma 9, and (iv)(c) already leaves verification to P1 and P3.
 
 **Remark 10 (no confusion with foreign formats).** Every V1 tagged string begins with a byte in 0x11–0x1d, which
 is below 0x20. Each of the following begins with a printable byte:
@@ -330,9 +372,11 @@ is below 0x20. Each of the following begins with a printable byte:
 - a TXT value of E§7 (`v=`, 0x76);
 - RFC 8785 text (`{`, `[`, `"`, a digit, `-`, `t`, `f` or `n`).
 
-So no V1 tagged string is byte-equal to any of them. With (K) this is not needed, but it means that a key reused
-by mistake still could not have one of its V1 signatures read as a signature over a commit or a DNS value, or the
-reverse.
+So no V1 tagged string is byte-equal to any of them: a V1 signed document is never also a commit, a DNS value or
+RFC 8785 text. (K) keeps the slot keys off those formats. [OWNER 2026-10-19, P8F-01, NARROW-CLAIM] *(Was: "With (K)
+this is not needed, but it means that a key reused by mistake still could not have one of its V1 signatures read as
+a signature over a commit or a DNS value, or the reverse." Different documents do not by themselves prevent one
+signature from verifying over both; that is a signature-scheme property (Lemma 9's note), not P8's.)*
 
 **Lemma 11 (DNS record).** The unambiguity of the E§7 record is argued in E§7 itself, because it lies outside the
 frame domain. In summary:
@@ -371,7 +415,8 @@ Let the accepted sets be as in §1.
 - **(ii) Boundary-unambiguity.** In every accepted byte string, each field's extent is a function of the bytes
   before it. The end of input is required to fall exactly where the last length prefix says. The JSON payload is
   delimited by the frame's length, never by its own syntax. A signature's extent is fixed by its slot length, and
-  it must agree with the signature's own extent. *(Lemmas 5, 7, 7a, 8; Lemma 9 for the OpenPGP signed data.)*
+  it must agree with the signature's own extent. *(Lemmas 5, 7, 7a, 8; Lemma 9 for the split of the OpenPGP hash
+  input into frame and trailer.)*
 
 - **(iii) Type and domain separation.** The accepted sets `Frm(attest)`, `Frm(manifest)`, `Anc` and `Snp` are
   pairwise disjoint (Lemma 4). A decoder for one construction rejects every member of the others (`TAG_MISMATCH`).
@@ -403,18 +448,25 @@ Let the accepted sets be as in §1.
     check. It is made on the committed bytes (E§5.3). Whether a verifying `S` was produced by the key holder
     rests on the signature scheme's security and on key custody.
   - **(d) Temporal composition** (C5, not P8). Suppose valid OTS and Bitcoin evidence shows that
-    `SHA256(A_sig)` existed by time T. Then by (b), the exact bytes `S_kms` and `S_gpg` existed by T, under that
-    evidence's own chain-time residuals.
-    - Hence a signature first produced after T, for example once a key is stolen or the algorithm broken, cannot
-      be substituted into this receipt while (H) and the temporal evidence hold.
-    - It does **not** follow that the signatures were produced honestly before T. That needs the historical
-      signing, custody and authority assumptions of CODEX-REVIEW findings 7 and 8, which V1 reports as not
-      evaluated.
+    `SHA256(A_sig)` existed before the selected Bitcoin inclusion block was mined. Then by (b), the exact bytes
+    `S_kms` and `S_gpg` existed before that block was mined, under that evidence's own chain-order residuals. Its
+    header time T is not a UTC upper bound (A10.1); any UTC statement is separate and conditional on A-UTC
+    (A10.1.1), and P8 makes none. [OWNER 2026-10-19, PR-01, NARROW-CLAIM]
+    - Hence a signature first produced after that block was mined, for example once a key is stolen or the
+      algorithm broken, cannot be substituted into this receipt while (H) and the temporal evidence hold.
+    - It does **not** follow that the signatures were produced honestly before that block was mined. That needs
+      the historical signing, custody and authority assumptions of CODEX-REVIEW findings 7 and 8, which V1 reports
+      as not evaluated.
+    - *(Was: "existed by time T", "existed by T", "first produced after T", "produced honestly before T"; a
+      signature made after a backward-skewed header's nominal UTC time, but before mining, can fit the anchor,
+      A10:248-249.)*
 
 ∎ (from the lemmas)
 
 **What is not claimed.** P8 does not claim any of the following:
 - that signatures are unforgeable, or that keys are bound to identities (P1, P3);
+- that a signature verifying over one document cannot also verify over another (Lemma 9's note; P1, P3)
+  [OWNER 2026-10-19, P8F-01];
 - that a stamp's time bound makes signing honest (iv)(d);
 - that the values have any meaning (A3 §A3.1);
 - that any value outside V is accepted. It is rejected with the code its first failing check names.
@@ -495,6 +547,20 @@ The output is deterministic: RFC 6979 nonces, and regeneration reproduces both f
 - *Sensitivity check* (by hand, on scratch copies). Two planted defects in B were each caught by the agreement
   run: accepting a non-minimal `0x89` header (XA-20), and skipping signature verification (XR-16).
 
+**Falsification pass repairs** (2026-10-19, P8F-02 to P8F-04). The review found three places where B did not match
+E§1: an uncaught `ValueError` on accepted literals whose exponent exceeds Python's integer digit limit (`0e` and 4301
+nines); `JSON_SYNTAX` for a BOM followed by invalid UTF-8, where E§1.4 requires `JSON_ENCODING`; and no size cap in
+the standalone `payload_value`. B now clamps exponents of more than 18 significant digits (within the payload-size bound, no
+nonzero literal with such an exponent rounds to a finite, nonzero binary64 value; zero-valued literals are handled
+separately) [OWNER 2026-10-19, PR-13] *(was: "no nonzero such literal is finite or nonzero as a double, and zero is
+decided first")*, decodes UTF-8 before the BOM check, and rejects a
+standalone payload above 2^24 bytes with `LENGTH_CAP`. The owner found the same three defects in A and repaired
+them the same way; A's old direct-decision bound (|exponent| > 100000) also wrongly rejected value-preserving
+literals such as `1` + 200000 zeros + `e-200000`, and now applies only above 18 exponent digits.
+`vectors/test_check.py` pins each reproduction for A and B. The rerun after the repair: B 71/71, 173/173 and 5/5
+baseline, 35/35, 63/63, 1/1 and 6/6 hybrid; A regenerates all four vector files byte for byte (checked in a
+scratch copy); `fuzz.py` 60,000 + 90,400 cases, 0 disagreements. No vector changed.
+
 The fuzz found one real defect in A before the 2026-10-09 vectors were frozen. A raised an uncaught `decimal`
 error on literals with exponents beyond about 10^18. A now decides those directly, and XC-31, XC-32 and C-10 pin
 the case.
@@ -524,8 +590,11 @@ Python 3.14 is needed, for its Unicode 16.0.0 tables.
   They show encoding, binding and the negative control. They say nothing about unforgeability, which is (iv)(c)
   and not P8 in any case.
 - Rule R (raw FIPS 204/205) has no vectors and is not implemented in either codec, because no PQ id is
-  registered. It must get golden and rejection vectors, and an agreement run, when one is.
+  registered. It must get golden and rejection vectors, and an agreement run, when one is. *[OWNER 2026-10-19
+  annotation: superseded for the hybrid branch by HYBRID-SUPPLEMENT §8 (registered 2026-10-16): the pair id is
+  registered, both codecs implement rule R, and `vectors/hybrid-golden.json` (35) and `vectors/hybrid-reject.json`
+  (63) pass the agreement run. The bullet is kept as baseline text, as the supplement directs.]*
 - The GnuPG cross-check is a manual record, not a scripted step.
-- Number rule D-1 is not registered yet (ENCODING-V1 §9). If the author keeps the literal rule instead, Lemma 2(c)
-  fails as stated (E§1.2), and the domain must be cut to the doubles whose `ES` form is exact. That is a one-line
-  change to `number_value` and `number`, and the injectivity argument is otherwise unchanged.
+- Number rule D-1 is registered by A9.8 for `tessera-v1-strict` (ENCODING-V1 §9), so Lemma 2(c) is stated against
+  the registered rule. [OWNER 2026-10-19, G38] *(Was: "Number rule D-1 is not registered yet … If the author keeps
+  the literal rule instead, Lemma 2(c) fails as stated …"; the contingency no longer arises.)*

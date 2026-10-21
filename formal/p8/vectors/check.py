@@ -205,9 +205,9 @@ class Parser:
 
 
 def parse_text(b):
-    if b[:3] == b"\xef\xbb\xbf":
+    text = utf8_decode(b)              # E§1.4: JSON_ENCODING over the whole input precedes JSON_SYNTAX (P8F-03)
+    if text[:1] == "\ufeff":
         raise Bad("JSON_SYNTAX", "BOM")
-    text = utf8_decode(b)
     try:
         return Parser(text).document()
     except RecursionError:
@@ -218,7 +218,12 @@ def parse_text(b):
 def _decimal(lit):
     """literal -> (negative, digit string without leading/trailing zeros, exponent) or zero marker."""
     m = re.fullmatch(r"(-?)([0-9]+)(?:\.([0-9]+))?(?:[eE]([+-]?[0-9]+))?", lit)
-    neg, ip, fp, ex = m.group(1) == "-", m.group(2), m.group(3) or "", int(m.group(4) or 0)
+    neg, ip, fp, es = m.group(1) == "-", m.group(2), m.group(3) or "", m.group(4) or "0"
+    # P8F-02: never convert an unbounded exponent (int() has a digit limit). A literal is at most 2^24 bytes, so an
+    # exponent of 19+ significant digits puts any nonzero value far outside binary64; clamping it to 10^18 keeps
+    # the zero / overflow / underflow verdict, and number() rejects every nonzero such literal before comparing.
+    sign, mag = (-1 if es[0] == "-" else 1), es.lstrip("+-").lstrip("0") or "0"
+    ex = sign * (int(mag) if len(mag) <= 18 else 10 ** 18)
     digits = (ip + fp).lstrip("0")
     if not digits:
         return neg, "", 0
@@ -356,6 +361,8 @@ def jcs(v):
 
 
 def payload_value(b):
+    if len(b) > CAP:                   # E§1.1 size limit, checked first as frame_decode does (P8F-04)
+        raise Bad("LENGTH_CAP")
     v = ingest(b, limit=64)
     if jcs(v) != b:
         raise Bad("JSON_NONCANONICAL")

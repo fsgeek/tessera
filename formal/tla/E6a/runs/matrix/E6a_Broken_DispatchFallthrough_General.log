@@ -1,0 +1,1726 @@
+===== E6a_Broken_DispatchFallthrough / General / TypeOK
+TLC2 Version 2026.07.31.184830 (rev: 30cc360)
+Running breadth-first search Model-Checking with fp 75 and seed 7516188035804375792 with 1 worker on 12 cores with 7068MB heap and 64MB offheap memory [pid: 312417] (Linux 6.8.0-139-generic amd64, Ubuntu 21.0.12.1 64bit, MSBDiskFPSet, DiskStateQueue).
+Parsing file /home/tony/projects/tessera/formal/tla/E6a/E6a_Broken_DispatchFallthrough.tla
+Parsing file /home/tony/projects/tessera/formal/tla/E6a/E6a_Base.tla
+Parsing file /tmp/tlc-11586272390016365535/_TLCTrace.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/_TLCTrace.tla)
+Parsing file /tmp/tlc-11586272390016365535/FiniteSets.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/FiniteSets.tla)
+Parsing file /home/tony/projects/tessera/formal/tla/E6a/E6a_Props.tla
+Parsing file /home/tony/projects/tessera/formal/tla/P4_VerifierStates.tla
+Parsing file /tmp/tlc-11586272390016365535/Naturals.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Naturals.tla)
+Parsing file /tmp/tlc-11586272390016365535/Sequences.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Sequences.tla)
+Parsing file /tmp/tlc-11586272390016365535/TLC.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/TLC.tla)
+Parsing file /tmp/tlc-11586272390016365535/TLCExt.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/TLCExt.tla)
+Parsing file /tmp/tlc-11586272390016365535/Integers.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Integers.tla)
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module P4_VerifierStates
+Semantic processing of module E6a_Base
+Semantic processing of module TLC
+Semantic processing of module Integers
+Semantic processing of module TLCExt
+Semantic processing of module _TLCTrace
+Semantic processing of module E6a_Props
+Semantic processing of module E6a_Broken_DispatchFallthrough
+Linting of module P4_VerifierStates
+Linting of module E6a_Base
+Linting of module TLCExt
+Linting of module _TLCTrace
+Linting of module E6a_Props
+Linting of module E6a_Broken_DispatchFallthrough
+Starting... (2026-10-19 20:52:55)
+Computing initial states...
+Computed 2 initial states...
+Computed 4 initial states...
+Computed 8 initial states...
+Computed 16 initial states...
+Computed 32 initial states...
+Computed 64 initial states...
+Computed 128 initial states...
+Computed 256 initial states...
+Computed 512 initial states...
+Computed 1024 initial states...
+Computed 2048 initial states...
+Computed 4096 initial states...
+Computed 8192 initial states...
+Finished computing initial states: 15876 distinct states generated at 2026-10-19 20:52:56.
+Model checking completed. No error has been found.
+  Estimates of the probability that TLC did not check all reachable states
+  because two distinct states had the same fingerprint:
+  calculated (optimistic):  val = 1.4E-11
+31752 states generated, 15876 distinct states found, 0 states left on queue.
+The depth of the complete state graph search is 1.
+The average outdegree of the complete state graph is 0 (minimum is 0, the maximum 0 and the 95th percentile is 0).
+Finished in 01s at (2026-10-19 20:52:56)
+===== E6a_Broken_DispatchFallthrough / General / DispatchTerminal
+TLC2 Version 2026.07.31.184830 (rev: 30cc360)
+Running breadth-first search Model-Checking with fp 128 and seed -7820295682763783683 with 1 worker on 12 cores with 7068MB heap and 64MB offheap memory [pid: 312519] (Linux 6.8.0-139-generic amd64, Ubuntu 21.0.12.1 64bit, MSBDiskFPSet, DiskStateQueue).
+Parsing file /home/tony/projects/tessera/formal/tla/E6a/E6a_Broken_DispatchFallthrough.tla
+Parsing file /home/tony/projects/tessera/formal/tla/E6a/E6a_Base.tla
+Parsing file /tmp/tlc-10628164319180217178/_TLCTrace.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/_TLCTrace.tla)
+Parsing file /tmp/tlc-10628164319180217178/FiniteSets.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/FiniteSets.tla)
+Parsing file /home/tony/projects/tessera/formal/tla/E6a/E6a_Props.tla
+Parsing file /home/tony/projects/tessera/formal/tla/P4_VerifierStates.tla
+Parsing file /tmp/tlc-10628164319180217178/Naturals.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Naturals.tla)
+Parsing file /tmp/tlc-10628164319180217178/Sequences.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Sequences.tla)
+Parsing file /tmp/tlc-10628164319180217178/TLC.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/TLC.tla)
+Parsing file /tmp/tlc-10628164319180217178/TLCExt.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/TLCExt.tla)
+Parsing file /tmp/tlc-10628164319180217178/Integers.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Integers.tla)
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module P4_VerifierStates
+Semantic processing of module E6a_Base
+Semantic processing of module TLC
+Semantic processing of module Integers
+Semantic processing of module TLCExt
+Semantic processing of module _TLCTrace
+Semantic processing of module E6a_Props
+Semantic processing of module E6a_Broken_DispatchFallthrough
+Linting of module P4_VerifierStates
+Linting of module E6a_Base
+Linting of module TLCExt
+Linting of module _TLCTrace
+Linting of module E6a_Props
+Linting of module E6a_Broken_DispatchFallthrough
+Starting... (2026-10-19 20:52:56)
+Computing initial states...
+Error: Invariant DispatchTerminal is violated by the initial state:
+/\ sig = (kms :> "absent" @@ gpg :> "absent")
+/\ alg = (kms :> "supported" @@ gpg :> "supported")
+/\ waived = {}
+/\ ev = (dns :> "absent" @@ git :> "absent")
+/\ dispatch = "out"
+
+Finished in 00s at (2026-10-19 20:52:57)
+===== E6a_Broken_DispatchFallthrough / General / OutOfProfileOnlyAtDispatch
+TLC2 Version 2026.07.31.184830 (rev: 30cc360)
+Running breadth-first search Model-Checking with fp 9 and seed -96631320841701728 with 1 worker on 12 cores with 7068MB heap and 64MB offheap memory [pid: 312564] (Linux 6.8.0-139-generic amd64, Ubuntu 21.0.12.1 64bit, MSBDiskFPSet, DiskStateQueue).
+Parsing file /home/tony/projects/tessera/formal/tla/E6a/E6a_Broken_DispatchFallthrough.tla
+Parsing file /home/tony/projects/tessera/formal/tla/E6a/E6a_Base.tla
+Parsing file /tmp/tlc-5712135053545030782/_TLCTrace.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/_TLCTrace.tla)
+Parsing file /tmp/tlc-5712135053545030782/FiniteSets.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/FiniteSets.tla)
+Parsing file /home/tony/projects/tessera/formal/tla/E6a/E6a_Props.tla
+Parsing file /home/tony/projects/tessera/formal/tla/P4_VerifierStates.tla
+Parsing file /tmp/tlc-5712135053545030782/Naturals.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Naturals.tla)
+Parsing file /tmp/tlc-5712135053545030782/Sequences.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Sequences.tla)
+Parsing file /tmp/tlc-5712135053545030782/TLC.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/TLC.tla)
+Parsing file /tmp/tlc-5712135053545030782/TLCExt.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/TLCExt.tla)
+Parsing file /tmp/tlc-5712135053545030782/Integers.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Integers.tla)
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module P4_VerifierStates
+Semantic processing of module E6a_Base
+Semantic processing of module TLC
+Semantic processing of module Integers
+Semantic processing of module TLCExt
+Semantic processing of module _TLCTrace
+Semantic processing of module E6a_Props
+Semantic processing of module E6a_Broken_DispatchFallthrough
+Linting of module P4_VerifierStates
+Linting of module E6a_Base
+Linting of module TLCExt
+Linting of module _TLCTrace
+Linting of module E6a_Props
+Linting of module E6a_Broken_DispatchFallthrough
+Starting... (2026-10-19 20:52:57)
+Computing initial states...
+Computed 2 initial states...
+Computed 4 initial states...
+Computed 8 initial states...
+Computed 16 initial states...
+Computed 32 initial states...
+Computed 64 initial states...
+Computed 128 initial states...
+Computed 256 initial states...
+Computed 512 initial states...
+Computed 1024 initial states...
+Computed 2048 initial states...
+Computed 4096 initial states...
+Computed 8192 initial states...
+Finished computing initial states: 15876 distinct states generated at 2026-10-19 20:52:57.
+Model checking completed. No error has been found.
+  Estimates of the probability that TLC did not check all reachable states
+  because two distinct states had the same fingerprint:
+  calculated (optimistic):  val = 1.4E-11
+31752 states generated, 15876 distinct states found, 0 states left on queue.
+The depth of the complete state graph search is 1.
+The average outdegree of the complete state graph is 0 (minimum is 0, the maximum 0 and the 95th percentile is 0).
+Finished in 00s at (2026-10-19 20:52:57)
+===== E6a_Broken_DispatchFallthrough / General / UnknownAlgGivesUnverifiable
+TLC2 Version 2026.07.31.184830 (rev: 30cc360)
+Running breadth-first search Model-Checking with fp 82 and seed 5590532330407394975 with 1 worker on 12 cores with 7068MB heap and 64MB offheap memory [pid: 312630] (Linux 6.8.0-139-generic amd64, Ubuntu 21.0.12.1 64bit, MSBDiskFPSet, DiskStateQueue).
+Parsing file /home/tony/projects/tessera/formal/tla/E6a/E6a_Broken_DispatchFallthrough.tla
+Parsing file /home/tony/projects/tessera/formal/tla/E6a/E6a_Base.tla
+Parsing file /tmp/tlc-12855305021541344879/_TLCTrace.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/_TLCTrace.tla)
+Parsing file /tmp/tlc-12855305021541344879/FiniteSets.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/FiniteSets.tla)
+Parsing file /home/tony/projects/tessera/formal/tla/E6a/E6a_Props.tla
+Parsing file /home/tony/projects/tessera/formal/tla/P4_VerifierStates.tla
+Parsing file /tmp/tlc-12855305021541344879/Naturals.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Naturals.tla)
+Parsing file /tmp/tlc-12855305021541344879/Sequences.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Sequences.tla)
+Parsing file /tmp/tlc-12855305021541344879/TLC.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/TLC.tla)
+Parsing file /tmp/tlc-12855305021541344879/TLCExt.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/TLCExt.tla)
+Parsing file /tmp/tlc-12855305021541344879/Integers.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Integers.tla)
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module P4_VerifierStates
+Semantic processing of module E6a_Base
+Semantic processing of module TLC
+Semantic processing of module Integers
+Semantic processing of module TLCExt
+Semantic processing of module _TLCTrace
+Semantic processing of module E6a_Props
+Semantic processing of module E6a_Broken_DispatchFallthrough
+Linting of module P4_VerifierStates
+Linting of module E6a_Base
+Linting of module TLCExt
+Linting of module _TLCTrace
+Linting of module E6a_Props
+Linting of module E6a_Broken_DispatchFallthrough
+Starting... (2026-10-19 20:52:58)
+Computing initial states...
+Computed 2 initial states...
+Computed 4 initial states...
+Computed 8 initial states...
+Computed 16 initial states...
+Computed 32 initial states...
+Computed 64 initial states...
+Computed 128 initial states...
+Computed 256 initial states...
+Computed 512 initial states...
+Computed 1024 initial states...
+Computed 2048 initial states...
+Computed 4096 initial states...
+Computed 8192 initial states...
+Finished computing initial states: 15876 distinct states generated at 2026-10-19 20:52:58.
+Model checking completed. No error has been found.
+  Estimates of the probability that TLC did not check all reachable states
+  because two distinct states had the same fingerprint:
+  calculated (optimistic):  val = 1.4E-11
+31752 states generated, 15876 distinct states found, 0 states left on queue.
+The depth of the complete state graph search is 1.
+The average outdegree of the complete state graph is 0 (minimum is 0, the maximum 0 and the 95th percentile is 0).
+Finished in 00s at (2026-10-19 20:52:58)
+===== E6a_Broken_DispatchFallthrough / General / UnknownAlgNeverValid
+TLC2 Version 2026.07.31.184830 (rev: 30cc360)
+Running breadth-first search Model-Checking with fp 113 and seed -7575576621435805470 with 1 worker on 12 cores with 7068MB heap and 64MB offheap memory [pid: 312682] (Linux 6.8.0-139-generic amd64, Ubuntu 21.0.12.1 64bit, MSBDiskFPSet, DiskStateQueue).
+Parsing file /home/tony/projects/tessera/formal/tla/E6a/E6a_Broken_DispatchFallthrough.tla
+Parsing file /home/tony/projects/tessera/formal/tla/E6a/E6a_Base.tla
+Parsing file /tmp/tlc-5647471154668569111/_TLCTrace.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/_TLCTrace.tla)
+Parsing file /tmp/tlc-5647471154668569111/FiniteSets.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/FiniteSets.tla)
+Parsing file /home/tony/projects/tessera/formal/tla/E6a/E6a_Props.tla
+Parsing file /home/tony/projects/tessera/formal/tla/P4_VerifierStates.tla
+Parsing file /tmp/tlc-5647471154668569111/Naturals.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Naturals.tla)
+Parsing file /tmp/tlc-5647471154668569111/Sequences.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Sequences.tla)
+Parsing file /tmp/tlc-5647471154668569111/TLC.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/TLC.tla)
+Parsing file /tmp/tlc-5647471154668569111/TLCExt.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/TLCExt.tla)
+Parsing file /tmp/tlc-5647471154668569111/Integers.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Integers.tla)
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module P4_VerifierStates
+Semantic processing of module E6a_Base
+Semantic processing of module TLC
+Semantic processing of module Integers
+Semantic processing of module TLCExt
+Semantic processing of module _TLCTrace
+Semantic processing of module E6a_Props
+Semantic processing of module E6a_Broken_DispatchFallthrough
+Linting of module P4_VerifierStates
+Linting of module E6a_Base
+Linting of module TLCExt
+Linting of module _TLCTrace
+Linting of module E6a_Props
+Linting of module E6a_Broken_DispatchFallthrough
+Starting... (2026-10-19 20:52:59)
+Computing initial states...
+Computed 2 initial states...
+Computed 4 initial states...
+Computed 8 initial states...
+Computed 16 initial states...
+Computed 32 initial states...
+Computed 64 initial states...
+Computed 128 initial states...
+Computed 256 initial states...
+Computed 512 initial states...
+Computed 1024 initial states...
+Computed 2048 initial states...
+Computed 4096 initial states...
+Computed 8192 initial states...
+Finished computing initial states: 15876 distinct states generated at 2026-10-19 20:52:59.
+Model checking completed. No error has been found.
+  Estimates of the probability that TLC did not check all reachable states
+  because two distinct states had the same fingerprint:
+  calculated (optimistic):  val = 1.4E-11
+31752 states generated, 15876 distinct states found, 0 states left on queue.
+The depth of the complete state graph search is 1.
+The average outdegree of the complete state graph is 0 (minimum is 0, the maximum 0 and the 95th percentile is 0).
+Finished in 00s at (2026-10-19 20:52:59)
+===== E6a_Broken_DispatchFallthrough / General / InvalidAlgFormsGiveInvalid
+TLC2 Version 2026.07.31.184830 (rev: 30cc360)
+Running breadth-first search Model-Checking with fp 75 and seed -8522862779599385635 with 1 worker on 12 cores with 7068MB heap and 64MB offheap memory [pid: 312734] (Linux 6.8.0-139-generic amd64, Ubuntu 21.0.12.1 64bit, MSBDiskFPSet, DiskStateQueue).
+Parsing file /home/tony/projects/tessera/formal/tla/E6a/E6a_Broken_DispatchFallthrough.tla
+Parsing file /home/tony/projects/tessera/formal/tla/E6a/E6a_Base.tla
+Parsing file /tmp/tlc-4294564856332678837/_TLCTrace.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/_TLCTrace.tla)
+Parsing file /tmp/tlc-4294564856332678837/FiniteSets.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/FiniteSets.tla)
+Parsing file /home/tony/projects/tessera/formal/tla/E6a/E6a_Props.tla
+Parsing file /home/tony/projects/tessera/formal/tla/P4_VerifierStates.tla
+Parsing file /tmp/tlc-4294564856332678837/Naturals.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Naturals.tla)
+Parsing file /tmp/tlc-4294564856332678837/Sequences.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Sequences.tla)
+Parsing file /tmp/tlc-4294564856332678837/TLC.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/TLC.tla)
+Parsing file /tmp/tlc-4294564856332678837/TLCExt.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/TLCExt.tla)
+Parsing file /tmp/tlc-4294564856332678837/Integers.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Integers.tla)
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module P4_VerifierStates
+Semantic processing of module E6a_Base
+Semantic processing of module TLC
+Semantic processing of module Integers
+Semantic processing of module TLCExt
+Semantic processing of module _TLCTrace
+Semantic processing of module E6a_Props
+Semantic processing of module E6a_Broken_DispatchFallthrough
+Linting of module P4_VerifierStates
+Linting of module E6a_Base
+Linting of module TLCExt
+Linting of module _TLCTrace
+Linting of module E6a_Props
+Linting of module E6a_Broken_DispatchFallthrough
+Starting... (2026-10-19 20:53:00)
+Computing initial states...
+Computed 2 initial states...
+Computed 4 initial states...
+Computed 8 initial states...
+Computed 16 initial states...
+Computed 32 initial states...
+Computed 64 initial states...
+Computed 128 initial states...
+Computed 256 initial states...
+Computed 512 initial states...
+Computed 1024 initial states...
+Computed 2048 initial states...
+Computed 4096 initial states...
+Computed 8192 initial states...
+Finished computing initial states: 15876 distinct states generated at 2026-10-19 20:53:00.
+Model checking completed. No error has been found.
+  Estimates of the probability that TLC did not check all reachable states
+  because two distinct states had the same fingerprint:
+  calculated (optimistic):  val = 1.4E-11
+31752 states generated, 15876 distinct states found, 0 states left on queue.
+The depth of the complete state graph search is 1.
+The average outdegree of the complete state graph is 0 (minimum is 0, the maximum 0 and the 95th percentile is 0).
+Finished in 00s at (2026-10-19 20:53:00)
+===== E6a_Broken_DispatchFallthrough / General / KnownAlgBadSigInvalid
+TLC2 Version 2026.07.31.184830 (rev: 30cc360)
+Running breadth-first search Model-Checking with fp 118 and seed 872761539979422405 with 1 worker on 12 cores with 7068MB heap and 64MB offheap memory [pid: 312797] (Linux 6.8.0-139-generic amd64, Ubuntu 21.0.12.1 64bit, MSBDiskFPSet, DiskStateQueue).
+Parsing file /home/tony/projects/tessera/formal/tla/E6a/E6a_Broken_DispatchFallthrough.tla
+Parsing file /home/tony/projects/tessera/formal/tla/E6a/E6a_Base.tla
+Parsing file /tmp/tlc-5950832571612047739/_TLCTrace.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/_TLCTrace.tla)
+Parsing file /tmp/tlc-5950832571612047739/FiniteSets.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/FiniteSets.tla)
+Parsing file /home/tony/projects/tessera/formal/tla/E6a/E6a_Props.tla
+Parsing file /home/tony/projects/tessera/formal/tla/P4_VerifierStates.tla
+Parsing file /tmp/tlc-5950832571612047739/Naturals.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Naturals.tla)
+Parsing file /tmp/tlc-5950832571612047739/Sequences.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Sequences.tla)
+Parsing file /tmp/tlc-5950832571612047739/TLC.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/TLC.tla)
+Parsing file /tmp/tlc-5950832571612047739/TLCExt.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/TLCExt.tla)
+Parsing file /tmp/tlc-5950832571612047739/Integers.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Integers.tla)
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module P4_VerifierStates
+Semantic processing of module E6a_Base
+Semantic processing of module TLC
+Semantic processing of module Integers
+Semantic processing of module TLCExt
+Semantic processing of module _TLCTrace
+Semantic processing of module E6a_Props
+Semantic processing of module E6a_Broken_DispatchFallthrough
+Linting of module P4_VerifierStates
+Linting of module E6a_Base
+Linting of module TLCExt
+Linting of module _TLCTrace
+Linting of module E6a_Props
+Linting of module E6a_Broken_DispatchFallthrough
+Starting... (2026-10-19 20:53:00)
+Computing initial states...
+Computed 2 initial states...
+Computed 4 initial states...
+Computed 8 initial states...
+Computed 16 initial states...
+Computed 32 initial states...
+Computed 64 initial states...
+Computed 128 initial states...
+Computed 256 initial states...
+Computed 512 initial states...
+Computed 1024 initial states...
+Computed 2048 initial states...
+Computed 4096 initial states...
+Computed 8192 initial states...
+Finished computing initial states: 15876 distinct states generated at 2026-10-19 20:53:01.
+Model checking completed. No error has been found.
+  Estimates of the probability that TLC did not check all reachable states
+  because two distinct states had the same fingerprint:
+  calculated (optimistic):  val = 1.4E-11
+31752 states generated, 15876 distinct states found, 0 states left on queue.
+The depth of the complete state graph search is 1.
+The average outdegree of the complete state graph is 0 (minimum is 0, the maximum 0 and the 95th percentile is 0).
+Finished in 00s at (2026-10-19 20:53:01)
+===== E6a_Broken_DispatchFallthrough / General / AlgUnknownReasonExact
+TLC2 Version 2026.07.31.184830 (rev: 30cc360)
+Running breadth-first search Model-Checking with fp 93 and seed 6283402881720674617 with 1 worker on 12 cores with 7068MB heap and 64MB offheap memory [pid: 312858] (Linux 6.8.0-139-generic amd64, Ubuntu 21.0.12.1 64bit, MSBDiskFPSet, DiskStateQueue).
+Parsing file /home/tony/projects/tessera/formal/tla/E6a/E6a_Broken_DispatchFallthrough.tla
+Parsing file /home/tony/projects/tessera/formal/tla/E6a/E6a_Base.tla
+Parsing file /tmp/tlc-2910654144384676694/_TLCTrace.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/_TLCTrace.tla)
+Parsing file /tmp/tlc-2910654144384676694/FiniteSets.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/FiniteSets.tla)
+Parsing file /home/tony/projects/tessera/formal/tla/E6a/E6a_Props.tla
+Parsing file /home/tony/projects/tessera/formal/tla/P4_VerifierStates.tla
+Parsing file /tmp/tlc-2910654144384676694/Naturals.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Naturals.tla)
+Parsing file /tmp/tlc-2910654144384676694/Sequences.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Sequences.tla)
+Parsing file /tmp/tlc-2910654144384676694/TLC.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/TLC.tla)
+Parsing file /tmp/tlc-2910654144384676694/TLCExt.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/TLCExt.tla)
+Parsing file /tmp/tlc-2910654144384676694/Integers.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Integers.tla)
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module P4_VerifierStates
+Semantic processing of module E6a_Base
+Semantic processing of module TLC
+Semantic processing of module Integers
+Semantic processing of module TLCExt
+Semantic processing of module _TLCTrace
+Semantic processing of module E6a_Props
+Semantic processing of module E6a_Broken_DispatchFallthrough
+Linting of module P4_VerifierStates
+Linting of module E6a_Base
+Linting of module TLCExt
+Linting of module _TLCTrace
+Linting of module E6a_Props
+Linting of module E6a_Broken_DispatchFallthrough
+Starting... (2026-10-19 20:53:01)
+Computing initial states...
+Computed 2 initial states...
+Computed 4 initial states...
+Computed 8 initial states...
+Computed 16 initial states...
+Computed 32 initial states...
+Computed 64 initial states...
+Computed 128 initial states...
+Computed 256 initial states...
+Error: Invariant AlgUnknownReasonExact is violated by the initial state:
+/\ sig = (kms :> "good" @@ gpg :> "bad")
+/\ alg = (kms :> "supported" @@ gpg :> "unsupported")
+/\ waived = {<<"ev", git>>}
+/\ ev = (dns :> "good" @@ git :> "absent")
+/\ dispatch = "out"
+
+Finished in 00s at (2026-10-19 20:53:01)
+===== E6a_Broken_DispatchFallthrough / General / MixedFailedUnknownInvalid
+TLC2 Version 2026.07.31.184830 (rev: 30cc360)
+Running breadth-first search Model-Checking with fp 35 and seed 1860780156856057867 with 1 worker on 12 cores with 7068MB heap and 64MB offheap memory [pid: 312912] (Linux 6.8.0-139-generic amd64, Ubuntu 21.0.12.1 64bit, MSBDiskFPSet, DiskStateQueue).
+Parsing file /home/tony/projects/tessera/formal/tla/E6a/E6a_Broken_DispatchFallthrough.tla
+Parsing file /home/tony/projects/tessera/formal/tla/E6a/E6a_Base.tla
+Parsing file /tmp/tlc-15402777457982168960/_TLCTrace.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/_TLCTrace.tla)
+Parsing file /tmp/tlc-15402777457982168960/FiniteSets.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/FiniteSets.tla)
+Parsing file /home/tony/projects/tessera/formal/tla/E6a/E6a_Props.tla
+Parsing file /home/tony/projects/tessera/formal/tla/P4_VerifierStates.tla
+Parsing file /tmp/tlc-15402777457982168960/Naturals.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Naturals.tla)
+Parsing file /tmp/tlc-15402777457982168960/Sequences.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Sequences.tla)
+Parsing file /tmp/tlc-15402777457982168960/TLC.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/TLC.tla)
+Parsing file /tmp/tlc-15402777457982168960/TLCExt.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/TLCExt.tla)
+Parsing file /tmp/tlc-15402777457982168960/Integers.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Integers.tla)
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module P4_VerifierStates
+Semantic processing of module E6a_Base
+Semantic processing of module TLC
+Semantic processing of module Integers
+Semantic processing of module TLCExt
+Semantic processing of module _TLCTrace
+Semantic processing of module E6a_Props
+Semantic processing of module E6a_Broken_DispatchFallthrough
+Linting of module P4_VerifierStates
+Linting of module E6a_Base
+Linting of module TLCExt
+Linting of module _TLCTrace
+Linting of module E6a_Props
+Linting of module E6a_Broken_DispatchFallthrough
+Starting... (2026-10-19 20:53:02)
+Computing initial states...
+Computed 2 initial states...
+Computed 4 initial states...
+Computed 8 initial states...
+Computed 16 initial states...
+Computed 32 initial states...
+Computed 64 initial states...
+Computed 128 initial states...
+Computed 256 initial states...
+Computed 512 initial states...
+Computed 1024 initial states...
+Computed 2048 initial states...
+Computed 4096 initial states...
+Computed 8192 initial states...
+Finished computing initial states: 15876 distinct states generated at 2026-10-19 20:53:02.
+Model checking completed. No error has been found.
+  Estimates of the probability that TLC did not check all reachable states
+  because two distinct states had the same fingerprint:
+  calculated (optimistic):  val = 1.4E-11
+31752 states generated, 15876 distinct states found, 0 states left on queue.
+The depth of the complete state graph search is 1.
+The average outdegree of the complete state graph is 0 (minimum is 0, the maximum 0 and the 95th percentile is 0).
+Finished in 00s at (2026-10-19 20:53:02)
+===== E6a_Broken_DispatchFallthrough / General / MixedFailedMissingEvidenceInvalid
+TLC2 Version 2026.07.31.184830 (rev: 30cc360)
+Running breadth-first search Model-Checking with fp 32 and seed 871746613556497116 with 1 worker on 12 cores with 7068MB heap and 64MB offheap memory [pid: 312970] (Linux 6.8.0-139-generic amd64, Ubuntu 21.0.12.1 64bit, MSBDiskFPSet, DiskStateQueue).
+Parsing file /home/tony/projects/tessera/formal/tla/E6a/E6a_Broken_DispatchFallthrough.tla
+Parsing file /home/tony/projects/tessera/formal/tla/E6a/E6a_Base.tla
+Parsing file /tmp/tlc-9710541622681683212/_TLCTrace.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/_TLCTrace.tla)
+Parsing file /tmp/tlc-9710541622681683212/FiniteSets.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/FiniteSets.tla)
+Parsing file /home/tony/projects/tessera/formal/tla/E6a/E6a_Props.tla
+Parsing file /home/tony/projects/tessera/formal/tla/P4_VerifierStates.tla
+Parsing file /tmp/tlc-9710541622681683212/Naturals.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Naturals.tla)
+Parsing file /tmp/tlc-9710541622681683212/Sequences.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Sequences.tla)
+Parsing file /tmp/tlc-9710541622681683212/TLC.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/TLC.tla)
+Parsing file /tmp/tlc-9710541622681683212/TLCExt.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/TLCExt.tla)
+Parsing file /tmp/tlc-9710541622681683212/Integers.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Integers.tla)
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module P4_VerifierStates
+Semantic processing of module E6a_Base
+Semantic processing of module TLC
+Semantic processing of module Integers
+Semantic processing of module TLCExt
+Semantic processing of module _TLCTrace
+Semantic processing of module E6a_Props
+Semantic processing of module E6a_Broken_DispatchFallthrough
+Linting of module P4_VerifierStates
+Linting of module E6a_Base
+Linting of module TLCExt
+Linting of module _TLCTrace
+Linting of module E6a_Props
+Linting of module E6a_Broken_DispatchFallthrough
+Starting... (2026-10-19 20:53:03)
+Computing initial states...
+Computed 2 initial states...
+Computed 4 initial states...
+Computed 8 initial states...
+Computed 16 initial states...
+Computed 32 initial states...
+Computed 64 initial states...
+Computed 128 initial states...
+Computed 256 initial states...
+Computed 512 initial states...
+Computed 1024 initial states...
+Computed 2048 initial states...
+Computed 4096 initial states...
+Computed 8192 initial states...
+Finished computing initial states: 15876 distinct states generated at 2026-10-19 20:53:03.
+Model checking completed. No error has been found.
+  Estimates of the probability that TLC did not check all reachable states
+  because two distinct states had the same fingerprint:
+  calculated (optimistic):  val = 1.4E-11
+31752 states generated, 15876 distinct states found, 0 states left on queue.
+The depth of the complete state graph search is 1.
+The average outdegree of the complete state graph is 0 (minimum is 0, the maximum 0 and the 95th percentile is 0).
+Finished in 00s at (2026-10-19 20:53:03)
+===== E6a_Broken_DispatchFallthrough / General / MissingSignatureInvalid
+TLC2 Version 2026.07.31.184830 (rev: 30cc360)
+Running breadth-first search Model-Checking with fp 67 and seed -1912557619735962658 with 1 worker on 12 cores with 7068MB heap and 64MB offheap memory [pid: 313034] (Linux 6.8.0-139-generic amd64, Ubuntu 21.0.12.1 64bit, MSBDiskFPSet, DiskStateQueue).
+Parsing file /home/tony/projects/tessera/formal/tla/E6a/E6a_Broken_DispatchFallthrough.tla
+Parsing file /home/tony/projects/tessera/formal/tla/E6a/E6a_Base.tla
+Parsing file /tmp/tlc-7901399402987859815/_TLCTrace.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/_TLCTrace.tla)
+Parsing file /tmp/tlc-7901399402987859815/FiniteSets.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/FiniteSets.tla)
+Parsing file /home/tony/projects/tessera/formal/tla/E6a/E6a_Props.tla
+Parsing file /home/tony/projects/tessera/formal/tla/P4_VerifierStates.tla
+Parsing file /tmp/tlc-7901399402987859815/Naturals.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Naturals.tla)
+Parsing file /tmp/tlc-7901399402987859815/Sequences.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Sequences.tla)
+Parsing file /tmp/tlc-7901399402987859815/TLC.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/TLC.tla)
+Parsing file /tmp/tlc-7901399402987859815/TLCExt.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/TLCExt.tla)
+Parsing file /tmp/tlc-7901399402987859815/Integers.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Integers.tla)
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module P4_VerifierStates
+Semantic processing of module E6a_Base
+Semantic processing of module TLC
+Semantic processing of module Integers
+Semantic processing of module TLCExt
+Semantic processing of module _TLCTrace
+Semantic processing of module E6a_Props
+Semantic processing of module E6a_Broken_DispatchFallthrough
+Linting of module P4_VerifierStates
+Linting of module E6a_Base
+Linting of module TLCExt
+Linting of module _TLCTrace
+Linting of module E6a_Props
+Linting of module E6a_Broken_DispatchFallthrough
+Starting... (2026-10-19 20:53:04)
+Computing initial states...
+Computed 2 initial states...
+Computed 4 initial states...
+Computed 8 initial states...
+Computed 16 initial states...
+Computed 32 initial states...
+Computed 64 initial states...
+Computed 128 initial states...
+Computed 256 initial states...
+Computed 512 initial states...
+Computed 1024 initial states...
+Computed 2048 initial states...
+Computed 4096 initial states...
+Computed 8192 initial states...
+Finished computing initial states: 15876 distinct states generated at 2026-10-19 20:53:04.
+Model checking completed. No error has been found.
+  Estimates of the probability that TLC did not check all reachable states
+  because two distinct states had the same fingerprint:
+  calculated (optimistic):  val = 1.4E-11
+31752 states generated, 15876 distinct states found, 0 states left on queue.
+The depth of the complete state graph search is 1.
+The average outdegree of the complete state graph is 0 (minimum is 0, the maximum 0 and the 95th percentile is 0).
+Finished in 00s at (2026-10-19 20:53:04)
+===== E6a_Broken_DispatchFallthrough / General / MissingEvidenceUnverifiable
+TLC2 Version 2026.07.31.184830 (rev: 30cc360)
+Running breadth-first search Model-Checking with fp 45 and seed -2595559575739854384 with 1 worker on 12 cores with 7068MB heap and 64MB offheap memory [pid: 313092] (Linux 6.8.0-139-generic amd64, Ubuntu 21.0.12.1 64bit, MSBDiskFPSet, DiskStateQueue).
+Parsing file /home/tony/projects/tessera/formal/tla/E6a/E6a_Broken_DispatchFallthrough.tla
+Parsing file /home/tony/projects/tessera/formal/tla/E6a/E6a_Base.tla
+Parsing file /tmp/tlc-5566494055263403053/_TLCTrace.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/_TLCTrace.tla)
+Parsing file /tmp/tlc-5566494055263403053/FiniteSets.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/FiniteSets.tla)
+Parsing file /home/tony/projects/tessera/formal/tla/E6a/E6a_Props.tla
+Parsing file /home/tony/projects/tessera/formal/tla/P4_VerifierStates.tla
+Parsing file /tmp/tlc-5566494055263403053/Naturals.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Naturals.tla)
+Parsing file /tmp/tlc-5566494055263403053/Sequences.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Sequences.tla)
+Parsing file /tmp/tlc-5566494055263403053/TLC.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/TLC.tla)
+Parsing file /tmp/tlc-5566494055263403053/TLCExt.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/TLCExt.tla)
+Parsing file /tmp/tlc-5566494055263403053/Integers.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Integers.tla)
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module P4_VerifierStates
+Semantic processing of module E6a_Base
+Semantic processing of module TLC
+Semantic processing of module Integers
+Semantic processing of module TLCExt
+Semantic processing of module _TLCTrace
+Semantic processing of module E6a_Props
+Semantic processing of module E6a_Broken_DispatchFallthrough
+Linting of module P4_VerifierStates
+Linting of module E6a_Base
+Linting of module TLCExt
+Linting of module _TLCTrace
+Linting of module E6a_Props
+Linting of module E6a_Broken_DispatchFallthrough
+Starting... (2026-10-19 20:53:05)
+Computing initial states...
+Computed 2 initial states...
+Computed 4 initial states...
+Computed 8 initial states...
+Computed 16 initial states...
+Computed 32 initial states...
+Computed 64 initial states...
+Computed 128 initial states...
+Computed 256 initial states...
+Computed 512 initial states...
+Computed 1024 initial states...
+Computed 2048 initial states...
+Computed 4096 initial states...
+Computed 8192 initial states...
+Finished computing initial states: 15876 distinct states generated at 2026-10-19 20:53:05.
+Model checking completed. No error has been found.
+  Estimates of the probability that TLC did not check all reachable states
+  because two distinct states had the same fingerprint:
+  calculated (optimistic):  val = 1.4E-11
+31752 states generated, 15876 distinct states found, 0 states left on queue.
+The depth of the complete state graph search is 1.
+The average outdegree of the complete state graph is 0 (minimum is 0, the maximum 0 and the 95th percentile is 0).
+Finished in 00s at (2026-10-19 20:53:05)
+===== E6a_Broken_DispatchFallthrough / General / MissingEvidenceNeverValid
+TLC2 Version 2026.07.31.184830 (rev: 30cc360)
+Running breadth-first search Model-Checking with fp 118 and seed 6950046523237459098 with 1 worker on 12 cores with 7068MB heap and 64MB offheap memory [pid: 313156] (Linux 6.8.0-139-generic amd64, Ubuntu 21.0.12.1 64bit, MSBDiskFPSet, DiskStateQueue).
+Parsing file /home/tony/projects/tessera/formal/tla/E6a/E6a_Broken_DispatchFallthrough.tla
+Parsing file /home/tony/projects/tessera/formal/tla/E6a/E6a_Base.tla
+Parsing file /tmp/tlc-17162301198831006290/_TLCTrace.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/_TLCTrace.tla)
+Parsing file /tmp/tlc-17162301198831006290/FiniteSets.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/FiniteSets.tla)
+Parsing file /home/tony/projects/tessera/formal/tla/E6a/E6a_Props.tla
+Parsing file /home/tony/projects/tessera/formal/tla/P4_VerifierStates.tla
+Parsing file /tmp/tlc-17162301198831006290/Naturals.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Naturals.tla)
+Parsing file /tmp/tlc-17162301198831006290/Sequences.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Sequences.tla)
+Parsing file /tmp/tlc-17162301198831006290/TLC.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/TLC.tla)
+Parsing file /tmp/tlc-17162301198831006290/TLCExt.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/TLCExt.tla)
+Parsing file /tmp/tlc-17162301198831006290/Integers.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Integers.tla)
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module P4_VerifierStates
+Semantic processing of module E6a_Base
+Semantic processing of module TLC
+Semantic processing of module Integers
+Semantic processing of module TLCExt
+Semantic processing of module _TLCTrace
+Semantic processing of module E6a_Props
+Semantic processing of module E6a_Broken_DispatchFallthrough
+Linting of module P4_VerifierStates
+Linting of module E6a_Base
+Linting of module TLCExt
+Linting of module _TLCTrace
+Linting of module E6a_Props
+Linting of module E6a_Broken_DispatchFallthrough
+Starting... (2026-10-19 20:53:06)
+Computing initial states...
+Computed 2 initial states...
+Computed 4 initial states...
+Computed 8 initial states...
+Computed 16 initial states...
+Computed 32 initial states...
+Computed 64 initial states...
+Computed 128 initial states...
+Computed 256 initial states...
+Computed 512 initial states...
+Computed 1024 initial states...
+Computed 2048 initial states...
+Computed 4096 initial states...
+Computed 8192 initial states...
+Finished computing initial states: 15876 distinct states generated at 2026-10-19 20:53:06.
+Model checking completed. No error has been found.
+  Estimates of the probability that TLC did not check all reachable states
+  because two distinct states had the same fingerprint:
+  calculated (optimistic):  val = 1.4E-11
+31752 states generated, 15876 distinct states found, 0 states left on queue.
+The depth of the complete state graph search is 1.
+The average outdegree of the complete state graph is 0 (minimum is 0, the maximum 0 and the 95th percentile is 0).
+Finished in 00s at (2026-10-19 20:53:06)
+===== E6a_Broken_DispatchFallthrough / General / InvalidNeedsDefect
+TLC2 Version 2026.07.31.184830 (rev: 30cc360)
+Running breadth-first search Model-Checking with fp 58 and seed -8347152738116860277 with 1 worker on 12 cores with 7068MB heap and 64MB offheap memory [pid: 313252] (Linux 6.8.0-139-generic amd64, Ubuntu 21.0.12.1 64bit, MSBDiskFPSet, DiskStateQueue).
+Parsing file /home/tony/projects/tessera/formal/tla/E6a/E6a_Broken_DispatchFallthrough.tla
+Parsing file /home/tony/projects/tessera/formal/tla/E6a/E6a_Base.tla
+Parsing file /tmp/tlc-7830101286520670300/_TLCTrace.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/_TLCTrace.tla)
+Parsing file /tmp/tlc-7830101286520670300/FiniteSets.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/FiniteSets.tla)
+Parsing file /home/tony/projects/tessera/formal/tla/E6a/E6a_Props.tla
+Parsing file /home/tony/projects/tessera/formal/tla/P4_VerifierStates.tla
+Parsing file /tmp/tlc-7830101286520670300/Naturals.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Naturals.tla)
+Parsing file /tmp/tlc-7830101286520670300/Sequences.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Sequences.tla)
+Parsing file /tmp/tlc-7830101286520670300/TLC.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/TLC.tla)
+Parsing file /tmp/tlc-7830101286520670300/TLCExt.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/TLCExt.tla)
+Parsing file /tmp/tlc-7830101286520670300/Integers.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Integers.tla)
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module P4_VerifierStates
+Semantic processing of module E6a_Base
+Semantic processing of module TLC
+Semantic processing of module Integers
+Semantic processing of module TLCExt
+Semantic processing of module _TLCTrace
+Semantic processing of module E6a_Props
+Semantic processing of module E6a_Broken_DispatchFallthrough
+Linting of module P4_VerifierStates
+Linting of module E6a_Base
+Linting of module TLCExt
+Linting of module _TLCTrace
+Linting of module E6a_Props
+Linting of module E6a_Broken_DispatchFallthrough
+Starting... (2026-10-19 20:53:07)
+Computing initial states...
+Error: Invariant InvalidNeedsDefect is violated by the initial state:
+/\ sig = (kms :> "absent" @@ gpg :> "absent")
+/\ alg = (kms :> "supported" @@ gpg :> "supported")
+/\ waived = {}
+/\ ev = (dns :> "absent" @@ git :> "absent")
+/\ dispatch = "out"
+
+Finished in 00s at (2026-10-19 20:53:07)
+===== E6a_Broken_DispatchFallthrough / General / ReasonMatchesVerdict
+TLC2 Version 2026.07.31.184830 (rev: 30cc360)
+Running breadth-first search Model-Checking with fp 10 and seed 9137004224428286479 with 1 worker on 12 cores with 7068MB heap and 64MB offheap memory [pid: 313298] (Linux 6.8.0-139-generic amd64, Ubuntu 21.0.12.1 64bit, MSBDiskFPSet, DiskStateQueue).
+Parsing file /home/tony/projects/tessera/formal/tla/E6a/E6a_Broken_DispatchFallthrough.tla
+Parsing file /home/tony/projects/tessera/formal/tla/E6a/E6a_Base.tla
+Parsing file /tmp/tlc-11912344957196249888/_TLCTrace.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/_TLCTrace.tla)
+Parsing file /tmp/tlc-11912344957196249888/FiniteSets.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/FiniteSets.tla)
+Parsing file /home/tony/projects/tessera/formal/tla/E6a/E6a_Props.tla
+Parsing file /home/tony/projects/tessera/formal/tla/P4_VerifierStates.tla
+Parsing file /tmp/tlc-11912344957196249888/Naturals.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Naturals.tla)
+Parsing file /tmp/tlc-11912344957196249888/Sequences.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Sequences.tla)
+Parsing file /tmp/tlc-11912344957196249888/TLC.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/TLC.tla)
+Parsing file /tmp/tlc-11912344957196249888/TLCExt.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/TLCExt.tla)
+Parsing file /tmp/tlc-11912344957196249888/Integers.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Integers.tla)
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module P4_VerifierStates
+Semantic processing of module E6a_Base
+Semantic processing of module TLC
+Semantic processing of module Integers
+Semantic processing of module TLCExt
+Semantic processing of module _TLCTrace
+Semantic processing of module E6a_Props
+Semantic processing of module E6a_Broken_DispatchFallthrough
+Linting of module P4_VerifierStates
+Linting of module E6a_Base
+Linting of module TLCExt
+Linting of module _TLCTrace
+Linting of module E6a_Props
+Linting of module E6a_Broken_DispatchFallthrough
+Starting... (2026-10-19 20:53:07)
+Computing initial states...
+Computed 2 initial states...
+Computed 4 initial states...
+Computed 8 initial states...
+Computed 16 initial states...
+Computed 32 initial states...
+Computed 64 initial states...
+Computed 128 initial states...
+Computed 256 initial states...
+Computed 512 initial states...
+Computed 1024 initial states...
+Computed 2048 initial states...
+Computed 4096 initial states...
+Computed 8192 initial states...
+Finished computing initial states: 15876 distinct states generated at 2026-10-19 20:53:08.
+Model checking completed. No error has been found.
+  Estimates of the probability that TLC did not check all reachable states
+  because two distinct states had the same fingerprint:
+  calculated (optimistic):  val = 1.4E-11
+31752 states generated, 15876 distinct states found, 0 states left on queue.
+The depth of the complete state graph search is 1.
+The average outdegree of the complete state graph is 0 (minimum is 0, the maximum 0 and the 95th percentile is 0).
+Finished in 00s at (2026-10-19 20:53:08)
+===== E6a_Broken_DispatchFallthrough / General / ExactInvalidIn
+TLC2 Version 2026.07.31.184830 (rev: 30cc360)
+Running breadth-first search Model-Checking with fp 28 and seed 2014930904041537936 with 1 worker on 12 cores with 7068MB heap and 64MB offheap memory [pid: 313359] (Linux 6.8.0-139-generic amd64, Ubuntu 21.0.12.1 64bit, MSBDiskFPSet, DiskStateQueue).
+Parsing file /home/tony/projects/tessera/formal/tla/E6a/E6a_Broken_DispatchFallthrough.tla
+Parsing file /home/tony/projects/tessera/formal/tla/E6a/E6a_Base.tla
+Parsing file /tmp/tlc-15902471069925029635/_TLCTrace.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/_TLCTrace.tla)
+Parsing file /tmp/tlc-15902471069925029635/FiniteSets.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/FiniteSets.tla)
+Parsing file /home/tony/projects/tessera/formal/tla/E6a/E6a_Props.tla
+Parsing file /home/tony/projects/tessera/formal/tla/P4_VerifierStates.tla
+Parsing file /tmp/tlc-15902471069925029635/Naturals.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Naturals.tla)
+Parsing file /tmp/tlc-15902471069925029635/Sequences.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Sequences.tla)
+Parsing file /tmp/tlc-15902471069925029635/TLC.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/TLC.tla)
+Parsing file /tmp/tlc-15902471069925029635/TLCExt.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/TLCExt.tla)
+Parsing file /tmp/tlc-15902471069925029635/Integers.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Integers.tla)
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module P4_VerifierStates
+Semantic processing of module E6a_Base
+Semantic processing of module TLC
+Semantic processing of module Integers
+Semantic processing of module TLCExt
+Semantic processing of module _TLCTrace
+Semantic processing of module E6a_Props
+Semantic processing of module E6a_Broken_DispatchFallthrough
+Linting of module P4_VerifierStates
+Linting of module E6a_Base
+Linting of module TLCExt
+Linting of module _TLCTrace
+Linting of module E6a_Props
+Linting of module E6a_Broken_DispatchFallthrough
+Starting... (2026-10-19 20:53:08)
+Computing initial states...
+Computed 2 initial states...
+Computed 4 initial states...
+Computed 8 initial states...
+Computed 16 initial states...
+Computed 32 initial states...
+Computed 64 initial states...
+Computed 128 initial states...
+Computed 256 initial states...
+Computed 512 initial states...
+Computed 1024 initial states...
+Computed 2048 initial states...
+Computed 4096 initial states...
+Computed 8192 initial states...
+Finished computing initial states: 15876 distinct states generated at 2026-10-19 20:53:08.
+Model checking completed. No error has been found.
+  Estimates of the probability that TLC did not check all reachable states
+  because two distinct states had the same fingerprint:
+  calculated (optimistic):  val = 1.4E-11
+31752 states generated, 15876 distinct states found, 0 states left on queue.
+The depth of the complete state graph search is 1.
+The average outdegree of the complete state graph is 0 (minimum is 0, the maximum 0 and the 95th percentile is 0).
+Finished in 00s at (2026-10-19 20:53:09)
+===== E6a_Broken_DispatchFallthrough / General / ExactUnverifiableIn
+TLC2 Version 2026.07.31.184830 (rev: 30cc360)
+Running breadth-first search Model-Checking with fp 77 and seed -4034129562105165289 with 1 worker on 12 cores with 7068MB heap and 64MB offheap memory [pid: 313421] (Linux 6.8.0-139-generic amd64, Ubuntu 21.0.12.1 64bit, MSBDiskFPSet, DiskStateQueue).
+Parsing file /home/tony/projects/tessera/formal/tla/E6a/E6a_Broken_DispatchFallthrough.tla
+Parsing file /home/tony/projects/tessera/formal/tla/E6a/E6a_Base.tla
+Parsing file /tmp/tlc-3803873213106580931/_TLCTrace.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/_TLCTrace.tla)
+Parsing file /tmp/tlc-3803873213106580931/FiniteSets.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/FiniteSets.tla)
+Parsing file /home/tony/projects/tessera/formal/tla/E6a/E6a_Props.tla
+Parsing file /home/tony/projects/tessera/formal/tla/P4_VerifierStates.tla
+Parsing file /tmp/tlc-3803873213106580931/Naturals.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Naturals.tla)
+Parsing file /tmp/tlc-3803873213106580931/Sequences.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Sequences.tla)
+Parsing file /tmp/tlc-3803873213106580931/TLC.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/TLC.tla)
+Parsing file /tmp/tlc-3803873213106580931/TLCExt.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/TLCExt.tla)
+Parsing file /tmp/tlc-3803873213106580931/Integers.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Integers.tla)
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module P4_VerifierStates
+Semantic processing of module E6a_Base
+Semantic processing of module TLC
+Semantic processing of module Integers
+Semantic processing of module TLCExt
+Semantic processing of module _TLCTrace
+Semantic processing of module E6a_Props
+Semantic processing of module E6a_Broken_DispatchFallthrough
+Linting of module P4_VerifierStates
+Linting of module E6a_Base
+Linting of module TLCExt
+Linting of module _TLCTrace
+Linting of module E6a_Props
+Linting of module E6a_Broken_DispatchFallthrough
+Starting... (2026-10-19 20:53:09)
+Computing initial states...
+Computed 2 initial states...
+Computed 4 initial states...
+Computed 8 initial states...
+Computed 16 initial states...
+Computed 32 initial states...
+Computed 64 initial states...
+Computed 128 initial states...
+Computed 256 initial states...
+Computed 512 initial states...
+Computed 1024 initial states...
+Computed 2048 initial states...
+Computed 4096 initial states...
+Computed 8192 initial states...
+Finished computing initial states: 15876 distinct states generated at 2026-10-19 20:53:09.
+Model checking completed. No error has been found.
+  Estimates of the probability that TLC did not check all reachable states
+  because two distinct states had the same fingerprint:
+  calculated (optimistic):  val = 1.4E-11
+31752 states generated, 15876 distinct states found, 0 states left on queue.
+The depth of the complete state graph search is 1.
+The average outdegree of the complete state graph is 0 (minimum is 0, the maximum 0 and the 95th percentile is 0).
+Finished in 00s at (2026-10-19 20:53:09)
+===== E6a_Broken_DispatchFallthrough / General / ExactStrictIn
+TLC2 Version 2026.07.31.184830 (rev: 30cc360)
+Running breadth-first search Model-Checking with fp 105 and seed 726826709276305106 with 1 worker on 12 cores with 7068MB heap and 64MB offheap memory [pid: 313473] (Linux 6.8.0-139-generic amd64, Ubuntu 21.0.12.1 64bit, MSBDiskFPSet, DiskStateQueue).
+Parsing file /home/tony/projects/tessera/formal/tla/E6a/E6a_Broken_DispatchFallthrough.tla
+Parsing file /home/tony/projects/tessera/formal/tla/E6a/E6a_Base.tla
+Parsing file /tmp/tlc-1234832497424399481/_TLCTrace.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/_TLCTrace.tla)
+Parsing file /tmp/tlc-1234832497424399481/FiniteSets.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/FiniteSets.tla)
+Parsing file /home/tony/projects/tessera/formal/tla/E6a/E6a_Props.tla
+Parsing file /home/tony/projects/tessera/formal/tla/P4_VerifierStates.tla
+Parsing file /tmp/tlc-1234832497424399481/Naturals.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Naturals.tla)
+Parsing file /tmp/tlc-1234832497424399481/Sequences.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Sequences.tla)
+Parsing file /tmp/tlc-1234832497424399481/TLC.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/TLC.tla)
+Parsing file /tmp/tlc-1234832497424399481/TLCExt.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/TLCExt.tla)
+Parsing file /tmp/tlc-1234832497424399481/Integers.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Integers.tla)
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module P4_VerifierStates
+Semantic processing of module E6a_Base
+Semantic processing of module TLC
+Semantic processing of module Integers
+Semantic processing of module TLCExt
+Semantic processing of module _TLCTrace
+Semantic processing of module E6a_Props
+Semantic processing of module E6a_Broken_DispatchFallthrough
+Linting of module P4_VerifierStates
+Linting of module E6a_Base
+Linting of module TLCExt
+Linting of module _TLCTrace
+Linting of module E6a_Props
+Linting of module E6a_Broken_DispatchFallthrough
+Starting... (2026-10-19 20:53:10)
+Computing initial states...
+Computed 2 initial states...
+Computed 4 initial states...
+Computed 8 initial states...
+Computed 16 initial states...
+Computed 32 initial states...
+Computed 64 initial states...
+Computed 128 initial states...
+Computed 256 initial states...
+Computed 512 initial states...
+Computed 1024 initial states...
+Computed 2048 initial states...
+Computed 4096 initial states...
+Computed 8192 initial states...
+Finished computing initial states: 15876 distinct states generated at 2026-10-19 20:53:10.
+Model checking completed. No error has been found.
+  Estimates of the probability that TLC did not check all reachable states
+  because two distinct states had the same fingerprint:
+  calculated (optimistic):  val = 1.4E-11
+31752 states generated, 15876 distinct states found, 0 states left on queue.
+The depth of the complete state graph search is 1.
+The average outdegree of the complete state graph is 0 (minimum is 0, the maximum 0 and the 95th percentile is 0).
+Finished in 00s at (2026-10-19 20:53:10)
+===== E6a_Broken_DispatchFallthrough / General / ExactDegradedIn
+TLC2 Version 2026.07.31.184830 (rev: 30cc360)
+Running breadth-first search Model-Checking with fp 112 and seed -2451162166683767054 with 1 worker on 12 cores with 7068MB heap and 64MB offheap memory [pid: 313536] (Linux 6.8.0-139-generic amd64, Ubuntu 21.0.12.1 64bit, MSBDiskFPSet, DiskStateQueue).
+Parsing file /home/tony/projects/tessera/formal/tla/E6a/E6a_Broken_DispatchFallthrough.tla
+Parsing file /home/tony/projects/tessera/formal/tla/E6a/E6a_Base.tla
+Parsing file /tmp/tlc-6519220710005655846/_TLCTrace.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/_TLCTrace.tla)
+Parsing file /tmp/tlc-6519220710005655846/FiniteSets.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/FiniteSets.tla)
+Parsing file /home/tony/projects/tessera/formal/tla/E6a/E6a_Props.tla
+Parsing file /home/tony/projects/tessera/formal/tla/P4_VerifierStates.tla
+Parsing file /tmp/tlc-6519220710005655846/Naturals.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Naturals.tla)
+Parsing file /tmp/tlc-6519220710005655846/Sequences.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Sequences.tla)
+Parsing file /tmp/tlc-6519220710005655846/TLC.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/TLC.tla)
+Parsing file /tmp/tlc-6519220710005655846/TLCExt.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/TLCExt.tla)
+Parsing file /tmp/tlc-6519220710005655846/Integers.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Integers.tla)
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module P4_VerifierStates
+Semantic processing of module E6a_Base
+Semantic processing of module TLC
+Semantic processing of module Integers
+Semantic processing of module TLCExt
+Semantic processing of module _TLCTrace
+Semantic processing of module E6a_Props
+Semantic processing of module E6a_Broken_DispatchFallthrough
+Linting of module P4_VerifierStates
+Linting of module E6a_Base
+Linting of module TLCExt
+Linting of module _TLCTrace
+Linting of module E6a_Props
+Linting of module E6a_Broken_DispatchFallthrough
+Starting... (2026-10-19 20:53:11)
+Computing initial states...
+Computed 2 initial states...
+Computed 4 initial states...
+Computed 8 initial states...
+Computed 16 initial states...
+Computed 32 initial states...
+Computed 64 initial states...
+Computed 128 initial states...
+Computed 256 initial states...
+Computed 512 initial states...
+Computed 1024 initial states...
+Computed 2048 initial states...
+Computed 4096 initial states...
+Computed 8192 initial states...
+Finished computing initial states: 15876 distinct states generated at 2026-10-19 20:53:11.
+Model checking completed. No error has been found.
+  Estimates of the probability that TLC did not check all reachable states
+  because two distinct states had the same fingerprint:
+  calculated (optimistic):  val = 1.4E-11
+31752 states generated, 15876 distinct states found, 0 states left on queue.
+The depth of the complete state graph search is 1.
+The average outdegree of the complete state graph is 0 (minimum is 0, the maximum 0 and the 95th percentile is 0).
+Finished in 00s at (2026-10-19 20:53:11)
+===== E6a_Broken_DispatchFallthrough / General / NoDegradedWithoutWaivable
+TLC2 Version 2026.07.31.184830 (rev: 30cc360)
+Running breadth-first search Model-Checking with fp 122 and seed -196553949753969234 with 1 worker on 12 cores with 7068MB heap and 64MB offheap memory [pid: 313599] (Linux 6.8.0-139-generic amd64, Ubuntu 21.0.12.1 64bit, MSBDiskFPSet, DiskStateQueue).
+Parsing file /home/tony/projects/tessera/formal/tla/E6a/E6a_Broken_DispatchFallthrough.tla
+Parsing file /home/tony/projects/tessera/formal/tla/E6a/E6a_Base.tla
+Parsing file /tmp/tlc-1521340255442707085/_TLCTrace.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/_TLCTrace.tla)
+Parsing file /tmp/tlc-1521340255442707085/FiniteSets.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/FiniteSets.tla)
+Parsing file /home/tony/projects/tessera/formal/tla/E6a/E6a_Props.tla
+Parsing file /home/tony/projects/tessera/formal/tla/P4_VerifierStates.tla
+Parsing file /tmp/tlc-1521340255442707085/Naturals.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Naturals.tla)
+Parsing file /tmp/tlc-1521340255442707085/Sequences.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Sequences.tla)
+Parsing file /tmp/tlc-1521340255442707085/TLC.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/TLC.tla)
+Parsing file /tmp/tlc-1521340255442707085/TLCExt.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/TLCExt.tla)
+Parsing file /tmp/tlc-1521340255442707085/Integers.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Integers.tla)
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module P4_VerifierStates
+Semantic processing of module E6a_Base
+Semantic processing of module TLC
+Semantic processing of module Integers
+Semantic processing of module TLCExt
+Semantic processing of module _TLCTrace
+Semantic processing of module E6a_Props
+Semantic processing of module E6a_Broken_DispatchFallthrough
+Linting of module P4_VerifierStates
+Linting of module E6a_Base
+Linting of module TLCExt
+Linting of module _TLCTrace
+Linting of module E6a_Props
+Linting of module E6a_Broken_DispatchFallthrough
+Starting... (2026-10-19 20:53:12)
+Computing initial states...
+Computed 2 initial states...
+Computed 4 initial states...
+Computed 8 initial states...
+Computed 16 initial states...
+Computed 32 initial states...
+Computed 64 initial states...
+Computed 128 initial states...
+Computed 256 initial states...
+Computed 512 initial states...
+Computed 1024 initial states...
+Computed 2048 initial states...
+Computed 4096 initial states...
+Computed 8192 initial states...
+Finished computing initial states: 15876 distinct states generated at 2026-10-19 20:53:12.
+Model checking completed. No error has been found.
+  Estimates of the probability that TLC did not check all reachable states
+  because two distinct states had the same fingerprint:
+  calculated (optimistic):  val = 1.4E-11
+31752 states generated, 15876 distinct states found, 0 states left on queue.
+The depth of the complete state graph search is 1.
+The average outdegree of the complete state graph is 0 (minimum is 0, the maximum 0 and the 95th percentile is 0).
+Finished in 00s at (2026-10-19 20:53:12)
+===== E6a_Broken_DispatchFallthrough / General / AgreesWithP4
+TLC2 Version 2026.07.31.184830 (rev: 30cc360)
+Running breadth-first search Model-Checking with fp 51 and seed 7058601881635536856 with 1 worker on 12 cores with 7068MB heap and 64MB offheap memory [pid: 313651] (Linux 6.8.0-139-generic amd64, Ubuntu 21.0.12.1 64bit, MSBDiskFPSet, DiskStateQueue).
+Parsing file /home/tony/projects/tessera/formal/tla/E6a/E6a_Broken_DispatchFallthrough.tla
+Parsing file /home/tony/projects/tessera/formal/tla/E6a/E6a_Base.tla
+Parsing file /tmp/tlc-12369628283475468944/_TLCTrace.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/_TLCTrace.tla)
+Parsing file /tmp/tlc-12369628283475468944/FiniteSets.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/FiniteSets.tla)
+Parsing file /home/tony/projects/tessera/formal/tla/E6a/E6a_Props.tla
+Parsing file /home/tony/projects/tessera/formal/tla/P4_VerifierStates.tla
+Parsing file /tmp/tlc-12369628283475468944/Naturals.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Naturals.tla)
+Parsing file /tmp/tlc-12369628283475468944/Sequences.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Sequences.tla)
+Parsing file /tmp/tlc-12369628283475468944/TLC.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/TLC.tla)
+Parsing file /tmp/tlc-12369628283475468944/TLCExt.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/TLCExt.tla)
+Parsing file /tmp/tlc-12369628283475468944/Integers.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Integers.tla)
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module P4_VerifierStates
+Semantic processing of module E6a_Base
+Semantic processing of module TLC
+Semantic processing of module Integers
+Semantic processing of module TLCExt
+Semantic processing of module _TLCTrace
+Semantic processing of module E6a_Props
+Semantic processing of module E6a_Broken_DispatchFallthrough
+Linting of module P4_VerifierStates
+Linting of module E6a_Base
+Linting of module TLCExt
+Linting of module _TLCTrace
+Linting of module E6a_Props
+Linting of module E6a_Broken_DispatchFallthrough
+Starting... (2026-10-19 20:53:12)
+Computing initial states...
+Computed 2 initial states...
+Computed 4 initial states...
+Computed 8 initial states...
+Computed 16 initial states...
+Computed 32 initial states...
+Computed 64 initial states...
+Computed 128 initial states...
+Computed 256 initial states...
+Computed 512 initial states...
+Computed 1024 initial states...
+Computed 2048 initial states...
+Computed 4096 initial states...
+Computed 8192 initial states...
+Finished computing initial states: 15876 distinct states generated at 2026-10-19 20:53:13.
+Model checking completed. No error has been found.
+  Estimates of the probability that TLC did not check all reachable states
+  because two distinct states had the same fingerprint:
+  calculated (optimistic):  val = 1.4E-11
+31752 states generated, 15876 distinct states found, 0 states left on queue.
+The depth of the complete state graph search is 1.
+The average outdegree of the complete state graph is 0 (minimum is 0, the maximum 0 and the 95th percentile is 0).
+Finished in 00s at (2026-10-19 20:53:13)
+===== E6a_Broken_DispatchFallthrough / General / P4_Partition
+TLC2 Version 2026.07.31.184830 (rev: 30cc360)
+Running breadth-first search Model-Checking with fp 87 and seed -3277097277258594420 with 1 worker on 12 cores with 7068MB heap and 64MB offheap memory [pid: 313708] (Linux 6.8.0-139-generic amd64, Ubuntu 21.0.12.1 64bit, MSBDiskFPSet, DiskStateQueue).
+Parsing file /home/tony/projects/tessera/formal/tla/E6a/E6a_Broken_DispatchFallthrough.tla
+Parsing file /home/tony/projects/tessera/formal/tla/E6a/E6a_Base.tla
+Parsing file /tmp/tlc-701229917160650798/_TLCTrace.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/_TLCTrace.tla)
+Parsing file /tmp/tlc-701229917160650798/FiniteSets.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/FiniteSets.tla)
+Parsing file /home/tony/projects/tessera/formal/tla/E6a/E6a_Props.tla
+Parsing file /home/tony/projects/tessera/formal/tla/P4_VerifierStates.tla
+Parsing file /tmp/tlc-701229917160650798/Naturals.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Naturals.tla)
+Parsing file /tmp/tlc-701229917160650798/Sequences.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Sequences.tla)
+Parsing file /tmp/tlc-701229917160650798/TLC.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/TLC.tla)
+Parsing file /tmp/tlc-701229917160650798/TLCExt.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/TLCExt.tla)
+Parsing file /tmp/tlc-701229917160650798/Integers.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Integers.tla)
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module P4_VerifierStates
+Semantic processing of module E6a_Base
+Semantic processing of module TLC
+Semantic processing of module Integers
+Semantic processing of module TLCExt
+Semantic processing of module _TLCTrace
+Semantic processing of module E6a_Props
+Semantic processing of module E6a_Broken_DispatchFallthrough
+Linting of module P4_VerifierStates
+Linting of module E6a_Base
+Linting of module TLCExt
+Linting of module _TLCTrace
+Linting of module E6a_Props
+Linting of module E6a_Broken_DispatchFallthrough
+Starting... (2026-10-19 20:53:13)
+Computing initial states...
+Computed 2 initial states...
+Computed 4 initial states...
+Computed 8 initial states...
+Computed 16 initial states...
+Computed 32 initial states...
+Computed 64 initial states...
+Computed 128 initial states...
+Computed 256 initial states...
+Computed 512 initial states...
+Computed 1024 initial states...
+Computed 2048 initial states...
+Computed 4096 initial states...
+Computed 8192 initial states...
+Finished computing initial states: 15876 distinct states generated at 2026-10-19 20:53:14.
+Model checking completed. No error has been found.
+  Estimates of the probability that TLC did not check all reachable states
+  because two distinct states had the same fingerprint:
+  calculated (optimistic):  val = 1.4E-11
+31752 states generated, 15876 distinct states found, 0 states left on queue.
+The depth of the complete state graph search is 1.
+The average outdegree of the complete state graph is 0 (minimum is 0, the maximum 0 and the 95th percentile is 0).
+Finished in 00s at (2026-10-19 20:53:14)
+===== E6a_Broken_DispatchFallthrough / General / P4_Monotonicity
+TLC2 Version 2026.07.31.184830 (rev: 30cc360)
+Running breadth-first search Model-Checking with fp 92 and seed -17584685535748181 with 1 worker on 12 cores with 7068MB heap and 64MB offheap memory [pid: 313763] (Linux 6.8.0-139-generic amd64, Ubuntu 21.0.12.1 64bit, MSBDiskFPSet, DiskStateQueue).
+Parsing file /home/tony/projects/tessera/formal/tla/E6a/E6a_Broken_DispatchFallthrough.tla
+Parsing file /home/tony/projects/tessera/formal/tla/E6a/E6a_Base.tla
+Parsing file /tmp/tlc-12006829234880110148/_TLCTrace.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/_TLCTrace.tla)
+Parsing file /tmp/tlc-12006829234880110148/FiniteSets.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/FiniteSets.tla)
+Parsing file /home/tony/projects/tessera/formal/tla/E6a/E6a_Props.tla
+Parsing file /home/tony/projects/tessera/formal/tla/P4_VerifierStates.tla
+Parsing file /tmp/tlc-12006829234880110148/Naturals.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Naturals.tla)
+Parsing file /tmp/tlc-12006829234880110148/Sequences.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Sequences.tla)
+Parsing file /tmp/tlc-12006829234880110148/TLC.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/TLC.tla)
+Parsing file /tmp/tlc-12006829234880110148/TLCExt.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/TLCExt.tla)
+Parsing file /tmp/tlc-12006829234880110148/Integers.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Integers.tla)
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module P4_VerifierStates
+Semantic processing of module E6a_Base
+Semantic processing of module TLC
+Semantic processing of module Integers
+Semantic processing of module TLCExt
+Semantic processing of module _TLCTrace
+Semantic processing of module E6a_Props
+Semantic processing of module E6a_Broken_DispatchFallthrough
+Linting of module P4_VerifierStates
+Linting of module E6a_Base
+Linting of module TLCExt
+Linting of module _TLCTrace
+Linting of module E6a_Props
+Linting of module E6a_Broken_DispatchFallthrough
+Starting... (2026-10-19 20:53:14)
+Computing initial states...
+Computed 2 initial states...
+Computed 4 initial states...
+Computed 8 initial states...
+Computed 16 initial states...
+Computed 32 initial states...
+Computed 64 initial states...
+Computed 128 initial states...
+Computed 256 initial states...
+Computed 512 initial states...
+Computed 1024 initial states...
+Computed 2048 initial states...
+Computed 4096 initial states...
+Computed 8192 initial states...
+Finished computing initial states: 15876 distinct states generated at 2026-10-19 20:53:15.
+Model checking completed. No error has been found.
+  Estimates of the probability that TLC did not check all reachable states
+  because two distinct states had the same fingerprint:
+  calculated (optimistic):  val = 1.4E-11
+31752 states generated, 15876 distinct states found, 0 states left on queue.
+The depth of the complete state graph search is 1.
+The average outdegree of the complete state graph is 0 (minimum is 0, the maximum 0 and the 95th percentile is 0).
+Finished in 00s at (2026-10-19 20:53:15)
+===== E6a_Broken_DispatchFallthrough / General / P4_NoSilentPromotion
+TLC2 Version 2026.07.31.184830 (rev: 30cc360)
+Running breadth-first search Model-Checking with fp 71 and seed 3621892873698816407 with 1 worker on 12 cores with 7068MB heap and 64MB offheap memory [pid: 313835] (Linux 6.8.0-139-generic amd64, Ubuntu 21.0.12.1 64bit, MSBDiskFPSet, DiskStateQueue).
+Parsing file /home/tony/projects/tessera/formal/tla/E6a/E6a_Broken_DispatchFallthrough.tla
+Parsing file /home/tony/projects/tessera/formal/tla/E6a/E6a_Base.tla
+Parsing file /tmp/tlc-9539290386043091922/_TLCTrace.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/_TLCTrace.tla)
+Parsing file /tmp/tlc-9539290386043091922/FiniteSets.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/FiniteSets.tla)
+Parsing file /home/tony/projects/tessera/formal/tla/E6a/E6a_Props.tla
+Parsing file /home/tony/projects/tessera/formal/tla/P4_VerifierStates.tla
+Parsing file /tmp/tlc-9539290386043091922/Naturals.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Naturals.tla)
+Parsing file /tmp/tlc-9539290386043091922/Sequences.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Sequences.tla)
+Parsing file /tmp/tlc-9539290386043091922/TLC.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/TLC.tla)
+Parsing file /tmp/tlc-9539290386043091922/TLCExt.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/TLCExt.tla)
+Parsing file /tmp/tlc-9539290386043091922/Integers.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Integers.tla)
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module P4_VerifierStates
+Semantic processing of module E6a_Base
+Semantic processing of module TLC
+Semantic processing of module Integers
+Semantic processing of module TLCExt
+Semantic processing of module _TLCTrace
+Semantic processing of module E6a_Props
+Semantic processing of module E6a_Broken_DispatchFallthrough
+Linting of module P4_VerifierStates
+Linting of module E6a_Base
+Linting of module TLCExt
+Linting of module _TLCTrace
+Linting of module E6a_Props
+Linting of module E6a_Broken_DispatchFallthrough
+Starting... (2026-10-19 20:53:15)
+Computing initial states...
+Computed 2 initial states...
+Computed 4 initial states...
+Computed 8 initial states...
+Computed 16 initial states...
+Computed 32 initial states...
+Computed 64 initial states...
+Computed 128 initial states...
+Computed 256 initial states...
+Computed 512 initial states...
+Computed 1024 initial states...
+Computed 2048 initial states...
+Computed 4096 initial states...
+Computed 8192 initial states...
+Finished computing initial states: 15876 distinct states generated at 2026-10-19 20:53:16.
+Model checking completed. No error has been found.
+  Estimates of the probability that TLC did not check all reachable states
+  because two distinct states had the same fingerprint:
+  calculated (optimistic):  val = 1.4E-11
+31752 states generated, 15876 distinct states found, 0 states left on queue.
+The depth of the complete state graph search is 1.
+The average outdegree of the complete state graph is 0 (minimum is 0, the maximum 0 and the 95th percentile is 0).
+Finished in 00s at (2026-10-19 20:53:16)
+===== E6a_Broken_DispatchFallthrough / General / P4_ValidNeedsNonWaivablePass
+TLC2 Version 2026.07.31.184830 (rev: 30cc360)
+Running breadth-first search Model-Checking with fp 33 and seed -400301364578294721 with 1 worker on 12 cores with 7068MB heap and 64MB offheap memory [pid: 313934] (Linux 6.8.0-139-generic amd64, Ubuntu 21.0.12.1 64bit, MSBDiskFPSet, DiskStateQueue).
+Parsing file /home/tony/projects/tessera/formal/tla/E6a/E6a_Broken_DispatchFallthrough.tla
+Parsing file /home/tony/projects/tessera/formal/tla/E6a/E6a_Base.tla
+Parsing file /tmp/tlc-16982945625230784394/_TLCTrace.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/_TLCTrace.tla)
+Parsing file /tmp/tlc-16982945625230784394/FiniteSets.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/FiniteSets.tla)
+Parsing file /home/tony/projects/tessera/formal/tla/E6a/E6a_Props.tla
+Parsing file /home/tony/projects/tessera/formal/tla/P4_VerifierStates.tla
+Parsing file /tmp/tlc-16982945625230784394/Naturals.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Naturals.tla)
+Parsing file /tmp/tlc-16982945625230784394/Sequences.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Sequences.tla)
+Parsing file /tmp/tlc-16982945625230784394/TLC.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/TLC.tla)
+Parsing file /tmp/tlc-16982945625230784394/TLCExt.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/TLCExt.tla)
+Parsing file /tmp/tlc-16982945625230784394/Integers.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Integers.tla)
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module P4_VerifierStates
+Semantic processing of module E6a_Base
+Semantic processing of module TLC
+Semantic processing of module Integers
+Semantic processing of module TLCExt
+Semantic processing of module _TLCTrace
+Semantic processing of module E6a_Props
+Semantic processing of module E6a_Broken_DispatchFallthrough
+Linting of module P4_VerifierStates
+Linting of module E6a_Base
+Linting of module TLCExt
+Linting of module _TLCTrace
+Linting of module E6a_Props
+Linting of module E6a_Broken_DispatchFallthrough
+Starting... (2026-10-19 20:53:16)
+Computing initial states...
+Computed 2 initial states...
+Computed 4 initial states...
+Computed 8 initial states...
+Computed 16 initial states...
+Computed 32 initial states...
+Computed 64 initial states...
+Computed 128 initial states...
+Computed 256 initial states...
+Computed 512 initial states...
+Computed 1024 initial states...
+Computed 2048 initial states...
+Computed 4096 initial states...
+Computed 8192 initial states...
+Finished computing initial states: 15876 distinct states generated at 2026-10-19 20:53:17.
+Model checking completed. No error has been found.
+  Estimates of the probability that TLC did not check all reachable states
+  because two distinct states had the same fingerprint:
+  calculated (optimistic):  val = 1.4E-11
+31752 states generated, 15876 distinct states found, 0 states left on queue.
+The depth of the complete state graph search is 1.
+The average outdegree of the complete state graph is 0 (minimum is 0, the maximum 0 and the 95th percentile is 0).
+Finished in 00s at (2026-10-19 20:53:17)
+===== E6a_Broken_DispatchFallthrough / General / P4_StrictMeansEverything
+TLC2 Version 2026.07.31.184830 (rev: 30cc360)
+Running breadth-first search Model-Checking with fp 40 and seed -655270553379543364 with 1 worker on 12 cores with 7068MB heap and 64MB offheap memory [pid: 313989] (Linux 6.8.0-139-generic amd64, Ubuntu 21.0.12.1 64bit, MSBDiskFPSet, DiskStateQueue).
+Parsing file /home/tony/projects/tessera/formal/tla/E6a/E6a_Broken_DispatchFallthrough.tla
+Parsing file /home/tony/projects/tessera/formal/tla/E6a/E6a_Base.tla
+Parsing file /tmp/tlc-13780594294973504803/_TLCTrace.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/_TLCTrace.tla)
+Parsing file /tmp/tlc-13780594294973504803/FiniteSets.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/FiniteSets.tla)
+Parsing file /home/tony/projects/tessera/formal/tla/E6a/E6a_Props.tla
+Parsing file /home/tony/projects/tessera/formal/tla/P4_VerifierStates.tla
+Parsing file /tmp/tlc-13780594294973504803/Naturals.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Naturals.tla)
+Parsing file /tmp/tlc-13780594294973504803/Sequences.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Sequences.tla)
+Parsing file /tmp/tlc-13780594294973504803/TLC.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/TLC.tla)
+Parsing file /tmp/tlc-13780594294973504803/TLCExt.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/TLCExt.tla)
+Parsing file /tmp/tlc-13780594294973504803/Integers.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Integers.tla)
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module P4_VerifierStates
+Semantic processing of module E6a_Base
+Semantic processing of module TLC
+Semantic processing of module Integers
+Semantic processing of module TLCExt
+Semantic processing of module _TLCTrace
+Semantic processing of module E6a_Props
+Semantic processing of module E6a_Broken_DispatchFallthrough
+Linting of module P4_VerifierStates
+Linting of module E6a_Base
+Linting of module TLCExt
+Linting of module _TLCTrace
+Linting of module E6a_Props
+Linting of module E6a_Broken_DispatchFallthrough
+Starting... (2026-10-19 20:53:17)
+Computing initial states...
+Computed 2 initial states...
+Computed 4 initial states...
+Computed 8 initial states...
+Computed 16 initial states...
+Computed 32 initial states...
+Computed 64 initial states...
+Computed 128 initial states...
+Computed 256 initial states...
+Computed 512 initial states...
+Computed 1024 initial states...
+Computed 2048 initial states...
+Computed 4096 initial states...
+Computed 8192 initial states...
+Finished computing initial states: 15876 distinct states generated at 2026-10-19 20:53:18.
+Model checking completed. No error has been found.
+  Estimates of the probability that TLC did not check all reachable states
+  because two distinct states had the same fingerprint:
+  calculated (optimistic):  val = 1.4E-11
+31752 states generated, 15876 distinct states found, 0 states left on queue.
+The depth of the complete state graph search is 1.
+The average outdegree of the complete state graph is 0 (minimum is 0, the maximum 0 and the 95th percentile is 0).
+Finished in 00s at (2026-10-19 20:53:18)
+===== E6a_Broken_DispatchFallthrough / General / P4_DegradedNeedsExplicitWaiver
+TLC2 Version 2026.07.31.184830 (rev: 30cc360)
+Running breadth-first search Model-Checking with fp 36 and seed -6737124815195892890 with 1 worker on 12 cores with 7068MB heap and 64MB offheap memory [pid: 314039] (Linux 6.8.0-139-generic amd64, Ubuntu 21.0.12.1 64bit, MSBDiskFPSet, DiskStateQueue).
+Parsing file /home/tony/projects/tessera/formal/tla/E6a/E6a_Broken_DispatchFallthrough.tla
+Parsing file /home/tony/projects/tessera/formal/tla/E6a/E6a_Base.tla
+Parsing file /tmp/tlc-15079788030259146990/_TLCTrace.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/_TLCTrace.tla)
+Parsing file /tmp/tlc-15079788030259146990/FiniteSets.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/FiniteSets.tla)
+Parsing file /home/tony/projects/tessera/formal/tla/E6a/E6a_Props.tla
+Parsing file /home/tony/projects/tessera/formal/tla/P4_VerifierStates.tla
+Parsing file /tmp/tlc-15079788030259146990/Naturals.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Naturals.tla)
+Parsing file /tmp/tlc-15079788030259146990/Sequences.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Sequences.tla)
+Parsing file /tmp/tlc-15079788030259146990/TLC.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/TLC.tla)
+Parsing file /tmp/tlc-15079788030259146990/TLCExt.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/TLCExt.tla)
+Parsing file /tmp/tlc-15079788030259146990/Integers.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Integers.tla)
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module P4_VerifierStates
+Semantic processing of module E6a_Base
+Semantic processing of module TLC
+Semantic processing of module Integers
+Semantic processing of module TLCExt
+Semantic processing of module _TLCTrace
+Semantic processing of module E6a_Props
+Semantic processing of module E6a_Broken_DispatchFallthrough
+Linting of module P4_VerifierStates
+Linting of module E6a_Base
+Linting of module TLCExt
+Linting of module _TLCTrace
+Linting of module E6a_Props
+Linting of module E6a_Broken_DispatchFallthrough
+Starting... (2026-10-19 20:53:18)
+Computing initial states...
+Computed 2 initial states...
+Computed 4 initial states...
+Computed 8 initial states...
+Computed 16 initial states...
+Computed 32 initial states...
+Computed 64 initial states...
+Computed 128 initial states...
+Computed 256 initial states...
+Computed 512 initial states...
+Computed 1024 initial states...
+Computed 2048 initial states...
+Computed 4096 initial states...
+Computed 8192 initial states...
+Finished computing initial states: 15876 distinct states generated at 2026-10-19 20:53:19.
+Model checking completed. No error has been found.
+  Estimates of the probability that TLC did not check all reachable states
+  because two distinct states had the same fingerprint:
+  calculated (optimistic):  val = 1.4E-11
+31752 states generated, 15876 distinct states found, 0 states left on queue.
+The depth of the complete state graph search is 1.
+The average outdegree of the complete state graph is 0 (minimum is 0, the maximum 0 and the 95th percentile is 0).
+Finished in 00s at (2026-10-19 20:53:19)
+===== E6a_Broken_DispatchFallthrough / General / P4_UnverifiableIsHonest
+TLC2 Version 2026.07.31.184830 (rev: 30cc360)
+Running breadth-first search Model-Checking with fp 129 and seed 5018062961187331159 with 1 worker on 12 cores with 7068MB heap and 64MB offheap memory [pid: 314097] (Linux 6.8.0-139-generic amd64, Ubuntu 21.0.12.1 64bit, MSBDiskFPSet, DiskStateQueue).
+Parsing file /home/tony/projects/tessera/formal/tla/E6a/E6a_Broken_DispatchFallthrough.tla
+Parsing file /home/tony/projects/tessera/formal/tla/E6a/E6a_Base.tla
+Parsing file /tmp/tlc-11074335149463816889/_TLCTrace.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/_TLCTrace.tla)
+Parsing file /tmp/tlc-11074335149463816889/FiniteSets.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/FiniteSets.tla)
+Parsing file /home/tony/projects/tessera/formal/tla/E6a/E6a_Props.tla
+Parsing file /home/tony/projects/tessera/formal/tla/P4_VerifierStates.tla
+Parsing file /tmp/tlc-11074335149463816889/Naturals.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Naturals.tla)
+Parsing file /tmp/tlc-11074335149463816889/Sequences.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Sequences.tla)
+Parsing file /tmp/tlc-11074335149463816889/TLC.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/TLC.tla)
+Parsing file /tmp/tlc-11074335149463816889/TLCExt.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/TLCExt.tla)
+Parsing file /tmp/tlc-11074335149463816889/Integers.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Integers.tla)
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module P4_VerifierStates
+Semantic processing of module E6a_Base
+Semantic processing of module TLC
+Semantic processing of module Integers
+Semantic processing of module TLCExt
+Semantic processing of module _TLCTrace
+Semantic processing of module E6a_Props
+Semantic processing of module E6a_Broken_DispatchFallthrough
+Linting of module P4_VerifierStates
+Linting of module E6a_Base
+Linting of module TLCExt
+Linting of module _TLCTrace
+Linting of module E6a_Props
+Linting of module E6a_Broken_DispatchFallthrough
+Starting... (2026-10-19 20:53:19)
+Computing initial states...
+Computed 2 initial states...
+Computed 4 initial states...
+Computed 8 initial states...
+Computed 16 initial states...
+Computed 32 initial states...
+Computed 64 initial states...
+Computed 128 initial states...
+Computed 256 initial states...
+Computed 512 initial states...
+Computed 1024 initial states...
+Computed 2048 initial states...
+Computed 4096 initial states...
+Computed 8192 initial states...
+Finished computing initial states: 15876 distinct states generated at 2026-10-19 20:53:20.
+Model checking completed. No error has been found.
+  Estimates of the probability that TLC did not check all reachable states
+  because two distinct states had the same fingerprint:
+  calculated (optimistic):  val = 1.4E-11
+31752 states generated, 15876 distinct states found, 0 states left on queue.
+The depth of the complete state graph search is 1.
+The average outdegree of the complete state graph is 0 (minimum is 0, the maximum 0 and the 95th percentile is 0).
+Finished in 00s at (2026-10-19 20:53:20)
+===== E6a_Broken_DispatchFallthrough / General / P4_ExactInvalid
+TLC2 Version 2026.07.31.184830 (rev: 30cc360)
+Running breadth-first search Model-Checking with fp 56 and seed 4803830840624617442 with 1 worker on 12 cores with 7068MB heap and 64MB offheap memory [pid: 314151] (Linux 6.8.0-139-generic amd64, Ubuntu 21.0.12.1 64bit, MSBDiskFPSet, DiskStateQueue).
+Parsing file /home/tony/projects/tessera/formal/tla/E6a/E6a_Broken_DispatchFallthrough.tla
+Parsing file /home/tony/projects/tessera/formal/tla/E6a/E6a_Base.tla
+Parsing file /tmp/tlc-17208667988354572203/_TLCTrace.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/_TLCTrace.tla)
+Parsing file /tmp/tlc-17208667988354572203/FiniteSets.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/FiniteSets.tla)
+Parsing file /home/tony/projects/tessera/formal/tla/E6a/E6a_Props.tla
+Parsing file /home/tony/projects/tessera/formal/tla/P4_VerifierStates.tla
+Parsing file /tmp/tlc-17208667988354572203/Naturals.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Naturals.tla)
+Parsing file /tmp/tlc-17208667988354572203/Sequences.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Sequences.tla)
+Parsing file /tmp/tlc-17208667988354572203/TLC.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/TLC.tla)
+Parsing file /tmp/tlc-17208667988354572203/TLCExt.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/TLCExt.tla)
+Parsing file /tmp/tlc-17208667988354572203/Integers.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Integers.tla)
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module P4_VerifierStates
+Semantic processing of module E6a_Base
+Semantic processing of module TLC
+Semantic processing of module Integers
+Semantic processing of module TLCExt
+Semantic processing of module _TLCTrace
+Semantic processing of module E6a_Props
+Semantic processing of module E6a_Broken_DispatchFallthrough
+Linting of module P4_VerifierStates
+Linting of module E6a_Base
+Linting of module TLCExt
+Linting of module _TLCTrace
+Linting of module E6a_Props
+Linting of module E6a_Broken_DispatchFallthrough
+Starting... (2026-10-19 20:53:20)
+Computing initial states...
+Computed 2 initial states...
+Computed 4 initial states...
+Computed 8 initial states...
+Computed 16 initial states...
+Computed 32 initial states...
+Computed 64 initial states...
+Computed 128 initial states...
+Computed 256 initial states...
+Computed 512 initial states...
+Computed 1024 initial states...
+Computed 2048 initial states...
+Computed 4096 initial states...
+Computed 8192 initial states...
+Finished computing initial states: 15876 distinct states generated at 2026-10-19 20:53:21.
+Model checking completed. No error has been found.
+  Estimates of the probability that TLC did not check all reachable states
+  because two distinct states had the same fingerprint:
+  calculated (optimistic):  val = 1.4E-11
+31752 states generated, 15876 distinct states found, 0 states left on queue.
+The depth of the complete state graph search is 1.
+The average outdegree of the complete state graph is 0 (minimum is 0, the maximum 0 and the 95th percentile is 0).
+Finished in 00s at (2026-10-19 20:53:21)
+===== E6a_Broken_DispatchFallthrough / General / P4_ExactUnverifiable
+TLC2 Version 2026.07.31.184830 (rev: 30cc360)
+Running breadth-first search Model-Checking with fp 77 and seed 1700013254271127239 with 1 worker on 12 cores with 7068MB heap and 64MB offheap memory [pid: 314223] (Linux 6.8.0-139-generic amd64, Ubuntu 21.0.12.1 64bit, MSBDiskFPSet, DiskStateQueue).
+Parsing file /home/tony/projects/tessera/formal/tla/E6a/E6a_Broken_DispatchFallthrough.tla
+Parsing file /home/tony/projects/tessera/formal/tla/E6a/E6a_Base.tla
+Parsing file /tmp/tlc-2614558499889055031/_TLCTrace.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/_TLCTrace.tla)
+Parsing file /tmp/tlc-2614558499889055031/FiniteSets.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/FiniteSets.tla)
+Parsing file /home/tony/projects/tessera/formal/tla/E6a/E6a_Props.tla
+Parsing file /home/tony/projects/tessera/formal/tla/P4_VerifierStates.tla
+Parsing file /tmp/tlc-2614558499889055031/Naturals.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Naturals.tla)
+Parsing file /tmp/tlc-2614558499889055031/Sequences.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Sequences.tla)
+Parsing file /tmp/tlc-2614558499889055031/TLC.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/TLC.tla)
+Parsing file /tmp/tlc-2614558499889055031/TLCExt.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/TLCExt.tla)
+Parsing file /tmp/tlc-2614558499889055031/Integers.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Integers.tla)
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module P4_VerifierStates
+Semantic processing of module E6a_Base
+Semantic processing of module TLC
+Semantic processing of module Integers
+Semantic processing of module TLCExt
+Semantic processing of module _TLCTrace
+Semantic processing of module E6a_Props
+Semantic processing of module E6a_Broken_DispatchFallthrough
+Linting of module P4_VerifierStates
+Linting of module E6a_Base
+Linting of module TLCExt
+Linting of module _TLCTrace
+Linting of module E6a_Props
+Linting of module E6a_Broken_DispatchFallthrough
+Starting... (2026-10-19 20:53:21)
+Computing initial states...
+Computed 2 initial states...
+Computed 4 initial states...
+Computed 8 initial states...
+Computed 16 initial states...
+Computed 32 initial states...
+Computed 64 initial states...
+Computed 128 initial states...
+Computed 256 initial states...
+Computed 512 initial states...
+Computed 1024 initial states...
+Computed 2048 initial states...
+Computed 4096 initial states...
+Computed 8192 initial states...
+Finished computing initial states: 15876 distinct states generated at 2026-10-19 20:53:22.
+Model checking completed. No error has been found.
+  Estimates of the probability that TLC did not check all reachable states
+  because two distinct states had the same fingerprint:
+  calculated (optimistic):  val = 1.4E-11
+31752 states generated, 15876 distinct states found, 0 states left on queue.
+The depth of the complete state graph search is 1.
+The average outdegree of the complete state graph is 0 (minimum is 0, the maximum 0 and the 95th percentile is 0).
+Finished in 00s at (2026-10-19 20:53:22)
+===== E6a_Broken_DispatchFallthrough / General / P4_ExactStrict
+TLC2 Version 2026.07.31.184830 (rev: 30cc360)
+Running breadth-first search Model-Checking with fp 105 and seed -3449461185055876522 with 1 worker on 12 cores with 7068MB heap and 64MB offheap memory [pid: 314280] (Linux 6.8.0-139-generic amd64, Ubuntu 21.0.12.1 64bit, MSBDiskFPSet, DiskStateQueue).
+Parsing file /home/tony/projects/tessera/formal/tla/E6a/E6a_Broken_DispatchFallthrough.tla
+Parsing file /home/tony/projects/tessera/formal/tla/E6a/E6a_Base.tla
+Parsing file /tmp/tlc-15795717960320066078/_TLCTrace.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/_TLCTrace.tla)
+Parsing file /tmp/tlc-15795717960320066078/FiniteSets.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/FiniteSets.tla)
+Parsing file /home/tony/projects/tessera/formal/tla/E6a/E6a_Props.tla
+Parsing file /home/tony/projects/tessera/formal/tla/P4_VerifierStates.tla
+Parsing file /tmp/tlc-15795717960320066078/Naturals.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Naturals.tla)
+Parsing file /tmp/tlc-15795717960320066078/Sequences.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Sequences.tla)
+Parsing file /tmp/tlc-15795717960320066078/TLC.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/TLC.tla)
+Parsing file /tmp/tlc-15795717960320066078/TLCExt.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/TLCExt.tla)
+Parsing file /tmp/tlc-15795717960320066078/Integers.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Integers.tla)
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module P4_VerifierStates
+Semantic processing of module E6a_Base
+Semantic processing of module TLC
+Semantic processing of module Integers
+Semantic processing of module TLCExt
+Semantic processing of module _TLCTrace
+Semantic processing of module E6a_Props
+Semantic processing of module E6a_Broken_DispatchFallthrough
+Linting of module P4_VerifierStates
+Linting of module E6a_Base
+Linting of module TLCExt
+Linting of module _TLCTrace
+Linting of module E6a_Props
+Linting of module E6a_Broken_DispatchFallthrough
+Starting... (2026-10-19 20:53:22)
+Computing initial states...
+Computed 2 initial states...
+Computed 4 initial states...
+Computed 8 initial states...
+Computed 16 initial states...
+Computed 32 initial states...
+Computed 64 initial states...
+Computed 128 initial states...
+Computed 256 initial states...
+Computed 512 initial states...
+Computed 1024 initial states...
+Computed 2048 initial states...
+Computed 4096 initial states...
+Computed 8192 initial states...
+Finished computing initial states: 15876 distinct states generated at 2026-10-19 20:53:23.
+Model checking completed. No error has been found.
+  Estimates of the probability that TLC did not check all reachable states
+  because two distinct states had the same fingerprint:
+  calculated (optimistic):  val = 1.4E-11
+31752 states generated, 15876 distinct states found, 0 states left on queue.
+The depth of the complete state graph search is 1.
+The average outdegree of the complete state graph is 0 (minimum is 0, the maximum 0 and the 95th percentile is 0).
+Finished in 00s at (2026-10-19 20:53:23)
+===== E6a_Broken_DispatchFallthrough / General / P4_ExactDegraded
+TLC2 Version 2026.07.31.184830 (rev: 30cc360)
+Running breadth-first search Model-Checking with fp 98 and seed -2362576834945344930 with 1 worker on 12 cores with 7068MB heap and 64MB offheap memory [pid: 314343] (Linux 6.8.0-139-generic amd64, Ubuntu 21.0.12.1 64bit, MSBDiskFPSet, DiskStateQueue).
+Parsing file /home/tony/projects/tessera/formal/tla/E6a/E6a_Broken_DispatchFallthrough.tla
+Parsing file /home/tony/projects/tessera/formal/tla/E6a/E6a_Base.tla
+Parsing file /tmp/tlc-13262822509415726628/_TLCTrace.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/_TLCTrace.tla)
+Parsing file /tmp/tlc-13262822509415726628/FiniteSets.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/FiniteSets.tla)
+Parsing file /home/tony/projects/tessera/formal/tla/E6a/E6a_Props.tla
+Parsing file /home/tony/projects/tessera/formal/tla/P4_VerifierStates.tla
+Parsing file /tmp/tlc-13262822509415726628/Naturals.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Naturals.tla)
+Parsing file /tmp/tlc-13262822509415726628/Sequences.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Sequences.tla)
+Parsing file /tmp/tlc-13262822509415726628/TLC.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/TLC.tla)
+Parsing file /tmp/tlc-13262822509415726628/TLCExt.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/TLCExt.tla)
+Parsing file /tmp/tlc-13262822509415726628/Integers.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Integers.tla)
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module P4_VerifierStates
+Semantic processing of module E6a_Base
+Semantic processing of module TLC
+Semantic processing of module Integers
+Semantic processing of module TLCExt
+Semantic processing of module _TLCTrace
+Semantic processing of module E6a_Props
+Semantic processing of module E6a_Broken_DispatchFallthrough
+Linting of module P4_VerifierStates
+Linting of module E6a_Base
+Linting of module TLCExt
+Linting of module _TLCTrace
+Linting of module E6a_Props
+Linting of module E6a_Broken_DispatchFallthrough
+Starting... (2026-10-19 20:53:23)
+Computing initial states...
+Computed 2 initial states...
+Computed 4 initial states...
+Computed 8 initial states...
+Computed 16 initial states...
+Computed 32 initial states...
+Computed 64 initial states...
+Computed 128 initial states...
+Computed 256 initial states...
+Computed 512 initial states...
+Computed 1024 initial states...
+Computed 2048 initial states...
+Computed 4096 initial states...
+Computed 8192 initial states...
+Finished computing initial states: 15876 distinct states generated at 2026-10-19 20:53:24.
+Model checking completed. No error has been found.
+  Estimates of the probability that TLC did not check all reachable states
+  because two distinct states had the same fingerprint:
+  calculated (optimistic):  val = 1.4E-11
+31752 states generated, 15876 distinct states found, 0 states left on queue.
+The depth of the complete state graph search is 1.
+The average outdegree of the complete state graph is 0 (minimum is 0, the maximum 0 and the 95th percentile is 0).
+Finished in 00s at (2026-10-19 20:53:24)

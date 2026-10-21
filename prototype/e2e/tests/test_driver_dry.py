@@ -28,6 +28,14 @@ def test_dry_run_valid_strict(dry):
     assert all(read_json(dry.p("preship.json"))["checks"].values())
 
 
+def test_dry_run_utc_assessment(dry):
+    # A10.1.1 / profile 7.4: reported beside the stable six, U = 7200 + max nTime(h*..h*+5) >= T + 7200.
+    a = dry.state["verify"]["utc_assessment"]
+    assert a["assumption_id"] == "A-UTC-7200-6"
+    T = read_json(dry.p("preship.json"))["facts"]["receipt"]["T"]
+    assert U.ts(a["utc_upper_bound"]) >= T + 7200
+
+
 def test_chain_order_and_heights(dry):
     f = read_json(dry.p("preship.json"))["facts"]
     assert f["git"]["h"] + 5 < f["receipt"]["h"]
@@ -39,7 +47,7 @@ def _verify(dry, bundle_bytes, tmp, release=None):
     b.write_bytes(bundle_bytes)
     rc, out, err = driver.verify_with_indep(dry.p("trust.json"), b, release or dry.p("release.json"),
                                             dry.p("release-key.json"))
-    return rc, (json.loads(out) if rc == 0 else None), err
+    return rc, (json.loads(out)["stable"] if rc == 0 else None), err
 
 
 def test_tampered_content_rejected(dry, tmp_path):

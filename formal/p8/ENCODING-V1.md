@@ -1,6 +1,6 @@
 # P8 encoding for `tessera-v1-strict` (V1 only)
 
-> **STATUS: DRAFT, 2026-10-09; revised 2026-10-12 (see CHANGELOG).** Owner instance (Claude Opus 5.5). This is the O-79 encoding map and the byte
+> **STATUS: DRAFT, 2026-10-09; revised 2026-10-12 and 2026-10-19 (see CHANGELOG).** Owner instance (Claude Opus 5.5). This is the O-79 encoding map and the byte
 > layout that P8 (A1 §A1.2) requires "before the Band 1 freeze", **for the V1 profile only**. It changes no
 > registered sentence. Where it needs a registered sentence to change, §9 says so. The proof is `PROOF.md`. The
 > vectors are `vectors/` (implementation A `gen.py`, implementation B `check.py`, differential `fuzz.py`).
@@ -9,6 +9,40 @@
 
 **CHANGELOG**
 
+- **2026-10-19 (profile review PR-01 sweep; no codec rule change).** Source:
+  `docs/reviews/profile-2026-10-19/CODEX-REVIEW.md` PR-01 and its disposition. Tagged `[OWNER 2026-10-19, PR-01]`
+  in place. No rule, field, length, tag, reason code, reason order, golden byte or vector changes.
+  - NARROW-CLAIM: §5's re-stamp sentence ("a new, later time bound") and §7.1's rationale ("the anchor prevents
+    claiming an earlier T") are restated in chain order. A later block can carry an earlier header time, so
+    neither "later" nor "earlier T" follows (A10.1).
+- **2026-10-19 (P8 falsification repairs; no codec rule change).** Source:
+  `prototype/p8-falsify/REPORT.md` and `docs/reviews/p8-falsification/DISPOSITION.md`. Tagged `[OWNER 2026-10-19,
+  P8F-nn]` in place. No rule, field, length, tag, reason code, reason order, golden byte or vector changes.
+  - CORRECT (P8F-05): §3.5's trailer sentence. The final u32 is `6 + hlen`, the hashed-header length; the trailer is
+    `12 + hlen` bytes, so it splits off as the final u32 plus six. The citation is PROOF Lemma 9, not Lemma 7.
+  - CORRECT (P8F-07): §8's canonicalization-version offset is `1 + len(tag)` (18 for attest, 20 for manifest), not
+    "18".
+  - CLARIFY (P8F-04): §1.4 states that `payload(bytes)` enforces §1.1's 2^24-byte size limit first, with the code
+    the frame's `payload_length` check already gives (`LENGTH_CAP`). Through a frame the outcome is unchanged; the
+    standalone helpers in implementations A and B now match.
+  - P8F-02 and P8F-03 needed no text change: implementations B and A were repaired to match §1.2 and §1.4.
+- **2026-10-19 (owner wording edits; change accounting per V1-PROFILE §1 "Baseline", G37).** Sources: V1-PROFILE
+  §14.2 item 9 (G01, G02, G18, G28, G38, r2-contra) and the Levadura contradiction search
+  (`docs/reviews/levadura-contradictions/DISPOSITION.md`). Each edit is tagged `[OWNER 2026-10-19]` in place.
+  - **No codec change.** No rule, field, length, tag, reason code, reason order, golden byte or vector changes.
+    Both codecs and every vector stand as they are; PROOF's lemmas are unaffected.
+  - CORRECT: §7.1's window-provenance sentence (G02: no "fixed … before any receipt" claim; chain-order
+    pre-commitment and A9 C4's DNSSEC non-claim instead); §7.1's selection sentence ("earliest" → lowest block
+    height, A9 C5 and A10.5); §7.2's "that commit adds the assertion blob" (the profile does not check it); §5.3's
+    "not registered" (→ not the catalog-supported id); §3.2's "V1 issues" comment (the registered hybrid branch).
+  - CLARIFY: §2's header sentence (scoped to slot-key signatures and the two tagged OTS preimages; the git stamped
+    message and the TXT value are untagged); §8's "single in-profile UNVERIFIABLE" → codec-level (G01); §3.2 and
+    §7 field grammars (G18); §5.2 subpacket length forms (G28); §1.2 and D-1's "needs an author sentence" → A9.8
+    registered it (G38). §8's PQ scope bullet is annotated, not edited (HYBRID-SUPPLEMENT: baseline text kept).
+  - **Governing text is unchanged.** The baseline is ENCODING-V1 at A9's signing commit `2ad3489` plus the
+    registered hybrid supplement (whose §5.2 edit gave SHA-256 `fe537b1f…efd0`). This edited text replaces that
+    file only through the freeze record, which names both hashes and this list. Where any sentence here differs
+    from A9, A10 or the supplement, they govern.
 - **2026-10-12 (Amendment 9 review disposition): a single issuance window of at most 90 days.** Source:
   `docs/reviews/amendment-9/DISPOSITION.md`, Skeptic findings 2, 10 and 12, and Codex finding 2.
   - §7: `issuance-not-before` is now **mandatory** (`DNS_FIELD_MISSING` when absent; XD-31). There is one field
@@ -52,7 +86,9 @@ strings in tags and fixed fields are ASCII.
 
 ## 0. What V1 encodes, and the encoding map (O-79)
 
-V1 signs, hashes or publishes eight byte strings. Nothing else in the bundle is signed or anchored directly.
+V1 signs, hashes or publishes eight byte strings. Nothing else in the bundle is signed or anchored directly, except
+the git channel's stamped message (the signed commit's 40-hex id plus LF, A9.5), through which row 8's git copy is
+anchored (§7.2). [OWNER 2026-10-19, Levadura C6]
 
 | # | Byte string | Constructed as | Signed / hashed by | Section |
 |---|---|---|---|---|
@@ -144,8 +180,10 @@ canonical form `0.1` it then *rejects* when the verifier re-reads the payload. S
 `canonical()` maps its own domain outside itself. The value-preserving rule is the largest rule under which:
 - (a) canonicalization never changes a value; and
 - (b) every canonical output is itself accepted.
-**This is a change to A1 P8's rejection item and prereg §4.3's wording, and it needs an author sentence (§9, D-1).**
-The V1 derivation's profile line, "registered number rule unchanged", must be reconciled with it either way.
+**This changes A1 P8's rejection item and prereg §4.3's wording. A9.8 registers it for `tessera-v1-strict`,
+replacing both (A9.7 rows 22–23).** [OWNER 2026-10-19, G38] *(Was: "… and it needs an author sentence (§9, D-1). The
+V1 derivation's profile line, 'registered number rule unchanged', must be reconciled with it either way." A9.8
+supplied the sentence, and the derivation's line now states the value-preserving rule.)*
 
 What "never helpfully normalized" means here. The **issuer's ingestion** normalizes *spelling only*:
 - insignificant whitespace;
@@ -173,7 +211,10 @@ U+1F600 sorting before U+E000.*
 
 Two entry points.
 - `ingest(text)` takes requester JSON: whitespace is allowed, and the depth limit is 62.
-- `payload(bytes)` takes in-frame bytes: the depth limit is 64, and the bytes must be canonical.
+- `payload(bytes)` takes in-frame bytes: the depth limit is 64, and the bytes must be canonical. Before the
+  checks below it enforces §1.1's size limit: more than 2^24 bytes gives `LENGTH_CAP`, the code a frame's
+  `payload_length` check gives for the same bytes (§3.1), so the standalone entry point and the frame agree.
+  [OWNER 2026-10-19, P8F-04]
 
 Each runs these checks in this order and reports the **first category that fails**, scanning the whole value for
 each category. *Reason: both implementations then agree on the reason code, not only on rejection.*
@@ -193,7 +234,14 @@ each category. *Reason: both implementations then agree on the reason code, not 
 
 ## 2. The tagged byte strings: one header, four tags
 
-Every V1 byte string that a V1 key signs or that OTS stamps begins with the same header:
+Every byte string that a V1 slot key signs (attestation and manifest frames), and every receipt-anchor and snapshot
+preimage that OTS stamps, begins with the same header. Two V1 byte strings carry no header: the git channel's
+stamped message, which is exactly the 40 lowercase hex digits of the signed commit id followed by one LF (A9.5,
+§7.2), and the key-publication value (§7), which the repository key and the DNSSEC keys sign through git and DNS.
+Neither is a frame (Remark 10 of PROOF.md). [OWNER 2026-10-19, Levadura C6] *(Was: "Every V1 byte string that a V1
+key signs or that OTS stamps begins with the same header:", which the git stamped message contradicts.)*
+
+The header:
 
 ```
 header(t) = u8 len(t) || t                       t ∈ T (ASCII, no NUL)
@@ -254,7 +302,7 @@ means no unsigned or unknown field can carry meaning, which is R-3.39.*
 
 ```
 {"common":{
-   "alg":                 A,     ^[A-Z0-9][A-Z0-9-]{0,63}$          V1 issues "OPENPGP4-ECDSA-P256-SHA256"
+   "alg":                 A,     ^[A-Z0-9][A-Z0-9-]{0,63}$          V1 issues the catalog id (see below)
    "binding_forms":       [F…],  nonempty, strictly ascending, each ^[A-Z][A-Z0-9_]{0,31}$
    "content":             <any value in V>                          the requester's content
    "declared_issue_time": "YYYY-MM-DDThh:mm:ssZ"                    a real UTC date and time, seconds 00–59
@@ -270,6 +318,16 @@ means no unsigned or unknown field can carry meaning, which is R-3.39.*
 ```
 
 `hex64` means exactly 64 **lowercase** hex digits. Members appear in JCS order, which is the order shown.
+
+- **The id V1 issues.** Under the registered hybrid branch (A9.6; HYBRID-SUPPLEMENT §1, registered 2026-10-16), V1
+  issues the pair id `KMS-MLDSA65-PURE-GPG-OPENPGP4-ECDSA-P256-SHA256` (§5.2). The classical id
+  `OPENPGP4-ECDSA-P256-SHA256` stays codec-known (rule O in both slots) and is policy-unsupported in the V1
+  installation: `UNVERIFIABLE / ALG_UNKNOWN` (V1-PROFILE §1, §8). [OWNER 2026-10-19, Levadura C2] *(Was: `V1 issues
+  "OPENPGP4-ECDSA-P256-SHA256"`, the fallback branch's id; the supplement's superseded-statement list omitted it.)*
+- **Field grammars** [OWNER 2026-10-19, G18; codifies what both codecs already do, no vector change].
+  `declared_issue_time`: years 0001–9999, proleptic Gregorian, seconds 00–59. `issuer`: labels match
+  `[a-z0-9-]{1,63}` with no leading or trailing hyphen; all-numeric labels, the top label included, are allowed; at
+  least two labels; at most 241 bytes in total.
 
 | Field | Reason, and the G-id it resolves |
 |---|---|
@@ -330,8 +388,11 @@ FIPS 204/205 signer signs the frame itself (§5.2, rule R). For OpenPGP, the sig
 trailer = 04 ‖ 00 ‖ pubalg ‖ hashalg ‖ u16 hlen ‖ hashed-subpackets ‖ 04 FF ‖ u32(6 + hlen)
 ```
 
-- The trailer's last four bytes give its own length, so `frame ‖ trailer` splits into frame and trailer reading
-  from the end, and the frame's own `payload_length` then delimits the payload. PROOF.md Lemma 7 covers this.
+- The trailer's last four bytes give `6 + hlen`, the length of its hashed header (`04 ‖ 00 ‖ pubalg ‖ hashalg ‖
+  u16 hlen ‖ hashed-subpackets`); the whole trailer is `12 + hlen` bytes, that value plus six. So `frame ‖ trailer`
+  splits into frame and trailer reading from the end, and the frame's own `payload_length` then delimits the
+  payload. PROOF.md Lemma 9 covers this. [OWNER 2026-10-19, P8F-05] *(Was: "The trailer's last four bytes give its
+  own length … PROOF.md Lemma 7 covers this.")*
 - **Signature type 0x01 (text) must be rejected:** text mode rewrites line endings, and frame headers and lengths
   can contain the bytes `0x0a` and `0x0d`.
 - The unhashed subpacket area carries no meaning. Its exact bytes are nonetheless committed by `A_sig` (§5), as
@@ -349,7 +410,9 @@ trailer = 04 ‖ 00 ‖ pubalg ‖ hashalg ‖ u16 hlen ‖ hashed-subpackets �
   to XR-14). So none of them lets a new signature inherit an old time bound.
   - What remains is copy integrity. A mirror that alters a signature byte damages its copy, just as altering a
     frame byte would. Preservation must keep the committed bytes exactly.
-  - A later re-stamp of an altered copy gets a new, later time bound. It does not restore the original one.
+  - A later re-stamp of an altered copy gets a new anchor in a block mined later. It does not restore the
+    original one. Its header time need not be later (A10.1). [OWNER 2026-10-19, PR-01] *(Was: "gets a new, later
+    time bound.")*
   - V1 does not require signatures to be unique, and it normalizes no signature (low-s or otherwise). Low-s would
     not cover OpenPGP serialization or unhashed-area changes, and any normalization after stamping would break the
     anchor. Serialization choices are made before stamping (§5.4).
@@ -461,7 +524,11 @@ The rule is chosen by `(common.alg, slot)`:
 6. MPI s.
 
 Each of the following holds, or the result is `SIG_FORMAT`:
-- each subpacket area is an exact sequence of subpackets, each at least 1 byte, with shortest-form lengths;
+- each subpacket area is an exact sequence of subpackets, each at least 1 byte, with shortest-form lengths. The
+  length forms are RFC 9580 §5.2.3.7's: first octet < 192, one octet; 192–254, two octets
+  `((o1−192)<<8)+o2+192` (192–16319); 255, then a four-octet big-endian value (five octets in all). The length
+  counts the type octet and is ≥ 1. A longer form than needed is `SIG_FORMAT`; this is a V1 rule, not an RFC ban.
+  [OWNER 2026-10-19, G28];
 - each MPI is 1 to 256 bits, with an exact bit count;
 - the body ends exactly after s.
 
@@ -519,7 +586,11 @@ The verifier never does any of these:
 The vectors exercise the following verification-stage codes. They are reported after every codec code:
 - `KEY_MISMATCH`: the presented public key does not hash to its slot's manifest fingerprint;
 - `SIG_INVALID`: a committed signature does not verify (XR-16, signatures swapped between slots, anchor rebuilt);
-- `UNVERIFIABLE`: the algorithm id is not registered.
+- `UNVERIFIABLE` (`ALG_UNKNOWN`): the algorithm id is well-formed but is not the installation's catalog-supported
+  id. Being codec-known (a row of §5.2's table) is not being policy-supported: under the hybrid branch the
+  classical id is codec-known and still `UNVERIFIABLE` (V1-PROFILE §1, "Codec-known versus policy-supported").
+  [OWNER 2026-10-19, Levadura contested 5] *(Was: "the algorithm id is not registered", which used "registered" in
+  two senses.)*
 
 These codes belong to the signature verification profile (P3), not to P8.
 
@@ -582,6 +653,7 @@ value      = "v=tessera1" ";profile=tessera-v1-strict" ";kms=" 64LHEX ";gpg=" 64
 LHEX       = %x30-39 / %x61-66                              ; lowercase hex only
 utc        = 4DIGIT "-" 2DIGIT "-" 2DIGIT "T" 2DIGIT ":" 2DIGIT ":" 2DIGIT "Z"
              ; RFC 3339 UTC; a real Gregorian date and time, seconds 00-59, no fraction
+             ; years 0001-9999, proleptic Gregorian [OWNER 2026-10-19, G18]
 ```
 
 - `kms` is the hex of §3.3's `spki-sha256`. `gpg` is the hex of §3.3's `gpg-sha256`.
@@ -641,13 +713,20 @@ v=tessera1;profile=tessera-v1-strict;kms=5cd252fb…7cd3;gpg=5ecd7121…8fc3;iss
 The key-publication record carries the issuance window. For V1 there is one window, of at most 90 days
 (`DNS_WINDOW_LENGTH`), with no overlapping successor: before it ends, either a rotation mechanism is registered or
 issuance stops (Amendment 9, A9.6). It is the same canonical value in both channels: the DNS
-TXT record, and the git key-assertion blob (§7.2). The window is therefore fixed in DNSSEC-authenticated and
-anchored authority evidence before any receipt that relies on it.
+TXT record, and the git key-assertion blob (§7.2). The same window value is authenticated by the anchored git
+assertion and by DNSSEC at the snapshot's own anchored time. Its pre-commitment is **chain order**: the git
+assertion's selected anchor height plus 5 is lower than the receipt's selected anchor height, so the window was
+confirmed at k = 6 in the chain before the receipt was anchored (A9 C4; V1-PROFILE §6.3, `GIT_NOT_PRECOMMITTED`).
+That is chain order, not UTC (A2.1), and DNSSEC evidence establishes no publication before issue (A9 C4). [OWNER
+2026-10-19, G02 CORRECT; Levadura C1] *(Was: "The window is therefore fixed in DNSSEC-authenticated and anchored
+authority evidence before any receipt that relies on it", which overstated both channels.)*
 
 **Verifier rule (C4).** A receipt passes C4 only if both of these hold:
 - `issuance-not-before` ≤ `declared_issue_time`;
-- **T ≤ `issuance-not-after`**, where T is the time of the earliest verified attestation in the presented OTS
-  proof.
+- **T ≤ `issuance-not-after`**, where T is the header time of the qualifying attestation at the **lowest block
+  height** in the presented OTS proof (A9 C5; A10.5's stages; V1-PROFILE §7.1). Header times are not monotone, so
+  selection is by height, never by least header time. [OWNER 2026-10-19, r2-contra; Levadura contested 1] *(Was:
+  "the time of the earliest verified attestation", A9's pre-2026-10-14 wording.)*
 
 Otherwise the verdict is `INVALID`, with reason `ISSUANCE_WINDOW`. Both bounds are inclusive: W-01 is
 T = not-after, W-02 is declared time = not-before. XW-01 is T = not-after + 1 s, and XW-02 is a declared time
@@ -657,7 +736,9 @@ T = not-after, W-02 is declared time = not-before. XW-01 is T = not-after + 1 s,
 - **A surviving or stolen key cannot mint a receipt that passes with T after the window.** Keys may outlive the
   service's exit, or be stolen. Even signing capability for every required slot cannot produce a receipt that
   passes with verified T after `issuance-not-after`, under continuing anchor, history and authority assumptions. A fresh mint's `A_sig` (§5) can only
-  be stamped at or after the moment it exists, and the anchor prevents claiming an earlier T. So every receipt
+  be stamped at or after the moment it exists, and the anchor prevents claiming an earlier block; a later block's
+  header time can still be earlier, which is why the claim is only about verified T [OWNER 2026-10-19, PR-01]
+  *(was: "the anchor prevents claiming an earlier T")*. So every receipt
   whose verified T is after the window fails (XW-03). This is a statement in chain time, not in UTC (see the
   residual below).
   - A compromise *before* `not-after` is not covered. Within the window, a thief mints receipts that pass, subject
@@ -693,8 +774,10 @@ T = not-after, W-02 is declared time = not-before. XW-01 is T = not-after + 1 s,
   trailing LF is allowed. Those are not P8's.
 - **What P8 fixes here.** The blob's anchor target.
 
-- **The stamp targets the signed commit's object id.** That commit adds the assertion blob, and it carries a
-  `gpgsig` header that verifies under the repository key.
+- **The stamp targets the signed commit's object id.** That commit's tree contains the assertion blob at the
+  profile path (V1-PROFILE §6.3, `tessera-v1/key-assertion`), and it carries a `gpgsig` header that verifies under
+  the repository key. Whether this commit introduced the blob is not checked (V1-PROFILE §15.4). [OWNER 2026-10-19,
+  r2-contra; Levadura C4] *(Was: "That commit adds the assertion blob".)*
 - These stamp targets are **not acceptable**:
   - the tree;
   - the blob;
@@ -735,7 +818,7 @@ T = not-after, W-02 is declared time = not-before. XW-01 is T = not-after + 1 s,
 | Identifier | Encoding | Where |
 |---|---|---|
 | Construction / object type | `tessera-v1/{attest,manifest,receipt-anchor-sig,dnssec-snapshot}` | §2 header |
-| Canonicalization version | u16 `0x0001` | frame offset 18 |
+| Canonicalization version | u16 `0x0001` | frame offset `1 + len(tag)`: 18 for attest, 20 for manifest [OWNER 2026-10-19, P8F-07] |
 | Profile | `"tessera-v1-strict"` | `common.profile`; DNS `profile=` |
 | Verification spec | `common.spec.id` + `common.spec.sha256` | §3.2 |
 | Authority statement version | `"map-v1"` | manifest `ver` |
@@ -755,15 +838,18 @@ T = not-after, W-02 is declared time = not-before. XW-01 is T = not-after + 1 s,
 - Once a bundle is dispatched to `tessera-v1-strict`, every rejection here is `INVALID`. That includes a signed
   `profile` other than `tessera-v1-strict`, an unknown tag and an unknown canonicalization version, because the
   bundle claimed V1 and its signed bytes contradict that claim.
-- The single in-profile `UNVERIFIABLE` that concerns these bytes is a well-formed unknown `alg` (stage (c)), and P8
-  lets that through.
+- The single **codec-level** in-profile `UNVERIFIABLE` that concerns these bytes is a well-formed unknown `alg`
+  (stage (c)), and P8 lets that through. The profile adds further in-profile `UNVERIFIABLE` outcomes on these bytes
+  (for example `BINDING_FORM_UNSUPPORTED` and `SPEC_UNKNOWN`; V1-PROFILE §3.1 item 5). [OWNER 2026-10-19, G01;
+  Levadura C5] *(Was: "The single in-profile `UNVERIFIABLE` …".)*
 
 ## 9. Owner decisions taken here, for the author's record
 
 D-1 **Number rule: value-preserving (§1.2).** This changes A1 P8's item "numbers not exactly representable as
-IEEE 754 doubles" and prereg §4.3's "must be exactly representable". **It needs an A9 sentence.** Codex review 14
-asked for exactly that. The registered wording also fails to compose with RFC 8785 (§1.2). The derivation's
-profile line, which says the rule is unchanged, must be revised to match.
+IEEE 754 doubles" and prereg §4.3's "must be exactly representable". **A9.8 registers it** (A9.7 rows 22–23), as
+Codex review 14 asked. The registered wording also fails to compose with RFC 8785 (§1.2). [OWNER 2026-10-19, G38]
+*(Was: "It needs an A9 sentence. … The derivation's profile line, which says the rule is unchanged, must be revised
+to match." Both are done.)*
 D-2 Unicode 16.0.0 is pinned. Unassigned code points are rejected, and text that is not NFC is rejected rather than
 normalized.
 D-3 Limits: a payload of at most 2^24 bytes; depth 64 for the payload and 62 for content.
@@ -817,5 +903,7 @@ registered header-time-derived T, with no margin. Key-format expiries are not re
 - the signature verification profile (P3 [assumption]). P8 now fixes each signature's *serialization* and its
   place in `A_sig` (§5.2). Whether a signature verifies, and what that proves, remains P3's question.
 - the PQ algorithm id(s), the parameter set and the signing mode. They are registered only if the 21 Oct spike
-  passes (§5.2, rule R);
+  passes (§5.2, rule R); *[OWNER 2026-10-19 annotation: superseded for the hybrid branch by HYBRID-SUPPLEMENT §1–§2,
+  registered 2026-10-16 (pair id, ML-DSA-65, pure, empty context). The bullet is kept as baseline text, as the
+  supplement directs.]*
 - which binding forms V1 requires.

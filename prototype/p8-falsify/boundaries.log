@@ -1,0 +1,32 @@
+payload-bytes 16777215 B=OK I=OK
+payload-bytes 16777216 B=OK I=OK
+payload-bytes 16777217 B=LENGTH_CAP I=LENGTH_CAP
+{
+  "counts": {
+    "ingest-depth": 8,
+    "payload-depth": 8,
+    "frame-depth": 8,
+    "schema-declared_issue_time": 7,
+    "schema-issuer": 7,
+    "schema-alg": 7,
+    "schema-forms": 9,
+    "unicode-scalar-domain": 1114112,
+    "unicode-decoder": 31,
+    "frame-size": 3,
+    "signature-cap": 72,
+    "cross-tag-frame": 8,
+    "cross-tag-anchor": 4,
+    "snapshot-size": 5
+  },
+  "histogram": {
+    "OK / OK": 76,
+    "JSON_DEPTH / JSON_DEPTH": 7,
+    "SCHEMA / SCHEMA": 17,
+    "JSON_STRING / JSON_STRING": 11,
+    "LENGTH_CAP / LENGTH_CAP": 28,
+    "SIG_EMPTY / SIG_EMPTY": 6,
+    "SIG_PACKET / SIG_PACKET": 12,
+    "SIG_FORMAT / SIG_FORMAT": 6,
+    "TAG_MISMATCH / TAG_MISMATCH": 9
+  }
+}

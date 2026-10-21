@@ -1,0 +1,35 @@
+Python 3.14.6 Unicode 16.0.0
+hybrid-short installed B=SIG_FORMAT I=SIG_FORMAT
+hybrid-short default B=SIG_FORMAT I=OK
+empty-pgp-body signature B=SIG_FORMAT I=SIG_FORMAT
+empty-pgp-body anchor B=SIG_FORMAT I=SIG_FORMAT
+zero-exponent-digits=4300 ingest B=OK I=OK
+zero-exponent-digits=4300 payload B=JSON_NONCANONICAL I=JSON_NONCANONICAL
+zero-exponent-digits=4301 ingest B=CRASH:ValueError I=OK
+zero-exponent-digits=4301 payload B=CRASH:ValueError I=JSON_NONCANONICAL
+lemma3-depth65 B=JSON_DEPTH I=JSON_DEPTH
+BOM-invalid-UTF8 B=JSON_SYNTAX I=JSON_ENCODING
+depth1200 B=JSON_DEPTH I=JSON_DEPTH
+lemma9 digest witness: distinct=True B-verifies=2/2 OpenSSL-verifies=2/2
+digest1=0000000000000000000000000000000000000000000000000000000000000001
+digest2=061b09cde5f96103eb5b8ff9f695ca783bd426e8b7336819a7a338ca6d95f260
+This is a missing-implication witness, not two SHA256 preimages or an encoding collision.
+hybrid-id-actual-length=47
+trailer-length actual=41 final-u32=35 difference=6
+trailer-suffix-literal-split-equals-trailer=False
+F01/F02 lengths=(824, 823) first-difference=23 signer-prefix-difference=745
+signature-880404001308 B=SIG_FORMAT I=SIG_FORMAT
+signature-88100400130800000000000000010100010178 B=TRAILING I=TRAILING
+precedence-content-efbbbfff B=JSON_SYNTAX I=JSON_ENCODING
+precedence-frame-BOM-invalid B=JSON_SYNTAX I=JSON_ENCODING
+large-exponent-0e-0 B=CRASH:ValueError I=OK
+large-exponent-1e-0 B=CRASH:ValueError I=OK
+large-exponent-1e-9 B=CRASH:ValueError I=JSON_NUMBER
+typed-true B=OK I=OK
+typed-1 B=OK I=OK
+typed-false B=OK I=OK
+typed-0 B=OK I=OK
+typed-null B=OK I=OK
+typed-"0" B=OK I=OK
+typed-[] B=OK I=OK
+typed-{} B=OK I=OK

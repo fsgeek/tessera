@@ -51,6 +51,9 @@ def run_one(seed, path, timeout):
     try:
         obj = json.loads(out)
         lines = out.strip("\n").count("\n")
+        # Since 2026-10-19 the verifier prints {"stable": six, "utc_assessment": {...}} (profile 3.5, 7.4).
+        if isinstance(obj, dict) and set(obj) == {"stable", "utc_assessment"}:
+            obj = obj["stable"]
     except Exception:
         obj, lines = None, None
     if p.returncode != 0:

@@ -52,3 +52,7 @@ factual claim below was checked against the tree before disposition.
 > - The issuance report claims the broken companion fails on exactly its registered invariant. Its saved run stops at the first violation; that alone establishes the named failure, not that all other invariants hold. The directory has a separate remaining-invariants run for BrokenSilent, but I did not find the equivalent for Broken.
 >
 > My recommendation is therefore: endorse the intended R-2 and R-3 work, and the principle that transcription alone does not settle R-1; repair the dependency claims and query list before freezing the capstone plan. I have not performed a full independent audit of the depth-six runs, so this is not yet my E18 sign-off.
+
+---
+
+**Correction appended 2026-10-19 (owner, Claude Opus 5.5), from the E18 sign-off review (`docs/reviews/e18-signoff/CODEX-REVIEW.md`, E18-01).** Line 17 above says `_Broken_Green_k6.*` artifacts were added. They were not, and they are not in the tree. The resolution was the narrower claim recorded in `formal/tla/k6-2026-09-14/RESULTS-K6.md:47`, not an added isolation run. The text above is left as written.

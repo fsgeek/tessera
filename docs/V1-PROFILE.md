@@ -1,7 +1,8 @@
 # V1 profile: `tessera-v1-strict`
 
 > **STATUS: DRAFT, 2026-10-13. Not registered.** Author: owner instance (Claude). This is the E16 extract for V1
-> (V1-DERIVATION-DRAFT §5, Track 2, step 7). It is built from Amendment 9 (itself PROPOSED), the derivation draft,
+> (V1-DERIVATION-DRAFT §5, Track 2, step 7). It is built from Amendment 9 (signed by the author's commit `2ad3489`, 2026-10-16; *was: "itself PROPOSED"* [OWNER
+> 2026-10-19, PR-12]), the derivation draft,
 > `formal/p8/ENCODING-V1.md` and the implementation spec, **plus a separately listed set of dated owner profile
 > decisions (section 0.1)**. It changes no registered sentence. Revised 2026-10-13 after `docs/reviews/v1-profile/`
 > (F2, F8 and the "decisions A9 does not settle" list) and `docs/reviews/a9-custody/` finding 3. **Revised
@@ -41,7 +42,8 @@ Every requirement ends with a tag `[source:line]`. Sources:
 
 | Short | File |
 |---|---|
-| A9 | `docs/phase-0-prereg-amendment-9.md` (PROPOSED) |
+| A9 | `docs/phase-0-prereg-amendment-9.md` (signed by the author's commit `2ad3489`, 2026-10-16; `formal/p8/HYBRID-REGISTRATION-RECORD.md`) [OWNER 2026-10-19, PR-12] *(Was: "(PROPOSED)".)* |
+| A10 | `docs/phase-0-prereg-amendment-10.md` (signed by the author's commit `9ade764`, 2026-10-18); cited by row number of its A10.7 table [OWNER 2026-10-19] |
 | DD | `docs/V1-DERIVATION-DRAFT.md` |
 | ENC | `formal/p8/ENCODING-V1.md` (section numbers and line numbers) |
 | SPEC | `docs/implementation-spec.md` |
@@ -113,7 +115,8 @@ marks a gap that belongs to another step or to a dated owner act. Section 14 lis
     remain performable for an unknown spec hash.)*
   - **Catalog entry** (one, for V1): the frozen object hashes; exactly one `alg` id (`OPENPGP4-ECDSA-P256-SHA256`
     under the fallback, or the registered pair id under the hybrid); `alg_prohibited` = `[]`; `binding_forms` =
-    `["STMT_DIRECT"]`; D, δ, ε, k; DNSSEC algorithms {8, 13} and DS digest types {2, 4}. A well-formed `common.alg`
+    `["STMT_DIRECT"]`; D, δ, ε, k; the UTC-assessment constants Δ = 7200 s and m = 6 (section 7.4) [OWNER 2026-10-19,
+    A10.1.1; A10:284-285; A10 row 22]; DNSSEC algorithms {8, 13} and DS digest types {2, 4}. A well-formed `common.alg`
     other than the catalog id, including the branch not taken, gives `UNVERIFIABLE / ALG_UNKNOWN`. The catalog is
     independent of the bundle and of trust-configuration updates, and later verifiers apply it unchanged to V1
     bundles (A9.4, A9.7 row 29). [OWNER 2026-10-14, G12]
@@ -143,9 +146,12 @@ marks a gap that belongs to another step or to a dated owner act. Section 14 lis
   [A9:217-219] The verifier owns δ, ε and k; a receipt cannot choose them. [SPEC R-5.9:1219; SPEC R-3.46:698-700]
   N and S govern the issuer only. δ, ε and k are frozen catalog constants, not trust-configuration data.
   [OWNER 2026-10-14, G12]
-- **Branch recorded:** hybrid or fallback signer branch. `OPEN (other):` not yet taken. The hybrid spike has a
-  21 Oct deadline; the owner records the branch, dated, in ENC §5.2 and in this document before the freeze.
-  [A9:298-326] Fallback: both slots OpenPGP P-256. Hybrid: slot `kms` ML-DSA-65, slot `gpg` OpenPGP P-256. (Still open, section 14.2 item 4.)
+- **Branch recorded: HYBRID, registered 2026-10-16 (A9.6).** Slot `kms` ML-DSA-65 (rule R), slot `gpg` OpenPGP
+  P-256 (rule O), pair id `KMS-MLDSA65-PURE-GPG-OPENPGP4-ECDSA-P256-SHA256`; recorded in ENC §5.2 ("Branch
+  recorded") and section 8 ("Branch taken"); supplement `formal/p8/HYBRID-SUPPLEMENT.md`, record
+  `formal/p8/HYBRID-REGISTRATION-RECORD.md`. [A9.6 "Branch registration"; OWNER 2026-10-19, Levadura C3] *(Was:
+  "hybrid or fallback signer branch. `OPEN (other):` not yet taken … (Still open, section 14.2 item 4.)", which
+  section 8 contradicted after 2026-10-16.)*
 
 ## 2. Bundle format
 
@@ -301,10 +307,23 @@ its reason code, T, `revocation`, `historical_security` and standing. [A9:156; A
   of the presented `a_sig` bytes, no attestation in it is contradicted, and it has a qualifying attestation;
   otherwise `null`. T is reported whatever the verdict. Diagnostics (trust-config version and hash, spec hash,
   per-check list) go in a separate wrapper object, outside the stable six. [OWNER 2026-10-14, G32]
+- **UTC assessment** (outside the stable field set) [OWNER 2026-10-19, A10.1.1; A10:300-305; A10 row 22]. Every
+  receipt-verdict report, including a D1–D4 terminal report, contains the object `utc_assessment` =
+  `{"assumption_id":"A-UTC-7200-6","utc_upper_bound":U}`, defined in section 7.4. For D1–D4 its `utc_upper_bound`
+  is null. Startup refusals produce no receipt-verdict report. [OWNER 2026-10-19, PR-03] *(Was: "Every report
+  reached after dispatch also carries the object …", which left D1–D4 reports undecided.)* It is never a member of the
+  stable-output object, never one of the six stable fields, never enters the verdict, the reason code or the
+  section 15.7 check order, and later verifiers are not bound to reproduce it as a stable field. It is reported
+  with every verdict, `INVALID` and `UNVERIFIABLE` included; a value reported with `INVALID` or `UNVERIFIABLE` does
+  not establish a valid service receipt or valid service signatures (A10:303-304). Documentation and relying-party
+  text never state U without the A-UTC identifier and the assumption beside it (A10:304-305).
 - **T for dispatch-terminal outcomes.** A D1–D4 outcome (section 3.1) evaluates nothing, the receipt proof
   included, so its T is `null`; this holds for D4 too, even when the same bundle bytes under a strict request would
   give a T. "T is reported whatever the verdict" applies to every outcome reached after dispatch.
-  [OWNER 2026-10-14, codified from diff-1, EA-05]
+  [OWNER 2026-10-14, codified from diff-1, EA-05] Its `utc_upper_bound` is likewise `null` (section 7.4).
+  [OWNER 2026-10-19, A10.1.1]
+- Relying-party text must say that a U reported with `INVALID` or `UNVERIFIABLE` is not evidence of a valid service
+  receipt, and must state A-UTC beside every U. [OWNER 2026-10-19, A10.1.1; A10:303-305]
 - Relying-party text must say that a T reported with `INVALID` is not evidence of a valid service receipt.
   [OWNER 2026-10-14, G32]
 - Relying-party text must say that `INVALID / ISSUANCE_WINDOW` can come from presenting a later proof, and that the
@@ -317,7 +336,9 @@ its reason code, T, `revocation`, `historical_security` and standing. [A9:156; A
 differential harness drive a verifier under test. It changes no verdict, reason or T, binds no production release,
 and gives way to the release artefact and release-signature format when those are decided (section 14.2 items 1,
 2). Both implementations of differential run 1 used it. [OWNER 2026-10-14, interface convention from diff-1,
-EA-01/EA-02/EA-03/EA-12]
+EA-01/EA-02/EA-03/EA-12] *The release format is now section 15.9. The TEST provisioning below is an instrument
+interface only: it is never a release, and an installed production verifier refuses it (section 15.9 R4).*
+[OWNER 2026-10-19, §14.2 item 2, `docs/V1-FREEZE-OPEN.md` §3]
 - **Invocation and compiled-in inputs (EA-01).** `CMD --trust <config> --bundle <bundle>`. The compiled-in trust
   configuration hash and catalog (section 1, section 5) are provisioned for TEST by environment: the TEST release
   record from `TESSERA_V1_TEST_RELEASE`, authenticated by the public key in `TESSERA_V1_TEST_RELEASE_KEY`, and the
@@ -325,7 +346,10 @@ EA-01/EA-02/EA-03/EA-12]
   release is refused (`TRUST_CONFIG_UNAUTHENTICATED`, no verdict).
 - **Request (EA-02).** The request (D4) is `strict` by default; `--request <value>` supplies any other value.
 - **Output and refusal (EA-03).** A verdict is one JSON object on stdout carrying the six stable fields, either at
-  top level or under `stable`, `result` or `report`; diagnostics may accompany it. A startup refusal is a nonzero
+  top level or under `stable`, `result` or `report`; diagnostics may accompany it. *Instrument convention
+  [OWNER 2026-10-19, A10.1.1]:* the independent verifier prints `{"stable":<stable-output object>,
+  "utc_assessment":<section 7.4 object>}`; the conformance runner compares `utc_assessment` only where a case's
+  `expected.json` carries one. A startup refusal is a nonzero
   exit with the refusal code on stdout or stderr and no six-field object.
 - **Release checker (EA-12).** `CMD --previous <config> --next <config>` prints `ACCEPT` or `REJECT` for the release
   invariants of section 5.
@@ -396,15 +420,25 @@ signing interval.
   distribution compromise, a stated boundary (A9 "The boundaries"). [OWNER 2026-10-14, G08]
   - A config whose SHA-256 is not the compiled hash, or that fails the section 15.5 schema, makes the verifier refuse
     to run with exit error `TRUST_CONFIG_UNAUTHENTICATED`: no verdict.
-  - Bootstrap: the release public key is published with the verifier's documentation and relying-party text, and its
-    fingerprint is in the freeze record. A new release key is introduced only by a release signed by the current one.
+  - Bootstrap: the production release key's full v4 fingerprint is published through at least two channels
+    independent of the operational environment and recorded in the dated first-production-release bootstrap record
+    (section 15.9 R5; A10.4.2). The freeze record does not contain it. Initial bootstrap authenticates the first
+    production key. A successor is authenticated by a conforming release verified under the currently authenticated
+    key and naming the successor fingerprint; subsequently acquired successor key material must match that
+    fingerprint. Loss recovery starts a separately authenticated release lineage and does not establish continuity
+    with the old lineage (section 15.9 R5). [OWNER 2026-10-19, §14.2 item 2; A10.4.2 "Bootstrap record"; OWNER
+    2026-10-19, PR-05] *(Was, 2026-10-19: "A new release key is introduced only by a release signed by the current
+    one", which recovery contradicted.)* *(Was: "the
+    release public key is published with the verifier's documentation and relying-party text, and its fingerprint is
+    in the freeze record.")*
   - `version` starts at `"1"` and increases by 1; `previous_sha256` is 64 zeros for version 1, else the prior config's
     hash. Every report carries the config version and hash as diagnostics; reproducing a verdict exactly (A9.4) uses
     the release that compiled that hash.
   - Required test: a captured repository signer (and, separately, a captured DNS credential and the issuing AWS
     account) signs a config adding its own KSK, repository key and pins; the verifier refuses it.
-  - **OPEN:** release-key custody, holder and access boundary; the release artefact and release-signature format
-    (section 14).
+  - **OPEN:** release-key custody, holder and access boundary (section 14.2 item 1; gate: the first public verifier
+    release, A10.4.2). The release artefact and release-signature format are section 15.9. [OWNER 2026-10-19,
+    §14.2 item 2]
   - *Dated correction 2026-10-14:* the 2026-10-13 resolutions draft proposed a dedicated trust-config key giving the
     config a detached rule-O signature, with append-only enforced in CI. Withdrawn: key inequality does not establish
     independence, and CI cannot stop an attacker who bypasses it (`CODEX-REVIEW-RESOLUTIONS.md` F04).
@@ -502,20 +536,64 @@ signing interval.
   not revocation, supplies temporal exclusion. Publication and revocation dates are informational. The publisher
   takes each full public key from an archived authenticated source that contains it, or from an archived root DNSKEY
   RRset cross-checked against independently authenticated IANA material (`root-anchors.xml` and its `.p7s`, verified
-  against the ICANN CA by a recorded bootstrap procedure), and records source digests. Proposed starts, to be
-  confirmed against archived sources at freeze: ~~KSK-2017 signing start 2018-10-11T00:00:00Z~~; KSK-2024 signing
-  start 2026-10-11T00:00:00Z. [OWNER 2026-10-14, G22]
+  against the ICANN CA by a recorded bootstrap procedure), and records source digests. ~~Proposed starts, to be
+  confirmed against archived sources at freeze: KSK-2017 signing start 2018-10-11T00:00:00Z; KSK-2024 signing
+  start 2026-10-11T00:00:00Z.~~ [OWNER 2026-10-14, G22] *Superseded by the sourced values below.* [OWNER
+  2026-10-19, §14.2 item 3]
 - **Signing starts: evidence versus policy** [OWNER 2026-10-14, r2-F15]. IANA records KSK-2017 signing from
   2018-10-11 (the day is sourced); ICANN's operational account puts the switch at 16:00 UTC; neither establishes the
   inception of the first applicable root RRSIG. The freeze record keeps three values apart for each KSK: the
   operational switch time, the RRSIG inception evidence, and the chosen acceptance-policy `signing_start`, with
-  rationale and archived source digests. **Owner choice (fail-closed):** KSK-2017's proposed policy
+  rationale and archived source digests. *(Closed 2026-10-19 by the three-way record below; the OPEN and
+  "proposed" wording in the rest of this bullet is historical.)* [OWNER 2026-10-19, §14.2 item 3] **Owner choice
+  (fail-closed):** KSK-2017's proposed policy
   `signing_start` is the sourced switch time **2018-10-11T16:00:00Z**, with a boundary vector; it is still OPEN
   until the sources are archived, and if historical RRSIG/ceremony evidence is obtained and differs, the freeze
   record says which value is chosen and why. KSK-2024's start (2026-10-11T00:00:00Z) and KSK-2017's end
   (2026-10-11T00:00:00Z) are likewise proposed acceptance-policy endpoints, not sourced exact signing events, until
   the same three-way record exists. *(Dated correction 2026-10-14: the proposed KSK-2017 start
   2018-10-11T00:00:00Z was a remembered day presented at midnight; midnight is not established.)*
+- **Sourced trust values (the three-way record)** [OWNER 2026-10-19, §14.2 item 3; sources archived in
+  `formal/trust-sources/` with URLs, fetch times and SHA-256 in `MANIFEST.md`; values and quotations in
+  `VALUES.md`]. These replace the PROPOSED values above; the policy values are unchanged except publication.
+  - **Key material.** KSK-2017: key tag 20326, algorithm 8, DS SHA-256
+    `e06d44b80b8f1d39a95c0b0d7c65d08458e880409bbc683457104237c7f8ec8d`. KSK-2024: key tag 38696, algorithm 8, DS
+    SHA-256 `683d2d0acb8c9b712a1948b27f741219298d0a450d612c483af444a4c0fb2b16`. RDATA (flags 257, protocol 3) is
+    `0x0101 03 08 ‖ PublicKey` from `root-anchors.xml`, whose `.p7s` verifies (`MANIFEST.md`); the computed tag and
+    DS digest reproduce the XML's `KeyTag` and `Digest`, and both public keys equal the live root DNSKEY RRset byte
+    for byte (`VALUES.md`, base64 RDATA there).
+
+    | Value | Operational switch (source) | RRSIG inception evidence | Policy value |
+    |---|---|---|---|
+    | KSK-2017 signing start | 2018-10-11, 16:00 UTC (ICANN blog 2018-10-30; day also IANA) | none archived | **2018-10-11T16:00:00Z** |
+    | KSK-2017 signing end | 2026-10-11, no time of day (IANA) | first KSK-2024 root RRSIG inception 2026-10-11T00:00:00Z | **2026-10-11T00:00:00Z** |
+    | KSK-2024 signing start | 2026-10-11, no time of day (IANA; ICANN 2026-10-15) | inception 2026-10-11T00:00:00Z (captures of 2026-10-12 and 2026-10-19) | **2026-10-11T00:00:00Z** |
+    | KSK-2024 signing end | none ("Active", IANA) | — | **null** (open) |
+    | L, both keys | not announced | 21 d (KSK-2017 RRSIG 2026-10-01 to 10-22; KSK-2024 RRSIG 2026-10-11 to 11-01) | **1814400** (observed) |
+    | KSK-2017 reliance end | derived | — | **2026-11-01T00:00:00Z** |
+  - **Publication and revocation (informational).** KSK-2017 publication **2017-07-11** (ICANN: "July 11 2017:
+    Publication of new KSK in DNS"), recorded as `2017-07-11T00:00:00Z`. *Dated correction 2026-10-19:* the
+    builder had 2017-08-11 (`prototype/e2e/FINDINGS.md` E-04); the profile prose never stated it. KSK-2024
+    publication **2025-01-11** (IANA and ICANN), recorded as `2025-01-11T00:00:00Z` (was null). KSK-2017 revocation
+    `2027-01-11T00:00:00Z` (scheduled, IANA); KSK-2024 revocation null. A day-only source is written at midnight as a
+    representation convention; these fields decide no verdict. `root-anchors.xml`'s `validFrom` dates (2017-02-02,
+    2024-07-18) are trust-anchor listing dates, a different event, and are not used.
+  - **The 2026-10-11 switch has no published time of day; the rule does not need one.** Decision: no new rule.
+    KSK-2017's reliance runs to 2026-11-01T00:00:00Z and KSK-2024's policy start is 00:00:00Z, the inception of its
+    first root DNSKEY RRSIG. For `T_snap` values whose encoded date is 2026-10-11, the KSK reliance intervals
+    overlap. Acceptance additionally requires a validating RRSIG whose window contains `T_snap`. This does not
+    guarantee acceptance of every snapshot mined during that real UTC day: `T_snap` is a header time, not UTC
+    (A10.1), and a backward-skewed `T_snap` can fall before a key's policy start or its RRSIG's inception.
+    [OWNER 2026-10-19, PR-09] *(Was: "the reliance rule already makes both keys acceptable for the whole UTC day …
+    so a genuine snapshot anchored at any time on 2026-10-11 has an eligible candidate under whichever key actually
+    signed it.")* The overlap holds only while no KSK-2024 root RRSIG with an inception before 2026-10-11T00:00:00Z is known; if one
+    is found, the freeze record says so and the start is not moved silently.
+  - **Limits.** The 16:00 UTC switch in 2018 is attributed to KSK-2017 by IANA's day and table, not by the ICANN
+    sentence itself. L is observed, not published. The ICANN CA that verified the `.p7s` came over the same HTTPS
+    channel, so the "recorded bootstrap procedure" above is **not yet met**; it is required before trust
+    configuration v1 is built for the first production release (section 14.2 item 3), not for the freeze, because
+    the trust configuration is not a frozen spec part (section 15.9 R2). `formal/trust-sources/` must be in the
+    tracked tree at the freeze commit.
 - **Open endpoints.** `signing_end: null` means still signing as of the config's `as_of`. The finite reliance of an
   open KSK is [signing-start, `as_of`]; an open repository key is usable on [signing-start, `as_of`]. Evidence later
   than `as_of` under an open entry, with no other usable entry, gives `UNVERIFIABLE / TRUST_HORIZON`.
@@ -538,6 +616,16 @@ signing interval.
   not verifier policy; no verifier check concerns custody. It is distinct from the release-key boundary above.
   [OWNER 2026-10-14, G36] *(Was: "`OPEN (other):` whether the repository key being the public half of an offline root
   is profile policy", 2026-10-13.)*
+- **No service-key listing in V1** [OWNER 2026-10-19, `docs/decisions/2026-10-19-listing-cut.md`]. A10.4.1 is cut
+  under A10 row 33 (the second item in the cut order), together with the rows that take effect only with it (A10.7
+  rows 25–32 and 37–39). **A10.4 option (a) applies:** honest signed material stays protected under authority
+  capture (A10 rows 15–16). **V1 gives no protection against new receipts under a captor's own keys when both
+  authority channels are captured;** relying-party text and the freeze record say so. Accordingly the trust
+  configuration (section 15.5) has no `service_keys` member, the verifier has no listing classifier, listing
+  subchecks or listing reason codes (`SERVICE_KEYS_NOT_LISTED`, `LISTING_*`), verifier releases need no
+  OpenTimestamps stamp for a listing, there is no C0/C1 bootstrap, and holders keep no listing-evidence package.
+  This profile never implemented any of these; none is in V1. Release-key custody (A10.4.2) is unchanged by the cut.
+  The author can override the cut until the freeze assembly (26 Oct).
 
 ## 6. Authority channels
 
@@ -720,7 +808,8 @@ issuer == pinned D together with the path (`docs/reviews/v1-profile/` F7).
   not UTC (A2.1), and DNSSEC evidence establishes no publication before issue. [OWNER 2026-10-14, G02] *(Was:
   "`OPEN (step 8):` the time relation the git assertion must have to the receipt", 2026-10-13. Dated correction
   2026-10-14: ENC §7.1's "fixed in DNSSEC-authenticated and anchored authority evidence before any receipt that
-  relies on it" overstates both channels; the replacement wording for ENC is pending.)*
+  relies on it" overstates both channels; the replacement wording for ENC is pending.)* *(ENC §7.1 now carries the
+  replacement, [OWNER 2026-10-19].)*
 
 ### 6.4 Required set, owner name and manifest (step 8 fixes)
 
@@ -821,7 +910,9 @@ issuer == pinned D together with the path (`docs/reviews/v1-profile/` F7).
   There is no retarget logic, because the pins cover every accepted header. [A9:150; DD:99]
 - **Conflict.** A supplied header at a pinned height with a different hash gives `INVALID / HEADER_CONFLICTS_PIN`:
   it is contradictory evidence. A9.1's "a bundle header outside the pins" is read as a header **at a height the pins
-  do not cover**. [OWNER 2026-10-14, G23] *(Was: "`OPEN (step 8):` the verdict for a header that … conflicts with a
+  do not cover**. [OWNER 2026-10-14, G23] A10.5 stage 1 (signed 2026-10-18) registers this reading as A9's meaning:
+  no pin at the height gives `UNVERIFIABLE / HEADERS_NOT_COVERED`, a header differing from its pin gives `INVALID /
+  HEADER_CONFLICTS_PIN`. [OWNER 2026-10-19, Levadura contested 2] *(Was: "`OPEN (step 8):` the verdict for a header that … conflicts with a
   pin", 2026-10-13.)*
 - **Coverage.** Required: headers h* … h*+5 of the selected attestation of each of the three proofs (receipt,
   snapshot, git), all in the shared `headers` pool. Every supplied header, used or not, is checked against the pins.
@@ -872,11 +963,97 @@ issuer == pinned D together with the path (`docs/reviews/v1-profile/` F7).
   rule, ranked with `RRSIG_NOT_VALID_AT_EVAL_TIME`. The witness check is inception ≤ T_snap ≤ expiration, never "now",
   including in 2106. [OWNER 2026-10-14, G27]
 
+### 7.4 The UTC assessment [OWNER 2026-10-19, A10.1.1]
+
+A10.1.1 (AUTHOR ADOPTED 2026-10-18, BROADEN; A10 rows 20–24) adds one reported assessment and one named assumption.
+Nothing in this subsection changes T, a verdict, a reason code, the check order or the stable field set.
+
+- **Assumption A-UTC** (`assumption_id` `"A-UTC-7200-6"`). At least one of the six blocks h* … h*+5 has a header
+  time no more than 7200 s before it was actually mined: `nTime(j) ≥ r(j) − 7200 s` for some j in [h*, h*+5], where
+  r(j) is the real (UTC) time block j was first produced. It is an assumption of the UTC assessment only, not a
+  Bitcoin consensus rule; **the verifier does not check it** and no bundle carries evidence of it. It is sufficient,
+  not minimal. [A10:280-285]
+- **Constants.** Δ = 7200 s and m = 6 are frozen catalog constants (section 1), not trust-configuration data, and
+  are not shown to be optimal. m = 6 is the same six-header segment h* … h*+5 that section 7.1 already requires and
+  pins (k = 6), so U needs no new input. [A10:284-285; A10 row 22; A10:343-344] *Instrument note: the TEST catalog
+  wire object (section 3.5; `prototype/differential/ADAPTER.md` T2) does not yet carry Δ and m; both instruments
+  compile them in. Adding them to the frozen catalog object is owner work before the freeze.*
+- **h\*** is the receipt proof's selected inclusion height (section 7.1, A10.5); it counts as confirmation one, so
+  h*+5 is confirmation six. [A10:277-278]
+- **Definition.** `U_seconds = 7200 + max(uint64(nTime(h*)), uint64(nTime(h*+1)), …, uint64(nTime(h*+5)))`, the
+  maximum over the receipt proof's selected h* and its six qualified headers (section 7.1 items (a)–(d)). Header
+  times need not be monotone: the maximum is taken over all six, not nTime(h*+5) and not T. Each nTime is the
+  header's unsigned 32-bit little-endian field (section 7.1 "Time arithmetic"), widened to 64 bits **before** the
+  addition; the sum is never reduced modulo 2^32. [A10:287-293; A10:307-311]
+- **Encoding.** `utc_upper_bound` is the RFC 3339 UTC string of U_seconds in the form used for T
+  (`YYYY-MM-DDTHH:MM:SSZ`, days-from-civil, no leap seconds). For max nTime = 4294967295, U = 4294974495 =
+  `2106-02-07T08:28:15Z`, not a 1970 time. [A10:309-311]
+- **Null rule.** `utc_upper_bound` is `null` exactly when T is `null` (section 3.4), including every D1–D4
+  dispatch-terminal outcome; otherwise it is computed from the same selected h* that gives T. Every receipt-verdict report,
+  including a D1–D4 terminal report, contains `utc_assessment`, with `assumption_id`. For D1–D4 its
+  `utc_upper_bound` is null. Startup refusals produce no receipt-verdict report. [A10:300-302; OWNER 2026-10-19,
+  PR-03] *(Was: "The object `utc_assessment`, with `assumption_id`, is present on every report reached after
+  dispatch.")*
+- **No verdict effect.** U never enters a verdict, reason code, stable field, the shipping predicate or S; a value
+  is reported whatever the verdict, and with `INVALID` or `UNVERIFIABLE` it does not establish a valid service
+  receipt or valid service signatures. [A10:302-305; A10:347-348; A10 row 21]
+- **Clock.** Verification does not consult the current clock; the arithmetic covers preserved headers. Timestamp
+  representation for Bitcoin blocks produced after the 2106 rollover of the 32-bit field is a Bitcoin protocol
+  matter outside V1. Section 7.3's serial-time unwrapping applies to DNSSEC RRSIG fields only, never to nTime.
+  [A10:307-313; A10 row 24]
+- **Claim, as registered** (A10:289-293): under A-UTC, the bytes and both signatures existed before U, in UTC. A2.1's
+  refusal to bound the observation lag B − C is unchanged; guarantee 2 keeps its chain-time meaning (A10 row 23).
+  A-UTC is false exactly when every one of the six blocks has a header time more than 7200 s before its production;
+  then the conditional UTC guarantee is unavailable, though the computed value need not itself be false (A10 row
+  24).
+
 ## 8. Signers and keys
 
 - Fallback: both slots OpenPGP P-256 (rule O), KMS-backed for kms, and slot-2 custody per A9.6 for gpg. The dated pre-freeze custody record identifies the selected implementation. [A9.6 "Signers" (was cited A9:338-340, a stale locator; OWNER 2026-10-14, r2-F17); A9.6 slot-2 custody; ENC §5.2:438-444; `docs/reviews/a9-custody/` finding 3]
-- Hybrid, only if the spike passes by 21 Oct: `kms` is ML-DSA-65 (rule R), `gpg` is P-256 (rule O). One pair
-  algorithm id names both. [A9:298-302; ENC §5.2:441]
+- Hybrid (taken; see "Branch taken" below): `kms` is ML-DSA-65 (rule R), `gpg` is P-256 (rule O). One pair
+  algorithm id names both. [A9:298-302; ENC §5.2:441] *(Was: "Hybrid, only if the spike passes by 21 Oct";
+  [OWNER 2026-10-19].)*
+- **Slot-2 custody record (A9.6), dated** [OWNER 2026-10-19, §14.2 item 5; choice made 2026-10-13,
+  `docs/reviews/hybrid-supplement/DECISIONS.md` item 2]. Not an operations fact that changes verdicts; recorded
+  here because A9.6 requires the choice in the profile before the freeze.
+  - **Choice (2026-10-13):** the non-AWS HSM alternative, not a token. Provider Google Cloud KMS, protection level
+    HSM. Key version `projects/tessera-slot2/locations/us-east1/keyRings/tessera-v1/cryptoKeys/slot2-spike/cryptoKeyVersions/1`,
+    `EC_SIGN_P256_SHA256`, non-exportable, created 2026-10-14T02:55:53Z, attestation format `CAVIUM_V2_COMPRESSED`.
+    These identifiers describe the historical deployed-slot evidence, not production-key selection. Production key
+    versions and dated replacements are recorded in an external custody record before use. They retain the
+    selected, deadline-qualified custody implementation and obey A9.6's issuance and successor-registration
+    requirements. The frozen profile is unchanged. Key authority comes from the DNSSEC and git key-publication
+    record, not from this text. [OWNER 2026-10-19, PR-06] *(Was: "If issuance is to use any other key version, this
+    record gets a dated entry naming it before it signs a shipped receipt", which tied key replacement to editing
+    frozen text and left the spike key, which HYBRID-SUPPLEMENT §9 item 6 directs be deleted, as the apparent
+    production key.)*
+  - **Public-key packet (immutable):** the v4 P-256 public-key packet body with creation time 1791946553
+    (2026-10-14T02:55:53Z), `gpg-sha256:b6e37f7c8120ca19cca86cc9617d4ec50b2875a799ee976d9d0253e01c7a077c`.
+  - **Adapter and policy boundary:** the external queue-pulling policy signer (`prototype/policy-signer/DESIGN.md`,
+    `EVIDENCE.md`): requests arrive only through SQS; a Cloud Run job with no URL, pinned image digest, checks tag,
+    alg, `key_fp` and ε before any HSM call and emits one rule-O v4 type-0x00 packet. Only its service account holds
+    `roles/cloudkms.signer` on the key. No static credentials cross clouds. *Not deployed:* the VPC Service
+    Controls perimeter of runbook §1 "Signer isolation"; that is an operations item, not a freeze item.
+  - **Deadline (A9.6):** the deployed-slot pass-condition evidence was completed 2026-10-14, before 21 Oct
+    (`formal/p8/HYBRID-REGISTRATION-RECORD.md` item 4). The first real receipt was signed through it
+    (`prototype/e2e/FINDINGS.md` E-03).
+  - **Throughput:** measured end-to-end latency 3 to 70 s per request (scheduler tick plus job start); E-01's
+    on-demand trigger removes the tick wait. Adequate for V1's dozen receipts; no sustained-rate figure is claimed.
+  - **HSM monoculture check (checked 2026-10-19; runbook §1).** Slot 1 (`kms`, AWS KMS ML-DSA-65) runs on the "AWS
+    Key Management Service HSM", vendor Amazon Web Services, Inc., FIPS 140-3 Level 3, CMVP certificate **#4884**
+    (hardware 3.0, firmware 1.8.104, validated 2024-11-18, interim validation)
+    (https://csrc.nist.gov/projects/cryptographic-module-validation-program/certificate/4884); AWS describes "a
+    distributed fleet of FIPS 140-3 Security Level 3–validated hardware security modules … Each AWS KMS HSM is a
+    dedicated, standalone hardware appliance" (https://docs.aws.amazon.com/kms/latest/developerguide/data-protection.html).
+    Slot 2 runs on Google Cloud HSM: "All Cloud HSM devices are manufactured by Marvell (formerly Cavium)"
+    (https://docs.cloud.google.com/kms/docs/attest-key), "FIPS 140-2 Level 3 certified" with no certificate number
+    given (https://docs.cloud.google.com/kms/docs/hsm); our key's attestation format is Cavium's. **Result: the two
+    slots do not share an HSM vendor or validated module** at the level public documentation shows. *Limits:*
+    neither provider names the chips inside its module, so a shared component below the module cannot be excluded;
+    whether AWS's ML-DSA signing runs on the firmware version certificate #4884 names is not stated. *Caution:*
+    Marvell has stated that its LiquidSecurity HSM serves AWS CloudHSM
+    (https://investor.marvell.com/news-events/press-releases/detail/363/marvell-enables-enterprise-data-center-and-private-cloud-security-with-innovative-liquidsecurity-network-hsm,
+    2019), so moving slot 1 to an AWS CloudHSM custom key store would need this check repeated.
 - Key fingerprints: `spki-sha256:` for `kms`, `gpg-sha256:` for `gpg`. No SHA-1 for key binding. [ENC §3.3:285-301]
 - The two keys are separate technical failure domains under one controller. V1 claims no separation of control and no
   independent fates. [A9:136; A9:368-372]
@@ -978,20 +1155,24 @@ DD:63 lists the same eight (with ECDSA P-256 in place of "the algorithms in use"
   [OWNER 2026-10-14, G15] *(Was: "`OPEN (other):` … whether V1 adopts them as a profile requirement is not
   decided", 2026-10-13.)*
 - **Extra standards: added.** Beyond A9's eight, the manifest names: Unicode 16.0.0 UCD (with file digests) and UAX
-  #15 (NFC); RFC 8259; RFC 3339; RFC 9580; ECMA-262 Number::toString (pinned edition); FIPS 180-4; FIPS 186-5;
+  #15 (NFC); RFC 8259; RFC 3339; RFC 9580; ECMA-262 10th edition (June 2019) NumberToString (7.1.12.1), the edition RFC 8785 cites; FIPS 180-4; FIPS 186-5;
   RFC 4648; RFC 1035, 1982, 2181, 3110, 4034, 4035, 4509, 5011, 5702, 6605, 9718, and RFC 9102 (informative); RFC
   5652 (CMS, for `.p7s` source authentication); the OTS DetachedTimestampFile format (section 15.2); Bitcoin header,
   double SHA-256, merkle and non-witness transaction formats; gitformat-signature(5), the git object format and
-  SHA-1DC; under the hybrid, FIPS 204 and the supplement's SPKI encoding. [OWNER 2026-10-14, G15] *(Was: "`OPEN
+  SHA-1DC; under the hybrid, FIPS 204 and the supplement's SPKI encoding. [OWNER 2026-10-14, G15]
+- **Standards the built manifest added** [OWNER 2026-10-19, item 15; source formal/dependency-sources/MANIFEST.md]: RFC 8017 (RSASSA-PKCS1-v1_5, needed to verify algorithm-8 RRSIGs); FIPS 202 (SHAKE256, called directly in ENC rule R); RFC 9881 (ML-DSA SPKI encoding cited by ENC and the supplement); RFC 7493 (I-JSON, ENC §1.1 input restrictions); IEEE 754-2019 (the double the number rule is defined over; paywalled, digest null); RFC 6840 (updates RFC 4034 §6.2, which §6.1 uses); RFC 5280 (certificate path for the `.p7s` source authentication, beyond RFC 5652). SP 800-186 (named in section 8) and `gpgv` (the release-signature checker, section 15.9) are also entries. The built manifest has 44 entries, one per document.
+- **DNSSEC algorithms** [OWNER 2026-10-19, item 15; source formal/dependency-sources/MANIFEST.md]. Row 6 ("the DNSSEC algorithms in the chain") is pinned as the supported set of section 6.1, algorithms {8, 13} with DS digest types {2, 4}, which is wider than any one chain. A chain that needs another algorithm is outside the profile: `UNVERIFIABLE / DNSSEC_ALGORITHM_UNSUPPORTED`. *(Was: "`OPEN
   (other):` ENC depends on more standards than A9's eight entries name … Decide whether to add these", 2026-10-13.)*
 - The manifest's hash is fixed in the catalog: a mismatch gives `INVALID / BUNDLE_OBJECT_HASH`, an absent manifest
   `UNVERIFIABLE / MEMBER_MISSING`. The verifier does not interpret its contents. [OWNER 2026-10-14, G15] The catalog comparison is performable only when the spec lookup succeeds; under `SPEC_UNKNOWN` it is
   unperformable (section 1). [OWNER 2026-10-14, r2-F12]
-- **Not yet the object** [OWNER 2026-10-14, r2-F14]. The list above and section 15.6 are a schema for a future
-  object, not the object: pinned editions, errata and digests for ECMA-262, UAX #15 / Unicode 16.0.0, git and
-  SHA-1DC, the Bitcoin formats and the release verifier are not yet supplied, and the listed names alone do not let
-  an implementer build NFC tables or RSA/DNSSEC/CMS. Constructing and archiving the actual manifest and its
-  referenced bytes is section 14.2 item 15.
+- **The built object and what remains** [OWNER 2026-10-14, r2-F14; OWNER 2026-10-19, PR-12]. The manifest is built
+  (`formal/dependency-sources/`: 44 entries with editions, errata notes and digests; at-risk sources archived; the
+  IEEE 754 digest is null, section 15.6). It is an owner working artifact. Remaining before the freeze: its review,
+  tracking it and its archive at the freeze commit, and entering its hash in the frozen catalog (section 14.2 items
+  7 and 15). The listed names alone still do not let an implementer build NFC tables or RSA/DNSSEC/CMS; the pinned
+  sources do. *(Was: "pinned editions, errata and digests … are not yet supplied", superseded by the built
+  manifest above.)*
 - **Reference OTS reader divergence.** python-opentimestamps 0.4.5, section 15.2's reference reader, rejects a
   timestamp at depth 256 (its limit is 255), while this profile allows depth ≤ 256 with the root at depth 0
   (section 15.2); a depth-256 proof that is otherwise valid is `VALID_STRICT`. It also accepts redundant LEB128
@@ -1014,10 +1195,11 @@ the accepted and rejected examples are in ENC §1.2. [A9:438-443; ENC §1.2:118-
 
 This replaces the literal "exactly representable as an IEEE 754 double" rule for this profile only. [A9:405-406;
 A9:440-443] The stale "needs an author sentence" remarks in ENC (ENC:147-148, D-1) and PROOF §6 are superseded by
-A9.8. [OWNER 2026-10-14, G38; the ENC and PROOF wording edits are pending]
+A9.8. [OWNER 2026-10-14, G38; the ENC and PROOF wording edits are done, OWNER 2026-10-19]
 
-**`ES` recipe.** `ES(d)` is ECMA-262 Number::toString of a pinned edition (edition, section and digest in the
-dependency manifest). If d is +0 or −0: `"0"`. If d < 0: `"-"` ‖ ES(−d). Otherwise let n, k, s be integers with
+**`ES` recipe.** `ES(d)` is ECMA-262 NumberToString (7.1.12.1, Note 2) of the 10th edition (June 2019), the edition RFC 8785 cites
+(edition, section and digest in the dependency manifest; later editions rename it Number::toString with the same
+output) [OWNER 2026-10-19, item 15; source formal/dependency-sources/MANIFEST.md]. If d is +0 or −0: `"0"`. If d < 0: `"-"` ‖ ES(−d). Otherwise let n, k, s be integers with
 k ≥ 1, 10^(k−1) ≤ s < 10^k, s × 10^(n−k) = d as a double, and k as small as possible; if several s qualify, choose
 the one for which s × 10^(n−k) is closest in value to d, and if two are equally close, the even one. Then: if
 k ≤ n ≤ 21, the k digits followed by n−k zeros; if 0 < n ≤ 21, the first n digits, `.`, the remaining k−n digits;
@@ -1030,7 +1212,7 @@ runtime may use bundled pinned tables, and one whose tables do not match refuses
 **Field grammars.** `utc` years run 0001–9999 (proleptic Gregorian, seconds 00–59). LDH labels match
 `[a-z0-9-]{1,63}` with no leading or trailing hyphen; all-numeric labels, the top label included, are allowed; at
 least two labels; at most 241 bytes. This is what both P8 codecs already do. [OWNER 2026-10-14, G18; the ENC §3.2
-wording edit is pending]
+and §7 wording edit is done, OWNER 2026-10-19]
 
 ## 11. The A9.1 scenario mapping
 
@@ -1040,7 +1222,7 @@ thirteen cases (a, g, b, c, d1, d2, d3, e, e′, f, h, i, i′). [A9:169-181; DD
 
 | Case | Fixture | Expected verdict | Safe decision |
 |---|---|---|---|
-| a, g | Honest receipt as shipped (a's TLR removed) | `VALID_STRICT` | Accept as: these bytes were presented to Tessera by T |
+| a, g | Honest receipt as shipped (a's TLR removed) | `VALID_STRICT` | Accept as: these bytes were presented to Tessera before the selected Bitcoin block was mined; its header time T is not a UTC upper bound [A10 row 5; OWNER 2026-10-19, PR-01] |
 | b | Reattribution under attacker keys | `INVALID` | Reject |
 | c | Two-layer transplant | `UNVERIFIABLE / OUT_OF_PROFILE` | Reject |
 | d1 | a's bundle; degraded request, then strict | Waiver refused; strict `VALID_STRICT` | Accept under strict only |
@@ -1049,7 +1231,7 @@ thirteen cases (a, g, b, c, d1, d2, d3, e, e′, f, h, i, i′). [A9:169-181; DD
 | e, e′ | a's bytes; slot-B key revoked inside (declared, anchor], or (e′) before declared | `VALID_STRICT` | Non-revocation not established; a transaction needing it must not rely on this receipt alone |
 | f | Impostor's content through the honest service | `VALID_STRICT` | The receipt attests no submitter |
 | h | Honest renewal wrapper | `UNVERIFIABLE / OUT_OF_PROFILE` | Reject: registered false reject |
-| i | `content` = a contract plus two valid party signatures, issued honestly | `VALID_STRICT` | Accept as: this signed contract existed by T. The parties' signatures and keys are the relying party's to check |
+| i | `content` = a contract plus two valid party signatures, issued honestly | `VALID_STRICT` | Accept as: this signed contract existed before the selected Bitcoin block was mined; its header time T is not a UTC upper bound [A10 row 6; OWNER 2026-10-19, PR-01]. The parties' signatures and keys are the relying party's to check |
 | i′ | As i, one party signature does not verify | `VALID_STRICT` (Tessera does not read `content`) | Reject the contract: the receipt is valid, a party signature fails the relying party's own check |
 
 **Fixtures for b and d3** [OWNER 2026-10-14, codified from diff-1, EA-27]. A9.1 names the outcome, not the fixture;
@@ -1072,8 +1254,10 @@ dispatch. It is a verifier input, refused at D4 (section 3.1). [OWNER 2026-10-14
 
 - Exit statements M2 and M5, the E6a dispatch and precedence cases, and the E12 page are 30 Oct items. [A9:199-204]
 - After exit: vectors run against AWS, the missing-capture control, and the dead-service test. [A9:208-210]
-- Cut order if 30 Oct slips: the PQ hybrid first, nothing else. `A_sig`, the root-KSK rule and the git stamp target
-  are required. [A9:205-207]
+- Cut order if 30 Oct slips: the PQ hybrid first, then the service-key listing (A10 row 33). `A_sig`, the root-KSK
+  rule and the git stamp target are required. [A9:205-207; A10 row 33] The hybrid is registered (section 1); the
+  listing is cut (section 5, "No service-key listing in V1"). [OWNER 2026-10-19] *(Was: "the PQ hybrid first,
+  nothing else", which A10 row 33 replaced.)*
 
 ## 13. Reconciliation notes
 
@@ -1105,9 +1289,62 @@ Disagreements between sources, found while drafting:
 5. **Number rule restated in the spec.** SPEC V6 (1261) still reads "numbers not exactly IEEE 754 doubles". A9.7 rows
    22 and 23 (A9:405-406) do not list SPEC:1261, though row 15 lists spec restatements. A9.8 governs.
 6. **ENC note on the derivation.** ENC:147-148 and ENC D-1 (752-755) say the derivation's profile line keeps the old
-   number rule. DD:62 now states the value-preserving rule. The ENC remark is stale.
+   number rule. DD:62 now states the value-preserving rule. Corrected 2026-10-19: ENC §1.2 (ENC:177-180) and ENC
+   D-1 now state that A9.8 registers the rule and that the derivation's line states it. [OWNER 2026-10-19, PR-12]
+   *(Was: "The ENC remark is stale.")*
 7. **Spec revocation text.** SPEC R-5.21 (1358) requires the revocation conjunct for `VALID_STRICT`. A9.4 and A9.7 rows
    7 to 9 replace it for V1. Not a defect; listed so an implementer does not read the spec alone.
+
+**Reconciliation notes added 2026-10-19** [OWNER 2026-10-19, `docs/reviews/levadura-contradictions/DISPOSITION.md`].
+Each states which text governs and why; no registered text is edited.
+
+- **To notes 1, 5 and 7 (A9.7 does not list the SPEC sentences).** A9.7 rows 22–23 omit SPEC V6, rows 7–9 omit SPEC
+  R-5.21, and no row lists SPEC R-3.37/V21. A9 governs in each case: A9.8 replaces the number rule "for
+  `tessera-v1-strict`" outright, A9.4 fixes the stable output with `revocation: NOT_EVALUATED`, and A9 C4 says the
+  verifier fixes the required set. Each is a substantive registered rule, not a pointer through A9.7, so A9.7's
+  list being incomplete does not keep the SPEC sentence alive for V1. SPEC is the design reference (section "What
+  this document is for"), synced after V1. A9.7's completeness against the SPEC is not audited here.
+8. **HYBRID-SUPPLEMENT §10.4 versus §11 (one registered text, two states).** §10.4 says the deployed-slot path was
+   "Met 2026-10-14"; §11 still lists "HS-02 deployed-slot evidence through the policy signer, by 21 Oct" as open and
+   item 2 says that path "is still owed". **§10.4 governs**, with the registration record's pass-condition item 4
+   (`prototype/policy-signer/EVIDENCE.md`, captured 2026-10-14 through the queue path). Why: the supplement was
+   registered byte-identical to its 2026-10-14 draft, whose §10.4 was updated with the evidence while §11 was not;
+   §11's sentences are the earlier state, and the registration record, made under A9.6 on the same date, relies on
+   §10.4's.
+9. **A9.6 "naming the exact … specification hashes" versus the supplement's spec hash "entered at the 30 Oct
+   freeze".** **A9.6 governs.** The registration of 2026-10-16 stands for the branch taken, and A9.6's own deadline
+   for the registration is "before the 30 Oct freeze"; the spec-object hash cannot exist before the freeze assembly
+   (section 15.8). So the registration is complete under A9.6 only when the freeze record enters that hash into the
+   registration record, before the freeze closes. This is tracked as section 14.2 item 7.
+10. **A9.7's tally "plus one disposition left open" versus A9's "OWNER DECISION 2026-10-12: public publication
+    remains an issuer duty".** **The OWNER DECISION governs.** It is the specific, dated disposition of the one
+    "changed in effect" item (public publication of the commit), and the tally is a count summary. The item is
+    "not counted" among the twenty-nine rows; it is decided, not open. This profile follows the decision (sections
+    3.4 and 4), and A10 lists it as named and not changed.
+11. **The registration record's ENCODING-V1 hash versus the edited ENCODING-V1.** The record names ENC after the
+    §5.2 edit as SHA-256 `fe537b1f…efd0`. ENC's 2026-10-19 wording edits change that file's hash. **The registered
+    baseline governs** (ENC at `2ad3489` plus the supplement, A9.6), and the edited ENC replaces the `fe537b1f…` text
+    only through the freeze record with ENC's CHANGELOG as the change accounting (section 1 "Baseline", G37). The
+    edits change no codec rule, code or vector.
+12. **A9.1 "a bundle header outside the pins" versus section 7.2's `HEADER_CONFLICTS_PIN`.** Resolved by registered
+    text: A10.5 stage 1 states the profile's reading as A9's meaning (section 7.2).
+13. **A9 C3 "a missing, stripped or substituted one fails" versus `UNVERIFIABLE / MEMBER_MISSING`.** [OWNER
+    2026-10-19, CLARIFY; from `formal/tla/E6a/RESULTS.md`] An absent `possession.<slot>` (case F03-j) or an absent
+    `a_sig` gives `UNVERIFIABLE / MEMBER_MISSING`, not `INVALID`. C3's "fails" is read as "does not reach
+    `VALID_STRICT`": both outcomes are fail-closed, and C3 claims nothing about which non-accepting verdict is given.
+    Changing a committed receipt-signature byte without a matching anchor fails the anchor check. For supported
+    algorithms, a present signature that fails verification contributes `INVALID`. Replacing a possession signature
+    with another policy-conforming valid signature over the same manifest is permitted. Unsupported-algorithm
+    semantics remain unperformable. [OWNER 2026-10-19, PR-07] *(Was: "A substituted or non-verifying signature that
+    is present gives `INVALID`", which covered possession signatures that `A_sig` does not commit, section 9, and
+    unsupported algorithms, section 8.)*
+14. **A10:302 "It is null exactly when T is null."** [OWNER 2026-10-19, CLARIFY] "It" is read as `utc_upper_bound`, not
+    the wrapper: the `utc_assessment` wrapper is present on every receipt-verdict report, D1–D4 terminal reports
+    included (startup refusals produce no receipt-verdict report) [OWNER 2026-10-19, PR-03], and only the bound is typed "(RFC 3339 string or
+    null)" (A10:300-301). Section 7.4.
+15. **A10:284-285 "Δ = 7200 s and m = 6 are frozen in the governing specification's catalog."** [OWNER 2026-10-19]
+    The TEST catalog format does not carry them yet, and both verifiers build them in. They go into the catalog at the
+    freeze assembly (section 14.2), which changes every release hash once, before the first production release.
 
 
 ## 14. OPEN items
@@ -1116,7 +1353,8 @@ Disagreements between sources, found while drafting:
 
 Every `OPEN (step 8)` group and seven of the eight `OPEN (other)` items of the 2026-10-13 list are closed by the
 owner-disposed spec-sufficiency resolutions (RES). Each closing rule carries its tag where it now stands. The
-eighth, the signer branch, is still open (14.2 item 4).
+eighth, the signer branch, closed on 2026-10-16: hybrid, registered under A9.6 (section 1; 14.2 item 4).
+[OWNER 2026-10-19, Levadura C3] *(Was: "The eighth, the signer branch, is still open (14.2 item 4).")*
 
 | 2026-10-13 OPEN item | Closed by | Where |
 |---|---|---|
@@ -1138,14 +1376,21 @@ eighth, the signer branch, is still open (14.2 item 4).
 | Repository key as offline root | G36 (operating fact) | section 5 |
 | Inventory and stage table as extraction | G14, G17, G31 | sections 2.1, 15.7 |
 
-### 14.2 Still open before 30 Oct
+### 14.2 Freeze requirements and deferred release gates
 
-Each is a decision or owner act the freeze needs. None is settled by this document. Items 1–10 are the 2026-10-14
+[OWNER 2026-10-19, PR-11] *(Was: "Still open before 30 Oct … Each is a decision or owner act the freeze needs.")*
+Each is a decision or owner act the freeze needs, except where an item names execution deferred to a later gate
+(item 1's execution is required before the first public verifier release, A10.4.2). None is settled by this
+document. Items 1–10 are the 2026-10-14
 list, amended where marked; items 11–16 are added by the second review. [OWNER 2026-10-14, r2-14.2] They are bounded
 to verifier sufficiency and already-stated release/freeze work; they add no V2 capability and do not move the V1
 finish line.
 
-1. **Release-key custody** (G08, A9.5). Which key signs verifier releases, who holds it, and its access boundary,
+1. **Release-key custody** (G08, A9.5). *Split [OWNER 2026-10-19, PR-11; A10.4.2]:* **required frozen contents**
+   (30 Oct): the independence requirement, the release format (item 2) and the custody procedure's required
+   contents (A10.4.2 "Custody form"); **execution required before the first public verifier release:** the key,
+   its holder and access boundary, the review-and-sign environment, the written procedure's review, the bootstrap
+   record and channels, and the rehearsal. The text below is the 2026-10-14 statement. Which key signs verifier releases, who holds it, and its access boundary,
    shown to be unusable by the DNS credential, the repository key and the issuing AWS account. YubiKey 2 is not in
    hand. If independence cannot be supplied, a NARROW-MODEL excluding the channel-capture path goes to the author.
    **Expanded (r2-F17):** the custody record also covers the release key's authenticated bootstrap, rotation and
@@ -1156,28 +1401,50 @@ finish line.
    configuration's byte format is specified** (section 15.5); its actual values are item 3. **Expanded (r2-14.2,
    r2-F17):** authenticated bootstrap, release-key rotation and bounded loss/compromise recovery; the exact signed
    release preimage and verification format, with dependency pinning. None of these becomes a bundle-verifier rule.
+   **Closed 2026-10-19 (format):** section 15.9 (R1–R6), with the three departures closed (TEST signature covers the
+   whole archive, R3; production is the default and TEST needs an explicit provisioning path, R4; no machine-specific
+   facts in the signed release, R2); section 5's bootstrap sentence replaced. What remains is execution, not format:
+   the instrument changes listed at the end of section 15.9, and the key, ceremony, bootstrap record, channels and
+   rehearsal before the first public verifier release (item 1; A10.4.2). [OWNER 2026-10-19, `docs/V1-FREEZE-OPEN.md`
+   §3 and owner decisions]
 3. **The pre-freeze trust configuration's values** (G22, G09). Sourced KSK RDATA, confirmed signing starts
    (~~KSK-2017 2018-10-11~~ KSK-2017 2018-10-11T16:00:00Z policy start, r2-F15, and KSK-2024 2026-10-11 are
    proposed), ends, L, the repository entry, the pins and their source digests. **Expanded (r2-14.2):** the complete
    machine-checkable trust schema (section 15.5 as amended) and the horizon/candidate aggregation (r2-F04), plus
    sourced precise endpoints with switch time, RRSIG inception and policy value recorded separately (r2-F14,
-   r2-F15).
-4. **The hybrid branch** (A9.6; section 1). Signer branch taken, due 21 Oct; under the hybrid, the
-   branch-registration supplement, the pair algorithm id and the exact ML-DSA-65 SPKI encoding (G21, G12).
+   r2-F15). **Closed 2026-10-19 for the freeze:** sourced values and the three-way record in section 5 ("Sourced
+   trust values"), citing `formal/trust-sources/VALUES.md` and `MANIFEST.md`; KSK-2017 publication corrected to
+   2017-07-11; the 2026-10-11 switch needs no time of day (section 5). Carried to building trust configuration v1
+   for the first production release, not the freeze (the configuration is compiled into a release, section 15.9
+   R2): an independently obtained ICANN CA for the `.p7s` check, the repository entry (YubiKey 2, item 6) and the
+   header pins. `formal/trust-sources/` must be tracked at the freeze commit. [OWNER 2026-10-19, `prototype/e2e/FINDINGS.md` E-04]
+4. ~~**The hybrid branch** (A9.6; section 1). Signer branch taken, due 21 Oct; under the hybrid, the
+   branch-registration supplement, the pair algorithm id and the exact ML-DSA-65 SPKI encoding (G21, G12).~~
+   **Closed 2026-10-16:** hybrid registered (section 1, section 8; supplement §1–§3). What remains of A9.6's
+   registration is the frozen spec-object hash, which is item 7's (section 13, note 9). [OWNER 2026-10-19,
+   Levadura C3]
 5. **Slot-2 custody choice** (A9.6; section 8): token or non-AWS HSM, recorded dated in this profile, with the
    throughput measurement and the HSM monoculture check (RB §1). **Expanded (r2-F17):** for the hybrid, the final
    custody implementation must have completed the deployed-slot pass-condition evidence by **21 Oct**; a choice
    deferred to before 30 Oct is allowed only among implementations that already met that deadline, otherwise the
-   registered fallback is taken (A9.6 "Deadline").
+   registered fallback is taken (A9.6 "Deadline"). **Closed 2026-10-19:** the dated record is in section 8
+   ("Slot-2 custody record"): GCP Cloud KMS HSM P-256 through the policy signer, chosen 2026-10-13, evidence complete
+   2026-10-14; monoculture check done (AWS KMS HSM, Amazon, CMVP #4884, versus Google Cloud HSM, Marvell: no shared
+   vendor at module level; sub-module components not public). Not a freeze item: the VPC Service Controls perimeter
+   (runbook §1). [OWNER 2026-10-19]
 6. **Repository-root algorithm** (G25). Confirm that the deployed repository root (YubiKey 2) is P-256; otherwise
    list its algorithm and add it to the dependency manifest.
 7. **Freeze assembly** (G13). Build the spec object, the vectors object and the catalog; record their hashes.
    **Expanded (r2-F13, r2-F14, r2-F17):** the exact tracked part inventory from a named freeze commit (section
    15.8), an assembler plus an independent byte-agreement check, the external catalog, the authored bytes and
    hashes of the purpose preamble and of the dependency manifest, and A9's archival distribution (as a spec part,
-   section 15.8). Actual spec/vector/catalog hashes go in a separate release/freeze record **outside** the frozen
-   spec parts. The freeze record also names the A9 signing commit and the freeze commit of every source, and
-   refreshes every `A9:nnn` locator against them (section 0).
+   section 15.8), plus the signed A10 bytes and the current repaired `formal/p8/PROOF.md` as spec parts (section
+   15.8; [OWNER 2026-10-19, PR-08]). Actual spec/vector/catalog hashes go in a separate release/freeze record
+   **outside** the frozen spec parts. The freeze record also names the A9 signing commit and the freeze commit of every source, and
+   refreshes every `A9:nnn` locator against them (section 0). **Added [OWNER 2026-10-19]:** the freeze record
+   enters the frozen spec-object hash into the branch-registration record (A9.6's "naming the exact ENCODING-V1 and
+   specification hashes"; section 13, note 9), and names the frozen ENCODING-V1 hash beside the registration
+   record's post-§5.2 hash `fe537b1f…efd0`, with ENC's 2026-10-19 change accounting (section 13, note 11).
 8. **Conformance vectors** (RES §L, cases L-01 to L-111), including A9.5's git cases, before the freeze.
    **Amended (r2-F16):** L-27 and L-28 are withdrawn and replaced by RES's amended positive controls (T_git >
    declared and T_git > receipt T with `h_git + 5 < h_receipt` → pass); the obsolete `GIT_ASSERTION_AFTER_ISSUE`
@@ -1198,7 +1465,9 @@ finish line.
    multiple-failure stable-six-field cases across and within stages, including possession, DNS and git (F11);
    unknown spec plus independently bad signed-object bytes, unknown spec plus unmatched dependency bytes (F12);
    KSK-2017 policy-start boundary (F15).
-9. **ENCODING-V1 and PROOF wording edits** named in G01 (E§8 "codec-level"), G02 (E§7.1 CORRECT), G18 (E§3.2),
+9. **Done 2026-10-19** [OWNER 2026-10-19]: every edit below is made, tagged in place, with ENC's CHANGELOG entry as
+   the G37 change accounting (wording only; no codec, vector or lemma change); disposition in
+   `docs/reviews/levadura-contradictions/DISPOSITION.md`. Original item: **ENCODING-V1 and PROOF wording edits** named in G01 (E§8 "codec-level"), G02 (E§7.1 CORRECT), G18 (E§3.2),
    G28 (E§5.2) and G38 (E:147-148, D-1, PROOF §6), with the change accounting G37 requires. **Expanded (r2-14.2,
    r2-contra):** E §7.1's exact selection sentence ("earliest") changed to A9 C5's lowest block height, not only its
    publication/pre-commitment explanation; E §7.2's "commit adds blob" replaced by "whose tree contains the
@@ -1294,7 +1563,9 @@ OWNER CHOICE (supported-path limit). python-opentimestamps 0.4.5 is the referenc
   output count ≥ 1, outputs (8 + compact-size length + script), locktime (4); no SegWit marker; compact sizes
   shortest form; (2) m is 32 bytes and some output script is exactly `6a 20 ‖ m`; (3) `hex(reverse(SHA256d(P)))`
   equals `receipt_anchor.txid`. Otherwise `INVALID / ANCHOR_TXID_MISMATCH`. Any one path to the selected height may
-  satisfy this. (All 344 Bitcoin paths in the repository's 127 proofs have this shape, RES G20.)
+  satisfy this. (All 344 Bitcoin paths in the repository's 127 proofs had this shape when RES G20 was written; the
+later owner check of 2026-10-14 under part (4) below counts 352 paths in 129 proofs, all conforming. Evidence, not a
+rule. [OWNER 2026-10-19, Levadura contested 6])
 - **CompactSize and transaction fields** [OWNER 2026-10-14, r2-F09]. A first byte < 253 is the value; `fd` then u16le,
   `fe` then u32le, `ff` then u64le; shortest form only; a length or count exceeding the remaining bytes is rejected
   before allocation. Version, value and locktime are parsed as their fixed-width bytes (4, 8, 4) and not
@@ -1454,7 +1725,21 @@ KSK entry (strings unless marked):
 A closed JCS object, exactly `{"entries":[…],"format":"tessera-v1-deps/1"}`; `entries` sorted by `id`, unique. Each
 entry has all of: `id` (`[a-z0-9-]+`), `title`, `edition`, `sections` (nonempty array of strings), `errata`,
 `digest_sha256` (64 lowercase hex, or null where no canonical bytes exist), `retrieval`, `redistribution`,
-`failure_consequence`; strings unless marked. The entry list is section 9's.
+`failure_consequence`; strings unless marked. The entry list is section 9's, one entry per document (section 9 lists
+concepts and several RFCs per line; the correspondence is in `formal/dependency-sources/MANIFEST.md`).
+
+**Multi-file sources** [OWNER 2026-10-19, item 15; source formal/dependency-sources/MANIFEST.md]: where the canonical bytes are several files (Bitcoin Core source, git, SHA-1DC),
+`digest_sha256` is the sha256 of a `SHA256SUMS` listing (`sha256sum` format, `<hex>  <relative path>` per file, one
+line per file), which is kept beside the files. Where only an HTML and a PDF form exist (ECMA-262), the digest is of
+the PDF and the HTML digest is in `retrieval`. `digest_sha256` is null when exact source bytes were not obtained,
+with that limitation and its reason stated in `retrieval` (IEEE 754: not fetched). Redistribution restrictions alone
+do not require a null digest. [OWNER 2026-10-19, PR-10] *(Was: "A source with no redistributable bytes (IEEE 754)
+has `digest_sha256` null.")*
+
+**Normative, informative, distributed** [OWNER 2026-10-19, item 15; source formal/dependency-sources/MANIFEST.md]: the format has no separate field. The manifest as built marks
+informative entries in free text (the word "informative" in `errata` or `sections`; RFC 9102, RFC 5480, BIP 144),
+and `redistribution` states whether the source is distributed with the verifier, archived with the spec sources, or
+retrieved by reference. Entries not so marked are normative. Only SHA-1DC is distributed with the verifier.
 
 ### 15.7 Total check order for the reported reason [OWNER 2026-10-14, G31, G26; r2-F11]
 
@@ -1581,6 +1866,13 @@ differ.
 - **A9 is a part (owner choice).** The spec object also carries the governing A9 bytes
   (`docs/phase-0-prereg-amendment-9.md` at its signing commit) as a part, so the object is the complete archival
   spec; this was chosen over distributing A9 separately with a bound digest.
+- **A10 and the current proof are parts** [OWNER 2026-10-19, PR-08]. The spec object also carries, as parts, the
+  signed A10 bytes (`docs/phase-0-prereg-amendment-10.md`, signed by the author's commit `9ade764`; this includes
+  A10.4.2's required custody-procedure contents) and the current repaired `formal/p8/PROOF.md`, each taken at the
+  freeze commit, whose A9 and A10 bytes must equal those at their signing commits. The "complete archival spec"
+  sentence above holds only with these parts. HYBRID-SUPPLEMENT §9's table records the older baseline proof hash
+  (`06910a5f…`); the current proof's SHA-256 is recorded in the freeze record, beside that baseline, outside every
+  included part.
 - **Hashes live outside.** Actual spec, vectors and catalog hashes are recorded in a separate release/freeze record
   **outside** the frozen spec parts; recording them inside an included file would be self-reference.
 - The part format is a new packaging choice, not an inherited P8 construction or a proven archival format. Once
@@ -1588,3 +1880,139 @@ differ.
   *(Dated correction 2026-10-14: "repository-relative UTF-8 without spaces" admitted LF, CR, tab, absolute and
   dot paths and duplicates; "every file under formal/p8/vectors/" did not select tracked regular files; "the
   non-P8 conformance vectors (RES §L)" named cases, not files.)*
+
+### 15.9 Release format [OWNER 2026-10-19, §14.2 item 2]
+
+Source: `docs/V1-FREEZE-OPEN.md` §3 (proposal R1–R6) as adjusted by its "Owner decisions" (2026-10-19); A10.4.2
+(rows 34 and 36); the custody draft `docs/V1-RELEASE-KEY-CUSTODY-DRAFT.md` §2–§3. **Frozen at the 30 Oct freeze:** the
+envelope below (archive, release manifest, signature, TEST/production rules, bootstrap rule). **Not frozen:** the
+verifier's code bytes and its inventory, which each release binds (owner decision 1), and the production key,
+ceremony, bootstrap record and rehearsal, which come after the freeze and before the first public verifier release
+(A10.4.2). None of this is a bundle-verifier rule.
+
+**R1. A release is one archive.**
+- One file, `tessera-verifier-v1-<n>.parts` (production) or `tessera-verifier-v1-TEST-<n>.parts` (TEST); `<n>` is the
+  canonical decimal release number.
+- Its bytes are the section 15.8 part format (header grammar, sorted paths). Every part except `RELEASE.json` is
+  copied from the named **source commit** (verbatim tracked regular-file blob bytes). `RELEASE.json` is generated
+  deterministically from those bytes and the declared release metadata; `source_commit` identifies their source
+  commit. The independent assembler reproduces the complete archive, including that generated manifest, and it is
+  compared by hash [OWNER 2026-10-19, PR-02] *(Was: "verbatim tracked regular-file blob bytes at one named source
+  commit. Nothing is generated during assembly; the archive is rebuilt from the source commit and compared by
+  hash", which required `RELEASE.json`, a tracked file, to name the commit containing it)* (the section 15.8 assembler and independent byte-agreement check), which is the input the
+  custody procedure's review-and-build step (A10.4.2 C01) needs.
+- Required parts: `RELEASE.json` (R2); `trust.json`, the exact section 15.5 bytes; `catalog.json`, the exact frozen
+  catalog bytes; `release_constants.py` (R2); the dependency lock (R6); the vendored SHA-1DC source with
+  `SHA1DC-PIN.md`; `install.sh`; the relying-party text; the verifier code. No other part carries authority.
+- The archive is unpacked only after R3 succeeds. Scripts run as `bash install.sh`, so no file mode is needed.
+  *(The custody draft's `.tar` is replaced: the part format has one byte string per file set.)*
+
+**R2. The release manifest and how the trust configuration and catalog bind.**
+- `RELEASE.json` is one closed JCS object with exactly these keys: `format` (`"tessera-v1-release/1"`), `namespace`
+  (`"PRODUCTION"` or `"TEST"`), `release` (= `<n>`), `profile` (`"tessera-v1-strict"`), `source_commit` (40 lowercase
+  hex), `trust_config_sha256`, `trust_config_version`, `catalog_sha256`, `freeze_record_sha256`, `parts` (an object
+  mapping every other part's path to the 64-lowercase-hex SHA-256 of its bytes, exactly the archive's other paths),
+  and `release_key_successor` (40 uppercase hex v4 fingerprint, or null). All values are strings except `parts` (an
+  object of strings) and a null successor. `parts` is how a release binds its verifier code (owner decision 1).
+- **Binding equalities**, checked before signing and again by `install.sh`; any failure means no installation:
+  every `parts` entry equals the hash of that part and the path sets are equal; SHA-256(`trust.json`) =
+  `trust_config_sha256` = `release_constants.TRUST_SHA256`; SHA-256(`catalog.json`) = `catalog_sha256` =
+  `release_constants.CATALOG_SHA256`, and `release_constants.CATALOG_BYTES` equals `catalog.json`; the `version`
+  inside `trust.json` = `trust_config_version`; `release_constants.NAMESPACE` = `namespace`. Under `PRODUCTION`,
+  `catalog_sha256` equals the catalog hash in the freeze record whose SHA-256 is `freeze_record_sha256`.
+- Run time is unchanged: a `--trust` file whose hash is not `TRUST_SHA256`, or that fails section 15.5, is
+  `TRUST_CONFIG_UNAUTHENTICATED`, no verdict. Each new release's `trust.json` passes the release checker (section 5
+  release invariants, EA-12) against the previous release's.
+- **No machine-specific facts in the signed archive.** `release_constants.py` holds only `NAMESPACE`,
+  `TRUST_SHA256`, `CATALOG_SHA256`, `CATALOG_BYTES` and `UNICODE_VERSION` (`"16.0.0"`), all independent of the build
+  machine. Facts about one installation (the interpreter's `unicodedata` file hash, whether SHA-1DC built) are
+  written by `install.sh` into a per-installation record `install.json`, outside the archive and unsigned; the
+  verifier checks them at start (Python 3.14, Unicode 16.0.0, SHA-1DC present, else the existing startup refusals)
+  and reports the SHA-256 of `install.json` as a diagnostic. `install.json` carries no authority. *(Closes the
+  triage's departure: `build_release.py` wrote `UNICODE_MODULE_SHA256` and `SHA1DC_AVAILABLE` from the build
+  machine into the release.)*
+
+**R3. The release signature.**
+- A **detached, binary (unarmored) OpenPGP v4 signature of type 0x00** over the exact archive bytes, file
+  `<archive>.sig`, ECDSA P-256 with SHA-256, satisfying rule O's grammar and policy (section 8). The signing session
+  checks it against rule O before it leaves the session.
+- The release key is **one v4 ECDSA P-256 primary key with no subkeys**, identified by its full v4 fingerprint. A
+  signature by any other key, or by a subkey, authenticates nothing.
+- The signature covers the whole archive, code included. The key never signs a hash written as text.
+- **Acceptance.** Accept only if a trusted acquisition-side checker first validates exactly one unarmored
+  signature against rule O's grammar and section 8 policy, confirms the authenticated primary-key identity (the
+  currently authenticated production key under R5: the bootstrapped key or an authenticated successor), and the
+  pinned `gpgv` verifies the exact archive bytes with a keyring holding **only** that key. Installation then
+  requires R2's equalities. The checker must be available before executing the acquired archive. [OWNER
+  2026-10-19, PR-04, PR-05] *(Was: "Accept iff the pinned `gpgv` exits 0 on `<archive>.sig <archive>` with a keyring
+  holding only the production key whose full fingerprint was obtained by R5"; `gpgv` also exits 0 on a
+  new-format-header signature, on two concatenated signatures and on armored signatures, which rule O rejects.)*
+  The manifest entry `gpgv` pins the upstream GnuPG 2.4.4 source (digest of the tarball) [OWNER 2026-10-19, item 15; source formal/dependency-sources/MANIFEST.md]. It does not certify
+  distribution builds (the owner machine's Ubuntu `2.4.4-2ubuntu17.6` is patched; its bytes differ). A distribution
+  build is acceptable only if it reproduces the upstream behaviour (exit status) on the release-format test vectors.
+  The 2.4.4 pin is **provisional**: it is the version observed, R3/R6 have not yet fixed the `gpgv` version, and
+  it remains an owner choice before the freeze. [OWNER 2026-10-19, PR-12] *(Was: "The version is the one observed;
+  R3/R6 have not yet fixed it, so it remains an owner choice", beside an unqualified pin.)*
+- **TEST releases use this same format** with a TEST key over the whole TEST archive, code included. The
+  `tessera-v1-test-release/1` record (two hashes, raw r‖s, SPKI-hash signer) is withdrawn as a release: it did not
+  cover the verifier code. It survives only as the section 3.5 instrument interface for the conformance and
+  differential harnesses, which is never a release and which an installed verifier refuses (R4). *(Closes the
+  triage's departure on TEST signature coverage.)*
+
+**R4. Production is the default; TEST is explicit.**
+- Every release before the first public verifier release is a **TEST release**: `namespace` `"TEST"`, a `TEST` file
+  name, signed by a TEST release key in the R3 format. TEST keys are throwaway v4 P-256 keys and may live on the
+  operational computer. A TEST public key is never published as the release key, never named in the freeze record,
+  the bootstrap record or relying-party text, and never named in any `release_key_successor` (A10 row 36).
+- The production key signs only `"PRODUCTION"`; a TEST key signs only `"TEST"`. The signing session checks this.
+- **Production refusal is by key, not by label.** A TEST signature fails R3 because the production keyring holds only
+  the production key. The label prevents honest mistakes; it is not a security check.
+- **Mode comes from the installed archive, never from the command line.** There is no `--production` flag. An
+  installed verifier whose `NAMESPACE` is not exactly `"TEST"` is a production verifier: it refuses
+  `--test-release`, `--test-release-key` and every `TESSERA_V1_TEST_*` variable with `TEST_AUTHORITY_REFUSED` and
+  no verdict, whatever else the command line or environment says. Omitting a flag can therefore never select TEST.
+- **The explicit TEST provisioning path** is one of: (a) an installed TEST archive (`NAMESPACE = "TEST"`),
+  acquired by R3 against a TEST keyring the operator names explicitly; or (b) the section 3.5 instrument interface,
+  usable only from a source checkout with no installed release, where the TEST release, TEST key and catalog must
+  all be supplied; with none supplied it refuses (`TRUST_CONFIG_UNAUTHENTICATED`). *(Closes the triage's departure:
+  production mode was a CLI flag, so an invocation without it accepted TEST provisioning.)*
+- **Rehearsal (A10 row 36), before the first public verifier release:** an otherwise correct archive signed only by
+  a TEST key is refused by the R3/R5 acquisition procedure, including when the TEST public key is offered as the
+  key; and an installed production verifier refuses the section 3.5 interface.
+
+**R5. Out-of-band authentication of the production key** (owner decision 2).
+- The relying party's root of trust is the production key's **full v4 fingerprint**, obtained before and apart from
+  any release. A key or fingerprint that arrives with a release, on the same page as a release, or from the
+  operational computer (the NUC), this repository, DNS or the issuing AWS account authenticates nothing, except a
+  successor fingerprint named by a conforming release verified under the currently authenticated key (Rotation,
+  below). [OWNER 2026-10-19, PR-05]
+- **Frozen rule:** the fingerprint is published through **at least two channels independent of the operational
+  environment**, named in the custody record before the first public verifier release (A10.4.2). The channels are
+  the author's to name. *(Owner recommendation for then, not frozen: a Zenodo record under the author's ORCID plus
+  one offline printed copy.)* A relying party who did not obtain the fingerprint this way relies on authenticated
+  first acquisition as an assumption, which the relying-party text states (A10.4.2: "does not protect a user who …
+  acquires a substituted initial key").
+- The fingerprint is recorded in the dated **first-production-release bootstrap record**, which names the freeze
+  record by hash and the production key, and is published and OpenTimestamps-stamped. Publication and stamping give
+  a dated public record; they are not authentication. The freeze record does not contain the fingerprint.
+- **Initial bootstrap and rotation** [OWNER 2026-10-19, PR-05]. Initial bootstrap authenticates the first
+  production key. A successor is authenticated by a conforming release verified under the currently authenticated
+  key and naming the successor fingerprint in `release_key_successor`; subsequently acquired successor key material
+  must match that fingerprint. The next release is signed by the successor.
+- **Loss or compromise.** V1 has no assured recovery. New releases stop. Loss recovery starts a separately
+  authenticated release lineage, with new out-of-band publication under this rule and a new dated bootstrap record,
+  and does not establish continuity with the old lineage. Genuine old releases stay available. [OWNER 2026-10-19,
+  PR-05] *(Was: "a replacement key needs new out-of-band publication under this rule and a new dated bootstrap
+  record", which read as a second way to introduce a key in the same lineage.)*
+
+**R6. Dependency pinning.**
+- The archive carries a lock with exact versions **and SHA-256 hashes** for every Python package, installed with
+  hash checking required; wheels are retrieved at install time, not distributed.
+- Python 3.14 with Unicode 16.0.0 tables is checked at install and at start; SHA-1DC is built from the vendored,
+  digest-checked source.
+- The relying party's `gpgv` version and the OpenPGP standard it implements are dependency-manifest entries
+  (section 9; section 14.2 item 15). Verification is offline after installation; installation is not.
+
+**Instrument work this implies (not frozen text):** the e2e `release` stage moves its TEST releases to R1–R3 with a
+TEST key; `verify.py` drops `--production` and takes its mode from `release_constants.NAMESPACE`; `build_release.py`
+stops writing machine facts; `install.sh` writes `install.json`; the rehearsal's acquisition half is new. Added [OWNER 2026-10-19, PR-02, PR-04, PR-05, PR-08]: the assembler generates `RELEASE.json` from the source-commit parts (R1); the acquisition-side rule-O checker and successor-lineage handling (R3, R5) are new; `prototype/e2e/freeze.py`'s TEST `SPEC_PATHS` does not yet carry A10 or `formal/p8/PROOF.md` (section 15.8).
