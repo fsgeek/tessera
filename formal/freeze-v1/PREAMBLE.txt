@@ -1,0 +1,23 @@
+Tessera V1 receipt (tessera-v1-strict).
+
+Check without Tessera using an authenticated verifier release and its trust file.
+VALID_STRICT means all required checks passed.
+Claims depend on registered assumptions about cryptography, key use and Bitcoin history.
+Two keys signed bytes that bind the content.
+A DNS record, authenticated by DNSSEC signatures, and a signed git commit named these keys for wamason.com.
+
+One controller holds both keys.
+Control of the issuing AWS account lets an attacker use both.
+An attacker controlling both authority records can issue passing receipts without the original service.
+V1 guarantees no detection or public exposure of capture.
+
+The content and signatures existed before the selected Bitcoin block was mined.
+Its header time T is not a UTC upper bound.
+The separate UTC bound assumes unchecked A-UTC and never changes the verdict.
+
+V1 checks no sender identity, content meaning or truth, signatures inside content, revocation, or past key or algorithm safety.
+The same content can have more than one valid receipt.
+It gives no lower time bound or priority.
+It does not show that a replay suits your transaction.
+
+See the specification, vectors and standards list.

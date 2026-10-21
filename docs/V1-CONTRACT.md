@@ -81,6 +81,12 @@ The method needs every guarantee checked twice: once by a formal model or inspec
 implementation. When the two disagree, we fix the contract, the model or the code. This is a first mapping, not
 yet checked case by case.
 
+**These are mappings, not pairs.** A pair, in the method's sense, runs the same scenario on both sides, so that a
+disagreement means something. Here the model side and the test side were written separately, for different
+scenarios, and none of the rows below runs one scenario through both. The tupay project's M1 found the same gap in
+its own workflow ("the pairs were not pairs", `../tupay/experiments/M1-result.md`). Making real pairs (shared
+scenarios, and a `derives: G…` tag on each case and model element) is post-freeze work. (Owner, 2026-10-21.)
+
 | # | Model side | Test side (`prototype/conformance/cases-index.json` groups) |
 |---|---|---|
 | G1 | P1, P8 (prose proof and vectors) | container, codec, field grammar, numbers, spec binding, receipt consistency, OTS |
