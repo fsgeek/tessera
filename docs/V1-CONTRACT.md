@@ -32,8 +32,8 @@ When those hold, a checker who has the receipt, the published verifier and its t
 | G8 | **No Tessera needed.** The verdict depends only on the inputs above. | C6 |
 | G9 | **A typed verdict.** Once the trust configuration is authenticated, the verifier returns `VALID_STRICT`, `INVALID` or `UNVERIFIABLE`, with a reason code and `revocation: NOT_EVALUATED`, `historical_security: NOT_EVALUATED`, `standing: ABSENT/NOT_ISSUED_IN_PROFILE`. Missing required evidence prevents acceptance. A valid receipt still leaves everything in §3 unestablished. If the trust configuration is not authenticated, there is no receipt verdict. | C7; A9.5 trust-configuration authority; V1-PROFILE §5 (`TRUST_CONFIG_UNAUTHENTICATED`) |
 | G10 | **Honest receipts cannot be moved.** If an attacker takes over the DNS and git authority records while the service's own keys stay secret and unmisused, it cannot move honestly signed frames to other keys or bytes, or change their signer sets, whether they were signed before or after the takeover. | A10.4 |
-**No G11.** The service-key listing (A10.4.1) was cut from V1 on 2026-10-19 under A10 row 33
-(`docs/decisions/2026-10-19-listing-cut.md`). G10 holds while the independent release boundary of A9.5 holds.
+**No G11.** The service-key listing (A10.4.1) is not in V1, by the author's ruling of 2026-10-23 (E9 row 2,
+`docs/reviews/e9-packet/AUTHOR-RULINGS.md`; `docs/decisions/2026-10-19-listing-cut.md`). G10 holds while the independent release boundary of A9.5 holds.
 **New receipts under an attacker's own keys pass when both authority channels are captured.**
 
 ## 3. Not guaranteed

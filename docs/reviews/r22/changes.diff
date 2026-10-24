@@ -1,0 +1,64 @@
+diff --git a/docs/V1-RELYING-PARTY.md b/docs/V1-RELYING-PARTY.md
+index c28d426..bb2a00a 100644
+--- a/docs/V1-RELYING-PARTY.md
++++ b/docs/V1-RELYING-PARTY.md
+@@ -1,6 +1,6 @@
+ # Using a Tessera V1 receipt: a guide for users
+ 
+-> **OWNER DRAFT 2026-10-19, revised after Codex review (docs/reviews/exit-pages/).** (Claude Opus 5.5, owner instance.) The E12 page of the
++> **OWNER DRAFT 2026-10-19, revised after Codex review (docs/reviews/exit-pages/); row 22 repairs 1–4 and the bootstrap caveat applied 2026-10-23 (docs/reviews/e9-packet/AUTHOR-RULINGS.md).** (Claude Opus 5.5, owner instance.) The E12 page of the
+ > 30 Oct exit (A9.2, `docs/phase-0-prereg-amendment-9.md:208`; registered by
+ > `docs/phase-0-prereg-amendment-3.md:89-95`). It is based on `docs/V1-CONTRACT.md` (owner draft). It is written in
+ > the plain style of `docs/plain/STE-STYLE.md`. It adds no rule. If it differs from A9, A10, the V1 profile or the
+@@ -28,9 +28,11 @@ are the ruling's words.
+ A receipt is the set of files that the service gives back for one content. The service is the Tessera V1
+ program that makes receipts. A verifier is the program that checks a receipt.
+ 
+-Some technical names appear in this guide. A key is a secret number that makes signatures. A signature is data that
+-only the holder of a key can make. Anyone can check a signature with the public part of the key. SHA-256 is a hash:
+-it turns any bytes into a short code. A change of one bit in the bytes changes the code.
++Some technical names appear in this guide. A key is a secret number that makes signatures. A signature is data made
++with a key. Under the registered cryptographic assumptions, making a valid signature requires access to the key's
++signing capability. Anyone can check a signature with the public part of the key. SHA-256 is a hash:
++it turns any bytes into a short code. V1 assumes that nobody can find two different inputs with the same code; the
++checks below depend on that assumption [R2].
+ 
+ DNS is the internet's name system. DNSSEC adds signatures to DNS records. Git is a system that saves versions of
+ files. A git commit is one saved version. Bitcoin is a public chain of blocks, and each block states a time.
+@@ -40,9 +42,14 @@ the content and the receipt's common information.
+ If the verifier says VALID, these statements are true, under the conditions in "Conditions that V1 does not
+ check" below [R2]. Statements 2, 3 and 4 also need the authority-record condition in that section [R2a]:
+ 
+-1. The receipt fixes these exact content bytes. A change of one bit makes the check fail [R3].
++1. The receipt fixes these exact content bytes. Under the registered cryptographic assumptions, a change of one bit
++   makes the check fail [R3].
+ 2. Someone gave these bytes to the Tessera V1 service on some occasion [R3].
+-3. Both service keys signed them. A missing or changed signature makes the check fail [R3].
++3. Both service keys signed frames that fix these bytes. The keys do not sign the raw content directly. A missing or
++   changed receipt signature makes the check fail. The receipt signatures are the two that the receipt's anchor
++   (`A_sig`) fixes. A possession signature is different: it proves possession of a signing key over the manifest (the key list
++   and its metadata). Another policy-conforming valid signature by the same key over the exact same manifest can
++   replace it without changing the verdict [R3].
+ 4. Two authority records named the two keys for `wamason.com`. One record is in DNS. The other is in a signed git
+    commit that Bitcoin recorded at least 6 blocks before the receipt [R4].
+ 5. The bytes and both signatures existed before a specific Bitcoin block. The verifier reports that block's
+@@ -109,7 +116,9 @@ are VALID. V1 gives no protection against this [R15].
+ ## Before you check a receipt
+ 
+ 1. Get the verifier release from its publisher.
+-2. Check the release signature with an independently authenticated production release key [R16][R17].
++2. Check the release signature with an independently authenticated production release key [R16][R17]. **This step
++   is not usable yet.** The production release key and the channels that publish its fingerprint are not yet fixed
++   (see "Open items in this draft" below). Until they are, no release is for a real decision.
+ 3. Reject TEST keys. A release that is marked TEST is never for a real decision [R17].
+ 4. Do not trust a key that came with the release. A substituted release brings its own key [R17].
+ 5. Get all files of the receipt from the holder. The holder is the person who keeps a receipt.
+@@ -123,7 +132,7 @@ The verifier gives one of three verdicts, with a reason code [R19]:
+ |---|---|---|
+ | VALID (`VALID_STRICT`) | All V1 checks passed. | Rely only on the statements in "What a VALID V1 receipt tells you". |
+ | INVALID | A check failed. | Reject the receipt. INVALID does not show that the content is false. |
+-| CANNOT VERIFY (`UNVERIFIABLE`) | The verifier does not have what it needs, or the receipt is outside V1. | Reject the receipt. If files are missing, ask the holder for them. |
++| CANNOT VERIFY (`UNVERIFIABLE`) | The verifier does not have what it needs, or the receipt is outside V1. | Do not rely on it as a verified V1 receipt. CANNOT VERIFY does not show fraud, and it does not show that the content is false. If files are missing, ask the holder for them. |
+ 
+ Three special rules apply [R20]:
+ 

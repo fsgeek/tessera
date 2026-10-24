@@ -460,3 +460,30 @@ Dependency manifest: blob `ac5900fb650181084216a88fd2c4d7b99d3d918f` of `formal/
 | `prototype/conformance/run.py` | `1cb69d7e52128159c99eec31c1c4e9d5ed41ef5d` | 8972 |
 | `prototype/conformance/tcrypto.py` | `a8500b0d73fe61f9fcca3e6354f3bf7c53f49a5c` | 10779 |
 | `prototype/conformance/universe.py` | `a725aa0595146fe490c27573b2264d8b3ad34934` | 28790 |
+
+---
+
+## Reassembled 2026-10-21 at `9834e90` (owner) — supersedes the hashes above
+
+The 481d54a assembly used a draft preamble that overclaimed (it said the bytes "were presented to the Tessera V1
+service", false under capture of both authority channels). The preamble is now the owner text
+`formal/freeze-v1/PREAMBLE.txt`, revised after Codex review (`docs/reviews/preamble/`). Reassembled from a clean
+worktree of `9834e90`, twice, byte-identical; `assemble.py --check`: agreement OK.
+
+| Object | Bytes | SHA-256 |
+|---|---|---|
+| spec.bin | 469354 | `3b2ba1ada8baa6ab6735d6d308a2f5faaa21a1bd066c40f75b5d505e43a1a0d9` (unchanged) |
+| vectors.bin | 3123748 | `19ac772a155daf3808727587407a09410572e8291235524b8c36a1ac870bdf3f` (unchanged) |
+| preamble.bin | 1205 | `1eebd4a8c2ac405117ba5c4951f053c92459952194a760993dafea1c8959468f` |
+| dependency-manifest.json | 41181 | `20020475a8ef852fbd3d9331b370a3161e925a44cddf83c8f51d26be2ac9e063` (unchanged) |
+| catalog.json | 662 | `b0d02173a39a68e5cf44d0c25c03894cb066486407aa8fffa5f7684851e031b7` |
+
+**Dry run against this freeze:** `driver.py init --mode dry --freeze-dir ../formal/freeze-v1` then `run`: the
+freeze stage records commit `9834e90` and catalog `b0d02173…`; verdict `VALID_STRICT / OK` with `utc_assessment`.
+*Correction:* the owner's first attempt passed `--freeze-dir ../formal/freeze-v1/objects`. The driver found no
+`freeze-record.json` there, silently assembled a TEST freeze into that folder, and returned VALID_STRICT over the
+TEST catalog (`8e37e69a…`). The strays were removed by exact path. Check (d) in the 481d54a assembly above should be
+read with the same caution: its report does not state which directory it passed. The driver should refuse a
+`--freeze-dir` without a record instead of assembling into it (fixed 2026-10-21: `driver.py` now refuses it; checked).
+
+**Still to fix before the record is signed:** the A9 line locator refresh; the record's final form for the exit commit.

@@ -616,8 +616,9 @@ signing interval.
   not verifier policy; no verifier check concerns custody. It is distinct from the release-key boundary above.
   [OWNER 2026-10-14, G36] *(Was: "`OPEN (other):` whether the repository key being the public half of an offline root
   is profile policy", 2026-10-13.)*
-- **No service-key listing in V1** [OWNER 2026-10-19, `docs/decisions/2026-10-19-listing-cut.md`]. A10.4.1 is cut
-  under A10 row 33 (the second item in the cut order), together with the rows that take effect only with it (A10.7
+- **No service-key listing in V1** [AUTHOR RULING 2026-10-23, E9 row 2, `docs/reviews/e9-packet/AUTHOR-RULINGS.md`;
+  supersedes the owner's 2026-10-19 cut, which the cut order did not authorize because the exit had not slipped
+  (`docs/decisions/2026-10-19-listing-cut.md`, correction)]. The author narrowed option (e): A10.4.1 is cut, together with the rows that take effect only with it (A10.7
   rows 25–32 and 37–39). **A10.4 option (a) applies:** honest signed material stays protected under authority
   capture (A10 rows 15–16). **V1 gives no protection against new receipts under a captor's own keys when both
   authority channels are captured;** relying-party text and the freeze record say so. Accordingly the trust
@@ -1255,8 +1256,9 @@ dispatch. It is a verifier input, refused at D4 (section 3.1). [OWNER 2026-10-14
 - Exit statements M2 and M5, the E6a dispatch and precedence cases, and the E12 page are 30 Oct items. [A9:199-204]
 - After exit: vectors run against AWS, the missing-capture control, and the dead-service test. [A9:208-210]
 - Cut order if 30 Oct slips: the PQ hybrid first, then the service-key listing (A10 row 33). `A_sig`, the root-KSK
-  rule and the git stamp target are required. [A9:205-207; A10 row 33] The hybrid is registered (section 1); the
-  listing is cut (section 5, "No service-key listing in V1"). [OWNER 2026-10-19] *(Was: "the PQ hybrid first,
+  rule and the git stamp target are required. [A9:205-207; A10 row 33] The hybrid is registered (section 1). The
+  listing is not in V1 by the author's ruling of 2026-10-23, not by this cut order: the exit had not slipped
+  (section 5, "No service-key listing in V1"). [OWNER 2026-10-23] *(Was: "the PQ hybrid first,
   nothing else", which A10 row 33 replaced.)*
 
 ## 13. Reconciliation notes
@@ -1950,8 +1952,7 @@ ceremony, bootstrap record and rehearsal, which come after the freeze and before
   The manifest entry `gpgv` pins the upstream GnuPG 2.4.4 source (digest of the tarball) [OWNER 2026-10-19, item 15; source formal/dependency-sources/MANIFEST.md]. It does not certify
   distribution builds (the owner machine's Ubuntu `2.4.4-2ubuntu17.6` is patched; its bytes differ). A distribution
   build is acceptable only if it reproduces the upstream behaviour (exit status) on the release-format test vectors.
-  The 2.4.4 pin is **provisional**: it is the version observed, R3/R6 have not yet fixed the `gpgv` version, and
-  it remains an owner choice before the freeze. [OWNER 2026-10-19, PR-12] *(Was: "The version is the one observed;
+  **The pin is upstream GnuPG 2.4.4** [OWNER DECISION 2026-10-23, E9 packet E9-05]. [OWNER 2026-10-19, PR-12, superseded] *(Was: "The version is the one observed;
   R3/R6 have not yet fixed it, so it remains an owner choice", beside an unqualified pin.)*
 - **TEST releases use this same format** with a TEST key over the whole TEST archive, code included. The
   `tessera-v1-test-release/1` record (two hashes, raw r‖s, SPKI-hash signer) is withdrawn as a release: it did not
@@ -1983,7 +1984,11 @@ ceremony, bootstrap record and rehearsal, which come after the freeze and before
 **R5. Out-of-band authentication of the production key** (owner decision 2).
 - The relying party's root of trust is the production key's **full v4 fingerprint**, obtained before and apart from
   any release. A key or fingerprint that arrives with a release, on the same page as a release, or from the
-  operational computer (the NUC), this repository, DNS or the issuing AWS account authenticates nothing, except a
+  operational environment authenticates nothing. The operational environment is assessed by actual roles,
+  credentials and release authorization, not by provider names; it includes at least the operational computer
+  (the NUC), this repository, DNS, the issuing AWS account and the GCP project that holds the slot-2 key, and
+  another provider's name does not by itself establish independence [AUTHOR COMMENT 2026-10-23, E9 row 6]. Such a
+  key or fingerprint authenticates nothing, except a
   successor fingerprint named by a conforming release verified under the currently authenticated key (Rotation,
   below). [OWNER 2026-10-19, PR-05]
 - **Frozen rule:** the fingerprint is published through **at least two channels independent of the operational

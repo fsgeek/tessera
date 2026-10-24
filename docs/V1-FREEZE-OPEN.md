@@ -323,7 +323,9 @@ install-time checks.
    `prototype/indep-verifier/`; it must then earn its own evidence (E10 vectors against it, the P9 code inspection,
    A9:214) on its own bytes. Instrument results never count for it.
 2. **The production release-key fingerprint channel.** The freeze fixes the rule only: the fingerprint is published
-   through at least two channels independent of the operational environment (the NUC, this repository, DNS, AWS),
+   through at least two channels independent of the operational environment (assessed by actual roles, credentials
+   and release authorization; it includes at least the NUC, this repository, DNS, AWS and the GCP slot-2 project;
+   author comment, E9 row 6, 2026-10-23),
    named in the custody record before the first public verifier release (A10.4.2). The channels are the author's to
    name. Owner recommendation for then: a Zenodo record under the author's ORCID, plus one offline printed copy.
 

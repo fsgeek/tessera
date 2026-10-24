@@ -132,7 +132,11 @@ class Run:
 # ------------------------------------------------------------------------------------------------ stages
 def st_freeze(r):
     d = r.cfg.get("freeze_dir")
-    if not d or not Path(d, "freeze-record.json").exists():
+    if d and not Path(d, "freeze-record.json").exists():
+        # A named freeze dir without a record used to be assembled into silently (2026-10-21: a TEST freeze landed
+        # inside formal/freeze-v1/objects and the run looked like a check of the real freeze). Refuse instead.
+        raise IssueRefused(f"--freeze-dir {d} has no freeze-record.json; pass the freeze directory, not its objects/")
+    if not d:
         d = str(freeze.assemble(r.cfg.get("freeze_commit", "HEAD"), d))
     freeze.check_agreement(d)
     rec = read_json(Path(d, "freeze-record.json"))
