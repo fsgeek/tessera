@@ -1,4 +1,4 @@
-tessera-v1-part docs/V1-PROFILE.md 187874
+tessera-v1-part docs/V1-PROFILE.md 188554
 # V1 profile: `tessera-v1-strict`
 
 > **STATUS: DRAFT, 2026-10-13. Not registered.** Author: owner instance (Claude). This is the E16 extract for V1
@@ -54,10 +54,10 @@ Every requirement ends with a tag `[source:line]`. Sources:
 | RES | `docs/reviews/spec-sufficiency/RESOLUTIONS-DRAFT.md` (owner-disposed 2026-10-14; rationale and conformance list §L) |
 
 **Locators** [OWNER 2026-10-14, r2-F17]. A9 section identifiers (A9.1 … A9.8) and stable rule names ("Root-KSK
-rule", "Trust-configuration authority", "Git stamp target", C4, …) govern. Many `A9:nnn` line numbers in this
-document were taken from an earlier A9 layout and are now approximate locators only (example: section 8's fallback
-bullet cited A9:338-340, which in the reviewed snapshot is A9.5 trust-configuration authority; the rule it means is
-A9.6 "Signers"). Where a line number and a section or rule name disagree, the section and rule name govern. Every
+rule", "Trust-configuration authority", "Git stamp target", C4, …) govern. The `A9:nnn` and `A10:nnn` line numbers
+in this document were refreshed on 2026-10-24 against the signed texts (A9 at `2ad3489`, A10 at `9ade764`; table in
+`docs/reviews/freeze-record/LOCATORS.md`) [OWNER 2026-10-24, FR-01]. They were earlier taken from a draft A9 layout
+and were approximate (example: section 8's fallback bullet cited A9:338-340 for A9.6 "Signers"). Where a line number and a section or rule name disagree, the section and rule name govern. Every
 `A9:nnn` locator is refreshed against the A9 **signing commit**, which the freeze record names together with the
 freeze commit of every other source (section 14.2 item 7).
 A tag `[OWNER 2026-10-14, Gxx]` marks a rule decided by the owner's 2026-10-14 disposition of spec-sufficiency gap
@@ -65,7 +65,7 @@ Gxx (RES). Its rationale, label (CLARIFY, OWNER CHOICE (supported-path limit), B
 conformance cases are in RES under that gap. These are owner profile decisions in the sense of section 0.1, except
 where they cite A9 text the owner changed on 2026-10-14 (A9 C4, C5, C6, A9.5 trust-configuration authority).
 
-Decision labels follow A9's: AUTHOR DECISION, OWNER DECISION, RECOMMENDED (A9:12-18). Nothing binds until the
+Decision labels follow A9's: AUTHOR DECISION, OWNER DECISION, RECOMMENDED (A9:16-22). Nothing binds until the
 author signs A9 (A9:24). A label `OWNER DECISION` with an A9 tag is an A9 decision carried in. A label
 `OWNER PROFILE DECISION 2026-10-13` marks a choice made in this document, not in A9 (section 0.1).
 
@@ -85,7 +85,7 @@ Codex's classification):
 |---|---|---|
 | 1 | Pairing the repository key with D, and the mandatory signed-issuer == pinned-D gate (sections 5, 6.3) | OWNER PROFILE DECISION 2026-10-13 |
 | 2 | Fixed path `tessera-v1/key-assertion`, no framing bytes, entry modes 100644 / 40000 (section 6.3) | OWNER PROFILE DECISION 2026-10-13 |
-| 3 | KSK-2017's concrete periods (section 5). The end-of-day cutoff is **withdrawn**; the reliance-period rule itself is now in A9.5 (OWNER DECISION 2026-10-13, A9:296-303). The concrete dates and their evidence are this profile's | OWNER PROFILE DECISION 2026-10-13 (values); rule: A9.5 |
+| 3 | KSK-2017's concrete periods (section 5). The end-of-day cutoff is **withdrawn**; the reliance-period rule itself is now in A9.5 (OWNER DECISION 2026-10-13, A9:309-325). The concrete dates and their evidence are this profile's | OWNER PROFILE DECISION 2026-10-13 (values); rule: A9.5 |
 | 4 | The INVALID / UNVERIFIABLE root-case split and its reason codes, including `SNAPSHOT_NOT_ANCHORED` (section 5). The snapshot's own-anchor requirement is inherited; the split and codes are new | OWNER PROFILE DECISION 2026-10-13 |
 | 5 | The repository key described as the public half of an offline root (section 5). Source is the runbook; neither adopted as profile policy nor A9's | **Closed 2026-10-14:** an operating fact, not verifier policy [OWNER 2026-10-14, G36] |
 | 6 | The twelve-member inventory (section 2.1) and the ten-stage table (section 3.2). Extraction from ENC/SPEC, not a decision; the container encoding and any stage order or reason precedence remain open, and the table is not an execution order | **Closed 2026-10-14:** container fixed [G14, G17]; reporting order fixed [G31]; the ten-stage table stays descriptive (section 15.1, 15.7) |
@@ -97,7 +97,7 @@ marks a gap that belongs to another step or to a dated owner act. Section 14 lis
 ## 1. Profile identity
 
 - **Profile id:** `tessera-v1-strict`. It appears in the signed bytes as `common.profile` and in the DNS and git
-  record as `profile=`. [ENC §3.2:264; ENC §7:569; A9:142]
+  record as `profile=`. [ENC §3.2:264; ENC §7:569; A9:148]
 - **Spec binding:** `common.spec.id` is `tessera-v1-strict/verification-spec/1` and `common.spec.sha256` is the hash
   of the specification bytes. [ENC §3.2:265-266]
   - `common.spec.id` other than that value gives `INVALID / SPEC_ID`. The verifier compiles in a **frozen spec
@@ -136,15 +136,15 @@ marks a gap that belongs to another step or to a dated owner act. Section 14 lis
     its signing commit; a frozen edited ENCODING-V1 replaces it only with authorized change accounting.
     [OWNER 2026-10-14, G37]
 - **Encoding:** `formal/p8/ENCODING-V1.md` at the signing commit, including D-1 to D-17. If the hybrid signer
-  branch is taken, the signing-commit baseline plus the dated branch-registration supplement governs. [A9:143-144;
-  A9:321-326]
+  branch is taken, the signing-commit baseline plus the dated branch-registration supplement governs. [A9:149-150;
+  A9:395-400]
 - **Mode:** strict only. One layer. No wrappers, no renewal, no TLR, no waiver policy. `VALID_DEGRADED` is never
-  returned. [A9:155; DD:67]
-- **Claim and sub-claims:** C1 to C7 as in A9:123-140. This document does not restate them.
-- **Authority:** DNSSEC for D plus the git key assertion. Both are required (n = 2). [A9:147; DD:65]
-- **Issuance:** an operated API (API Gateway, Lambda, KMS). A receipt ships only when complete. [A9:158-159]
+  returned. [A9:161; DD:67]
+- **Claim and sub-claims:** C1 to C7 as in A9:128-146. This document does not restate them.
+- **Authority:** DNSSEC for D plus the git key assertion. Both are required (n = 2). [A9:153; DD:65]
+- **Issuance:** an operated API (API Gateway, Lambda, KMS). A receipt ships only when complete. [A9:164-165]
 - **Parameters:** δ = 72 h, ε = 24 h, k = 6, N = 3, S = 24 h. The author's signature on A9 ratifies these five.
-  [A9:217-219] The verifier owns δ, ε and k; a receipt cannot choose them. [SPEC R-5.9:1219; SPEC R-3.46:698-700]
+  [A9:223-225] The verifier owns δ, ε and k; a receipt cannot choose them. [SPEC R-5.9:1219; SPEC R-3.46:698-700]
   N and S govern the issuer only. δ, ε and k are frozen catalog constants, not trust-configuration data.
   [OWNER 2026-10-14, G12]
 - **Branch recorded: HYBRID, registered 2026-10-16 (A9.6).** Slot `kms` ML-DSA-65 (rule R), slot `gpg` OpenPGP
@@ -166,16 +166,16 @@ G17]
 |---|---|---|---|
 | 1 | Unsigned profile label (read first, for dispatch) | [ENC §8:742-743] | top-level `profile` |
 | 2 | The receipt tuple `(F_kms, S_kms, F_gpg, S_gpg)`, or `A_sig`, which encodes it | [ENC §5.3:493-497] | `a_sig` only (one tuple route) |
-| 3 | The manifest frame `F_manifest` and each key's possession signature over it | [ENC §4:362-369; A9:311-312] | `manifest`, `possession` |
+| 3 | The manifest frame `F_manifest` and each key's possession signature over it | [ENC §4:362-369; A9:364-366] | `manifest`, `possession` |
 | 4 | The two public keys, checked against the manifest fingerprints | [ENC §5.3:509] | `keys` |
 | 5 | The DNSSEC snapshot (envelope per ENC §6) and its own OTS proof | [ENC §6:536-542; DD:94] | `dns` |
-| 6 | The git key-assertion evidence: raw signed commit object, the tree objects on the path, the blob, and the OTS proof stamped on the commit id | [ENC §7.2:706-710; A9:282-284] | `git` |
+| 6 | The git key-assertion evidence: raw signed commit object, the tree objects on the path, the blob, and the OTS proof stamped on the commit id | [ENC §7.2:706-710; A9:297-299] | `git` |
 | 7 | The receipt's OTS proof and the anchor transaction id | [SPEC R-3.42:679-682] | `receipt_anchor` |
-| 8 | Bitcoin block headers needed by the proof, each of which must be in the pinned set | [A9:150; DD:99] | `headers` (one pool) |
-| 9 | The verification specification bytes (content-addressed) | [A9:152-153; ENC §3.2:281] | `spec` |
-| 10 | The conformance vector bytes (content-addressed) | [A9:152-153; ENC §3.2:281] | `vectors` |
-| 11 | The plain-language purpose preamble, bound by hash in the signed bytes | [A9:153; ENC §3.2:281] | `preamble` |
-| 12 | The dependency manifest (section 9) | [A9:153-154] | `dependency_manifest` |
+| 8 | Bitcoin block headers needed by the proof, each of which must be in the pinned set | [A9:156; DD:99] | `headers` (one pool) |
+| 9 | The verification specification bytes (content-addressed) | [A9:158-159; ENC §3.2:281] | `spec` |
+| 10 | The conformance vector bytes (content-addressed) | [A9:158-159; ENC §3.2:281] | `vectors` |
+| 11 | The plain-language purpose preamble, bound by hash in the signed bytes | [A9:159; ENC §3.2:281] | `preamble` |
+| 12 | The dependency manifest (section 9) | [A9:159-160] | `dependency_manifest` |
 | — | Observed anchor delay and issue-time policy version (R-3.46), optional diagnostics | [SPEC R-3.46:698-700] | `issuer_record` |
 
 - Members 9, 10 and 11 are bound by SHA-256 of their raw bytes, inside the signed common bytes. They are never signed
@@ -209,16 +209,16 @@ G17]
 
 ### 2.2 What the bundle never supplies
 
-The bundle never supplies the trust configuration, δ, ε, k or any verifier policy. [A9:148; SPEC R-5.9:1219]
+The bundle never supplies the trust configuration, δ, ε, k or any verifier policy. [A9:154; SPEC R-5.9:1219]
 
 ## 3. Verifier dispatch, stages and precedence
 
 ### 3.1 Dispatch
 
 1. The verifier reads the bundle's unsigned profile label first. An unrecognized label gives
-   `UNVERIFIABLE / OUT_OF_PROFILE`, and nothing else is evaluated. [ENC §8:742-743; A9:272]
-2. Out-of-profile layer structure or request gives the same result without evaluation. [DD:70; A9:272]
-   Cases c (two-layer transplant) and h (renewal wrapper) land here. [A9:173, 179]
+   `UNVERIFIABLE / OUT_OF_PROFILE`, and nothing else is evaluated. [ENC §8:742-743; A9:287]
+2. Out-of-profile layer structure or request gives the same result without evaluation. [DD:70; A9:287]
+   Cases c (two-layer transplant) and h (renewal wrapper) land here. [A9:179, 185]
 3. **Dispatch reads exactly three things**, in order, and nothing else [OWNER 2026-10-14, G17]:
    - **D1.** The bytes are not strict JSON (ENC §1.4 checks 1–5), or exceed 2^27 bytes: `UNVERIFIABLE /
      OUT_OF_PROFILE`.
@@ -246,17 +246,17 @@ table presents ENC/SPEC material; it is not a newly fixed execution order (secti
 | Stage | What V1 does | Source |
 |---|---|---|
 | (a) Parse | Decode every frame, the manifest and `A_sig` under ENC §1 to §5. Reason codes are reported in ENC's order. | [ENC §1.4:172-190; ENC §3.1:241-248; ENC §5:385-394] |
-| (b) Type | Tag must be in T and be the expected one: `TAG_UNKNOWN`, `TAG_MISMATCH`. No wrapper stage: one layer only. | [ENC §2:215-218; A9:155] |
+| (b) Type | Tag must be in T and be the expected one: `TAG_UNKNOWN`, `TAG_MISMATCH`. No wrapper stage: one layer only. | [ENC §2:215-218; A9:161] |
 | (c) Algorithm | A well-formed unknown `common.alg` gives `UNVERIFIABLE`. A malformed, missing or substituted id gives `INVALID`. | [ENC §3.2:276; SPEC V13-V15:1282-1284] |
 | (d) Key binding | Each presented key hashes to its slot's manifest fingerprint (`KEY_MISMATCH`). `manifest_sha256` equals the hash of the manifest frame. | [ENC §5.3:509; ENC §3.2:280] |
-| (e) Authority | DNS channel and git channel (section 6), the issuance window, possession proofs. | [A9:137; A9:338-340] |
+| (e) Authority | DNS channel and git channel (section 6), the issuance window, possession proofs. | [A9:143; A9:419-421] |
 | (f) Signature set | Both slots are required, from the signed manifest, never from what the bundle presents. Common bytes are byte-equal across slots. | [SPEC V28-V31:1327-1330; ENC §3.4:303-320] |
 | (g) Integrity | `SHA256(A_sig)` is the digest the OTS evidence attests. Each committed `S` verifies over its committed `F`. Any difference from the committed tuple gives `RECEIPT_ANCHOR_MISMATCH`; a bad signature gives `SIG_INVALID`. | [ENC §5.3:498-511] |
-| (h) Temporal | The three-conjunct predicate at k = 6, plus the T rule (section 7). | [A9:138; SPEC V33-V36:1342-1346; SPEC R-5.19:1352] |
-| (i) Revocation | Not evaluated. The report says so. | [A9:248-252] |
+| (h) Temporal | The three-conjunct predicate at k = 6, plus the T rule (section 7). | [A9:144; SPEC V33-V36:1342-1346; SPEC R-5.19:1352] |
+| (i) Revocation | Not evaluated. The report says so. | [A9:255-258] |
 | (j) Partition | Section 3.3. | [SPEC R-5.25:1368] |
 
-- The issuance-window check is part of stage (e) (C4). [A9:338-340; ENC §7.1:636-643]
+- The issuance-window check is part of stage (e) (C4). [A9:419-421; ENC §7.1:636-643]
 - **Reported reason.** The reported reason is the first failed check in the **total check order** of section 15.7;
   if none failed, the first unperformable check in that order. The order is a reporting order, not an execution
   order. [OWNER 2026-10-14, G31] *(Was: "`OPEN (step 8):` which reason code is reported when several different
@@ -275,8 +275,8 @@ table presents ENC/SPEC material; it is not a newly fixed execution order (secti
 
 - Order of decision: any required check failed gives `INVALID`; else any required check unperformable gives
   `UNVERIFIABLE`; else `VALID_STRICT`. There is no waiver set, so the degraded branch never applies. [SPEC
-  R-5.25:1368; A9:155]
-- `INVALID` dominates `UNVERIFIABLE`. [A9:176; SPEC R-5.26:1370; SPEC R-2.33:300] Case d3 depends on it.
+  R-5.25:1368; A9:161]
+- `INVALID` dominates `UNVERIFIABLE`. [A9:182; SPEC R-5.26:1370; SPEC R-2.33:300] Case d3 depends on it.
 - The unperformable rule applies to required checks only. [SPEC R-2.32:298]
 - A verdict is never a bare boolean. `UNVERIFIABLE` is never promoted. [SPEC R-2.34:302; SPEC R-5.38:1394]
 - No fallback, negotiation or normalization during verification. [SPEC R-5.18:1266; ENC §1.2:156-158]
@@ -295,12 +295,12 @@ table presents ENC/SPEC material; it is not a newly fixed execution order (secti
 ### 3.4 Output
 
 Every report carries these six fields, and they are the stable set that later verifiers must reproduce: the verdict,
-its reason code, T, `revocation`, `historical_security` and standing. [A9:156; A9:262-268]
+its reason code, T, `revocation`, `historical_security` and standing. [A9:162; A9:268-283]
 
-- `revocation: NOT_EVALUATED`. [A9:248-252]
+- `revocation: NOT_EVALUATED`. [A9:255-258]
 - `historical_security: NOT_EVALUATED`. The documentation names what a later examiner must supply: an authenticated
-  safe-before cutoff per algorithm and per key, compared with T and A2.1's chain-time uncertainty. [A9:253-259]
-- Standing: `ABSENT/NOT_ISSUED_IN_PROFILE`, reported separately and never folded in. [A9:166-167; SPEC R-1.16:163]
+  safe-before cutoff per algorithm and per key, compared with T and A2.1's chain-time uncertainty. [A9:259-265]
+- Standing: `ABSENT/NOT_ISSUED_IN_PROFILE`, reported separately and never folded in. [A9:172-173; SPEC R-1.16:163]
 - No aggregate checkmark. [SPEC R-5.47:1419]
 - **Report encoding.** The stable-output object is the JCS object `{"historical_security":"NOT_EVALUATED",
   "reason","revocation":"NOT_EVALUATED","standing":"ABSENT/NOT_ISSUED_IN_PROFILE","T","verdict"}`; the success
@@ -328,8 +328,8 @@ its reason code, T, `revocation`, `historical_security` and standing. [A9:156; A
 - Relying-party text must say that a T reported with `INVALID` is not evidence of a valid service receipt.
   [OWNER 2026-10-14, G32]
 - Relying-party text must say that `INVALID / ISSUANCE_WINDOW` can come from presenting a later proof, and that the
-  holder should be asked for the issuer's original proof. [A9:344-345]
-- Relying-party text must say that the verifier cannot check public publication of the git commit. [A9:413-418]
+  holder should be asked for the issuer's original proof. [A9:425-426]
+- Relying-party text must say that the verifier cannot check public publication of the git commit. [A9:495-500]
 
 ### 3.5 Verifier CLI and release-provisioning interface (instrument level)
 
@@ -366,12 +366,12 @@ interface only: it is never a release, and an installed production verifier refu
 7. Obtain and validate the confirmation and time evidence.
 8. Ship the complete receipt.
 
-[ENC §5.4:515-525; A9:278-281] That is eight steps in both sources. A retry that changes any committed byte needs a
-fresh stamp. The frame-only anchor is withdrawn, with no fallback. [A9:277; ENC §5.1:407-414]
+[ENC §5.4:515-525; A9:293-296] That is eight steps in both sources. A retry that changes any committed byte needs a
+fresh stamp. The frame-only anchor is withdrawn, with no fallback. [A9:292; ENC §5.1:407-414]
 
-Issuer duties that are not verifier rules: an attempt whose T would exceed not-after is not shipped [A9:341-342]; the
-`gpg` signer refuses a frame whose `declared_issue_time` is more than ε from its clock [A9:327-330]; the issuer never
-re-authorizes a key [A9:260]; public publication of the commit stays an issuer duty [A9:413-418]; the issuer
+Issuer duties that are not verifier rules: an attempt whose T would exceed not-after is not shipped [A9:422-423]; the
+`gpg` signer refuses a frame whose `declared_issue_time` is more than ε from its clock [A9:401-405]; the issuer never
+re-authorizes a key [A9:266]; public publication of the commit stays an issuer duty [A9:495-500]; the issuer
 re-captures the DNSSEC snapshot before shipping if it fails the snapshot rule [DD:94].
 
 Further issuer duties [OWNER 2026-10-14]:
@@ -396,14 +396,14 @@ Further issuer duties [OWNER 2026-10-14]:
 
 ## 5. Trust configuration
 
-It ships with the verifier and is never read from the bundle. [A9:148; SPEC R-5.8:1217; SPEC R-2.17:262] It holds:
+It ships with the verifier and is never read from the bundle. [A9:154; SPEC R-5.8:1217; SPEC R-2.17:262] It holds:
 
 | # | Item | Source |
 |---|---|---|
-| 1 | Root KSK-2017 | [A9:148-149; DD:66] |
-| 2 | Root KSK-2024 | [A9:148-149; DD:66] |
-| 3 | Repository entries: D = `wamason.com`, the repository key, an inclusive signing interval | OWNER PROFILE DECISION 2026-10-13 (section 6.3); A9.5 repository entries; [A9:63-65] |
-| 4 | A versioned set of pinned mainnet header hashes, authenticated by the release allowlist | [A9:149; DD:66]; A9.5 trust-configuration authority |
+| 1 | Root KSK-2017 | [A9:154-155; DD:66] |
+| 2 | Root KSK-2024 | [A9:154-155; DD:66] |
+| 3 | Repository entries: D = `wamason.com`, the repository key, an inclusive signing interval | OWNER PROFILE DECISION 2026-10-13 (section 6.3); A9.5 repository entries; [A9:68-69] |
+| 4 | A versioned set of pinned mainnet header hashes, authenticated by the release allowlist | [A9:155; DD:66]; A9.5 trust-configuration authority |
 | 5 | ~~The parameters δ, ε, k~~ | moved to the frozen spec catalog (section 1) [OWNER 2026-10-14, G12] |
 
 *Dated correction 2026-10-14:* item 5 previously read "The parameters δ, ε, k [A9:217; SPEC R-5.8:1217]". A
@@ -445,7 +445,7 @@ signing interval.
     independence, and CI cannot stop an attacker who bypasses it (`CODEX-REVIEW-RESOLUTIONS.md` F04).
 
 - **Root KSKs, three periods each.** The trust configuration records each KSK's signing and reliance periods
-  separately from its publication and revocation dates. [A9:153; A9:302-303] The instrument spike found that
+  separately from its publication and revocation dates. [A9:154-155; A9:324-325] The instrument spike found that
   conflating signing with publication falsely rejected every snapshot from 2026-10-11. [SR:73-78]
 - **Root rule.** The root DNSKEY set is valid at the snapshot's anchored time if some trusted KSK whose **reliance
   period** contains that time validates it. Each KSK entry records signing-start, signing-end and a sourced reliance lifetime L; the reliance
@@ -456,9 +456,9 @@ signing interval.
   ("maximum validity … it made"; "usable for that long and no longer") overclaimed provenance and is withdrawn.* The rule is existential and
   order-independent: a candidate that fails is informational, and the result is computed once, after every eligible
   key has been tried. A trusted KSK that is published but did not sign is informational, never a failure.
-  [A9.5, A9:296-303, OWNER DECISION 2026-10-13 after `docs/reviews/v1-profile/` F1, F2]
+  [A9.5, A9:309-325, OWNER DECISION 2026-10-13 after `docs/reviews/v1-profile/` F1, F2]
 - **Rollover control (required vector).** A snapshot taken while one trusted KSK is published but not signing must
-  pass. [A9:307-308] Further required vectors (`docs/reviews/v1-profile/` F1, F2 dispositions): a failing trusted
+  pass. [A9:341-342] Further required vectors (`docs/reviews/v1-profile/` F1, F2 dispositions): a failing trusted
   candidate listed before a validating one, in both trust-list orders, must pass; an honest old root signed before
   retirement and anchored after retirement but within reliance must pass, and the same evidence after reliance must
   not.
@@ -530,7 +530,7 @@ signing interval.
   - A snapshot without its own anchor is `UNVERIFIABLE / SNAPSHOT_NOT_ANCHORED`; no stand-in time is used. Missing
     snapshot evidence of any kind is `UNVERIFIABLE`, never an exception, unless another required check fails.
 - **Unlisted rollover.** The periods are those known at release. A snapshot taken after an unlisted rollover is
-  `UNVERIFIABLE`. [A9:150-151]
+  `UNVERIFIABLE`. [A9:156-157]
 - **Root KSK material.** Each KSK entry holds its full DNSKEY RDATA (RFC 4034 §2.2) and the fields of section 15.5.
   A presented root DNSKEY is trusted only if its RDATA is byte-equal to an entry's `dnskey_rdata`; the DS digest is a
   cross-check. Byte equality excludes the RDATA when the presented RDATA has the REVOKE bit set; the reliance period,
@@ -610,15 +610,16 @@ signing interval.
   no monotonic-verdict promise is made.
 - **Header pins.** A bundle header at a height with no pin gives `UNVERIFIABLE / HEADERS_NOT_COVERED`. A **selected**
   anchor (section 7.1) beyond the newest pin is `UNVERIFIABLE`; an unselected attestation without its headers
-  supplies no fact and is not a failure. [A9:150; A9 C6 as revised 2026-10-14; OWNER 2026-10-14, G05]
+  supplies no fact and is not a failure. [A9:156; A9 C6 as revised 2026-10-14; OWNER 2026-10-14, G05]
 - **Pin-set authentication** is the release allowlist above. [OWNER 2026-10-14, G08] *(Was: "`OPEN (other):` the
   key that signs the pin set, its format and its versioning rule. A9 says only 'signed, versioned'", 2026-10-13.)*
 - **Repository custody.** "The repository key is the public half of an offline root" is an operating fact (RB §1),
   not verifier policy; no verifier check concerns custody. It is distinct from the release-key boundary above.
   [OWNER 2026-10-14, G36] *(Was: "`OPEN (other):` whether the repository key being the public half of an offline root
   is profile policy", 2026-10-13.)*
-- **No service-key listing in V1** [OWNER 2026-10-19, `docs/decisions/2026-10-19-listing-cut.md`]. A10.4.1 is cut
-  under A10 row 33 (the second item in the cut order), together with the rows that take effect only with it (A10.7
+- **No service-key listing in V1** [AUTHOR RULING 2026-10-23, E9 row 2, `docs/reviews/e9-packet/AUTHOR-RULINGS.md`;
+  supersedes the owner's 2026-10-19 cut, which the cut order did not authorize because the exit had not slipped
+  (`docs/decisions/2026-10-19-listing-cut.md`, correction)]. The author narrowed option (e): A10.4.1 is cut, together with the rows that take effect only with it (A10.7
   rows 25–32 and 37–39). **A10.4 option (a) applies:** honest signed material stays protected under authority
   capture (A10 rows 15–16). **V1 gives no protection against new receipts under a captor's own keys when both
   authority channels are captured;** relying-party text and the freeze record say so. Accordingly the trust
@@ -630,8 +631,8 @@ signing interval.
 
 ## 6. Authority channels
 
-Both channels must pass (n = 2). Neither commits to any receipt. [A9:137, 147] Both carry the same issuance
-window. [A9:332-333; ENC §7.1:630-634]
+Both channels must pass (n = 2). Neither commits to any receipt. [A9:143, 153] Both carry the same issuance
+window. [A9:407-408; ENC §7.1:630-634]
 
 ### 6.1 DNS channel
 
@@ -642,7 +643,7 @@ window. [A9:332-333; ENC §7.1:630-634]
 - The record carries `kms`, `gpg`, `profile`, `issuance-not-before` and `issuance-not-after`, all mandatory, in a
   fixed order. [ENC §7:569-579]
 - The DNSSEC chain is validated against the root rule (section 5) at the snapshot's own anchored time (section 7.3).
-  [A9:137; A9:285-287]
+  [A9:143; A9:309-310]
 - **Root rule first.** The root RRset passes only under A9.5: a byte-matching configured KSK, usable in its reliance
   interval at T_snap, verifies a selected RRSIG valid at T_snap. The algorithm profile below never replaces that
   eligibility condition. Candidate aggregation is existential and order-independent; extra candidates are
@@ -723,18 +724,18 @@ window. [A9:332-333; ENC §7.1:630-634]
 ### 6.2 Issuance window (C4 verifier rule)
 
 - The window `issuance-not-after − issuance-not-before` is at most 90 days. A record that violates it is rejected
-  (`DNS_WINDOW_LENGTH`). V1 has one window and no overlap. [A9:334-337; ENC §7:578-580]
+  (`DNS_WINDOW_LENGTH`). V1 has one window and no overlap. [A9:409-411; ENC §7:578-580]
 - A receipt is `INVALID / ISSUANCE_WINDOW` unless `issuance-not-before` ≤ declared issue time and T ≤
   `issuance-not-after`. Both bounds are inclusive. T is compared as registered, with no margin. T is not compared
-  with not-before. [A9:338-340; ENC §7.1:636-643, 662-663]
-- The guarantee is in chain time. A UTC cutoff would need a backward-skew bound V1 does not establish. [A9:360-366;
+  with not-before. [A9:419-421; ENC §7.1:636-643, 662-663]
+- The guarantee is in chain time. A UTC cutoff would need a backward-skew bound V1 does not establish. [A9:441-447;
   ENC §7.1:661-671]
-- A published window cannot be shortened. [A9:343]
-- The window, its dates and the stop margin are operating facts, not profile rules. [A9:341-342; RB §2]
+- A published window cannot be shortened. [A9:424]
+- The window, its dates and the stop margin are operating facts, not profile rules. [A9:422-423; RB §2]
 
 ### 6.3 Git channel
 
-The OTS stamp targets the signed commit's object id, never a tree, blob or unsigned commit. [A9:282-284; ENC
+The OTS stamp targets the signed commit's object id, never a tree, blob or unsigned commit. [A9:297-299; ENC
 §7.2:685-691] The verifier does four things:
 
 1. Recomputes the commit id from the presented raw commit object.
@@ -742,7 +743,7 @@ The OTS stamp targets the signed commit's object id, never a tree, blob or unsig
 3. Follows commit, then tree, then blob, down the fixed path below.
 4. Checks that the stamped bytes name that id.
 
-[ENC §7.2:706-710] SHA-1 linkage (the commit id and the commit-tree-blob links) is a stated residual. [A9:284;
+[ENC §7.2:706-710] SHA-1 linkage (the commit id and the commit-tree-blob links) is a stated residual. [A9:299;
 ENC §7.2:712-718]
 
 ENC §7.2 says the blob's path and any byte framing around the value are "not P8's" (ENC:680-682). These three owner
@@ -776,8 +777,8 @@ issuer == pinned D together with the path (`docs/reviews/v1-profile/` F7).
   OWNER 2026-10-14, G39]
 
 - **OWNER PROFILE DECISION 2026-10-13 (path).** The key-assertion blob is at the fixed path `tessera-v1/key-assertion` in the
-  issuer repository. One window per record (A9:334-337) means one path is enough. A rotation mechanism, if one is ever
-  registered, must define its own paths. [ENC §7.2:680-682 for the gap; A9:334-337]
+  issuer repository. One window per record (A9:409-411) means one path is enough. A rotation mechanism, if one is ever
+  registered, must define its own paths. [ENC §7.2:680-682 for the gap; A9:409-411]
 - **OWNER PROFILE DECISION 2026-10-13 (framing).** None. The blob's bytes equal the ENC §7 canonical value byte for byte. A
   trailing LF or any other byte is rejected. The leaf tree entry mode must be 100644 and each intermediate entry must
   be 40000. [ENC §7:566-586; ENC §7.2:679-682] A blob that is the DNS value plus a trailing LF (or any other extra
@@ -789,7 +790,7 @@ issuer == pinned D together with the path (`docs/reviews/v1-profile/` F7).
   signed bytes (`common.issuer`) equals the pinned D. [ENC §7:566-575; ENC §3.2:279]
   - **Correction.** This supersedes the derivation draft's "exact extraction of D and the key set" (DD:94). The key
     set is still taken from the blob, parsed with the ENC §7 grammar. D is not.
-- The git value and the DNS value must be identical, window included. [A9:333; ENC §7.2:679-681]
+- The git value and the DNS value must be identical, window included. [A9:408; ENC §7.2:679-681]
 - **One pinned-D gate for both channels.** Before either channel, `common.issuer` must be exactly `wamason.com`,
   the profile constant D, which must also equal the trust configuration's `issuer_domain`; otherwise
   `INVALID / ISSUER_NOT_PINNED`. With git evidence absent and another D, the result is `INVALID`, not
@@ -814,13 +815,13 @@ issuer == pinned D together with the path (`docs/reviews/v1-profile/` F7).
 
 ### 6.4 Required set, owner name and manifest (step 8 fixes)
 
-- **G-21 / M2 (owner name).** Decided for DNS (section 6.1). Decided for git by the pin (section 6.3). [A9:202;
+- **G-21 / M2 (owner name).** Decided for DNS (section 6.1). Decided for git by the pin (section 6.3). [A9:208;
   FT:19, 39] **M2:** "For both channels the authority evidence is for D = `common.issuer` = `wamason.com`. On DNS,
   the validated TXT owner equals `_tessera-v1.<D>` label by label, ignoring ASCII case. On git, the commit verifies
   under a repository entry whose domain is D." [OWNER 2026-10-14, G34] *(Was: "`OPEN (step 8):` write M2",
   2026-10-13.)*
 - **G-17 (verifier-fixed required set).** Decided: the verifier fixes the required set. It does not read it from the
-  bundle. [A9:137; DD:93; FT:21] **V1 value:** {direct-form evidence on the DNS channel, direct-form evidence on the
+  bundle. [A9:143; DD:93; FT:21] **V1 value:** {direct-form evidence on the DNS channel, direct-form evidence on the
   git channel}; in each channel the statement is the ENC §7 canonical value, which publishes the fingerprints
   directly (R-4.30). The signed `common.binding_forms` must equal `["STMT_DIRECT"]`: element by element in canonical
   order, `STMT_DIRECT` is accepted, `STMT_DIGEST` gives `UNVERIFIABLE / BINDING_FORM_UNSUPPORTED`, any other id
@@ -850,7 +851,7 @@ issuer == pinned D together with the path (`docs/reviews/v1-profile/` F7).
 - **W1 (malleability).** Decided. No V1 semantic, standing or attempt identifier is derived from signature bytes. The
   anchor digest commits to them by design and is not an identifier. V1 does not require unique signatures and
   normalizes none. The unhashed OpenPGP area carries no meaning. A changed signature fails the anchor
-  (`RECEIPT_ANCHOR_MISMATCH`). [ENC §3.5:339-355; ENC §8:735-739; A9:280-281] The half-day argument that no strict
+  (`RECEIPT_ANCHOR_MISMATCH`). [ENC §3.5:339-355; ENC §8:735-739; A9:295-296] The half-day argument that no strict
   query relies on signature uniqueness is a separate item (DD:89; step 10).
 
 ## 7. Time
@@ -863,10 +864,10 @@ issuer == pinned D together with the path (`docs/reviews/v1-profile/` F7).
   correction 2026-10-14: this bullet previously read "T is the time of the earliest verified attestation", A9's
   earlier wording. "Earliest" means chain order, not least nTime: header times are not monotone, and the two
   selection rules can give different verdicts on the same proof.*
-- No lower bound and no priority. Header times are chain-time proxies. [A9:138]
+- No lower bound and no priority. Header times are chain-time proxies. [A9:144]
 - The three conjuncts at k = 6 (`DepthK = k − 1 = 5`): `declared − ε ≤ anchor_time`; `anchor_time ≤ declared + δ`;
   `confirmed_at ≤ declared + δ`. All three are evaluated together. [SPEC R-4.41:985; SPEC R-5.19:1352; SPEC
-  V33-V36:1342-1346; A9:99]
+  V33-V36:1342-1346; A9:105-106]
 - A real proof carries several attestations hours apart and nothing in the proof names T (M3). [FT:20; DD:98]
 - **T ≡ `anchor_time`.** For the receipt proof, T = `anchor_time` = nTime(h*), where h* is the lowest qualifying
   height. The same value feeds conjuncts 1 and 2, the C4 window rule and the reported T. Two qualifying attestations
@@ -908,7 +909,7 @@ issuer == pinned D together with the path (`docs/reviews/v1-profile/` F7).
 ### 7.2 Header pins
 
 - Every bundle header must be in the pinned set. Otherwise the verdict is `UNVERIFIABLE / HEADERS_NOT_COVERED`.
-  There is no retarget logic, because the pins cover every accepted header. [A9:150; DD:99]
+  There is no retarget logic, because the pins cover every accepted header. [A9:156; DD:99]
 - **Conflict.** A supplied header at a pinned height with a different hash gives `INVALID / HEADER_CONFLICTS_PIN`:
   it is contradictory evidence. A9.1's "a bundle header outside the pins" is read as a header **at a height the pins
   do not cover**. [OWNER 2026-10-14, G23] A10.5 stage 1 (signed 2026-10-18) registers this reading as A9's meaning:
@@ -931,7 +932,7 @@ issuer == pinned D together with the path (`docs/reviews/v1-profile/` F7).
   `tessera-v1/dnssec-snapshot`. [DD:94; ENC §6:536-542]
 - The verifier checks that the snapshot's anchored time lies inside every RRSIG window in the chain and within
   [declared − ε, declared + δ]. The issuer re-captures before shipping if it does not. [DD:94] This is an owner
-  decision carried in, not routed. [A9:99-101]
+  decision carried in, not routed. [A9:104-106]
   - "declared" is the receipt's signed `declared_issue_time`, not the snapshot's capture time. Capture-to-anchor
     latency is a separate observation, not this predicate. (`docs/reviews/v1-profile/` F6, accepted 2026-10-13.)
   - "every RRSIG window in the chain" means the one witness signature selected to authenticate each required RRset,
@@ -945,7 +946,7 @@ issuer == pinned D together with the path (`docs/reviews/v1-profile/` F7).
     eligibility precedes selection. [OWNER 2026-10-14, G35] *(Previously described only as the instrument's order.)*
   - Conjunct 3 (`confirmed_at` of the snapshot ≤ declared + δ) is a new owner acceptance restriction, fail-closed. A
     failure of any conjunct gives `INVALID / SNAPSHOT_TIME`. [OWNER 2026-10-14, G06]
-- The chain is evaluated at the snapshot's anchored time, not at T of the receipt. [A9:137]
+- The chain is evaluated at the snapshot's anchored time, not at T of the receipt. [A9:143]
 - Why: the joint RRSIG window measured 1.6 days, shorter than δ (M8). [DD:93]
 - **Snapshot body.** A fixed-order sequence of uncompressed RFC 1035 wire RRs in RFC 4034 §6.2 canonical form,
   section 15.3. Framing violations are `INVALID / SNAPSHOT_FORMAT`; a syntactically complete body lacking a required
@@ -1012,7 +1013,7 @@ Nothing in this subsection changes T, a verdict, a reason code, the check order 
 
 - Fallback: both slots OpenPGP P-256 (rule O), KMS-backed for kms, and slot-2 custody per A9.6 for gpg. The dated pre-freeze custody record identifies the selected implementation. [A9.6 "Signers" (was cited A9:338-340, a stale locator; OWNER 2026-10-14, r2-F17); A9.6 slot-2 custody; ENC §5.2:438-444; `docs/reviews/a9-custody/` finding 3]
 - Hybrid (taken; see "Branch taken" below): `kms` is ML-DSA-65 (rule R), `gpg` is P-256 (rule O). One pair
-  algorithm id names both. [A9:298-302; ENC §5.2:441] *(Was: "Hybrid, only if the spike passes by 21 Oct";
+  algorithm id names both. [A9:351-356; ENC §5.2:441] *(Was: "Hybrid, only if the spike passes by 21 Oct";
   [OWNER 2026-10-19].)*
 - **Slot-2 custody record (A9.6), dated** [OWNER 2026-10-19, §14.2 item 5; choice made 2026-10-13,
   `docs/reviews/hybrid-supplement/DECISIONS.md` item 2]. Not an operations fact that changes verdicts; recorded
@@ -1057,7 +1058,7 @@ Nothing in this subsection changes T, a verdict, a reason code, the check order 
     2019), so moving slot 1 to an AWS CloudHSM custom key store would need this check repeated.
 - Key fingerprints: `spki-sha256:` for `kms`, `gpg-sha256:` for `gpg`. No SHA-1 for key binding. [ENC §3.3:285-301]
 - The two keys are separate technical failure domains under one controller. V1 claims no separation of control and no
-  independent fates. [A9:136; A9:368-372]
+  independent fates. [A9:142; A9:449-453]
 - Each slot's signature is exactly one detached signature in the serialization its rule pins. [ENC §5.2:429-436]
 - **Transported keys.** `keys.gpg` is the bare v4 public-key packet body, exactly the `gpg-sha256` preimage (no
   `0x99` prefix, packet header, user IDs, subkeys or armour). gpg must parse as the specified v4 P-256 public-key
@@ -1131,22 +1132,22 @@ Nothing in this subsection changes T, a verdict, a reason code, the check order 
   counts the type octet and is ≥ 1. V1 accepts the shortest form only (a V1 rule, not an RFC ban); a longer form is
   `SIG_FORMAT`. [OWNER 2026-10-14, G28; r2-F14] *(Dated correction 2026-10-14: "255, four octets" misdescribed the
   five-octet form.)*
-- Revocation is not evaluated. Loss or theft handling is operations. [A9:248-252; RB §1]
+- Revocation is not evaluated. Loss or theft handling is operations. [A9:255-258; RB §1]
 
 ## 9. Dependency manifest
 
-The dependency manifest is a bundle member (section 2.1, member 12). A9 names eight entries. [A9:153-154]
+The dependency manifest is a bundle member (section 2.1, member 12). A9 names eight entries. [A9:159-160]
 
 | # | Entry named in A9 | Where V1 uses it |
 |---|---|---|
 | 1 | RFC 8785 | canonical payload [ENC §1.3:160-170] |
 | 2 | OpenPGP | signature rule O, key fingerprint [ENC §5.2:444-478; ENC §3.3:290] |
-| 3 | The signature algorithms in use | ECDSA P-256 (fallback); plus ML-DSA-65 under the hybrid [A9:298-319] |
+| 3 | The signature algorithms in use | ECDSA P-256 (fallback); plus ML-DSA-65 under the hybrid [A9:351-374] |
 | 4 | SHA-256 | frames, anchors, fingerprints [ENC §3.3:289-290] |
 | 5 | SHA-1, for git object linkage | commit id and commit-tree-blob links [ENC §7.2:712-718] |
 | 6 | The DNSSEC algorithms in the chain | snapshot validation |
 | 7 | OpenTimestamps | receipt, snapshot and commit proofs |
-| 8 | Bitcoin headers | temporal check [A9:150] |
+| 8 | Bitcoin headers | temporal check [A9:159-160] |
 
 DD:63 lists the same eight (with ECDSA P-256 in place of "the algorithms in use"). [DD:63]
 
@@ -1185,17 +1186,17 @@ DD:63 lists the same eight (with ECDSA P-256 in place of "the algorithms in use"
   malleation (unhashed area, s versus n−s), non-qualifying OTS branches and unused pinned headers, and still return
   the same six fields (`prototype/mutation/REPORT.md`, classes A1–A4). Deduplicate and refer to receipts by
   SHA256(A_sig).
-  [A9:290-292]
+  [A9:343-344]
 
 ## 10. Number rule
 
 Accept a number exactly when RFC 8785's canonical serialization preserves its value. Reject otherwise. The three
 conditions (not negative zero, finite after round-half-even, exact decimal value of `ES(d)` equals the literal) and
-the accepted and rejected examples are in ENC §1.2. [A9:438-443; ENC §1.2:118-148; ENC D-1:752-755] Proof:
+the accepted and rejected examples are in ENC §1.2. [A9:519-524; ENC §1.2:118-148; ENC D-1:752-755] Proof:
 `formal/p8/PROOF.md` Lemma 3. Vectors: `formal/p8/vectors/`.
 
-This replaces the literal "exactly representable as an IEEE 754 double" rule for this profile only. [A9:405-406;
-A9:440-443] The stale "needs an author sentence" remarks in ENC (ENC:147-148, D-1) and PROOF §6 are superseded by
+This replaces the literal "exactly representable as an IEEE 754 double" rule for this profile only. [A9:486-487;
+A9:521-524] The stale "needs an author sentence" remarks in ENC (ENC:147-148, D-1) and PROOF §6 are superseded by
 A9.8. [OWNER 2026-10-14, G38; the ENC and PROOF wording edits are done, OWNER 2026-10-19]
 
 **`ES` recipe.** `ES(d)` is ECMA-262 NumberToString (7.1.12.1, Note 2) of the 10th edition (June 2019), the edition RFC 8785 cites
@@ -1218,8 +1219,8 @@ and §7 wording edit is done, OWNER 2026-10-19]
 ## 11. The A9.1 scenario mapping
 
 Registered before any V1 run. Every row: profile `tessera-v1-strict`, strict request, `revocation: NOT_EVALUATED`,
-`historical_security: NOT_EVALUATED`, standing `ABSENT/NOT_ISSUED_IN_PROFILE`. [A9:165-167] Eleven rows cover
-thirteen cases (a, g, b, c, d1, d2, d3, e, e′, f, h, i, i′). [A9:169-181; DD:195-207 has the same first ten rows]
+`historical_security: NOT_EVALUATED`, standing `ABSENT/NOT_ISSUED_IN_PROFILE`. [A9:171-173] Eleven rows cover
+thirteen cases (a, g, b, c, d1, d2, d3, e, e′, f, h, i, i′). [A9:175-187; DD:195-207 has the same first ten rows]
 
 | Case | Fixture | Expected verdict | Safe decision |
 |---|---|---|---|
@@ -1244,20 +1245,21 @@ the conformance fixtures are:
 - **d3 ("one key, one channel"):** one attacker key in both slots, honest DNS evidence, `git` absent: `INVALID /
   DNS_KEY_MISMATCH` (row 15.1), dominating `UNVERIFIABLE / MEMBER_MISSING:git` (section 3.3).
 
-The success bar: zero unsafe accepts; false rejects only on d2 and h. [A9:112-116] Registered prediction: a
-headline-only reader fails e and f, and i′ is the same hazard. [A9:183-186] The A9.4 missing-capture negative control
-is C7 evidence, not a mapping row. [A9:140; A9:267-268]
+The success bar: zero unsafe accepts; false rejects only on d2 and h. [A9:117-118] Registered prediction: a
+headline-only reader fails e and f, and i′ is the same hazard. [A9:189-191] The A9.4 missing-capture negative control
+is C7 evidence, not a mapping row. [A9:146; A9:281-283]
 
 Note on case d1's expected verdict and dispatch: the "degraded request" half needs the request type to be visible at
 dispatch. It is a verifier input, refused at D4 (section 3.1). [OWNER 2026-10-14, G17]
 
 ## 12. Gate items this profile feeds (for tracking only)
 
-- Exit statements M2 and M5, the E6a dispatch and precedence cases, and the E12 page are 30 Oct items. [A9:199-204]
-- After exit: vectors run against AWS, the missing-capture control, and the dead-service test. [A9:208-210]
+- Exit statements M2 and M5, the E6a dispatch and precedence cases, and the E12 page are 30 Oct items. [A9:205-210]
+- After exit: vectors run against AWS, the missing-capture control, and the dead-service test. [A9:214-216]
 - Cut order if 30 Oct slips: the PQ hybrid first, then the service-key listing (A10 row 33). `A_sig`, the root-KSK
-  rule and the git stamp target are required. [A9:205-207; A10 row 33] The hybrid is registered (section 1); the
-  listing is cut (section 5, "No service-key listing in V1"). [OWNER 2026-10-19] *(Was: "the PQ hybrid first,
+  rule and the git stamp target are required. [A9:211-213; A10 row 33] The hybrid is registered (section 1). The
+  listing is not in V1 by the author's ruling of 2026-10-23, not by this cut order: the exit had not slipped
+  (section 5, "No service-key listing in V1"). [OWNER 2026-10-23] *(Was: "the PQ hybrid first,
   nothing else", which A10 row 33 replaced.)*
 
 ## 13. Reconciliation notes
@@ -1266,29 +1268,29 @@ Counts checked against the source files when this draft was written:
 
 | List | Count here | Source count |
 |---|---|---|
-| Bundle members (section 2.1) | 12 | A9:152-154 names spec, vectors, preamble, dependency manifest (4); the other eight come from ENC and SPEC as cited per row |
-| Trust configuration items (section 5) | 4 (+1 moved) | A9:148-151 names 4 (two KSKs, repository key, pin set); item 3 is the 2026-10-13 pair, now with A9.5 intervals; item 5 (SPEC R-5.8 parameters) moved to the spec catalog 2026-10-14 (G12) |
-| Stable output fields | 6 | A9:156 |
-| Dependency manifest entries | 8 named by A9 (+ the 2026-10-14 additions, section 9) | A9:153-154; DD:63 |
+| Bundle members (section 2.1) | 12 | A9:158-160 names spec, vectors, preamble, dependency manifest (4); the other eight come from ENC and SPEC as cited per row |
+| Trust configuration items (section 5) | 4 (+1 moved) | A9:154-157 names 4 (two KSKs, repository key, pin set); item 3 is the 2026-10-13 pair, now with A9.5 intervals; item 5 (SPEC R-5.8 parameters) moved to the spec catalog 2026-10-14 (G12) |
+| Stable output fields | 6 | A9:162 |
+| Dependency manifest entries | 8 named by A9 (+ the 2026-10-14 additions, section 9) | A9:159-160; DD:63 |
 | Per-entry fields | 7 | SPEC R-3.51:743-748 |
-| Issue-order steps | 8 | ENC §5.4:517-524; A9:278-281 |
-| Scenario rows / cases | 11 / 13 | A9:169-181 |
+| Issue-order steps | 8 | ENC §5.4:517-524; A9:293-296 |
+| Scenario rows / cases | 11 / 13 | A9:175-187 |
 | DNS rejection steps | 15 | ENC §7:595-612 |
-| Parameters | 5 | A9:217 |
+| Parameters | 5 | A9:223-225 |
 
 Disagreements between sources, found while drafting:
 
-1. **Required set.** SPEC R-3.37 (635-638) and V21 (1300) say the envelope carries the required set. A9:137 and
+1. **Required set.** SPEC R-3.37 (635-638) and V21 (1300) say the envelope carries the required set. A9:143 and
    DD:93 say the verifier fixes it. DD:93 already notes "the spec drifted". This profile follows A9.
-2. **Stale derivation wording.** DD:52 and DD:56 describe the anchor as covering the frames only. A9:134, 138 and ENC
+2. **Stale derivation wording.** DD:52 and DD:56 describe the anchor as covering the frames only. A9:140, 144 and ENC
    §5 cover frames and exact signatures. DD:61 is already correct. DD:64 (P-256 signers only) and DD:218 (parameters
-   ratified) are superseded by A9:298-326 and A9:217-219.
-3. **KSK periods.** DD:66 gives each KSK "its IANA validity period". A9:302-303 requires signing and reliance
+   ratified) are superseded by A9:351-400 and A9:223-225.
+3. **KSK periods.** DD:66 gives each KSK "its IANA validity period". A9:324-325 requires signing and reliance
    periods kept apart from publication and revocation. SR:76-78 is the evidence for the split; the reliance values
    are in section 5.
 4. **Extraction of D.** DD:94 says "exact extraction of D". Superseded by the 2026-10-13 decision (section 6.3).
 5. **Number rule restated in the spec.** SPEC V6 (1261) still reads "numbers not exactly IEEE 754 doubles". A9.7 rows
-   22 and 23 (A9:405-406) do not list SPEC:1261, though row 15 lists spec restatements. A9.8 governs.
+   22 and 23 (A9:486-487) do not list SPEC:1261, though row 15 lists spec restatements. A9.8 governs.
 6. **ENC note on the derivation.** ENC:147-148 and ENC D-1 (752-755) say the derivation's profile line keeps the old
    number rule. DD:62 now states the value-preserving rule. Corrected 2026-10-19: ENC §1.2 (ENC:177-180) and ENC
    D-1 now state that A9.8 registers the rule and that the derivation's line states it. [OWNER 2026-10-19, PR-12]
@@ -1951,8 +1953,7 @@ ceremony, bootstrap record and rehearsal, which come after the freeze and before
   The manifest entry `gpgv` pins the upstream GnuPG 2.4.4 source (digest of the tarball) [OWNER 2026-10-19, item 15; source formal/dependency-sources/MANIFEST.md]. It does not certify
   distribution builds (the owner machine's Ubuntu `2.4.4-2ubuntu17.6` is patched; its bytes differ). A distribution
   build is acceptable only if it reproduces the upstream behaviour (exit status) on the release-format test vectors.
-  The 2.4.4 pin is **provisional**: it is the version observed, R3/R6 have not yet fixed the `gpgv` version, and
-  it remains an owner choice before the freeze. [OWNER 2026-10-19, PR-12] *(Was: "The version is the one observed;
+  **The pin is upstream GnuPG 2.4.4** [OWNER DECISION 2026-10-23, E9 packet E9-05]. [OWNER 2026-10-19, PR-12, superseded] *(Was: "The version is the one observed;
   R3/R6 have not yet fixed it, so it remains an owner choice", beside an unqualified pin.)*
 - **TEST releases use this same format** with a TEST key over the whole TEST archive, code included. The
   `tessera-v1-test-release/1` record (two hashes, raw r‖s, SPKI-hash signer) is withdrawn as a release: it did not
@@ -1984,7 +1985,11 @@ ceremony, bootstrap record and rehearsal, which come after the freeze and before
 **R5. Out-of-band authentication of the production key** (owner decision 2).
 - The relying party's root of trust is the production key's **full v4 fingerprint**, obtained before and apart from
   any release. A key or fingerprint that arrives with a release, on the same page as a release, or from the
-  operational computer (the NUC), this repository, DNS or the issuing AWS account authenticates nothing, except a
+  operational environment authenticates nothing. The operational environment is assessed by actual roles,
+  credentials and release authorization, not by provider names; it includes at least the operational computer
+  (the NUC), this repository, DNS, the issuing AWS account and the GCP project that holds the slot-2 key, and
+  another provider's name does not by itself establish independence [AUTHOR COMMENT 2026-10-23, E9 row 6]. Such a
+  key or fingerprint authenticates nothing, except a
   successor fingerprint named by a conforming release verified under the currently authenticated key (Rotation,
   below). [OWNER 2026-10-19, PR-05]
 - **Frozen rule:** the fingerprint is published through **at least two channels independent of the operational

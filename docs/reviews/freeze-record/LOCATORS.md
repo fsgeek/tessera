@@ -111,7 +111,7 @@ Left on purpose because they record a stale or old locator as history, not as a 
 | docs/V1-PROFILE.md | 1134 | A9:248-252 | A9:255-258 | Revocation is not evaluated |
 | docs/V1-PROFILE.md | 1138 | A9:153-154 | A9:159-160 | A9 names eight dependency-manifest entries |
 | docs/V1-PROFILE.md | 1144 | A9:298-319 | A9:351-374 | signature algorithms: P-256 fallback, ML-DSA-65 under hybrid |
-| docs/V1-PROFILE.md | 1149 | A9:150 | A9:156 | Bitcoin headers (pinned headers) |
+| docs/V1-PROFILE.md | 1149 | A9:150 | A9:159-160 | Bitcoin headers, as a dependency-manifest entry (owner correction 2026-10-24, FC-01; the agent first mapped it to A9:156) |
 | docs/V1-PROFILE.md | 1188 | A9:290-292 | A9:343-344 | Custody: long-horizon validity depends on manifest and exact bytes; no renewal |
 | docs/V1-PROFILE.md | 1194 | A9:438-443 | A9:519-524 | number rule: accept exactly when RFC 8785 preserves value (A9.8) |
 | docs/V1-PROFILE.md | 1197 | A9:405-406 | A9:486-487 | replaces the IEEE 754 double rule (A9.7 rows 22-23) |
@@ -142,7 +142,7 @@ Left on purpose because they record a stale or old locator as history, not as a 
 ## Lower-confidence mappings (judgment, not unresolved)
 
 - Line 168, manifest frame and possession signature: A9 has no sentence naming the manifest frame in the profile list; the old A9:311-312 was the pass-condition bullet on "attestation and manifest-possession verification", now 364-366.
-- Lines 1149 and 612/911/173, "Bitcoin headers" and pin coverage: mapped to A9:156 (HEADERS_NOT_COVERED), where the old number pointed. Line 1149 sits in the dependency-manifest table, whose A9 list entry is at A9:160.
+- Lines 612/911/173, pin coverage: mapped to A9:156 (HEADERS_NOT_COVERED), where the old number pointed. Line 1149 sits in the dependency-manifest table, whose A9 list entry is at A9:160. Line 1149 (the dependency-manifest table) is A9:159-160, corrected by the owner (FC-01).
 - Line 869, the three-conjunct predicate: old A9:99 was the "Earlier owner decisions carried in" paragraph (k = 6, DepthK = k - 1), now 105-106.
 - Lines 1144 and 1286, signer profile ranges: mapped to the A9.6 signer text (351-374 and 351-400). The spans grew with the slot-2 custody text.
 - Line 1249: C7 row (146) and the "Evidence (C7)" sentence (281-283).
@@ -150,4 +150,4 @@ Left on purpose because they record a stale or old locator as history, not as a 
 
 ## Not changed, for the author
 
-Profile lines 56-59 say that many `A9:nnn` numbers are "approximate locators only". That sentence is now out of date but is prose outside this task; left untouched.
+Profile §0 now records the completed refresh against the signed A9 and A10 texts (owner, 2026-10-24, FC-01).
