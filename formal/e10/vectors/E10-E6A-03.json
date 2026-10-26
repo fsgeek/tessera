@@ -1,0 +1,99 @@
+{
+ "id": "E10-E6A-03",
+ "title": "Both authority channels absent, signatures good -> UNVERIFIABLE / MEMBER_MISSING:dns",
+ "guarantees": [
+  "G4",
+  "G9"
+ ],
+ "source": [
+  {
+   "model": "E6a_Broken_MissingEvidenceAsFail, V1",
+   "file": "formal/tla/E6a/runs/broken/E6a_Broken_MissingEvidenceAsFail_V1.out",
+   "lines": "44-49",
+   "kind": "counterexample",
+   "property": "MissingEvidenceUnverifiable",
+   "abstract": {
+    "sig": "good",
+    "alg": "supported",
+    "ev": {
+     "dns": "absent",
+     "git": "absent"
+    }
+   },
+   "role": "execution_evidence"
+  }
+ ],
+ "scenario": "Absent evidence cannot be checked: UNVERIFIABLE, never INVALID by itself. The first missing path in JCS key order is dns.",
+ "base": "honest bundle (A-a)",
+ "mutations": [
+  {
+   "op": "remove_member",
+   "path": "dns"
+  },
+  {
+   "op": "remove_member",
+   "path": "git"
+  }
+ ],
+ "test_universe": {
+  "post_edit": "delete layers[0].dns and layers[0].git"
+ },
+ "expected": {
+  "verdict": "UNVERIFIABLE",
+  "reason": "MEMBER_MISSING:dns",
+  "T": "2026-11-10T12:20:00Z",
+  "revocation": "NOT_EVALUATED",
+  "historical_security": "NOT_EVALUATED",
+  "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+  "utc_assessment": {
+   "assumption_id": "A-UTC-7200-6",
+   "utc_upper_bound": "2026-11-10T15:10:00Z"
+  },
+  "row": "2.2"
+ },
+ "partial_overlap": [
+  "L-09 (git only)",
+  "F03-e (dns.ots and git.ots)"
+ ],
+ "schema": "tessera-e10-vector/1",
+ "profile": "tessera-v1-strict",
+ "request": "strict",
+ "side": "verifier",
+ "choices": [],
+ "covered_by": [],
+ "notes": [],
+ "status": "new",
+ "live": {
+  "modes": [
+   "L0"
+  ],
+  "needs": [
+   "A real receipt; delete two members."
+  ]
+ },
+ "subcases": [
+  {
+   "id": "E10-E6A-03",
+   "construction": "A-a; post-issue: delete layers[0].dns and layers[0].git",
+   "coverage": {
+    "exact": [],
+    "analogous": []
+   },
+   "expected": {
+    "verdict": "UNVERIFIABLE",
+    "reason": "MEMBER_MISSING:dns",
+    "T": "2026-11-10T12:20:00Z",
+    "revocation": "NOT_EVALUATED",
+    "historical_security": "NOT_EVALUATED",
+    "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+    "utc_assessment": {
+     "assumption_id": "A-UTC-7200-6",
+     "utc_upper_bound": "2026-11-10T15:10:00Z"
+    },
+    "row": "2.2"
+   },
+   "T_derivation": "T = nTime(h*): the edit leaves a_sig and receipt_anchor untouched, so rows 11.1-11.4 still pass; U from the same headers"
+  }
+ ],
+ "analogous_to": []
+}

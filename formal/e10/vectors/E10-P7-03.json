@@ -1,0 +1,104 @@
+{
+ "id": "E10-P7-03",
+ "title": "Two-layer wrapper is out of profile",
+ "guarantees": [
+  "G9"
+ ],
+ "source": [
+  {
+   "model": "capstone wrapper cases (C-C15, C-Q4, link 6b)",
+   "file": "formal/suite/capstone/proverif/capstone.pv",
+   "kind": "model text: wrappers not mappable beyond dispatch",
+   "lines": "88-94 (wrapped layers lyr <> L0; header comment)",
+   "role": "property_definition"
+  }
+ ],
+ "scenario": "Cases c and h: layers of length 2 are refused at D3.",
+ "base": "honest bundle (A-a)",
+ "mutations": [
+  {
+   "op": "see",
+   "detail": "L-04 / L-05 fixtures"
+  }
+ ],
+ "test_universe": {
+  "cases": [
+   "L-04",
+   "L-05"
+  ]
+ },
+ "expected": "see subcases",
+ "covered_by": [
+  "L-04",
+  "L-05"
+ ],
+ "schema": "tessera-e10-vector/1",
+ "profile": "tessera-v1-strict",
+ "request": "strict",
+ "side": "verifier",
+ "choices": [],
+ "partial_overlap": [],
+ "notes": [],
+ "status": "covered",
+ "live": {
+  "modes": [
+   "L0"
+  ],
+  "needs": [
+   "Two real receipts; nest one layer."
+  ]
+ },
+ "subcases": [
+  {
+   "id": "E10-P7-03.L-04",
+   "construction": "conformance L-04: two layers",
+   "bundle_from": "L-04",
+   "coverage": {
+    "exact": [
+     "L-04"
+    ],
+    "analogous": []
+   },
+   "expected": {
+    "verdict": "UNVERIFIABLE",
+    "reason": "OUT_OF_PROFILE",
+    "T": null,
+    "revocation": "NOT_EVALUATED",
+    "historical_security": "NOT_EVALUATED",
+    "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+    "utc_assessment": {
+     "assumption_id": "A-UTC-7200-6",
+     "utc_upper_bound": null
+    },
+    "row": "1.3"
+   },
+   "T_derivation": "T null: dispatch-terminal, nothing evaluated (profile 3.4, 7.4); U null"
+  },
+  {
+   "id": "E10-P7-03.L-05",
+   "construction": "conformance L-05: renewal wrapper as a second layer",
+   "bundle_from": "L-05",
+   "coverage": {
+    "exact": [
+     "L-05"
+    ],
+    "analogous": []
+   },
+   "expected": {
+    "verdict": "UNVERIFIABLE",
+    "reason": "OUT_OF_PROFILE",
+    "T": null,
+    "revocation": "NOT_EVALUATED",
+    "historical_security": "NOT_EVALUATED",
+    "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+    "utc_assessment": {
+     "assumption_id": "A-UTC-7200-6",
+     "utc_upper_bound": null
+    },
+    "row": "1.3"
+   },
+   "T_derivation": "T null: dispatch-terminal, nothing evaluated (profile 3.4, 7.4); U null"
+  }
+ ],
+ "analogous_to": []
+}

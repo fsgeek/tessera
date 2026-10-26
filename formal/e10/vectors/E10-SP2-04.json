@@ -1,0 +1,132 @@
+{
+ "id": "E10-SP2-04",
+ "title": "Attacker material in the gpg slot under the honest manifest -> KEY_MISMATCH (gpg)",
+ "guarantees": [
+  "G3",
+  "G10"
+ ],
+ "source": [
+  {
+   "model": "S-P2 Q4 companion (slot B unbound), degraded",
+   "file": "formal/suite/s-p2/proverif/sp2_q4_companion_slot_unbound.out",
+   "lines": "360-601",
+   "kind": "counterexample",
+   "property": "SignerForged",
+   "role": "execution_evidence"
+  },
+  {
+   "model": "S-P2 d8 strict Q4 mutation (unregistered diagnostic)",
+   "file": "formal/suite/s-p2/proverif/diagnostics/d8_strict_q4_mutation.out",
+   "lines": "645",
+   "kind": "counterexample",
+   "role": "execution_evidence"
+  },
+  {
+   "model": "S-P2 d11 frame fp unbound, no slot match (unregistered diagnostic)",
+   "file": "formal/suite/s-p2/proverif/diagnostics/d11_strict_frame_fp_unbound_no_slot_match.out",
+   "lines": "654, 922",
+   "kind": "counterexample",
+   "role": "execution_evidence"
+  },
+  {
+   "model": "capstone C-C17 (strict, case a)",
+   "file": "formal/suite/capstone/proverif/cap_cc17_a.out",
+   "lines": "6530, 26679, 28301",
+   "kind": "counterexample (strict run)",
+   "role": "execution_evidence"
+  }
+ ],
+ "scenario": "The attacker's key in slot gpg, with its own frame fingerprint, signature and possession over the honest manifest.",
+ "base": "honest bundle (A-a)",
+ "mutations": [
+  {
+   "op": "replace_slot_material",
+   "slot": "gpg",
+   "with": "attacker key: keys.gpg, F_gpg signer.key_fp, S_gpg, possession.gpg"
+  },
+  {
+   "op": "keep",
+   "what": "honest manifest"
+  },
+  {
+   "op": "restamp",
+   "value": "split: subcases .unstamped and .restamped"
+  }
+ ],
+ "test_universe": {
+  "hooks": "attacker gpg key for slot material; manifest built for the honest gpg key; adversarial=True"
+ },
+ "expected": "see subcases",
+ "partial_overlap": [
+  "KEY-a (key replaced only)",
+  "A-d3"
+ ],
+ "schema": "tessera-e10-vector/1",
+ "profile": "tessera-v1-strict",
+ "request": "strict",
+ "side": "verifier",
+ "choices": [],
+ "covered_by": [],
+ "notes": [],
+ "status": "new",
+ "live": {
+  "modes": [
+   "L1",
+   "L0"
+  ],
+  "needs": [
+   "A real receipt plus an attacker OpenPGP P-256 key; re-encode a_sig."
+  ]
+ },
+ "subcases": [
+  {
+   "id": "E10-SP2-04.restamped",
+   "title": "TEST form: re-stamped",
+   "construction": "TEST issue, adversarial; gpg slot material (keys.gpg, F_gpg signer.key_fp, S_gpg, possession.gpg) from attacker key e10-attacker-gpg; manifest names the honest gpg key; DNS names the honest keys; A_sig stamped",
+   "coverage": {
+    "exact": [],
+    "analogous": []
+   },
+   "expected": {
+    "verdict": "INVALID",
+    "reason": "KEY_MISMATCH",
+    "T": "2026-11-10T12:20:00Z",
+    "revocation": "NOT_EVALUATED",
+    "historical_security": "NOT_EVALUATED",
+    "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+    "utc_assessment": {
+     "assumption_id": "A-UTC-7200-6",
+     "utc_upper_bound": "2026-11-10T15:10:00Z"
+    },
+    "row": "5.2",
+    "slot": "gpg"
+   },
+   "T_derivation": "T = nTime(h*) of the fixture's own receipt proof and headers (a_sig and receipt_anchor as stamped; rows 11.1-11.4 pass); U = 7200 + max nTime(h*..h*+5) (A10.1.1)"
+  },
+  {
+   "id": "E10-SP2-04.unstamped",
+   "title": "L0/L1 form: not re-stamped",
+   "construction": "A-a; post-issue: keys.gpg, possession.gpg and the a_sig gpg pair replaced by the attacker material of .restamped; receipt_anchor kept (the L0/L1 form)",
+   "coverage": {
+    "exact": [],
+    "analogous": []
+   },
+   "expected": {
+    "verdict": "INVALID",
+    "reason": "KEY_MISMATCH",
+    "T": null,
+    "revocation": "NOT_EVALUATED",
+    "historical_security": "NOT_EVALUATED",
+    "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+    "utc_assessment": {
+     "assumption_id": "A-UTC-7200-6",
+     "utc_upper_bound": null
+    },
+    "row": "5.2",
+    "slot": "gpg"
+   },
+   "T_derivation": "T null: a_sig changed after stamping, so the receipt proof's digest no longer matches (row 11.2); U null with T (A10.1.1)"
+  }
+ ],
+ "analogous_to": []
+}

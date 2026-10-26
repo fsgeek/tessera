@@ -1,0 +1,102 @@
+{
+ "id": "E10-P4-02",
+ "title": "Non-waivable check unperformable -> UNVERIFIABLE",
+ "guarantees": [
+  "G9",
+  "G5"
+ ],
+ "source": [
+  {
+   "model": "P4_VerifierStates_Broken (companion), _Broken_Green cfg",
+   "file": "formal/tla/P4_VerifierStates_Broken_Green.out",
+   "lines": "32-38",
+   "kind": "counterexample",
+   "property": "NoSilentPromotion",
+   "abstract": {
+    "waived": [],
+    "c2": "unperformable",
+    "others": "pass"
+   },
+   "role": "execution_evidence"
+  }
+ ],
+ "scenario": "A non-waivable (temporal-anchor) check cannot be performed: the receipt proof is pending only.",
+ "base": "honest bundle (A-a)",
+ "mutations": [
+  {
+   "op": "replace_receipt_proof",
+   "with": "pending-only OTS proof over SHA256(a_sig)"
+  }
+ ],
+ "test_universe": {
+  "issue": {
+   "receipt_branches": [
+    {
+     "kind": "pending"
+    }
+   ],
+   "adversarial": true
+  }
+ },
+ "choices": [
+  "c2 -> temporal-anchor consistency (non-waivable, A1.2.1)."
+ ],
+ "expected": {
+  "verdict": "UNVERIFIABLE",
+  "reason": "ANCHOR_PENDING_ONLY",
+  "T": null,
+  "revocation": "NOT_EVALUATED",
+  "historical_security": "NOT_EVALUATED",
+  "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+  "utc_assessment": {
+   "assumption_id": "A-UTC-7200-6",
+   "utc_upper_bound": null
+  },
+  "row": "11.4"
+ },
+ "covered_by": [
+  "L-43"
+ ],
+ "schema": "tessera-e10-vector/1",
+ "profile": "tessera-v1-strict",
+ "request": "strict",
+ "side": "verifier",
+ "partial_overlap": [],
+ "notes": [],
+ "status": "covered",
+ "live": {
+  "modes": [
+   "L0"
+  ],
+  "needs": [
+   "The service's own pending proof, captured before upgrade (or strip the Bitcoin branch of a real proof)."
+  ]
+ },
+ "subcases": [
+  {
+   "id": "E10-P4-02",
+   "construction": "TEST issue, receipt_branches [{kind: pending}], adversarial",
+   "coverage": {
+    "exact": [
+     "L-43"
+    ],
+    "analogous": []
+   },
+   "expected": {
+    "verdict": "UNVERIFIABLE",
+    "reason": "ANCHOR_PENDING_ONLY",
+    "T": null,
+    "revocation": "NOT_EVALUATED",
+    "historical_security": "NOT_EVALUATED",
+    "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+    "utc_assessment": {
+     "assumption_id": "A-UTC-7200-6",
+     "utc_upper_bound": null
+    },
+    "row": "11.4"
+   },
+   "T_derivation": "T null: no qualifying attestation (row 11.4); U null"
+  }
+ ],
+ "analogous_to": []
+}

@@ -1,0 +1,151 @@
+{
+ "id": "E10-P9-03",
+ "title": "A reachable service contradicts the bundle: the verdict is the bundle's",
+ "registered_case": "BAND0-EXIT E10 'the P9 two-machine case' (A5.1 contradicting-service clause)",
+ "guarantees": [
+  "G8"
+ ],
+ "source": [
+  {
+   "model": "P9_Statelessness probe (TLA+, non-discharging; A4.1)",
+   "file": "formal/spike/tla-probes/P9/RESULTS-PROBE.md",
+   "lines": "142-150, 183-215",
+   "role": "summary"
+  },
+  {
+   "registered_text": "docs/phase-0-prereg-amendment-5.md",
+   "lines": "58-91",
+   "role": "registered_text"
+  },
+  {
+   "registered_text": "docs/band-1-docket.md",
+   "lines": "99-104",
+   "role": "registered_text"
+  },
+  {
+   "model": "P9 probe LIVE_FALLBACK, FULL Agreement cfg",
+   "file": "formal/spike/tla-probes/P9/P9_Statelessness_LiveFallback_Full_Agreement.out",
+   "lines": "30-121",
+   "kind": "counterexample",
+   "property": "Agreement",
+   "abstract": "run 1, service unreachable: VALID_STRICT; ServiceChange to revoked; run 2: INVALID",
+   "role": "execution_evidence"
+  },
+  {
+   "model": "P9 probe LIVE_FALLBACK, VECTOR cfg",
+   "file": "formal/spike/tla-probes/P9/P9_Statelessness_LiveFallback_Vector.out",
+   "kind": "green: the isolated-machine vector cannot see this class (F2)",
+   "lines": "29 (No error)",
+   "role": "execution_evidence"
+  }
+ ],
+ "scenario": "With the network up, every service Tessera runs is made to contradict the bundle; the verdict must not move.",
+ "base": "honest bundle (A-a)",
+ "mutations": [
+  {
+   "op": "environment",
+   "detail": "reachable, contradicting: live DNS _tessera-v1.<D> TXT names other keys (or NXDOMAIN); the git remote's key-assertion blob changed; OTS calendars return a different or upgraded proof; the Tessera issue API reports the receipt unknown/revoked"
+  }
+ ],
+ "test_universe": {
+  "cases": [
+   "A-a"
+  ]
+ },
+ "choices": [
+  "Which services count as 'optional services' in V1 is a choice: the list above is the inspection's input list (formal/P9-CONTRACT-INSPECTION.md) of things Tessera runs; a verifier consulting none passes trivially."
+ ],
+ "expected": {
+  "verdict": "VALID_STRICT",
+  "reason": "OK",
+  "T": "2026-11-10T12:20:00Z",
+  "revocation": "NOT_EVALUATED",
+  "historical_security": "NOT_EVALUATED",
+  "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+  "utc_assessment": {
+   "assumption_id": "A-UTC-7200-6",
+   "utc_upper_bound": "2026-11-10T15:10:00Z"
+  }
+ },
+ "schema": "tessera-e10-vector/1",
+ "profile": "tessera-v1-strict",
+ "request": "strict",
+ "side": "verifier",
+ "covered_by": [],
+ "partial_overlap": [],
+ "notes": [],
+ "status": "new",
+ "live": {
+  "modes": [
+   "L6",
+   "L2"
+  ],
+  "needs": [
+   "A sandbox resolver and remotes the tester controls (DNS, git, calendar, API stubs); against AWS, a staging domain. Production wamason.com must not be altered."
+  ]
+ },
+ "subcases": [
+  {
+   "id": "E10-P9-03.A-a",
+   "construction": "bundle A-a, run with every listed service reachable and contradicting it",
+   "bundle_from": "A-a",
+   "coverage": {
+    "exact": [],
+    "analogous": []
+   },
+   "expected": {
+    "verdict": "VALID_STRICT",
+    "reason": "OK",
+    "T": "2026-11-10T12:20:00Z",
+    "revocation": "NOT_EVALUATED",
+    "historical_security": "NOT_EVALUATED",
+    "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+    "utc_assessment": {
+     "assumption_id": "A-UTC-7200-6",
+     "utc_upper_bound": "2026-11-10T15:10:00Z"
+    }
+   },
+   "T_derivation": "T = nTime(h*) of the fixture's own receipt proof and headers (a_sig and receipt_anchor as stamped; rows 11.1-11.4 pass); U = 7200 + max nTime(h*..h*+5) (A10.1.1)"
+  }
+ ],
+ "analogous_to": [],
+ "sequence": {
+  "hosts": [
+   "H1"
+  ],
+  "setup": "network up; the harness makes each listed service reachable and contradicting (staging domain/repository/calendar/API only, never the production wamason.com channels)",
+  "steps": [
+   {
+    "step": 1,
+    "fixture": "E10-P9-03.A-a",
+    "environment": "isolated (baseline)"
+   },
+   {
+    "step": 2,
+    "fixture": "E10-P9-03.A-a",
+    "environment": "DNS _tessera-v1.<D> TXT names other keys"
+   },
+   {
+    "step": 3,
+    "fixture": "E10-P9-03.A-a",
+    "environment": "DNS NXDOMAIN"
+   },
+   {
+    "step": 4,
+    "fixture": "E10-P9-03.A-a",
+    "environment": "git remote's key-assertion blob changed"
+   },
+   {
+    "step": 5,
+    "fixture": "E10-P9-03.A-a",
+    "environment": "OTS calendars return a different or upgraded proof"
+   },
+   {
+    "step": 6,
+    "fixture": "E10-P9-03.A-a",
+    "environment": "issue API reports the receipt unknown/revoked"
+   }
+  ],
+  "pass": "every step equals the fixture's expected.json and step 1"
+ }
+}

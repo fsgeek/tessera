@@ -1,0 +1,97 @@
+{
+ "id": "E10-P4-01",
+ "title": "Strict request, one required check unperformable -> UNVERIFIABLE (never VALID)",
+ "guarantees": [
+  "G9"
+ ],
+ "source": [
+  {
+   "model": "P4_VerifierStates_Broken (companion)",
+   "file": "formal/tla/P4_VerifierStates_Broken.out",
+   "lines": "28-34",
+   "kind": "counterexample",
+   "property": "StrictMeansEverything",
+   "abstract": {
+    "waived": [],
+    "c1": "pass",
+    "c2": "pass",
+    "c3": "pass",
+    "c4": "pass",
+    "c5": "unperformable"
+   },
+   "role": "execution_evidence"
+  }
+ ],
+ "scenario": "The fail-open verifier returns VALID_STRICT with an unperformable check; the correct one returns UNVERIFIABLE.",
+ "base": "honest bundle (A-a)",
+ "mutations": [
+  {
+   "op": "remove_member",
+   "path": "git"
+  }
+ ],
+ "test_universe": {
+  "post_edit": "delete layers[0].git"
+ },
+ "choices": [
+  "c1..c5 are uninterpreted (READING-AID-P4 cast table; 'a reading, not a checked correspondence'). c5 is a waivable-class check in the model; V1 has no waivable checks, so c5 -> the git channel (the general E6a instance's waivable member)."
+ ],
+ "expected": {
+  "verdict": "UNVERIFIABLE",
+  "reason": "MEMBER_MISSING:git",
+  "T": "2026-11-10T12:20:00Z",
+  "revocation": "NOT_EVALUATED",
+  "historical_security": "NOT_EVALUATED",
+  "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+  "utc_assessment": {
+   "assumption_id": "A-UTC-7200-6",
+   "utc_upper_bound": "2026-11-10T15:10:00Z"
+  },
+  "row": "2.2"
+ },
+ "covered_by": [
+  "L-09"
+ ],
+ "schema": "tessera-e10-vector/1",
+ "profile": "tessera-v1-strict",
+ "request": "strict",
+ "side": "verifier",
+ "partial_overlap": [],
+ "notes": [],
+ "status": "covered",
+ "live": {
+  "modes": [
+   "L0"
+  ],
+  "needs": [
+   "A real receipt; delete the git member."
+  ]
+ },
+ "subcases": [
+  {
+   "id": "E10-P4-01",
+   "construction": "A-a; post-issue: delete layers[0].git",
+   "coverage": {
+    "exact": [
+     "L-09"
+    ],
+    "analogous": []
+   },
+   "expected": {
+    "verdict": "UNVERIFIABLE",
+    "reason": "MEMBER_MISSING:git",
+    "T": "2026-11-10T12:20:00Z",
+    "revocation": "NOT_EVALUATED",
+    "historical_security": "NOT_EVALUATED",
+    "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+    "utc_assessment": {
+     "assumption_id": "A-UTC-7200-6",
+     "utc_upper_bound": "2026-11-10T15:10:00Z"
+    },
+    "row": "2.2"
+   },
+   "T_derivation": "T = nTime(h*): the edit leaves a_sig and receipt_anchor untouched, so rows 11.1-11.4 still pass; U from the same headers"
+  }
+ ],
+ "analogous_to": []
+}

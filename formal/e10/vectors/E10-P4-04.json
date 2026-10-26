@@ -1,0 +1,104 @@
+{
+ "id": "E10-P4-04",
+ "title": "Failure dominates unperformable (A4.2 precedence): one key, one channel",
+ "guarantees": [
+  "G9",
+  "G4"
+ ],
+ "source": [
+  {
+   "model": "P4_VerifierStates",
+   "file": "formal/tla/P4_VerifierStates.tla",
+   "lines": "96-103, 164-168",
+   "kind": "VerdictFor, ExactInvalid",
+   "role": "property_definition"
+  },
+  {
+   "model": "E6a_AlgVerdict V1 instance",
+   "file": "formal/tla/E6a/E6a_Props.tla",
+   "lines": "206",
+   "kind": "witness definition",
+   "property": "NeverDefectPlusMissingEv",
+   "role": "property_definition"
+  },
+  {
+   "model": "E6a_AlgVerdict V1 instance",
+   "file": "formal/tla/E6a/runs/sanity/NeverDefectPlusMissingEv_V1.out",
+   "lines": "44",
+   "kind": "vacuity witness (A-d3 state)",
+   "property": "NeverDefectPlusMissingEv",
+   "role": "execution_evidence"
+  }
+ ],
+ "scenario": "Case d3: attacker key in both slots, honest DNS evidence, git absent.",
+ "base": "case d3 fixture",
+ "mutations": [
+  {
+   "op": "see",
+   "detail": "profile 11, fixtures for b and d3"
+  }
+ ],
+ "test_universe": {
+  "case": "A-d3"
+ },
+ "expected": {
+  "verdict": "INVALID",
+  "reason": "DNS_KEY_MISMATCH",
+  "T": "2026-11-10T12:20:00Z",
+  "revocation": "NOT_EVALUATED",
+  "historical_security": "NOT_EVALUATED",
+  "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+  "utc_assessment": {
+   "assumption_id": "A-UTC-7200-6",
+   "utc_upper_bound": "2026-11-10T15:10:00Z"
+  },
+  "row": "15.1"
+ },
+ "covered_by": [
+  "A-d3"
+ ],
+ "schema": "tessera-e10-vector/1",
+ "profile": "tessera-v1-strict",
+ "request": "strict",
+ "side": "verifier",
+ "choices": [],
+ "partial_overlap": [],
+ "notes": [],
+ "status": "covered",
+ "live": {
+  "modes": [
+   "L1"
+  ],
+  "needs": [
+   "Attacker keys; honest DNS evidence copied from a real receipt."
+  ]
+ },
+ "subcases": [
+  {
+   "id": "E10-P4-04",
+   "construction": "conformance A-d3 construction, unchanged (one attacker key in both slots, DNS names the honest keys, git absent)",
+   "bundle_from": "A-d3",
+   "coverage": {
+    "exact": [
+     "A-d3"
+    ],
+    "analogous": []
+   },
+   "expected": {
+    "verdict": "INVALID",
+    "reason": "DNS_KEY_MISMATCH",
+    "T": "2026-11-10T12:20:00Z",
+    "revocation": "NOT_EVALUATED",
+    "historical_security": "NOT_EVALUATED",
+    "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+    "utc_assessment": {
+     "assumption_id": "A-UTC-7200-6",
+     "utc_upper_bound": "2026-11-10T15:10:00Z"
+    },
+    "row": "15.1"
+   },
+   "T_derivation": "T = nTime(h*) of the fixture's own receipt proof and headers (a_sig and receipt_anchor as stamped; rows 11.1-11.4 pass); U = 7200 + max nTime(h*..h*+5) (A10.1.1)"
+  }
+ ],
+ "analogous_to": []
+}

@@ -1,0 +1,99 @@
+{
+ "id": "E10-P7-02",
+ "title": "Red bar for E10-P7-01: a re-serializing embedding changes the inner verdict",
+ "guarantees": [
+  "G1"
+ ],
+ "source": [
+  {
+   "model": "S-P7 Q4 companion (two versions, re-serializing)",
+   "file": "formal/suite/s-p7/proverif/sp7_q4_companion_reserialize_twoversion.out",
+   "lines": "604",
+   "kind": "N1 HonestWrappedAccepted unreachable (the required red)",
+   "role": "execution_evidence"
+  }
+ ],
+ "scenario": "Embedding the inner as parsed JSON and re-emitting it with JCS turns L-07 (re-indented, JSON_NONCANONICAL) into a canonical, VALID_STRICT bundle: the verdict changed. The vector harness must detect this.",
+ "base": "inner L-07",
+ "mutations": [
+  {
+   "op": "embed_as_parsed_json_then_reextract_with_jcs",
+   "inner": "L-07"
+  }
+ ],
+ "test_universe": {
+  "cases": [
+   "L-07"
+  ]
+ },
+ "choices": [
+  "The model's red needs two canonicalization versions; V1 has one. The V1 red bar is a control on the harness/embedding, not on the verifier."
+ ],
+ "expected": "see subcases",
+ "schema": "tessera-e10-vector/1",
+ "profile": "tessera-v1-strict",
+ "request": "strict",
+ "side": "verifier",
+ "covered_by": [],
+ "partial_overlap": [],
+ "notes": [],
+ "status": "new",
+ "live": {
+  "modes": [
+   "L0"
+  ],
+  "needs": [
+   "None beyond E10-P7-01."
+  ]
+ },
+ "subcases": [
+  {
+   "id": "E10-P7-02.inner-L-07",
+   "construction": "the inner as embedded: conformance L-07 bytes",
+   "bundle_from": "L-07",
+   "coverage": {
+    "exact": [
+     "L-07"
+    ],
+    "analogous": []
+   },
+   "expected": {
+    "verdict": "INVALID",
+    "reason": "JSON_NONCANONICAL",
+    "T": "2026-11-10T12:20:00Z",
+    "revocation": "NOT_EVALUATED",
+    "historical_security": "NOT_EVALUATED",
+    "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+    "utc_assessment": {
+     "assumption_id": "A-UTC-7200-6",
+     "utc_upper_bound": "2026-11-10T15:10:00Z"
+    },
+    "row": "2.1"
+   },
+   "T_derivation": "T = nTime(h*) of the fixture's own receipt proof and headers (a_sig and receipt_anchor as stamped; rows 11.1-11.4 pass); U = 7200 + max nTime(h*..h*+5) (A10.1.1)"
+  },
+  {
+   "id": "E10-P7-02.reserialized",
+   "construction": "the red bar: L-07 parsed and re-emitted as JCS (what a re-serializing embedding harness hands back), verified with L-07's trust configuration",
+   "coverage": {
+    "exact": [],
+    "analogous": []
+   },
+   "expected": {
+    "verdict": "VALID_STRICT",
+    "reason": "OK",
+    "T": "2026-11-10T12:20:00Z",
+    "revocation": "NOT_EVALUATED",
+    "historical_security": "NOT_EVALUATED",
+    "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+    "utc_assessment": {
+     "assumption_id": "A-UTC-7200-6",
+     "utc_upper_bound": "2026-11-10T15:10:00Z"
+    }
+   },
+   "T_derivation": "T = nTime(h*) of the fixture's own receipt proof and headers (a_sig and receipt_anchor as stamped; rows 11.1-11.4 pass); U = 7200 + max nTime(h*..h*+5) (A10.1.1)",
+   "note": "This expected value is the WRONG inner verdict the red bar must produce: re-serialization turned INVALID / JSON_NONCANONICAL into VALID_STRICT. The harness passes the red bar when the two subcases' verdicts differ."
+  }
+ ],
+ "analogous_to": []
+}

@@ -1,0 +1,100 @@
+{
+ "id": "E10-TMP-10",
+ "title": "Signed at or after the key's revocation: the model rejects, V1 does not evaluate revocation",
+ "guarantees": [
+  "G9"
+ ],
+ "source": [
+  {
+   "model": "P5P6_TemporalRevocation_Broken (companion)",
+   "file": "formal/tla/P5P6_TemporalRevocation_Broken.out",
+   "lines": "38-47",
+   "kind": "counterexample",
+   "property": "ForgeryRejected",
+   "abstract": {
+    "declared": 0,
+    "signed": 1,
+    "anchor": 1,
+    "revoked": 1
+   },
+   "role": "execution_evidence"
+  }
+ ],
+ "scenario": "The trace is a forgery: bytes signed at the revocation instant (signed = revoked = anchor) by a key that is then still usable. P6's correct model rejects it. V1 does not evaluate revocation (A9 cases e, e'): such bytes are byte-for-byte an ordinary valid bundle, VALID_STRICT with revocation NOT_EVALUATED, and nothing in the bundle distinguishes them from case e's honest bytes. A-e's bundle therefore realises the vector; the relying party must not read non-revocation into it.",
+ "base": "honest bundle (A-a); revocation happens out of band",
+ "mutations": [
+  {
+   "op": "none",
+   "detail": "bytes unchanged; the slot-B key is revoked out of band"
+  }
+ ],
+ "test_universe": {
+  "issue": {}
+ },
+ "choices": [
+  "Model/V1 divergence, stated: the model's P6 prediction (reject) is NOT the V1 expectation. The vector follows V1: VALID_STRICT with revocation NOT_EVALUATED (A9.4; A9 cases e, e'). Listed so the divergence is visible, not as a test of P6."
+ ],
+ "expected": {
+  "verdict": "VALID_STRICT",
+  "reason": "OK",
+  "T": "2026-11-10T12:20:00Z",
+  "revocation": "NOT_EVALUATED",
+  "historical_security": "NOT_EVALUATED",
+  "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+  "utc_assessment": {
+   "assumption_id": "A-UTC-7200-6",
+   "utc_upper_bound": "2026-11-10T15:10:00Z"
+  }
+ },
+ "model_expects": {
+  "verdict": "reject (not StrictAccept)"
+ },
+ "covered_by": [
+  "A-e"
+ ],
+ "schema": "tessera-e10-vector/1",
+ "profile": "tessera-v1-strict",
+ "request": "strict",
+ "side": "verifier",
+ "partial_overlap": [],
+ "notes": [],
+ "status": "covered",
+ "live": {
+  "modes": [
+   "L0"
+  ],
+  "needs": [
+   "A real receipt; no revocation channel is consulted."
+  ]
+ },
+ "subcases": [
+  {
+   "id": "E10-TMP-10",
+   "construction": "A-a bytes unchanged; the slot-B key is revoked out of band (nothing in the bundle or trust configuration changes)",
+   "coverage": {
+    "exact": [
+     "A-e"
+    ],
+    "analogous": [
+     "A-e2 (revoked before declared; same bytes, different out-of-band timing)"
+    ]
+   },
+   "expected": {
+    "verdict": "VALID_STRICT",
+    "reason": "OK",
+    "T": "2026-11-10T12:20:00Z",
+    "revocation": "NOT_EVALUATED",
+    "historical_security": "NOT_EVALUATED",
+    "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+    "utc_assessment": {
+     "assumption_id": "A-UTC-7200-6",
+     "utc_upper_bound": "2026-11-10T15:10:00Z"
+    }
+   },
+   "T_derivation": "T = nTime(h*) of the fixture's own receipt proof and headers (a_sig and receipt_anchor as stamped; rows 11.1-11.4 pass); U = 7200 + max nTime(h*..h*+5) (A10.1.1)"
+  }
+ ],
+ "analogous_to": [
+  "A-e2 (revoked before declared; same bytes, different out-of-band timing)"
+ ]
+}

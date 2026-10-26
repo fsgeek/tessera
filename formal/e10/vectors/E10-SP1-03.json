@@ -1,0 +1,103 @@
+{
+ "id": "E10-SP1-03",
+ "title": "One channel captured (DNS names the attacker's keys), git honest -> CHANNEL_VALUE_MISMATCH",
+ "guarantees": [
+  "G4"
+ ],
+ "source": [
+  {
+   "model": "S-P1 Q1 strict, DNS compromised",
+   "file": "formal/suite/s-p1/proverif/sp1_q1_strict_dns_compromised.out",
+   "lines": "201",
+   "kind": "query true",
+   "property": "Accept => IssuerSigned (unrestricted)",
+   "role": "execution_evidence"
+  },
+  {
+   "model": "capstone correct form, case a",
+   "file": "formal/suite/capstone/proverif/capstone.out",
+   "lines": "5554, 2728",
+   "kind": "queries true",
+   "property": "Accept => IssuerSigned; link 1b",
+   "role": "execution_evidence"
+  }
+ ],
+ "scenario": "The attacker holds the DNS credential: a valid DNSSEC TXT names its keys; it re-signs content under its own two keys and manifest and presents the honest git assertion.",
+ "base": "case b fixture with the DNS channel replaced",
+ "mutations": [
+  {
+   "op": "attacker_receipt",
+   "detail": "attacker keys, manifest, possession, signatures; A_sig re-stamped"
+  },
+  {
+   "op": "dns_txt",
+   "names": "attacker fingerprints",
+   "signed_by": "honest wamason.com ZSK (captured)"
+  },
+  {
+   "op": "git",
+   "names": "honest fingerprints (unchanged)"
+  }
+ ],
+ "test_universe": {
+  "like": "AUTH-i-T with the git assertion reverted to the honest keys"
+ },
+ "choices": [
+  "Model channels sign h(t); V1 channels publish fingerprints, window and profile. 'Captured' = signs under the trusted path."
+ ],
+ "expected": {
+  "verdict": "INVALID",
+  "reason": "CHANNEL_VALUE_MISMATCH",
+  "T": "2026-11-10T12:20:00Z",
+  "revocation": "NOT_EVALUATED",
+  "historical_security": "NOT_EVALUATED",
+  "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+  "utc_assessment": {
+   "assumption_id": "A-UTC-7200-6",
+   "utc_upper_bound": "2026-11-10T15:10:00Z"
+  },
+  "row": "15.2"
+ },
+ "schema": "tessera-e10-vector/1",
+ "profile": "tessera-v1-strict",
+ "request": "strict",
+ "side": "verifier",
+ "covered_by": [],
+ "partial_overlap": [],
+ "notes": [],
+ "status": "new",
+ "live": {
+  "modes": [
+   "L2",
+   "L1"
+  ],
+  "needs": [
+   "A staging domain and repository the tester controls, named by a TEST trust configuration."
+  ]
+ },
+ "subcases": [
+  {
+   "id": "E10-SP1-03",
+   "construction": "TEST issue with captor keys (seeds e10-captor-*), adversarial; DNS TXT names the captor's keys (captured zone key); git blob names the honest keys",
+   "coverage": {
+    "exact": [],
+    "analogous": []
+   },
+   "expected": {
+    "verdict": "INVALID",
+    "reason": "CHANNEL_VALUE_MISMATCH",
+    "T": "2026-11-10T12:20:00Z",
+    "revocation": "NOT_EVALUATED",
+    "historical_security": "NOT_EVALUATED",
+    "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+    "utc_assessment": {
+     "assumption_id": "A-UTC-7200-6",
+     "utc_upper_bound": "2026-11-10T15:10:00Z"
+    },
+    "row": "15.2"
+   },
+   "T_derivation": "T = nTime(h*) of the fixture's own receipt proof and headers (a_sig and receipt_anchor as stamped; rows 11.1-11.4 pass); U = 7200 + max nTime(h*..h*+5) (A10.1.1)"
+  }
+ ],
+ "analogous_to": []
+}

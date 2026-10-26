@@ -1,0 +1,12 @@
+{
+  "case": "02-valid-test",
+  "description": "Valid TEST-key signature over a TEST archive, acquired against an explicitly named TEST keyring (R4 path a). Not a production acceptance.",
+  "archive": "tessera-verifier-v1-TEST-1.parts",
+  "signature": "tessera-verifier-v1-TEST-1.parts.sig",
+  "keyring": "keyring.pgp",
+  "keyring_holds": "test",
+  "signed_by": "test",
+  "gpgv_exit": "0",
+  "accept": true,
+  "accept_basis": "section 15.9 R3 acceptance (trusted checker + pinned gpgv exit 0 + keyring holding only the R5-authenticated production key); case 02 is a TEST acceptance under R4(a)."
+}

@@ -1,0 +1,33 @@
+tessera-v1-part RELEASE.json 1257
+{"catalog_sha256":"2e57bf68928b35b6eabc9070de782d33ea3c1f0d5d18df0c6d684a2965a5f01e","format":"tessera-v1-release/1","freeze_record_sha256":"0000000000000000000000000000000000000000000000000000000000000000","namespace":"PRODUCTION","parts":{"RELYING-PARTY.txt":"af69580c8b6b8ef1504571222498aadc350c8b7f463da1e265e0c0305fe922d3","catalog.json":"2e57bf68928b35b6eabc9070de782d33ea3c1f0d5d18df0c6d684a2965a5f01e","install.sh":"e7be55639cc1dc501574ead2ceef5a41bd1376da79535c9005e8aa128f33892a","release_constants.py":"abbb821c579c4bdf4b28dd7072ce098140dfac54c4e54c955d15401dc023781e","requirements.lock":"4169317d72372e4510eae9958249fd2fafb4c9064d0a3a6d14d48c31659c8a76","sha1dc/SHA1DC-PIN.md":"5e1fa11de611f4a6feef607c10e99e7a64a6dedc985518acd35223c8bb16cf4c","sha1dc/sha1.c":"46685aa85cf6d142e515b03f922d2254d72a271b91f13625bd972ce16dc17149","trust.json":"c5b26d0fb421f897d42c60d74f121cc00b16ec97bc3b06f13e373c0e4448d8e0","verifier/verify.py":"a2b0cc4d70c3fc9eac2be5a8392e81897921459f59acda0f85b0c0f0b2835422"},"profile":"tessera-v1-strict","release":"1","release_key_successor":null,"source_commit":"0000000000000000000000000000000000000000","trust_config_sha256":"c5b26d0fb421f897d42c60d74f121cc00b16ec97bc3b06f13e373c0e4448d8e0","trust_config_version":"0"}
+tessera-v1-part RELYING-PARTY.txt 38
+THROWAWAY stand-in relying-party text
+
+tessera-v1-part catalog.json 33
+{"THROWAWAY":"stand-in catalog"}
+
+tessera-v1-part install.sh 44
+#!/bin/sh
+echo THROWAWAY stand-in installer
+
+tessera-v1-part release_constants.py 272
+NAMESPACE = "PRODUCTION"
+TRUST_SHA256 = "c5b26d0fb421f897d42c60d74f121cc00b16ec97bc3b06f13e373c0e4448d8e0"
+CATALOG_SHA256 = "2e57bf68928b35b6eabc9070de782d33ea3c1f0d5d18df0c6d684a2965a5f01e"
+CATALOG_BYTES = b'{"THROWAWAY":"stand-in catalog"}\n'
+UNICODE_VERSION = "16.0.0"
+
+tessera-v1-part requirements.lock 28
+# THROWAWAY dependency lock
+
+tessera-v1-part sha1dc/SHA1DC-PIN.md 23
+THROWAWAY stand-in pin
+
+tessera-v1-part sha1dc/sha1.c 41
+/* THROWAWAY stand-in vendored source */
+
+tessera-v1-part trust.json 52
+{"THROWAWAY":"stand-in trust config","version":"0"}
+
+tessera-v1-part verifier/verify.py 42
+print('THROWAWAY stand-in verifier c

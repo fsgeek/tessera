@@ -1,0 +1,123 @@
+{
+ "id": "E10-E6A-01",
+ "title": "Fail-open past an unknown algorithm (registered A3.6.2 item 3 companion)",
+ "guarantees": [
+  "G9",
+  "G3"
+ ],
+ "source": [
+  {
+   "model": "E6a_Broken_FailOpen, V1 instance",
+   "file": "formal/tla/E6a/runs/broken/E6a_Broken_FailOpen_V1.out",
+   "lines": "45-50",
+   "kind": "counterexample",
+   "property": "UnknownAlgGivesUnverifiable",
+   "abstract": {
+    "sig": {
+     "kms": "good",
+     "gpg": "bad"
+    },
+    "alg": {
+     "kms": "supported",
+     "gpg": "unsupported"
+    },
+    "ev": "good"
+   },
+   "role": "execution_evidence"
+  }
+ ],
+ "scenario": "The broken verifier treats an unknown algorithm as passed and accepts its opaque signature.",
+ "base": "honest bundle (A-a)",
+ "mutations": [
+  {
+   "op": "see",
+   "detail": "choice (i): both frames and the manifest carry one unknown alg, signatures opaque and non-verifying"
+  }
+ ],
+ "test_universe": {
+  "case": "HY-b2-H (subcase .i)",
+  "case_ii": "HY-e1-C (subcase .ii)"
+ },
+ "choices": [
+  "The model gives each slot its own alg; V1 has one common alg (rows 6.2, 6.3). (i) Same unknown alg in both slots -> UNVERIFIABLE / ALG_UNKNOWN (HY-b2-H). (ii) Slots disagree -> INVALID / RECEIPT_COMMON_MISMATCH (HY-e1-C). Neither reproduces the trace's mixed-slot state exactly."
+ ],
+ "expected": "see subcases",
+ "covered_by": [
+  "HY-b2-H",
+  "HY-e1-C"
+ ],
+ "schema": "tessera-e10-vector/1",
+ "profile": "tessera-v1-strict",
+ "request": "strict",
+ "side": "verifier",
+ "partial_overlap": [],
+ "notes": [],
+ "status": "covered",
+ "live": {
+  "modes": [
+   "L1"
+  ],
+  "needs": [
+   "Frames re-signed or with opaque signatures: re-build a_sig (no service key needed for non-verifying signatures)."
+  ]
+ },
+ "subcases": [
+  {
+   "id": "E10-E6A-01.i",
+   "title": "Choice (i): one alg, unknown to the installation",
+   "construction": "choice (i): conformance HY-b2-H construction (hybrid installation; classical-id frames and manifest, non-verifying rule-O signatures)",
+   "bundle_from": "HY-b2-H",
+   "coverage": {
+    "exact": [
+     "HY-b2-H"
+    ],
+    "analogous": [
+     "ALG-01 (opaque unknown-alg canary, classical installation)"
+    ]
+   },
+   "expected": {
+    "verdict": "UNVERIFIABLE",
+    "reason": "ALG_UNKNOWN",
+    "T": "2026-11-10T12:20:00Z",
+    "revocation": "NOT_EVALUATED",
+    "historical_security": "NOT_EVALUATED",
+    "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+    "utc_assessment": {
+     "assumption_id": "A-UTC-7200-6",
+     "utc_upper_bound": "2026-11-10T15:10:00Z"
+    },
+    "row": "7.1"
+   },
+   "T_derivation": "T = nTime(h*) of the fixture's own receipt proof and headers (a_sig and receipt_anchor as stamped; rows 11.1-11.4 pass); U = 7200 + max nTime(h*..h*+5) (A10.1.1)"
+  },
+  {
+   "id": "E10-E6A-01.ii",
+   "title": "Choice (ii): the slots' alg values disagree",
+   "construction": "choice (ii): conformance HY-e1-C construction (kms frame pair id, gpg frame classical id; classical installation)",
+   "bundle_from": "HY-e1-C",
+   "coverage": {
+    "exact": [
+     "HY-e1-C"
+    ],
+    "analogous": []
+   },
+   "expected": {
+    "verdict": "INVALID",
+    "reason": "RECEIPT_COMMON_MISMATCH",
+    "T": "2026-11-10T12:20:00Z",
+    "revocation": "NOT_EVALUATED",
+    "historical_security": "NOT_EVALUATED",
+    "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+    "utc_assessment": {
+     "assumption_id": "A-UTC-7200-6",
+     "utc_upper_bound": "2026-11-10T15:10:00Z"
+    },
+    "row": "6.2"
+   },
+   "T_derivation": "T = nTime(h*) of the fixture's own receipt proof and headers (a_sig and receipt_anchor as stamped; rows 11.1-11.4 pass); U = 7200 + max nTime(h*..h*+5) (A10.1.1)"
+  }
+ ],
+ "analogous_to": [
+  "ALG-01 (opaque unknown-alg canary, classical installation)"
+ ]
+}

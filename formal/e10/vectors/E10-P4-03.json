@@ -1,0 +1,117 @@
+{
+ "id": "E10-P4-03",
+ "title": "Degraded request refused; the same bytes under strict are valid",
+ "guarantees": [
+  "G9"
+ ],
+ "source": [
+  {
+   "model": "P4_VerifierStates",
+   "file": "formal/tla/P4_VerifierStates.tla",
+   "lines": "117-119, 142-143",
+   "kind": "invariants Monotonicity, DegradedNeedsExplicitWaiver",
+   "role": "property_definition"
+  },
+  {
+   "model": "E6a_AlgVerdict V1 instance",
+   "file": "formal/tla/E6a/RESULTS.md",
+   "lines": "88 (§3.2 table row NeverInDegraded)",
+   "kind": "summary",
+   "role": "summary"
+  },
+  {
+   "model": "E6a_AlgVerdict V1 instance",
+   "file": "formal/tla/E6a/runs/sanity/NeverInDegraded_V1.out",
+   "lines": "46 (No error: unreachable in V1, as expected)",
+   "kind": "witness run, green",
+   "role": "execution_evidence"
+  }
+ ],
+ "scenario": "A waiver request is a verifier input; V1 refuses it at dispatch D4 without evaluation.",
+ "base": "honest bundle (A-a)",
+ "mutations": [
+  {
+   "op": "request",
+   "value": "degraded"
+  }
+ ],
+ "test_universe": {
+  "request": "degraded (subcase .degraded); strict (subcase .strict-control)"
+ },
+ "expected": "see subcases",
+ "covered_by": [
+  "L-06",
+  "L-06s"
+ ],
+ "schema": "tessera-e10-vector/1",
+ "profile": "tessera-v1-strict",
+ "request": "strict",
+ "side": "verifier",
+ "choices": [],
+ "partial_overlap": [],
+ "notes": [],
+ "status": "covered",
+ "live": {
+  "modes": [
+   "L0"
+  ],
+  "needs": [
+   "The service verifier's request parameter (API) or CLI flag."
+  ]
+ },
+ "subcases": [
+  {
+   "id": "E10-P4-03.degraded",
+   "title": "Degraded request: refused at dispatch D4",
+   "construction": "A-a bytes; request = degraded",
+   "request": "degraded",
+   "coverage": {
+    "exact": [
+     "L-06"
+    ],
+    "analogous": []
+   },
+   "expected": {
+    "verdict": "UNVERIFIABLE",
+    "reason": "OUT_OF_PROFILE",
+    "T": null,
+    "revocation": "NOT_EVALUATED",
+    "historical_security": "NOT_EVALUATED",
+    "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+    "utc_assessment": {
+     "assumption_id": "A-UTC-7200-6",
+     "utc_upper_bound": null
+    },
+    "row": "1.4",
+    "detail": "REQUEST_UNSUPPORTED"
+   },
+   "T_derivation": "T null: dispatch-terminal, nothing evaluated (profile 3.4, 7.4); U null"
+  },
+  {
+   "id": "E10-P4-03.strict-control",
+   "title": "Control: the same bytes under the strict request",
+   "construction": "A-a bytes; request = strict (the control)",
+   "request": "strict",
+   "coverage": {
+    "exact": [
+     "L-06s"
+    ],
+    "analogous": []
+   },
+   "expected": {
+    "verdict": "VALID_STRICT",
+    "reason": "OK",
+    "T": "2026-11-10T12:20:00Z",
+    "revocation": "NOT_EVALUATED",
+    "historical_security": "NOT_EVALUATED",
+    "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+    "utc_assessment": {
+     "assumption_id": "A-UTC-7200-6",
+     "utc_upper_bound": "2026-11-10T15:10:00Z"
+    }
+   },
+   "T_derivation": "T = nTime(h*) of the fixture's own receipt proof and headers (a_sig and receipt_anchor as stamped; rows 11.1-11.4 pass); U = 7200 + max nTime(h*..h*+5) (A10.1.1)"
+  }
+ ],
+ "analogous_to": []
+}

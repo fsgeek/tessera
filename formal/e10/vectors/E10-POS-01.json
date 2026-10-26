@@ -1,0 +1,118 @@
+{
+ "id": "E10-POS-01",
+ "title": "Honest receipt as shipped -> VALID_STRICT (every model's N1/ship witness)",
+ "guarantees": [
+  "G1",
+  "G2",
+  "G3",
+  "G4",
+  "G5",
+  "G7",
+  "G9"
+ ],
+ "source": [
+  {
+   "model": "P5cP5P6_Bridge, k=6",
+   "file": "formal/tla/k6-2026-09-14/Bridge/W_ShipUnreachable.out",
+   "kind": "vacuity witness (honest ship)",
+   "lines": "25 (ShipUnreachable violated), 153 (State 15: Ship)",
+   "role": "execution_evidence"
+  },
+  {
+   "model": "S-P1 Q1 N1",
+   "file": "formal/suite/s-p1/proverif/sp1_q1_strict_dns_compromised.out",
+   "lines": "396",
+   "kind": "reachable",
+   "role": "execution_evidence"
+  },
+  {
+   "model": "S-P2 Q1 N1 HonestAccepted",
+   "file": "formal/suite/s-p2/proverif/sp2_q1_strict_dns_compromised.out",
+   "lines": "1055",
+   "kind": "reachable",
+   "role": "execution_evidence"
+  },
+  {
+   "model": "E6a_AlgVerdict V1 instance",
+   "file": "formal/tla/E6a/E6a_Props.tla",
+   "lines": "192",
+   "kind": "witness definition",
+   "property": "NeverInStrict",
+   "role": "property_definition"
+  },
+  {
+   "model": "E6a_AlgVerdict V1 instance",
+   "file": "formal/tla/E6a/runs/sanity/NeverInStrict_V1.out",
+   "lines": "44-49",
+   "kind": "vacuity witness (A-a state)",
+   "property": "NeverInStrict",
+   "role": "execution_evidence"
+  }
+ ],
+ "scenario": "The positive control every negative vector is a mutation of.",
+ "base": "honest bundle (A-a)",
+ "mutations": [],
+ "test_universe": {
+  "case": "A-a"
+ },
+ "expected": {
+  "verdict": "VALID_STRICT",
+  "reason": "OK",
+  "T": "2026-11-10T12:20:00Z",
+  "revocation": "NOT_EVALUATED",
+  "historical_security": "NOT_EVALUATED",
+  "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+  "utc_assessment": {
+   "assumption_id": "A-UTC-7200-6",
+   "utc_upper_bound": "2026-11-10T15:10:00Z"
+  }
+ },
+ "covered_by": [
+  "A-a",
+  "L-06s"
+ ],
+ "schema": "tessera-e10-vector/1",
+ "profile": "tessera-v1-strict",
+ "request": "strict",
+ "side": "verifier",
+ "choices": [],
+ "partial_overlap": [],
+ "notes": [],
+ "status": "covered",
+ "live": {
+  "modes": [
+   "L0"
+  ],
+  "needs": [
+   "One real receipt from the AWS issuer."
+  ]
+ },
+ "subcases": [
+  {
+   "id": "E10-POS-01",
+   "construction": "A-a, the honest receipt as shipped",
+   "bundle_from": "A-a",
+   "coverage": {
+    "exact": [
+     "A-a",
+     "L-06s"
+    ],
+    "analogous": []
+   },
+   "expected": {
+    "verdict": "VALID_STRICT",
+    "reason": "OK",
+    "T": "2026-11-10T12:20:00Z",
+    "revocation": "NOT_EVALUATED",
+    "historical_security": "NOT_EVALUATED",
+    "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+    "utc_assessment": {
+     "assumption_id": "A-UTC-7200-6",
+     "utc_upper_bound": "2026-11-10T15:10:00Z"
+    }
+   },
+   "T_derivation": "T = nTime(h*) of the fixture's own receipt proof and headers (a_sig and receipt_anchor as stamped; rows 11.1-11.4 pass); U = 7200 + max nTime(h*..h*+5) (A10.1.1)"
+  }
+ ],
+ "analogous_to": []
+}

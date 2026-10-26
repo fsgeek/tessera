@@ -1,0 +1,45 @@
+{
+ "T": "2026-11-10T12:20:00Z",
+ "_meta": {
+  "ambiguities": [],
+  "ambiguous_fields": [],
+  "cite": [],
+  "construction": "TEST issue, times {h*+5: TB+1200-3600}",
+  "coverage": {
+   "analogous": [
+    "UTC-03 (same nonmonotone shape, built by raising nTime(h*) to TB+2h: its T is 2026-11-10T14:00:00Z, not 12:20)"
+   ],
+   "exact": [
+    "L-38"
+   ]
+  },
+  "derivation": "expected copied from formal/e10/vectors/E10-TMP-04.json subcases[]",
+  "group": "E10",
+  "id": "E10-TMP-04",
+  "issuer_preship": {
+   "chain_order_h_git_plus_5_lt_h_receipt": true,
+   "git_anchored": true,
+   "receipt_anchored": true,
+   "receipt_c1": true,
+   "receipt_c2": true,
+   "receipt_c3": true,
+   "snapshot_anchored": true,
+   "snapshot_c1": true,
+   "snapshot_c2": true,
+   "snapshot_c3": true,
+   "window": true
+  },
+  "kind": "bundle",
+  "title": "Nonmonotone, accepted: confirmed_at earlier than T",
+  "vector": "E10-TMP-04"
+ },
+ "historical_security": "NOT_EVALUATED",
+ "reason": "OK",
+ "revocation": "NOT_EVALUATED",
+ "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+ "utc_assessment": {
+  "assumption_id": "A-UTC-7200-6",
+  "utc_upper_bound": "2026-11-10T15:00:00Z"
+ },
+ "verdict": "VALID_STRICT"
+}

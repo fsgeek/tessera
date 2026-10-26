@@ -1,0 +1,88 @@
+{
+ "id": "E10-CAP-03",
+ "title": "Cross-receipt transplant: S_kms of receipt R2 on receipt R1's frame -> SIG_INVALID",
+ "guarantees": [
+  "G1",
+  "G10"
+ ],
+ "source": [
+  {
+   "model": "capstone C-C7(i) (strict, case a)",
+   "file": "formal/suite/capstone/proverif/cap_cc07i_a.out",
+   "lines": "9385, 10116, 13678, 14185",
+   "kind": "counterexample (strict run)",
+   "property": "SigBytesUnbound; ...",
+   "role": "execution_evidence"
+  }
+ ],
+ "scenario": "A signature by the honest key over another honest frame that names the same key.",
+ "base": "two honest bundles R1, R2 (different content)",
+ "mutations": [
+  {
+   "op": "a_sig_set_signature",
+   "slot": "kms",
+   "value": "S_kms of R2",
+   "into": "R1"
+  }
+ ],
+ "test_universe": {
+  "post_edit": "issue R2 with other content; transplant S_kms into R1's a_sig"
+ },
+ "expected": {
+  "verdict": "INVALID",
+  "reason": "SIG_INVALID",
+  "T": null,
+  "revocation": "NOT_EVALUATED",
+  "historical_security": "NOT_EVALUATED",
+  "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+  "utc_assessment": {
+   "assumption_id": "A-UTC-7200-6",
+   "utc_upper_bound": null
+  },
+  "row": "9.2",
+  "slot": "kms"
+ },
+ "schema": "tessera-e10-vector/1",
+ "profile": "tessera-v1-strict",
+ "request": "strict",
+ "side": "verifier",
+ "choices": [],
+ "covered_by": [],
+ "partial_overlap": [],
+ "notes": [],
+ "status": "new",
+ "live": {
+  "modes": [
+   "L0"
+  ],
+  "needs": [
+   "Two real receipts from the AWS issuer."
+  ]
+ },
+ "subcases": [
+  {
+   "id": "E10-CAP-03",
+   "construction": "A-a (R1); post-issue: a_sig re-encoded with S_kms of R2 (honest issue, content {TEST: 'receipt R2: other content'})",
+   "coverage": {
+    "exact": [],
+    "analogous": []
+   },
+   "expected": {
+    "verdict": "INVALID",
+    "reason": "SIG_INVALID",
+    "T": null,
+    "revocation": "NOT_EVALUATED",
+    "historical_security": "NOT_EVALUATED",
+    "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+    "utc_assessment": {
+     "assumption_id": "A-UTC-7200-6",
+     "utc_upper_bound": null
+    },
+    "row": "9.2",
+    "slot": "kms"
+   },
+   "T_derivation": "T null: a_sig changed after stamping, so the receipt proof's digest no longer matches (row 11.2); U null with T (A10.1.1)"
+  }
+ ],
+ "analogous_to": []
+}

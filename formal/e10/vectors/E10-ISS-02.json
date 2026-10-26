@@ -1,0 +1,106 @@
+{
+ "id": "E10-ISS-02",
+ "side": "issuer",
+ "title": "Refuse to ship when conjunct 3 fails although wall-clock and burial look done (wall-clock ship guard)",
+ "guarantees": [
+  "G5"
+ ],
+ "source": [
+  {
+   "model": "P5cP5P6_Bridge_BrokenWallClock (companion), k=6",
+   "file": "formal/tla/k6-2026-09-14/Bridge/C_WallClock_Red.out",
+   "lines": "whole trace, final Ship state 180-186",
+   "kind": "counterexample",
+   "property": "HonestShipAccepted",
+   "abstract": {
+    "declared": 6,
+    "Delta": 2,
+    "chain": [
+     7,
+     7,
+     7,
+     7,
+     7,
+     9
+    ],
+    "anchorH": 1,
+    "shipAtWall": 8
+   },
+   "role": "execution_evidence"
+  }
+ ],
+ "scenario": "An issuer whose ship rule uses its wall clock ships a receipt whose sixth block time is past the window; the verifier rejects it (CONFIRMATION_LATE). The honest issuer must not ship it.",
+ "base": "an issuance attempt",
+ "mutations": [
+  {
+   "op": "chain_times",
+   "h*": "declared + delta/2",
+   "h*+5": "declared + 3*delta/2"
+  },
+  {
+   "op": "wall_clock_at_ship",
+   "value": "declared + delta (inside the wall deadline)"
+  }
+ ],
+ "test_universe": {
+  "issue": {
+   "times": {
+    "900024": "TB + 129600",
+    "900029": "TB + 388800"
+   }
+  },
+  "expect": "IssueRefused (pre-ship receipt_c3 = false)"
+ },
+ "choices": [
+  "Unit = delta/2 as in E10-TMP-02."
+ ],
+ "expected": null,
+ "expected_issuer": {
+  "ships": false
+ },
+ "schema": "tessera-e10-vector/1",
+ "profile": "tessera-v1-strict",
+ "request": "strict",
+ "covered_by": [],
+ "partial_overlap": [],
+ "notes": [],
+ "status": "new",
+ "live": {
+  "modes": [
+   "L5",
+   "L4"
+  ],
+  "needs": [
+   "As E10-ISS-01."
+  ]
+ },
+ "staging_harness": {
+  "status": "requires staging harness",
+  "harness": "staging issuer with the simulated chain of E10-ISS-01 and a lifecycle (wall) clock W the harness drives; the attempt log records W at every event",
+  "sequence": [
+   "S1 W := d; submit request R; record attempt A1 and its lifecycle expiry W_exp = d+DELTA+slack",
+   "S2 W := d+DELTA/2; stub mines h* with nTime d+DELTA/2",
+   "S3 W advances to d+DELTA-3600 (inside the wall deadline); stub mines h*+1..h*+5, h*+5 with nTime d+3*DELTA/2 (six confirmations)",
+   "S4 hold W at d+DELTA-3600 and the chain at h*+5 until A1's decision is recorded"
+  ],
+  "observations": [
+   "O1 the decision record for A1 is made at W_dec < W_exp, carries the confirmed proof (h*..h*+5 headers) and c3 = false",
+   "O2 A1 is not marked expired (the refusal is not a lifecycle expiry)",
+   "O3 no receipt for A1 is returned or queued"
+  ],
+  "controls": [
+   {
+    "id": "C1-ships",
+    "change": "S3 with nTime(h*+5) = d+DELTA, same W schedule",
+    "expect": "A1 ships at W_dec < W_exp; the receipt verifies VALID_STRICT"
+   }
+  ],
+  "pass": "O1-O3 for the refusal run and C1 ships; a ships:false caused by expiry (O2 fails) is NOT a pass",
+  "test_oracle": [
+   "E10-ISS-02.test-refuse",
+   "E10-ISS-02.test-control"
+  ],
+  "test_oracle_limit": "The TEST issuer has no wall clock; its oracle fixes only that c3 = false refuses and the c3-boundary control ships."
+ },
+ "status_note": "requires staging harness; not exercisable through the public API alone"
+}

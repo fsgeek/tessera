@@ -1,0 +1,97 @@
+{
+ "id": "E10-SP2-05",
+ "title": "Honest frames with a substituted manifest -> RECEIPT_MANIFEST_MISMATCH",
+ "guarantees": [
+  "G3",
+  "G10"
+ ],
+ "source": [
+  {
+   "model": "S-P2 Q5-C2 companion (both set pins removed), degraded",
+   "file": "formal/suite/s-p2/proverif/sp2_q5_c2_fponly_frame_nomh.out",
+   "lines": "363-535",
+   "kind": "counterexample",
+   "property": "SetAltered",
+   "role": "execution_evidence"
+  },
+  {
+   "model": "S-P2 diagnostic d9 (strict)",
+   "file": "formal/suite/s-p2/proverif/diagnostics/d9_strict_c2_mutation.out",
+   "lines": "395",
+   "kind": "query true (the strict tuple pin closes it)",
+   "role": "execution_evidence"
+  }
+ ],
+ "scenario": "An honest key ends up accepted under a manifest it never signed: the manifest is swapped for one naming another valid gpg key.",
+ "base": "honest bundle (A-a)",
+ "mutations": [
+  {
+   "op": "replace_member",
+   "path": "manifest",
+   "with": "F_manifest with sset = [another valid gpg fingerprint]"
+  }
+ ],
+ "test_universe": {
+  "post_edit": "rebuild F_manifest with another fingerprint; keep a_sig"
+ },
+ "expected": {
+  "verdict": "INVALID",
+  "reason": "RECEIPT_MANIFEST_MISMATCH",
+  "T": "2026-11-10T12:20:00Z",
+  "revocation": "NOT_EVALUATED",
+  "historical_security": "NOT_EVALUATED",
+  "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+  "utc_assessment": {
+   "assumption_id": "A-UTC-7200-6",
+   "utc_upper_bound": "2026-11-10T15:10:00Z"
+  },
+  "row": "4.2",
+  "slot": "kms"
+ },
+ "partial_overlap": [
+  "RC-b (bad manifest_sha256 on the frame side)",
+  "ALG-05"
+ ],
+ "schema": "tessera-e10-vector/1",
+ "profile": "tessera-v1-strict",
+ "request": "strict",
+ "side": "verifier",
+ "choices": [],
+ "covered_by": [],
+ "notes": [],
+ "status": "new",
+ "live": {
+  "modes": [
+   "L0"
+  ],
+  "needs": [
+   "A real receipt; build a manifest frame (no signing)."
+  ]
+ },
+ "subcases": [
+  {
+   "id": "E10-SP2-05",
+   "construction": "A-a; post-issue: manifest replaced by F_manifest with sset = [fp of TEST key other-gpg]; a_sig kept",
+   "coverage": {
+    "exact": [],
+    "analogous": []
+   },
+   "expected": {
+    "verdict": "INVALID",
+    "reason": "RECEIPT_MANIFEST_MISMATCH",
+    "T": "2026-11-10T12:20:00Z",
+    "revocation": "NOT_EVALUATED",
+    "historical_security": "NOT_EVALUATED",
+    "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+    "utc_assessment": {
+     "assumption_id": "A-UTC-7200-6",
+     "utc_upper_bound": "2026-11-10T15:10:00Z"
+    },
+    "row": "4.2",
+    "slot": "kms"
+   },
+   "T_derivation": "T = nTime(h*): the edit leaves a_sig and receipt_anchor untouched, so rows 11.1-11.4 still pass; U from the same headers"
+  }
+ ],
+ "analogous_to": []
+}

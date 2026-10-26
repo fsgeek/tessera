@@ -1,0 +1,152 @@
+{
+ "id": "E10-TMP-01",
+ "title": "Late burial at the boundary: anchor in window, k-th confirmation one second late",
+ "registered_case": "BAND0-EXIT E10 'late burial -> INVALID'; PROPERTIES A2.2 box",
+ "guarantees": [
+  "G5",
+  "G9"
+ ],
+ "source": [
+  {
+   "model": "P5P6_TemporalRevocation_BrokenConf (companion)",
+   "file": "formal/tla/P5P6_TemporalRevocation_BrokenConf.out",
+   "lines": "35-44",
+   "kind": "counterexample",
+   "property": "AbandonedArtifactRejected",
+   "defined_at": "formal/tla/P5P6_TemporalRevocation.tla:195-199",
+   "abstract": {
+    "declared": 0,
+    "anchor": 0,
+    "confirmedAt": 1,
+    "polDelta": 0,
+    "polEps": 0
+   },
+   "role": "execution_evidence"
+  },
+  {
+   "model": "P5cP5P6_Bridge, k=6 instance",
+   "file": "formal/tla/k6-2026-09-14/Bridge/W_LateBurialArtifactUnreachable.out",
+   "lines": "25-141",
+   "kind": "vacuity witness",
+   "property": "LateBurialArtifactUnreachable (feeds LateBurialRejected, P5cP5P6_Bridge.tla:213-217)",
+   "abstract": {
+    "declared": 2,
+    "Delta": 2,
+    "chain": [
+     3,
+     3,
+     3,
+     3,
+     5,
+     5
+    ],
+    "anchorH": 1,
+    "designated": 6
+   },
+   "role": "execution_evidence"
+  },
+  {
+   "model": "P5cP5P6_Bridge_BrokenAnchorSubst, k=6",
+   "file": "formal/tla/k6-2026-09-14/Bridge/C_AnchorSubst_Late.out",
+   "lines": "25-141",
+   "kind": "counterexample",
+   "property": "LateBurialRejected",
+   "abstract": {
+    "declared": 2,
+    "chain": [
+     3,
+     3,
+     4,
+     3,
+     3,
+     5
+    ],
+    "anchorH": 1
+   },
+   "role": "execution_evidence"
+  }
+ ],
+ "scenario": "An anchored attempt whose including block is inside the window but whose sixth block (h*+5) carries a time past declared + delta. Strict issuance never ships it (it is the A2.0 abandoned-anchor artifact); the verifier must reject it on conjunct 3.",
+ "base": "honest bundle (A-a)",
+ "mutations": [
+  {
+   "op": "set_ntime",
+   "height": "h*+5",
+   "value": "declared + delta + 1 s"
+  },
+  {
+   "op": "restamp_not_needed"
+  }
+ ],
+ "test_universe": {
+  "issue": {
+   "times": {
+    "900029": "TB + DELTA + 1"
+   },
+   "adversarial": true
+  }
+ },
+ "choices": [
+  "Unit scaling: the traces fix only order relations (anchor <= declared + polDelta < confirmedAt). This vector takes the boundary concretization (one second past the window). E10-TMP-02 takes the traced ratio."
+ ],
+ "expected": {
+  "verdict": "INVALID",
+  "reason": "CONFIRMATION_LATE",
+  "T": "2026-11-10T12:20:00Z",
+  "revocation": "NOT_EVALUATED",
+  "historical_security": "NOT_EVALUATED",
+  "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+  "utc_assessment": {
+   "assumption_id": "A-UTC-7200-6",
+   "utc_upper_bound": "2026-11-13T14:00:01Z"
+  },
+  "row": "12.3"
+ },
+ "covered_by": [
+  "L-36b",
+  "UTC-06"
+ ],
+ "schema": "tessera-e10-vector/1",
+ "profile": "tessera-v1-strict",
+ "request": "strict",
+ "side": "verifier",
+ "partial_overlap": [],
+ "notes": [],
+ "status": "covered",
+ "live": {
+  "modes": [
+   "L4"
+  ],
+  "needs": [
+   "Mainnet header times cannot be chosen: run the service verifier on the TEST-universe bundle (TEST release, trust configuration and pins, run.py environment contract)."
+  ]
+ },
+ "subcases": [
+  {
+   "id": "E10-TMP-01",
+   "construction": "TEST issue, times {h*+5: TB+DELTA+1}, adversarial (materialize.py BUILD)",
+   "coverage": {
+    "exact": [
+     "L-36b",
+     "UTC-06"
+    ],
+    "analogous": []
+   },
+   "expected": {
+    "verdict": "INVALID",
+    "reason": "CONFIRMATION_LATE",
+    "T": "2026-11-10T12:20:00Z",
+    "revocation": "NOT_EVALUATED",
+    "historical_security": "NOT_EVALUATED",
+    "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+    "utc_assessment": {
+     "assumption_id": "A-UTC-7200-6",
+     "utc_upper_bound": "2026-11-13T14:00:01Z"
+    },
+    "row": "12.3"
+   },
+   "T_derivation": "T = nTime(h*) of the fixture's own receipt proof and headers (a_sig and receipt_anchor as stamped; rows 11.1-11.4 pass); U = 7200 + max nTime(h*..h*+5) (A10.1.1)"
+  }
+ ],
+ "analogous_to": []
+}

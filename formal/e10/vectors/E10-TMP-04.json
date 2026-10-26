@@ -1,0 +1,115 @@
+{
+ "id": "E10-TMP-04",
+ "title": "Nonmonotone, accepted: confirmed_at earlier than T",
+ "guarantees": [
+  "G5"
+ ],
+ "source": [
+  {
+   "model": "P5cP5P6_Bridge, k=6",
+   "file": "formal/tla/k6-2026-09-14/Bridge/W_NonMonotonicShipUnreachable.out",
+   "lines": "25-114",
+   "kind": "vacuity witness",
+   "property": "NonMonotonicShipUnreachable",
+   "abstract": {
+    "declared": 0,
+    "chain": [
+     1,
+     0,
+     0,
+     1,
+     0,
+     0
+    ],
+    "anchorH": 1,
+    "shipped": true
+   },
+   "role": "execution_evidence"
+  },
+  {
+   "model": "P5P6_TemporalRevocation",
+   "file": "formal/tla/P5P6_TemporalRevocation_Sanity.out",
+   "lines": "53-62",
+   "kind": "vacuity witness",
+   "property": "NonMonotonicAcceptUnreachable",
+   "role": "execution_evidence"
+  }
+ ],
+ "scenario": "Honest shipment where the sixth block's time is before the including block's time. No monotonicity check: valid.",
+ "base": "honest bundle (A-a)",
+ "mutations": [
+  {
+   "op": "set_ntime",
+   "height": "h*+5",
+   "value": "T - 1 h"
+  }
+ ],
+ "test_universe": {
+  "issue": {
+   "times": {
+    "900029": "TB + 1200 - 3600"
+   }
+  }
+ },
+ "expected": {
+  "verdict": "VALID_STRICT",
+  "reason": "OK",
+  "T": "2026-11-10T12:20:00Z",
+  "revocation": "NOT_EVALUATED",
+  "historical_security": "NOT_EVALUATED",
+  "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+  "utc_assessment": {
+   "assumption_id": "A-UTC-7200-6",
+   "utc_upper_bound": "2026-11-10T15:00:00Z"
+  }
+ },
+ "covered_by": [
+  "L-38"
+ ],
+ "schema": "tessera-e10-vector/1",
+ "profile": "tessera-v1-strict",
+ "request": "strict",
+ "side": "verifier",
+ "choices": [],
+ "partial_overlap": [],
+ "notes": [],
+ "status": "covered",
+ "live": {
+  "modes": [
+   "L4"
+  ],
+  "needs": [
+   "As E10-TMP-01."
+  ]
+ },
+ "subcases": [
+  {
+   "id": "E10-TMP-04",
+   "construction": "TEST issue, times {h*+5: TB+1200-3600}",
+   "coverage": {
+    "exact": [
+     "L-38"
+    ],
+    "analogous": [
+     "UTC-03 (same nonmonotone shape, built by raising nTime(h*) to TB+2h: its T is 2026-11-10T14:00:00Z, not 12:20)"
+    ]
+   },
+   "expected": {
+    "verdict": "VALID_STRICT",
+    "reason": "OK",
+    "T": "2026-11-10T12:20:00Z",
+    "revocation": "NOT_EVALUATED",
+    "historical_security": "NOT_EVALUATED",
+    "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+    "utc_assessment": {
+     "assumption_id": "A-UTC-7200-6",
+     "utc_upper_bound": "2026-11-10T15:00:00Z"
+    }
+   },
+   "T_derivation": "T = nTime(h*) of the fixture's own receipt proof and headers (a_sig and receipt_anchor as stamped; rows 11.1-11.4 pass); U = 7200 + max nTime(h*..h*+5) (A10.1.1)"
+  }
+ ],
+ "analogous_to": [
+  "UTC-03 (same nonmonotone shape, built by raising nTime(h*) to TB+2h: its T is 2026-11-10T14:00:00Z, not 12:20)"
+ ]
+}

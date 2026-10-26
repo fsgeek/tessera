@@ -1,0 +1,12 @@
+{
+  "case": "03-wrong-key",
+  "description": "Otherwise valid signature by an unrelated key; production keyring does not hold it (R3: any other key authenticates nothing).",
+  "archive": "tessera-verifier-v1-1.parts",
+  "signature": "tessera-verifier-v1-1.parts.sig",
+  "keyring": "keyring.pgp",
+  "keyring_holds": "production",
+  "signed_by": "wrong",
+  "gpgv_exit": "nonzero",
+  "accept": false,
+  "accept_basis": "section 15.9 R3 acceptance (trusted checker + pinned gpgv exit 0 + keyring holding only the R5-authenticated production key); case 02 is a TEST acceptance under R4(a)."
+}

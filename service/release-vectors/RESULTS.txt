@@ -1,0 +1,26 @@
+# Recorded 2026-10-26. Exact exit codes are identical for both.
+## /usr/bin/gpgv (Ubuntu 2.4.4-2ubuntu17.6)
+gpgv: /usr/bin/gpgv ['gpgv (GnuPG) 2.4.4']
+match    01-valid-production                      exit=0 expected=0 accept=True
+match    02-valid-test                            exit=0 expected=0 accept=True
+match    03-wrong-key                             exit=2 expected=nonzero accept=False
+match    04-test-key-as-production                exit=2 expected=nonzero accept=False
+match    05-truncated-archive                     exit=1 expected=nonzero accept=False
+match    06-signature-over-different-archive      exit=1 expected=nonzero accept=False
+match    07-signature-corrupted                   exit=1 expected=nonzero accept=False
+match    08-archive-extra-byte                    exit=1 expected=nonzero accept=False
+match    09-test-key-offered-as-key               exit=0 expected=0 accept=False
+9/9 match
+
+## upstream GnuPG 2.4.4 gpgv built from tarball sha256 67ebe016...85bc6 (matches MANIFEST), with libgpg-error 1.47, libgcrypt 1.10.3, libksba 1.6.6, libassuan 2.5.7, npth 1.6 built locally, no root
+gpgv: /home/tony/projects/tessera/service/release-vectors/work/up/src/gnupg-2.4.4/g10/gpgv ['gpgv (GnuPG) 2.4.4']
+match    01-valid-production                      exit=0 expected=0 accept=True
+match    02-valid-test                            exit=0 expected=0 accept=True
+match    03-wrong-key                             exit=2 expected=nonzero accept=False
+match    04-test-key-as-production                exit=2 expected=nonzero accept=False
+match    05-truncated-archive                     exit=1 expected=nonzero accept=False
+match    06-signature-over-different-archive      exit=1 expected=nonzero accept=False
+match    07-signature-corrupted                   exit=1 expected=nonzero accept=False
+match    08-archive-extra-byte                    exit=1 expected=nonzero accept=False
+match    09-test-key-offered-as-key               exit=0 expected=0 accept=False
+9/9 match

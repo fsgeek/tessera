@@ -1,0 +1,95 @@
+{
+ "id": "E10-E6A-05",
+ "title": "Out-of-profile input is terminal (dispatch fall-through companion)",
+ "guarantees": [
+  "G9"
+ ],
+ "source": [
+  {
+   "model": "E6a_Broken_DispatchFallthrough, V1",
+   "file": "formal/tla/E6a/runs/broken/E6a_Broken_DispatchFallthrough_V1.out",
+   "lines": "33-38",
+   "kind": "counterexample",
+   "property": "DispatchTerminal",
+   "role": "execution_evidence"
+  }
+ ],
+ "scenario": "Dispatch out; nothing is evaluated.",
+ "base": "honest bundle (A-a)",
+ "mutations": [
+  {
+   "op": "set_top_level",
+   "path": "profile",
+   "value": "tessera-v2-strict"
+  }
+ ],
+ "test_universe": {
+  "case": "L-03b"
+ },
+ "expected": {
+  "verdict": "UNVERIFIABLE",
+  "reason": "OUT_OF_PROFILE",
+  "T": null,
+  "revocation": "NOT_EVALUATED",
+  "historical_security": "NOT_EVALUATED",
+  "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+  "utc_assessment": {
+   "assumption_id": "A-UTC-7200-6",
+   "utc_upper_bound": null
+  },
+  "row": "1.2"
+ },
+ "covered_by": [
+  "L-03b"
+ ],
+ "schema": "tessera-e10-vector/1",
+ "profile": "tessera-v1-strict",
+ "request": "strict",
+ "side": "verifier",
+ "choices": [],
+ "partial_overlap": [],
+ "notes": [],
+ "status": "covered",
+ "live": {
+  "modes": [
+   "L0"
+  ],
+  "needs": [
+   "A real receipt; edit the top-level label."
+  ]
+ },
+ "subcases": [
+  {
+   "id": "E10-E6A-05",
+   "construction": "conformance L-03b construction: top-level profile = 'tessera-v2-strict'",
+   "bundle_from": "L-03b",
+   "coverage": {
+    "exact": [
+     "L-03b"
+    ],
+    "analogous": [
+     "L-03 (profile absent)",
+     "L-04b (zero layers)"
+    ]
+   },
+   "expected": {
+    "verdict": "UNVERIFIABLE",
+    "reason": "OUT_OF_PROFILE",
+    "T": null,
+    "revocation": "NOT_EVALUATED",
+    "historical_security": "NOT_EVALUATED",
+    "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+    "utc_assessment": {
+     "assumption_id": "A-UTC-7200-6",
+     "utc_upper_bound": null
+    },
+    "row": "1.2"
+   },
+   "T_derivation": "T null: dispatch-terminal, nothing evaluated (profile 3.4, 7.4); U null"
+  }
+ ],
+ "analogous_to": [
+  "L-03 (profile absent)",
+  "L-04b (zero layers)"
+ ]
+}

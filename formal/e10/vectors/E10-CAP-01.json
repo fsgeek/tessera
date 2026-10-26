@@ -1,0 +1,88 @@
+{
+ "id": "E10-CAP-01",
+ "title": "Both channels captured, captor's own keys: VALID_STRICT (V1's accepted limit)",
+ "guarantees": [
+  "G4",
+  "G10"
+ ],
+ "source": [
+  {
+   "model": "capstone C-C1 (case c)",
+   "file": "formal/suite/capstone/proverif/cap_cc01_c.out",
+   "lines": "14277, 3278",
+   "kind": "query false (registered)",
+   "property": "Accept => IssuerSigned; link 1b",
+   "role": "execution_evidence"
+  }
+ ],
+ "scenario": "New receipts under the captor's own keys pass when both authority channels are captured (V1-CONTRACT §2, §4).",
+ "base": "AUTH-i-T",
+ "mutations": [
+  {
+   "op": "see",
+   "detail": "AUTH-i-T fixture"
+  }
+ ],
+ "test_universe": {
+  "case": "AUTH-i-T"
+ },
+ "expected": {
+  "verdict": "VALID_STRICT",
+  "reason": "OK",
+  "T": "2026-11-10T12:20:00Z",
+  "revocation": "NOT_EVALUATED",
+  "historical_security": "NOT_EVALUATED",
+  "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+  "utc_assessment": {
+   "assumption_id": "A-UTC-7200-6",
+   "utc_upper_bound": "2026-11-10T15:10:00Z"
+  }
+ },
+ "covered_by": [
+  "AUTH-i-T"
+ ],
+ "schema": "tessera-e10-vector/1",
+ "profile": "tessera-v1-strict",
+ "request": "strict",
+ "side": "verifier",
+ "choices": [],
+ "partial_overlap": [],
+ "notes": [],
+ "status": "covered",
+ "live": {
+  "modes": [
+   "L2",
+   "L1"
+  ],
+  "needs": [
+   "Captured-channel simulation."
+  ]
+ },
+ "subcases": [
+  {
+   "id": "E10-CAP-01",
+   "construction": "conformance AUTH-i-T construction: the captor's keys, published in both channels",
+   "bundle_from": "AUTH-i-T",
+   "coverage": {
+    "exact": [
+     "AUTH-i-T"
+    ],
+    "analogous": []
+   },
+   "expected": {
+    "verdict": "VALID_STRICT",
+    "reason": "OK",
+    "T": "2026-11-10T12:20:00Z",
+    "revocation": "NOT_EVALUATED",
+    "historical_security": "NOT_EVALUATED",
+    "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+    "utc_assessment": {
+     "assumption_id": "A-UTC-7200-6",
+     "utc_upper_bound": "2026-11-10T15:10:00Z"
+    }
+   },
+   "T_derivation": "T = nTime(h*) of the fixture's own receipt proof and headers (a_sig and receipt_anchor as stamped; rows 11.1-11.4 pass); U = 7200 + max nTime(h*..h*+5) (A10.1.1)"
+  }
+ ],
+ "analogous_to": []
+}

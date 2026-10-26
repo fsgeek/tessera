@@ -1,0 +1,270 @@
+{
+ "id": "E10-P7-01",
+ "title": "Opaque embedding: a receipt inside another receipt's content; the inner verdict is unchanged",
+ "registered_case": "BAND0-EXIT E10 'the P7 verdict-independence case' (partial: see choices)",
+ "guarantees": [
+  "G1",
+  "G8"
+ ],
+ "source": [
+  {
+   "model": "S-P7 Q4 opaque control (two versions)",
+   "file": "formal/suite/s-p7/proverif/sp7_q4_control_opaque_twoversion.out",
+   "lines": "560, 574, 588 (true); 926 (N1 reachable)",
+   "kind": "queries green; N1 HonestWrappedAccepted reachable",
+   "role": "execution_evidence"
+  },
+  {
+   "registered_text": "docs/phase-0-prereg-amendment-6.md",
+   "lines": "44-53",
+   "role": "registered_text"
+  },
+  {
+   "registered_text": "docs/band-1-docket.md",
+   "lines": "106-109",
+   "role": "registered_text"
+  },
+  {
+   "registered_text": "docs/phase-0-prereg-amendment-9.md",
+   "lines": "490 (A9 row 26)",
+   "role": "registered_text"
+  }
+ ],
+ "scenario": "The outer receipt's content holds the exact bytes of an inner container (base64). The outer verifies VALID_STRICT whatever the inner is; the decoded inner bytes are byte-identical and keep their standalone verdict.",
+ "base": "honest bundle (A-a) as outer, issued with chosen content",
+ "mutations": [
+  {
+   "op": "issue_with_content",
+   "content": {
+    "TEST": "opaque embedded receipt",
+    "inner_b64": "<base64 of inner bundle bytes>"
+   }
+  },
+  {
+   "op": "inners",
+   "list": [
+    "A-a -> VALID_STRICT / OK",
+    "KEY-a -> INVALID / KEY_MISMATCH",
+    "L-07 -> INVALID / JSON_NONCANONICAL",
+    "L-09 -> UNVERIFIABLE / MEMBER_MISSING:git"
+   ]
+  }
+ ],
+ "test_universe": {
+  "issue": {
+   "content": {
+    "TEST": "opaque embedded receipt",
+    "inner_b64": "<inner>"
+   }
+  }
+ },
+ "choices": [
+  "A6.1 asks for every P4 verdict value; VALID_DEGRADED does not exist in V1, so three values.",
+  "V1 has no wrapper type (two layers are OUT_OF_PROFILE). 'Wrapper' is read as opaque content; the outer asserts nothing about the inner.",
+  "A9 row 26 moved P7's wrapper half and its H1a vector to 'Wrapping and renewal'; this is a V1 analogue, not the registered vector."
+ ],
+ "expected": "see subcases",
+ "schema": "tessera-e10-vector/1",
+ "profile": "tessera-v1-strict",
+ "request": "strict",
+ "side": "verifier",
+ "covered_by": [],
+ "partial_overlap": [],
+ "notes": [],
+ "status": "new",
+ "live": {
+  "modes": [
+   "L0"
+  ],
+  "needs": [
+   "Submit the content to the AWS issuer (ordinary client request); verify outer and decoded inners."
+  ]
+ },
+ "subcases": [
+  {
+   "id": "E10-P7-01.inner-A-a",
+   "construction": "inner bundle, standalone: conformance A-a",
+   "bundle_from": "A-a",
+   "coverage": {
+    "exact": [
+     "A-a"
+    ],
+    "analogous": []
+   },
+   "expected": {
+    "verdict": "VALID_STRICT",
+    "reason": "OK",
+    "T": "2026-11-10T12:20:00Z",
+    "revocation": "NOT_EVALUATED",
+    "historical_security": "NOT_EVALUATED",
+    "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+    "utc_assessment": {
+     "assumption_id": "A-UTC-7200-6",
+     "utc_upper_bound": "2026-11-10T15:10:00Z"
+    }
+   },
+   "T_derivation": "T = nTime(h*) of the fixture's own receipt proof and headers (a_sig and receipt_anchor as stamped; rows 11.1-11.4 pass); U = 7200 + max nTime(h*..h*+5) (A10.1.1)"
+  },
+  {
+   "id": "E10-P7-01.inner-KEY-a",
+   "construction": "inner bundle, standalone: conformance KEY-a",
+   "bundle_from": "KEY-a",
+   "coverage": {
+    "exact": [
+     "KEY-a"
+    ],
+    "analogous": []
+   },
+   "expected": {
+    "verdict": "INVALID",
+    "reason": "KEY_MISMATCH",
+    "T": "2026-11-10T12:20:00Z",
+    "revocation": "NOT_EVALUATED",
+    "historical_security": "NOT_EVALUATED",
+    "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+    "utc_assessment": {
+     "assumption_id": "A-UTC-7200-6",
+     "utc_upper_bound": "2026-11-10T15:10:00Z"
+    },
+    "row": "5.2",
+    "slot": "gpg"
+   },
+   "T_derivation": "T = nTime(h*) of the fixture's own receipt proof and headers (a_sig and receipt_anchor as stamped; rows 11.1-11.4 pass); U = 7200 + max nTime(h*..h*+5) (A10.1.1)"
+  },
+  {
+   "id": "E10-P7-01.inner-L-07",
+   "construction": "inner bundle, standalone: conformance L-07",
+   "bundle_from": "L-07",
+   "coverage": {
+    "exact": [
+     "L-07"
+    ],
+    "analogous": []
+   },
+   "expected": {
+    "verdict": "INVALID",
+    "reason": "JSON_NONCANONICAL",
+    "T": "2026-11-10T12:20:00Z",
+    "revocation": "NOT_EVALUATED",
+    "historical_security": "NOT_EVALUATED",
+    "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+    "utc_assessment": {
+     "assumption_id": "A-UTC-7200-6",
+     "utc_upper_bound": "2026-11-10T15:10:00Z"
+    },
+    "row": "2.1"
+   },
+   "T_derivation": "T = nTime(h*) of the fixture's own receipt proof and headers (a_sig and receipt_anchor as stamped; rows 11.1-11.4 pass); U = 7200 + max nTime(h*..h*+5) (A10.1.1)"
+  },
+  {
+   "id": "E10-P7-01.inner-L-09",
+   "construction": "inner bundle, standalone: conformance L-09",
+   "bundle_from": "L-09",
+   "coverage": {
+    "exact": [
+     "L-09"
+    ],
+    "analogous": []
+   },
+   "expected": {
+    "verdict": "UNVERIFIABLE",
+    "reason": "MEMBER_MISSING:git",
+    "T": "2026-11-10T12:20:00Z",
+    "revocation": "NOT_EVALUATED",
+    "historical_security": "NOT_EVALUATED",
+    "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+    "utc_assessment": {
+     "assumption_id": "A-UTC-7200-6",
+     "utc_upper_bound": "2026-11-10T15:10:00Z"
+    },
+    "row": "2.2"
+   },
+   "T_derivation": "T = nTime(h*) of the fixture's own receipt proof and headers (a_sig and receipt_anchor as stamped; rows 11.1-11.4 pass); U = 7200 + max nTime(h*..h*+5) (A10.1.1)"
+  },
+  {
+   "id": "E10-P7-01.outer-A-a",
+   "construction": "honest TEST issue, content {TEST: 'opaque embedded receipt', inner_b64: base64(A-a bundle bytes)}; materialize.py extracts inner_b64 from the outer bundle's signed kms frame and asserts byte identity",
+   "coverage": {
+    "exact": [],
+    "analogous": []
+   },
+   "expected": {
+    "verdict": "VALID_STRICT",
+    "reason": "OK",
+    "T": "2026-11-10T12:20:00Z",
+    "revocation": "NOT_EVALUATED",
+    "historical_security": "NOT_EVALUATED",
+    "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+    "utc_assessment": {
+     "assumption_id": "A-UTC-7200-6",
+     "utc_upper_bound": "2026-11-10T15:10:00Z"
+    }
+   },
+   "T_derivation": "T = nTime(h*) of the fixture's own receipt proof and headers (a_sig and receipt_anchor as stamped; rows 11.1-11.4 pass); U = 7200 + max nTime(h*..h*+5) (A10.1.1)"
+  },
+  {
+   "id": "E10-P7-01.outer-KEY-a",
+   "construction": "as outer-A-a with the KEY-a bundle embedded",
+   "coverage": {
+    "exact": [],
+    "analogous": []
+   },
+   "expected": {
+    "verdict": "VALID_STRICT",
+    "reason": "OK",
+    "T": "2026-11-10T12:20:00Z",
+    "revocation": "NOT_EVALUATED",
+    "historical_security": "NOT_EVALUATED",
+    "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+    "utc_assessment": {
+     "assumption_id": "A-UTC-7200-6",
+     "utc_upper_bound": "2026-11-10T15:10:00Z"
+    }
+   },
+   "T_derivation": "T = nTime(h*) of the fixture's own receipt proof and headers (a_sig and receipt_anchor as stamped; rows 11.1-11.4 pass); U = 7200 + max nTime(h*..h*+5) (A10.1.1)"
+  },
+  {
+   "id": "E10-P7-01.outer-L-07",
+   "construction": "as outer-A-a with the L-07 bundle embedded",
+   "coverage": {
+    "exact": [],
+    "analogous": []
+   },
+   "expected": {
+    "verdict": "VALID_STRICT",
+    "reason": "OK",
+    "T": "2026-11-10T12:20:00Z",
+    "revocation": "NOT_EVALUATED",
+    "historical_security": "NOT_EVALUATED",
+    "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+    "utc_assessment": {
+     "assumption_id": "A-UTC-7200-6",
+     "utc_upper_bound": "2026-11-10T15:10:00Z"
+    }
+   },
+   "T_derivation": "T = nTime(h*) of the fixture's own receipt proof and headers (a_sig and receipt_anchor as stamped; rows 11.1-11.4 pass); U = 7200 + max nTime(h*..h*+5) (A10.1.1)"
+  },
+  {
+   "id": "E10-P7-01.outer-L-09",
+   "construction": "as outer-A-a with the L-09 bundle embedded",
+   "coverage": {
+    "exact": [],
+    "analogous": []
+   },
+   "expected": {
+    "verdict": "VALID_STRICT",
+    "reason": "OK",
+    "T": "2026-11-10T12:20:00Z",
+    "revocation": "NOT_EVALUATED",
+    "historical_security": "NOT_EVALUATED",
+    "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+    "utc_assessment": {
+     "assumption_id": "A-UTC-7200-6",
+     "utc_upper_bound": "2026-11-10T15:10:00Z"
+    }
+   },
+   "T_derivation": "T = nTime(h*) of the fixture's own receipt proof and headers (a_sig and receipt_anchor as stamped; rows 11.1-11.4 pass); U = 7200 + max nTime(h*..h*+5) (A10.1.1)"
+  }
+ ],
+ "analogous_to": []
+}

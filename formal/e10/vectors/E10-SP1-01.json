@@ -1,0 +1,122 @@
+{
+ "id": "E10-SP1-01",
+ "title": "Frame bytes changed, signatures kept -> SIG_INVALID",
+ "guarantees": [
+  "G1"
+ ],
+ "source": [
+  {
+   "model": "S-P1 Q3 companion A (signature unbound), degraded",
+   "file": "formal/suite/s-p1/proverif/sp1_q3_companionA_sig_unbound.out",
+   "lines": "330-331",
+   "kind": "counterexample",
+   "property": "AcceptedUnderHonestKey => IssuerSigned",
+   "role": "execution_evidence"
+  },
+  {
+   "model": "capstone C-C5 (strict, case a)",
+   "file": "formal/suite/capstone/proverif/cap_cc05_a.out",
+   "lines": "4393, 4998, 7809, 8280",
+   "kind": "counterexample (strict run)",
+   "property": "C-Q8, link 4, Accept, AUHK",
+   "role": "execution_evidence"
+  }
+ ],
+ "scenario": "Change common.content identically in both frames (so the common bytes still agree) and keep both signatures.",
+ "base": "honest bundle (A-a)",
+ "mutations": [
+  {
+   "op": "frames_set",
+   "field": "common.content",
+   "value": {
+    "TEST": "altered after signing"
+   },
+   "slots": "both"
+  },
+  {
+   "op": "keep_signatures"
+  },
+  {
+   "op": "restamp",
+   "value": "split: subcase .unstamped (T null) and .restamped (T = nTime(h*))"
+  }
+ ],
+ "test_universe": {
+  "post_edit": "subcase .unstamped",
+  "hooks": "subcase .restamped"
+ },
+ "choices": [
+  "Altering object type or canonicalization version instead is caught earlier by the codec (CV_UNKNOWN, TAG_*), so the payload is the field that exercises the signature check (S-P1 F4).",
+  "The strict counterpart of the S-P1 trace is the capstone C-C5 strict run; S-P1's strict mutant m_D_signature has no archived .out."
+ ],
+ "expected": "see subcases",
+ "partial_overlap": [
+  "L-108 / HY-N2 / AGG-g (valid signature over other bytes; the dual form)"
+ ],
+ "schema": "tessera-e10-vector/1",
+ "profile": "tessera-v1-strict",
+ "request": "strict",
+ "side": "verifier",
+ "covered_by": [],
+ "notes": [],
+ "status": "new",
+ "live": {
+  "modes": [
+   "L0"
+  ],
+  "needs": [
+   "A real receipt; re-encode frames and a_sig (no signing)."
+  ]
+ },
+ "subcases": [
+  {
+   "id": "E10-SP1-01.unstamped",
+   "title": "L0 form: not re-stamped",
+   "construction": "A-a; post-issue: common.content set to {TEST: 'altered after signing'} in both frame payloads, a_sig re-encoded with the original S_kms, S_gpg; no re-stamp (the L0 form)",
+   "coverage": {
+    "exact": [],
+    "analogous": []
+   },
+   "expected": {
+    "verdict": "INVALID",
+    "reason": "SIG_INVALID",
+    "T": null,
+    "revocation": "NOT_EVALUATED",
+    "historical_security": "NOT_EVALUATED",
+    "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+    "utc_assessment": {
+     "assumption_id": "A-UTC-7200-6",
+     "utc_upper_bound": null
+    },
+    "row": "9.2",
+    "slot": "kms"
+   },
+   "T_derivation": "T null: a_sig changed after stamping, so the receipt proof's digest no longer matches (row 11.2); U null with T (A10.1.1)"
+  },
+  {
+   "id": "E10-SP1-01.restamped",
+   "title": "TEST form: the altered A_sig re-stamped",
+   "construction": "TEST issue, adversarial; sign hook replaces both frames with the altered-content frames after signing, so the new A_sig is stamped",
+   "coverage": {
+    "exact": [],
+    "analogous": []
+   },
+   "expected": {
+    "verdict": "INVALID",
+    "reason": "SIG_INVALID",
+    "T": "2026-11-10T12:20:00Z",
+    "revocation": "NOT_EVALUATED",
+    "historical_security": "NOT_EVALUATED",
+    "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+    "utc_assessment": {
+     "assumption_id": "A-UTC-7200-6",
+     "utc_upper_bound": "2026-11-10T15:10:00Z"
+    },
+    "row": "9.2",
+    "slot": "kms"
+   },
+   "T_derivation": "T = nTime(h*) of the fixture's own receipt proof and headers (a_sig and receipt_anchor as stamped; rows 11.1-11.4 pass); U = 7200 + max nTime(h*..h*+5) (A10.1.1)"
+  }
+ ],
+ "analogous_to": []
+}

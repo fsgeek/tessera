@@ -1,0 +1,105 @@
+{
+ "id": "E10-SP1-04",
+ "title": "One channel captured (git names the attacker's keys), DNS honest -> DNS_KEY_MISMATCH",
+ "guarantees": [
+  "G4"
+ ],
+ "source": [
+  {
+   "model": "S-P1 Q1 strict, repository compromised",
+   "file": "formal/suite/s-p1/proverif/sp1_q1_strict_repo_compromised.out",
+   "lines": "201",
+   "kind": "query true",
+   "property": "Accept => IssuerSigned (unrestricted)",
+   "role": "execution_evidence"
+  },
+  {
+   "model": "capstone correct form, case b",
+   "file": "formal/suite/capstone/proverif/capstone_b.out",
+   "lines": "5585, 2731",
+   "kind": "queries true",
+   "role": "execution_evidence"
+  }
+ ],
+ "scenario": "The attacker holds the configured repository key and commits an assertion naming its keys; DNS is honest.",
+ "base": "case b fixture with the git channel replaced",
+ "mutations": [
+  {
+   "op": "attacker_receipt",
+   "detail": "as E10-SP1-03"
+  },
+  {
+   "op": "git",
+   "names": "attacker fingerprints",
+   "signed_by": "configured repository key (captured)",
+   "precommitted": true
+  },
+  {
+   "op": "dns_txt",
+   "names": "honest fingerprints (unchanged)"
+  }
+ ],
+ "test_universe": {
+  "like": "AUTH-i-T with the DNS TXT reverted to the honest keys"
+ },
+ "expected": {
+  "verdict": "INVALID",
+  "reason": "DNS_KEY_MISMATCH",
+  "T": "2026-11-10T12:20:00Z",
+  "revocation": "NOT_EVALUATED",
+  "historical_security": "NOT_EVALUATED",
+  "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+  "utc_assessment": {
+   "assumption_id": "A-UTC-7200-6",
+   "utc_upper_bound": "2026-11-10T15:10:00Z"
+  },
+  "row": "15.1",
+  "slot": "kms"
+ },
+ "partial_overlap": [
+  "A-b, AUTH-i (both channels honest: same code, different path)"
+ ],
+ "schema": "tessera-e10-vector/1",
+ "profile": "tessera-v1-strict",
+ "request": "strict",
+ "side": "verifier",
+ "choices": [],
+ "covered_by": [],
+ "notes": [],
+ "status": "new",
+ "live": {
+  "modes": [
+   "L2",
+   "L1"
+  ],
+  "needs": [
+   "As E10-SP1-03."
+  ]
+ },
+ "subcases": [
+  {
+   "id": "E10-SP1-04",
+   "construction": "TEST issue with captor keys, adversarial; git blob names the captor's keys (captured repository key, precommitted); DNS TXT names the honest keys",
+   "coverage": {
+    "exact": [],
+    "analogous": []
+   },
+   "expected": {
+    "verdict": "INVALID",
+    "reason": "DNS_KEY_MISMATCH",
+    "T": "2026-11-10T12:20:00Z",
+    "revocation": "NOT_EVALUATED",
+    "historical_security": "NOT_EVALUATED",
+    "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+    "utc_assessment": {
+     "assumption_id": "A-UTC-7200-6",
+     "utc_upper_bound": "2026-11-10T15:10:00Z"
+    },
+    "row": "15.1",
+    "slot": "kms"
+   },
+   "T_derivation": "T = nTime(h*) of the fixture's own receipt proof and headers (a_sig and receipt_anchor as stamped; rows 11.1-11.4 pass); U = 7200 + max nTime(h*..h*+5) (A10.1.1)"
+  }
+ ],
+ "analogous_to": []
+}

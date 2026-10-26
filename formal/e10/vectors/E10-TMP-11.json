@@ -1,0 +1,113 @@
+{
+ "id": "E10-TMP-11",
+ "title": "Headers missing: Bitcoin attestation present, no headers -> UNVERIFIABLE",
+ "registered_case": "BAND0-EXIT E10 'headers missing -> UNVERIFIABLE'; A2.2 waiver-status paragraph",
+ "guarantees": [
+  "G9",
+  "G5"
+ ],
+ "source": [
+  {
+   "model": "P4_VerifierStates (partition, ExactUnverifiable)",
+   "file": "formal/tla/P4_VerifierStates.tla",
+   "lines": "167-168",
+   "kind": "invariant",
+   "role": "property_definition"
+  },
+  {
+   "model": "P4_VerifierStates_Sanity",
+   "file": "formal/tla/P4_VerifierStates_Sanity.out",
+   "kind": "vacuity witness",
+   "property": "VerdictNeverUnverifiable",
+   "lines": "82-88 (VerdictNeverUnverifiable violated, c5 unperformable)",
+   "role": "execution_evidence"
+  },
+  {
+   "registered_text": "docs/phase-0-prereg-amendment-2.md",
+   "lines": "247-251",
+   "role": "registered_text"
+  }
+ ],
+ "scenario": "The temporal check cannot be performed because the headers h*..h*+5 are unavailable. Not a failure: unperformable.",
+ "base": "honest bundle (A-a)",
+ "mutations": [
+  {
+   "op": "remove_headers",
+   "heights": "h*..h*+5 of the receipt proof"
+  }
+ ],
+ "test_universe": {
+  "issue": {
+   "receipt_branches": [
+    {
+     "h": 900024,
+     "headers": false
+    }
+   ],
+   "adversarial": true
+  }
+ },
+ "choices": [
+  "No temporal model carries an unperformable arm: the bridge excludes it (P5cP5P6_Bridge.tla:73-75) and P5P6 has none. The vector rests on P4's partition plus A2.2's text, not on a temporal trace."
+ ],
+ "expected": {
+  "verdict": "UNVERIFIABLE",
+  "reason": "HEADERS_MISSING",
+  "T": null,
+  "revocation": "NOT_EVALUATED",
+  "historical_security": "NOT_EVALUATED",
+  "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+  "utc_assessment": {
+   "assumption_id": "A-UTC-7200-6",
+   "utc_upper_bound": null
+  },
+  "row": "11.4"
+ },
+ "covered_by": [
+  "L-43b",
+  "UTC-08"
+ ],
+ "schema": "tessera-e10-vector/1",
+ "profile": "tessera-v1-strict",
+ "request": "strict",
+ "side": "verifier",
+ "partial_overlap": [],
+ "notes": [],
+ "status": "covered",
+ "live": {
+  "modes": [
+   "L0"
+  ],
+  "needs": [
+   "A real receipt; delete the receipt proof's headers from the pool (if shared with snapshot/git heights, delete only heights not used by them, or expect the snapshot/git rows to change)."
+  ]
+ },
+ "subcases": [
+  {
+   "id": "E10-TMP-11",
+   "construction": "TEST issue, receipt_branches [{h: h*, headers: false}], adversarial",
+   "coverage": {
+    "exact": [
+     "L-43b",
+     "UTC-08"
+    ],
+    "analogous": []
+   },
+   "expected": {
+    "verdict": "UNVERIFIABLE",
+    "reason": "HEADERS_MISSING",
+    "T": null,
+    "revocation": "NOT_EVALUATED",
+    "historical_security": "NOT_EVALUATED",
+    "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+    "utc_assessment": {
+     "assumption_id": "A-UTC-7200-6",
+     "utc_upper_bound": null
+    },
+    "row": "11.4"
+   },
+   "T_derivation": "T null: no qualifying attestation (row 11.4); U null"
+  }
+ ],
+ "analogous_to": []
+}

@@ -1,0 +1,116 @@
+{
+ "id": "E10-E6A-02",
+ "title": "Both signatures stripped and both evidence members absent -> INVALID (failure dominates)",
+ "guarantees": [
+  "G3",
+  "G9"
+ ],
+ "source": [
+  {
+   "model": "E6a_Broken_MissingSigAsEvidence, V1",
+   "file": "formal/tla/E6a/runs/broken/E6a_Broken_MissingSigAsEvidence_V1.out",
+   "lines": "44-49",
+   "kind": "counterexample",
+   "property": "MixedFailedMissingEvidenceInvalid",
+   "abstract": {
+    "sig": {
+     "kms": "absent",
+     "gpg": "absent"
+    },
+    "alg": "supported",
+    "ev": {
+     "dns": "absent",
+     "git": "absent"
+    }
+   },
+   "role": "execution_evidence"
+  }
+ ],
+ "scenario": "A missing required signature is a failure, not missing evidence; with the evidence also absent the verdict stays INVALID.",
+ "base": "honest bundle (A-a)",
+ "mutations": [
+  {
+   "op": "a_sig_set_signature",
+   "slot": "kms",
+   "value": "empty"
+  },
+  {
+   "op": "a_sig_set_signature",
+   "slot": "gpg",
+   "value": "empty"
+  },
+  {
+   "op": "remove_member",
+   "path": "dns"
+  },
+  {
+   "op": "remove_member",
+   "path": "git"
+  }
+ ],
+ "test_universe": {
+  "post_edit": "rebuild a_sig with zero-length S_kms and S_gpg; delete dns and git"
+ },
+ "choices": [
+  "'Signature absent' -> zero-length signature inside a present a_sig (the codec's SIG_EMPTY). A wholly absent a_sig is E10-E6A-07, where the profile and the model disagree."
+ ],
+ "expected": {
+  "verdict": "INVALID",
+  "reason": "SIG_EMPTY",
+  "T": null,
+  "revocation": "NOT_EVALUATED",
+  "historical_security": "NOT_EVALUATED",
+  "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+  "utc_assessment": {
+   "assumption_id": "A-UTC-7200-6",
+   "utc_upper_bound": null
+  },
+  "row": "3.1",
+  "slot": "kms"
+ },
+ "partial_overlap": [
+  "ALG-02 (empty kms signature, unknown alg, evidence present)",
+  "HY-c4-C"
+ ],
+ "schema": "tessera-e10-vector/1",
+ "profile": "tessera-v1-strict",
+ "request": "strict",
+ "side": "verifier",
+ "covered_by": [],
+ "notes": [],
+ "status": "new",
+ "live": {
+  "modes": [
+   "L0"
+  ],
+  "needs": [
+   "A real receipt; re-encode a_sig per ENC 5 with empty signatures (T becomes null: the proof digest no longer matches)."
+  ]
+ },
+ "subcases": [
+  {
+   "id": "E10-E6A-02",
+   "construction": "A-a; post-issue: a_sig re-encoded with zero-length S_kms and S_gpg; delete dns and git",
+   "coverage": {
+    "exact": [],
+    "analogous": []
+   },
+   "expected": {
+    "verdict": "INVALID",
+    "reason": "SIG_EMPTY",
+    "T": null,
+    "revocation": "NOT_EVALUATED",
+    "historical_security": "NOT_EVALUATED",
+    "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+    "utc_assessment": {
+     "assumption_id": "A-UTC-7200-6",
+     "utc_upper_bound": null
+    },
+    "row": "3.1",
+    "slot": "kms"
+   },
+   "T_derivation": "T null: a_sig changed after stamping, so the receipt proof's digest no longer matches (row 11.2); U null with T (A10.1.1)"
+  }
+ ],
+ "analogous_to": []
+}

@@ -1,0 +1,130 @@
+{
+ "id": "E10-TMP-03",
+ "title": "Decoupled-clock divergence (A3.9): T = declared + delta + 1, confirmed_at = declared + delta - 1",
+ "registered_case": "BAND0-EXIT E10 'A3.9 refuse-to-ship issuance case' (verifier face)",
+ "guarantees": [
+  "G5",
+  "G9"
+ ],
+ "source": [
+  {
+   "model": "E10_BridgeRefuseC2 (extends P5cP5P6_Bridge unchanged), k=6 instance",
+   "file": "formal/e10/tla/W_C2FailC3Pass_k6.out",
+   "lines": "whole trace, final state 110-116",
+   "kind": "vacuity witness (new, E10)",
+   "property": "C2FailC3PassArtifactUnreachable",
+   "defined_at": "formal/e10/tla/E10_BridgeRefuseC2.tla",
+   "abstract": {
+    "declared": 0,
+    "Delta": 2,
+    "Epsilon": 1,
+    "chain": [
+     3,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "anchorH": 1
+   },
+   "role": "execution_evidence"
+  },
+  {
+   "model": "same, committed k=3 instance",
+   "file": "formal/e10/tla/W_C2FailC3Pass_k3.out",
+   "kind": "vacuity witness",
+   "lines": "18-19 (Invariant C2FailC3PassArtifactUnreachable violated)",
+   "role": "execution_evidence"
+  },
+  {
+   "registered_text": "docs/phase-0-prereg-amendment-3.md",
+   "lines": "759-765",
+   "role": "registered_text"
+  }
+ ],
+ "scenario": "Block times are not monotone: the including block is stamped one second past the window, its fifth successor one second inside. Conjunct 3 passes, conjunct 2 fails. A verifier that checked only conjunct 3 (the unrepaired A2.1 wording) would accept.",
+ "base": "honest bundle (A-a)",
+ "mutations": [
+  {
+   "op": "set_ntime",
+   "height": "h*",
+   "value": "declared + delta + 1 s"
+  },
+  {
+   "op": "set_ntime",
+   "height": "h*+5",
+   "value": "declared + delta - 1 s"
+  }
+ ],
+ "test_universe": {
+  "issue": {
+   "times": {
+    "900024": "TB + DELTA + 1",
+    "900029": "TB + DELTA - 1"
+   },
+   "adversarial": true
+  }
+ },
+ "choices": [
+  "Boundary concretization (+-1 s), as registered; the k=6 trace is the same shape at unit = delta/2."
+ ],
+ "expected": {
+  "verdict": "INVALID",
+  "reason": "TIME_AFTER_DECLARED_DELTA",
+  "T": "2026-11-13T12:00:01Z",
+  "revocation": "NOT_EVALUATED",
+  "historical_security": "NOT_EVALUATED",
+  "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+  "utc_assessment": {
+   "assumption_id": "A-UTC-7200-6",
+   "utc_upper_bound": "2026-11-13T14:00:01Z"
+  },
+  "row": "12.2"
+ },
+ "partial_overlap": [
+  "L-33 (c2 fails at the lower of two attestations; c3 not isolated)"
+ ],
+ "notes": [
+  "The registered _BrokenConjunct3Only bridge companion (A3.9) was never built (COVERAGE-MAP row 6). This witness shows the state is reachable; it is not that companion."
+ ],
+ "schema": "tessera-e10-vector/1",
+ "profile": "tessera-v1-strict",
+ "request": "strict",
+ "side": "verifier",
+ "covered_by": [],
+ "status": "new",
+ "live": {
+  "modes": [
+   "L4"
+  ],
+  "needs": [
+   "As E10-TMP-01."
+  ]
+ },
+ "subcases": [
+  {
+   "id": "E10-TMP-03",
+   "construction": "TEST issue, times {h*: TB+DELTA+1, h*+5: TB+DELTA-1}, adversarial",
+   "coverage": {
+    "exact": [],
+    "analogous": []
+   },
+   "expected": {
+    "verdict": "INVALID",
+    "reason": "TIME_AFTER_DECLARED_DELTA",
+    "T": "2026-11-13T12:00:01Z",
+    "revocation": "NOT_EVALUATED",
+    "historical_security": "NOT_EVALUATED",
+    "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+    "utc_assessment": {
+     "assumption_id": "A-UTC-7200-6",
+     "utc_upper_bound": "2026-11-13T14:00:01Z"
+    },
+    "row": "12.2"
+   },
+   "T_derivation": "T = nTime(h*) of the fixture's own receipt proof and headers (a_sig and receipt_anchor as stamped; rows 11.1-11.4 pass); U = 7200 + max nTime(h*..h*+5) (A10.1.1)"
+  }
+ ],
+ "analogous_to": []
+}

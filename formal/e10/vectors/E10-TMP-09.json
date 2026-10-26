@@ -1,0 +1,89 @@
+{
+ "id": "E10-TMP-09",
+ "title": "A tolerance member in the unsigned issuer_record is a schema failure, never a parameter",
+ "guarantees": [
+  "G9"
+ ],
+ "source": [
+  {
+   "model": "P5P6_TemporalRevocation_BrokenTol (companion)",
+   "file": "formal/tla/P5P6_TemporalRevocation_BrokenTol.out",
+   "lines": "37-46",
+   "kind": "counterexample",
+   "property": "VerifierOwnsTolerances",
+   "role": "execution_evidence"
+  }
+ ],
+ "scenario": "The holder adds a delta claim to issuer_record (unsigned diagnostics). Its values never alter parameters; a present record with an unknown member is a closed-schema failure.",
+ "base": "honest bundle (A-a)",
+ "mutations": [
+  {
+   "op": "add_member",
+   "path": "issuer_record.delta_s",
+   "value": "999999999"
+  }
+ ],
+ "test_universe": {
+  "post_edit": "layers[0].issuer_record.delta_s = \"999999999\"; re-emit canonical JCS"
+ },
+ "choices": [
+  "Second carrier for E10-TMP-07's abstraction; profile 2.1 'any defect in a present issuer_record'."
+ ],
+ "expected": {
+  "verdict": "INVALID",
+  "reason": "CONTAINER_SCHEMA",
+  "T": "2026-11-10T12:20:00Z",
+  "revocation": "NOT_EVALUATED",
+  "historical_security": "NOT_EVALUATED",
+  "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+  "utc_assessment": {
+   "assumption_id": "A-UTC-7200-6",
+   "utc_upper_bound": "2026-11-10T15:10:00Z"
+  },
+  "row": "2.4"
+ },
+ "partial_overlap": [
+  "L-16 (malformed policy_version)",
+  "F03-a (empty issuer_record)"
+ ],
+ "schema": "tessera-e10-vector/1",
+ "profile": "tessera-v1-strict",
+ "request": "strict",
+ "side": "verifier",
+ "covered_by": [],
+ "notes": [],
+ "status": "new",
+ "live": {
+  "modes": [
+   "L0"
+  ],
+  "needs": [
+   "A real receipt; edit the JSON container and re-emit canonical JCS."
+  ]
+ },
+ "subcases": [
+  {
+   "id": "E10-TMP-09",
+   "construction": "A-a; post-issue: layers[0].issuer_record.delta_s = '999999999'; canonical JCS re-emitted",
+   "coverage": {
+    "exact": [],
+    "analogous": []
+   },
+   "expected": {
+    "verdict": "INVALID",
+    "reason": "CONTAINER_SCHEMA",
+    "T": "2026-11-10T12:20:00Z",
+    "revocation": "NOT_EVALUATED",
+    "historical_security": "NOT_EVALUATED",
+    "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+    "utc_assessment": {
+     "assumption_id": "A-UTC-7200-6",
+     "utc_upper_bound": "2026-11-10T15:10:00Z"
+    },
+    "row": "2.4"
+   },
+   "T_derivation": "T = nTime(h*): the edit leaves a_sig and receipt_anchor untouched, so rows 11.1-11.4 still pass; U from the same headers"
+  }
+ ],
+ "analogous_to": []
+}

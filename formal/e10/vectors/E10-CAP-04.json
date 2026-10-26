@@ -1,0 +1,90 @@
+{
+ "id": "E10-CAP-04",
+ "title": "Possession signed over the fingerprint only, not the manifest frame -> POSSESSION_INVALID",
+ "guarantees": [
+  "G3"
+ ],
+ "source": [
+  {
+   "model": "capstone C-C3 = C-C8 (strict, case a)",
+   "file": "formal/suite/capstone/proverif/cap_cc03_a.out",
+   "lines": "3795, 4199",
+   "kind": "counterexample (strict run)",
+   "property": "C-Q9; link 3",
+   "role": "execution_evidence"
+  }
+ ],
+ "scenario": "Possession that proves control of the key but does not commit to the accepted manifest.",
+ "base": "honest bundle (A-a)",
+ "mutations": [
+  {
+   "op": "replace_member",
+   "path": "possession.kms",
+   "with": "kms signature over fp(kms) bytes"
+  }
+ ],
+ "test_universe": {
+  "hooks": "possession.kms signed over the fingerprint string"
+ },
+ "expected": {
+  "verdict": "INVALID",
+  "reason": "POSSESSION_INVALID",
+  "T": "2026-11-10T12:20:00Z",
+  "revocation": "NOT_EVALUATED",
+  "historical_security": "NOT_EVALUATED",
+  "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+  "utc_assessment": {
+   "assumption_id": "A-UTC-7200-6",
+   "utc_upper_bound": "2026-11-10T15:10:00Z"
+  },
+  "row": "9.5",
+  "slot": "kms"
+ },
+ "partial_overlap": [
+  "POS-a (over another document)",
+  "HY-N3",
+  "AGG-a"
+ ],
+ "schema": "tessera-e10-vector/1",
+ "profile": "tessera-v1-strict",
+ "request": "strict",
+ "side": "verifier",
+ "choices": [],
+ "covered_by": [],
+ "notes": [],
+ "status": "new",
+ "live": {
+  "modes": [
+   "L3"
+  ],
+  "needs": [
+   "A service-key signature over chosen bytes: TEST issuer or staging hook."
+  ]
+ },
+ "subcases": [
+  {
+   "id": "E10-CAP-04",
+   "construction": "TEST issue, adversarial; possession hook: possession.kms = kms signature over the ASCII fingerprint string fp(kms)",
+   "coverage": {
+    "exact": [],
+    "analogous": []
+   },
+   "expected": {
+    "verdict": "INVALID",
+    "reason": "POSSESSION_INVALID",
+    "T": "2026-11-10T12:20:00Z",
+    "revocation": "NOT_EVALUATED",
+    "historical_security": "NOT_EVALUATED",
+    "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+    "utc_assessment": {
+     "assumption_id": "A-UTC-7200-6",
+     "utc_upper_bound": "2026-11-10T15:10:00Z"
+    },
+    "row": "9.5",
+    "slot": "kms"
+   },
+   "T_derivation": "T = nTime(h*) of the fixture's own receipt proof and headers (a_sig and receipt_anchor as stamped; rows 11.1-11.4 pass); U = 7200 + max nTime(h*..h*+5) (A10.1.1)"
+  }
+ ],
+ "analogous_to": []
+}

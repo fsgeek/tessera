@@ -1,0 +1,94 @@
+{
+ "id": "E10-E6A-07",
+ "title": "a_sig member wholly absent -> UNVERIFIABLE / MEMBER_MISSING:a_sig (model says INVALID)",
+ "guarantees": [
+  "G3",
+  "G9"
+ ],
+ "source": [
+  {
+   "model": "E6a_Props",
+   "file": "formal/tla/E6a/E6a_Props.tla",
+   "lines": "117-121",
+   "kind": "invariant MissingSignatureInvalid",
+   "role": "property_definition"
+  },
+  {
+   "model": "E6a RESULTS observation 1",
+   "file": "formal/tla/E6a/RESULTS.md",
+   "lines": "155-166 (§6 observation 1)",
+   "role": "summary"
+  }
+ ],
+ "scenario": "The signatures are absent because the member that carries them is absent.",
+ "base": "honest bundle (A-a)",
+ "mutations": [
+  {
+   "op": "remove_member",
+   "path": "a_sig"
+  }
+ ],
+ "test_universe": {
+  "post_edit": "delete layers[0].a_sig"
+ },
+ "choices": [
+  "Model/V1 divergence, stated: the model classes a missing signature as a failure (INVALID, A9 C3); profile 2.1/15.7 row 2.2 classes an absent a_sig member as missing evidence. The vector follows V1: UNVERIFIABLE / MEMBER_MISSING:a_sig (profile §13 note 13; owner reading, author-accepted in E9 row 3). Both are fail-closed."
+ ],
+ "expected": {
+  "verdict": "UNVERIFIABLE",
+  "reason": "MEMBER_MISSING:a_sig",
+  "T": null,
+  "revocation": "NOT_EVALUATED",
+  "historical_security": "NOT_EVALUATED",
+  "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+  "utc_assessment": {
+   "assumption_id": "A-UTC-7200-6",
+   "utc_upper_bound": null
+  },
+  "row": "2.2"
+ },
+ "model_expects": {
+  "verdict": "INVALID"
+ },
+ "schema": "tessera-e10-vector/1",
+ "profile": "tessera-v1-strict",
+ "request": "strict",
+ "side": "verifier",
+ "covered_by": [],
+ "partial_overlap": [],
+ "notes": [],
+ "status": "new",
+ "live": {
+  "modes": [
+   "L0"
+  ],
+  "needs": [
+   "A real receipt; delete a_sig."
+  ]
+ },
+ "subcases": [
+  {
+   "id": "E10-E6A-07",
+   "construction": "A-a; post-issue: delete layers[0].a_sig",
+   "coverage": {
+    "exact": [],
+    "analogous": []
+   },
+   "expected": {
+    "verdict": "UNVERIFIABLE",
+    "reason": "MEMBER_MISSING:a_sig",
+    "T": null,
+    "revocation": "NOT_EVALUATED",
+    "historical_security": "NOT_EVALUATED",
+    "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+    "utc_assessment": {
+     "assumption_id": "A-UTC-7200-6",
+     "utc_upper_bound": null
+    },
+    "row": "2.2"
+   },
+   "T_derivation": "T null: no a_sig, so no receipt digest to match (row 11.2 unperformable); U null"
+  }
+ ],
+ "analogous_to": []
+}

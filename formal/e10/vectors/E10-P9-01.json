@@ -1,0 +1,184 @@
+{
+ "id": "E10-P9-01",
+ "title": "Two isolated machines, no network: each verdict equals the expected verdict",
+ "registered_case": "BAND0-EXIT E10 'the P9 two-machine case'",
+ "guarantees": [
+  "G8"
+ ],
+ "source": [
+  {
+   "model": "P9_Statelessness probe (TLA+, non-discharging; A4.1)",
+   "file": "formal/spike/tla-probes/P9/RESULTS-PROBE.md",
+   "lines": "142-150, 183-215",
+   "role": "summary"
+  },
+  {
+   "registered_text": "docs/phase-0-prereg-amendment-5.md",
+   "lines": "58-91",
+   "role": "registered_text"
+  },
+  {
+   "registered_text": "docs/band-1-docket.md",
+   "lines": "99-104",
+   "role": "registered_text"
+  },
+  {
+   "model": "P9 probe LIVE_FAILCLOSED, VECTOR cfg",
+   "file": "formal/spike/tla-probes/P9/P9_Statelessness_LiveFailclosed_Vector.out",
+   "lines": "29-75",
+   "kind": "counterexample",
+   "property": "Purity",
+   "abstract": "bundle determines INVALID; a consulting verifier returns UNVERIFIABLE on both machines (they agree)",
+   "role": "execution_evidence"
+  }
+ ],
+ "scenario": "The same bundle, trust configuration and request on two machines with no network. Each machine's six stable fields are compared with the expected six, not only with each other (A5.1: agreement alone passes a fail-closed consulting verifier).",
+ "base": "three bundles, one per V1 verdict value",
+ "mutations": [
+  {
+   "op": "run_set",
+   "bundles": [
+    "A-a (VALID_STRICT)",
+    "L-36b (INVALID / CONFIRMATION_LATE)",
+    "L-09 (UNVERIFIABLE / MEMBER_MISSING:git)"
+   ]
+  },
+  {
+   "op": "environment",
+   "detail": "two hosts, network interfaces down (or egress denied), fresh installs of the same release"
+  }
+ ],
+ "test_universe": {
+  "cases": [
+   "A-a",
+   "L-36b",
+   "L-09"
+  ]
+ },
+ "choices": [
+  "The probe's 'optional service' is a revocation view; V1 consults none. Bundles chosen to cover each V1 verdict value (the probe's FailClosed trace is an INVALID bundle)."
+ ],
+ "expected": "see subcases",
+ "schema": "tessera-e10-vector/1",
+ "profile": "tessera-v1-strict",
+ "request": "strict",
+ "side": "verifier",
+ "covered_by": [],
+ "partial_overlap": [],
+ "notes": [],
+ "status": "new",
+ "live": {
+  "modes": [
+   "L6",
+   "L0"
+  ],
+  "needs": [
+   "For real receipts: two hosts without egress, the published verifier release; expected verdicts taken from a reference run, fixed before the isolated runs. The service verifier behind an API cannot be the system under test for 'no network'; this vector targets the distributed verifier."
+  ]
+ },
+ "subcases": [
+  {
+   "id": "E10-P9-01.A-a",
+   "construction": "bundle A-a, run on each of two isolated hosts",
+   "bundle_from": "A-a",
+   "coverage": {
+    "exact": [],
+    "analogous": []
+   },
+   "expected": {
+    "verdict": "VALID_STRICT",
+    "reason": "OK",
+    "T": "2026-11-10T12:20:00Z",
+    "revocation": "NOT_EVALUATED",
+    "historical_security": "NOT_EVALUATED",
+    "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+    "utc_assessment": {
+     "assumption_id": "A-UTC-7200-6",
+     "utc_upper_bound": "2026-11-10T15:10:00Z"
+    }
+   },
+   "T_derivation": "T = nTime(h*) of the fixture's own receipt proof and headers (a_sig and receipt_anchor as stamped; rows 11.1-11.4 pass); U = 7200 + max nTime(h*..h*+5) (A10.1.1)"
+  },
+  {
+   "id": "E10-P9-01.L-36b",
+   "construction": "bundle L-36b, run on each of two isolated hosts",
+   "bundle_from": "L-36b",
+   "coverage": {
+    "exact": [],
+    "analogous": []
+   },
+   "expected": {
+    "verdict": "INVALID",
+    "reason": "CONFIRMATION_LATE",
+    "T": "2026-11-10T12:20:00Z",
+    "revocation": "NOT_EVALUATED",
+    "historical_security": "NOT_EVALUATED",
+    "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+    "utc_assessment": {
+     "assumption_id": "A-UTC-7200-6",
+     "utc_upper_bound": "2026-11-13T14:00:01Z"
+    },
+    "row": "12.3"
+   },
+   "T_derivation": "T = nTime(h*) of the fixture's own receipt proof and headers (a_sig and receipt_anchor as stamped; rows 11.1-11.4 pass); U = 7200 + max nTime(h*..h*+5) (A10.1.1)"
+  },
+  {
+   "id": "E10-P9-01.L-09",
+   "construction": "bundle L-09, run on each of two isolated hosts",
+   "bundle_from": "L-09",
+   "coverage": {
+    "exact": [],
+    "analogous": []
+   },
+   "expected": {
+    "verdict": "UNVERIFIABLE",
+    "reason": "MEMBER_MISSING:git",
+    "T": "2026-11-10T12:20:00Z",
+    "revocation": "NOT_EVALUATED",
+    "historical_security": "NOT_EVALUATED",
+    "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+    "utc_assessment": {
+     "assumption_id": "A-UTC-7200-6",
+     "utc_upper_bound": "2026-11-10T15:10:00Z"
+    },
+    "row": "2.2"
+   },
+   "T_derivation": "T = nTime(h*) of the fixture's own receipt proof and headers (a_sig and receipt_anchor as stamped; rows 11.1-11.4 pass); U = 7200 + max nTime(h*..h*+5) (A10.1.1)"
+  }
+ ],
+ "analogous_to": [],
+ "sequence": {
+  "hosts": [
+   "H1",
+   "H2"
+  ],
+  "setup": "two hosts, fresh installs of the same verifier release, network interfaces down or egress denied (verify with a failed outbound probe before and after)",
+  "steps": [
+   {
+    "host": "H1",
+    "fixture": "E10-P9-01.A-a"
+   },
+   {
+    "host": "H1",
+    "fixture": "E10-P9-01.L-36b"
+   },
+   {
+    "host": "H1",
+    "fixture": "E10-P9-01.L-09"
+   },
+   {
+    "host": "H2",
+    "fixture": "E10-P9-01.A-a"
+   },
+   {
+    "host": "H2",
+    "fixture": "E10-P9-01.L-36b"
+   },
+   {
+    "host": "H2",
+    "fixture": "E10-P9-01.L-09"
+   }
+  ],
+  "pass": "every step's six stable fields and utc_assessment equal its fixture's expected.json; H1 and H2 agree byte-for-byte on the six fields"
+ }
+}

@@ -1,0 +1,130 @@
+{
+ "id": "E10-E6A-04",
+ "title": "Unknown algorithm does not dominate a failure: unknown alg, signatures empty, evidence absent -> INVALID",
+ "guarantees": [
+  "G9"
+ ],
+ "source": [
+  {
+   "model": "E6a_Broken_UnknownDominates, V1",
+   "file": "formal/tla/E6a/runs/broken/E6a_Broken_UnknownDominates_V1.out",
+   "lines": "44-49",
+   "kind": "counterexample",
+   "property": "AlgUnknownReasonExact",
+   "abstract": {
+    "sig": "absent",
+    "alg": {
+     "kms": "supported",
+     "gpg": "unsupported"
+    },
+    "ev": "absent"
+   },
+   "role": "execution_evidence"
+  },
+  {
+   "model": "E6a_Broken_UnknownAsOutOfProfile, V1",
+   "file": "formal/tla/E6a/runs/broken/E6a_Broken_UnknownAsOutOfProfile_V1.out",
+   "lines": "44-49",
+   "kind": "counterexample",
+   "property": "OutOfProfileOnlyAtDispatch",
+   "role": "execution_evidence"
+  }
+ ],
+ "scenario": "A verifier that lets ALG_UNKNOWN override a definite failure (or treats it as out of profile) reports UNVERIFIABLE; the correct verdict is INVALID.",
+ "base": "honest bundle (A-a)",
+ "mutations": [
+  {
+   "op": "frames_set",
+   "field": "common.alg",
+   "value": "X-UNKNOWN-ALG-1",
+   "slots": "both"
+  },
+  {
+   "op": "manifest_set",
+   "field": "alg",
+   "value": "X-UNKNOWN-ALG-1"
+  },
+  {
+   "op": "a_sig_set_signature",
+   "slot": "both",
+   "value": "empty"
+  },
+  {
+   "op": "remove_member",
+   "path": "dns"
+  },
+  {
+   "op": "remove_member",
+   "path": "git"
+  }
+ ],
+ "test_universe": {
+  "issue": {
+   "alg": "X-UNKNOWN-ALG-1",
+   "adversarial": true
+  },
+  "post_edit": "empty signatures; delete dns, git"
+ },
+ "choices": [
+  "Per-slot alg (model) -> one common unknown alg in both frames and the manifest (V1 rows 6.2-6.3)."
+ ],
+ "expected": {
+  "verdict": "INVALID",
+  "reason": "SIG_EMPTY",
+  "T": null,
+  "revocation": "NOT_EVALUATED",
+  "historical_security": "NOT_EVALUATED",
+  "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+  "utc_assessment": {
+   "assumption_id": "A-UTC-7200-6",
+   "utc_upper_bound": null
+  },
+  "row": "3.1",
+  "slot": "kms"
+ },
+ "partial_overlap": [
+  "ALG-02 (evidence present)",
+  "AGG-d (MEMBER_MISSING + ALG_UNKNOWN, no failure)"
+ ],
+ "schema": "tessera-e10-vector/1",
+ "profile": "tessera-v1-strict",
+ "request": "strict",
+ "side": "verifier",
+ "covered_by": [],
+ "notes": [],
+ "status": "new",
+ "live": {
+  "modes": [
+   "L0"
+  ],
+  "needs": [
+   "A real receipt; edit frames (no signing needed: signatures are empty)."
+  ]
+ },
+ "subcases": [
+  {
+   "id": "E10-E6A-04",
+   "construction": "TEST issue alg = X-UNKNOWN-ALG-1, adversarial; post-issue: a_sig re-encoded with zero-length S_kms and S_gpg; delete dns and git",
+   "coverage": {
+    "exact": [],
+    "analogous": []
+   },
+   "expected": {
+    "verdict": "INVALID",
+    "reason": "SIG_EMPTY",
+    "T": null,
+    "revocation": "NOT_EVALUATED",
+    "historical_security": "NOT_EVALUATED",
+    "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+    "utc_assessment": {
+     "assumption_id": "A-UTC-7200-6",
+     "utc_upper_bound": null
+    },
+    "row": "3.1",
+    "slot": "kms"
+   },
+   "T_derivation": "T null: a_sig changed after stamping, so the receipt proof's digest no longer matches (row 11.2); U null with T (A10.1.1)"
+  }
+ ],
+ "analogous_to": []
+}

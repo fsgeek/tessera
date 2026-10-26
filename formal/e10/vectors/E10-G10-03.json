@@ -1,0 +1,139 @@
+{
+ "id": "E10-G10-03",
+ "title": "Both channels captured: frames rebuilt to name the captor's keys, honest signatures kept -> SIG_INVALID",
+ "guarantees": [
+  "G10",
+  "G1"
+ ],
+ "source": [
+  {
+   "model": "S-P3 Q2 degraded, sole channel compromised (abstraction of V1 strict with both channels captured)",
+   "file": "formal/suite/s-p3/proverif/sp3_q2_degraded_compromised.out",
+   "lines": "195, 200",
+   "kind": "queries true",
+   "property": "Reattributed; PossessionTransplanted",
+   "role": "execution_evidence"
+  },
+  {
+   "model": "S-P3 Q5 (two signers)",
+   "file": "formal/suite/s-p3/proverif/sp3_q5_multikey_correct.out",
+   "lines": "314, 320, 326",
+   "kind": "queries true",
+   "property": "ReattributedA/B; PossessionTransplanted",
+   "role": "execution_evidence"
+  },
+  {
+   "model": "capstone C-C1 (case c, both channel keys public)",
+   "file": "formal/suite/capstone/proverif/cap_cc01_c.out",
+   "lines": "9737, 9959, 14743",
+   "kind": "queries true",
+   "property": "ReattributedA/B; AUHK",
+   "role": "execution_evidence"
+  }
+ ],
+ "scenario": "The captor rewrites the frames' key fingerprints and manifest hash to its own manifest and keeps the honest signature bytes.",
+ "base": "honest bundle (A-a) + AUTH-i-T channel material",
+ "mutations": [
+  {
+   "op": "frames_set",
+   "field": "signer.key_fp, common.manifest_sha256",
+   "value": "captor's",
+   "slots": "both"
+  },
+  {
+   "op": "keep_signatures"
+  },
+  {
+   "op": "replace_member",
+   "path": "manifest, keys, possession",
+   "with": "captor's"
+  },
+  {
+   "op": "channels",
+   "dns": "names K'",
+   "git": "names K'"
+  },
+  {
+   "op": "restamp",
+   "value": "split: subcases .unstamped and .restamped"
+  }
+ ],
+ "test_universe": {
+  "like": "AUTH-i-T with the honest S_kms, S_gpg transplanted"
+ },
+ "choices": [
+  "'Captured channels' = the TXT signed under the trusted DNSSEC path and the assertion committed by the configured repository key, both naming the captor's keys K' (AUTH-i-T's channel material).",
+  "DSKS (the model's derived key) is not achievable for fixed-generator P-256 with a known private key; the captor's own key K' stands in for it.",
+  "Reading S-P3's degraded sole-channel model as V1 strict with both channels captured is the extractor's reading (the S-P3 H1 header says only 'strict ... not weaker')."
+ ],
+ "expected": "see subcases",
+ "schema": "tessera-e10-vector/1",
+ "profile": "tessera-v1-strict",
+ "request": "strict",
+ "side": "verifier",
+ "covered_by": [],
+ "partial_overlap": [],
+ "notes": [],
+ "status": "new",
+ "live": {
+  "modes": [
+   "L2",
+   "L1",
+   "L0"
+  ],
+  "needs": [
+   "As E10-G10-01."
+  ]
+ },
+ "subcases": [
+  {
+   "id": "E10-G10-03.restamped",
+   "title": "TEST form: re-stamped",
+   "construction": "TEST issue with captor keys, adversarial; sign hook: S_kms, S_gpg := A-a's honest signature bytes over frames that name the captor's keys and manifest; A_sig stamped",
+   "coverage": {
+    "exact": [],
+    "analogous": []
+   },
+   "expected": {
+    "verdict": "INVALID",
+    "reason": "SIG_INVALID",
+    "T": "2026-11-10T12:20:00Z",
+    "revocation": "NOT_EVALUATED",
+    "historical_security": "NOT_EVALUATED",
+    "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+    "utc_assessment": {
+     "assumption_id": "A-UTC-7200-6",
+     "utc_upper_bound": "2026-11-10T15:10:00Z"
+    },
+    "row": "9.2",
+    "slot": "kms"
+   },
+   "T_derivation": "T = nTime(h*) of the fixture's own receipt proof and headers (a_sig and receipt_anchor as stamped; rows 11.1-11.4 pass); U = 7200 + max nTime(h*..h*+5) (A10.1.1)"
+  },
+  {
+   "id": "E10-G10-03.unstamped",
+   "title": "L0 form: not re-stamped",
+   "construction": "as .restamped, but receipt_digest hook: the receipt proof covers A-a's honest A_sig (the L0 form: the honest receipt_anchor kept)",
+   "coverage": {
+    "exact": [],
+    "analogous": []
+   },
+   "expected": {
+    "verdict": "INVALID",
+    "reason": "SIG_INVALID",
+    "T": null,
+    "revocation": "NOT_EVALUATED",
+    "historical_security": "NOT_EVALUATED",
+    "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+    "utc_assessment": {
+     "assumption_id": "A-UTC-7200-6",
+     "utc_upper_bound": null
+    },
+    "row": "9.2",
+    "slot": "kms"
+   },
+   "T_derivation": "T null: the receipt proof covers the honest A_sig, not the bundled one (row 11.2); U null"
+  }
+ ],
+ "analogous_to": []
+}

@@ -1,0 +1,113 @@
+{
+ "id": "E10-SP3-01",
+ "title": "Possession transplanted onto another manifest -> POSSESSION_INVALID",
+ "guarantees": [
+  "G3"
+ ],
+ "source": [
+  {
+   "model": "S-P3 Q4 companion B (possession not tied to manifest)",
+   "file": "formal/suite/s-p3/proverif/sp3_q4_companionB_possession_unnamed.out",
+   "lines": "383",
+   "kind": "counterexample",
+   "property": "PossessionTransplanted",
+   "role": "execution_evidence"
+  }
+ ],
+ "scenario": "A service-key signature over some other document is presented as possession.kms for the accepted manifest. L0 form (E10R-05): the same receipt's S_kms, which signs F_kms, not F_manifest.",
+ "base": "honest bundle (A-a)",
+ "mutations": [
+  {
+   "op": "replace_member",
+   "path": "possession.kms",
+   "with": "the same receipt's S_kms bytes (from a_sig)"
+  }
+ ],
+ "test_universe": {
+  "post_edit": "possession.kms := S_kms (subcase .L0)",
+  "case": "POS-a (subcase .POS-a)"
+ },
+ "expected": "see subcases",
+ "covered_by": [
+  "POS-a"
+ ],
+ "schema": "tessera-e10-vector/1",
+ "profile": "tessera-v1-strict",
+ "request": "strict",
+ "side": "verifier",
+ "choices": [],
+ "partial_overlap": [],
+ "notes": [],
+ "status": "covered",
+ "live": {
+  "modes": [
+   "L0"
+  ],
+  "needs": [
+   "One real receipt; copy S_kms out of a_sig into possession.kms (post-issue edit; no signing, no TEST key)."
+  ]
+ },
+ "subcases": [
+  {
+   "id": "E10-SP3-01.L0",
+   "title": "L0 form: the receipt's own S_kms as the possession proof",
+   "construction": "A-a; post-issue: possession.kms := the same receipt's S_kms (a service-key signature over F_kms, not over F_manifest). Post-issue edit only; no TEST signing (E10R-05)",
+   "coverage": {
+    "exact": [],
+    "analogous": [
+     "POS-a (TEST-signed other document)",
+     "HY-N3 (hybrid, rule R)"
+    ]
+   },
+   "expected": {
+    "verdict": "INVALID",
+    "reason": "POSSESSION_INVALID",
+    "T": "2026-11-10T12:20:00Z",
+    "revocation": "NOT_EVALUATED",
+    "historical_security": "NOT_EVALUATED",
+    "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+    "utc_assessment": {
+     "assumption_id": "A-UTC-7200-6",
+     "utc_upper_bound": "2026-11-10T15:10:00Z"
+    },
+    "row": "9.5",
+    "slot": "kms"
+   },
+   "T_derivation": "T = nTime(h*): the edit leaves a_sig and receipt_anchor untouched, so rows 11.1-11.4 still pass; U from the same headers"
+  },
+  {
+   "id": "E10-SP3-01.POS-a",
+   "title": "TEST form: POS-a",
+   "construction": "conformance POS-a construction: possession.kms over the TEST bytes 'TEST not the manifest'",
+   "bundle_from": "POS-a",
+   "coverage": {
+    "exact": [
+     "POS-a"
+    ],
+    "analogous": [
+     "HY-N3"
+    ]
+   },
+   "expected": {
+    "verdict": "INVALID",
+    "reason": "POSSESSION_INVALID",
+    "T": "2026-11-10T12:20:00Z",
+    "revocation": "NOT_EVALUATED",
+    "historical_security": "NOT_EVALUATED",
+    "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+    "utc_assessment": {
+     "assumption_id": "A-UTC-7200-6",
+     "utc_upper_bound": "2026-11-10T15:10:00Z"
+    },
+    "row": "9.5",
+    "slot": "kms"
+   },
+   "T_derivation": "T = nTime(h*) of the fixture's own receipt proof and headers (a_sig and receipt_anchor as stamped; rows 11.1-11.4 pass); U = 7200 + max nTime(h*..h*+5) (A10.1.1)"
+  }
+ ],
+ "analogous_to": [
+  "POS-a (TEST-signed other document)",
+  "HY-N3 (hybrid, rule R)",
+  "HY-N3"
+ ]
+}

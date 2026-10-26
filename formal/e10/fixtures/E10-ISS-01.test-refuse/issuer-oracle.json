@@ -1,0 +1,28 @@
+{
+ "_meta": {
+  "id": "E10-ISS-01.test-refuse",
+  "issue_kwargs": {
+   "times": {
+    "900024": "2026-11-13T12:00:01Z",
+    "900029": "2026-11-13T11:59:59Z"
+   }
+  },
+  "kind": "issuer_oracle",
+  "note": "TEST issuer (prototype/conformance/issue.py) pre-ship decision only; not the AWS issuer. run.py skips this directory (no expected.json)."
+ },
+ "preship": {
+  "chain_order_h_git_plus_5_lt_h_receipt": true,
+  "git_anchored": true,
+  "receipt_anchored": true,
+  "receipt_c1": true,
+  "receipt_c2": false,
+  "receipt_c3": true,
+  "snapshot_anchored": true,
+  "snapshot_c1": true,
+  "snapshot_c2": true,
+  "snapshot_c3": true,
+  "window": true
+ },
+ "refusal": "pre-ship checks failed: receipt_c2",
+ "ships": false
+}

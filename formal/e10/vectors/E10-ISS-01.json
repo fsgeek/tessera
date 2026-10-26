@@ -1,0 +1,118 @@
+{
+ "id": "E10-ISS-01",
+ "side": "issuer",
+ "title": "Refuse to ship when conjunct 2 fails and conjunct 3 passes (A3.9)",
+ "registered_case": "BAND0-EXIT E10 'A3.9's refuse-to-ship issuance case'",
+ "guarantees": [
+  "G5"
+ ],
+ "source": [
+  {
+   "model": "E10_BridgeRefuseC2 (extends P5cP5P6_Bridge unchanged)",
+   "file": "formal/e10/tla/S_C2FailNeverShipped_k6.out",
+   "kind": "invariant, green over the full k=6 space (86,849,955 distinct)",
+   "property": "C2FailNeverShipped",
+   "defined_at": "formal/e10/tla/E10_BridgeRefuseC2.tla",
+   "lines": "18 (No error), 25 (86,849,955 distinct, 0 left)",
+   "role": "execution_evidence"
+  },
+  {
+   "model": "same, k=3",
+   "file": "formal/e10/tla/S_C2FailNeverShipped_k3.out",
+   "kind": "invariant, green (456,442 distinct)",
+   "lines": "18 (No error), 23 (456,442 distinct)",
+   "role": "execution_evidence"
+  },
+  {
+   "model": "P5cP5P6_Bridge Ship guard",
+   "file": "formal/tla/P5cP5P6_Bridge.tla",
+   "lines": "171-178",
+   "kind": "action",
+   "role": "property_definition"
+  },
+  {
+   "registered_text": "docs/phase-0-prereg-amendment-3.md",
+   "lines": "759-765",
+   "role": "registered_text"
+  },
+  {
+   "registered_text": "docs/phase-0-prereg-amendment-7.md",
+   "lines": "146-162",
+   "role": "registered_text"
+  }
+ ],
+ "scenario": "The anchor block is stamped past declared + delta, the sixth block inside. The issuer evaluates the three conjuncts on chain time plus depth (A7.6) and must not ship; the attempt is discarded and counts against N.",
+ "base": "an issuance attempt",
+ "mutations": [
+  {
+   "op": "chain_times",
+   "h*": "declared + delta + 1 s",
+   "h*+5": "declared + delta - 1 s"
+  }
+ ],
+ "test_universe": {
+  "issue": {
+   "times": {
+    "900024": "TB + DELTA + 1",
+    "900029": "TB + DELTA - 1"
+   }
+  },
+  "expect": "IssueRefused (pre-ship receipt_c2 = false)"
+ },
+ "choices": [
+  "The bridge has no refusal action; 'refuse' is read as 'Ship never fires in this state' (checked)."
+ ],
+ "expected": null,
+ "expected_issuer": {
+  "ships": false,
+  "attempt_discarded": true,
+  "counts_against_N": true
+ },
+ "schema": "tessera-e10-vector/1",
+ "profile": "tessera-v1-strict",
+ "request": "strict",
+ "covered_by": [],
+ "partial_overlap": [],
+ "notes": [],
+ "status": "new",
+ "live": {
+  "modes": [
+   "L5",
+   "L4"
+  ],
+  "needs": [
+   "An issuer test harness that feeds the service chosen header times (simulated chain or a header-source stub), then checks that no receipt is returned for that attempt and the attempt counter advances."
+  ]
+ },
+ "staging_harness": {
+  "status": "requires staging harness",
+  "harness": "staging issuer with (a) a header-source stub / simulated chain whose block times the tester sets, (b) a readable attempt log: attempt id, state transitions, per-request attempt counter, ship decision with the conjunct values",
+  "sequence": [
+   "S1 submit request R at staged declared time d; record attempt id A1 and counter n0",
+   "S2 stub mines the anchor block h* with nTime d+DELTA+1",
+   "S3 stub mines h*+1..h*+5 one at a time, h*+5 with nTime d+DELTA-1 (six confirmations, the model's depth 5)",
+   "S4 hold the chain at h*+5 until the issuer records a decision for A1"
+  ],
+  "observations": [
+   "O1 the decision record for A1 carries c2 = false (and c1, c3 = true, depth = 6)",
+   "O2 A1 moves to discarded, with no shipped state before or after",
+   "O3 the attempt counter for R reads n0+1 (counted against N)",
+   "O4 no receipt for A1 is returned by the API or present in the issuer's outbox at any point",
+   "O5 the issuer starts attempt A2 (or, if A1 was the N-th, enters the refusal: see E10-ISS-04)"
+  ],
+  "controls": [
+   {
+    "id": "C1-ships",
+    "change": "S2 with nTime(h*) = d+DELTA and S3 with nTime(h*+5) = d+DELTA (all conjuncts pass at the boundary)",
+    "expect": "A1 ships; the receipt verifies VALID_STRICT, T = d+DELTA (cf. E10-TMP-06); counter not advanced by a discard"
+   }
+  ],
+  "pass": "O1-O4 hold for the refusal run and C1 ships; a refusal without the matching discard and counter observations is NOT a pass",
+  "test_oracle": [
+   "E10-ISS-01.test-refuse",
+   "E10-ISS-01.test-control"
+  ],
+  "test_oracle_limit": "The TEST issuer (prototype/conformance/issue.py) only raises IssueRefused with receipt_c2 = false; it has no attempts, discard or N. The oracle fixes the pre-ship decision, not O2-O3."
+ },
+ "status_note": "requires staging harness; not exercisable through the public API alone"
+}

@@ -1,0 +1,22 @@
+{
+ "_meta": {
+  "id": "E10-ISS-03.test-refuse",
+  "issue_kwargs": {
+   "supply_remove": [
+    900029
+   ]
+  },
+  "kind": "issuer_oracle",
+  "note": "TEST issuer (prototype/conformance/issue.py) pre-ship decision only; not the AWS issuer. run.py skips this directory (no expected.json)."
+ },
+ "preship": {
+  "git_anchored": true,
+  "receipt_anchored": false,
+  "snapshot_anchored": true,
+  "snapshot_c1": true,
+  "snapshot_c2": true,
+  "snapshot_c3": true
+ },
+ "refusal": "pre-ship checks failed: receipt_anchored",
+ "ships": false
+}

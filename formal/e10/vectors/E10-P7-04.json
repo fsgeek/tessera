@@ -1,0 +1,99 @@
+{
+ "id": "E10-P7-04",
+ "title": "Type confusion: the manifest frame and its honest possession signature placed in an a_sig slot",
+ "guarantees": [
+  "G1",
+  "G3"
+ ],
+ "source": [
+  {
+   "model": "S-P7 Q3 companion (type unchecked)",
+   "file": "formal/suite/s-p7/proverif/sp7_q3_companion_type_unchecked.out",
+   "lines": "727",
+   "kind": "counterexample",
+   "property": "TypeConfused",
+   "role": "execution_evidence"
+  },
+  {
+   "model": "capstone C-C13(i)",
+   "file": "formal/suite/capstone/proverif/cap_cc13i_a.out",
+   "lines": "4042, 6460",
+   "kind": "counterexample (strict, case a)",
+   "property": "link 6a; TypeConfused",
+   "role": "execution_evidence"
+  }
+ ],
+ "scenario": "The service keys sign two framed types (attestation frames; the manifest frame, via possession). The attacker presents the honestly signed manifest frame where an attestation frame belongs.",
+ "base": "honest bundle (A-a)",
+ "mutations": [
+  {
+   "op": "a_sig_replace_slot",
+   "slot": "kms",
+   "frame": "F_manifest",
+   "signature": "possession.kms"
+  }
+ ],
+ "test_universe": {
+  "post_edit": "rebuild a_sig with (F_manifest, possession.kms) in the kms slot"
+ },
+ "expected": {
+  "verdict": "INVALID",
+  "reason": "TAG_MISMATCH",
+  "T": null,
+  "revocation": "NOT_EVALUATED",
+  "historical_security": "NOT_EVALUATED",
+  "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+  "utc_assessment": {
+   "assumption_id": "A-UTC-7200-6",
+   "utc_upper_bound": null
+  },
+  "row": "3.1",
+  "slot": "kms"
+ },
+ "partial_overlap": [
+  "CODEC-f (manifest tag on the first frame, no honest possession signature)",
+  "CODEC-c"
+ ],
+ "schema": "tessera-e10-vector/1",
+ "profile": "tessera-v1-strict",
+ "request": "strict",
+ "side": "verifier",
+ "choices": [],
+ "covered_by": [],
+ "notes": [],
+ "status": "new",
+ "live": {
+  "modes": [
+   "L0"
+  ],
+  "needs": [
+   "A real receipt; re-encode a_sig (no signing)."
+  ]
+ },
+ "subcases": [
+  {
+   "id": "E10-P7-04",
+   "construction": "A-a; post-issue: a_sig re-encoded with (F_manifest, possession.kms) in the kms slot",
+   "coverage": {
+    "exact": [],
+    "analogous": []
+   },
+   "expected": {
+    "verdict": "INVALID",
+    "reason": "TAG_MISMATCH",
+    "T": null,
+    "revocation": "NOT_EVALUATED",
+    "historical_security": "NOT_EVALUATED",
+    "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+    "utc_assessment": {
+     "assumption_id": "A-UTC-7200-6",
+     "utc_upper_bound": null
+    },
+    "row": "3.1",
+    "slot": "kms"
+   },
+   "T_derivation": "T null: a_sig changed after stamping, so the receipt proof's digest no longer matches (row 11.2); U null with T (A10.1.1)"
+  }
+ ],
+ "analogous_to": []
+}

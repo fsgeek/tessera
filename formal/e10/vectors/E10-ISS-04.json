@@ -1,0 +1,100 @@
+{
+ "id": "E10-ISS-04",
+ "side": "issuer",
+ "title": "Refusal after N = 3 expired attempts, entered atomically, no receipt",
+ "guarantees": [
+  "G5",
+  "G9"
+ ],
+ "source": [
+  {
+   "model": "P5c_IssuanceProtocol, k=6 (Delta = 6, MaxTime = 26)",
+   "file": "formal/tla/k6-2026-09-14/P5c/P5c_k6_d6_Sanity.out",
+   "lines": "475-762",
+   "kind": "vacuity witness",
+   "property": "RefusalUnreachable",
+   "abstract": {
+    "attempts": 3,
+    "declared_last": 14,
+    "refused_at_now": 21,
+    "anchorAt": -1
+   },
+   "role": "execution_evidence"
+  },
+  {
+   "model": "P5c_IssuanceProtocol",
+   "file": "formal/tla/P5c_IssuanceProtocol.tla",
+   "lines": "318-337",
+   "kind": "invariants NoSilentDeadlock, RefusedOnlyWhenExhausted, RefusalLatched",
+   "role": "property_definition"
+  }
+ ],
+ "scenario": "Three attempts each expire without an anchor confirmed in window (calendar outage, fee spike). The final expiry enters the refusal; nothing ships afterwards.",
+ "base": "an issuance request",
+ "mutations": [
+  {
+   "op": "fault",
+   "detail": "OTS calendars unreachable (or never confirming) for 3 x (delta + slack)"
+  }
+ ],
+ "test_universe": null,
+ "choices": [
+  "Lifecycle clock: wall time with slack S = 24 h (clock-precedence ruling); the model's single clock is fused. The refusal record's content (A3.7.2 extended atomic entry) is unmodelled (PROPERTIES row A3.7.2 open), so only 'no receipt, refused, latched' is expected."
+ ],
+ "expected": null,
+ "expected_issuer": {
+  "ships": false,
+  "refused": true,
+  "attempts": 3,
+  "later_ship": false
+ },
+ "schema": "tessera-e10-vector/1",
+ "profile": "tessera-v1-strict",
+ "request": "strict",
+ "covered_by": [],
+ "partial_overlap": [],
+ "notes": [],
+ "status": "new",
+ "live": {
+  "modes": [
+   "L5"
+  ],
+  "needs": [
+   "Calendar fault injection and a compressible clock in a staging issuer (real time would be about 3 x 96 h). The registered 20 Nov 'bounded local refusal' item is the place to run it."
+  ]
+ },
+ "staging_harness": {
+  "status": "requires staging harness",
+  "harness": "staging issuer with an OTS calendar fault switch, a compressible lifecycle clock, the attempt log, and a durable refusal record",
+  "sequence": [
+   "S1 calendars unreachable; submit request R at W = d",
+   "S2 advance W past attempt 1's expiry (DELTA + slack); observe expiry and the start of attempt 2",
+   "S3 repeat for attempts 2 and 3",
+   "S4 after attempt 3 expires, observe the refusal",
+   "S5 restore calendar availability and deliver late evidence that would confirm attempt 3's anchor in window",
+   "S6 advance W and poll; restart the issuer process; poll again"
+  ],
+  "observations": [
+   "O1 exactly three attempts, each expired at its own W_exp (attempt counter 1, 2, 3)",
+   "O2 the refusal is entered once, at attempt 3's expiry, atomically with the final discard (no state between)",
+   "O3 after S5 and S6 the request R stays refused: no receipt is ever returned and no attempt 4 starts",
+   "O4 the refusal survives the restart (latched)"
+  ],
+  "controls": [
+   {
+    "id": "C1-recovers",
+    "change": "restore the calendars during attempt 2",
+    "expect": "attempt 2 ships; no refusal is entered (RefusedOnlyWhenExhausted)"
+   },
+   {
+    "id": "C2-stalled",
+    "change": "freeze W during an outage",
+    "expect": "no refusal and no expiry: distinguishes a latched refusal from a stalled issuer"
+   }
+  ],
+  "pass": "O1-O4 and both controls",
+  "test_oracle": [],
+  "test_oracle_limit": "No TEST issuer recipe: issue.py has no attempts, clock or refusal latch."
+ },
+ "status_note": "requires staging harness; not exercisable through the public API alone"
+}

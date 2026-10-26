@@ -1,0 +1,86 @@
+{
+ "id": "E10-CAP-02",
+ "title": "Possession signature reused as the receipt signature -> SIG_INVALID",
+ "guarantees": [
+  "G1",
+  "G3"
+ ],
+ "source": [
+  {
+   "model": "capstone C-C7(ii) (strict, case a)",
+   "file": "formal/suite/capstone/proverif/cap_cc07ii_a.out",
+   "lines": "12156, 13412, 20301, 21156",
+   "kind": "counterexample (strict run)",
+   "role": "execution_evidence"
+  }
+ ],
+ "scenario": "Byte equality checked only for the attestation type lets the honest possession signature (over F_manifest) stand as S_kms.",
+ "base": "honest bundle (A-a)",
+ "mutations": [
+  {
+   "op": "a_sig_set_signature",
+   "slot": "kms",
+   "value": "possession.kms bytes"
+  }
+ ],
+ "test_universe": {
+  "post_edit": "S_kms := possession.kms; re-encode a_sig"
+ },
+ "expected": {
+  "verdict": "INVALID",
+  "reason": "SIG_INVALID",
+  "T": null,
+  "revocation": "NOT_EVALUATED",
+  "historical_security": "NOT_EVALUATED",
+  "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+  "utc_assessment": {
+   "assumption_id": "A-UTC-7200-6",
+   "utc_upper_bound": null
+  },
+  "row": "9.2",
+  "slot": "kms"
+ },
+ "schema": "tessera-e10-vector/1",
+ "profile": "tessera-v1-strict",
+ "request": "strict",
+ "side": "verifier",
+ "choices": [],
+ "covered_by": [],
+ "partial_overlap": [],
+ "notes": [],
+ "status": "new",
+ "live": {
+  "modes": [
+   "L0"
+  ],
+  "needs": [
+   "A real receipt; re-encode a_sig (no signing)."
+  ]
+ },
+ "subcases": [
+  {
+   "id": "E10-CAP-02",
+   "construction": "A-a; post-issue: a_sig re-encoded with S_kms := possession.kms bytes",
+   "coverage": {
+    "exact": [],
+    "analogous": []
+   },
+   "expected": {
+    "verdict": "INVALID",
+    "reason": "SIG_INVALID",
+    "T": null,
+    "revocation": "NOT_EVALUATED",
+    "historical_security": "NOT_EVALUATED",
+    "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+    "utc_assessment": {
+     "assumption_id": "A-UTC-7200-6",
+     "utc_upper_bound": null
+    },
+    "row": "9.2",
+    "slot": "kms"
+   },
+   "T_derivation": "T null: a_sig changed after stamping, so the receipt proof's digest no longer matches (row 11.2); U null with T (A10.1.1)"
+  }
+ ],
+ "analogous_to": []
+}

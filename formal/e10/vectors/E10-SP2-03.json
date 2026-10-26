@@ -1,0 +1,103 @@
+{
+ "id": "E10-SP2-03",
+ "title": "gpg signature emptied -> SIG_EMPTY (gpg)",
+ "guarantees": [
+  "G3"
+ ],
+ "source": [
+  {
+   "model": "S-P2 Q3 companion (cardinality ignored), degraded",
+   "file": "formal/suite/s-p2/proverif/sp2_q3_companion_cardinality_ignored.out",
+   "lines": "354-520",
+   "kind": "counterexample",
+   "property": "Stripped",
+   "role": "execution_evidence"
+  },
+  {
+   "model": "S-P2 diagnostic d7 (strict form of Q3)",
+   "file": "formal/suite/s-p2/proverif/diagnostics/d7_strict_q3_mutation.out",
+   "lines": "564",
+   "kind": "counterexample (unregistered diagnostic)",
+   "role": "execution_evidence"
+  },
+  {
+   "model": "capstone C-C9 (strict, case a)",
+   "file": "formal/suite/capstone/proverif/cap_cc09_a.out",
+   "lines": "3505, 6176",
+   "kind": "counterexample (strict run)",
+   "property": "link 2b slot B; Stripped",
+   "role": "execution_evidence"
+  }
+ ],
+ "scenario": "As E10-SP2-01, S_gpg of length zero.",
+ "base": "honest bundle (A-a)",
+ "mutations": [
+  {
+   "op": "a_sig_set_signature",
+   "slot": "gpg",
+   "value": "empty"
+  }
+ ],
+ "test_universe": {
+  "post_edit": "re-encode a_sig with zero-length S_gpg"
+ },
+ "expected": {
+  "verdict": "INVALID",
+  "reason": "SIG_EMPTY",
+  "T": null,
+  "revocation": "NOT_EVALUATED",
+  "historical_security": "NOT_EVALUATED",
+  "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+  "utc_assessment": {
+   "assumption_id": "A-UTC-7200-6",
+   "utc_upper_bound": null
+  },
+  "row": "3.1",
+  "slot": "gpg"
+ },
+ "partial_overlap": [
+  "ALG-02 / HY-c4-C (kms slot)"
+ ],
+ "schema": "tessera-e10-vector/1",
+ "profile": "tessera-v1-strict",
+ "request": "strict",
+ "side": "verifier",
+ "choices": [],
+ "covered_by": [],
+ "notes": [],
+ "status": "new",
+ "live": {
+  "modes": [
+   "L0"
+  ],
+  "needs": [
+   "A real receipt; re-encode a_sig."
+  ]
+ },
+ "subcases": [
+  {
+   "id": "E10-SP2-03",
+   "construction": "A-a; post-issue: a_sig re-encoded with zero-length S_gpg",
+   "coverage": {
+    "exact": [],
+    "analogous": []
+   },
+   "expected": {
+    "verdict": "INVALID",
+    "reason": "SIG_EMPTY",
+    "T": null,
+    "revocation": "NOT_EVALUATED",
+    "historical_security": "NOT_EVALUATED",
+    "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+    "utc_assessment": {
+     "assumption_id": "A-UTC-7200-6",
+     "utc_upper_bound": null
+    },
+    "row": "3.1",
+    "slot": "gpg"
+   },
+   "T_derivation": "T null: a_sig changed after stamping, so the receipt proof's digest no longer matches (row 11.2); U null with T (A10.1.1)"
+  }
+ ],
+ "analogous_to": []
+}

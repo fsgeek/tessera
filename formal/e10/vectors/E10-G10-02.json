@@ -1,0 +1,119 @@
+{
+ "id": "E10-G10-02",
+ "title": "Both channels captured: honest frames, honest manifest, captor keys presented -> KEY_MISMATCH",
+ "guarantees": [
+  "G10",
+  "G3"
+ ],
+ "source": [
+  {
+   "model": "S-P3 Q2 degraded, sole channel compromised (abstraction of V1 strict with both channels captured)",
+   "file": "formal/suite/s-p3/proverif/sp3_q2_degraded_compromised.out",
+   "lines": "195, 200",
+   "kind": "queries true",
+   "property": "Reattributed; PossessionTransplanted",
+   "role": "execution_evidence"
+  },
+  {
+   "model": "S-P3 Q5 (two signers)",
+   "file": "formal/suite/s-p3/proverif/sp3_q5_multikey_correct.out",
+   "lines": "314, 320, 326",
+   "kind": "queries true",
+   "property": "ReattributedA/B; PossessionTransplanted",
+   "role": "execution_evidence"
+  },
+  {
+   "model": "capstone C-C1 (case c, both channel keys public)",
+   "file": "formal/suite/capstone/proverif/cap_cc01_c.out",
+   "lines": "9737, 9959, 14743",
+   "kind": "queries true",
+   "property": "ReattributedA/B; AUHK",
+   "role": "execution_evidence"
+  }
+ ],
+ "scenario": "As E10-G10-01 but the honest manifest is kept; only keys (and possession) are the captor's.",
+ "base": "honest bundle (A-a) + AUTH-i-T channel material",
+ "mutations": [
+  {
+   "op": "replace_member",
+   "path": "keys",
+   "with": "K'"
+  },
+  {
+   "op": "replace_member",
+   "path": "possession",
+   "with": "by K' over the honest manifest"
+  },
+  {
+   "op": "channels",
+   "dns": "names K'",
+   "git": "names K'"
+  }
+ ],
+ "test_universe": {
+  "like": "AUTH-i-T channels; everything else from A-a"
+ },
+ "choices": [
+  "'Captured channels' = the TXT signed under the trusted DNSSEC path and the assertion committed by the configured repository key, both naming the captor's keys K' (AUTH-i-T's channel material).",
+  "DSKS (the model's derived key) is not achievable for fixed-generator P-256 with a known private key; the captor's own key K' stands in for it.",
+  "Reading S-P3's degraded sole-channel model as V1 strict with both channels captured is the extractor's reading (the S-P3 H1 header says only 'strict ... not weaker')."
+ ],
+ "expected": {
+  "verdict": "INVALID",
+  "reason": "KEY_MISMATCH",
+  "T": "2026-11-10T12:20:00Z",
+  "revocation": "NOT_EVALUATED",
+  "historical_security": "NOT_EVALUATED",
+  "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+  "utc_assessment": {
+   "assumption_id": "A-UTC-7200-6",
+   "utc_upper_bound": "2026-11-10T15:10:00Z"
+  },
+  "row": "5.2",
+  "slot": "kms"
+ },
+ "schema": "tessera-e10-vector/1",
+ "profile": "tessera-v1-strict",
+ "request": "strict",
+ "side": "verifier",
+ "covered_by": [],
+ "partial_overlap": [],
+ "notes": [],
+ "status": "new",
+ "live": {
+  "modes": [
+   "L2",
+   "L1",
+   "L0"
+  ],
+  "needs": [
+   "As E10-G10-01."
+  ]
+ },
+ "subcases": [
+  {
+   "id": "E10-G10-02",
+   "construction": "TEST issue with captor keys, adversarial; manifest_value hook: the honest manifest; asig hook: A-a's honest A_sig; keys and possession (over the honest manifest) by the captor; both channels name the captor's keys",
+   "coverage": {
+    "exact": [],
+    "analogous": []
+   },
+   "expected": {
+    "verdict": "INVALID",
+    "reason": "KEY_MISMATCH",
+    "T": "2026-11-10T12:20:00Z",
+    "revocation": "NOT_EVALUATED",
+    "historical_security": "NOT_EVALUATED",
+    "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+    "utc_assessment": {
+     "assumption_id": "A-UTC-7200-6",
+     "utc_upper_bound": "2026-11-10T15:10:00Z"
+    },
+    "row": "5.2",
+    "slot": "kms"
+   },
+   "T_derivation": "T = nTime(h*) of the fixture's own receipt proof and headers (a_sig and receipt_anchor as stamped; rows 11.1-11.4 pass); U = 7200 + max nTime(h*..h*+5) (A10.1.1)"
+  }
+ ],
+ "analogous_to": []
+}

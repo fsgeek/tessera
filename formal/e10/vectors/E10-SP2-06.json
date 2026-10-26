@@ -1,0 +1,122 @@
+{
+ "id": "E10-SP2-06",
+ "title": "Content splice: each slot honestly signs different content -> RECEIPT_COMMON_MISMATCH",
+ "guarantees": [
+  "G1",
+  "G3"
+ ],
+ "source": [
+  {
+   "model": "S-P2 diagnostic d12 (honest splice instance)",
+   "file": "formal/suite/s-p2/proverif/diagnostics/d12_q6c_registered_witness.out",
+   "lines": "1362-1428",
+   "kind": "counterexample (unregistered diagnostic)",
+   "property": "Spliced",
+   "role": "execution_evidence"
+  },
+  {
+   "model": "S-P2 Q6-C companion, degraded",
+   "file": "formal/suite/s-p2/proverif/sp2_q6_companion_content_unchecked.out",
+   "lines": "1187-1213",
+   "kind": "counterexample",
+   "role": "execution_evidence"
+  },
+  {
+   "model": "capstone C-C16 (strict, case a)",
+   "file": "formal/suite/capstone/proverif/cap_cc16_a.out",
+   "lines": "4014, 6605",
+   "kind": "counterexample (strict run)",
+   "property": "link 5; Spliced",
+   "role": "execution_evidence"
+  }
+ ],
+ "scenario": "Both slots are honest signers, each over a different content, presented under one tuple.",
+ "base": "honest bundle (A-a)",
+ "mutations": [
+  {
+   "op": "frames_set",
+   "field": "common.content",
+   "value": {
+    "TEST": "other content"
+   },
+   "slots": "gpg",
+   "resign": "service gpg key"
+  }
+ ],
+ "test_universe": {
+  "hooks": "common_slots hook: common_gpg.content differs; both frames signed honestly"
+ },
+ "choices": [
+  "S-P2's strict models carry no content-equality check or Spliced query; the strict evidence is the capstone C-C16 run."
+ ],
+ "expected": "see subcases",
+ "partial_overlap": [
+  "RC-a (also an issuer mismatch)",
+  "HY-e1-C (alg splice)"
+ ],
+ "schema": "tessera-e10-vector/1",
+ "profile": "tessera-v1-strict",
+ "request": "strict",
+ "side": "verifier",
+ "covered_by": [],
+ "notes": [],
+ "status": "new",
+ "live": {
+  "modes": [
+   "L3",
+   "L0"
+  ],
+  "needs": [
+   "Live variant without a hook: take the kms pair from receipt R1 and the gpg pair from receipt R2 (two real receipts with different content); expected reason identical."
+  ]
+ },
+ "subcases": [
+  {
+   "id": "E10-SP2-06.L3",
+   "title": "L3 form: one issue, slots sign different content",
+   "construction": "TEST issue, adversarial; common_slots hook: the gpg frame's common.content = {TEST: 'other content'}; both frames signed honestly; A_sig stamped",
+   "coverage": {
+    "exact": [],
+    "analogous": []
+   },
+   "expected": {
+    "verdict": "INVALID",
+    "reason": "RECEIPT_COMMON_MISMATCH",
+    "T": "2026-11-10T12:20:00Z",
+    "revocation": "NOT_EVALUATED",
+    "historical_security": "NOT_EVALUATED",
+    "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+    "utc_assessment": {
+     "assumption_id": "A-UTC-7200-6",
+     "utc_upper_bound": "2026-11-10T15:10:00Z"
+    },
+    "row": "6.2"
+   },
+   "T_derivation": "T = nTime(h*) of the fixture's own receipt proof and headers (a_sig and receipt_anchor as stamped; rows 11.1-11.4 pass); U = 7200 + max nTime(h*..h*+5) (A10.1.1)"
+  },
+  {
+   "id": "E10-SP2-06.L0",
+   "title": "L0 form: splice two real receipts",
+   "construction": "A-a; post-issue: the a_sig gpg pair replaced by (F_gpg, S_gpg) of a second honest receipt R2 with content {TEST: 'other content'}; receipt_anchor kept",
+   "coverage": {
+    "exact": [],
+    "analogous": []
+   },
+   "expected": {
+    "verdict": "INVALID",
+    "reason": "RECEIPT_COMMON_MISMATCH",
+    "T": null,
+    "revocation": "NOT_EVALUATED",
+    "historical_security": "NOT_EVALUATED",
+    "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+    "utc_assessment": {
+     "assumption_id": "A-UTC-7200-6",
+     "utc_upper_bound": null
+    },
+    "row": "6.2"
+   },
+   "T_derivation": "T null: a_sig changed after stamping, so the receipt proof's digest no longer matches (row 11.2); U null with T (A10.1.1)"
+  }
+ ],
+ "analogous_to": []
+}

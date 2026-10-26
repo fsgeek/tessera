@@ -1,0 +1,113 @@
+{
+ "id": "E10-TMP-07",
+ "title": "Receipt-declared tolerance does not enlarge the window (content claims delta_s huge; confirmation late)",
+ "guarantees": [
+  "G9",
+  "G8"
+ ],
+ "source": [
+  {
+   "model": "P5P6_TemporalRevocation_BrokenTol (companion)",
+   "file": "formal/tla/P5P6_TemporalRevocation_BrokenTol.out",
+   "lines": "37-46",
+   "kind": "counterexample",
+   "property": "VerifierOwnsTolerances",
+   "defined_at": "formal/tla/P5P6_TemporalRevocation.tla:182-186",
+   "abstract": {
+    "rcptDelta": 4,
+    "polDelta": 0,
+    "declared": 0,
+    "anchor": 0,
+    "confirmedAt": 4
+   },
+   "role": "execution_evidence"
+  }
+ ],
+ "scenario": "The receipt carries its own (adversarial) tolerances; the verifier must use only its catalog delta and reject the late confirmation.",
+ "base": "honest bundle (A-a), issued with chosen content",
+ "mutations": [
+  {
+   "op": "issue_with_content",
+   "content": {
+    "TEST": "receipt-declared tolerances",
+    "delta_s": "999999999",
+    "epsilon_s": "999999999"
+   }
+  },
+  {
+   "op": "set_ntime",
+   "height": "h*+5",
+   "value": "declared + delta + 1 s"
+  }
+ ],
+ "test_universe": {
+  "issue": {
+   "content": {
+    "TEST": "receipt-declared tolerances",
+    "delta_s": "999999999",
+    "epsilon_s": "999999999"
+   },
+   "times": {
+    "900029": "TB + DELTA + 1"
+   },
+   "adversarial": true
+  }
+ },
+ "choices": [
+  "Where a V1 receipt can 'declare' a tolerance: the bundle never supplies delta (profile 2.2). The only signed free field is common.content, which the verifier does not read. This vector puts it there; E10-TMP-09 puts it in the unsigned issuer_record."
+ ],
+ "expected": {
+  "verdict": "INVALID",
+  "reason": "CONFIRMATION_LATE",
+  "T": "2026-11-10T12:20:00Z",
+  "revocation": "NOT_EVALUATED",
+  "historical_security": "NOT_EVALUATED",
+  "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+  "utc_assessment": {
+   "assumption_id": "A-UTC-7200-6",
+   "utc_upper_bound": "2026-11-13T14:00:01Z"
+  },
+  "row": "12.3"
+ },
+ "schema": "tessera-e10-vector/1",
+ "profile": "tessera-v1-strict",
+ "request": "strict",
+ "side": "verifier",
+ "covered_by": [],
+ "partial_overlap": [],
+ "notes": [],
+ "status": "new",
+ "live": {
+  "modes": [
+   "L4"
+  ],
+  "needs": [
+   "As E10-TMP-01; the content is ordinary client content (L0-compatible on the issue side)."
+  ]
+ },
+ "subcases": [
+  {
+   "id": "E10-TMP-07",
+   "construction": "TEST issue, content {TEST, delta_s: '999999999', epsilon_s: '999999999'}, times {h*+5: TB+DELTA+1}, adversarial",
+   "coverage": {
+    "exact": [],
+    "analogous": []
+   },
+   "expected": {
+    "verdict": "INVALID",
+    "reason": "CONFIRMATION_LATE",
+    "T": "2026-11-10T12:20:00Z",
+    "revocation": "NOT_EVALUATED",
+    "historical_security": "NOT_EVALUATED",
+    "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+    "utc_assessment": {
+     "assumption_id": "A-UTC-7200-6",
+     "utc_upper_bound": "2026-11-13T14:00:01Z"
+    },
+    "row": "12.3"
+   },
+   "T_derivation": "T = nTime(h*) of the fixture's own receipt proof and headers (a_sig and receipt_anchor as stamped; rows 11.1-11.4 pass); U = 7200 + max nTime(h*..h*+5) (A10.1.1)"
+  }
+ ],
+ "analogous_to": []
+}

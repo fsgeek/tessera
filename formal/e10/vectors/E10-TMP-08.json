@@ -1,0 +1,110 @@
+{
+ "id": "E10-TMP-08",
+ "title": "Receipt-declared tolerance does not narrow the window (content claims delta_s = 0; confirmed_at = declared + delta)",
+ "guarantees": [
+  "G9",
+  "G8"
+ ],
+ "source": [
+  {
+   "model": "P5P6_TemporalRevocation_BrokenTolStrict (companion)",
+   "file": "formal/tla/P5P6_TemporalRevocation_BrokenTolStrict.out",
+   "lines": "35-44",
+   "kind": "counterexample",
+   "property": "ReceiptIndependence",
+   "defined_at": "formal/tla/P5P6_TemporalRevocation.tla:219-221",
+   "abstract": {
+    "rcptDelta": 0,
+    "polDelta": 1,
+    "declared": 0,
+    "anchor": 0,
+    "confirmedAt": 1
+   },
+   "role": "execution_evidence"
+  }
+ ],
+ "scenario": "An issuer-controlled narrowing: the receipt claims a zero tolerance. The verdict must be identical to the same receipt without the claim: valid at the inclusive boundary.",
+ "base": "honest bundle (A-a), issued with chosen content",
+ "mutations": [
+  {
+   "op": "issue_with_content",
+   "content": {
+    "TEST": "receipt-declared tolerances",
+    "delta_s": "0",
+    "epsilon_s": "0"
+   }
+  },
+  {
+   "op": "set_ntime",
+   "height": "h*+5",
+   "value": "declared + delta"
+  }
+ ],
+ "test_universe": {
+  "issue": {
+   "content": {
+    "TEST": "receipt-declared tolerances",
+    "delta_s": "0",
+    "epsilon_s": "0"
+   },
+   "times": {
+    "900029": "TB + DELTA"
+   }
+  }
+ },
+ "choices": [
+  "As E10-TMP-07 (content as the carrier). Model polDelta = 1 unit maps to delta; confirmedAt = 1 to the inclusive boundary."
+ ],
+ "expected": {
+  "verdict": "VALID_STRICT",
+  "reason": "OK",
+  "T": "2026-11-10T12:20:00Z",
+  "revocation": "NOT_EVALUATED",
+  "historical_security": "NOT_EVALUATED",
+  "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+  "utc_assessment": {
+   "assumption_id": "A-UTC-7200-6",
+   "utc_upper_bound": "2026-11-13T14:00:00Z"
+  }
+ },
+ "schema": "tessera-e10-vector/1",
+ "profile": "tessera-v1-strict",
+ "request": "strict",
+ "side": "verifier",
+ "covered_by": [],
+ "partial_overlap": [],
+ "notes": [],
+ "status": "new",
+ "live": {
+  "modes": [
+   "L4"
+  ],
+  "needs": [
+   "As E10-TMP-01."
+  ]
+ },
+ "subcases": [
+  {
+   "id": "E10-TMP-08",
+   "construction": "TEST issue, content {TEST, delta_s: '0', epsilon_s: '0'}, times {h*+5: TB+DELTA}",
+   "coverage": {
+    "exact": [],
+    "analogous": []
+   },
+   "expected": {
+    "verdict": "VALID_STRICT",
+    "reason": "OK",
+    "T": "2026-11-10T12:20:00Z",
+    "revocation": "NOT_EVALUATED",
+    "historical_security": "NOT_EVALUATED",
+    "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+    "utc_assessment": {
+     "assumption_id": "A-UTC-7200-6",
+     "utc_upper_bound": "2026-11-13T14:00:00Z"
+    }
+   },
+   "T_derivation": "T = nTime(h*) of the fixture's own receipt proof and headers (a_sig and receipt_anchor as stamped; rows 11.1-11.4 pass); U = 7200 + max nTime(h*..h*+5) (A10.1.1)"
+  }
+ ],
+ "analogous_to": []
+}

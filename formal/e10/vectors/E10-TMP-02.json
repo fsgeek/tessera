@@ -1,0 +1,113 @@
+{
+ "id": "E10-TMP-02",
+ "title": "Late burial as traced at k = 6 (scaled): T = declared + delta/2, confirmed_at = declared + 3*delta/2",
+ "registered_case": "BAND0-EXIT E10 'late burial -> INVALID'",
+ "guarantees": [
+  "G5",
+  "G9"
+ ],
+ "source": [
+  {
+   "model": "P5cP5P6_Bridge, k=6 instance",
+   "file": "formal/tla/k6-2026-09-14/Bridge/W_LateBurialArtifactUnreachable.out",
+   "lines": "25-141",
+   "kind": "vacuity witness",
+   "property": "LateBurialArtifactUnreachable",
+   "abstract": {
+    "declared": 2,
+    "Delta": 2,
+    "chain": [
+     3,
+     3,
+     3,
+     3,
+     5,
+     5
+    ],
+    "anchorH": 1
+   },
+   "role": "execution_evidence"
+  }
+ ],
+ "scenario": "The traced artifact itself: the including block one half-window after declared, the k-th confirmation one half-window past the window's end.",
+ "base": "honest bundle (A-a)",
+ "mutations": [
+  {
+   "op": "set_ntime",
+   "height": "h*",
+   "value": "declared + 129600 s"
+  },
+  {
+   "op": "set_ntime",
+   "height": "h*+5",
+   "value": "declared + 388800 s"
+  }
+ ],
+ "test_universe": {
+  "issue": {
+   "times": {
+    "900024": "TB + 129600",
+    "900029": "TB + 388800"
+   },
+   "adversarial": true
+  }
+ },
+ "choices": [
+  "Unit = delta/2 = 36 h (model Delta = 2). The model's Epsilon = 1 would then be 36 h, not 24 h: epsilon is not exercised by this trace, so the mismatch is immaterial here.",
+  "Heights h*+1..h*+4 keep their default times (nonmonotone order is legal, profile 7.1)."
+ ],
+ "expected": {
+  "verdict": "INVALID",
+  "reason": "CONFIRMATION_LATE",
+  "T": "2026-11-12T00:00:00Z",
+  "revocation": "NOT_EVALUATED",
+  "historical_security": "NOT_EVALUATED",
+  "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+  "utc_assessment": {
+   "assumption_id": "A-UTC-7200-6",
+   "utc_upper_bound": "2026-11-15T02:00:00Z"
+  },
+  "row": "12.3"
+ },
+ "schema": "tessera-e10-vector/1",
+ "profile": "tessera-v1-strict",
+ "request": "strict",
+ "side": "verifier",
+ "covered_by": [],
+ "partial_overlap": [],
+ "notes": [],
+ "status": "new",
+ "live": {
+  "modes": [
+   "L4"
+  ],
+  "needs": [
+   "As E10-TMP-01."
+  ]
+ },
+ "subcases": [
+  {
+   "id": "E10-TMP-02",
+   "construction": "TEST issue, times {h*: TB+129600, h*+5: TB+388800}, adversarial",
+   "coverage": {
+    "exact": [],
+    "analogous": []
+   },
+   "expected": {
+    "verdict": "INVALID",
+    "reason": "CONFIRMATION_LATE",
+    "T": "2026-11-12T00:00:00Z",
+    "revocation": "NOT_EVALUATED",
+    "historical_security": "NOT_EVALUATED",
+    "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+    "utc_assessment": {
+     "assumption_id": "A-UTC-7200-6",
+     "utc_upper_bound": "2026-11-15T02:00:00Z"
+    },
+    "row": "12.3"
+   },
+   "T_derivation": "T = nTime(h*) of the fixture's own receipt proof and headers (a_sig and receipt_anchor as stamped; rows 11.1-11.4 pass); U = 7200 + max nTime(h*..h*+5) (A10.1.1)"
+  }
+ ],
+ "analogous_to": []
+}

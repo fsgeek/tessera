@@ -1,0 +1,12 @@
+{
+  "case": "08-archive-extra-byte",
+  "description": "Archive with one appended byte (LF); signature is over the original.",
+  "archive": "tessera-verifier-v1-1.parts",
+  "signature": "tessera-verifier-v1-1.parts.sig",
+  "keyring": "keyring.pgp",
+  "keyring_holds": "production",
+  "signed_by": "production",
+  "gpgv_exit": "nonzero",
+  "accept": false,
+  "accept_basis": "section 15.9 R3 acceptance (trusted checker + pinned gpgv exit 0 + keyring holding only the R5-authenticated production key); case 02 is a TEST acceptance under R4(a)."
+}

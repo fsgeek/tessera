@@ -1,0 +1,92 @@
+{
+ "id": "E10-SP1-02",
+ "title": "Receipt signature computed over the payload only, not the frame -> SIG_INVALID",
+ "guarantees": [
+  "G1"
+ ],
+ "source": [
+  {
+   "model": "S-P1 Q4 companion B (frame fields outside the signature), degraded",
+   "file": "formal/suite/s-p1/proverif/sp1_q4_companionB_frame_unsigned.out",
+   "lines": "327-328",
+   "kind": "counterexample",
+   "property": "AcceptedUnderHonestKey => IssuerSigned",
+   "role": "execution_evidence"
+  }
+ ],
+ "scenario": "An issuer (or verifier) that binds only the payload lets the frame header be changed under a valid signature.",
+ "base": "honest bundle (A-a)",
+ "mutations": [
+  {
+   "op": "a_sig_set_signature",
+   "slot": "kms",
+   "value": "service kms signature over the JCS payload bytes only"
+  },
+  {
+   "op": "restamp",
+   "value": "yes (TEST)"
+  }
+ ],
+ "test_universe": {
+  "hooks": "sign hook: S_kms = sign(payload) instead of sign(F_kms); adversarial=True"
+ },
+ "expected": {
+  "verdict": "INVALID",
+  "reason": "SIG_INVALID",
+  "T": "2026-11-10T12:20:00Z",
+  "revocation": "NOT_EVALUATED",
+  "historical_security": "NOT_EVALUATED",
+  "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+  "utc_assessment": {
+   "assumption_id": "A-UTC-7200-6",
+   "utc_upper_bound": "2026-11-10T15:10:00Z"
+  },
+  "row": "9.2",
+  "slot": "kms"
+ },
+ "notes": [
+  "Issuer face: the service must sign the full ENC frame; a live check is to verify the service's S over F_kms."
+ ],
+ "schema": "tessera-e10-vector/1",
+ "profile": "tessera-v1-strict",
+ "request": "strict",
+ "side": "verifier",
+ "choices": [],
+ "covered_by": [],
+ "partial_overlap": [],
+ "status": "new",
+ "live": {
+  "modes": [
+   "L3"
+  ],
+  "needs": [
+   "A signature by the service kms key over chosen bytes: TEST issuer or staging hook only."
+  ]
+ },
+ "subcases": [
+  {
+   "id": "E10-SP1-02",
+   "construction": "TEST issue, adversarial; sign hook: S_kms = kms signature over the JCS payload only (not the frame); A_sig stamped",
+   "coverage": {
+    "exact": [],
+    "analogous": []
+   },
+   "expected": {
+    "verdict": "INVALID",
+    "reason": "SIG_INVALID",
+    "T": "2026-11-10T12:20:00Z",
+    "revocation": "NOT_EVALUATED",
+    "historical_security": "NOT_EVALUATED",
+    "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+    "utc_assessment": {
+     "assumption_id": "A-UTC-7200-6",
+     "utc_upper_bound": "2026-11-10T15:10:00Z"
+    },
+    "row": "9.2",
+    "slot": "kms"
+   },
+   "T_derivation": "T = nTime(h*) of the fixture's own receipt proof and headers (a_sig and receipt_anchor as stamped; rows 11.1-11.4 pass); U = 7200 + max nTime(h*..h*+5) (A10.1.1)"
+  }
+ ],
+ "analogous_to": []
+}

@@ -1,0 +1,12 @@
+{
+  "case": "07-signature-corrupted",
+  "description": "Production signature with one bit flipped in its final byte (inside the s MPI).",
+  "archive": "tessera-verifier-v1-1.parts",
+  "signature": "tessera-verifier-v1-1.parts.sig",
+  "keyring": "keyring.pgp",
+  "keyring_holds": "production",
+  "signed_by": "production",
+  "gpgv_exit": "nonzero",
+  "accept": false,
+  "accept_basis": "section 15.9 R3 acceptance (trusted checker + pinned gpgv exit 0 + keyring holding only the R5-authenticated production key); case 02 is a TEST acceptance under R4(a)."
+}

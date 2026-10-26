@@ -1,0 +1,104 @@
+{
+ "id": "E10-TMP-12",
+ "title": "Shallow anchor: h*..h*+4 bundled, h*+5 absent -> UNVERIFIABLE",
+ "guarantees": [
+  "G5",
+  "G9"
+ ],
+ "source": [
+  {
+   "model": "P5c_IssuanceProtocol_Broken (companion), k=6",
+   "file": "formal/tla/k6-2026-09-14/P5c/P5c_IssuanceProtocol_Broken_k6.out",
+   "lines": "25-96",
+   "kind": "counterexample",
+   "property": "NoShippedOrphan",
+   "abstract": {
+    "declared": 0,
+    "anchorAt": 1,
+    "depth_at_ship": 1,
+    "then": "Reorg orphans the shipped anchor"
+   },
+   "role": "execution_evidence"
+  },
+  {
+   "model": "P4_VerifierStates",
+   "file": "formal/tla/P4_VerifierStates.tla",
+   "lines": "167-168",
+   "kind": "invariant (ExactUnverifiable)",
+   "role": "property_definition"
+  }
+ ],
+ "scenario": "The verifier face of 'shipped before depth k': the presented proof's selected height lacks its sixth header, so no attestation qualifies (profile 7.1 (b)).",
+ "base": "honest bundle (A-a)",
+ "mutations": [
+  {
+   "op": "remove_headers",
+   "heights": "h*+5"
+  }
+ ],
+ "test_universe": {
+  "issue": {
+   "supply_remove": [
+    900029
+   ],
+   "adversarial": true
+  }
+ },
+ "choices": [
+  "The model's harm is a reorg after a shallow ship; a bundle cannot show a reorg. The concretization is the shallow bundle itself; the issuer half is E10-ISS-03."
+ ],
+ "expected": {
+  "verdict": "UNVERIFIABLE",
+  "reason": "HEADERS_MISSING",
+  "T": null,
+  "revocation": "NOT_EVALUATED",
+  "historical_security": "NOT_EVALUATED",
+  "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+  "utc_assessment": {
+   "assumption_id": "A-UTC-7200-6",
+   "utc_upper_bound": null
+  },
+  "row": "11.4"
+ },
+ "schema": "tessera-e10-vector/1",
+ "profile": "tessera-v1-strict",
+ "request": "strict",
+ "side": "verifier",
+ "covered_by": [],
+ "partial_overlap": [],
+ "notes": [],
+ "status": "new",
+ "live": {
+  "modes": [
+   "L0"
+  ],
+  "needs": [
+   "A real receipt; delete header h*+5 of the receipt proof (check it is not h*..h*+5 of the snapshot or git proof)."
+  ]
+ },
+ "subcases": [
+  {
+   "id": "E10-TMP-12",
+   "construction": "TEST issue, supply_remove [h*+5], adversarial",
+   "coverage": {
+    "exact": [],
+    "analogous": []
+   },
+   "expected": {
+    "verdict": "UNVERIFIABLE",
+    "reason": "HEADERS_MISSING",
+    "T": null,
+    "revocation": "NOT_EVALUATED",
+    "historical_security": "NOT_EVALUATED",
+    "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+    "utc_assessment": {
+     "assumption_id": "A-UTC-7200-6",
+     "utc_upper_bound": null
+    },
+    "row": "11.4"
+   },
+   "T_derivation": "T null: no qualifying attestation (row 11.4); U null"
+  }
+ ],
+ "analogous_to": []
+}

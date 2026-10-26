@@ -1,0 +1,110 @@
+{
+ "id": "E10-E6A-06",
+ "title": "Missing algorithm id is malformed, not unknown -> INVALID",
+ "guarantees": [
+  "G9",
+  "G1"
+ ],
+ "source": [
+  {
+   "model": "E6a_Broken_MalformedAsUnknown, V1",
+   "file": "formal/tla/E6a/runs/broken/E6a_Broken_MalformedAsUnknown_V1.out",
+   "lines": "45-50",
+   "kind": "counterexample",
+   "property": "InvalidAlgFormsGiveInvalid",
+   "abstract": {
+    "sig": {
+     "kms": "good",
+     "gpg": "bad"
+    },
+    "alg": {
+     "kms": "supported",
+     "gpg": "missing"
+    },
+    "ev": "absent"
+   },
+   "role": "execution_evidence"
+  }
+ ],
+ "scenario": "A verifier that classes every non-supported id form as unknown reports UNVERIFIABLE for a missing id.",
+ "base": "honest bundle (A-a)",
+ "mutations": [
+  {
+   "op": "frames_delete",
+   "field": "common.alg",
+   "slots": "gpg"
+  },
+  {
+   "op": "remove_member",
+   "path": "dns"
+  },
+  {
+   "op": "remove_member",
+   "path": "git"
+  }
+ ],
+ "test_universe": {
+  "post_edit": "delete common.alg from F_gpg's payload, re-encode a_sig; delete dns, git"
+ },
+ "choices": [
+  "Per-slot 'missing' -> the gpg frame's payload lacks alg: a closed-schema payload failure (ENC 3.2:300)."
+ ],
+ "expected": {
+  "verdict": "INVALID",
+  "reason": "SCHEMA",
+  "T": null,
+  "revocation": "NOT_EVALUATED",
+  "historical_security": "NOT_EVALUATED",
+  "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+  "utc_assessment": {
+   "assumption_id": "A-UTC-7200-6",
+   "utc_upper_bound": null
+  },
+  "row": "3.1",
+  "slot": "gpg"
+ },
+ "notes": [
+  "Confirm the slot-order tie with the reference verifier: kms decodes first and passes, so gpg's SCHEMA is the first failure."
+ ],
+ "schema": "tessera-e10-vector/1",
+ "profile": "tessera-v1-strict",
+ "request": "strict",
+ "side": "verifier",
+ "covered_by": [],
+ "partial_overlap": [],
+ "status": "new",
+ "live": {
+  "modes": [
+   "L0"
+  ],
+  "needs": [
+   "A real receipt; re-encode one frame and a_sig (no signing)."
+  ]
+ },
+ "subcases": [
+  {
+   "id": "E10-E6A-06",
+   "construction": "A-a; post-issue: common.alg deleted from F_gpg's payload, a_sig re-encoded (S_gpg kept); delete dns and git",
+   "coverage": {
+    "exact": [],
+    "analogous": []
+   },
+   "expected": {
+    "verdict": "INVALID",
+    "reason": "SCHEMA",
+    "T": null,
+    "revocation": "NOT_EVALUATED",
+    "historical_security": "NOT_EVALUATED",
+    "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+    "utc_assessment": {
+     "assumption_id": "A-UTC-7200-6",
+     "utc_upper_bound": null
+    },
+    "row": "3.1",
+    "slot": "gpg"
+   },
+   "T_derivation": "T null: a_sig changed after stamping, so the receipt proof's digest no longer matches (row 11.2); U null with T (A10.1.1)"
+  }
+ ],
+ "analogous_to": []
+}

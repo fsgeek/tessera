@@ -1,0 +1,153 @@
+{
+ "id": "E10-P9-02",
+ "title": "Same bundle twice on one machine: same six fields",
+ "registered_case": "BAND0-EXIT E10 'the P9 two-machine case' (A5.1 repeat clause)",
+ "guarantees": [
+  "G8"
+ ],
+ "source": [
+  {
+   "model": "P9_Statelessness probe (TLA+, non-discharging; A4.1)",
+   "file": "formal/spike/tla-probes/P9/RESULTS-PROBE.md",
+   "lines": "142-150, 183-215",
+   "role": "summary"
+  },
+  {
+   "registered_text": "docs/phase-0-prereg-amendment-5.md",
+   "lines": "58-91",
+   "role": "registered_text"
+  },
+  {
+   "registered_text": "docs/band-1-docket.md",
+   "lines": "99-104",
+   "role": "registered_text"
+  },
+  {
+   "model": "P9 probe REPLAY_LATCH, FULL cfg",
+   "file": "formal/spike/tla-probes/P9/P9_Statelessness_ReplayLatch_Full.out",
+   "lines": "30-88",
+   "kind": "counterexample",
+   "property": "Purity",
+   "abstract": "machine mA verifies the bundle twice: VALID_STRICT, then INVALID (verifier-local history)",
+   "role": "execution_evidence"
+  },
+  {
+   "model": "P9 probe PURE, VECTOR RepeatMachine cfg",
+   "file": "formal/spike/tla-probes/P9/P9_Statelessness_Pure_Vector_RepeatMachine.out",
+   "lines": "29-33",
+   "kind": "green (definitional; filed, not cited as evidence)",
+   "role": "execution_evidence"
+  }
+ ],
+ "scenario": "A verifier that keeps local history (a replay latch) changes its verdict on the second presentation.",
+ "base": "honest bundle (A-a), then L-36b, then A-a again",
+ "mutations": [
+  {
+   "op": "run_sequence",
+   "bundles": [
+    "A-a",
+    "A-a",
+    "L-36b",
+    "A-a"
+   ]
+  }
+ ],
+ "test_universe": {
+  "cases": [
+   "A-a",
+   "L-36b"
+  ]
+ },
+ "expected": "see subcases",
+ "schema": "tessera-e10-vector/1",
+ "profile": "tessera-v1-strict",
+ "request": "strict",
+ "side": "verifier",
+ "choices": [],
+ "covered_by": [],
+ "partial_overlap": [],
+ "notes": [],
+ "status": "new",
+ "live": {
+  "modes": [
+   "L0",
+   "L6"
+  ],
+  "needs": [
+   "Applies to the service verifier API too: submit the same receipt repeatedly (and interleaved with others); the six fields must not change."
+  ]
+ },
+ "subcases": [
+  {
+   "id": "E10-P9-02.A-a",
+   "construction": "bundle A-a (steps 1, 2 and 4 of the sequence)",
+   "bundle_from": "A-a",
+   "coverage": {
+    "exact": [],
+    "analogous": []
+   },
+   "expected": {
+    "verdict": "VALID_STRICT",
+    "reason": "OK",
+    "T": "2026-11-10T12:20:00Z",
+    "revocation": "NOT_EVALUATED",
+    "historical_security": "NOT_EVALUATED",
+    "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+    "utc_assessment": {
+     "assumption_id": "A-UTC-7200-6",
+     "utc_upper_bound": "2026-11-10T15:10:00Z"
+    }
+   },
+   "T_derivation": "T = nTime(h*) of the fixture's own receipt proof and headers (a_sig and receipt_anchor as stamped; rows 11.1-11.4 pass); U = 7200 + max nTime(h*..h*+5) (A10.1.1)"
+  },
+  {
+   "id": "E10-P9-02.L-36b",
+   "construction": "bundle L-36b (step 3 of the sequence)",
+   "bundle_from": "L-36b",
+   "coverage": {
+    "exact": [],
+    "analogous": []
+   },
+   "expected": {
+    "verdict": "INVALID",
+    "reason": "CONFIRMATION_LATE",
+    "T": "2026-11-10T12:20:00Z",
+    "revocation": "NOT_EVALUATED",
+    "historical_security": "NOT_EVALUATED",
+    "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+    "utc_assessment": {
+     "assumption_id": "A-UTC-7200-6",
+     "utc_upper_bound": "2026-11-13T14:00:01Z"
+    },
+    "row": "12.3"
+   },
+   "T_derivation": "T = nTime(h*) of the fixture's own receipt proof and headers (a_sig and receipt_anchor as stamped; rows 11.1-11.4 pass); U = 7200 + max nTime(h*..h*+5) (A10.1.1)"
+  }
+ ],
+ "analogous_to": [],
+ "sequence": {
+  "hosts": [
+   "H1"
+  ],
+  "setup": "one host, one verifier release; no state cleared between steps",
+  "steps": [
+   {
+    "step": 1,
+    "fixture": "E10-P9-02.A-a"
+   },
+   {
+    "step": 2,
+    "fixture": "E10-P9-02.A-a"
+   },
+   {
+    "step": 3,
+    "fixture": "E10-P9-02.L-36b"
+   },
+   {
+    "step": 4,
+    "fixture": "E10-P9-02.A-a"
+   }
+  ],
+  "pass": "each step equals its fixture's expected.json; steps 1, 2 and 4 are identical (no latch after the INVALID of step 3). Against the service API: submit the same bytes at steps 1, 2 and 4"
+ }
+}

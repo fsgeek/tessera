@@ -1,0 +1,93 @@
+{
+ "id": "E10-ISS-03",
+ "side": "issuer",
+ "title": "Never ship before the sixth confirmation exists",
+ "guarantees": [
+  "G5"
+ ],
+ "source": [
+  {
+   "model": "P5c_IssuanceProtocol_Broken (companion), k=6",
+   "file": "formal/tla/k6-2026-09-14/P5c/P5c_IssuanceProtocol_Broken_k6.out",
+   "lines": "25-96",
+   "kind": "counterexample",
+   "property": "NoShippedOrphan",
+   "role": "execution_evidence"
+  },
+  {
+   "model": "P5c_IssuanceProtocol",
+   "file": "formal/tla/P5c_IssuanceProtocol.tla",
+   "lines": "260-266",
+   "kind": "action (Ship guard depth >= DepthK)",
+   "role": "property_definition"
+  }
+ ],
+ "scenario": "Ship at depth 1, then a reorg orphans the anchor: a shipped receipt becomes permanently unverifiable. The service must return a receipt only when h*..h*+5 exist and are bundled.",
+ "base": "an issuance attempt",
+ "mutations": [
+  {
+   "op": "observe",
+   "detail": "poll the issue API while the anchor has 1..5 confirmations"
+  }
+ ],
+ "test_universe": {
+  "issue": {
+   "supply_remove": [
+    900029
+   ]
+  },
+  "expect": "IssueRefused (receipt_anchored = false)"
+ },
+ "expected": null,
+ "expected_issuer": {
+  "ships_before_depth_6": false,
+  "shipped_bundle_has_headers": "h*..h*+5 of each proof"
+ },
+ "schema": "tessera-e10-vector/1",
+ "profile": "tessera-v1-strict",
+ "request": "strict",
+ "choices": [],
+ "covered_by": [],
+ "partial_overlap": [],
+ "notes": [],
+ "status": "new",
+ "live": {
+  "modes": [
+   "L5",
+   "L0"
+  ],
+  "needs": [
+   "Live: request a receipt and poll; any receipt returned must verify, and its pool must hold h*..h*+5 for the receipt, snapshot and git proofs. A reorg cannot be induced on mainnet; the reorg half needs a simulated chain."
+  ]
+ },
+ "staging_harness": {
+  "status": "requires staging harness (live half observable through the public API)",
+  "harness": "staging issuer with the simulated chain; the harness can hold the chain at a chosen depth; API responses and the issuer outbox are logged",
+  "depth_convention": "The model's DepthK = 5 counts successors of the including block (P5c_IssuanceProtocol.tla:202, :262; k6 cfgs DepthK = 5), so shipping needs h*..h*+5: six confirmations.",
+  "sequence": [
+   "S1 submit request R; stub mines h* (1 confirmation)",
+   "S2 for c = 1..5: hold the chain at c confirmations for at least one issuer decision cycle; poll the API and read the outbox",
+   "S3 release the sixth confirmation (h*+5)"
+  ],
+  "observations": [
+   "O1 at every hold c = 1..5: no receipt in any API response and none in the outbox",
+   "O2 after S3: a receipt is returned; its headers hold h*..h*+5 for the receipt, snapshot and git proofs, and it verifies VALID_STRICT",
+   "O3 (simulated reorg, optional) orphaning h* during S2 produces no receipt and a new attempt"
+  ],
+  "controls": [
+   {
+    "id": "C1-release",
+    "change": "S3 itself",
+    "expect": "the receipt ships only after the sixth confirmation (O2)"
+   }
+  ],
+  "public_api_only": "Through the public API alone only O2's bundle half is checkable: any returned receipt must hold h*..h*+5 for all three proofs. Polling cannot exclude a premature shipment.",
+  "pass": "O1 and O2",
+  "test_oracle": [
+   "E10-ISS-03.test-refuse",
+   "E10-ISS-03.test-control"
+  ],
+  "test_oracle_limit": "The TEST issuer refuses when h*+5's header is absent (receipt_anchored = false). That is evidence completeness, not the live sequence."
+ },
+ "status_note": "requires staging harness; not exercisable through the public API alone"
+}
