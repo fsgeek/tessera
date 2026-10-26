@@ -103,3 +103,20 @@ and keeps its "requires staging harness" status.
 - **P7.** P7 stays deferred under A9 row 26. P7-01 and P7-02 remain optional V1 analogues and do not discharge
   A6.1.
 - **Registered material.** No registered sentence, model, `.out` file or conformance case was edited.
+
+## Materializer review (MATERIALIZE-REVIEW.md): MZ-01 and MZ-02
+
+- **MZ-01 (fixed).** E10-TMP-11 is now the honest A-a fixture with only the six headers h*..h*+5 (900024-900029)
+  deleted from `layers[0].headers`. `trust.json` (pins 900025-900029 included), `release.json` and every other
+  member are byte-identical to the honest fixture (TMP-11 trust equals TMP-10 trust). The vector's recipe
+  (`mutations`, `test_universe`, `construction`, `live.needs`) now says exactly that. Added control subcase
+  `E10-TMP-11.control` (headers restored): `VALID_STRICT / OK`, T 2026-11-10T12:20:00Z.
+  **Expected verdict of TMP-11 is unchanged:** `UNVERIFIABLE / HEADERS_MISSING` (row 11.4; V1-PROFILE section 15.7
+  rows 10.2 and 11.4: pins present, headers absent, so row 10.2 has nothing to flag and 11.4 reports). The
+  SERVICE verifier agrees on the corrected fixture. What changed is the construction, not the verdict.
+- **MZ-02 (fixed).** `materialize.py --check` now hashes the files actually present in `--out`, validates them
+  against the saved `MANIFEST.json` (changed / missing / unexpected), then compares with a fresh build in a temp
+  directory. `RUN-INDEP.json` stays excluded. `formal/e10/test_materialize_check.py` proves each of the three is
+  detected, on a temp copy.
+- **Result.** Fixtures regenerated (284 files); `--check` exits 0; SERVICE verifier (`--mode test`, via
+  `service/verifier/tests/conformance_runner.py`): **69/69 AGREE** (68 prior + the new control).

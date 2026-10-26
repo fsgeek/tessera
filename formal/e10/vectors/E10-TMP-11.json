@@ -33,19 +33,15 @@
  "mutations": [
   {
    "op": "remove_headers",
-   "heights": "h*..h*+5 of the receipt proof"
+   "heights": "h*..h*+5 (900024..900029) of the receipt proof; the six entries of the bundle's headers member, and nothing else"
   }
  ],
  "test_universe": {
   "issue": {
-   "receipt_branches": [
-    {
-     "h": 900024,
-     "headers": false
-    }
-   ],
-   "adversarial": true
-  }
+   "adversarial": false,
+   "note": "honest issue, as E10-TMP-10 (A-a)"
+  },
+  "post_edit": "delete exactly the header entries h*..h*+5 from layers[0].headers of the already-issued honest bundle; trust.json (pins for 900025..900029 included), release.json and every other member stay byte-identical; re-serialize the container canonically"
  },
  "choices": [
   "No temporal model carries an unperformable arm: the bridge excludes it (P5cP5P6_Bridge.tla:73-75) and P5P6 has none. The vector rests on P4's partition plus A2.2's text, not on a temporal trace."
@@ -79,13 +75,13 @@
    "L0"
   ],
   "needs": [
-   "A real receipt; delete the receipt proof's headers from the pool (if shared with snapshot/git heights, delete only heights not used by them, or expect the snapshot/git rows to change)."
+   "A real receipt; delete only the six receipt-proof headers h*..h*+5 from the bundle, keeping the pinned trust configuration and release unchanged (if the heights are shared with snapshot/git heights, delete only heights not used by them, or expect the snapshot/git rows to change)."
   ]
  },
  "subcases": [
   {
    "id": "E10-TMP-11",
-   "construction": "TEST issue, receipt_branches [{h: h*, headers: false}], adversarial",
+   "construction": "A-a (honest TEST issue) bytes with ONLY the six headers h*..h*+5 removed from layers[0].headers; trust configuration, release and every other member byte-identical to the honest fixture",
    "coverage": {
     "exact": [
      "L-43b",
@@ -107,6 +103,30 @@
     "row": "11.4"
    },
    "T_derivation": "T null: no qualifying attestation (row 11.4); U null"
+  },
+  {
+   "id": "E10-TMP-11.control",
+   "construction": "Control: the same bundle with the six headers restored (A-a unchanged); trust, release and all members as the honest fixture",
+   "coverage": {
+    "exact": [],
+    "analogous": [
+     "E10-TMP-10 (same bytes)"
+    ]
+   },
+   "expected": {
+    "verdict": "VALID_STRICT",
+    "reason": "OK",
+    "T": "2026-11-10T12:20:00Z",
+    "revocation": "NOT_EVALUATED",
+    "historical_security": "NOT_EVALUATED",
+    "standing": "ABSENT/NOT_ISSUED_IN_PROFILE",
+    "utc_assessment": {
+     "assumption_id": "A-UTC-7200-6",
+     "utc_upper_bound": "2026-11-10T15:10:00Z"
+    }
+   },
+   "T_derivation": "T = nTime(h*) of the fixture's own receipt proof and headers (rows 11.1-11.4 pass); U = 7200 + max nTime(h*..h*+5)",
+   "title": "Headers restored control: VALID_STRICT / OK"
   }
  ],
  "analogous_to": []

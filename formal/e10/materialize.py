@@ -339,6 +339,15 @@ def p7_02_reserialized():
     return c
 
 
+def tmp_11():
+    """Withhold ONLY the six receipt headers h*..h*+5 from the already-issued honest fixture (MZ-01): trust (pins
+    included), release and every other member stay byte-identical to A-a."""
+    c = copy.deepcopy(base())
+    for h in range(HB + 24, HB + 30):
+        del L(c)["headers"][str(h)]
+    return rebuild(c)
+
+
 BUILD = {
     # temporal (TEST chain times; L4)
     "E10-TMP-01": _tmp({HB + 29: TB + DELTA + 1}, adversarial=True),
@@ -354,7 +363,8 @@ BUILD = {
                                   times={HB + 29: TB + DELTA}),
     "E10-TMP-09": tmp_09,
     "E10-TMP-10": base,
-    "E10-TMP-11": lambda: I.issue(receipt_branches=[{"h": HB + 24, "headers": False}], adversarial=True),
+    "E10-TMP-11": tmp_11,
+    "E10-TMP-11.control": base,
     "E10-TMP-12": lambda: I.issue(supply_remove=[HB + 29], adversarial=True),
     # P4
     "E10-P4-01": lambda: post(lambda c: L(c).pop("git")),
@@ -542,21 +552,46 @@ def materialize(out, only=None):
     return m
 
 
+RUN_RECORD = "RUN-INDEP.json"    # explicit exclusion: a saved execution record, not a generated file
+
+
+def hash_dir(out):
+    """Every file actually present under `out`, relative path -> sha256, excluding MANIFEST.json and the run record."""
+    return {str(p.relative_to(out)): hashlib.sha256(p.read_bytes()).hexdigest()
+            for p in sorted(out.rglob("*")) if p.is_file() and p.name not in ("MANIFEST.json", RUN_RECORD)}
+
+
+def check_dirs(out):
+    """Returns a report dict: existing bytes vs saved MANIFEST (changed/missing/unexpected), then saved vs fresh."""
+    want = json.loads((out / "MANIFEST.json").read_text())
+    have = hash_dir(out)
+    r = {"changed": sorted(k for k in have if k in want["files"] and have[k] != want["files"][k]),
+         "missing": sorted(k for k in want["files"] if k not in have),
+         "unexpected": sorted(k for k in have if k not in want["files"])}
+    with tempfile.TemporaryDirectory(prefix="e10-check-") as t:
+        got = materialize(Path(t))
+    r["files_differing"] = sorted(k for k in set(want["files"]) | set(got["files"])
+                                  if want["files"].get(k) != got["files"].get(k))
+    r["sources_differing"] = sorted(k for k in want["sources"] if want["sources"][k] != got["sources"].get(k))
+    return r
+
+
+def check(out):
+    r = check_dirs(out)
+    print(json.dumps(r, indent=1))
+    return 1 if any(r.values()) else 0
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--out", default=str(HERE / "fixtures"))
     ap.add_argument("--only")
-    ap.add_argument("--check", action="store_true", help="rebuild into a temp dir and compare with --out's MANIFEST")
+    ap.add_argument("--check", action="store_true", help="hash --out's files, validate against its saved MANIFEST, "
+                    "then compare with a fresh build in a temp dir (changed/missing/unexpected files all fail)")
     a = ap.parse_args()
     only = set(a.only.split(",")) if a.only else None
     if a.check:
-        want = json.loads((Path(a.out) / "MANIFEST.json").read_text())
-        with tempfile.TemporaryDirectory(prefix="e10-check-") as t:
-            got = materialize(Path(t))
-        diff = sorted(k for k in set(want["files"]) | set(got["files"]) if want["files"].get(k) != got["files"].get(k))
-        sdiff = sorted(k for k in want["sources"] if want["sources"][k] != got["sources"].get(k))
-        print(json.dumps({"files_differing": diff, "sources_differing": sdiff}, indent=1))
-        sys.exit(1 if diff or sdiff else 0)
+        sys.exit(check(Path(a.out)))
     m = materialize(Path(a.out), only)
     print(f"{len(m['files'])} files; MANIFEST.json written")
 
