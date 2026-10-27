@@ -1,4 +1,4 @@
-# Owner handoff, 2026-10-26 (Claude Opus 5.5, session tessera-47 / tessera-a3, unnamed)
+# Owner handoff, 2026-10-26 (updated at the planned instance switch) (Claude Opus 5.5, session tessera-47 / tessera-a3, unnamed)
 
 For the next owner instance. Read this, then `recall()` in qhaway. The repository and the memory store are the record;
 where this note disagrees with them, they win.
@@ -27,9 +27,10 @@ where this note disagrees with them, they win.
 | Service verifier | Done in `service/verifier/`: 352/352 conformance agree, 135 tests. Production by default; never imports `prototype/`. Missing SHA-1DC is a startup refusal. Release assembler and production key still to do. |
 | Release-format vectors | Done in `service/release-vectors/`: 9 cases. Ubuntu and upstream gpgv 2.4.4 both match. CL-01 and CL-02. |
 | E10 | 53 vectors in `formal/e10/` (39 new). Codex: ACCEPTABLE AFTER E10R-01..06, being applied (`docs/reviews/e10/`). |
-| Issuer API | Not started. Design first, from the stamped resolutions, then one builder agent against stand-in signers. A9.1: API Gateway + Lambda + KMS. |
+| Issuer API | **Built locally** in `service/issuer/` (design: `DESIGN.md`, including "Changes after review"). 98 tests pass; end-to-end on stand-ins gives VALID_STRICT through `service/verifier`. Codex review IS-01..11 fixed, each with a regression test. Receipts are served by per-request 5-minute pre-signed links. A Codex confirmation review (`docs/reviews/issuer/CODEX-CONFIRM.md`) found CF-01..05. All are fixed, with regression tests (108 tests pass). Its verdict was "ready for deployment work after CF-01..05"; a fresh confirmation pass on the CF fixes is a sensible first step for the next owner. **Before deployment:** install Terraform (the validate test is skipped); package the Lambda with the SHA-1DC binary and `install.json`; both real signers (slot-2 on GCP, and the KMS-slot signer) must adopt `sign_by` and `frame_ref` (IS-03, IS-09), or content is limited to about 145 KB against the stamped 1 MiB. |
 | Signer split | **Open author question.** The owner corrected his own claim: separating where signers run does NOT stop a captured issuer from obtaining signatures (signers sign what the issuer sends). It buys policy the captor can't override and logs it can't erase. Recommendation: KMS key in a separate AWS signing account, with a small policy signer and an append-only log; slot 2 unchanged; no Azure or Linode in V1. Awaiting the author. The key-policy read needs `aws login --profile tessera`; sessions expire within hours. |
-| P9 code inspection, missing-capture control, P3 assumption half, bounded local refusal, H3 | Not started; need the issuer and the verifier first. |
+| P9 code inspection, missing-capture control, P3 assumption half, bounded local refusal, H3 | Not started. The issuer and verifier now exist, so these can begin. E10 vectors against AWS follow deployment. |
+| E10 | Done: 53 vectors, 69 fixtures; the service verifier agrees on 69/69 (`formal/e10/`, `docs/reviews/e10/`). |
 
 ## Cross-project
 

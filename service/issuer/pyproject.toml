@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tessera-issue"
+version = "0.0.0"
+description = "Tessera V1 issuer (tessera-v1-strict), Phase 1a"
+requires-python = "==3.14.*"
+# tessera-verify is the service verifier (../verifier), used as a library for the pre-ship checks.
+# boto3 is needed only in the Lambda package (lambda_app.from_env); tests use fake clients.
+dependencies = ["cryptography==50.0.2", "tessera-verify"]
+
+[project.optional-dependencies]
+aws = ["boto3"]
+
+[tool.setuptools]
+packages = ["tessera_issue"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
