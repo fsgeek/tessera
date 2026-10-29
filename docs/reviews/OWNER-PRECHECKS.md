@@ -17,4 +17,6 @@
    that reasons only about where a key is stored, and not about who can submit work to the signer, is FAIL.
 4. **Binding text.** For every sentence the document treats as a requirement, is it registered (a signed amendment,
    the freeze, or a recorded author ruling), or is it something an instance wrote? An unregistered sentence used as a
-   requirement is FAIL. Since 2026-10-27, `docs/V1-SCHEDULE.md`'s ruling budget is a known instance of this.
+   requirement is FAIL. Since 2026-10-27, `docs/V1-SCHEDULE.md`'s ruling budget is a known instance of this. Also FAIL: an owner
+   requirement (a resolution, a design document, a code constant) that contradicts a registered sentence. Since
+   2026-10-29, S4's 24-hour FAILED against A2.3's per-attempt `declared + δ + S` expiry is the known instance.

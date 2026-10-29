@@ -36,6 +36,11 @@ produces a real receipt over honest smoke-test content.
 
 ## In the session (author logged in: `aws login --profile tessera`)
 
+0. **Gate: the slot-2 custody decision** (Amendment 11 §A11.5 item 2, c036). **Satisfied 2026-10-29:** Amendment
+   11 was signed at `f01e086` with Option 1. `service/signer-gcp/` is the production slot-2 signer, subject to
+   conditions (i)–(iv) of §A11.5 item 2, which steps 6–8 below evidence before the first shipped receipt.
+   Production never uses `prototype/` code (`formal/freeze-v1/FREEZE-RECORD.md:62`).
+
 1. **Issuer, bootstrap.** `terraform -chdir=infra plan -var lambda_zip=../dist/issuer-bootstrap.zip -out tfplan`.
    Read the plan together, then `terraform -chdir=infra apply tfplan`. The bootstrap package has no `install.json`,
    so pre-ship refuses and no receipt can ship from it.

@@ -1,0 +1,4620 @@
+################ WITNESS TimelyUnobservedLatchUnreachable
+Error: Invariant TimelyUnobservedLatchUnreachable is violated.
+State 1: <Initial predicate>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 0
+/\ e1 = <<0, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = FALSE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<-1, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        cls |-> "-",
+        started |-> 0,
+        late |-> FALSE ] ]
+/\ pass = <<FALSE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 2: <Tick line 220, col 3 to line 229, col 65 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 1
+/\ e1 = <<0, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = FALSE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<-1, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        cls |-> "-",
+        started |-> 0,
+        late |-> FALSE ] ]
+/\ pass = <<FALSE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 3: <Bury(1) line 239, col 3 to line 242, col 82 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 1
+/\ e1 = <<0, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = FALSE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<1, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        cls |-> "-",
+        started |-> 0,
+        late |-> FALSE ] ]
+/\ pass = <<TRUE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 4: <Tick line 220, col 3 to line 229, col 65 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 2
+/\ e1 = <<0, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = FALSE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<1, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        cls |-> "-",
+        started |-> 0,
+        late |-> FALSE ] ]
+/\ pass = <<TRUE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 5: <Attest1(1) line 245, col 3 to line 246, col 89 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 2
+/\ e1 = <<1, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = FALSE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<1, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        cls |-> "-",
+        started |-> 0,
+        late |-> FALSE ] ]
+/\ pass = <<TRUE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 6: <Segment1(1) line 251, col 3 to line 252, col 89 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 2
+/\ e1 = <<2, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = FALSE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<1, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        cls |-> "-",
+        started |-> 0,
+        late |-> FALSE ] ]
+/\ pass = <<TRUE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 7: <Start("poller") line 294, col 3 to line 298, col 70 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 2
+/\ e1 = <<2, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = TRUE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<1, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "read",
+        att |-> 1,
+        rst |-> "open",
+        cls |-> "-",
+        started |-> 2,
+        late |-> FALSE ] ]
+/\ pass = <<TRUE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 8: <Fetch("poller") line 302, col 3 to line 316, col 55 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"late", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 2
+/\ e1 = <<2, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = TRUE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<1, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "fetched",
+        att |-> 1,
+        rst |-> "open",
+        cls |-> "elig",
+        started |-> 2,
+        late |-> FALSE ] ]
+/\ pass = <<TRUE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 9: <Send("poller") line 320, col 3 to line 332, col 59 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"late", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 2
+/\ e1 = <<2, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = TRUE
+/\ pending = { [ att |-> 1,
+    p |-> "poller",
+    sent |-> 2,
+    from |-> "open",
+    to |-> "latched",
+    dec |-> 2,
+    orphan |-> FALSE,
+    dup |-> FALSE ] }
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<1, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "await",
+        att |-> 1,
+        rst |-> "open",
+        cls |-> "elig",
+        started |-> 2,
+        late |-> FALSE ] ]
+/\ pass = <<TRUE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 10: <Store line 403, col 11 to line 403, col 49 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"late", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 2
+/\ e1 = <<2, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = TRUE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"latched", "none">>
+/\ bur = <<1, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        cls |-> "-",
+        started |-> 0,
+        late |-> FALSE ] ]
+/\ pass = <<TRUE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+39497 states generated, 15325 distinct states found, 8705 states left on queue.
+The depth of the complete state graph search is 14.
+Finished in 00s at (2026-10-29 18:46:11)
+################ WITNESS PartialThenLatchUnreachable
+Error: Invariant PartialThenLatchUnreachable is violated.
+State 1: <Initial predicate>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 0
+/\ e1 = <<0, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = FALSE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<-1, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        cls |-> "-",
+        started |-> 0,
+        late |-> FALSE ] ]
+/\ pass = <<FALSE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 2: <Bury(1) line 239, col 3 to line 242, col 82 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 0
+/\ e1 = <<0, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = FALSE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<0, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        cls |-> "-",
+        started |-> 0,
+        late |-> FALSE ] ]
+/\ pass = <<TRUE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 3: <Attest1(1) line 245, col 3 to line 246, col 89 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 0
+/\ e1 = <<1, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = FALSE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<0, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        cls |-> "-",
+        started |-> 0,
+        late |-> FALSE ] ]
+/\ pass = <<TRUE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 4: <Attest2(1) line 248, col 3 to line 249, col 89 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 0
+/\ e1 = <<1, 0>>
+/\ e2 = <<1, 0>>
+/\ faults = 0
+/\ polled = FALSE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<0, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        cls |-> "-",
+        started |-> 0,
+        late |-> FALSE ] ]
+/\ pass = <<TRUE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 5: <Segment1(1) line 251, col 3 to line 252, col 89 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 0
+/\ e1 = <<2, 0>>
+/\ e2 = <<1, 0>>
+/\ faults = 0
+/\ polled = FALSE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<0, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        cls |-> "-",
+        started |-> 0,
+        late |-> FALSE ] ]
+/\ pass = <<TRUE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 6: <Start("poller") line 294, col 3 to line 298, col 70 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 0
+/\ e1 = <<2, 0>>
+/\ e2 = <<1, 0>>
+/\ faults = 0
+/\ polled = TRUE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<0, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "read",
+        att |-> 1,
+        rst |-> "open",
+        cls |-> "-",
+        started |-> 0,
+        late |-> FALSE ] ]
+/\ pass = <<TRUE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 7: <Fetch("poller") line 302, col 3 to line 316, col 55 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"timely", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 0
+/\ e1 = <<2, 0>>
+/\ e2 = <<1, 0>>
+/\ faults = 0
+/\ polled = TRUE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<0, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "fetched",
+        att |-> 1,
+        rst |-> "open",
+        cls |-> "elig",
+        started |-> 0,
+        late |-> FALSE ] ]
+/\ pass = <<TRUE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 8: <Segment2(1) line 254, col 3 to line 255, col 89 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"timely", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 0
+/\ e1 = <<2, 0>>
+/\ e2 = <<2, 0>>
+/\ faults = 0
+/\ polled = TRUE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<0, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "fetched",
+        att |-> 1,
+        rst |-> "open",
+        cls |-> "elig",
+        started |-> 0,
+        late |-> FALSE ] ]
+/\ pass = <<TRUE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 9: <Send("poller") line 320, col 3 to line 332, col 59 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"timely", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 0
+/\ e1 = <<2, 0>>
+/\ e2 = <<2, 0>>
+/\ faults = 0
+/\ polled = TRUE
+/\ pending = { [ att |-> 1,
+    p |-> "poller",
+    sent |-> 0,
+    from |-> "open",
+    to |-> "latched",
+    dec |-> 0,
+    orphan |-> FALSE,
+    dup |-> FALSE ] }
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<0, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "await",
+        att |-> 1,
+        rst |-> "open",
+        cls |-> "elig",
+        started |-> 0,
+        late |-> FALSE ] ]
+/\ pass = <<TRUE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 10: <Kill("poller") line 337, col 3 to line 344, col 45 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"timely", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 0
+/\ e1 = <<2, 0>>
+/\ e2 = <<2, 0>>
+/\ faults = 1
+/\ polled = TRUE
+/\ pending = { [ att |-> 1,
+    p |-> "poller",
+    sent |-> 0,
+    from |-> "open",
+    to |-> "latched",
+    dec |-> 0,
+    orphan |-> TRUE,
+    dup |-> FALSE ] }
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<0, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        cls |-> "-",
+        started |-> 0,
+        late |-> FALSE ] ]
+/\ pass = <<TRUE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 11: <Start("poller") line 294, col 3 to line 298, col 70 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"timely", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 0
+/\ e1 = <<2, 0>>
+/\ e2 = <<2, 0>>
+/\ faults = 1
+/\ polled = TRUE
+/\ pending = { [ att |-> 1,
+    p |-> "poller",
+    sent |-> 0,
+    from |-> "open",
+    to |-> "latched",
+    dec |-> 0,
+    orphan |-> TRUE,
+    dup |-> FALSE ] }
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<0, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "read",
+        att |-> 1,
+        rst |-> "open",
+        cls |-> "-",
+        started |-> 0,
+        late |-> FALSE ] ]
+/\ pass = <<TRUE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 12: <Fetch("poller") line 302, col 3 to line 316, col 55 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"timely", "no">>
+/\ sawCalneg = <<TRUE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 0
+/\ e1 = <<2, 0>>
+/\ e2 = <<2, 0>>
+/\ faults = 1
+/\ polled = TRUE
+/\ pending = { [ att |-> 1,
+    p |-> "poller",
+    sent |-> 0,
+    from |-> "open",
+    to |-> "latched",
+    dec |-> 0,
+    orphan |-> TRUE,
+    dup |-> FALSE ] }
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<0, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "fetched",
+        att |-> 1,
+        rst |-> "open",
+        cls |-> "calneg",
+        started |-> 0,
+        late |-> FALSE ] ]
+/\ pass = <<TRUE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 13: <Store line 403, col 11 to line 403, col 49 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"timely", "no">>
+/\ sawCalneg = <<TRUE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 0
+/\ e1 = <<2, 0>>
+/\ e2 = <<2, 0>>
+/\ faults = 1
+/\ polled = TRUE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"latched", "none">>
+/\ bur = <<0, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "fetched",
+        att |-> 1,
+        rst |-> "open",
+        cls |-> "calneg",
+        started |-> 0,
+        late |-> FALSE ] ]
+/\ pass = <<TRUE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+980467 states generated, 406875 distinct states found, 236590 states left on queue.
+The depth of the complete state graph search is 17.
+Finished in 02s at (2026-10-29 18:46:14)
+################ WITNESS LateLatchUnreachable
+Error: Invariant LateLatchUnreachable is violated.
+State 1: <Initial predicate>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 0
+/\ e1 = <<0, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = FALSE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<-1, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        cls |-> "-",
+        started |-> 0,
+        late |-> FALSE ] ]
+/\ pass = <<FALSE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 2: <Tick line 220, col 3 to line 229, col 65 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 1
+/\ e1 = <<0, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = FALSE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<-1, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        cls |-> "-",
+        started |-> 0,
+        late |-> FALSE ] ]
+/\ pass = <<FALSE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 3: <Tick line 220, col 3 to line 229, col 65 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 2
+/\ e1 = <<0, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = FALSE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<-1, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        cls |-> "-",
+        started |-> 0,
+        late |-> FALSE ] ]
+/\ pass = <<FALSE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 4: <Bury(1) line 239, col 3 to line 242, col 82 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 2
+/\ e1 = <<0, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = FALSE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<2, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        cls |-> "-",
+        started |-> 0,
+        late |-> FALSE ] ]
+/\ pass = <<TRUE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 5: <Attest1(1) line 245, col 3 to line 246, col 89 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 2
+/\ e1 = <<1, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = FALSE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<2, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        cls |-> "-",
+        started |-> 0,
+        late |-> FALSE ] ]
+/\ pass = <<TRUE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 6: <Start("poller") line 294, col 3 to line 298, col 70 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 2
+/\ e1 = <<1, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = TRUE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<2, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "read",
+        att |-> 1,
+        rst |-> "open",
+        cls |-> "-",
+        started |-> 2,
+        late |-> FALSE ] ]
+/\ pass = <<TRUE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 7: <Segment1(1) line 251, col 3 to line 252, col 89 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 2
+/\ e1 = <<2, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = TRUE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<2, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "read",
+        att |-> 1,
+        rst |-> "open",
+        cls |-> "-",
+        started |-> 2,
+        late |-> FALSE ] ]
+/\ pass = <<TRUE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 8: <Fetch("poller") line 302, col 3 to line 316, col 55 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"late", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 2
+/\ e1 = <<2, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = TRUE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<2, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "fetched",
+        att |-> 1,
+        rst |-> "open",
+        cls |-> "elig",
+        started |-> 2,
+        late |-> FALSE ] ]
+/\ pass = <<TRUE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 9: <Send("poller") line 320, col 3 to line 332, col 59 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"late", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 2
+/\ e1 = <<2, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = TRUE
+/\ pending = { [ att |-> 1,
+    p |-> "poller",
+    sent |-> 2,
+    from |-> "open",
+    to |-> "latched",
+    dec |-> 2,
+    orphan |-> FALSE,
+    dup |-> FALSE ] }
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<2, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "await",
+        att |-> 1,
+        rst |-> "open",
+        cls |-> "elig",
+        started |-> 2,
+        late |-> FALSE ] ]
+/\ pass = <<TRUE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 10: <Store line 403, col 11 to line 403, col 49 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"late", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 2
+/\ e1 = <<2, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = TRUE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"latched", "none">>
+/\ bur = <<2, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        cls |-> "-",
+        started |-> 0,
+        late |-> FALSE ] ]
+/\ pass = <<TRUE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+22561 states generated, 8424 distinct states found, 4659 states left on queue.
+The depth of the complete state graph search is 12.
+Finished in 00s at (2026-10-29 18:46:15)
+################ WITNESS SecondAttemptShipUnreachable
+Error: Invariant SecondAttemptShipUnreachable is violated.
+State 1: <Initial predicate>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 0
+/\ e1 = <<0, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = FALSE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<-1, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        cls |-> "-",
+        started |-> 0,
+        late |-> FALSE ] ]
+/\ pass = <<FALSE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 2: <Tick line 220, col 3 to line 229, col 65 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 1
+/\ e1 = <<0, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = FALSE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<-1, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        cls |-> "-",
+        started |-> 0,
+        late |-> FALSE ] ]
+/\ pass = <<FALSE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 3: <Tick line 220, col 3 to line 229, col 65 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 2
+/\ e1 = <<0, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = FALSE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<-1, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        cls |-> "-",
+        started |-> 0,
+        late |-> FALSE ] ]
+/\ pass = <<FALSE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 4: <Tick line 220, col 3 to line 229, col 65 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 3
+/\ e1 = <<0, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = FALSE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<-1, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        cls |-> "-",
+        started |-> 0,
+        late |-> FALSE ] ]
+/\ pass = <<FALSE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 5: <Tick line 220, col 3 to line 229, col 65 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 4
+/\ e1 = <<0, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = FALSE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<-1, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        cls |-> "-",
+        started |-> 0,
+        late |-> FALSE ] ]
+/\ pass = <<FALSE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 6: <Start("poller") line 294, col 3 to line 298, col 70 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 4
+/\ e1 = <<0, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = TRUE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<-1, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "read",
+        att |-> 1,
+        rst |-> "open",
+        cls |-> "-",
+        started |-> 4,
+        late |-> FALSE ] ]
+/\ pass = <<FALSE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 7: <Fetch("poller") line 302, col 3 to line 316, col 55 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 4
+/\ e1 = <<0, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = TRUE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<-1, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "fetched",
+        att |-> 1,
+        rst |-> "open",
+        cls |-> "pending",
+        started |-> 4,
+        late |-> FALSE ] ]
+/\ pass = <<FALSE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 8: <Send("poller") line 320, col 3 to line 332, col 59 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 4
+/\ e1 = <<0, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = TRUE
+/\ pending = { [ att |-> 1,
+    p |-> "poller",
+    sent |-> 4,
+    from |-> "open",
+    to |-> "unavail",
+    dec |-> 4,
+    orphan |-> FALSE,
+    dup |-> FALSE ] }
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<-1, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "await",
+        att |-> 1,
+        rst |-> "open",
+        cls |-> "pending",
+        started |-> 4,
+        late |-> FALSE ] ]
+/\ pass = <<FALSE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 9: <Store line 403, col 11 to line 403, col 49 of module IssuerLifecycle>
+/\ decl = <<0, 4>>
+/\ cur = 2
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 4
+/\ e1 = <<0, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = TRUE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"unavail", "open">>
+/\ bur = <<-1, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        cls |-> "-",
+        started |-> 0,
+        late |-> FALSE ] ]
+/\ pass = <<FALSE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 10: <Bury(2) line 239, col 3 to line 242, col 82 of module IssuerLifecycle>
+/\ decl = <<0, 4>>
+/\ cur = 2
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 4
+/\ e1 = <<0, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = TRUE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"unavail", "open">>
+/\ bur = <<-1, 4>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        cls |-> "-",
+        started |-> 0,
+        late |-> FALSE ] ]
+/\ pass = <<FALSE, TRUE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 11: <Attest1(2) line 245, col 3 to line 246, col 89 of module IssuerLifecycle>
+/\ decl = <<0, 4>>
+/\ cur = 2
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 4
+/\ e1 = <<0, 1>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = TRUE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"unavail", "open">>
+/\ bur = <<-1, 4>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        cls |-> "-",
+        started |-> 0,
+        late |-> FALSE ] ]
+/\ pass = <<FALSE, TRUE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 12: <Segment1(2) line 251, col 3 to line 252, col 89 of module IssuerLifecycle>
+/\ decl = <<0, 4>>
+/\ cur = 2
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 4
+/\ e1 = <<0, 2>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = TRUE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"unavail", "open">>
+/\ bur = <<-1, 4>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        cls |-> "-",
+        started |-> 0,
+        late |-> FALSE ] ]
+/\ pass = <<FALSE, TRUE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 13: <Start("poller") line 294, col 3 to line 298, col 70 of module IssuerLifecycle>
+/\ decl = <<0, 4>>
+/\ cur = 2
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 4
+/\ e1 = <<0, 2>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = TRUE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"unavail", "open">>
+/\ bur = <<-1, 4>>
+/\ inv = [ poller |->
+      [ pc |-> "read",
+        att |-> 2,
+        rst |-> "open",
+        cls |-> "-",
+        started |-> 4,
+        late |-> FALSE ] ]
+/\ pass = <<FALSE, TRUE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 14: <Fetch("poller") line 302, col 3 to line 316, col 55 of module IssuerLifecycle>
+/\ decl = <<0, 4>>
+/\ cur = 2
+/\ obsAt = <<"no", "timely">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 4
+/\ e1 = <<0, 2>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = TRUE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"unavail", "open">>
+/\ bur = <<-1, 4>>
+/\ inv = [ poller |->
+      [ pc |-> "fetched",
+        att |-> 2,
+        rst |-> "open",
+        cls |-> "elig",
+        started |-> 4,
+        late |-> FALSE ] ]
+/\ pass = <<FALSE, TRUE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 15: <Send("poller") line 320, col 3 to line 332, col 59 of module IssuerLifecycle>
+/\ decl = <<0, 4>>
+/\ cur = 2
+/\ obsAt = <<"no", "timely">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 4
+/\ e1 = <<0, 2>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = TRUE
+/\ pending = { [ att |-> 2,
+    p |-> "poller",
+    sent |-> 4,
+    from |-> "open",
+    to |-> "latched",
+    dec |-> 4,
+    orphan |-> FALSE,
+    dup |-> FALSE ] }
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"unavail", "open">>
+/\ bur = <<-1, 4>>
+/\ inv = [ poller |->
+      [ pc |-> "await",
+        att |-> 2,
+        rst |-> "open",
+        cls |-> "elig",
+        started |-> 4,
+        late |-> FALSE ] ]
+/\ pass = <<FALSE, TRUE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 16: <Store line 403, col 11 to line 403, col 49 of module IssuerLifecycle>
+/\ decl = <<0, 4>>
+/\ cur = 2
+/\ obsAt = <<"no", "timely">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 4
+/\ e1 = <<0, 2>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = TRUE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"unavail", "latched">>
+/\ bur = <<-1, 4>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        cls |-> "-",
+        started |-> 0,
+        late |-> FALSE ] ]
+/\ pass = <<FALSE, TRUE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 17: <Start("poller") line 294, col 3 to line 298, col 70 of module IssuerLifecycle>
+/\ decl = <<0, 4>>
+/\ cur = 2
+/\ obsAt = <<"no", "timely">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 4
+/\ e1 = <<0, 2>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = TRUE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"unavail", "latched">>
+/\ bur = <<-1, 4>>
+/\ inv = [ poller |->
+      [ pc |-> "read",
+        att |-> 2,
+        rst |-> "latched",
+        cls |-> "-",
+        started |-> 4,
+        late |-> FALSE ] ]
+/\ pass = <<FALSE, TRUE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 18: <Fetch("poller") line 302, col 3 to line 316, col 55 of module IssuerLifecycle>
+/\ decl = <<0, 4>>
+/\ cur = 2
+/\ obsAt = <<"no", "timely">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 4
+/\ e1 = <<0, 2>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = TRUE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"unavail", "latched">>
+/\ bur = <<-1, 4>>
+/\ inv = [ poller |->
+      [ pc |-> "fetched",
+        att |-> 2,
+        rst |-> "latched",
+        cls |-> "-",
+        started |-> 4,
+        late |-> FALSE ] ]
+/\ pass = <<FALSE, TRUE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 19: <Send("poller") line 320, col 3 to line 332, col 59 of module IssuerLifecycle>
+/\ decl = <<0, 4>>
+/\ cur = 2
+/\ obsAt = <<"no", "timely">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 4
+/\ e1 = <<0, 2>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = TRUE
+/\ pending = { [ att |-> 2,
+    p |-> "poller",
+    sent |-> 4,
+    from |-> "latched",
+    to |-> "shipped",
+    dec |-> 4,
+    orphan |-> FALSE,
+    dup |-> FALSE ] }
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"unavail", "latched">>
+/\ bur = <<-1, 4>>
+/\ inv = [ poller |->
+      [ pc |-> "await",
+        att |-> 2,
+        rst |-> "latched",
+        cls |-> "-",
+        started |-> 4,
+        late |-> FALSE ] ]
+/\ pass = <<FALSE, TRUE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 20: <Store line 403, col 11 to line 403, col 49 of module IssuerLifecycle>
+/\ decl = <<0, 4>>
+/\ cur = 2
+/\ obsAt = <<"no", "timely">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 4
+/\ e1 = <<0, 2>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = TRUE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "complete"
+/\ st = <<"unavail", "shipped">>
+/\ bur = <<-1, 4>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        cls |-> "-",
+        started |-> 0,
+        late |-> FALSE ] ]
+/\ pass = <<FALSE, TRUE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+25371842 states generated, 7932432 distinct states found, 3252672 states left on queue.
+The depth of the complete state graph search is 21.
+Finished in 35s at (2026-10-29 18:46:50)
+################ WITNESS DuplicateUnreachable
+Error: Invariant DuplicateUnreachable is violated.
+State 1: <Initial predicate>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 0
+/\ e1 = <<0, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = FALSE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<-1, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        cls |-> "-",
+        started |-> 0,
+        late |-> FALSE ] ]
+/\ pass = <<FALSE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 2: <Tick line 220, col 3 to line 229, col 65 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 1
+/\ e1 = <<0, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = FALSE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<-1, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        cls |-> "-",
+        started |-> 0,
+        late |-> FALSE ] ]
+/\ pass = <<FALSE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 3: <Tick line 220, col 3 to line 229, col 65 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 2
+/\ e1 = <<0, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = FALSE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<-1, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        cls |-> "-",
+        started |-> 0,
+        late |-> FALSE ] ]
+/\ pass = <<FALSE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 4: <Tick line 220, col 3 to line 229, col 65 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 3
+/\ e1 = <<0, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = FALSE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<-1, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        cls |-> "-",
+        started |-> 0,
+        late |-> FALSE ] ]
+/\ pass = <<FALSE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 5: <Tick line 220, col 3 to line 229, col 65 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 4
+/\ e1 = <<0, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = FALSE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<-1, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        cls |-> "-",
+        started |-> 0,
+        late |-> FALSE ] ]
+/\ pass = <<FALSE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 6: <Start("poller") line 294, col 3 to line 298, col 70 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 4
+/\ e1 = <<0, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = TRUE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<-1, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "read",
+        att |-> 1,
+        rst |-> "open",
+        cls |-> "-",
+        started |-> 4,
+        late |-> FALSE ] ]
+/\ pass = <<FALSE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 7: <Fetch("poller") line 302, col 3 to line 316, col 55 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 4
+/\ e1 = <<0, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = TRUE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<-1, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "fetched",
+        att |-> 1,
+        rst |-> "open",
+        cls |-> "err",
+        started |-> 4,
+        late |-> FALSE ] ]
+/\ pass = <<FALSE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 8: <Send("poller") line 320, col 3 to line 332, col 59 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 4
+/\ e1 = <<0, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = TRUE
+/\ pending = { [ att |-> 1,
+    p |-> "poller",
+    sent |-> 4,
+    from |-> "open",
+    to |-> "unavail",
+    dec |-> 4,
+    orphan |-> FALSE,
+    dup |-> FALSE ] }
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<-1, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "await",
+        att |-> 1,
+        rst |-> "open",
+        cls |-> "err",
+        started |-> 4,
+        late |-> FALSE ] ]
+/\ pass = <<FALSE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 9: <Resend("poller") line 348, col 3 to line 353, col 66 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 4
+/\ e1 = <<0, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 1
+/\ polled = TRUE
+/\ pending = { [ att |-> 1,
+    p |-> "poller",
+    sent |-> 4,
+    from |-> "open",
+    to |-> "unavail",
+    dec |-> 4,
+    orphan |-> FALSE,
+    dup |-> FALSE ],
+  [ att |-> 1,
+    p |-> "poller",
+    sent |-> 4,
+    from |-> "open",
+    to |-> "unavail",
+    dec |-> 4,
+    orphan |-> FALSE,
+    dup |-> TRUE ] }
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<-1, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "await",
+        att |-> 1,
+        rst |-> "open",
+        cls |-> "err",
+        started |-> 4,
+        late |-> FALSE ] ]
+/\ pass = <<FALSE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 10: <Store line 403, col 11 to line 403, col 49 of module IssuerLifecycle>
+/\ decl = <<0, 4>>
+/\ cur = 2
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 4
+/\ e1 = <<0, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 1
+/\ polled = TRUE
+/\ pending = { [ att |-> 1,
+    p |-> "poller",
+    sent |-> 4,
+    from |-> "open",
+    to |-> "unavail",
+    dec |-> 4,
+    orphan |-> FALSE,
+    dup |-> FALSE ] }
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"unavail", "open">>
+/\ bur = <<-1, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "await",
+        att |-> 1,
+        rst |-> "open",
+        cls |-> "err",
+        started |-> 4,
+        late |-> FALSE ] ]
+/\ pass = <<FALSE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = TRUE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+10435 states generated, 3890 distinct states found, 2140 states left on queue.
+The depth of the complete state graph search is 11.
+Finished in 00s at (2026-10-29 18:46:51)
+################ WITNESS OrphanPendingUnreachable
+Error: Invariant OrphanPendingUnreachable is violated.
+State 1: <Initial predicate>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 0
+/\ e1 = <<0, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = FALSE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<-1, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        cls |-> "-",
+        started |-> 0,
+        late |-> FALSE ] ]
+/\ pass = <<FALSE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 2: <Tick line 220, col 3 to line 229, col 65 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 1
+/\ e1 = <<0, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = FALSE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<-1, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        cls |-> "-",
+        started |-> 0,
+        late |-> FALSE ] ]
+/\ pass = <<FALSE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 3: <Tick line 220, col 3 to line 229, col 65 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 2
+/\ e1 = <<0, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = FALSE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<-1, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        cls |-> "-",
+        started |-> 0,
+        late |-> FALSE ] ]
+/\ pass = <<FALSE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 4: <Tick line 220, col 3 to line 229, col 65 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 3
+/\ e1 = <<0, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = FALSE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<-1, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        cls |-> "-",
+        started |-> 0,
+        late |-> FALSE ] ]
+/\ pass = <<FALSE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 5: <Tick line 220, col 3 to line 229, col 65 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 4
+/\ e1 = <<0, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = FALSE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<-1, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        cls |-> "-",
+        started |-> 0,
+        late |-> FALSE ] ]
+/\ pass = <<FALSE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 6: <Start("poller") line 294, col 3 to line 298, col 70 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 4
+/\ e1 = <<0, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = TRUE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<-1, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "read",
+        att |-> 1,
+        rst |-> "open",
+        cls |-> "-",
+        started |-> 4,
+        late |-> FALSE ] ]
+/\ pass = <<FALSE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 7: <Fetch("poller") line 302, col 3 to line 316, col 55 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 4
+/\ e1 = <<0, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = TRUE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<-1, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "fetched",
+        att |-> 1,
+        rst |-> "open",
+        cls |-> "err",
+        started |-> 4,
+        late |-> FALSE ] ]
+/\ pass = <<FALSE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 8: <Send("poller") line 320, col 3 to line 332, col 59 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 4
+/\ e1 = <<0, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = TRUE
+/\ pending = { [ att |-> 1,
+    p |-> "poller",
+    sent |-> 4,
+    from |-> "open",
+    to |-> "unavail",
+    dec |-> 4,
+    orphan |-> FALSE,
+    dup |-> FALSE ] }
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<-1, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "await",
+        att |-> 1,
+        rst |-> "open",
+        cls |-> "err",
+        started |-> 4,
+        late |-> FALSE ] ]
+/\ pass = <<FALSE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 9: <Kill("poller") line 337, col 3 to line 344, col 45 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 4
+/\ e1 = <<0, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 1
+/\ polled = TRUE
+/\ pending = { [ att |-> 1,
+    p |-> "poller",
+    sent |-> 4,
+    from |-> "open",
+    to |-> "unavail",
+    dec |-> 4,
+    orphan |-> TRUE,
+    dup |-> FALSE ] }
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<-1, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        cls |-> "-",
+        started |-> 0,
+        late |-> FALSE ] ]
+/\ pass = <<FALSE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+5585 states generated, 2253 distinct states found, 1307 states left on queue.
+The depth of the complete state graph search is 11.
+Finished in 00s at (2026-10-29 18:46:52)
+################ WITNESS SendDelayUnreachable
+Error: Invariant SendDelayUnreachable is violated.
+State 1: <Initial predicate>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 0
+/\ e1 = <<0, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = FALSE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<-1, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        cls |-> "-",
+        started |-> 0,
+        late |-> FALSE ] ]
+/\ pass = <<FALSE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 2: <Tick line 220, col 3 to line 229, col 65 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 1
+/\ e1 = <<0, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = FALSE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<-1, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        cls |-> "-",
+        started |-> 0,
+        late |-> FALSE ] ]
+/\ pass = <<FALSE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 3: <Tick line 220, col 3 to line 229, col 65 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 2
+/\ e1 = <<0, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = FALSE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<-1, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        cls |-> "-",
+        started |-> 0,
+        late |-> FALSE ] ]
+/\ pass = <<FALSE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 4: <Bury(1) line 239, col 3 to line 242, col 82 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 2
+/\ e1 = <<0, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = FALSE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<2, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        cls |-> "-",
+        started |-> 0,
+        late |-> FALSE ] ]
+/\ pass = <<FALSE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 5: <Start("poller") line 294, col 3 to line 298, col 70 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 2
+/\ e1 = <<0, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = TRUE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<2, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "read",
+        att |-> 1,
+        rst |-> "open",
+        cls |-> "-",
+        started |-> 2,
+        late |-> FALSE ] ]
+/\ pass = <<FALSE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 6: <Fetch("poller") line 302, col 3 to line 316, col 55 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 2
+/\ e1 = <<0, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = TRUE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<2, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "fetched",
+        att |-> 1,
+        rst |-> "open",
+        cls |-> "err",
+        started |-> 2,
+        late |-> FALSE ] ]
+/\ pass = <<FALSE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 7: <Tick line 220, col 3 to line 229, col 65 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 3
+/\ e1 = <<0, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = FALSE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<2, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "fetched",
+        att |-> 1,
+        rst |-> "open",
+        cls |-> "err",
+        started |-> 2,
+        late |-> TRUE ] ]
+/\ pass = <<FALSE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 8: <Send("poller") line 320, col 3 to line 332, col 59 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 3
+/\ e1 = <<0, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = FALSE
+/\ pending = { [ att |-> 1,
+    p |-> "poller",
+    sent |-> 3,
+    from |-> "open",
+    to |-> "unavail",
+    dec |-> 3,
+    orphan |-> FALSE,
+    dup |-> FALSE ] }
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<2, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "await",
+        att |-> 1,
+        rst |-> "open",
+        cls |-> "err",
+        started |-> 2,
+        late |-> TRUE ] ]
+/\ pass = <<FALSE, FALSE>>
+/\ dSend = TRUE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+3842 states generated, 1667 distinct states found, 1008 states left on queue.
+The depth of the complete state graph search is 11.
+Finished in 00s at (2026-10-29 18:46:52)
+################ WITNESS CommitDelayUnreachable
+Error: Invariant CommitDelayUnreachable is violated.
+State 1: <Initial predicate>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 0
+/\ e1 = <<0, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = FALSE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<-1, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        cls |-> "-",
+        started |-> 0,
+        late |-> FALSE ] ]
+/\ pass = <<FALSE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 2: <Tick line 220, col 3 to line 229, col 65 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 1
+/\ e1 = <<0, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = FALSE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<-1, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        cls |-> "-",
+        started |-> 0,
+        late |-> FALSE ] ]
+/\ pass = <<FALSE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 3: <Tick line 220, col 3 to line 229, col 65 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 2
+/\ e1 = <<0, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = FALSE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<-1, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        cls |-> "-",
+        started |-> 0,
+        late |-> FALSE ] ]
+/\ pass = <<FALSE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 4: <Tick line 220, col 3 to line 229, col 65 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 3
+/\ e1 = <<0, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = FALSE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<-1, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        cls |-> "-",
+        started |-> 0,
+        late |-> FALSE ] ]
+/\ pass = <<FALSE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 5: <Bury(1) line 239, col 3 to line 242, col 82 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 3
+/\ e1 = <<0, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = FALSE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<3, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        cls |-> "-",
+        started |-> 0,
+        late |-> FALSE ] ]
+/\ pass = <<TRUE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 6: <Start("poller") line 294, col 3 to line 298, col 70 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 3
+/\ e1 = <<0, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = TRUE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<3, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "read",
+        att |-> 1,
+        rst |-> "open",
+        cls |-> "-",
+        started |-> 3,
+        late |-> FALSE ] ]
+/\ pass = <<TRUE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 7: <Fetch("poller") line 302, col 3 to line 316, col 55 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 3
+/\ e1 = <<0, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = TRUE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<3, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "fetched",
+        att |-> 1,
+        rst |-> "open",
+        cls |-> "err",
+        started |-> 3,
+        late |-> FALSE ] ]
+/\ pass = <<TRUE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 8: <Send("poller") line 320, col 3 to line 332, col 59 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 3
+/\ e1 = <<0, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = TRUE
+/\ pending = { [ att |-> 1,
+    p |-> "poller",
+    sent |-> 3,
+    from |-> "open",
+    to |-> "unavail",
+    dec |-> 3,
+    orphan |-> FALSE,
+    dup |-> FALSE ] }
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<3, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "await",
+        att |-> 1,
+        rst |-> "open",
+        cls |-> "err",
+        started |-> 3,
+        late |-> FALSE ] ]
+/\ pass = <<TRUE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 9: <Tick line 220, col 3 to line 229, col 65 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 4
+/\ e1 = <<0, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = FALSE
+/\ pending = { [ att |-> 1,
+    p |-> "poller",
+    sent |-> 3,
+    from |-> "open",
+    to |-> "unavail",
+    dec |-> 3,
+    orphan |-> FALSE,
+    dup |-> FALSE ] }
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<3, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "await",
+        att |-> 1,
+        rst |-> "open",
+        cls |-> "err",
+        started |-> 3,
+        late |-> FALSE ] ]
+/\ pass = <<TRUE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 10: <Store line 403, col 11 to line 403, col 49 of module IssuerLifecycle>
+/\ decl = <<0, 4>>
+/\ cur = 2
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 4
+/\ e1 = <<0, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = FALSE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"unavail", "open">>
+/\ bur = <<3, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        cls |-> "-",
+        started |-> 0,
+        late |-> FALSE ] ]
+/\ pass = <<TRUE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = TRUE
+
+12959 states generated, 4816 distinct states found, 2642 states left on queue.
+The depth of the complete state graph search is 12.
+Finished in 00s at (2026-10-29 18:46:53)
+################ WITNESS ExpiredUnreachable
+Error: Invariant ExpiredUnreachable is violated.
+State 1: <Initial predicate>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 0
+/\ e1 = <<0, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = FALSE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<-1, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        cls |-> "-",
+        started |-> 0,
+        late |-> FALSE ] ]
+/\ pass = <<FALSE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 2: <Tick line 220, col 3 to line 229, col 65 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 1
+/\ e1 = <<0, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = FALSE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<-1, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        cls |-> "-",
+        started |-> 0,
+        late |-> FALSE ] ]
+/\ pass = <<FALSE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 3: <Tick line 220, col 3 to line 229, col 65 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 2
+/\ e1 = <<0, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = FALSE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<-1, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        cls |-> "-",
+        started |-> 0,
+        late |-> FALSE ] ]
+/\ pass = <<FALSE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 4: <Tick line 220, col 3 to line 229, col 65 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 3
+/\ e1 = <<0, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = FALSE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<-1, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        cls |-> "-",
+        started |-> 0,
+        late |-> FALSE ] ]
+/\ pass = <<FALSE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 5: <Bury(1) line 239, col 3 to line 242, col 82 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 3
+/\ e1 = <<0, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = FALSE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<3, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        cls |-> "-",
+        started |-> 0,
+        late |-> FALSE ] ]
+/\ pass = <<FALSE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 6: <Attest1(1) line 245, col 3 to line 246, col 89 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 3
+/\ e1 = <<1, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = FALSE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<3, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        cls |-> "-",
+        started |-> 0,
+        late |-> FALSE ] ]
+/\ pass = <<FALSE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 7: <Attest2(1) line 248, col 3 to line 249, col 89 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 3
+/\ e1 = <<1, 0>>
+/\ e2 = <<1, 0>>
+/\ faults = 0
+/\ polled = FALSE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<3, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        cls |-> "-",
+        started |-> 0,
+        late |-> FALSE ] ]
+/\ pass = <<FALSE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 8: <Segment1(1) line 251, col 3 to line 252, col 89 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 3
+/\ e1 = <<2, 0>>
+/\ e2 = <<1, 0>>
+/\ faults = 0
+/\ polled = FALSE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<3, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        cls |-> "-",
+        started |-> 0,
+        late |-> FALSE ] ]
+/\ pass = <<FALSE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 9: <Segment2(1) line 254, col 3 to line 255, col 89 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 3
+/\ e1 = <<2, 0>>
+/\ e2 = <<2, 0>>
+/\ faults = 0
+/\ polled = FALSE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<3, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        cls |-> "-",
+        started |-> 0,
+        late |-> FALSE ] ]
+/\ pass = <<FALSE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 10: <Start("poller") line 294, col 3 to line 298, col 70 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 3
+/\ e1 = <<2, 0>>
+/\ e2 = <<2, 0>>
+/\ faults = 0
+/\ polled = TRUE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<3, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "read",
+        att |-> 1,
+        rst |-> "open",
+        cls |-> "-",
+        started |-> 3,
+        late |-> FALSE ] ]
+/\ pass = <<FALSE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 11: <Fetch("poller") line 302, col 3 to line 316, col 55 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 3
+/\ e1 = <<2, 0>>
+/\ e2 = <<2, 0>>
+/\ faults = 0
+/\ polled = TRUE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<3, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "fetched",
+        att |-> 1,
+        rst |-> "open",
+        cls |-> "neg",
+        started |-> 3,
+        late |-> FALSE ] ]
+/\ pass = <<FALSE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 12: <Send("poller") line 320, col 3 to line 332, col 59 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 3
+/\ e1 = <<2, 0>>
+/\ e2 = <<2, 0>>
+/\ faults = 0
+/\ polled = TRUE
+/\ pending = { [ att |-> 1,
+    p |-> "poller",
+    sent |-> 3,
+    from |-> "open",
+    to |-> "expired",
+    dec |-> 3,
+    orphan |-> FALSE,
+    dup |-> FALSE ] }
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<3, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "await",
+        att |-> 1,
+        rst |-> "open",
+        cls |-> "neg",
+        started |-> 3,
+        late |-> FALSE ] ]
+/\ pass = <<FALSE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 13: <Store line 403, col 11 to line 403, col 49 of module IssuerLifecycle>
+/\ decl = <<0, 3>>
+/\ cur = 2
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 3
+/\ e1 = <<2, 0>>
+/\ e2 = <<2, 0>>
+/\ faults = 0
+/\ polled = TRUE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"expired", "open">>
+/\ bur = <<3, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        cls |-> "-",
+        started |-> 0,
+        late |-> FALSE ] ]
+/\ pass = <<FALSE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+69505 states generated, 28831 distinct states found, 17073 states left on queue.
+The depth of the complete state graph search is 14.
+Finished in 01s at (2026-10-29 18:46:55)
+################ WITNESS DiscardedUnreachable
+Error: Invariant DiscardedUnreachable is violated.
+State 1: <Initial predicate>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 0
+/\ e1 = <<0, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = FALSE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<-1, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        cls |-> "-",
+        started |-> 0,
+        late |-> FALSE ] ]
+/\ pass = <<FALSE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 2: <Bury(1) line 239, col 3 to line 242, col 82 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 0
+/\ e1 = <<0, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = FALSE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<0, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        cls |-> "-",
+        started |-> 0,
+        late |-> FALSE ] ]
+/\ pass = <<FALSE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 3: <Attest1(1) line 245, col 3 to line 246, col 89 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 0
+/\ e1 = <<1, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = FALSE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<0, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        cls |-> "-",
+        started |-> 0,
+        late |-> FALSE ] ]
+/\ pass = <<FALSE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 4: <Attest2(1) line 248, col 3 to line 249, col 89 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 0
+/\ e1 = <<1, 0>>
+/\ e2 = <<1, 0>>
+/\ faults = 0
+/\ polled = FALSE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<0, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        cls |-> "-",
+        started |-> 0,
+        late |-> FALSE ] ]
+/\ pass = <<FALSE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 5: <Segment1(1) line 251, col 3 to line 252, col 89 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 0
+/\ e1 = <<2, 0>>
+/\ e2 = <<1, 0>>
+/\ faults = 0
+/\ polled = FALSE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<0, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        cls |-> "-",
+        started |-> 0,
+        late |-> FALSE ] ]
+/\ pass = <<FALSE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 6: <Segment2(1) line 254, col 3 to line 255, col 89 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 0
+/\ e1 = <<2, 0>>
+/\ e2 = <<2, 0>>
+/\ faults = 0
+/\ polled = FALSE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<0, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        cls |-> "-",
+        started |-> 0,
+        late |-> FALSE ] ]
+/\ pass = <<FALSE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 7: <Start("poller") line 294, col 3 to line 298, col 70 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 0
+/\ e1 = <<2, 0>>
+/\ e2 = <<2, 0>>
+/\ faults = 0
+/\ polled = TRUE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<0, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "read",
+        att |-> 1,
+        rst |-> "open",
+        cls |-> "-",
+        started |-> 0,
+        late |-> FALSE ] ]
+/\ pass = <<FALSE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 8: <Fetch("poller") line 302, col 3 to line 316, col 55 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 0
+/\ e1 = <<2, 0>>
+/\ e2 = <<2, 0>>
+/\ faults = 0
+/\ polled = TRUE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<0, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "fetched",
+        att |-> 1,
+        rst |-> "open",
+        cls |-> "neg",
+        started |-> 0,
+        late |-> FALSE ] ]
+/\ pass = <<FALSE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 9: <Send("poller") line 320, col 3 to line 332, col 59 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 0
+/\ e1 = <<2, 0>>
+/\ e2 = <<2, 0>>
+/\ faults = 0
+/\ polled = TRUE
+/\ pending = { [ att |-> 1,
+    p |-> "poller",
+    sent |-> 0,
+    from |-> "open",
+    to |-> "discarded",
+    dec |-> 0,
+    orphan |-> FALSE,
+    dup |-> FALSE ] }
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<0, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "await",
+        att |-> 1,
+        rst |-> "open",
+        cls |-> "neg",
+        started |-> 0,
+        late |-> FALSE ] ]
+/\ pass = <<FALSE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 10: <Store line 403, col 11 to line 403, col 49 of module IssuerLifecycle>
+/\ decl = <<0, 0>>
+/\ cur = 2
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 0
+/\ e1 = <<2, 0>>
+/\ e2 = <<2, 0>>
+/\ faults = 0
+/\ polled = TRUE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"discarded", "open">>
+/\ bur = <<0, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        cls |-> "-",
+        started |-> 0,
+        late |-> FALSE ] ]
+/\ pass = <<FALSE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+39235 states generated, 14802 distinct states found, 8010 states left on queue.
+The depth of the complete state graph search is 12.
+Finished in 00s at (2026-10-29 18:46:56)
+################ WITNESS UnavailUnreachable
+Error: Invariant UnavailUnreachable is violated.
+State 1: <Initial predicate>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 0
+/\ e1 = <<0, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = FALSE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<-1, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        cls |-> "-",
+        started |-> 0,
+        late |-> FALSE ] ]
+/\ pass = <<FALSE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 2: <Tick line 220, col 3 to line 229, col 65 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 1
+/\ e1 = <<0, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = FALSE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<-1, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        cls |-> "-",
+        started |-> 0,
+        late |-> FALSE ] ]
+/\ pass = <<FALSE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 3: <Tick line 220, col 3 to line 229, col 65 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 2
+/\ e1 = <<0, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = FALSE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<-1, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        cls |-> "-",
+        started |-> 0,
+        late |-> FALSE ] ]
+/\ pass = <<FALSE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 4: <Tick line 220, col 3 to line 229, col 65 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 3
+/\ e1 = <<0, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = FALSE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<-1, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        cls |-> "-",
+        started |-> 0,
+        late |-> FALSE ] ]
+/\ pass = <<FALSE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 5: <Start("poller") line 294, col 3 to line 298, col 70 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 3
+/\ e1 = <<0, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = TRUE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<-1, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "read",
+        att |-> 1,
+        rst |-> "open",
+        cls |-> "-",
+        started |-> 3,
+        late |-> FALSE ] ]
+/\ pass = <<FALSE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 6: <Fetch("poller") line 302, col 3 to line 316, col 55 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 3
+/\ e1 = <<0, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = TRUE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<-1, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "fetched",
+        att |-> 1,
+        rst |-> "open",
+        cls |-> "err",
+        started |-> 3,
+        late |-> FALSE ] ]
+/\ pass = <<FALSE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 7: <Send("poller") line 320, col 3 to line 332, col 59 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 3
+/\ e1 = <<0, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = TRUE
+/\ pending = { [ att |-> 1,
+    p |-> "poller",
+    sent |-> 3,
+    from |-> "open",
+    to |-> "unavail",
+    dec |-> 3,
+    orphan |-> FALSE,
+    dup |-> FALSE ] }
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<-1, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "await",
+        att |-> 1,
+        rst |-> "open",
+        cls |-> "err",
+        started |-> 3,
+        late |-> FALSE ] ]
+/\ pass = <<FALSE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 8: <Store line 403, col 11 to line 403, col 49 of module IssuerLifecycle>
+/\ decl = <<0, 3>>
+/\ cur = 2
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 3
+/\ e1 = <<0, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = TRUE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"unavail", "open">>
+/\ bur = <<-1, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        cls |-> "-",
+        started |-> 0,
+        late |-> FALSE ] ]
+/\ pass = <<FALSE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+5366 states generated, 2217 distinct states found, 1307 states left on queue.
+The depth of the complete state graph search is 11.
+Finished in 00s at (2026-10-29 18:46:56)
+################ WITNESS ShipUnreachable
+Error: Invariant ShipUnreachable is violated.
+State 1: <Initial predicate>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 0
+/\ e1 = <<0, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = FALSE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<-1, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        cls |-> "-",
+        started |-> 0,
+        late |-> FALSE ] ]
+/\ pass = <<FALSE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 2: <Tick line 220, col 3 to line 229, col 65 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 1
+/\ e1 = <<0, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = FALSE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<-1, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        cls |-> "-",
+        started |-> 0,
+        late |-> FALSE ] ]
+/\ pass = <<FALSE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 3: <Tick line 220, col 3 to line 229, col 65 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 2
+/\ e1 = <<0, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = FALSE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<-1, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        cls |-> "-",
+        started |-> 0,
+        late |-> FALSE ] ]
+/\ pass = <<FALSE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 4: <Bury(1) line 239, col 3 to line 242, col 82 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 2
+/\ e1 = <<0, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = FALSE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<2, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        cls |-> "-",
+        started |-> 0,
+        late |-> FALSE ] ]
+/\ pass = <<TRUE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 5: <Attest1(1) line 245, col 3 to line 246, col 89 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 2
+/\ e1 = <<1, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = FALSE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<2, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        cls |-> "-",
+        started |-> 0,
+        late |-> FALSE ] ]
+/\ pass = <<TRUE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 6: <Segment1(1) line 251, col 3 to line 252, col 89 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 2
+/\ e1 = <<2, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = FALSE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<2, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        cls |-> "-",
+        started |-> 0,
+        late |-> FALSE ] ]
+/\ pass = <<TRUE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 7: <Start("poller") line 294, col 3 to line 298, col 70 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 2
+/\ e1 = <<2, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = TRUE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<2, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "read",
+        att |-> 1,
+        rst |-> "open",
+        cls |-> "-",
+        started |-> 2,
+        late |-> FALSE ] ]
+/\ pass = <<TRUE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 8: <Fetch("poller") line 302, col 3 to line 316, col 55 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"late", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 2
+/\ e1 = <<2, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = TRUE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<2, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "fetched",
+        att |-> 1,
+        rst |-> "open",
+        cls |-> "elig",
+        started |-> 2,
+        late |-> FALSE ] ]
+/\ pass = <<TRUE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 9: <Send("poller") line 320, col 3 to line 332, col 59 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"late", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 2
+/\ e1 = <<2, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = TRUE
+/\ pending = { [ att |-> 1,
+    p |-> "poller",
+    sent |-> 2,
+    from |-> "open",
+    to |-> "latched",
+    dec |-> 2,
+    orphan |-> FALSE,
+    dup |-> FALSE ] }
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<2, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "await",
+        att |-> 1,
+        rst |-> "open",
+        cls |-> "elig",
+        started |-> 2,
+        late |-> FALSE ] ]
+/\ pass = <<TRUE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 10: <Store line 403, col 11 to line 403, col 49 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"late", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 2
+/\ e1 = <<2, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = TRUE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"latched", "none">>
+/\ bur = <<2, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        cls |-> "-",
+        started |-> 0,
+        late |-> FALSE ] ]
+/\ pass = <<TRUE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 11: <Start("poller") line 294, col 3 to line 298, col 70 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"late", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 2
+/\ e1 = <<2, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = TRUE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"latched", "none">>
+/\ bur = <<2, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "read",
+        att |-> 1,
+        rst |-> "latched",
+        cls |-> "-",
+        started |-> 2,
+        late |-> FALSE ] ]
+/\ pass = <<TRUE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 12: <Fetch("poller") line 302, col 3 to line 316, col 55 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"late", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 2
+/\ e1 = <<2, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = TRUE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"latched", "none">>
+/\ bur = <<2, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "fetched",
+        att |-> 1,
+        rst |-> "latched",
+        cls |-> "-",
+        started |-> 2,
+        late |-> FALSE ] ]
+/\ pass = <<TRUE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 13: <Send("poller") line 320, col 3 to line 332, col 59 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"late", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 2
+/\ e1 = <<2, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = TRUE
+/\ pending = { [ att |-> 1,
+    p |-> "poller",
+    sent |-> 2,
+    from |-> "latched",
+    to |-> "shipped",
+    dec |-> 2,
+    orphan |-> FALSE,
+    dup |-> FALSE ] }
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"latched", "none">>
+/\ bur = <<2, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "await",
+        att |-> 1,
+        rst |-> "latched",
+        cls |-> "-",
+        started |-> 2,
+        late |-> FALSE ] ]
+/\ pass = <<TRUE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 14: <Store line 403, col 11 to line 403, col 49 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"late", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 2
+/\ e1 = <<2, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = TRUE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "complete"
+/\ st = <<"shipped", "none">>
+/\ bur = <<2, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        cls |-> "-",
+        started |-> 0,
+        late |-> FALSE ] ]
+/\ pass = <<TRUE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+635000 states generated, 276275 distinct states found, 166587 states left on queue.
+The depth of the complete state graph search is 16.
+Finished in 02s at (2026-10-29 18:46:59)
+################ WITNESS RefusalUnreachable
+Error: Invariant RefusalUnreachable is violated.
+State 1: <Initial predicate>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 0
+/\ e1 = <<0, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = FALSE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<-1, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        cls |-> "-",
+        started |-> 0,
+        late |-> FALSE ] ]
+/\ pass = <<FALSE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 2: <Tick line 220, col 3 to line 229, col 65 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 1
+/\ e1 = <<0, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = FALSE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<-1, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        cls |-> "-",
+        started |-> 0,
+        late |-> FALSE ] ]
+/\ pass = <<FALSE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 3: <Tick line 220, col 3 to line 229, col 65 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 2
+/\ e1 = <<0, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = FALSE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<-1, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        cls |-> "-",
+        started |-> 0,
+        late |-> FALSE ] ]
+/\ pass = <<FALSE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 4: <Tick line 220, col 3 to line 229, col 65 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 3
+/\ e1 = <<0, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = FALSE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<-1, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        cls |-> "-",
+        started |-> 0,
+        late |-> FALSE ] ]
+/\ pass = <<FALSE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 5: <Tick line 220, col 3 to line 229, col 65 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 4
+/\ e1 = <<0, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = FALSE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<-1, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        cls |-> "-",
+        started |-> 0,
+        late |-> FALSE ] ]
+/\ pass = <<FALSE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 6: <Start("poller") line 294, col 3 to line 298, col 70 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 4
+/\ e1 = <<0, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = TRUE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<-1, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "read",
+        att |-> 1,
+        rst |-> "open",
+        cls |-> "-",
+        started |-> 4,
+        late |-> FALSE ] ]
+/\ pass = <<FALSE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 7: <Fetch("poller") line 302, col 3 to line 316, col 55 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 4
+/\ e1 = <<0, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = TRUE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<-1, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "fetched",
+        att |-> 1,
+        rst |-> "open",
+        cls |-> "err",
+        started |-> 4,
+        late |-> FALSE ] ]
+/\ pass = <<FALSE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 8: <Send("poller") line 320, col 3 to line 332, col 59 of module IssuerLifecycle>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 4
+/\ e1 = <<0, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = TRUE
+/\ pending = { [ att |-> 1,
+    p |-> "poller",
+    sent |-> 4,
+    from |-> "open",
+    to |-> "unavail",
+    dec |-> 4,
+    orphan |-> FALSE,
+    dup |-> FALSE ] }
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"open", "none">>
+/\ bur = <<-1, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "await",
+        att |-> 1,
+        rst |-> "open",
+        cls |-> "err",
+        started |-> 4,
+        late |-> FALSE ] ]
+/\ pass = <<FALSE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 9: <Store line 403, col 11 to line 403, col 49 of module IssuerLifecycle>
+/\ decl = <<0, 4>>
+/\ cur = 2
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 4
+/\ e1 = <<0, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = TRUE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"unavail", "open">>
+/\ bur = <<-1, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        cls |-> "-",
+        started |-> 0,
+        late |-> FALSE ] ]
+/\ pass = <<FALSE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 10: <Tick line 220, col 3 to line 229, col 65 of module IssuerLifecycle>
+/\ decl = <<0, 4>>
+/\ cur = 2
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 5
+/\ e1 = <<0, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = FALSE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"unavail", "open">>
+/\ bur = <<-1, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        cls |-> "-",
+        started |-> 0,
+        late |-> FALSE ] ]
+/\ pass = <<FALSE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 11: <Tick line 220, col 3 to line 229, col 65 of module IssuerLifecycle>
+/\ decl = <<0, 4>>
+/\ cur = 2
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 6
+/\ e1 = <<0, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = FALSE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"unavail", "open">>
+/\ bur = <<-1, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        cls |-> "-",
+        started |-> 0,
+        late |-> FALSE ] ]
+/\ pass = <<FALSE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 12: <Tick line 220, col 3 to line 229, col 65 of module IssuerLifecycle>
+/\ decl = <<0, 4>>
+/\ cur = 2
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 7
+/\ e1 = <<0, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = FALSE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"unavail", "open">>
+/\ bur = <<-1, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        cls |-> "-",
+        started |-> 0,
+        late |-> FALSE ] ]
+/\ pass = <<FALSE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 13: <Start("poller") line 294, col 3 to line 298, col 70 of module IssuerLifecycle>
+/\ decl = <<0, 4>>
+/\ cur = 2
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 7
+/\ e1 = <<0, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = TRUE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"unavail", "open">>
+/\ bur = <<-1, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "read",
+        att |-> 2,
+        rst |-> "open",
+        cls |-> "-",
+        started |-> 7,
+        late |-> FALSE ] ]
+/\ pass = <<FALSE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 14: <Fetch("poller") line 302, col 3 to line 316, col 55 of module IssuerLifecycle>
+/\ decl = <<0, 4>>
+/\ cur = 2
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 7
+/\ e1 = <<0, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = TRUE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"unavail", "open">>
+/\ bur = <<-1, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "fetched",
+        att |-> 2,
+        rst |-> "open",
+        cls |-> "err",
+        started |-> 7,
+        late |-> FALSE ] ]
+/\ pass = <<FALSE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 15: <Send("poller") line 320, col 3 to line 332, col 59 of module IssuerLifecycle>
+/\ decl = <<0, 4>>
+/\ cur = 2
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 7
+/\ e1 = <<0, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = TRUE
+/\ pending = { [ att |-> 2,
+    p |-> "poller",
+    sent |-> 7,
+    from |-> "open",
+    to |-> "unavail",
+    dec |-> 7,
+    orphan |-> FALSE,
+    dup |-> FALSE ] }
+/\ rreason = "-"
+/\ req = "active"
+/\ st = <<"unavail", "open">>
+/\ bur = <<-1, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "await",
+        att |-> 2,
+        rst |-> "open",
+        cls |-> "err",
+        started |-> 7,
+        late |-> FALSE ] ]
+/\ pass = <<FALSE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+State 16: <Store line 403, col 11 to line 403, col 49 of module IssuerLifecycle>
+/\ decl = <<0, 4>>
+/\ cur = 2
+/\ obsAt = <<"no", "no">>
+/\ sawCalneg = <<FALSE, FALSE>>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 7
+/\ e1 = <<0, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = TRUE
+/\ pending = {}
+/\ rreason = "EVIDENCE_UNAVAILABLE"
+/\ req = "refused"
+/\ st = <<"unavail", "unavail">>
+/\ bur = <<-1, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        cls |-> "-",
+        started |-> 0,
+        late |-> FALSE ] ]
+/\ pass = <<FALSE, FALSE>>
+/\ dSend = FALSE
+/\ dupApplied = FALSE
+/\ lostLive = <<FALSE, FALSE>>
+/\ dCommit = FALSE
+
+1512785 states generated, 622562 distinct states found, 357631 states left on queue.
+The depth of the complete state graph search is 17.
+Finished in 04s at (2026-10-29 18:47:04)

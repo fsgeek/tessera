@@ -81,3 +81,82 @@ the check and named archive-manipulation techniques. It was re-run as two briefs
   - Codex's note that Terraform does not publish Lambda versions stands. Publishing a version conditional on
     `CodeSha256` is a V2 candidate.
 - The manifest was regenerated. The floor gives 1201 passed, 1 skipped.
+
+## Consolidated draft review (`CODEX-REVIEW-CONSOLIDATED.md`, 2026-10-29): owner disposition
+
+The draft was consolidated from the Levadura panel's 28 findings. The review found that all 28 are accounted for
+and the custody options are stated neutrally. It found three high findings, two of them the panel's own pattern
+again (a fix that leaves a copy of the text elsewhere unchanged), and three prechecks FAILED. All findings applied:
+
+| ID | Sev | Disposition |
+|---|---|---|
+| A11X-01 | High | The K-R row adds the supplement's copy of the E§5.2 sentence (`HYBRID-SUPPLEMENT.md:274-276`). The historical "issuer-computed μ" capture labels are stated to still fit. |
+| A11X-02 | High | Row 8 adds A10's plain-language passages (`:106-124`), its additions list (`:213-226`) and the row-26 note (`:432`). They are kept as the dated record of the 2026-10-18 adoption and superseded as descriptions of V1. In V1 no listing rejection, pre-commitment or preservation duty exists, and attacker-key receipts pass after capture of both channels (V1-CONTRACT §2, §4). |
+| A11X-03 | High | The owner's own c016 sentence said expiry could "override" a latch, which A2.1 forbids. It now says the latch excludes expiry and describes the revision-3 design (one writer; expiry only after B plus the lease, on fresh evidence). |
+| A11X-04 | Med | Row 10 adds `PROOF.md:485` ("No check reads it"), scoped as in :134-135. "B never computes it" stays. |
+| A11X-05 | Low | The K-R row no longer calls source wording "unchanged". The unchanged restrictions are named and cited (:151-153, :157), and the actor change is stated. |
+| Paraphrases | — | The table states that the "Was" cells of rows 3, 4, 7 and 8 are paraphrases; only quoted words are exact. |
+
+The owner repairs in §A11.7 remain listed, not done (the live S4 still has the 24-hour rule). They are done with the
+issuer lifecycle change.
+
+## Consolidated confirmation (`CODEX-CONFIRM-CONSOLIDATED.md`): owner disposition
+
+A11X-01 to -05 and the paraphrase labelling were CLOSED. A11XC-01 (High): row 8 still missed A10's closing summary
+(`:795-799`, "deliberately rejects new cases: receipts under unlisted keys") and the listing parts of the
+reconciliation item (`:810-812`). This was the fourth missed copy for the listing cut, so the owner did not repair
+it alone. The owner grepped every registered text (prereg, A1–A10, PROOF, ENCODING-V1, HYBRID-SUPPLEMENT,
+HYBRID-REGISTRATION-RECORD, FREEZE-RECORD, profile at `270ca49`) for the listing's vocabulary (`service_keys`,
+`SERVICE_KEYS_NOT_LISTED`, `unlisted`, `LISTING_`, `A10.4.1`, `key listing`, `listing evidence`, `listing
+pre-commit`). Every hit is now disposed by row 8: either named explicitly or covered as adoption history, the
+mechanism section or frozen copies. A9:157 and profile :531 ("unlisted rollover") are DNSSEC terms, unrelated.
+
+**Row-8 confirmation (`CODEX-CONFIRM-ROW8.md`):** A11XC-01 CLOSED; independent wider search found no undisposed hit. Ready for the author. Owner tidy: the mechanism-section range is corrected to `:462-611` (all of A10.4.1, which ends where A10.4.2 begins at :612).
+
+## Author's pre-signing Codex read (relayed by the author, 2026-10-29): owner disposition
+
+The author ran the draft by Codex before ruling. Codex leaned toward Option 1 and asked for two bounded corrections.
+Both are applied:
+- **DEPLOY.md gate.** A step 0 now makes the whole deployment wait for the §A11.5 item 2 ruling, recorded in the
+  signed amendment. It states what each option means for the steps, and that no option uses `prototype/` code.
+  A11.7 c036 is updated to match.
+- **Stale lifecycle summary in A11.7 c016.** The summary described revision 3 (expiry after the boundary plus the
+  write lease), while the design is now at revision 4 (expiry only on complete negative evidence, no lease timing).
+  The owner had revised the design twice after writing the summary. A11 now defers to the design document instead
+  of restating it. Following Codex's caution, it also says that **signing A11 does not accept any residual the
+  lifecycle design states**: such a residual is assessed in the lifecycle work against A2.1 and A2.3, and needs its
+  own author decision if it remains.
+
+Codex also noted that §A11.2 item 4 is a continuing operational duty: re-runs on every verifier or library change,
+every new upstream vector commit, and at least quarterly. This is stated in the amendment, and the author should
+weigh it as an ongoing cost, not a one-time approval.
+
+## Author's question on the operational triggers (2026-10-29): owner disposition
+
+The author asked whether §A11.2 item 4's triggers are the right boundaries or educated guesses. Owner assessment:
+- Code or library change is required: the evidence is bound to bytes.
+- "Every upstream vector commit" had the right purpose at the wrong grain: it now triggers only on files for the
+  algorithms in use.
+- "Quarterly" was a guess standing in for knowledge outside the vector suite. It is replaced by advisory and erratum
+  triggers, plus a calendar backstop labelled as an operating guess, to be reviewed on a year of run records.
+
+Item 4 is rewritten so that each trigger states what it detects. This is an unreviewed edit to the draft. The
+owner's confirmation runs before signing.
+
+A boundary candidate raised to the author, not added to A11: the verifier's DNSSEC signature checks (RSA alg 8,
+ECDSA P-256 alg 13, which ground G4) are inventoried but not profiled (`formal/p3-verification-profile/PROFILE.md:54-58`).
+No registered property asks for a verification profile for them.
+
+## Custody ruling as an owner decision (2026-10-29)
+
+The author asked whether the custody ruling is irreversible or scope-changing. Owner's answer:
+- Option 1 is neither. It changes no V1 scope. The practical lock-in is the first production receipt under the
+  hybrid keys, at deployment, and a later amendment can revisit it before then.
+- Option 2 is the scope change: it drops PQ and amends the freeze, for no claim V1 makes.
+
+So the choice does not need the author's separate ruling. It needs his signature, because Option 1 relaxes a
+registered reading, and signing A11 gives that. The ruling block, the header, §A11.5 item 2, change-table row 7 and
+DEPLOY step 0 now record Option 1 as the owner's decision, adopted by signing. Option 2 is kept as the alternative
+not taken, and the retrospective-relaxation disclosure is unchanged.
+
+**Decision-wording confirmation (`CODEX-CONFIRM-DECISION.md`):** A11D-01 (stale "recommendation, not a decision", "Until the author rules", "If the author picks Option 1") fixed; A11D-02 to -04 PASS. A grep for the stale phrasings finds none left.

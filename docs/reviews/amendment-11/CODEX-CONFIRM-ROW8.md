@@ -1,0 +1,9 @@
+**Verdict: ready for the author’s custody ruling and signature; A11.7’s pending owner repairs are not a blocker.**
+
+- **A11R8-01 — CLOSED: A11XC-01.** [Row 8](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-11.md:123) now explicitly supersedes A10:795–799’s listing mechanisms and rejection promise, withdraws the listing-related reconciliation duties at :810–812, and covers their frozen `spec.bin` copies.
+
+- **A11R8-02 — Independent search: no undisposed hit found.** I searched the original, A1–A10, every `formal/p8/*.md`, all of `formal/freeze-v1/` with binary-as-text searching, and the profile extracted with `git show 270ca49:docs/V1-PROFILE.md`. Independent terms included broad `list/listed/listing`, `pre-commit`, `pre-publish`, allowlist/whitelist, authorized keys, key sets, registries and schedules, alongside the reason codes. All relevant positive listing requirements are disposed by row 8 or the frozen profile’s §5 cut. This includes A10:582–610: although beyond row 8’s expressly inventoried :462–579 range, these remain within **A10.4.1**, which row 8 supersedes wholesale for V1. DNSSEC rollover, release allowlisting and git-assertion pre-commitment are separate retained checks.
+
+- **A11R8-03 — Repair scope: consistent with the previous finding.** Compared with the prior review’s description, row 8 adds the requested closing-summary and reconciliation dispositions, plus adoption-history and frozen-copy coverage. I found no unrelated substantive change within that repair. **Without the prior amendment snapshot, I cannot establish that nothing elsewhere in the amendment changed.**
+
+Repository read-only; no git writes. Scratch used only `/tmp/tmp.yfA4hAyKqi`.

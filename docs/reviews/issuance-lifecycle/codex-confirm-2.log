@@ -1,0 +1,1527 @@
+Reading additional input from stdin...
+OpenAI Codex v0.165.0
+--------
+workdir: /home/tony/projects/tessera
+model: gpt-6.1-sol
+provider: openai
+approval: never
+sandbox: danger-full-access
+reasoning effort: none
+reasoning summaries: none
+session id: 01a188d5-9c9d-7673-a382-013f54b75fdf
+--------
+user
+Second confirmation for Project Tessera at /home/tony/projects/tessera (our own repository; read-only: no repo edits, no git writes; scratch only under a fresh mktemp -d). Your last review: docs/reviews/issuance-lifecycle/CODEX-CONFIRM.md (ILC-01..05; not ready). The owner's revision 3 replaces concurrent arbitration with a single writer: docs/decisions/2026-10-29-issuance-lifecycle.md, section 'What the issuer does (revision 3...)'. Relevant facts to check yourself: service/issuer/infra/main.tf:354 reserved_concurrent_executions = 1 for the poller; service/issuer/tessera_issue/api.py:194 currently calls settle from the status path (the design removes it); the registered latch model formal/tla/P5cP5P6_BridgeSlack_Latch.tla defines timeliness on burialAtWall (when burial occurred), not on the issuer's observation. (A) ILC-01..05: CLOSED / PARTIAL / OPEN with the registered text. (B) Attack revision 3 as a protocol: Lambda reserved concurrency 1 serialises invocations, but can two invocations overlap in practice (timeouts, retries, EventBridge redelivery, the 10-minute schedule versus a 15-minute timeout)? Does a killed invocation's write landing late break anything given expiry waits until B + WRITE_LEASE_S? Is the stated residual (an on-time observation never made durable, then a source outage) the only path by which a timely attempt expires, and is it consistent with the registered latch semantics (timeliness on burialAtWall)? Are steps 6 (permanent failure only when every proof is complete) and 7 (post-latch discard only for uncurable failures; preserved presentation) now sound? Is step 8's single guarded end-and-allocate write sufficient against duplicate retries? (C) New defects. Number findings ILC2-01.... One-line verdict: ready to implement (with the TLA+ model in step 10 as the paired check) or not. Apply these owner prechecks to revision 3, PASS/FAIL with file:line:
+
+# Owner prechecks, run by the reviewer
+
+> **Status: OWNER PROCESS, 2026-10-27.** Every owner instance has written these down as lessons and then repeated
+> the mistakes (the 2026-10-19 stone, and its 2026-10-27 postscript "Naming it did not stop it"). The author's
+> answer to "what do new owners get wrong in their first week": *"that they will behave differently from the prior
+> instances."* So these checks are not left to the owner's self-review. The owner appends this file verbatim to
+> every review brief (Codex or another family), and the reviewer reports each check as PASS or FAIL with file:line.
+
+## Checks
+
+1. **Capture row.** For every plain-language statement of what holds, what happens when an attacker controls both
+   authority channels (DNS and git)? If the text implies that the attacker's own keys are rejected, or that a
+   capture is detected or made visible, that is FAIL. Ground truth: `docs/V1-CONTRACT.md` §2 (after G10) and §4.
+2. **Trigger clause.** For every registered rule cited as authority (an amendment section, a table row, a ruling),
+   did the rule's trigger condition actually occur? Citing a consequence whose trigger has not happened is FAIL.
+3. **Requester.** For every security claim about keys or signing, who can cause a signature to be made? A claim
+   that reasons only about where a key is stored, and not about who can submit work to the signer, is FAIL.
+4. **Binding text.** For every sentence the document treats as a requirement, is it registered (a signed amendment,
+   the freeze, or a recorded author ruling), or is it something an instance wrote? An unregistered sentence used as a
+   requirement is FAIL. Since 2026-10-27, `docs/V1-SCHEDULE.md`'s ruling budget is a known instance of this. Also FAIL: an owner
+   requirement (a resolution, a design document, a code constant) that contradicts a registered sentence. Since
+   2026-10-29, S4's 24-hour FAILED against A2.3's per-attempt `declared + δ + S` expiry is the known instance.
+codex
+I’ll check revision 3 against the prior findings, registered semantics, and code, then attack the single-writer protocol and report the owner prechecks. I’ll keep the repository read-only and put any scratch work in a fresh temporary directory.
+exec
+/bin/bash -lc "rg -n 'issuance|latch|A2.3|reading order' /home/tony/.codex/memories/MEMORY.md" in /home/tony/projects/tessera
+ succeeded in 0ms:
+44:- Symptom: Row 2 CUT is attributed solely to the owner's merits rationale. Fix: preserve the author's actual rationale: manage V1 complexity and low initial use, accept the disclosed early limitation, and keep future issuance upgradeable. [Task 1]
+102:- Row 2, service-key listing, KEEP, CUT, attacker-selected keys, DNS, git authority, future issuance, pre-receipt commitment, listing-cut.md
+110:- For the E9 Row 2 choice, the user favored bounded staged scope: V1 complexity is already high, initial use is expected to be low, and the protection can be added for future issuance -> do not add complexity merely for a stronger theoretical guarantee; disclose the limitation precisely. [Task 2]
+117:- KEEP would block fresh attacker-key receipts after both DNS and git authority capture only for a user with an authentic listed verifier; CUT knowingly permits them while honest receipts remain protected under registered assumptions. Future issuance can add the listing, but cannot retroactively establish its required pre-receipt commitment for already-issued receipts. The author CUT is an independent scope decision, not the registered schedule-slip cut order. [Task 2]
+270:scope: Begin work in Tessera with read-only orientation, project reading order, ownership boundaries, and formal-before-implementation status.
+286:- When beginning work, the user asked the agent to “look around, familiarize yourself,” and welcomed questions -> start read-only, follow the repository reading order, and report readiness before edits. [Task 1]
+
+exec
+/bin/bash -lc "pwd; rg --files -g AGENTS.md -g '*issuance*' -g '*CONFIRM*' -g '*BridgeSlack*'" in /home/tony/projects/tessera
+ succeeded in 0ms:
+/home/tony/projects/tessera
+docs/decisions/2026-10-29-issuance-lifecycle.md
+docs/reviews/amendment-10/CONFIRMATION.md
+docs/reviews/issuer/CODEX-CONFIRM-2.md
+docs/reviews/issuer/CODEX-CONFIRM-3.md
+docs/reviews/issuer/CODEX-CONFIRM.md
+docs/reviews/freeze-record/CODEX-CONFIRM.md
+docs/reviews/amendment-10-r2/CONFIRMATION.md
+docs/reviews/amendment-11/CODEX-CONFIRM-2.md
+docs/reviews/amendment-11/CODEX-CONFIRM-3A.md
+docs/reviews/amendment-11/CODEX-CONFIRM.md
+docs/reviews/amendment-11/CODEX-CONFIRM-4.md
+docs/reviews/amendment-11/CODEX-CONFIRM-3B.md
+docs/reviews/spec-sufficiency/A9-GAP-FIXES-CONFIRMATION.md
+docs/reviews/issuance-lifecycle/CODEX-CONFIRM.md
+docs/reviews/a9-final-delta/CONFIRMATION.md
+formal/tla/P5cP5P6_BridgeSlack.out
+formal/tla/P5cP5P6_BridgeSlack_Latch.tla
+formal/tla/P5cP5P6_BridgeSlack_Latch.cfg
+formal/tla/P5cP5P6_BridgeSlack_Latch.out
+formal/tla/P5cP5P6_BridgeSlack_BrokenSlack.out
+formal/tla/P5cP5P6_BridgeSlack_Sanity.out
+formal/tla/P5cP5P6_BridgeSlack_BrokenSlack.cfg
+formal/tla/P5cP5P6_BridgeSlack_Latch_Sanity.cfg
+formal/tla/P5cP5P6_BridgeSlack_Latch_Sanity.out
+formal/tla/P5cP5P6_BridgeSlack.tla
+formal/tla/P5cP5P6_BridgeSlack.cfg
+formal/tla/P5cP5P6_BridgeSlack_Sanity.cfg
+
+exec
+/bin/bash -lc 'ls -la AGENTS.md; nl -ba docs/decisions/2026-10-29-issuance-lifecycle.md; nl -ba docs/reviews/issuance-lifecycle/CODEX-CONFIRM.md' in /home/tony/projects/tessera
+ succeeded in 0ms:
+ls: cannot access 'AGENTS.md': No such file or directory
+     1	# The issuer implements the registered issuance lifecycle (2026-10-29, revised after review)
+     2	
+     3	> **Status: OWNER DECISION**, by the owner instance (Claude Opus 5.5). It corrects an owner defect found by the
+     4	> Levadura consistency panel (finding c016, `levadura_salvaje/docs/tessera-a11-canary-scorecard.md`). Resolution S4
+     5	> (`docs/V1-SERVICE-RESOLUTIONS.md:23`) and the issuer failed every request 24 hours after acceptance. The
+     6	> registered lifecycle (A2.1, A2.2, A2.3, with A9.2's parameters) has no such deadline and makes "every
+     7	> timely-eligible attempt ships" an obligation on the implementation (`phase-0-prereg-amendment-2.md:143-145`).
+     8	> Registered text governs. No registered sentence changes; owner documents and code do. Revised the same day after
+     9	> Codex's design review (`docs/reviews/issuance-lifecycle/CODEX-REVIEW.md`, IL-01 to IL-07; two prechecks failed on
+    10	> the first version: it carried CF2-01's lease margin into the latch, and it called a nominal budget a bound).
+    11	
+    12	## What is registered
+    13	
+    14	- **Parameters** (A9.2; frozen profile §1): δ = 72 h, ε = 24 h, k = 6, N = 3, S = 24 h.
+    15	- **Attempts** (A2.3, `:259-268`): at most N. Each has its own declared issue time. A retry that changes any
+    16	  committed byte needs a fresh stamp (A9.5, `phase-0-prereg-amendment-9.md:295`), and its signatures are frozen
+    17	  before it is stamped (A9.5, `:290-296`).
+    18	- **Eligibility** (A2.1 `:91-94`; A2.2 `:220-224`; A3.7.3 `:659-673`): the attempt's own authenticated evidence for
+    19	  `SHA256(A_sig)`, with the lowest qualifying height buried k = 6 deep on the pinned, linked segment (profile §7.1),
+    20	  satisfies all three conjuncts: `declared − ε ≤ T`, `T ≤ declared + δ`, and `confirmed_at ≤ declared + δ`. This
+    21	  is narrower than the whole `VALID_STRICT` verdict, and the remaining pre-ship checks stay separate. Rows 12.2 and
+    22	  12.3 of the verifier are two of the conjuncts, not the predicate.
+    23	- **Latch and expiry** (A2.1 `:150-162`): eligibility observed at or before `B = declared + δ + S` is timely. The
+    24	  boundary is inclusive and "latch-winning", and a latched attempt cannot expire. Expiry applies only strictly
+    25	  after B, and only to attempts with no timely-latched eligibility. Atomicity of latch against expiry is an
+    26	  obligation on the implementation (A2.3). If the predicate fails at issuance time, the attempt is discarded and
+    27	  re-issued, subject to N (A2.1 `:161-162`). A lag beyond S *may* be refused (A2.1 `:135-138`); refusing it is not
+    28	  required.
+    29	- **Refusal** (A2.3 `:265-268, :279-281`): exhausting N ends issuance in an explicit refusal, durably recorded, and
+    30	  the transition that expires the final attempt records the refusal in the same step. In V1 the refusal is local and
+    31	  returned by the API (A9.7 row 12; `docs/V1-CLARIFICATIONS.md` CL-03). A3's portable record, commitment and
+    32	  publication are not V1.
+    33	- **Budget** (A2.3 `:271-274, :288-289`): N × (δ + S), twelve days, is a *nominal* budget, "not a proven wall-clock
+    34	  bound". Termination is an obligation on the implementation, not a proven liveness property.
+    35	- **Window** (A9 `:422`): an attempt whose T would exceed not-after is not shipped.
+    36	- **No SLA here** (A2.1 `:139-142`): a hard latency bound may enter only as a deployment-profile item with monitoring
+    37	  and an explicit violation outcome. It never kills an eligible attempt.
+    38	
+    39	## What the issuer does (revision 3, after `CODEX-CONFIRM.md` ILC-01 to ILC-05)
+    40	
+    41	The second revision let any worker latch or expire, and relied on compare-and-set plus re-observation. Codex found
+    42	interleavings in which a stale or partial fetch expires an attempt that another, stalled worker had already observed
+    43	on time (ILC-01). Compare-and-set makes the writes exclusive. It does not make the earlier observation win. Revision 3
+    44	removes the concurrency instead of arbitrating it.
+    45	
+    46	1. **One writer.** Every lifecycle transition (start an attempt, latch, discard, expire, refuse, complete) is made
+    47	   only by the poller, which runs with reserved concurrency 1 (`service/issuer/infra/main.tf:354`). The API is
+    48	   read-only for the lifecycle: `api.status` no longer calls `settle` (`api.py:194`). Every transition is a write
+    49	   guarded on the expected state *and* attempt id, so a write meant for an ended attempt fails (ILC-05).
+    50	2. **Attempt isolation.** As before: each attempt's declared time, frames, signature jobs, proofs and evidence live
+    51	   under its id. A late response names its attempt and can never fill another.
+    52	3. **Latch.** On each poll, for each open attempt, the poller fetches and upgrades the attempt's evidence and
+    53	   evaluates the three-conjunct predicate with k-deep burial (see "What is registered"). If it holds, the poller
+    54	   writes the latch with `observed_at` (a wall reading taken after the evidence is in hand) and the digests of the
+    55	   qualifying presentation, which is kept. The observation counts once that write is durable. A latch may be written
+    56	   at any time before the attempt expires: the A2.1 "may" is exercised permissively.
+    57	4. **Expiry.** An attempt expires only when all of these hold:
+    58	   - (a) it is not latched, as read by the poller in this invocation;
+    59	   - (b) the wall reading, taken after that read, is past `B + WRITE_LEASE_S`. B itself is never moved earlier;
+    60	     waiting the lease longer only lets any latch write from a killed earlier invocation (begun with
+    61	     `observed_at ≤ B`) commit first, under the stated write-duration assumption
+    62	     (`docs/decisions/2026-10-27-service-clock-tolerance.md`);
+    63	   - (c) this invocation's own fresh fetch, from every calendar the attempt was stamped to and the configured
+    64	     explorers, does not establish eligibility.
+    65	
+    66	   Expiry is permitted strictly after B, so expiring later than B is allowed. What remains is a stated residual: an
+    67	   on-time observation that was never made durable (its invocation was killed before the write) is lost if the
+    68	   evidence sources then regress, for example during a calendar or explorer outage. Evidence otherwise only
+    69	   accumulates (calendars do not retract commitments, and burial deepens), so a later fetch sees at least what an
+    70	   earlier one did.
+    71	5. **Unavailable evidence.** If (c) cannot be evaluated because a source is unreachable, the attempt is not expired
+    72	   on that poll. After an operating period past B (runbook), an *unlatched* attempt whose evidence is still
+    73	   unobtainable is ended with reason `EVIDENCE_UNAVAILABLE`. A latched attempt is never ended for unavailability.
+    74	   This is how termination is kept as an obligation on the implementation (A2.3) without inventing a hard bound.
+    75	6. **Permanent failure (discard before B).** A conjunct counts as permanently failed only when *every* proof for the
+    76	   attempt is complete (no pending calendar), so the lowest qualifying height, and with it T and the confirmation
+    77	   segment, can no longer change, and that presentation fails a conjunct. Otherwise the attempt waits (ILC-02).
+    78	7. **After the latch.** The preserved qualifying presentation is used for assembly; it is never swapped for a
+    79	   different, worse one. A transient failure (store, explorer, calendar, DNS snapshot) is retried. The attempt is
+    80	   discarded only for a failure the frozen attempt cannot cure even with recovered evidence: T of the preserved
+    81	   presentation > not-after (A9 `:422`), or a verifier reason that depends only on the attempt's committed bytes.
+    82	   Each discard records its reason (ILC-04).
+    83	8. **Next attempt and refusal.** Ending attempt i and allocating attempt i+1 happen in one guarded write. So a crash
+    84	   cannot leave the request between attempts, and a retry cannot run twice. If i = N, or a new attempt would need
+    85	   signing after the stop, the same write ends the request REFUSED with `ATTEMPTS_EXHAUSTED`, `SIGNING_CLOSED` or
+    86	   `EVIDENCE_UNAVAILABLE`. A closed signing window never ends a latched or already signed and stamped attempt.
+    87	9. **Public view and tolerance.** `fail_after` is withdrawn. The status shows `state`, `attempt` i of N, and for an
+    88	   open, unlatched attempt its B, with a note that the twelve days are nominal. The 15-minute visibility tolerance
+    89	   applies as stated; it never moves B.
+    90	10. **Mechanized check before code.** The protocol in steps 1–8 (one writer, a killed invocation's delayed write,
+    91	    latch, expiry after `B + lease`, discard, allocation of the next attempt) is modelled by extending the existing
+    92	    latch model (`formal/tla/P5cP5P6_BridgeSlack_Latch.tla`), with a broken companion that must go red. The model
+    93	    is the paired formal side of the issuer change.
+    94	
+    95	## Owner documents and code to change
+    96	
+    97	- **Prose:**
+    98	  - S4: drop the 24-hour FAILED. "Usually within 3 hours" stays, stated and unguaranteed. State the attempt
+    99	    lifecycle, the nominal twelve-day budget, and REFUSED with its reasons.
+   100	  - L1: acceptance stops at least δ + S + 24 h before signing stops (an operating margin).
+   101	  - CL-03 item 1 (the closed reason set) and item 2 (it cites 24 hours).
+   102	  - The clock-tolerance decision.
+   103	  - `service/issuer/DESIGN.md`.
+   104	  - Historical reviews and dispositions keep their text and gain a supersession pointer where they still read as
+   105	    current guidance.
+   106	- **Code** (Codex IL-06 inventory):
+   107	  - `service.py:7` (`DEADLINE_S`).
+   108	  - `api.py:12, :52-75, :94`.
+   109	  - `pipeline.py:84-85, :149-150, :194-214` (response routing by attempt), `:263` (`sign_by`), `:475-491`, and the
+   110	    module header.
+   111	  - Tests: `test_faults.py:125-144, :181`; `test_review_fixes.py:95-106`; `test_confirm_fixes.py` (deadline
+   112	    fixtures, CF2-01) are rewritten against the registered lifecycle. The CF2-01 tests become latch and expiry
+   113	    serialization tests.
+   114	- `docs/V1-SERVICE-CONTRACT.md` is unchanged (S4 there says only that completion is not immediate). Nothing goes to
+   115	  tupay (embargo).
+   116	
+   117	## How this happened
+   118	
+   119	S4 was resolved from the outside view, and every review brief since took the resolutions and the design as its
+   120	source of truth, so none compared S4 with A2. Precheck 4 now fails an owner requirement that contradicts a
+   121	registered sentence. Its first catch was this document's own first version, which carried an owner margin into a
+   122	registered boundary.
+     1	**Verdict: not ready to implement.** The revision fixes the predicate definition, removes the early latch cutoff, and corrects the twelve-day claim. Step 3 still does not establish latch-winning atomicity; steps 4 and 6 introduce additional ways to discard protected attempts.
+     2	
+     3	Review was read-only. Scratch enumeration is in [interleavings.txt](/tmp/tmp.f0QJh9236H/interleavings.txt). No repository edits or git writes were made.
+     4	
+     5	### A. Confirmation of IL-01–07
+     6	
+     7	Here, **CLOSED** means the revised design addresses the finding, not that implementation conformance has been established.
+     8	
+     9	| Finding | Status | Assessment |
+    10	|---|---|---|
+    11	| **IL-01: eligibility definition** | **CLOSED** | [Revision:18–22](/home/tony/projects/tessera/docs/decisions/2026-10-29-issuance-lifecycle.md:18) includes authenticated, attempt-bound evidence, six-deep burial, and all three conjuncts. This matches A2.1’s “**full three-conjunct temporal predicate**” ([A2:91–94](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-2.md:91)), A2.2’s `declared − ε ≤ anchor_time`, `anchor_time ≤ declared + δ`, and `confirmed_at ≤ declared + δ` ([A2:220–224](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-2.md:220)). A3.7.3 expressly retains “the three-conjunct temporal predicate plus the burial-depth requirement,” without requiring the whole envelope verification at ship ([A3:659–673](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-3.md:659)). |
+    12	| **IL-02: latch boundary and atomicity** | **PARTIAL** | The prohibited margin is removed at revision:47–48, 81–83. However, re-observation plus CAS does not meet “**inclusive and latch-winning**” or “**Atomicity of the latch against the expiry transition**” ([A2:153–160](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-2.md:153)). See ILC-01. |
+    13	| **IL-03: late-observation policy** | **CLOSED** | [Revision:58–59](/home/tony/projects/tessera/docs/decisions/2026-10-29-issuance-lifecycle.md:58) consistently permits late-observed eligibility while open and prohibits reopening expired attempts. A2.1 says an attempt whose lag exceeds S “**may be refused**” ([A2:135–138](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-2.md:135)); refusal is optional. The policy is permissible, although its concurrency implementation remains defective. |
+    14	| **IL-04: nominal budget** | **CLOSED** | Revision:33–34, 79–80 correctly follow “a **nominal lifecycle budget**” and “**not a proven wall-clock bound**” ([A2:271–274](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-2.md:271)). |
+    15	| **IL-05: durable refusal and API** | **PARTIAL** | Revision:67–71 specifies atomic durable refusal and API delivery; revision:91 includes CL-03’s reason set. These address “**explicit refusal, durably recorded**” and refusal “**in the same step**” as final expiry ([A2:265–281](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-2.md:265)). A9.7 row 12 substitutes “**Bounded local refusal returned by the API**” ([A9:476](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-9.md:476)). But `EVIDENCE_UNAVAILABLE` lacks a safe terminal-transition rule; see ILC-03. |
+    16	| **IL-06: change inventory/public semantics** | **CLOSED** | Revision:85–105 incorporates the identified implementation, test and prose sites. Revision:78–80 withdraws misleading `fail_after` semantics. This closes the design inventory finding; it does not certify that future edits cover every dependency. |
+    17	| **IL-07: isolation and failure handling** | **PARTIAL** | Attempt isolation and signing closure are substantially addressed. Revision:64 follows A9.5: “**A retry that changes any committed byte needs a fresh stamp**”; the registered order freezes signatures before stamping ([A9:290–296](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-9.md:290)). Permanent-failure classification and post-latch discard remain underspecified; see ILC-02 and ILC-04. |
+    18	
+    19	The profile was checked using `git show 270ca49:docs/V1-PROFILE.md`. Its §7.1 states:
+    20	
+    21	> “T is the time of the verified attestation at the **lowest block height** in the presented OTS proof” — lines 860–862.
+    22	
+    23	> “It is presentation-sensitive: a different presentation of the same receipt can select a different T.” — lines 861–862.
+    24	
+    25	Qualification requires the pinned, linked `h…h+5` segment, and an incomplete branch “supplies no time or trust fact” — lines 879–888. These qualifications are central to the remaining defects.
+    26	
+    27	### B. Step 3 concurrency review
+    28	
+    29	**ILC-01 — High: re-observation does not make a timely observation win.**
+    30	
+    31	Affected text: [revision:45–59](/home/tony/projects/tessera/docs/decisions/2026-10-29-issuance-lifecycle.md:45), especially the assertion at lines 54–56.
+    32	
+    33	Let L be the latching worker and E the expiring worker. Both initially read version v, OPEN.
+    34	
+    35	| Interleaving or condition | Result |
+    36	|---|---|
+    37	| L observes qualifying evidence by B and commits its latch before E’s CAS | Safe: E’s CAS fails. |
+    38	| E reads first; L subsequently commits; E then tries its old-version write | Safe: E’s CAS fails. |
+    39	| L observes by B; its write stalls; E reads OPEN after B, independently fetches an older/pending proof, and commits expiry | **Violation:** L’s CAS subsequently fails. A timely-eligible attempt expires. |
+    40	| E fetches partial evidence; L has the complete pinned segment; E treats “predicate not established” as false | **Same violation.** Successful fetching is not proof of completeness or absence. |
+    41	| L crashes after timely observation but before its write; E later obtains poorer evidence | No durable observation protects the attempt. It may expire. Crash recovery is unspecified. |
+    42	| E fetches pending evidence; OTS upgrade becomes available; L fetches it by B; E delays its expiry write until after B | **Violation possible.** E’s decision is based on evidence that no longer represents what another worker observed. |
+    43	| Both independently fetch the same complete qualifying evidence | E cannot legitimately conclude false. Re-observation works in this restricted case. |
+    44	| Explorers disagree | Neither “the latest fetch wins” nor one worker’s failure establishes authoritative absence. The design gives no reconciliation rule. |
+    45	| A reorganisation shallower than six displaces a successor near the tip | It can disrupt a newly six-deep observation without removing its inclusion block. A later fetch can lack the former six-header view. Re-fetching must not silently erase the preserved authenticated observation; pin conflicts require explicit handling. |
+    46	| Workers’ wall clocks differ | One can decide “after B” while another records “at B.” The note does not define a common lifecycle clock or ordering that makes these decisions consistent. Its visibility tolerance supplies neither. |
+    47	
+    48	A small exhaustive enumeration of the six read/observe/write events, constrained so L’s timely observation precedes E’s post-B fetch, produced **10 schedules; expiry won in three** when E received stale negative evidence. This is a bounded counterexample enumeration, not a model discharge.
+    49	
+    50	The decisive schedule is:
+    51	
+    52	```text
+    53	L reads v
+    54	L observes qualifying evidence at B
+    55	E reads v, OPEN
+    56	E reads time > B and fetches stale/pending evidence
+    57	E CAS(v → EXPIRED) succeeds
+    58	L CAS(v → LATCHED) fails
+    59	```
+    60	
+    61	CAS establishes exclusive writes. It does **not** establish precedence of an earlier observation over a later terminal write. Step 3 therefore **does not meet the registered latch obligation**.
+    62	
+    63	For a fixed, correctly authenticated presentation, these races do not by themselves allow a false predicate to latch: step 2 still requires it to hold. Accepting an observation after B is also expressly permitted by this design. However, the design must distinguish a valid latch on one presentation from a later, different presentation that fails.
+    64	
+    65	The repair must specify how observation and terminal decisions are serialized, how pending observations survive crashes, and how stale/partial evidence is distinguished from a conclusive negative. Another CAS alone is insufficient.
+    66	
+    67	**ILC-03 — High: the unavailable-evidence timeout bypasses the protection step 3 needs.**
+    68	
+    69	Affected text: [revision:56–59, 67–71](/home/tony/projects/tessera/docs/decisions/2026-10-29-issuance-lifecycle.md:56).
+    70	
+    71	“Evidence unavailable means do not expire” permits an **unbounded wait** under an indefinitely unavailable source. Calling twelve days nominal is correct, but A2.3 still makes termination a contract obligation ([A2:288–289](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-2.md:288)).
+    72	
+    73	Step 6 supplies a finite operating timeout, but elapsed time alone does not establish its authorization:
+    74	
+    75	- A2.1 permits refusal when the observation lag exceeds S.
+    76	- An outage at E does not establish that no worker observed eligibility by B.
+    77	- A timely observation may be pending, crashed before persistence, or durably latched elsewhere.
+    78	- Step 6 does not expressly restrict this refusal to an unlatched OPEN attempt or make it respect the latch/expiry serialization.
+    79	
+    80	Consequently, **step 6 is not demonstrated consistent with A2.1 and A2.3**. A finite refusal policy can be compatible for genuinely unprotected attempts; this note does not define how it establishes that condition. It must never refuse a latched attempt merely because evidence later becomes unavailable.
+    81	
+    82	### C. Discard, signing closure and shipping
+    83	
+    84	**ILC-02 — High: step 4’s example does not establish permanent failure.**
+    85	
+    86	Affected text: [revision:60–62](/home/tony/projects/tessera/docs/decisions/2026-10-29-issuance-lifecycle.md:60).
+    87	
+    88	A2.1 authorizes discard when:
+    89	
+    90	> “the predicate fails **at issuance time**” — [A2:161–162](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-2.md:161).
+    91	
+    92	It does not make every unsuccessful evidence fetch an irrevocable failure.
+    93	
+    94	A currently presented proof whose lowest qualifying height has a late timestamp can later acquire a **lower qualifying attestation**. The selected T and confirmation segment then change. With nonmonotone header times, neither height order nor one late timestamp proves every possible qualifying presentation fails.
+    95	
+    96	Thus step 4 is consistent **only when permanence is actually established**. Its example, as written, establishes failure of the current presentation, not permanent failure of the attempt. It could discard an attempt for which another worker already holds timely qualifying evidence.
+    97	
+    98	Signing closure in [revision:63–66](/home/tony/projects/tessera/docs/decisions/2026-10-29-issuance-lifecycle.md:63) is otherwise sound: it prevents fresh signatures while preserving latched and already signed/stamped attempts that can finish. Refusal for `SIGNING_CLOSED` must occur only after the current attempt has legitimately ended and a fresh attempt would require prohibited signing.
+    99	
+   100	**ILC-04 — Medium: step 7 has a valid safety exception but an overbroad discard category.**
+   101	
+   102	Affected text: [revision:72–77](/home/tony/projects/tessera/docs/decisions/2026-10-29-issuance-lifecycle.md:72).
+   103	
+   104	Two registered constraints limit shipping:
+   105	
+   106	> “a receipt ships only when complete; an operator refusal never concerns a shipped receipt” — [A9:165](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-9.md:165).
+   107	
+   108	> “An attempt whose T would exceed not-after is not shipped.” — [A9:422–423](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-9.md:422).
+   109	
+   110	Accordingly, **a temporal latch does not compel shipping an incomplete or otherwise prohibited receipt**. Step 7’s genuine, irreparable `T > not-after` case is consistent with the issuer invariant. Neither the temporal predicate nor A3.7.3 establishes full envelope validity.
+   111	
+   112	However:
+   113	
+   114	- “A verifier verdict other than `VALID_STRICT`” is not itself evidence of permanent failure.
+   115	- Missing snapshots, proofs, headers or storage objects can be recoverable.
+   116	- A different proof can select a different T; the issuer must preserve the qualifying presentation rather than replace it with a worse one and call the result incurable.
+   117	- A2.1:161–162 addresses failure of the temporal predicate, not arbitrary post-latch finalization failures.
+   118	
+   119	**Step 7 honours the shipping obligation only if “permanent” means that the frozen attempt cannot be completed lawfully, including by recovering evidence and using its preserved qualifying proof.** As written, it does not establish that restriction tightly enough. A valid, complete, timely-eligible attempt must not be discarded for scheduling delay, transient dependency failure, or an avoidable change of presentation.
+   120	
+   121	### D. Additional defect
+   122	
+   123	**ILC-05 — Medium: terminal-state guards and retry recovery remain unspecified.**
+   124	
+   125	At [revision:45–75](/home/tony/projects/tessera/docs/decisions/2026-10-29-issuance-lifecycle.md:45), step 2 describes a CAS latch without explicitly requiring OPEN/current-attempt state; steps 4 and 7 do not specify equivalent guarded discard transitions. Step 5 also leaves recovery between ending attempt i and creating i+1 undefined.
+   126	
+   127	Require explicit transition guards, atomic attempt allocation or idempotent recovery, and re-evaluation after CAS failure. Otherwise delayed workers can act on ended attempts, retries can duplicate, or a crash can leave the request between attempts. “An expired attempt is never reopened” states the intended invariant but does not specify its enforcement.
+   128	
+   129	### Owner prechecks
+   130	
+   131	| Check | Result | Evidence |
+   132	|---|---|---|
+   133	| **1. Capture row** | **PASS** | Revision:18–22, 41–44 makes no claim that dual-channel capture rejects attacker keys or reveals capture. [Contract:35–37, 72–73](/home/tony/projects/tessera/docs/V1-CONTRACT.md:35) still governs: attacker-key receipts can pass; issuing-account capture permits signing. |
+   134	| **2. Trigger clause** | **FAIL** | Revision:60–62 treats failure of one presented proof as permanent attempt failure. Revision:67–71 uses evidence unavailability as a refusal trigger without establishing absence of protected timely eligibility. Neither cited registered consequence follows from those facts alone. |
+   135	| **3. Requester** | **PASS** | Revision:41–44, 63–66 discusses attempt-labelled signature work and signing closure; it makes no security claim based solely on key location or independent signer control. This does not establish requester authorization conformance. |
+   136	| **4. Binding text** | **FAIL** | Revision:54–56 asserts a latch guarantee its mechanism does not provide. Revision:60–62 and 67–71 permit terminal outcomes without establishing their compatibility with A2.1’s protected eligibility. Owner operating numbers cannot override that registered obligation. |
+   137	
+
+exec
+/bin/bash -lc "nl -ba formal/tla/P5cP5P6_BridgeSlack_Latch.tla; nl -ba service/issuer/infra/main.tf | sed -n '320,410p'; nl -ba service/issuer/tessera_issue/api.py | sed -n '130,225p'" in /home/tony/projects/tessera
+ succeeded in 0ms:
+     1	------------------------- MODULE P5cP5P6_BridgeSlack_Latch -------------------------
+     2	(***************************************************************************)
+     3	(* Latch variant of the slack analysis (P5cP5P6_BridgeSlack.tla) —        *)
+     4	(* non-author bench contract, Codex constraint 1 (2026-07-21): "the       *)
+     5	(* lifecycle decision must use — or atomically latch — B [the wall time   *)
+     6	(* eligibility is reached], not the eventual execution time of Ship,"     *)
+     7	(* else the interleaving scheduler can manufacture expiry despite         *)
+     8	(* sufficient slack — a modeling artifact, not the clock question.        *)
+     9	(*                                                                          *)
+    10	(* ONE-CONJUNCT DIFFERENCE from P5cP5P6_BridgeSlack: Ship's lifecycle     *)
+    11	(* guard is `burialAtWall <= declared + Delta + Slack` (timeliness        *)
+    12	(* latched at the eligibility instant B) instead of                        *)
+    13	(* `now <= declared + Delta + Slack` (checked at execution). Under latch  *)
+    14	(* semantics an attempt whose eligibility arrived inside the envelope     *)
+    15	(* may ship at ANY later wall time — the scheduler cannot expire it —     *)
+    16	(* and discard semantics are ruled by B alone. The base module's          *)
+    17	(* analysis invariant (defined on B) is carried UNCHANGED and was never   *)
+    18	(* exposed to the artifact; what this variant adds to the checked space   *)
+    19	(* is the shipped states the execution-time guard excluded (ship after    *)
+    20	(* the wall envelope with timely eligibility — the PostEnvelopeShip       *)
+    21	(* sanity witness).                                                        *)
+    22	(*                                                                          *)
+    23	(* Everything else — constants, actions, transcriptions, the L-as-        *)
+    24	(* declared-assumption CORRECTION — is the base module's; see its header.  *)
+    25	(***************************************************************************)
+    26	EXTENDS Integers, Sequences
+    27	
+    28	CONSTANTS MaxTime, Delta, Epsilon, KConf, DepthK, MaxSkew, MaxBlocks, Slack
+    29	
+    30	ASSUME /\ Delta \in Nat /\ Epsilon \in Nat /\ MaxTime \in Nat
+    31	       /\ KConf \in Nat \ {0} /\ DepthK \in Nat \ {0}
+    32	       /\ MaxSkew \in Nat /\ MaxBlocks \in Nat \ {0}
+    33	       /\ Slack \in Nat
+    34	
+    35	NoAnchor == -1
+    36	NoTime   == -1
+    37	
+    38	VARIABLES
+    39	  now, chain, declared, anchorH, pendingAnchor, shipped, shipAtWall,
+    40	  burialAtWall
+    41	
+    42	vars == <<now, chain, declared, anchorH, pendingAnchor, shipped, shipAtWall,
+    43	          burialAtWall>>
+    44	
+    45	BlockTimestamps == {t \in 0..(MaxTime + MaxSkew) :
+    46	                      t >= now - MaxSkew /\ t <= now + MaxSkew}
+    47	
+    48	(* Latched lifecycle: timeliness fixed at the eligibility instant B.      *)
+    49	EligibleInLifecycle == burialAtWall <= declared + Delta + Slack
+    50	
+    51	Init ==
+    52	  /\ now = 0 /\ chain = <<>>
+    53	  /\ declared = NoTime /\ anchorH = NoAnchor /\ pendingAnchor = FALSE
+    54	  /\ shipped = FALSE /\ shipAtWall = NoTime /\ burialAtWall = NoTime
+    55	
+    56	Tick ==
+    57	  /\ now < MaxTime
+    58	  /\ now' = now + 1
+    59	  /\ UNCHANGED <<chain, declared, anchorH, pendingAnchor, shipped, shipAtWall,
+    60	                 burialAtWall>>
+    61	
+    62	NewBlock ==
+    63	  /\ Len(chain) < MaxBlocks
+    64	  /\ \E ts \in BlockTimestamps :
+    65	       chain' = Append(chain, ts)
+    66	  /\ anchorH' = IF pendingAnchor THEN Len(chain) + 1 ELSE anchorH
+    67	  /\ pendingAnchor' = FALSE
+    68	  /\ burialAtWall' = IF /\ burialAtWall = NoTime
+    69	                        /\ anchorH' # NoAnchor
+    70	                        /\ Len(chain) + 1 >= anchorH' + DepthK
+    71	                     THEN now ELSE burialAtWall
+    72	  /\ UNCHANGED <<now, declared, shipped, shipAtWall>>
+    73	
+    74	Declare ==
+    75	  /\ declared = NoTime
+    76	  /\ declared' = now
+    77	  /\ UNCHANGED <<now, chain, anchorH, pendingAnchor, shipped, shipAtWall,
+    78	                 burialAtWall>>
+    79	
+    80	AnchorNext ==
+    81	  /\ declared # NoTime /\ anchorH = NoAnchor /\ ~pendingAnchor
+    82	  /\ pendingAnchor' = TRUE
+    83	  /\ UNCHANGED <<now, chain, declared, anchorH, shipped, shipAtWall,
+    84	                 burialAtWall>>
+    85	
+    86	IssuerDesignatedH == anchorH + DepthK
+    87	IssuerConfirmedTs == chain[IssuerDesignatedH]
+    88	
+    89	VerifierDesignatedH(h) == h + KConf - 1
+    90	VerifierConfirmedTs(h) == chain[VerifierDesignatedH(h)]
+    91	
+    92	VerdictValid(d, h) ==
+    93	  /\ d - Epsilon <= chain[h]
+    94	  /\ chain[h] <= d + Delta
+    95	  /\ VerifierConfirmedTs(h) <= d + Delta
+    96	
+    97	(* Ship under latch: chain guard unchanged; lifecycle guard on B.         *)
+    98	(* Eligibility (buried to depth) implies burialAtWall # NoTime.            *)
+    99	Ship ==
+   100	  /\ ~shipped /\ anchorH # NoAnchor
+   101	  /\ Len(chain) >= IssuerDesignatedH
+   102	  /\ declared - Epsilon <= chain[anchorH]
+   103	  /\ chain[anchorH] <= declared + Delta
+   104	  /\ IssuerConfirmedTs <= declared + Delta
+   105	  /\ EligibleInLifecycle                           \* the latch, per contract
+   106	  /\ shipped' = TRUE /\ shipAtWall' = now
+   107	  /\ UNCHANGED <<now, chain, declared, anchorH, pendingAnchor, burialAtWall>>
+   108	
+   109	Next == Tick \/ NewBlock \/ Declare \/ AnchorNext \/ Ship
+   110	
+   111	(* Terminal states deadlock at the bounds — run TLC with -deadlock.        *)
+   112	
+   113	(***************************************************************************)
+   114	(* Invariants — identical statements to the base module.                   *)
+   115	(***************************************************************************)
+   116	
+   117	PinAgreement == DepthK = KConf - 1
+   118	
+   119	ShippedDesignatedAgree ==
+   120	  shipped =>
+   121	    /\ IssuerDesignatedH = VerifierDesignatedH(anchorH)
+   122	    /\ IssuerConfirmedTs = VerifierConfirmedTs(anchorH)
+   123	
+   124	HonestShipAccepted ==
+   125	  shipped => VerdictValid(declared, anchorH)
+   126	
+   127	LateBurialRejected ==
+   128	  (/\ anchorH # NoAnchor /\ ~shipped
+   129	   /\ Len(chain) >= VerifierDesignatedH(anchorH)
+   130	   /\ VerifierConfirmedTs(anchorH) > declared + Delta)
+   131	  => ~VerdictValid(declared, anchorH)
+   132	
+   133	ChainValidBurialInLifecycle ==
+   134	  (/\ anchorH # NoAnchor /\ burialAtWall # NoTime
+   135	   /\ VerdictValid(declared, anchorH))
+   136	  => burialAtWall <= declared + Delta + Slack
+   137	
+   138	(* Sanity witnesses (violations healthy): shipping reachable; the state   *)
+   139	(* the execution-time guard forbade is live — shipped AFTER the wall      *)
+   140	(* envelope on timely eligibility (the latch's point: the scheduler       *)
+   141	(* cannot expire an eligible attempt).                                     *)
+   142	ShipUnreachable == ~shipped
+   143	PostEnvelopeShipUnreachable ==
+   144	  ~(shipped /\ shipAtWall > declared + Delta + Slack)
+   145	
+   146	================================================================================
+   320	resource "aws_cloudwatch_log_group" "api" {
+   321	  name              = "/aws/lambda/${var.name}-api"
+   322	  retention_in_days = 30
+   323	}
+   324	
+   325	resource "aws_cloudwatch_log_group" "poller" {
+   326	  name              = "/aws/lambda/${var.name}-poller"
+   327	  retention_in_days = 30
+   328	}
+   329	
+   330	resource "aws_lambda_function" "api" {
+   331	  function_name    = "${var.name}-api"
+   332	  role             = aws_iam_role.api.arn
+   333	  runtime          = var.lambda_runtime
+   334	  handler          = "tessera_issue.lambda_app.api_handler"
+   335	  filename         = var.lambda_zip
+   336	  source_code_hash = filebase64sha256(var.lambda_zip)
+   337	  timeout          = 29
+   338	  memory_size      = 512
+   339	  environment {
+   340	    variables = local.lambda_env
+   341	  }
+   342	  depends_on = [aws_cloudwatch_log_group.api]
+   343	}
+   344	
+   345	resource "aws_lambda_function" "poller" {
+   346	  function_name                  = "${var.name}-poller"
+   347	  role                           = aws_iam_role.poller.arn
+   348	  runtime                        = var.lambda_runtime
+   349	  handler                        = "tessera_issue.lambda_app.poller_handler"
+   350	  filename                       = var.lambda_zip
+   351	  source_code_hash               = filebase64sha256(var.lambda_zip)
+   352	  timeout                        = 300
+   353	  memory_size                    = 1024
+   354	  reserved_concurrent_executions = 1 # one poller at a time; records are also compare-and-set
+   355	  environment {
+   356	    variables = local.lambda_env
+   357	  }
+   358	  depends_on = [aws_cloudwatch_log_group.poller]
+   359	}
+   360	
+   361	resource "aws_cloudwatch_event_rule" "poll" {
+   362	  name                = "${var.name}-poll"
+   363	  schedule_expression = "rate(10 minutes)"
+   364	}
+   365	
+   366	resource "aws_cloudwatch_event_target" "poll" {
+   367	  rule = aws_cloudwatch_event_rule.poll.name
+   368	  arn  = aws_lambda_function.poller.arn
+   369	}
+   370	
+   371	resource "aws_lambda_permission" "poll" {
+   372	  statement_id  = "AllowSchedule"
+   373	  action        = "lambda:InvokeFunction"
+   374	  function_name = aws_lambda_function.poller.function_name
+   375	  principal     = "events.amazonaws.com"
+   376	  source_arn    = aws_cloudwatch_event_rule.poll.arn
+   377	}
+   378	
+   379	# ------------------------------------------------------------------------------------------------ API Gateway
+   380	resource "aws_api_gateway_rest_api" "issuer" {
+   381	  name               = var.name
+   382	  binary_media_types = ["*/*"] # request bodies arrive base64-encoded, byte-exact
+   383	  endpoint_configuration {
+   384	    types = ["REGIONAL"]
+   385	  }
+   386	}
+   387	
+   388	resource "aws_api_gateway_resource" "v1" {
+   389	  rest_api_id = aws_api_gateway_rest_api.issuer.id
+   390	  parent_id   = aws_api_gateway_rest_api.issuer.root_resource_id
+   391	  path_part   = "v1"
+   392	}
+   393	
+   394	resource "aws_api_gateway_resource" "requests" {
+   395	  rest_api_id = aws_api_gateway_rest_api.issuer.id
+   396	  parent_id   = aws_api_gateway_resource.v1.id
+   397	  path_part   = "requests"
+   398	}
+   399	
+   400	resource "aws_api_gateway_resource" "request" {
+   401	  rest_api_id = aws_api_gateway_rest_api.issuer.id
+   402	  parent_id   = aws_api_gateway_resource.requests.id
+   403	  path_part   = "{key}"
+   404	}
+   405	
+   406	resource "aws_api_gateway_resource" "receipt" {
+   407	  rest_api_id = aws_api_gateway_rest_api.issuer.id
+   408	  parent_id   = aws_api_gateway_resource.request.id
+   409	  path_part   = "receipt"
+   410	}
+   130	    """IS-05: content is stored only by a request that already owns its record (stage "upload"). -> record."""
+   131	    iss.results.put("content", rec["rid"], content_name(rec["content_sha256"]), body)
+   132	    rec["stage"] = "frames"
+   133	    if iss.requests.save(rec):
+   134	        return rec
+   135	    cur = iss.requests.get(rec["rid"])                         # moved on concurrently (another retry, the poller)
+   136	    if cur is not None and cur["state"] != "ACCEPTED":
+   137	        iss.results.delete("content", rec["rid"])              # ended meanwhile: nothing may keep the content
+   138	    return cur
+   139	
+   140	
+   141	def submit(iss, credential, request_key, body):
+   142	    if not credential:
+   143	        return Response(401, {"error": "UNAUTHENTICATED"})
+   144	    if not isinstance(request_key, str) or not UUID_RE.match(request_key):
+   145	        return Response(400, {"state": "REFUSED", "reason": "BAD_REQUEST",
+   146	                              "detail": "header Tessera-Request-Key must be a UUID"})
+   147	    key = request_key.lower()
+   148	    rid = record_id(credential, key)
+   149	    digest = sha256hex(body)
+   150	    rec = iss.requests.get(rid)
+   151	    if rec is not None:
+   152	        return _existing(iss, rec, digest, body)
+   153	    if iss.requests.tombstone_get(rid) is not None:          # the record is gone; the key is never reused
+   154	        rec = iss.requests.get(rid)                          # (or it was created concurrently: answer as a repeat)
+   155	        if rec is not None:
+   156	            return _existing(iss, rec, digest, body)
+   157	        return Response(410, {"request_key": key, "state": "EXPIRED"})
+   158	    now = iss.clock()                                        # CF3-02: after the reads (the create is the tolerance)
+   159	    reason = None
+   160	    if len(body) > MIB:
+   161	        reason = "TOO_LARGE"
+   162	    elif iss.closing:
+   163	        reason = "CLOSING"
+   164	    elif not iss.window.nb <= now <= iss.window.accept_until:
+   165	        reason = "OUTSIDE_WINDOW"
+   166	    elif not iss.signing_available:
+   167	        reason = "SIGNING_UNAVAILABLE"
+   168	    rec = _new_record(rid, credential, key, digest, len(body), now)
+   169	    if reason:                                               # S3: final; S6: refused content is not stored
+   170	        rec.update(state="REFUSED", reason=reason, ended_at=now, expires_at=now + RETENTION_S)
+   171	    else:
+   172	        rec.update(state="ACCEPTED", stage="upload")         # IS-05: own the key before storing any content
+   173	    rec["events"].append([now, "submitted", rec["state"], reason])
+   174	    if not iss.requests.create(rec, iss.tombstone_until):    # IS-04: record and tombstone in one atomic write
+   175	        return _existing(iss, iss.requests.get(rid), digest, body)        # lost a race with the same key
+   176	    if rec["state"] == "ACCEPTED":
+   177	        rec = _finish_upload(iss, rec, body) or rec
+   178	    return Response(_original_status(rec), view(rec, now))
+   179	
+   180	
+   181	def status(iss, credential, key):
+   182	    if not credential:
+   183	        return Response(401, {"error": "UNAUTHENTICATED"})
+   184	    if not isinstance(key, str) or not UUID_RE.match(key):
+   185	        return Response(400, {"error": "BAD_REQUEST"})
+   186	    rid = record_id(credential, key.lower())
+   187	    rec = iss.requests.get(rid)
+   188	    now = iss.clock()                                    # CF2-02: read after the record, as receipt() does
+   189	    if rec is None:
+   190	        if iss.requests.tombstone_get(rid) is not None:
+   191	            return Response(200, {"request_key": key.lower(), "state": "EXPIRED"})
+   192	        return Response(404, {"error": "NOT_FOUND"})
+   193	    if not confirmed(rec):
+   194	        settle(iss, rec)                                 # CF-01
+   195	        now = iss.clock()
+   196	    return Response(200, view(rec, now))
+   197	
+   198	
+   199	def receipt(iss, credential, key):
+   200	    """IS-06 (owner decision): one plain GET. After the credential check (the record id is scoped to the credential)
+   201	    and only for a COMPLETE, unexpired request, mint a fresh pre-signed URL valid for RECEIPT_URL_TTL_S and answer 303.
+   202	    Nothing is minted otherwise; minted URLs are never stored or reused."""
+   203	    r = status(iss, credential, key)
+   204	    if r.status != 200:
+   205	        return r
+   206	    v = r.body
+   207	    if v["state"] == "EXPIRED":
+   208	        return Response(410, v)
+   209	    if v["state"] != "COMPLETE":
+   210	        return Response(409, v)
+   211	    rid = record_id(credential, key.lower())
+   212	    if iss.results.size("result", rid, "receipt.json") is None:
+   213	        return Response(410, {"request_key": v["request_key"], "state": "EXPIRED"})
+   214	    rec = iss.requests.get(rid)
+   215	    now = iss.clock()                                    # CF-03, CF2-02: after every read, just before minting
+   216	    if rec is None or _expired(rec, now):
+   217	        return Response(410, {"request_key": v["request_key"], "state": "EXPIRED"})
+   218	    url = iss.results.presign("result", rid, "receipt.json", RECEIPT_URL_TTL_S, now)
+   219	    return Response(303, {}, {"Location": url, "Tessera-Receipt-SHA256": v["receipt_sha256"],
+   220	                              "Cache-Control": "no-store"})
+   221	
+   222	
+   223	def encode(resp):
+   224	    """-> (status, headers, body bytes)."""
+   225	    if isinstance(resp.body, (bytes, bytearray)):
+
+exec
+/bin/bash -lc "nl -ba docs/phase-0-prereg-amendment-2.md | sed -n '85,165p;250,290p'; nl -ba docs/reviews/issuance-lifecycle/CODEX-CONFIRM.md | sed -n '65,120p'; nl -ba docs/decisions/2026-10-27-service-clock-tolerance.md" in /home/tony/projects/tessera
+ succeeded in 0ms:
+    85	    confirmed_at  :=  timestamp(block at height h + k − 1)
+    86	
+    87	**The rule.** Issuance is complete only if
+    88	
+    89	    confirmed_at  ≤  declared_issue_time + δ
+    90	
+    91	The issuer evaluates this conjunct **as part of the full three-conjunct
+    92	temporal predicate** (the P5 temporal test inside `VALID_STRICT`; all
+    93	three A2.2 conjuncts — not the whole verdict, which contains more than
+    94	the temporal test) before shipping: under
+    95	skewed, non-monotonic block timestamps the confirmation conjunct does
+    96	not imply the anchor-time conjunct, so shipping on this conjunct alone
+    97	could ship a receipt the verifier rejects (surfaced by the bridge model,
+    98	`formal/tla/P5cP5P6_Bridge.tla`, 2026-07-21). The verifier evaluates the
+    99	same conjuncts on the same chain observables at verification (A2.2),
+   100	**under the issuance policy's tolerances**: the verifier-owns-tolerances
+   101	discipline permits stricter verifier values of either tolerance (a
+   102	stricter δ′ < δ, or a stricter ε′ on the anchor-time lower bound), and
+   103	such a verifier may reject honestly-shipped receipts — the
+   104	no-disagreement guarantee below is scoped to verification under the
+   105	issuance policy's δ and ε.
+   106	**Clock roles (ruling, 2026-07-21).** Chain time and wall time hold
+   107	separate, explicitly-ranked roles. **Chain time governs evidence:** the
+   108	three-conjunct predicate above, evaluated identically by issuer and
+   109	verifier on the designated blocks' timestamps. **Wall time governs the
+   110	attempt lifecycle:** the service waits through `declared + δ + S` before
+   111	treating an attempt as expired, where S ≥ 0 is an **operational slack
+   112	constant** joining δ, ε, k, N for ratification at Band 0 exit (working
+   113	default S = 24 h, sized to the observation path — outages and polling,
+   114	not timestamp skew alone). **No global bound on the backward observation
+   115	lag is assumed.** Writing C = `confirmed_at` and B = the service's
+   116	wall-clock observation of the designated block: Bitcoin consensus
+   117	provides no finite bound on B − C (median-time-past and the two-hour
+   118	future rule bound the forward direction only), and B additionally
+   119	absorbs the entire observation path — network and header-store delay,
+   120	polling, outage and recovery, wall-clock error. Registering a hard
+   121	bound would assert, at Phase 0, a property of an operational stack that
+   122	does not yet exist. Instead the guarantee is registered **conditionally
+   123	on the observable antecedent**: *if B − C ≤ S for an attempt whose
+   124	predicate holds, that attempt has a live shipping opportunity at
+   125	eligibility* (slack-parameter analysis,
+   126	`formal/tla/P5cP5P6_BridgeSlack.tla` and its `_Latch` variant;
+   127	predictions-first record in
+   128	`docs/reviews/2026-07-21-claude-predictions-slack-bench.md`). Since B
+   129	and C are both observable, a violated antecedent is a detectable
+   130	operating-envelope event, not a silently failed assumption. Timeliness
+   131	is **latched at eligibility**: an attempt eligible within the envelope
+   132	cannot be expired by later packaging or scheduling delay —
+   133	eligible/finalizing, shipped, and expired/refused are mutually
+   134	exclusive states (a construction obligation on the implementation,
+   135	registered with the ruling). An attempt whose lag exceeds S may be
+   136	refused; a chain-valid artifact of such an attempt remains
+   137	cryptographically valid and evidentially admissible but carries **no
+   138	protocol standing** (A2.4; enforcing that distinction against later
+   139	publication is Amendment 3's lineage/standing obligation). If
+   140	operational evidence later supports an SLA-style hard bound, it may
+   141	enter a **deployment profile** with monitoring and an explicit
+   142	violation outcome — never this pre-registration's assumption set. What
+   143	the opportunity guarantee buys is opportunity, not outcome: "every
+   144	timely-eligible attempt ships" is a contract obligation on the
+   145	implementation, the same proof-versus-contract split as A2.3's refusal.
+   146	
+   147	**Boundary ties, registered per clock.** The chain-side predicate is
+   148	stateless: at exactly `confirmed_at = declared + δ` it holds, and holds
+   149	identically whenever evaluated — there is no chain-side race. The
+   150	wall-side boundary is **resolved by the latch, not raced** (round-3
+   151	repair, 2026-07-21: an earlier draft of this paragraph carried the
+   152	fused-clock race forward; under latched eligibility there is none).
+   153	Eligibility observed at exactly `B = declared + δ + S` is timely — the
+   154	boundary is **inclusive and latch-winning**, matching the mechanized
+   155	form (`burialAtWall <= declared + Delta + Slack` in the `_Latch`
+   156	companion) — so such an attempt latches eligible/finalizing and cannot
+   157	expire. Expiry (on the final attempt, refusal) applies only **strictly
+   158	after** the boundary, and only to attempts with no timely-latched
+   159	eligibility. Atomicity of the latch against the expiry transition is
+   160	part of the mutual-exclusion construction obligation (A2.3). If the
+   161	predicate fails at issuance time, the attempt is discarded and
+   162	re-issued per the P5 corollary, subject to the attempt bound of A2.3.
+   163	
+   164	**Why chain time on both sides.** A wall-clock ship rule ("ship if depth k
+   165	by `now ≤ declared + δ`") and a block-timestamp verifier check can
+   250	---
+   251	
+   252	## A2.3 The re-issue loop terminates: bounded attempts, fail-closed refusal
+   253	
+   254	As registered, the P5 corollary's re-issue rule was an unbounded loop, and
+   255	its dominant triggers — fee spikes, congestion, calendar outage — are
+   256	*correlated across attempts*: retrying under the same conditions is not a
+   257	fresh draw, so "re-issue until it works" can livelock. Fail-closed means
+   258	issuance must be able to end in refusal, not only in success.
+   259	
+   260	Amended: issuance makes at most **N attempts**. The expiry clock is the
+   261	**wall clock** (A2.1 clock roles): an attempt expires when wall time
+   262	passes `declared + δ + S`, except that timely-latched eligibility
+   263	excludes expiry — eligible/finalizing, shipped, and expired/refused are
+   264	mutually exclusive states (construction obligation, registered with the
+   265	ruling). Exhausting them obligates
+   266	the implementation to terminate issuance in an **explicit refusal, durably
+   267	recorded; reporting is a delivery obligation to be registered in
+   268	Amendment 3** — a first-class protocol outcome, not an error path. N is a
+   269	protocol constant ratified at Band 0 exit alongside δ, ε, k, and S
+   270	(working default **N = 3**; per the A2.1 clock-roles ruling each
+   271	attempt's lifecycle is wall-governed through δ + S, so N attempts give
+   272	a **nominal lifecycle budget** of N × (δ + S) — twelve days at the
+   273	working defaults δ = 72 h, S = 24 h — a nominal budget, not a proven
+   274	wall-clock bound on the process; see the model note).
+   275	[**Note:** refusal as a separate delivery obligation added 2026/07/21 per
+   276	review process/response.]
+   277	
+   278	Model note: P5c's `MaxAttempts` is hereby promoted from a state-space
+   279	bound to protocol semantics. The refusal state is modeled by **atomic
+   280	entry** (the transition expiring the final attempt's window records the
+   281	refusal in the same step; checked, with a broken companion red on
+   282	exactly the silent-deadlock invariant among the checked set — review
+   283	archived in
+   284	`docs/reviews/2026-07-20-codex-p5c-refusal-review.md`). Scope of proof
+   285	versus contract, per that review: the model proves the *conditional
+   286	safety half* — the refusal state is entered atomically and latches; it
+   287	does not prove the crossing occurs (no fairness is assumed), so
+   288	**termination is a contract obligation on the implementation, not a
+   289	proven liveness property**. The unbounded "eventually ships" claim
+   290	likewise remains explicitly unproven. Storage durability, retrievability,
+    65	The repair must specify how observation and terminal decisions are serialized, how pending observations survive crashes, and how stale/partial evidence is distinguished from a conclusive negative. Another CAS alone is insufficient.
+    66	
+    67	**ILC-03 — High: the unavailable-evidence timeout bypasses the protection step 3 needs.**
+    68	
+    69	Affected text: [revision:56–59, 67–71](/home/tony/projects/tessera/docs/decisions/2026-10-29-issuance-lifecycle.md:56).
+    70	
+    71	“Evidence unavailable means do not expire” permits an **unbounded wait** under an indefinitely unavailable source. Calling twelve days nominal is correct, but A2.3 still makes termination a contract obligation ([A2:288–289](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-2.md:288)).
+    72	
+    73	Step 6 supplies a finite operating timeout, but elapsed time alone does not establish its authorization:
+    74	
+    75	- A2.1 permits refusal when the observation lag exceeds S.
+    76	- An outage at E does not establish that no worker observed eligibility by B.
+    77	- A timely observation may be pending, crashed before persistence, or durably latched elsewhere.
+    78	- Step 6 does not expressly restrict this refusal to an unlatched OPEN attempt or make it respect the latch/expiry serialization.
+    79	
+    80	Consequently, **step 6 is not demonstrated consistent with A2.1 and A2.3**. A finite refusal policy can be compatible for genuinely unprotected attempts; this note does not define how it establishes that condition. It must never refuse a latched attempt merely because evidence later becomes unavailable.
+    81	
+    82	### C. Discard, signing closure and shipping
+    83	
+    84	**ILC-02 — High: step 4’s example does not establish permanent failure.**
+    85	
+    86	Affected text: [revision:60–62](/home/tony/projects/tessera/docs/decisions/2026-10-29-issuance-lifecycle.md:60).
+    87	
+    88	A2.1 authorizes discard when:
+    89	
+    90	> “the predicate fails **at issuance time**” — [A2:161–162](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-2.md:161).
+    91	
+    92	It does not make every unsuccessful evidence fetch an irrevocable failure.
+    93	
+    94	A currently presented proof whose lowest qualifying height has a late timestamp can later acquire a **lower qualifying attestation**. The selected T and confirmation segment then change. With nonmonotone header times, neither height order nor one late timestamp proves every possible qualifying presentation fails.
+    95	
+    96	Thus step 4 is consistent **only when permanence is actually established**. Its example, as written, establishes failure of the current presentation, not permanent failure of the attempt. It could discard an attempt for which another worker already holds timely qualifying evidence.
+    97	
+    98	Signing closure in [revision:63–66](/home/tony/projects/tessera/docs/decisions/2026-10-29-issuance-lifecycle.md:63) is otherwise sound: it prevents fresh signatures while preserving latched and already signed/stamped attempts that can finish. Refusal for `SIGNING_CLOSED` must occur only after the current attempt has legitimately ended and a fresh attempt would require prohibited signing.
+    99	
+   100	**ILC-04 — Medium: step 7 has a valid safety exception but an overbroad discard category.**
+   101	
+   102	Affected text: [revision:72–77](/home/tony/projects/tessera/docs/decisions/2026-10-29-issuance-lifecycle.md:72).
+   103	
+   104	Two registered constraints limit shipping:
+   105	
+   106	> “a receipt ships only when complete; an operator refusal never concerns a shipped receipt” — [A9:165](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-9.md:165).
+   107	
+   108	> “An attempt whose T would exceed not-after is not shipped.” — [A9:422–423](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-9.md:422).
+   109	
+   110	Accordingly, **a temporal latch does not compel shipping an incomplete or otherwise prohibited receipt**. Step 7’s genuine, irreparable `T > not-after` case is consistent with the issuer invariant. Neither the temporal predicate nor A3.7.3 establishes full envelope validity.
+   111	
+   112	However:
+   113	
+   114	- “A verifier verdict other than `VALID_STRICT`” is not itself evidence of permanent failure.
+   115	- Missing snapshots, proofs, headers or storage objects can be recoverable.
+   116	- A different proof can select a different T; the issuer must preserve the qualifying presentation rather than replace it with a worse one and call the result incurable.
+   117	- A2.1:161–162 addresses failure of the temporal predicate, not arbitrary post-latch finalization failures.
+   118	
+   119	**Step 7 honours the shipping obligation only if “permanent” means that the frozen attempt cannot be completed lawfully, including by recovering evidence and using its preserved qualifying proof.** As written, it does not establish that restriction tightly enough. A valid, complete, timely-eligible attempt must not be discarded for scheduling delay, transient dependency failure, or an avoidable change of presentation.
+   120	
+     1	# Service clock tolerance (2026-10-27)
+     2	
+     3	> **Status: OWNER DECISION, CLARIFY**, by the owner instance (Claude Opus 5.5), 2026-10-27. It concerns the
+     4	> service-level times in the owner's resolutions (`docs/V1-SERVICE-RESOLUTIONS.md`, stamped at `2411714`): S4, S5,
+     5	> S6 and L1. It changes no receipt guarantee. No guarantee in `docs/V1-CONTRACT.md` depends on these times, and the
+     6	> verifier checks none of them. It follows three Codex confirmation rounds on the issuer (`docs/reviews/issuer/
+     7	> CODEX-CONFIRM.md`, `-2.md`, `-3.md`). The third swept the whole package and found that the remaining problem is a
+     8	> limit, not a bug (CF3-01).
+     9	
+    10	## The limit
+    11	
+    12	The issuer decides on its own clock, and every decision is now taken on a clock reading made after the records it
+    13	depends on (CF2-02, CF3-02, CF3-03). But the write that makes a decision visible can take effect later than that
+    14	reading, and no client-side check can bound when AWS commits a request already sent. AWS documents that a write
+    15	reported as failed may still have succeeded.
+    16	
+    17	## What the issuer bounds
+    18	
+    19	- **Its own time per AWS call.** Connection 5 s, response 20 s, 4 attempts in standard retry mode: about 3 minutes
+    20	  at most (`tessera_issue/lambda_app.py`, `AWS_CLIENT_CONFIG`; a test keeps it under a third of the lease).
+    21	- **Completion.** COMPLETE is confirmed only when at least the 15-minute writer lease remains before the 24-hour
+    22	  deadline (CF2-01). Inside the last lease a finished request stays ACCEPTED, and at the deadline it is FAILED.
+    23	- **Late writers.** Cleanup keeps deleting until 15 minutes after an end (CF-02).
+    24	
+    25	## The stated tolerance
+    26	
+    27	Each service-level transition (FAILED at 24 hours, COMPLETE, the 30-day retention and deletion, the acceptance
+    28	stop, and the 5-minute receipt links) may become visible up to **15 minutes** after the time it records. This
+    29	assumes AWS commits or rejects every request within 15 minutes of its being sent.
+    30	
+    31	For the acceptance stop this is harmless by design: acceptance stops 120 hours before the window ends, and signing
+    32	stops at 96 hours (L1), so a late admission has 24 hours of slack. Those 96 hours are the runbook's operating margin,
+    33	an owner control, and not a registered rule (L1 says so). For signing itself, the check that counts is the signer's
+    34	own `sign_by` and signing stop, enforced at the signer (IS-03, IS-09). That too is an owner operating control. Both
+    35	signers now enforce it (`service/signer-kms`, `service/signer-gcp`), and this tolerance does not touch it.
+    36	(Corrected 2026-10-27 after the signer review's binding-text precheck: this first called it "the binding check".)
+    37	
+    38	## Why stop here
+    39	
+    40	Each review round found one more site of the same shape. A protocol that did not depend on commit time would need
+    41	the store to time-stamp commits authoritatively. That is redesign for a 15-minute fuzz on service promises that no
+    42	receipt depends on. The author's yardstick: *"build something that works, with known limitations."* If AWS ever
+    43	violates the assumption, a symptom is a status change that appears up to minutes late. No receipt is affected.
+
+web search: 
+web search: site.docs.aws.amazon.com lambda reserved concurrency asynchronous invocation timeout retry concurrency ...
+codex
+Reserved concurrency 1 addresses overlap between poller invocations, but AWS writes already sent can outlive an invocation. I also found two points needing closer scrutiny: the live poller timeout is 300 seconds, and the registered latch model records burial when it occurs, before any issuer fetch or durable write.
+exec
+/bin/bash -lc "nl -ba docs/V1-CONTRACT.md | sed -n '20,85p'; rg -n 'complete|pending|lowest|presentation' docs/V1-PROFILE.md | tail -25; nl -ba service/issuer/tessera_issue/stores.py | head -100; rg -n 'ConditionExpression|ConsistentRead|def save|WRITE_LEASE' service/issuer/tessera_issue; nl -ba /home/tony/.codex/memories/MEMORY.md | sed -n '108,118p'; find /home/tony -maxdepth 2 -name AGENTS.md" in /home/tony/projects/tessera
+ succeeded in 0ms:
+    20	
+    21	When those hold, a checker who has the receipt, the published verifier and its trust configuration can establish:
+    22	
+    23	| # | Guarantee | Source |
+    24	|---|---|---|
+    25	| G1 | **Exact bytes.** The receipt binds these exact bytes. Change one bit and the check fails. | C1 |
+    26	| G2 | **Presented to Tessera.** The bytes were presented to the Tessera V1 service at some issuance. | C2 |
+    27	| G3 | **Both signatures.** Both of the service's keys signed. A missing, stripped or swapped signature fails. | C3 |
+    28	| G4 | **The keys were Tessera's.** DNSSEC (`_tessera-v1.wamason.com`, at the snapshot's own anchored time) and a signed git commit (at its own evidence time) named the keys for the service's domain. The git commit was in the Bitcoin chain at least 6 blocks before the receipt. | C4, A10.6 |
+    29	| G5 | **Existed by a block.** The signed bytes and both signatures existed before a specific Bitcoin block: the lowest-height qualifying block in the presented proof, confirmed 6 deep. | C5, A10.1, A10.5 |
+    30	| G6 | **A real-time bound, under an unchecked assumption.** A-UTC says at least one of that block and its 5 successors has a time stamp at most 2 hours behind when it was made. If A-UTC holds, the bytes existed before U (the latest of those 6 times, plus 2 hours). U is reported separately and never changes the verdict. | A10.1.1 |
+    31	| G7 | **Window, two checks only.** The declared issue time is not before the keys' window opened, and the chain time T is not after it closed. This does not prove the signing happened inside the window. | C4, A10.2 |
+    32	| G8 | **No Tessera needed.** The verdict depends only on the inputs above. | C6 |
+    33	| G9 | **A typed verdict.** Once the trust configuration is authenticated, the verifier returns `VALID_STRICT`, `INVALID` or `UNVERIFIABLE`, with a reason code and `revocation: NOT_EVALUATED`, `historical_security: NOT_EVALUATED`, `standing: ABSENT/NOT_ISSUED_IN_PROFILE`. Missing required evidence prevents acceptance. A valid receipt still leaves everything in §3 unestablished. If the trust configuration is not authenticated, there is no receipt verdict. | C7; A9.5 trust-configuration authority; V1-PROFILE §5 (`TRUST_CONFIG_UNAUTHENTICATED`) |
+    34	| G10 | **Honest receipts cannot be moved.** If an attacker takes over the DNS and git authority records while the service's own keys stay secret and unmisused, it cannot move honestly signed frames to other keys or bytes, or change their signer sets, whether they were signed before or after the takeover. | A10.4 |
+    35	**No G11.** The service-key listing (A10.4.1) is not in V1, by the author's ruling of 2026-10-23 (E9 row 2,
+    36	`docs/reviews/e9-packet/AUTHOR-RULINGS.md`; `docs/decisions/2026-10-19-listing-cut.md`). G10 holds while the independent release boundary of A9.5 holds.
+    37	**New receipts under an attacker's own keys pass when both authority channels are captured.**
+    38	
+    39	## 3. Not guaranteed
+    40	
+    41	Each of these is a deliberate limit, not a missing feature.
+    42	
+    43	- **Who submitted the bytes**, or that a replayed receipt suits the current transaction (case f).
+    44	- **What the bytes mean**, or that they are true. A contract inside the bytes is the checker's to verify (cases i, i′).
+    45	- **That a key was not revoked** (cases e, e′).
+    46	- **That an algorithm or a key was still safe** when it signed.
+    47	- **Any lower time bound or priority.** "Existed by" is never "existed after" or "came first".
+    48	- **Real time without A-UTC.** Without it, only chain order is claimed.
+    49	- **Standing** of any kind.
+    50	- **Separate control of the two keys.** One controller holds both. Capturing the issuing AWS account means both
+    51	  slots can sign.
+    52	- **Visibility.** Publishing the authority records is the issuer's duty; the verifier does not check it. V1
+    53	  guarantees no detection or public exposure of a capture, of new receipts, or of a release given to one party.
+    54	- **That DNSSEC shows publication before issue.**
+    55	- **Anything after a Bitcoin reorganization of 6 or more blocks.**
+    56	- **Renewal, degraded modes, or wrappers.** These are refused (`UNVERIFIABLE`), including honest ones (cases d2, h:
+    57	  the two registered false rejects).
+    58	- **One receipt per presentation.** A receipt id (SHA-256 of `A_sig`) names a receipt, not a presentation. Signing
+    59	  is randomized, so the same honest frames can carry more than one valid signature set and therefore more than one
+    60	  valid receipt, each with its own T. Each still meets G1–G10. (Owner, 2026-10-19, from finding E-02 of the first
+    61	  real run.)
+    62	- **Stability of T and U across different proofs.** A different proof or pin set can select a different block.
+    63	- **Protection for a checker who skips authenticating the verifier release** or runs a substituted one.
+    64	
+    65	## 4. Failure model
+    66	
+    67	| Failure or attacker | What still holds |
+    68	|---|---|
+    69	| Tessera disappears | Everything in §2, if the holder kept the receipt and the verifier release. Reconstruction after the project dies is not demonstrated. |
+    70	| Attacker alters a receipt or moves its signatures | Rejected (G1, G3, G10). |
+    71	| Attacker uses its own keys, authority records not captured | Rejected: the required authority evidence does not name them (G4). |
+    72	| Attacker captures both DNS and git authority records | Honest receipts protected (G10). New receipts under its own keys **pass** (the listing was cut). |
+    73	| Attacker captures the issuing AWS account | **Not protected.** It can issue receipts that verify. |
+    74	| Attacker steals the release key | Not protected: it can publish releases with a trust configuration of its choosing. This is distribution compromise, which A9 excludes (A9:47–52). A checker who installs no later release is unaffected. |
+    75	| Bitcoin miners lie about time | G5 holds (chain order). G6 holds only under A-UTC. |
+    76	| Bitcoin reorganizes fewer than 6 blocks | G5 holds. |
+    77	
+    78	## 5. Pairing: where each guarantee is checked
+    79	
+    80	The method needs every guarantee checked twice: once by a formal model or inspection, once by tests against the
+    81	implementation. When the two disagree, we fix the contract, the model or the code. This is a first mapping, not
+    82	yet checked case by case.
+    83	
+    84	**These are mappings, not pairs.** A pair, in the method's sense, runs the same scenario on both sides, so that a
+    85	disagreement means something. Here the model side and the test side were written separately, for different
+812:  relies on it" overstates both channels; the replacement wording for ENC is pending.)* *(ENC §7.1 now carries the
+848:  remains required; this completes the specification and permits omitting none of these checks. Listed in section
+860:- T is the time of the verified attestation at the **lowest block height** in the presented OTS proof; both T and
+861:  its confirmations come from that attestation. It is presentation-sensitive: a different presentation of the same
+871:- **T ≡ `anchor_time`.** For the receipt proof, T = `anchor_time` = nTime(h*), where h* is the lowest qualifying
+885:  attestation without a complete h..h+5 segment is nonqualifying, not a required failed check. It supplies no time or
+891:  HEADERS_MISSING` if any Bitcoin attestation is present, `UNVERIFIABLE / ANCHOR_PENDING_ONLY` if only pending ones;
+951:  section 15.3. Framing violations are `INVALID / SNAPSHOT_FORMAT`; a syntactically complete body lacking a required
+1002:  representation for Bitcoin blocks produced after the 2106 rollover of the 32-bit field is a Bitcoin protocol
+1038:  - **Deadline (A9.6):** the deployed-slot pass-condition evidence was completed 2026-10-14, before 21 Oct
+1307:  list being incomplete does not keep the SPEC sentence alive for V1. SPEC is the design reference (section "What
+1308:  this document is for"), synced after V1. A9.7's completeness against the SPEC is not audited here.
+1319:   (section 15.8). So the registration is complete under A9.6 only when the freeze record enters that hash into the
+1414:   proposed), ends, L, the repository entry, the pins and their source digests. **Expanded (r2-14.2):** the complete
+1430:   custody implementation must have completed the deployed-slot pass-condition evidence by **21 Oct**; a choice
+1433:   ("Slot-2 custody record"): GCP Cloud KMS HSM P-256 through the policy signer, chosen 2026-10-13, evidence complete
+1463:   or git path failing `OTS_TX_SHAPE` (F08); non-32-byte Bitcoin message, non-shortest CompactSize, pending payload
+1474:   r2-contra):** E §7.1's exact selection sentence ("earliest") changed to A9 C5's lowest block height, not only its
+1487:14. **Signature completion** (r2-F10, F11): complete advisory-subpacket policy, public-key validation, v4
+1545:  Both the pending and the Bitcoin payloads must be consumed exactly (the pending payload's inner URI framing
+1624:3. **Framing versus completeness.** A truncated RR encoding, forbidden RR type, duplicate RR, inconsistent
+1636:   [OWNER 2026-10-14, r2-F06, r2-F05] A syntactically complete
+1869:  (`docs/phase-0-prereg-amendment-9.md` at its signing commit) as a part, so the object is the complete archival
+1874:  freeze commit, whose A9 and A10 bytes must equal those at their signing commits. The "complete archival spec"
+1901:  commit. The independent assembler reproduces the complete archive, including that generated manifest, and it is
+     1	"""Request store and result store behind interfaces, with in-memory implementations (AWS ones in aws.py).
+     2	
+     3	Request store: request records (state, content digest, timestamps, pipeline progress; never content), content-free
+     4	key tombstones kept until issuance closes, the signer-request index (signer request id -> request and job), and the
+     5	append-only signature log (E-02). Records carry a version; save() is a compare-and-set on it.
+     6	
+     7	Result store: blobs in four namespaces: "content" (submitted bytes, deleted when the request ends), "work" (frames,
+     8	signatures, proofs; deleted when the request ends), "frames" (frames too large for a queue message, read by the
+     9	signers by digest-bound reference; deleted when the request ends) and "result" (completed receipts, deleted 30 days
+    10	after the end).
+    11	
+    12	Cleanup obligations (IS-07) are kept apart from the request record, so a failed deletion is retried by the poller
+    13	whatever state the request is in, and the 30-day deletion of results does not depend on S3 lifecycle timing."""
+    14	import copy
+    15	
+    16	
+    17	class RequestStore:
+    18	    def get(self, rid):
+    19	        raise NotImplementedError
+    20	
+    21	    def create(self, rec, tombstone_until=None):
+    22	        """Insert iff absent, together with the key's tombstone in the same atomic write (IS-04). -> bool."""
+    23	        raise NotImplementedError
+    24	
+    25	    def save(self, rec):
+    26	        """Compare-and-set on rec["version"]; on success the stored and the passed record get version + 1."""
+    27	        raise NotImplementedError
+    28	
+    29	    def active(self):
+    30	        raise NotImplementedError
+    31	
+    32	    def tombstone_get(self, rid):
+    33	        raise NotImplementedError
+    34	
+    35	    def tombstone_put(self, rid, keep_until):
+    36	        raise NotImplementedError
+    37	
+    38	    def sigreq_put(self, signer_rid, entry, keep_until):
+    39	        raise NotImplementedError
+    40	
+    41	    def sigreq_get(self, signer_rid):
+    42	        raise NotImplementedError
+    43	
+    44	    def siglog_add(self, entry):
+    45	        raise NotImplementedError
+    46	
+    47	    def siglog(self):
+    48	        raise NotImplementedError
+    49	
+    50	    def siglog_has(self, request_id, signature_sha256):
+    51	        """Is there a durable "used" log record for this signature on this signer request? (IS-01)"""
+    52	        raise NotImplementedError
+    53	
+    54	    def cleanup_put(self, rid, doc):
+    55	        raise NotImplementedError
+    56	
+    57	    def cleanup_list(self):
+    58	        """-> [(rid, doc)] of outstanding cleanup obligations."""
+    59	        raise NotImplementedError
+    60	
+    61	    def cleanup_done(self, rid):
+    62	        raise NotImplementedError
+    63	
+    64	
+    65	NAMESPACES = ("content", "work", "frames", "result")
+    66	
+    67	
+    68	class ResultStore:
+    69	    def put(self, ns, rid, name, data):
+    70	        raise NotImplementedError
+    71	
+    72	    def get(self, ns, rid, name):
+    73	        raise NotImplementedError
+    74	
+    75	    def delete(self, ns, rid):
+    76	        raise NotImplementedError
+    77	
+    78	    def names(self, ns, rid):
+    79	        """-> names stored under (ns, rid)."""
+    80	        raise NotImplementedError
+    81	
+    82	    def size(self, ns, rid, name):
+    83	        """-> length in bytes, or None."""
+    84	        data = self.get(ns, rid, name)
+    85	        return None if data is None else len(data)
+    86	
+    87	    def presign(self, ns, rid, name, expires_in, now):
+    88	        """A fresh URL for one object, valid expires_in seconds. Callers mint one per request and never keep it."""
+    89	        raise NotImplementedError
+    90	
+    91	    @staticmethod
+    92	    def ref(ns, rid, name):
+    93	        """The object reference a signer is given for a large frame (IS-09)."""
+    94	        if ns != "frames":
+    95	            raise ValueError(ns)
+    96	        return f"{ns}/{rid}/{name}"
+    97	
+    98	    def get_ref(self, ref):
+    99	        ns, rid, name = ref.split("/")
+   100	        if ns != "frames":
+service/issuer/tessera_issue/stores.py:25:    def save(self, rec):
+service/issuer/tessera_issue/stores.py:124:    def save(self, rec):
+service/issuer/tessera_issue/pipeline.py:24:before the late writers' lease (WRITE_LEASE_S, CF-02) has run out.
+service/issuer/tessera_issue/pipeline.py:40:from .service import DEADLINE_S, RETENTION_S, WRITE_LEASE_S
+service/issuer/tessera_issue/pipeline.py:107:    gone WRITE_LEASE_S after the end was first seen here. Until then the obligation is kept and every poll deletes
+service/issuer/tessera_issue/pipeline.py:121:        doc = dict(doc, rid=rid, fence_until=seen + WRITE_LEASE_S)
+service/issuer/tessera_issue/service.py:9:WRITE_LEASE_S = 15 * 60             # CF-02: the longest a Lambda invocation can run (AWS maximum); every issuer write
+service/issuer/tessera_issue/api.py:12:from .service import DEADLINE_S, RETENTION_S, WRITE_LEASE_S
+service/issuer/tessera_issue/api.py:57:    Lambda invocation, so it commits within WRITE_LEASE_S of the decision. Hence: decided at least WRITE_LEASE_S
+service/issuer/tessera_issue/api.py:67:        if deadline - WRITE_LEASE_S <= now < deadline:
+service/issuer/tessera_issue/lambda_app.py:27:# writer lease (service.WRITE_LEASE_S). It does not bound when AWS commits a request already sent; that residual is
+service/issuer/tessera_issue/aws.py:46:        it = self.c.get_item(TableName=self.t, Key={"pk": {"S": pk}}, ConsistentRead=True).get("Item")
+service/issuer/tessera_issue/aws.py:66:                          "ConditionExpression": "attribute_not_exists(pk)"}}]
+service/issuer/tessera_issue/aws.py:78:    def save(self, rec):
+service/issuer/tessera_issue/aws.py:82:            self.c.put_item(TableName=self.t, Item=self._item(rec), ConditionExpression="#v = :v",
+service/issuer/tessera_issue/aws.py:95:            kw = {"TableName": self.t, "IndexName": self.INDEX, "KeyConditionExpression": "#s = :one",
+service/issuer/tessera_issue/aws.py:121:                            ConditionExpression="attribute_not_exists(pk)")
+service/issuer/tessera_issue/aws.py:145:                                                        "doc": doc}, ConditionExpression="attribute_not_exists(pk)")
+   108	- The user dislikes context-assuming “cold reads” -> assemble the current promise, assumptions, open decisions, and consequences in plain language instead of making them reconstruct amendment tables. [Task 1]
+   109	- The user wants anti-sycophantic review and precise claims: distinguish “bytes/metadata were preserved or changed” from claims about truth, authorship, or meaning. [Task 1]
+   110	- For the E9 Row 2 choice, the user favored bounded staged scope: V1 complexity is already high, initial use is expected to be low, and the protection can be added for future issuance -> do not add complexity merely for a stronger theoretical guarantee; disclose the limitation precisely. [Task 2]
+   111	
+   112	## Reusable knowledge
+   113	
+   114	- Tessera’s central claim is binding exact presented bytes to signatures and a temporal anchor, not truth or submitter identity. Amend-don’t-rewrite applies: amendments outrank tracker summaries, and proposed/checked/discharged/owner-decided states must remain distinct. [Task 1]
+   115	- Plain-language rendering and the prototype exposed gaps formal/document review missed: revocation lacked a source, relying parties could misread verdicts, byte layouts were underspecified, and Amendment 9 overclaimed Bitcoin header time. [Task 1]
+   116	- Amendment 10’s service-key listing was cut in `docs/decisions/2026-10-19-listing-cut.md`; V1 therefore does not protect against new receipts under attacker-selected keys once both authority channels are captured. A receipt alone does not provide an authentic historical verifier/release package or trust provenance. [Task 1][Task 2]
+   117	- KEEP would block fresh attacker-key receipts after both DNS and git authority capture only for a user with an authentic listed verifier; CUT knowingly permits them while honest receipts remain protected under registered assumptions. Future issuance can add the listing, but cannot retroactively establish its required pre-receipt commitment for already-issued receipts. The author CUT is an independent scope decision, not the registered schedule-slip cut order. [Task 2]
+   118	- The retained HIGH R3-01 custody issue is that the reviewed build was not explicitly bound to the exact archive later signed/distributed. Green P8 vectors, end-to-end tests, independent-verifier tests, and a recorded 352/352 differential agreement are evidence of those checks, not a general service discharge. [Task 1]
+
+web search: 
+web search: https://docs.aws.amazon.com/lambda/latest/dg/configuration-concurrency.html
+exec
+/bin/bash -lc "nl -ba docs/V1-PROFILE.md | sed -n '855,895p'; nl -ba docs/phase-0-prereg-amendment-9.md | sed -n '155,168p;286,297p;418,425p'; nl -ba service/issuer/tessera_issue/aws.py | sed -n '42,49p;75,90p'; nl -ba service/issuer/tessera_issue/pipeline.py | sed -n '430,505p'; mktemp -d" in /home/tony/projects/tessera
+ succeeded in 0ms:
+   855	
+   856	## 7. Time
+   857	
+   858	### 7.1 The T rule
+   859	
+   860	- T is the time of the verified attestation at the **lowest block height** in the presented OTS proof; both T and
+   861	  its confirmations come from that attestation. It is presentation-sensitive: a different presentation of the same
+   862	  receipt can select a different T. [A9 C5 as revised 2026-10-14; DD:56, 98-99; OWNER 2026-10-14, G03] *Dated
+   863	  correction 2026-10-14: this bullet previously read "T is the time of the earliest verified attestation", A9's
+   864	  earlier wording. "Earliest" means chain order, not least nTime: header times are not monotone, and the two
+   865	  selection rules can give different verdicts on the same proof.*
+   866	- No lower bound and no priority. Header times are chain-time proxies. [A9:144]
+   867	- The three conjuncts at k = 6 (`DepthK = k − 1 = 5`): `declared − ε ≤ anchor_time`; `anchor_time ≤ declared + δ`;
+   868	  `confirmed_at ≤ declared + δ`. All three are evaluated together. [SPEC R-4.41:985; SPEC R-5.19:1352; SPEC
+   869	  V33-V36:1342-1346; A9:105-106]
+   870	- A real proof carries several attestations hours apart and nothing in the proof names T (M3). [FT:20; DD:98]
+   871	- **T ≡ `anchor_time`.** For the receipt proof, T = `anchor_time` = nTime(h*), where h* is the lowest qualifying
+   872	  height. The same value feeds conjuncts 1 and 2, the C4 window rule and the reported T. Two qualifying attestations
+   873	  at the same height give the same T. [OWNER 2026-10-14, G03] *(Was: "`OPEN (step 8):` one sentence stating whether
+   874	  T is the `anchor_time` of the three conjuncts", 2026-10-13.)*
+   875	- **`confirmed_at`** = nTime(h* + 5): the including block plus five successors, k = 6 (SPEC R-3.45, R-4.42). A
+   876	  failure gives `INVALID`: `TIME_BEFORE_DECLARED_EPSILON`, `TIME_AFTER_DECLARED_DELTA` or `CONFIRMATION_LATE`.
+   877	  Nonmonotone header times can give `confirmed_at` < T; that is not a failure, and there is no monotonicity check.
+   878	  [OWNER 2026-10-14, G04]
+   879	- **Qualifying ("verified") attestation.** A Bitcoin attestation at height h qualifies if and only if (a) the
+   880	  bundled header at h exists and its merkle root equals the attestation message; (b) headers h … h+5 are all
+   881	  bundled; (c) each equals its pin, `hex(reverse(SHA256d(header))) = pin[height]`; (d) for i = h+1 … h+5,
+   882	  `header_i.prev = SHA256d(header_{i−1})`. [OWNER 2026-10-14, G05] *(Was: "`OPEN (step 8):` what 'verified' means
+   883	  for an attestation", 2026-10-13.)*
+   884	- **Selection.** Attestation selection is existential over qualifying branches. A syntactically valid Bitcoin
+   885	  attestation without a complete h..h+5 segment is nonqualifying, not a required failed check. It supplies no time or
+   886	  trust fact. All supplied headers, including unused ones, are independently checked against pins (section 7.2).
+   887	  The selected anchor, rather than every unverified attestation, is the referent of "anchors beyond the newest pin"
+   888	  (A9 C6 as revised 2026-10-14). [OWNER 2026-10-14, G05]
+   889	- **Proof outcomes.** A pinned bundled header at h whose merkle root ≠ the attestation message: `INVALID /
+   890	  OTS_MERKLE_MISMATCH` (a contradicted branch fails the proof). No qualifying attestation: `UNVERIFIABLE /
+   891	  HEADERS_MISSING` if any Bitcoin attestation is present, `UNVERIFIABLE / ANCHOR_PENDING_ONLY` if only pending ones;
+   892	  the snapshot uses `SNAPSHOT_NOT_ANCHORED` and git `GIT_NOT_ANCHORED`. [OWNER 2026-10-14, G05]
+   893	- **Time arithmetic.** Times are integer seconds since 1970-01-01T00:00:00Z without leap seconds; nTime is the
+   894	  header's uint32; RFC 3339 fields convert by days-from-civil (proleptic Gregorian); comparisons are inclusive.
+   895	  [OWNER 2026-10-14, G03]
+   155	  publication, signing and reliance periods; the repository key; a signed, versioned set of pinned mainnet header hashes.
+   156	  A bundle header outside the pins gives `UNVERIFIABLE / HEADERS_NOT_COVERED`. The trust configuration's KSK
+   157	  periods are as known at release; snapshots after an unlisted rollover are `UNVERIFIABLE`.
+   158	- *Bundle:* spec identifier and hash (signed); spec and conformance vectors (content-addressed); a bound
+   159	  plain-language purpose preamble; a dependency manifest (RFC 8785, OpenPGP, the signature algorithms in use,
+   160	  SHA-256, SHA-1 for git object linkage, the DNSSEC algorithms in the chain, OTS, Bitcoin headers).
+   161	- *Verification:* strict only; one layer; no wrappers, renewal, TLR or waiver policy.
+   162	- *Stable field set* (A9.4): the verdict, its reason code, T, `revocation`, `historical_security` and standing.
+   163	- *Parameters:* A9.2.
+   164	- *Issuance:* an operated API (API Gateway + Lambda + KMS).
+   165	- *Issuer invariant:* a receipt ships only when complete; an operator refusal never concerns a shipped receipt.
+   166	
+   167	**Separations.** V1 is a profile and milestone, not the "v1 product" done-line (`phase-0-prereg.md:589-617`),
+   168	which stands with the H2 panel and kill criterion. V1 is not the production version. H1b is withdrawn for V1,
+   286	
+   287	- **Dispatch.** Out-of-profile input gives `UNVERIFIABLE / OUT_OF_PROFILE` at dispatch; A4.2 precedence holds inside.
+   288	- **H1a's suite.** Forge, tamper, backdate, break-chain, strip-one-signature, out-of-profile, the A9.1 mapping.
+   289	  Degradation and wrapper instances move to their capabilities.
+   290	- **Receipt anchor.** OTS stamps `SHA256(A_sig)`, tag `tessera-v1/receipt-anchor-sig`, which commits to both frames
+   291	  and their exact detached signatures in manifest slot order (ENCODING-V1 §5, D-8, D-14). The verifier verifies the
+   292	  committed signature bytes only. The frame-only layout is withdrawn, with no fallback.
+   293	- **Issue order (D-15).** Fix manifest and metadata; build frames; sign; verify; **freeze** the signature bytes;
+   294	  **stamp** `A_sig` (one stamp per receipt, R-3.42); obtain confirmation; ship. A signature made after T cannot fit
+   295	  the anchor. A retry that changes any committed byte needs a fresh stamp. Signature identifiers stay independent
+   296	  of signature bytes; the anchor digest may commit to them; nothing is normalized after stamping.
+   297	- **Git stamp target (D-16).** The git channel's OTS stamp targets the **signed commit's object id**, never a tree,
+   418	  first-window gate. Without that registration, issuance stops at the first window's end.
+   419	- **Verifier rule (C4).** A receipt is `INVALID / ISSUANCE_WINDOW` unless the declared issue time is not earlier
+   420	  than not-before and the verified chain-time T is not later than not-after, with T as registered and no margin.
+   421	  T itself is not compared with not-before.
+   422	- **Issuer invariant.** An attempt whose T would exceed not-after is not shipped. The stop margin, the window's
+   423	  actual dates and the rotation plan are operating numbers, not registered (`docs/V1-OPERATIONS-RUNBOOK.md`).
+   424	- A published window cannot be shortened; detection changes no V1 verdict.
+   425	- The relying-party documentation states: `ISSUANCE_WINDOW` can result from presenting a later proof; ask the
+    42	    def __init__(self, client, table):
+    43	        self.c, self.t = client, table
+    44	
+    45	    def _get(self, pk):
+    46	        it = self.c.get_item(TableName=self.t, Key={"pk": {"S": pk}}, ConsistentRead=True).get("Item")
+    47	        return it
+    48	
+    49	    def _item(self, rec):
+    75	                return False
+    76	            raise
+    77	
+    78	    def save(self, rec):
+    79	        old = rec["version"]
+    80	        rec["version"] = old + 1
+    81	        try:
+    82	            self.c.put_item(TableName=self.t, Item=self._item(rec), ConditionExpression="#v = :v",
+    83	                            ExpressionAttributeNames={"#v": "version"},
+    84	                            ExpressionAttributeValues={":v": {"N": str(old)}})
+    85	            return True
+    86	        except Exception as e:  # noqa: BLE001
+    87	            rec["version"] = old
+    88	            if _conditional_failed(e):
+    89	                return False
+    90	            raise
+   430	    _save(iss, rec)
+   431	
+   432	
+   433	def st_headers(iss, rec, now):
+   434	    heights = set()
+   435	    for raw in (iss.results.get("work", rec["rid"], "receipt.ots"), iss.results.get("work", rec["rid"], "snapshot.ots"),
+   436	                iss.window.git["ots"]):
+   437	        h = ots.lowest_btc_height(raw)
+   438	        heights.update(range(h, h + 6))
+   439	    hdrs = iss.headers.headers(sorted(heights))
+   440	    iss.results.put("work", rec["rid"], "headers.json", json.dumps({str(h): v.hex() for h, v in hdrs.items()}).encode())
+   441	    rec["stage"] = "assemble"
+   442	    _save(iss, rec)
+   443	
+   444	
+   445	def assemble(iss, rec, hdrs):
+   446	    """The canonical JCS container of profile 15.1."""
+   447	    get, w, fz = (lambda n: iss.results.get("work", rec["rid"], n)), iss.window, iss.frozen
+   448	    receipt_ots = get("receipt.ots")
+   449	    selected, _ = select(parse_ots(receipt_ots), hdrs, {h: pin_of(v) for h, v in hdrs.items()})
+   450	    if selected is None:
+   451	        raise StageError("receipt proof does not qualify under the fetched headers")
+   452	    txid = ots.txid_of(selected.paths[0])
+   453	    from .util import ts
+   454	    delay = max(0, selected.time - ts(rec["declared_issue_time"]))
+   455	    layer = {
+   456	        "a_sig": b64e(get("a_sig")),
+   457	        "dependency_manifest": b64e(fz.dependency_manifest),
+   458	        "dns": {"ots": b64e(get("snapshot.ots")), "snapshot_body": b64e(get("snapshot.body"))},
+   459	        "git": {"blob": b64e(w.git["blob"]), "commit": b64e(w.git["commit"]), "object_format": "sha1",
+   460	                "ots": b64e(w.git["ots"]), "trees": [b64e(t) for t in w.git["trees"]]},
+   461	        "headers": {str(h): v.hex() for h, v in sorted(hdrs.items())},
+   462	        "issuer_record": {"observed_anchor_delay_s": str(delay), "policy_version": POLICY_VERSION},
+   463	        "keys": {"gpg": b64e(w.gpg_key), "kms": b64e(w.kms_key)},
+   464	        "manifest": b64e(get("manifest")),
+   465	        "possession": {"gpg": b64e(get(sig_name("p_gpg", rec["jobs"]["p_gpg"]["sig_sha256"]))),
+   466	                       "kms": b64e(get(sig_name("p_kms", rec["jobs"]["p_kms"]["sig_sha256"])))},
+   467	        "preamble": b64e(fz.preamble),
+   468	        "receipt_anchor": {"ots": b64e(receipt_ots), "txid": txid},
+   469	        "spec": b64e(fz.spec),
+   470	        "vectors": b64e(fz.vectors),
+   471	    }
+   472	    return jcs({"layers": [layer], "profile": PROFILE})
+   473	
+   474	
+   475	def st_assemble(iss, rec, now):
+   476	    hdrs = {int(h): bytes.fromhex(v) for h, v in json.loads(iss.results.get("work", rec["rid"], "headers.json")).items()}
+   477	    bundle = assemble(iss, rec, hdrs)
+   478	    stable, _ = iss.preship.check(bundle, hdrs, now)
+   479	    if stable["verdict"] == "VALID_STRICT" and stable["reason"] == "OK":
+   480	        if iss.clock() >= rec["created_at"] + DEADLINE_S:          # IS-02: re-checked after the pre-ship checks
+   481	            return _end(iss, rec, "FAILED", "NOT_COMPLETE_WITHIN_24H", now)
+   482	        iss.results.put("result", rec["rid"], "receipt.json", bundle)
+   483	        rec["receipt_sha256"] = sha256hex(bundle)
+   484	        rec["T"] = stable["T"]
+   485	        return _end(iss, rec, "COMPLETE", None, now)
+   486	    if stable["reason"] in SNAPSHOT_REASONS:            # profile 4: re-capture the snapshot before shipping
+   487	        rec["proofs"].pop("snapshot", None)
+   488	        rec["stage"] = "stamp"
+   489	        _event(rec, now, "preship-recapture", stable["reason"])
+   490	        return _save(iss, rec)
+   491	    return _end(iss, rec, "FAILED", "PRESHIP:" + stable["verdict"] + "/" + stable["reason"], now)
+   492	
+   493	
+   494	STAGES = {"upload": st_upload, "frames": st_frames, "signing": st_signing, "stamp": st_stamp, "confirm": st_confirm,
+   495	          "headers": st_headers, "assemble": st_assemble}
+/tmp/tmp.OmyIY8mGav
+
+exec
+/bin/bash -lc "python - <<'PY'
+from pathlib import Path
+p=Path('/tmp/tmp.OmyIY8mGav/counterexamples.txt')
+p.write_text('''Bounded hand-constructed protocol traces; not TLC discharge.
+Times relative to B, lease=900 seconds; each sent write resolves within 900 seconds.
+1. Observation to send gap:
+ t=0: writer observes eligibility, observed_at=B.
+ t=2: sends guarded latch write; invocation then times out.
+ t=901: next invocation reads OPEN; fresh source returns stale/pending nonqualifying evidence; expiry guard succeeds.
+ t=902: earlier latch write reaches store and fails state/attempt guard.
+ Send-to-resolution duration=900 seconds. Expiry waited beyond B+lease. Timely observation still loses.
+2. No observation:
+ t=-1: qualifying burial occurs; no issuer invocation fetches it.
+ t=901: source unreachable; later runbook timeout ends unlatched attempt.
+ No killed timely observation exists. burialAtWall was timely.
+3. Completed calendar proofs do not imply completed header evidence:
+ Both calendar proofs contain Bitcoin attestations, no pending calendar.
+ Higher branch has full pinned segment and fails a temporal conjunct.
+ Lower branch lacks headers; later recovered pinned segment qualifies and satisfies all conjuncts.
+ Discard on no-pending-calendar loses a curable attempt.
+''')
+print(p)
+PY" in /home/tony/projects/tessera
+ succeeded in 0ms:
+/tmp/tmp.OmyIY8mGav/counterexamples.txt
+
+codex
+**Verdict: not ready to implement.** Revision 3 removes concurrent poller execution, but it still permits loss of timely eligibility, and its lease argument does not cover the interval from observation to sending the write. Step 10 needs to check the registered property without redefining eligibility as successful persistence.
+
+Review was read-only; no repository edits or git writes. Constructed counterexamples are in [scratch](/tmp/tmp.OmyIY8mGav/counterexamples.txt). These are protocol traces, not TLC results.
+
+### A. ILC-01–05
+
+“CLOSED” below concerns the design correction, not implementation conformance.
+
+| Finding | Status | Assessment against registered text |
+|---|---|---|
+| **ILC-01 — timely observation loses to expiry** | **PARTIAL** | [Steps 1–4](/home/tony/projects/tessera/docs/decisions/2026-10-29-issuance-lifecycle.md:46) remove simultaneous poller invocations and the API lifecycle writer. But “counts once that write is durable” weakens the protected event, and the delayed-write argument is incomplete. [A2:153–160](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-2.md:153) requires the inclusive boundary to be latch-winning. See ILC2-01–02. |
+| **ILC-02 — premature permanent failure** | **PARTIAL** | [Step 6](/home/tony/projects/tessera/docs/decisions/2026-10-29-issuance-lifecycle.md:75) correctly waits for every calendar, but “no pending calendar” does not establish that every attestation’s qualifying header evidence is complete. [A2:161–162](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-2.md:161) does not authorize treating recoverable missing evidence as permanent predicate failure. See ILC2-03. |
+| **ILC-03 — unavailable-evidence refusal** | **PARTIAL** | [Step 5](/home/tony/projects/tessera/docs/decisions/2026-10-29-issuance-lifecycle.md:71) expressly protects durable latches and uses the single writer. It still treats absence of a durable latch as sufficient protection against refusing timely eligibility. A2.3’s termination obligation does not cancel [A2.1’s eligibility protection](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-2.md:130). |
+| **ILC-04 — overbroad post-latch discard** | **CLOSED** | [Step 7](/home/tony/projects/tessera/docs/decisions/2026-10-29-issuance-lifecycle.md:78) preserves the qualifying presentation, retries transient failures, and restricts discard to incurable failures. That respects [A9’s completeness invariant](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-9.md:165) and [not-after prohibition](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-9.md:422). The implementation must classify the underlying failure, rather than merely classify a verifier reason code. |
+| **ILC-05 — terminal guards and retry recovery** | **CLOSED** | [Steps 1 and 8](/home/tony/projects/tessera/docs/decisions/2026-10-29-issuance-lifecycle.md:46) specify state/attempt guards and atomic end-and-allocate, including refusal. This addresses duplicate transitions and the between-attempt crash gap, consistent with [A2.3’s atomic refusal requirement](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-2.md:278). |
+
+### B–C. Protocol attack and new findings
+
+**ILC2-01 — High: persistence is substituted for the registered eligibility event.**
+
+[Revision:55](/home/tony/projects/tessera/docs/decisions/2026-10-29-issuance-lifecycle.md:55) says:
+
+> “The observation counts once that write is durable.”
+
+That is a substantive restriction. An observation at B followed by a crash before persistence becomes an observation that never counted. Disclosure as a residual does not establish compatibility with the registered latch obligation.
+
+The model makes the discrepancy sharper. [`NewBlock`:68–71](/home/tony/projects/tessera/formal/tla/P5cP5P6_BridgeSlack_Latch.tla:68) records `burialAtWall` when burial occurs. [`EligibleInLifecycle`:49](/home/tony/projects/tessera/formal/tla/P5cP5P6_BridgeSlack_Latch.tla:49) tests that time; there is no issuer-fetch or persistence prerequisite. A2 expressly identifies this expression as its mechanized boundary counterpart at [155–156](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-2.md:153).
+
+Consequently, **the stated residual is not the only path**:
+
+1. Burial occurs on time.
+2. No issuer invocation observes it before sources become unavailable.
+3. Step 5 eventually ends the unlatched attempt.
+
+No killed, undurable observation is needed. Polling delay or starvation can produce the same gap.
+
+A2’s prose also calls B the service’s observation time at [115–124](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-2.md:115). That creates a refinement question between prose and model; it does not authorize silently replacing either with durable-write time. Step 10 must expose and resolve that distinction, preserving the existing property rather than proving a weaker replacement.
+
+**ILC2-02 — High: waiting until B + lease does not drain every timely-observation write.**
+
+[Revision:59–62](/home/tony/projects/tessera/docs/decisions/2026-10-29-issuance-lifecycle.md:59) relies on the clock decision’s assumption that AWS resolves a request within fifteen minutes **of sending it** ([clock decision:27–29](/home/tony/projects/tessera/docs/decisions/2026-10-27-service-clock-tolerance.md:27)). Observation and sending are separate events.
+
+With B = 0 and lease = 900 seconds:
+
+| Time | Event |
+|---|---|
+| 0 | Poller observes qualifying evidence on time. |
+| 2 | It sends the guarded latch write, then is killed. |
+| 901 | Successor reads OPEN; a fresh fetch returns stale/pending evidence; expiry commits. |
+| 902 | Earlier latch write resolves and fails its guard. |
+
+The write resolved within 900 seconds of sending. Expiry occurred strictly after B + lease. Nevertheless, expiry beat a timely observation.
+
+The guards prevent reopening the expired attempt; **they do not make the timely latch win**. The protocol needs an ordering or recovery mechanism covering observation-to-send as well as send-to-resolution. An undurable observation remains a separate problem even after that repair.
+
+The same unresolved write can overlap a later invocation’s store operations despite reserved concurrency 1.
+
+**ILC2-03 — Medium: calendar completion does not freeze the lowest qualifying height.**
+
+[Step 6:75–77](/home/tony/projects/tessera/docs/decisions/2026-10-29-issuance-lifecycle.md:75) infers that no pending calendar means the lowest qualifying height cannot change.
+
+Counterexample:
+
+- Every calendar proof has returned a Bitcoin attestation.
+- A higher attestation has its complete pinned segment and fails a temporal conjunct.
+- A lower attestation lacks its header segment.
+- Recovering that segment later makes the lower attestation qualify and satisfy the predicate.
+
+This follows directly from [profile:879–891](/home/tony/projects/tessera/docs/V1-PROFILE.md:879): qualification requires the full pinned, linked segment; an incomplete branch supplies no time fact. Header times are nonmonotone.
+
+Step 6 becomes sound only if “complete” includes all evidence needed to establish the claimed stable selection, rather than its parenthetical “no pending calendar.” A missing header must not become permanent failure merely because calendar work finished.
+
+**Invocation overlap and retries.** Reserved concurrency 1 caps simultaneous invocations of this poller function. Timeouts, Lambda retries, and EventBridge redelivery do not themselves bypass that cap; duplicate events remain possible and must be handled sequentially and idempotently. AWS documents both the [concurrency cap](https://docs.aws.amazon.com/lambda/latest/dg/configuration-concurrency.html) and [asynchronous retries, throttling, and duplicate delivery](https://docs.aws.amazon.com/lambda/latest/dg/invocation-async-error-handling.html).
+
+The live configuration is **300 seconds**, not fifteen minutes: [main.tf:352–363](/home/tony/projects/tessera/service/issuer/infra/main.tf:352). Fifteen minutes is the write lease. Even if execution timeout became fifteen minutes against the ten-minute schedule, excess invocations would be throttled/queued; downstream requests already sent remain the relevant overlap.
+
+The API currently still calls `settle` at [api.py:194](/home/tony/projects/tessera/service/issuer/tessera_issue/api.py:194). Removing that writer is therefore a necessary implementation change, not an existing guarantee.
+
+**Step 7:** sound as the revised design rule. Preserve the actual qualifying evidence durably, not only its digest, and classify “incurable” against recovery using that presentation.
+
+**Step 8:** sufficient for duplicate **end-and-allocate transitions**, provided the expected state and attempt id are evaluated atomically at commit and a failed or ambiguous write causes a reread. The existing store already uses [version CAS](/home/tony/projects/tessera/service/issuer/tessera_issue/aws.py:78). This does not provide exactly-once external signing or stamping; attempt-labelled jobs and idempotent recovery still carry that work.
+
+### Owner prechecks
+
+| Check | Result | File:line and assessment |
+|---|---|---|
+| **1. Capture row** | **PASS** | [Revision:18–22](/home/tony/projects/tessera/docs/decisions/2026-10-29-issuance-lifecycle.md:18), [78–82](/home/tony/projects/tessera/docs/decisions/2026-10-29-issuance-lifecycle.md:78) make no claim that dual-channel capture rejects attacker keys or reveals capture. [Contract:37,72–73](/home/tony/projects/tessera/docs/V1-CONTRACT.md:37) remains explicit: attacker-key receipts can pass; issuing-account capture permits issuance. |
+| **2. Trigger clause** | **FAIL** | [Revision:71–77](/home/tony/projects/tessera/docs/decisions/2026-10-29-issuance-lifecycle.md:71) does not establish the relevant antecedents: unlatched is not necessarily untimely; no pending calendar is not necessarily permanent predicate failure. |
+| **3. Requester** | **PASS** | [Revision:46–51,83–86](/home/tony/projects/tessera/docs/decisions/2026-10-29-issuance-lifecycle.md:46) makes no key-security claim based solely on storage or independent custody. Attempt routing and signing closure remain explicit. This is not a certification of signer requester authorization. |
+| **4. Binding text** | **FAIL** | [Revision:55,66–74](/home/tony/projects/tessera/docs/decisions/2026-10-29-issuance-lifecycle.md:55) introduces durable-write counting and an operating refusal policy without demonstrating compatibility with [A2:130–160](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-2.md:130) and its cited burial-time model. An owner residual cannot amend that protection. |
+
+Step 10 should include observation-to-send delay, delayed commits, crashes before persistence, timely burial without observation, partial header recovery, and duplicate transition retries. A green model that starts protection only at durable latch would leave the central discrepancy unchecked.
+
+
+hook: Stop
+hook: Stop Completed
+tokens used
+44,461
+**Verdict: not ready to implement.** Revision 3 removes concurrent poller execution, but it still permits loss of timely eligibility, and its lease argument does not cover the interval from observation to sending the write. Step 10 needs to check the registered property without redefining eligibility as successful persistence.
+
+Review was read-only; no repository edits or git writes. Constructed counterexamples are in [scratch](/tmp/tmp.OmyIY8mGav/counterexamples.txt). These are protocol traces, not TLC results.
+
+### A. ILC-01–05
+
+“CLOSED” below concerns the design correction, not implementation conformance.
+
+| Finding | Status | Assessment against registered text |
+|---|---|---|
+| **ILC-01 — timely observation loses to expiry** | **PARTIAL** | [Steps 1–4](/home/tony/projects/tessera/docs/decisions/2026-10-29-issuance-lifecycle.md:46) remove simultaneous poller invocations and the API lifecycle writer. But “counts once that write is durable” weakens the protected event, and the delayed-write argument is incomplete. [A2:153–160](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-2.md:153) requires the inclusive boundary to be latch-winning. See ILC2-01–02. |
+| **ILC-02 — premature permanent failure** | **PARTIAL** | [Step 6](/home/tony/projects/tessera/docs/decisions/2026-10-29-issuance-lifecycle.md:75) correctly waits for every calendar, but “no pending calendar” does not establish that every attestation’s qualifying header evidence is complete. [A2:161–162](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-2.md:161) does not authorize treating recoverable missing evidence as permanent predicate failure. See ILC2-03. |
+| **ILC-03 — unavailable-evidence refusal** | **PARTIAL** | [Step 5](/home/tony/projects/tessera/docs/decisions/2026-10-29-issuance-lifecycle.md:71) expressly protects durable latches and uses the single writer. It still treats absence of a durable latch as sufficient protection against refusing timely eligibility. A2.3’s termination obligation does not cancel [A2.1’s eligibility protection](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-2.md:130). |
+| **ILC-04 — overbroad post-latch discard** | **CLOSED** | [Step 7](/home/tony/projects/tessera/docs/decisions/2026-10-29-issuance-lifecycle.md:78) preserves the qualifying presentation, retries transient failures, and restricts discard to incurable failures. That respects [A9’s completeness invariant](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-9.md:165) and [not-after prohibition](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-9.md:422). The implementation must classify the underlying failure, rather than merely classify a verifier reason code. |
+| **ILC-05 — terminal guards and retry recovery** | **CLOSED** | [Steps 1 and 8](/home/tony/projects/tessera/docs/decisions/2026-10-29-issuance-lifecycle.md:46) specify state/attempt guards and atomic end-and-allocate, including refusal. This addresses duplicate transitions and the between-attempt crash gap, consistent with [A2.3’s atomic refusal requirement](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-2.md:278). |
+
+### B–C. Protocol attack and new findings
+
+**ILC2-01 — High: persistence is substituted for the registered eligibility event.**
+
+[Revision:55](/home/tony/projects/tessera/docs/decisions/2026-10-29-issuance-lifecycle.md:55) says:
+
+> “The observation counts once that write is durable.”
+
+That is a substantive restriction. An observation at B followed by a crash before persistence becomes an observation that never counted. Disclosure as a residual does not establish compatibility with the registered latch obligation.
+
+The model makes the discrepancy sharper. [`NewBlock`:68–71](/home/tony/projects/tessera/formal/tla/P5cP5P6_BridgeSlack_Latch.tla:68) records `burialAtWall` when burial occurs. [`EligibleInLifecycle`:49](/home/tony/projects/tessera/formal/tla/P5cP5P6_BridgeSlack_Latch.tla:49) tests that time; there is no issuer-fetch or persistence prerequisite. A2 expressly identifies this expression as its mechanized boundary counterpart at [155–156](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-2.md:153).
+
+Consequently, **the stated residual is not the only path**:
+
+1. Burial occurs on time.
+2. No issuer invocation observes it before sources become unavailable.
+3. Step 5 eventually ends the unlatched attempt.
+
+No killed, undurable observation is needed. Polling delay or starvation can produce the same gap.
+
+A2’s prose also calls B the service’s observation time at [115–124](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-2.md:115). That creates a refinement question between prose and model; it does not authorize silently replacing either with durable-write time. Step 10 must expose and resolve that distinction, preserving the existing property rather than proving a weaker replacement.
+
+**ILC2-02 — High: waiting until B + lease does not drain every timely-observation write.**
+
+[Revision:59–62](/home/tony/projects/tessera/docs/decisions/2026-10-29-issuance-lifecycle.md:59) relies on the clock decision’s assumption that AWS resolves a request within fifteen minutes **of sending it** ([clock decision:27–29](/home/tony/projects/tessera/docs/decisions/2026-10-27-service-clock-tolerance.md:27)). Observation and sending are separate events.
+
+With B = 0 and lease = 900 seconds:
+
+| Time | Event |
+|---|---|
+| 0 | Poller observes qualifying evidence on time. |
+| 2 | It sends the guarded latch write, then is killed. |
+| 901 | Successor reads OPEN; a fresh fetch returns stale/pending evidence; expiry commits. |
+| 902 | Earlier latch write resolves and fails its guard. |
+
+The write resolved within 900 seconds of sending. Expiry occurred strictly after B + lease. Nevertheless, expiry beat a timely observation.
+
+The guards prevent reopening the expired attempt; **they do not make the timely latch win**. The protocol needs an ordering or recovery mechanism covering observation-to-send as well as send-to-resolution. An undurable observation remains a separate problem even after that repair.
+
+The same unresolved write can overlap a later invocation’s store operations despite reserved concurrency 1.
+
+**ILC2-03 — Medium: calendar completion does not freeze the lowest qualifying height.**
+
+[Step 6:75–77](/home/tony/projects/tessera/docs/decisions/2026-10-29-issuance-lifecycle.md:75) infers that no pending calendar means the lowest qualifying height cannot change.
+
+Counterexample:
+
+- Every calendar proof has returned a Bitcoin attestation.
+- A higher attestation has its complete pinned segment and fails a temporal conjunct.
+- A lower attestation lacks its header segment.
+- Recovering that segment later makes the lower attestation qualify and satisfy the predicate.
+
+This follows directly from [profile:879–891](/home/tony/projects/tessera/docs/V1-PROFILE.md:879): qualification requires the full pinned, linked segment; an incomplete branch supplies no time fact. Header times are nonmonotone.
+
+Step 6 becomes sound only if “complete” includes all evidence needed to establish the claimed stable selection, rather than its parenthetical “no pending calendar.” A missing header must not become permanent failure merely because calendar work finished.
+
+**Invocation overlap and retries.** Reserved concurrency 1 caps simultaneous invocations of this poller function. Timeouts, Lambda retries, and EventBridge redelivery do not themselves bypass that cap; duplicate events remain possible and must be handled sequentially and idempotently. AWS documents both the [concurrency cap](https://docs.aws.amazon.com/lambda/latest/dg/configuration-concurrency.html) and [asynchronous retries, throttling, and duplicate delivery](https://docs.aws.amazon.com/lambda/latest/dg/invocation-async-error-handling.html).
+
+The live configuration is **300 seconds**, not fifteen minutes: [main.tf:352–363](/home/tony/projects/tessera/service/issuer/infra/main.tf:352). Fifteen minutes is the write lease. Even if execution timeout became fifteen minutes against the ten-minute schedule, excess invocations would be throttled/queued; downstream requests already sent remain the relevant overlap.
+
+The API currently still calls `settle` at [api.py:194](/home/tony/projects/tessera/service/issuer/tessera_issue/api.py:194). Removing that writer is therefore a necessary implementation change, not an existing guarantee.
+
+**Step 7:** sound as the revised design rule. Preserve the actual qualifying evidence durably, not only its digest, and classify “incurable” against recovery using that presentation.
+
+**Step 8:** sufficient for duplicate **end-and-allocate transitions**, provided the expected state and attempt id are evaluated atomically at commit and a failed or ambiguous write causes a reread. The existing store already uses [version CAS](/home/tony/projects/tessera/service/issuer/tessera_issue/aws.py:78). This does not provide exactly-once external signing or stamping; attempt-labelled jobs and idempotent recovery still carry that work.
+
+### Owner prechecks
+
+| Check | Result | File:line and assessment |
+|---|---|---|
+| **1. Capture row** | **PASS** | [Revision:18–22](/home/tony/projects/tessera/docs/decisions/2026-10-29-issuance-lifecycle.md:18), [78–82](/home/tony/projects/tessera/docs/decisions/2026-10-29-issuance-lifecycle.md:78) make no claim that dual-channel capture rejects attacker keys or reveals capture. [Contract:37,72–73](/home/tony/projects/tessera/docs/V1-CONTRACT.md:37) remains explicit: attacker-key receipts can pass; issuing-account capture permits issuance. |
+| **2. Trigger clause** | **FAIL** | [Revision:71–77](/home/tony/projects/tessera/docs/decisions/2026-10-29-issuance-lifecycle.md:71) does not establish the relevant antecedents: unlatched is not necessarily untimely; no pending calendar is not necessarily permanent predicate failure. |
+| **3. Requester** | **PASS** | [Revision:46–51,83–86](/home/tony/projects/tessera/docs/decisions/2026-10-29-issuance-lifecycle.md:46) makes no key-security claim based solely on storage or independent custody. Attempt routing and signing closure remain explicit. This is not a certification of signer requester authorization. |
+| **4. Binding text** | **FAIL** | [Revision:55,66–74](/home/tony/projects/tessera/docs/decisions/2026-10-29-issuance-lifecycle.md:55) introduces durable-write counting and an operating refusal policy without demonstrating compatibility with [A2:130–160](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-2.md:130) and its cited burial-time model. An owner residual cannot amend that protection. |
+
+Step 10 should include observation-to-send delay, delayed commits, crashes before persistence, timely burial without observation, partial header recovery, and duplicate transition retries. A green model that starts protection only at durable latch would leave the central discrepancy unchecked.
+
+

@@ -166,6 +166,9 @@ Cross-cutting obligations (A1.4, A1.7):
 - [ ] Informal written proof (defend-it-cold) in repository.
 - [ ] Parameter ratification at Band 0 exit: δ = 72h, ε = 24h, k = 6,
       and (A2.3) the issuance attempt bound N (working default 3).
+      *(2026-10-29, Amendment 11 c093: S = 24 h belongs in this list. For `tessera-v1-strict`, all five
+      parameters, δ = 72 h, ε = 24 h, k = 6, N = 3 and S = 24 h, were ratified by the author's signature on A9
+      (A9:223-225). The Band 0 exit item stays open outside V1 (A11 §A11.3 row 4).)*
 - [x] **P5 issuance corollary** (anchor confirmed at depth k within δ;
       re-issue on late/reorged anchors) — modeled as a real state machine
       in `formal/tla/P5c_IssuanceProtocol.tla` (checked; broken companion

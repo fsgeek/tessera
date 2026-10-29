@@ -1,0 +1,1326 @@
+Reading additional input from stdin...
+OpenAI Codex v0.165.0
+--------
+workdir: /home/tony/projects/tessera
+model: gpt-6.1-sol
+provider: openai
+approval: never
+sandbox: danger-full-access
+reasoning effort: none
+reasoning summaries: none
+session id: 01a188d1-c04d-7da2-a187-9395cba6e88f
+--------
+user
+Confirmation review for Project Tessera at /home/tony/projects/tessera (our own repository; read-only: no repo edits, no git writes; scratch only under a fresh mktemp -d). Your design review: docs/reviews/issuance-lifecycle/CODEX-REVIEW.md (IL-01..07, not ready). The owner's revision: docs/decisions/2026-10-29-issuance-lifecycle.md. (A) For each of IL-01..07: CLOSED / PARTIAL / OPEN, quoting the registered text (A2.1, A2.2, A2.3 in docs/phase-0-prereg-amendment-2.md; A3.7.3 in -3.md; A9.5, A9.7 and the issuer invariant in -9.md; profile §7.1 via git show 270ca49:docs/V1-PROFILE.md). (B) Step 3 is the new mechanism: expiry may be decided only by a worker that re-observes the chain evidence itself after B and finds the predicate false, with a compare-and-set write on the version it read; latching needs no margin. Test it as a concurrency design: enumerate interleavings of a latching worker and an expiring worker (delayed writes, crashes between read and write, a worker that fetched stale or partial evidence, an OTS proof upgraded between two fetches, explorer disagreement or a reorganisation shallower than 6, clock skew between workers), and say whether any interleaving lets a timely-eligible attempt expire or an ineligible one latch. Is the registered latch obligation (A2.1 'inclusive and latch-winning'; atomicity of latch against expiry) met? Does 'evidence unavailable means do not expire' create an unbounded wait, and is step 6's EVIDENCE_UNAVAILABLE refusal after an operating period consistent with A2.1 and A2.3? (C) Steps 4, 5 and 7: are discard on permanently failed conjuncts, the signing-closure rule and the post-latch permanent-failure discard consistent with A2.1 lines 161-162, A2.3 and the A9 issuer invariant? Does step 7 honour 'every timely-eligible attempt ships' as far as the registered texts allow, or does it discard something the texts require to ship? (D) Any new defect. Number findings ILC-01.... One-line verdict: ready to implement or not. Apply these owner prechecks to the revised design note, PASS/FAIL with file:line:
+
+# Owner prechecks, run by the reviewer
+
+> **Status: OWNER PROCESS, 2026-10-27.** Every owner instance has written these down as lessons and then repeated
+> the mistakes (the 2026-10-19 stone, and its 2026-10-27 postscript "Naming it did not stop it"). The author's
+> answer to "what do new owners get wrong in their first week": *"that they will behave differently from the prior
+> instances."* So these checks are not left to the owner's self-review. The owner appends this file verbatim to
+> every review brief (Codex or another family), and the reviewer reports each check as PASS or FAIL with file:line.
+
+## Checks
+
+1. **Capture row.** For every plain-language statement of what holds, what happens when an attacker controls both
+   authority channels (DNS and git)? If the text implies that the attacker's own keys are rejected, or that a
+   capture is detected or made visible, that is FAIL. Ground truth: `docs/V1-CONTRACT.md` §2 (after G10) and §4.
+2. **Trigger clause.** For every registered rule cited as authority (an amendment section, a table row, a ruling),
+   did the rule's trigger condition actually occur? Citing a consequence whose trigger has not happened is FAIL.
+3. **Requester.** For every security claim about keys or signing, who can cause a signature to be made? A claim
+   that reasons only about where a key is stored, and not about who can submit work to the signer, is FAIL.
+4. **Binding text.** For every sentence the document treats as a requirement, is it registered (a signed amendment,
+   the freeze, or a recorded author ruling), or is it something an instance wrote? An unregistered sentence used as a
+   requirement is FAIL. Since 2026-10-27, `docs/V1-SCHEDULE.md`'s ruling budget is a known instance of this. Also FAIL: an owner
+   requirement (a resolution, a design document, a code constant) that contradicts a registered sentence. Since
+   2026-10-29, S4's 24-hour FAILED against A2.3's per-attempt `declared + δ + S` expiry is the known instance.
+codex
+I’ll compare the revision with the registered texts, then work through the latch/expiry races and owner prechecks. I’ll keep the repository read-only and use a fresh temporary directory for any scratch work.
+exec
+/bin/bash -lc "pwd; rg -n 'issuance|A2.1|latch' /home/tony/.codex/memories/MEMORY.md; rg --files -g AGENTS.md -g '*issuance*' -g 'CODEX-REVIEW.md' -g '*amendment-2.md' -g '*amendment-3.md' -g '*amendment-9.md'" in /home/tony/projects/tessera
+ succeeded in 0ms:
+/home/tony/projects/tessera
+44:- Symptom: Row 2 CUT is attributed solely to the owner's merits rationale. Fix: preserve the author's actual rationale: manage V1 complexity and low initial use, accept the disclosed early limitation, and keep future issuance upgradeable. [Task 1]
+102:- Row 2, service-key listing, KEEP, CUT, attacker-selected keys, DNS, git authority, future issuance, pre-receipt commitment, listing-cut.md
+110:- For the E9 Row 2 choice, the user favored bounded staged scope: V1 complexity is already high, initial use is expected to be low, and the protection can be added for future issuance -> do not add complexity merely for a stronger theoretical guarantee; disclose the limitation precisely. [Task 2]
+117:- KEEP would block fresh attacker-key receipts after both DNS and git authority capture only for a user with an authentic listed verifier; CUT knowingly permits them while honest receipts remain protected under registered assumptions. Future issuance can add the listing, but cannot retroactively establish its required pre-receipt commitment for already-issued receipts. The author CUT is an independent scope decision, not the registered schedule-slip cut order. [Task 2]
+docs/phase-0-prereg-amendment-9.md
+docs/phase-0-prereg-amendment-2.md
+docs/phase-0-prereg-amendment-3.md
+docs/reviews/a9-final-delta/CODEX-REVIEW.md
+docs/reviews/v1-contract/CODEX-REVIEW.md
+docs/reviews/h2-record/CODEX-REVIEW.md
+docs/decisions/2026-10-29-issuance-lifecycle.md
+docs/reviews/v1-profile-r2/CODEX-REVIEW.md
+docs/reviews/p3-profile/CODEX-REVIEW.md
+docs/reviews/profile-2026-10-19/CODEX-REVIEW.md
+docs/reviews/e18-signoff/CODEX-REVIEW.md
+docs/reviews/hybrid-supplement/CODEX-REVIEW.md
+docs/reviews/e10/CODEX-REVIEW.md
+docs/reviews/amendment-10-r4/CODEX-REVIEW.md
+docs/reviews/p8-falsification/CODEX-REVIEW.md
+docs/reviews/amendment-10-r2/CODEX-REVIEW.md
+docs/reviews/plain-pilot/CODEX-REVIEW.md
+docs/reviews/signers/CODEX-REVIEW.md
+docs/reviews/exit-pages/CODEX-REVIEW.md
+docs/reviews/a9-custody/CODEX-REVIEW.md
+docs/reviews/preamble/CODEX-REVIEW.md
+docs/reviews/anchor-signatures/CODEX-REVIEW.md
+docs/reviews/amendment-10/CODEX-REVIEW.md
+docs/reviews/r22/CODEX-REVIEW.md
+docs/reviews/amendment-10-r3/CODEX-REVIEW.md
+docs/reviews/v1-profile/CODEX-REVIEW.md
+docs/reviews/service-resolutions/CODEX-REVIEW.md
+docs/reviews/amendment-9/CODEX-REVIEW.md
+docs/reviews/freeze-record/CODEX-REVIEW.md
+docs/reviews/issuance-lifecycle/CODEX-REVIEW.md
+docs/reviews/utc-capture-memo/CODEX-REVIEW.md
+docs/reviews/service-contract/CODEX-REVIEW.md
+docs/reviews/e9-packet/CODEX-REVIEW.md
+docs/reviews/issuer/CODEX-REVIEW.md
+formal/tla/falsification-2026-09-06/P4/CODEX-REVIEW.md
+formal/tla/falsification-2026-09-06/P5P6/CODEX-REVIEW.md
+formal/tla/falsification-2026-09-06/P5c/CODEX-REVIEW.md
+formal/suite/s-p7/proverif/falsification-2026-09-06/CODEX-REVIEW.md
+formal/suite/s-standing/proverif/falsification-2026-09-06/CODEX-REVIEW.md
+docs/reviews/custody/CODEX-REVIEW.md
+docs/reviews/amendment-11/CODEX-REVIEW.md
+docs/reviews/e6a/CODEX-REVIEW.md
+docs/reviews/v1-derivation/CODEX-REVIEW.md
+formal/suite/s-p1/proverif/falsification-2026-09-06/CODEX-REVIEW.md
+formal/suite/s-p2/proverif/falsification-2026-09-06/CODEX-REVIEW.md
+
+exec
+/bin/bash -lc 'for p in /AGENTS.md /home/AGENTS.md /home/tony/AGENTS.md /home/tony/projects/AGENTS.md /home/tony/projects/tessera/AGENTS.md; do if [ -f "$p" ]; then cat "$p"; fi; done
+nl -ba docs/decisions/2026-10-29-issuance-lifecycle.md
+nl -ba docs/reviews/issuance-lifecycle/CODEX-REVIEW.md' in /home/tony/projects/tessera
+ succeeded in 0ms:
+     1	# The issuer implements the registered issuance lifecycle (2026-10-29, revised after review)
+     2	
+     3	> **Status: OWNER DECISION**, by the owner instance (Claude Opus 5.5). It corrects an owner defect found by the
+     4	> Levadura consistency panel (finding c016, `levadura_salvaje/docs/tessera-a11-canary-scorecard.md`). Resolution S4
+     5	> (`docs/V1-SERVICE-RESOLUTIONS.md:23`) and the issuer failed every request 24 hours after acceptance. The
+     6	> registered lifecycle (A2.1, A2.2, A2.3, with A9.2's parameters) has no such deadline and makes "every
+     7	> timely-eligible attempt ships" an obligation on the implementation (`phase-0-prereg-amendment-2.md:143-145`).
+     8	> Registered text governs. No registered sentence changes; owner documents and code do. Revised the same day after
+     9	> Codex's design review (`docs/reviews/issuance-lifecycle/CODEX-REVIEW.md`, IL-01 to IL-07; two prechecks failed on
+    10	> the first version: it carried CF2-01's lease margin into the latch, and it called a nominal budget a bound).
+    11	
+    12	## What is registered
+    13	
+    14	- **Parameters** (A9.2; frozen profile §1): δ = 72 h, ε = 24 h, k = 6, N = 3, S = 24 h.
+    15	- **Attempts** (A2.3, `:259-268`): at most N. Each has its own declared issue time. A retry that changes any
+    16	  committed byte needs a fresh stamp (A9.5, `phase-0-prereg-amendment-9.md:295`), and its signatures are frozen
+    17	  before it is stamped (A9.5, `:290-296`).
+    18	- **Eligibility** (A2.1 `:91-94`; A2.2 `:220-224`; A3.7.3 `:659-673`): the attempt's own authenticated evidence for
+    19	  `SHA256(A_sig)`, with the lowest qualifying height buried k = 6 deep on the pinned, linked segment (profile §7.1),
+    20	  satisfies all three conjuncts: `declared − ε ≤ T`, `T ≤ declared + δ`, and `confirmed_at ≤ declared + δ`. This
+    21	  is narrower than the whole `VALID_STRICT` verdict, and the remaining pre-ship checks stay separate. Rows 12.2 and
+    22	  12.3 of the verifier are two of the conjuncts, not the predicate.
+    23	- **Latch and expiry** (A2.1 `:150-162`): eligibility observed at or before `B = declared + δ + S` is timely. The
+    24	  boundary is inclusive and "latch-winning", and a latched attempt cannot expire. Expiry applies only strictly
+    25	  after B, and only to attempts with no timely-latched eligibility. Atomicity of latch against expiry is an
+    26	  obligation on the implementation (A2.3). If the predicate fails at issuance time, the attempt is discarded and
+    27	  re-issued, subject to N (A2.1 `:161-162`). A lag beyond S *may* be refused (A2.1 `:135-138`); refusing it is not
+    28	  required.
+    29	- **Refusal** (A2.3 `:265-268, :279-281`): exhausting N ends issuance in an explicit refusal, durably recorded, and
+    30	  the transition that expires the final attempt records the refusal in the same step. In V1 the refusal is local and
+    31	  returned by the API (A9.7 row 12; `docs/V1-CLARIFICATIONS.md` CL-03). A3's portable record, commitment and
+    32	  publication are not V1.
+    33	- **Budget** (A2.3 `:271-274, :288-289`): N × (δ + S), twelve days, is a *nominal* budget, "not a proven wall-clock
+    34	  bound". Termination is an obligation on the implementation, not a proven liveness property.
+    35	- **Window** (A9 `:422`): an attempt whose T would exceed not-after is not shipped.
+    36	- **No SLA here** (A2.1 `:139-142`): a hard latency bound may enter only as a deployment-profile item with monitoring
+    37	  and an explicit violation outcome. It never kills an eligible attempt.
+    38	
+    39	## What the issuer does
+    40	
+    41	1. **Attempt isolation.** A request holds attempts 1..N. Each attempt has its own id. Its declared time, frames,
+    42	   signature jobs, proofs and evidence live under that id, in object names and record fields. A signer response, a
+    43	   proof or a frame always names its attempt. A late response for attempt i is logged and ignored. It can never fill
+    44	   attempt j.
+    45	2. **Eligibility check** (any poll, any worker): fetch or upgrade the attempt's evidence, then evaluate the
+    46	   eligibility predicate above, with the observation instant taken as a wall reading *after* the evidence is in hand.
+    47	   If it holds, **latch**: a compare-and-set write of `latched_at` together with the evidence digests. Latching
+    48	   needs no margin, because the latch is not raced. See step 3.
+    49	3. **Expiry is decided only by re-observation.** A worker may expire attempt i only if, in the same decision:
+    50	   - (a) it read the record and found i not latched;
+    51	   - (b) it took a wall reading strictly after B, after the read;
+    52	   - (c) it fetched the chain evidence itself and found the predicate false (or a conjunct permanently failed).
+    53	
+    54	   The expiry write is compare-and-set on the version it read. So a timely eligibility can never be lost to a stale
+    55	   expirer: the expirer recomputes the chain facts it would be overriding, and a concurrent latch makes its write
+    56	   fail. If the evidence cannot be fetched (calendar or explorer outage), the attempt is not expired on that poll.
+    57	   A request whose evidence stays unobtainable is refused only by the rule in step 6. This uses the permitted choice
+    58	   of A2.1: chain-eligible evidence observed after B, while the attempt is still open, is accepted. An attempt that
+    59	   has expired is never reopened.
+    60	4. **Known-invalid evidence.** If a conjunct has failed permanently (for example, the lowest qualifying height is
+    61	   later than `declared + δ` with k-deep burial), the attempt is discarded at once and the next one starts. It does
+    62	   not wait for B (A2.1 `:161-162`).
+    63	5. **Retry.** After an expiry or discard, if fewer than N attempts have been made and signing is open (signing stop,
+    64	   `sign_by`), attempt i+1 starts with a fresh declared time, fresh frames, fresh signatures and a fresh stamp. A
+    65	   closed signing window prevents *new* signatures only. It never expires a latched attempt, or an attempt already
+    66	   signed and stamped that can still become eligible.
+    67	6. **Refusal.** When the last attempt expires or is discarded, or no further attempt can start, the same
+    68	   compare-and-set write sets the request to REFUSED with its reason: `ATTEMPTS_EXHAUSTED`, `SIGNING_CLOSED` or
+    69	   `EVIDENCE_UNAVAILABLE`. That reason is used when evidence has been unobtainable for a stated operating period
+    70	   after B (an operating number, recorded in the runbook). The refusal is terminal and durable, returned by the API,
+    71	   and kept under S5.
+    72	7. **After the latch.** A latched attempt proceeds to assembly and the pre-ship checks. A *transient* failure (an
+    73	   explorer, a calendar, a DNS snapshot, a store) is retried and never expires the attempt. A *permanent* pre-ship
+    74	   failure of a latched attempt (for example T > not-after, or a verifier verdict other than `VALID_STRICT` for a
+    75	   reason the attempt cannot cure) discards that attempt with a recorded reason, and step 5 applies. An attempt
+    76	   that cannot be shipped is not shipped, and "every timely-eligible attempt ships" is honoured as far as the
+    77	   window invariant allows.
+    78	8. **Public view.** `fail_after` is withdrawn. The status shows `state`, `attempt` (i of N), and for an open,
+    79	   unlatched attempt its `attempt_expires_after` = B. It says plainly that a later attempt may follow, and that the
+    80	   twelve days are a nominal budget, not a promise.
+    81	9. **Clock tolerance.** The CF2-01 lease margin no longer applies to completion: COMPLETE follows a latch, and the
+    82	   latch is not raced. The 15-minute tolerance still bounds visibility of the other transitions
+    83	   (`docs/decisions/2026-10-27-service-clock-tolerance.md`). It never shrinks B.
+    84	
+    85	## Owner documents and code to change
+    86	
+    87	- **Prose:**
+    88	  - S4: drop the 24-hour FAILED. "Usually within 3 hours" stays, stated and unguaranteed. State the attempt
+    89	    lifecycle, the nominal twelve-day budget, and REFUSED with its reasons.
+    90	  - L1: acceptance stops at least δ + S + 24 h before signing stops (an operating margin).
+    91	  - CL-03 item 1 (the closed reason set) and item 2 (it cites 24 hours).
+    92	  - The clock-tolerance decision.
+    93	  - `service/issuer/DESIGN.md`.
+    94	  - Historical reviews and dispositions keep their text and gain a supersession pointer where they still read as
+    95	    current guidance.
+    96	- **Code** (Codex IL-06 inventory):
+    97	  - `service.py:7` (`DEADLINE_S`).
+    98	  - `api.py:12, :52-75, :94`.
+    99	  - `pipeline.py:84-85, :149-150, :194-214` (response routing by attempt), `:263` (`sign_by`), `:475-491`, and the
+   100	    module header.
+   101	  - Tests: `test_faults.py:125-144, :181`; `test_review_fixes.py:95-106`; `test_confirm_fixes.py` (deadline
+   102	    fixtures, CF2-01) are rewritten against the registered lifecycle. The CF2-01 tests become latch and expiry
+   103	    serialization tests.
+   104	- `docs/V1-SERVICE-CONTRACT.md` is unchanged (S4 there says only that completion is not immediate). Nothing goes to
+   105	  tupay (embargo).
+   106	
+   107	## How this happened
+   108	
+   109	S4 was resolved from the outside view, and every review brief since took the resolutions and the design as its
+   110	source of truth, so none compared S4 with A2. Precheck 4 now fails an owner requirement that contradicts a
+   111	registered sentence. Its first catch was this document's own first version, which carried an owner margin into a
+   112	registered boundary.
+     1	**Verdict: not ready to implement.** The direction is correct, but the eligibility definition, latch boundary, and claimed lifecycle bound need correction first.
+     2	
+     3	Review was read-only. I checked the registered amendments, the profile at `270ca49`, the verifier and issuer, and searched `service/` and `docs/` for the requested strings.
+     4	
+     5	1. **IL-01 — High: eligibility is incompletely defined.**  
+     6	   [Design lines 18–20 and 29–31](/home/tony/projects/tessera/docs/decisions/2026-10-29-issuance-lifecycle.md:18) identify eligibility with rows 12.2/12.3. Those rows are only two comparisons; they neither establish an authenticated anchor nor check the lower temporal bound.
+     7	
+     8	   Registered authority:
+     9	
+    10	   > “The issuer evaluates this conjunct **as part of the full three-conjunct temporal predicate**” — [A2.1:91–94](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-2.md:91).
+    11	
+    12	   > `declared_issue_time − ε ≤ anchor_time`  
+    13	   > `anchor_time ≤ declared_issue_time + δ`  
+    14	   > `confirmed_at ≤ declared_issue_time + δ` — [A2.2:220–224](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-2.md:220).
+    15	
+    16	   [A3.7.3:659–673](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-3.md:659) explicitly preserves the **burial-depth requirement** alongside those three conjuncts, while distinguishing them from the whole `VALID_STRICT` verdict. A9.7 explicitly leaves A2.1’s predicate unchanged.
+    17	
+    18	   For V1, the evidence must concern the attempt’s frozen `A_sig`: [A9.5:290–296](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-9.md:290) requires stamping `SHA256(A_sig)` and freezing signatures before stamping. Frozen profile §7.1, lines 860–900, requires selecting the lowest qualifying height, with the complete pinned, linked `h…h+5` segment; `confirmed_at` comes from that same selected branch.
+    19	
+    20	   **Correction:** define eligibility over authenticated, attempt-bound evidence with six confirmations and all three temporal conjuncts. Keep the remaining pre-ship checks distinct. Rows 12.2/12.3 alone are insufficient.
+    21	
+    22	2. **IL-02 — High: CF2-01’s early cutoff contradicts the registered latch boundary.**  
+    23	   [Design lines 38–42](/home/tony/projects/tessera/docs/decisions/2026-10-29-issuance-lifecycle.md:38) require the latch decision at least `WRITE_LEASE_S` before expiry. That excludes eligibility observed during the final 15 minutes, including the exact registered boundary.
+    24	
+    25	   Registered authority:
+    26	
+    27	   > “Eligibility observed at exactly `B = declared + δ + S` is timely — the boundary is **inclusive and latch-winning**” — [A2.1:153–156](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-2.md:153).
+    28	
+    29	   > “Expiry … applies only **strictly after** the boundary, and only to attempts with no timely-latched eligibility. Atomicity of the latch against the expiry transition is part of the mutual-exclusion construction obligation” — A2.1:157–160.
+    30	
+    31	   CF2-01 addressed the owner’s requirement that **completion become visible before a deadline**. Registered eligibility instead protects an observation from subsequent packaging and scheduling delay. An owner write-lease rule cannot move that observation boundary earlier.
+    32	
+    33	   A compare-and-set prevents both terminal transitions winning against the same record version; it does **not** alone ensure that timely observation wins. For example, one worker observes eligibility at the boundary, its write stalls, and another worker expires the unchanged record afterward.
+    34	
+    35	   **Correction:** specify serialization of evidence observation, latch and expiry, including delayed writes and crash recovery. Expiry must account for pending timely observations. Any AWS commit-latency assumption remains an assumption; the existing clock-tolerance decision does not authorize shrinking A2’s boundary.
+    36	
+    37	3. **IL-03 — Medium: permitting late-observed eligibility is allowed, but step 4 contradicts itself.**  
+    38	   The permissive choice at [design lines 40–42](/home/tony/projects/tessera/docs/decisions/2026-10-29-issuance-lifecycle.md:40) is compatible with:
+    39	
+    40	   > “An attempt whose lag exceeds S **may be refused**” — [A2.1:135–138](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-2.md:135).
+    41	
+    42	   “May” does not require refusal. Accepting authenticated chain-valid evidence observed after the nominal boundary, before an irreversible expiry decision, is a permissible policy choice. It cannot revive an already expired/refused attempt.
+    43	
+    44	   But “latch whenever the predicate holds before expiry is decided” conflicts with the preceding requirement to decide the latch **15 minutes before** the boundary. State one consistent policy: mandatory protection for timely eligibility, optional acceptance of late observations while the attempt remains open, and no reopening after expiry.
+    45	
+    46	4. **IL-04 — Medium: twelve days is a nominal budget, not an upper bound.**  
+    47	   [Design lines 44 and 49](/home/tony/projects/tessera/docs/decisions/2026-10-29-issuance-lifecycle.md:44) say the request ends “at up to” `N × (δ + S)`, plus clock tolerance. The registration explicitly disclaims that conclusion:
+    48	
+    49	   > “a **nominal lifecycle budget** … a nominal budget, **not a proven wall-clock bound on the process**” — [A2.3:271–274](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-2.md:271).
+    50	
+    51	   > “termination is a contract obligation on the implementation, not a proven liveness property” — A2.3:288–289.
+    52	
+    53	   Polling outages, delayed retry starts, and latched finalization can exceed twelve days. The optional late-observation policy further prevents treating this arithmetic as a hard bound.
+    54	
+    55	   **Correction:** describe twelve days as nominal attempt-window budgeting. Do not turn it into a replacement request deadline.
+    56	
+    57	5. **IL-05 — Medium: specify V1’s atomic durable refusal and API outcome; do not import portable-refusal machinery.**  
+    58	   [Design lines 21 and 36–37](/home/tony/projects/tessera/docs/decisions/2026-10-29-issuance-lifecycle.md:21) correctly require explicit refusal, but the implementation section should require the terminal state and reason to become durable together.
+    59	
+    60	   Registered authority:
+    61	
+    62	   > “explicit refusal, durably recorded” — [A2.3:265–268](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-2.md:265).
+    63	
+    64	   > “the transition expiring the final attempt’s window records the refusal in the same step” — A2.3:279–281.
+    65	
+    66	   A3 adds portable records, commitments, handoff and publication. However, [A9.7 row 12:476](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-9.md:476) replaces the refusal-record decomposition with:
+    67	
+    68	   > “Bounded local refusal returned by the API”.
+    69	
+    70	   Thus V1 needs an atomic, final, locally durable refusal with a reason, exposed through its authenticated API and retained under its declared policy. It does **not** need A3’s portable record, public commitment, publication channel or acknowledgment workflow. “Recorded reason” suffices only if it means durable terminal operator state, not merely a log message.
+    71	
+    72	   The owner-document list also misses [CL-03 item 1:34–35](/home/tony/projects/tessera/docs/V1-CLARIFICATIONS.md:34): its closed reason set lacks `ATTEMPTS_EXHAUSTED` and `SIGNING_CLOSED`, and associates accepted-request failures with `FAILED`.
+    73	
+    74	6. **IL-06 — Medium: the change inventory omits operational deadline sites and tests.**  
+    75	   The listed documents cover the principal prose locations, apart from CL-03 item 1. They do not enumerate every executable use of the old rule.
+    76	
+    77	   The requested search found these active implementation sites:
+    78	
+    79	   | File | Locations requiring review |
+    80	   |---|---|
+    81	   | [service.py](/home/tony/projects/tessera/service/issuer/tessera_issue/service.py:7) | `DEADLINE_S`, line 7 |
+    82	   | [api.py](/home/tony/projects/tessera/service/issuer/tessera_issue/api.py:52) | completion settlement, lines 52–75; `fail_after`, line 94; import, line 12 |
+    83	   | [pipeline.py](/home/tony/projects/tessera/service/issuer/tessera_issue/pipeline.py:81) | `_end`, lines 84–85; `advance`, 149–150; signer `sign_by`, 263; post-check rejection, 480–481; header commentary/import |
+    84	   | [test_faults.py](/home/tony/projects/tessera/service/issuer/tests/test_faults.py:125) | deadline expectations, lines 125–144 and 181 |
+    85	   | [test_review_fixes.py](/home/tony/projects/tessera/service/issuer/tests/test_review_fixes.py:95) | deadline-crossing expectations, lines 95–106 |
+    86	   | [test_confirm_fixes.py](/home/tony/projects/tessera/service/issuer/tests/test_confirm_fixes.py:46) | deadline fixtures and CF2-01 expectations, including lines 46, 178 and 198 onward |
+    87	
+    88	   The authoritative prose sites are S4, L1, CL-03, the clock-tolerance decision and issuer `DESIGN.md`, as anticipated. Historical issuer reviews and dispositions also contain the old rule: preserve their historical text and add a supersession pointer where they serve as current implementation guidance.
+    89	
+    90	   Other matches describe **ε**, **S**, or the retirement margin; those are separate rules and should retain their registered values.
+    91	
+    92	   Finally, `fail_after = current attempt expiry` becomes misleading once eligibility latches, and it never promises request termination when another attempt remains. Specify its public semantics for retries and finalization.
+    93	
+    94	7. **IL-07 — Medium: retry isolation and post-latch failure handling need design decisions.**  
+    95	   The attempt list is a start, but [design steps 1–3](/home/tony/projects/tessera/docs/decisions/2026-10-29-issuance-lifecycle.md:28) omit several consequential transitions.
+    96	
+    97	   Registered authority:
+    98	
+    99	   > “A retry that changes any committed byte needs a fresh stamp” — [A9.5:295](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-9.md:295).
+   100	
+   101	   > “If the predicate fails at issuance time, the attempt is discarded and re-issued … subject to the attempt bound” — [A2.1:161–162](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-2.md:161).
+   102	
+   103	   Before implementation, specify:
+   104	
+   105	   - **Attempt isolation:** separate frames, signature jobs, proofs and latch evidence by attempt identity. Current work-object names are reused, and signature-response handling resolves through the request’s current jobs ([pipeline.py:194–214](/home/tony/projects/tessera/service/issuer/tessera_issue/pipeline.py:194)). A late response must never populate a later attempt.
+   106	   - **Known-invalid evidence:** define discard/retry when a temporal conjunct fails, rather than only retrying after wall expiry.
+   107	   - **Finalization failures:** distinguish retryable packaging/evidence unavailability from irreversible refusal. Current pre-ship paths recapture snapshots or end `FAILED` ([pipeline.py:475–491](/home/tony/projects/tessera/service/issuer/tessera_issue/pipeline.py:475)); merely adding a latch will not resolve their interaction with the shipping obligation.
+   108	   - **Signing closure:** closing signing prevents fresh signatures; it does not itself justify expiring an already latched attempt or abandoning an already signed attempt that can finish without more signing.
+   109	
+   110	   The design correctly states `N = 3`, strict per-attempt expiry after `declared + δ + S`, and A9’s no-ship invariant for `T > not-after`. The new acceptance margin is an owner operating choice, not a registered guarantee of completion.
+   111	
+   112	The owner prechecks, applied to the design note:
+   113	
+   114	| Check | Result | Evidence |
+   115	|---|---|---|
+   116	| **1. Capture row** | **PASS** | [Lines 18–24](/home/tony/projects/tessera/docs/decisions/2026-10-29-issuance-lifecycle.md:18) make lifecycle claims, with no claim that dual-channel capture rejects attacker keys or exposes capture. The contract’s attacker-key acceptance remains applicable. |
+   117	| **2. Trigger clause** | **FAIL** | [Lines 38–42](/home/tony/projects/tessera/docs/decisions/2026-10-29-issuance-lifecycle.md:38) transplant CF2-01’s completion-deadline consequence into eligibility latching. That deadline requirement is being removed; registered latch precedence governs instead. |
+   118	| **3. Requester** | **PASS** | [Lines 13–14 and 35–37](/home/tony/projects/tessera/docs/decisions/2026-10-29-issuance-lifecycle.md:13) require fresh signing and respect signing controls; they make no key-storage or independent-approval security claim. This pass does not establish isolation of retry jobs. |
+   119	| **4. Binding text** | **FAIL** | [Lines 18–19, 38–39 and 44–49](/home/tony/projects/tessera/docs/decisions/2026-10-29-issuance-lifecycle.md:18) respectively narrow the registered predicate, impose a contradictory owner latch cutoff, and promote nominal budgeting into an upper bound. |
+
+exec
+/bin/bash -lc "nl -ba docs/phase-0-prereg-amendment-2.md | sed -n '80,170p;210,295p'
+nl -ba docs/phase-0-prereg-amendment-3.md | sed -n '650,680p'
+nl -ba docs/phase-0-prereg-amendment-9.md | sed -n '280,305p;405,430p;445,485p'
+git show 270ca49:docs/V1-PROFILE.md | nl -ba | sed -n '840,915p'
+nl -ba docs/V1-CONTRACT.md | sed -n '1,180p'
+nl -ba /home/tony/.codex/memories/MEMORY.md | sed -n '100,120p'" in /home/tony/projects/tessera
+ succeeded in 0ms:
+    80	**Vocabulary.** The anchor transaction is included in the block at height
+    81	`h`. Confirmation count follows the Bitcoin convention: the including
+    82	block is the first confirmation, so `c = tip_height − h + 1`, and the
+    83	block that grants the k-th confirmation has height `h + k − 1`. Define
+    84	
+    85	    confirmed_at  :=  timestamp(block at height h + k − 1)
+    86	
+    87	**The rule.** Issuance is complete only if
+    88	
+    89	    confirmed_at  ≤  declared_issue_time + δ
+    90	
+    91	The issuer evaluates this conjunct **as part of the full three-conjunct
+    92	temporal predicate** (the P5 temporal test inside `VALID_STRICT`; all
+    93	three A2.2 conjuncts — not the whole verdict, which contains more than
+    94	the temporal test) before shipping: under
+    95	skewed, non-monotonic block timestamps the confirmation conjunct does
+    96	not imply the anchor-time conjunct, so shipping on this conjunct alone
+    97	could ship a receipt the verifier rejects (surfaced by the bridge model,
+    98	`formal/tla/P5cP5P6_Bridge.tla`, 2026-07-21). The verifier evaluates the
+    99	same conjuncts on the same chain observables at verification (A2.2),
+   100	**under the issuance policy's tolerances**: the verifier-owns-tolerances
+   101	discipline permits stricter verifier values of either tolerance (a
+   102	stricter δ′ < δ, or a stricter ε′ on the anchor-time lower bound), and
+   103	such a verifier may reject honestly-shipped receipts — the
+   104	no-disagreement guarantee below is scoped to verification under the
+   105	issuance policy's δ and ε.
+   106	**Clock roles (ruling, 2026-07-21).** Chain time and wall time hold
+   107	separate, explicitly-ranked roles. **Chain time governs evidence:** the
+   108	three-conjunct predicate above, evaluated identically by issuer and
+   109	verifier on the designated blocks' timestamps. **Wall time governs the
+   110	attempt lifecycle:** the service waits through `declared + δ + S` before
+   111	treating an attempt as expired, where S ≥ 0 is an **operational slack
+   112	constant** joining δ, ε, k, N for ratification at Band 0 exit (working
+   113	default S = 24 h, sized to the observation path — outages and polling,
+   114	not timestamp skew alone). **No global bound on the backward observation
+   115	lag is assumed.** Writing C = `confirmed_at` and B = the service's
+   116	wall-clock observation of the designated block: Bitcoin consensus
+   117	provides no finite bound on B − C (median-time-past and the two-hour
+   118	future rule bound the forward direction only), and B additionally
+   119	absorbs the entire observation path — network and header-store delay,
+   120	polling, outage and recovery, wall-clock error. Registering a hard
+   121	bound would assert, at Phase 0, a property of an operational stack that
+   122	does not yet exist. Instead the guarantee is registered **conditionally
+   123	on the observable antecedent**: *if B − C ≤ S for an attempt whose
+   124	predicate holds, that attempt has a live shipping opportunity at
+   125	eligibility* (slack-parameter analysis,
+   126	`formal/tla/P5cP5P6_BridgeSlack.tla` and its `_Latch` variant;
+   127	predictions-first record in
+   128	`docs/reviews/2026-07-21-claude-predictions-slack-bench.md`). Since B
+   129	and C are both observable, a violated antecedent is a detectable
+   130	operating-envelope event, not a silently failed assumption. Timeliness
+   131	is **latched at eligibility**: an attempt eligible within the envelope
+   132	cannot be expired by later packaging or scheduling delay —
+   133	eligible/finalizing, shipped, and expired/refused are mutually
+   134	exclusive states (a construction obligation on the implementation,
+   135	registered with the ruling). An attempt whose lag exceeds S may be
+   136	refused; a chain-valid artifact of such an attempt remains
+   137	cryptographically valid and evidentially admissible but carries **no
+   138	protocol standing** (A2.4; enforcing that distinction against later
+   139	publication is Amendment 3's lineage/standing obligation). If
+   140	operational evidence later supports an SLA-style hard bound, it may
+   141	enter a **deployment profile** with monitoring and an explicit
+   142	violation outcome — never this pre-registration's assumption set. What
+   143	the opportunity guarantee buys is opportunity, not outcome: "every
+   144	timely-eligible attempt ships" is a contract obligation on the
+   145	implementation, the same proof-versus-contract split as A2.3's refusal.
+   146	
+   147	**Boundary ties, registered per clock.** The chain-side predicate is
+   148	stateless: at exactly `confirmed_at = declared + δ` it holds, and holds
+   149	identically whenever evaluated — there is no chain-side race. The
+   150	wall-side boundary is **resolved by the latch, not raced** (round-3
+   151	repair, 2026-07-21: an earlier draft of this paragraph carried the
+   152	fused-clock race forward; under latched eligibility there is none).
+   153	Eligibility observed at exactly `B = declared + δ + S` is timely — the
+   154	boundary is **inclusive and latch-winning**, matching the mechanized
+   155	form (`burialAtWall <= declared + Delta + Slack` in the `_Latch`
+   156	companion) — so such an attempt latches eligible/finalizing and cannot
+   157	expire. Expiry (on the final attempt, refusal) applies only **strictly
+   158	after** the boundary, and only to attempts with no timely-latched
+   159	eligibility. Atomicity of the latch against the expiry transition is
+   160	part of the mutual-exclusion construction obligation (A2.3). If the
+   161	predicate fails at issuance time, the attempt is discarded and
+   162	re-issued per the P5 corollary, subject to the attempt bound of A2.3.
+   163	
+   164	**Why chain time on both sides.** A wall-clock ship rule ("ship if depth k
+   165	by `now ≤ declared + δ`") and a block-timestamp verifier check can
+   166	disagree at the δ boundary by the consensus-bounded skew (block timestamps
+   167	may run up to about two hours ahead of network-adjusted time). Defining
+   168	the rule once, on the chain-visible quantity, removes the divergence: **no
+   169	honestly-shipped receipt can fail the verifier's confirmation conjunct
+   170	under the issuance policy's δ**, and the issuer's ship rule and the
+   210	at inclusion), so `depth ≥ DepthK` corresponds to `c ≥ DepthK + 1`. The
+   211	correspondence mapping instantiates **`DepthK = k − 1`** (for the strict
+   212	default k = 6: `DepthK = 5`). δ, ε, k remain ratified (or revised, on the
+   213	record) at Band 0 exit, as registered; δ's 72-hour sizing already included
+   214	aggregation-to-confirmation lag, so this amendment does not move it.
+   215	
+   216	---
+   217	
+   218	## A2.2 P5, amended: the strict temporal check gains a third conjunct
+   219	
+   220	`VALID_STRICT` now requires all of:
+   221	
+   222	    declared_issue_time − ε  ≤  anchor_time                       (unchanged)
+   223	    anchor_time              ≤  declared_issue_time + δ           (unchanged)
+   224	    confirmed_at             ≤  declared_issue_time + δ           (new)
+   225	
+   226	Consequences, stated explicitly:
+   227	
+   228	- The **chain-late subclass** of the A2.0 abandoned-anchor artifact
+   229	  (`confirmed_at > declared + δ`) is **rejected outright** — its
+   230	  `confirmed_at` exceeds its own window. Within this system the conjunct
+   231	  rejects *only* such artifacts: strict issuance ships nothing that fails
+   232	  it (A2.1). An operationally abandoned but chain-valid artifact passes
+   233	  this conjunct and is governed instead by the A2.1/A2.4 standing rules
+   234	  (no protocol standing; closure of the two-receipts residue is
+   235	  Amendment 3's obligation, per A2.0).
+   236	- **Evidence obligation.** The verifier must evaluate `confirmed_at`
+   237	  statelessly (P9): block headers `h … h + k − 1` are available either
+   238	  archived in the bundle or from the verifier-distributed header store the
+   239	  anchor check already requires — the same trust-configuration pattern as
+   240	  A1.5's historical trust-anchor store. Header *authentication* rules
+   241	  (canonicity, work validation, store identity in declared policy,
+   242	  bundle/store conflict resolution — the header-provenance residual of
+   243	  A2.1) are part of this obligation. This joins the H1a evidence
+   244	  obligations.
+   245	- **Waiver status.** Temporal-anchor consistency is already non-waivable
+   246	  (A1.2.1); the new conjunct is part of it. The P4 partition applies
+   247	  inside it: performed-and-failed → `INVALID`; unperformable (headers
+   248	  unavailable) → `UNVERIFIABLE`; neither is promotable.
+   249	
+   250	---
+   251	
+   252	## A2.3 The re-issue loop terminates: bounded attempts, fail-closed refusal
+   253	
+   254	As registered, the P5 corollary's re-issue rule was an unbounded loop, and
+   255	its dominant triggers — fee spikes, congestion, calendar outage — are
+   256	*correlated across attempts*: retrying under the same conditions is not a
+   257	fresh draw, so "re-issue until it works" can livelock. Fail-closed means
+   258	issuance must be able to end in refusal, not only in success.
+   259	
+   260	Amended: issuance makes at most **N attempts**. The expiry clock is the
+   261	**wall clock** (A2.1 clock roles): an attempt expires when wall time
+   262	passes `declared + δ + S`, except that timely-latched eligibility
+   263	excludes expiry — eligible/finalizing, shipped, and expired/refused are
+   264	mutually exclusive states (construction obligation, registered with the
+   265	ruling). Exhausting them obligates
+   266	the implementation to terminate issuance in an **explicit refusal, durably
+   267	recorded; reporting is a delivery obligation to be registered in
+   268	Amendment 3** — a first-class protocol outcome, not an error path. N is a
+   269	protocol constant ratified at Band 0 exit alongside δ, ε, k, and S
+   270	(working default **N = 3**; per the A2.1 clock-roles ruling each
+   271	attempt's lifecycle is wall-governed through δ + S, so N attempts give
+   272	a **nominal lifecycle budget** of N × (δ + S) — twelve days at the
+   273	working defaults δ = 72 h, S = 24 h — a nominal budget, not a proven
+   274	wall-clock bound on the process; see the model note).
+   275	[**Note:** refusal as a separate delivery obligation added 2026/07/21 per
+   276	review process/response.]
+   277	
+   278	Model note: P5c's `MaxAttempts` is hereby promoted from a state-space
+   279	bound to protocol semantics. The refusal state is modeled by **atomic
+   280	entry** (the transition expiring the final attempt's window records the
+   281	refusal in the same step; checked, with a broken companion red on
+   282	exactly the silent-deadlock invariant among the checked set — review
+   283	archived in
+   284	`docs/reviews/2026-07-20-codex-p5c-refusal-review.md`). Scope of proof
+   285	versus contract, per that review: the model proves the *conditional
+   286	safety half* — the refusal state is entered atomically and latches; it
+   287	does not prove the crossing occurs (no fairness is assumed), so
+   288	**termination is a contract obligation on the implementation, not a
+   289	proven liveness property**. The unbounded "eventually ships" claim
+   290	likewise remains explicitly unproven. Storage durability, retrievability,
+   291	and reporting of the refusal record are implementation/handoff
+   292	obligations to be registered in Amendment 3 (planned, not yet in force).
+   293	[**Note:** model-note scope split added 2026/07/21, same review cycle.]
+   294	
+   295	---
+   650	   declared threat model. It corroborates a disclosed record and does
+   651	   not reconstruct a lost one; absent a separately registered
+   652	   transparency mechanism, it does not prove that every refusal was
+   653	   published.
+   654	3. **The bridge finding (tracker; non-author review of the
+   655	   disposition performed 2026-08-08 — see
+   656	   `docs/reviews/2026-08-08-A3-panel-disposition.md`).**
+   657	   A2.1's "The rule" sentence states conjunct 3 only; under decoupled
+   658	   clocks conjunct 3 does not imply conjunct 2, so the issuer
+   659	   evaluates the **full three-conjunct temporal predicate of A2.2
+   660	   (the P5 temporal test inside `VALID_STRICT`)** before shipping —
+   661	   as the bridge model's Ship action already does. Evaluation of
+   662	   conjunct 3 alone is insufficient and is forbidden. Registered here
+   663	   as the authoritative prose repair.
+   664	
+   665	   `[PANEL-DRIVEN REPAIR — 2026-08-08, from the Kimi addendum,
+   666	   clerk-verified against the model]` An earlier form of this repair
+   667	   said the issuer evaluates "the full `VALID_STRICT` predicate" at
+   668	   ship. That overstates the model and the obligation: the bridge
+   669	   model's Ship guard is the three-conjunct temporal predicate plus
+   670	   the burial-depth requirement (its header registers exactly this),
+   671	   and the issuer does not re-run envelope verification (P1–P3) at
+   672	   ship. The repair sentence itself is now scoped to match the model
+   673	   — the same prose/model discipline this item exists to enforce.
+   674	
+   675	---
+   676	
+   677	## A3.8 The assessment must carry its own boundaries (Sol finding 2)
+   678	
+   679	`VALID_STRICT` attests envelope soundness, never payload truth — and
+   680	nothing previously registered prevented a future API or UI from
+   280	  prohibited-identifier cases (A9.7 row 29). This
+   281	  binds later verifiers and profiles; it is not a property V1 itself demonstrates. **This is not
+   282	  non-repudiation.** Evidence (C7): for an otherwise valid, fully performable bundle where missing status capture
+   283	  is the sole difference, a companion returning `INVALID` or `UNVERIFIABLE` must go red.
+   284	
+   285	## A9.5 Strict-only, standalone; the receipt anchor — OWNER DECISIONS 2026-10-12 except where marked
+   286	
+   287	- **Dispatch.** Out-of-profile input gives `UNVERIFIABLE / OUT_OF_PROFILE` at dispatch; A4.2 precedence holds inside.
+   288	- **H1a's suite.** Forge, tamper, backdate, break-chain, strip-one-signature, out-of-profile, the A9.1 mapping.
+   289	  Degradation and wrapper instances move to their capabilities.
+   290	- **Receipt anchor.** OTS stamps `SHA256(A_sig)`, tag `tessera-v1/receipt-anchor-sig`, which commits to both frames
+   291	  and their exact detached signatures in manifest slot order (ENCODING-V1 §5, D-8, D-14). The verifier verifies the
+   292	  committed signature bytes only. The frame-only layout is withdrawn, with no fallback.
+   293	- **Issue order (D-15).** Fix manifest and metadata; build frames; sign; verify; **freeze** the signature bytes;
+   294	  **stamp** `A_sig` (one stamp per receipt, R-3.42); obtain confirmation; ship. A signature made after T cannot fit
+   295	  the anchor. A retry that changes any committed byte needs a fresh stamp. Signature identifiers stay independent
+   296	  of signature bytes; the anchor digest may commit to them; nothing is normalized after stamping.
+   297	- **Git stamp target (D-16).** The git channel's OTS stamp targets the **signed commit's object id**, never a tree,
+   298	  blob or unsigned commit. The verifier recomputes the id, verifies `gpgsig`, follows commit→tree→blob, and checks
+   299	  the stamped id. SHA-1 linkage remains a stated residual. The git evidence names its object format, and V1
+   300	  accepts only `sha1`: the key-assertion repository stays in SHA-1 format at a host that supports it, whatever
+   301	  git's default becomes (the author, 2026-10-13: Git 3 moves to SHA-256 in 2027; GitHub does not support it).
+   302	  The pre-freeze bundle schema (V1-PROFILE §2.1, G-26) defines the git-evidence member `object_format` as the string
+   303	  `"sha1"`. It is an evidence descriptor, not a new signed-frame or key-publication field. A missing descriptor gives
+   304	  `UNVERIFIABLE / GIT_OBJECT_FORMAT_MISSING`; an unsupported value gives `UNVERIFIABLE / GIT_OBJECT_FORMAT`. The
+   305	  verifier recomputes the SHA-1 object ids from the raw commit/tree/blob bytes, so this descriptor cannot override
+   405	  V2 driver (A9.3).
+   406	
+   407	**Issuance window.** The key-publication record carries `issuance-not-before` and `issuance-not-after`, **both
+   408	mandatory**, identical in DNS and the git blob (ENCODING-V1 §7, §7.1, D-17).
+   409	- **Registered invariant: `issuance-not-after − issuance-not-before ≤ 90 days`** (a record that violates it is
+   410	  rejected, `DNS_WINDOW_LENGTH`). This amendment registers the first issuance window only; it does not yet
+   411	  authorize successor issuance. A future sequential-replacement registration may retain the frozen V1 byte/check
+   412	  profile: the same DNS owner and git path, new keys, and a new window with next.not-before > previous.not-after (both
+   413	  endpoints are inclusive). Each receipt carries its own historical snapshot and commit. Multiple TXT records at the
+   414	  required owner fail `DNS_RRSET`; a substituted per-key owner name fails `DNS_OWNER`. The V1 verifier checks each
+   415	  receipt's window, not non-overlap between receipts. Before successor issuance, the owner records a dated rotation
+   416	  registration naming the two-window positive/negative vectors and the model, checked property and result
+   417	  establishing the intended issuance invariant. This future rotation evidence is not added to the 30 Oct
+   418	  first-window gate. Without that registration, issuance stops at the first window's end.
+   419	- **Verifier rule (C4).** A receipt is `INVALID / ISSUANCE_WINDOW` unless the declared issue time is not earlier
+   420	  than not-before and the verified chain-time T is not later than not-after, with T as registered and no margin.
+   421	  T itself is not compared with not-before.
+   422	- **Issuer invariant.** An attempt whose T would exceed not-after is not shipped. The stop margin, the window's
+   423	  actual dates and the rotation plan are operating numbers, not registered (`docs/V1-OPERATIONS-RUNBOOK.md`).
+   424	- A published window cannot be shortened; detection changes no V1 verdict.
+   425	- The relying-party documentation states: `ISSUANCE_WINDOW` can result from presenting a later proof; ask the
+   426	  holder for the issuer's original proof.
+   427	
+   428	**Exit.** The exit procedure is not part of this instrument; it is in the operations runbook. No V1 verifier rule
+   429	consults any end-of-issuance statement (OWNER DECISION 2026-10-12).
+   430	
+   445	   explicit backward-skew assumption that V1 does not establish: A2.1 registers no finite bound on B − C, and
+   446	   neither ε nor S is one. Inside the window, such an adversary mints receipts that pass; the window cannot be
+   447	   shortened, and detecting misuse is the B(ii) add-on, not V1.
+   448	
+   449	**C3 non-claim.** The two keys are *separate technical failure domains under a single controller; no separation of
+   450	control or independent fates.* The `gpg` signer signs frames delivered by the AWS-side issuer, so capture of the
+   451	issuing account confers signing capability for both slots; the non-exportable key prevents key export, not misuse.
+   452	With the hybrid the slots differ in algorithm (lattice and elliptic curve) and custody (AWS KMS and the
+   453	slot-2 custody); under the fallback a P-256 break defeats both slots.
+   454	
+   455	## A9.7 What changed
+   456	
+   457	**Registered sentences changed.** Kind: **W** weakened, **C** capability not offered by V1, **G** gate or trigger
+   458	moved, **H** hypothesis withdrawn, **T** test registration, **R** replaced or narrowed for V1, **K** clarified. Every
+   459	change applies to `tessera-v1-strict` only; each sentence stays standing and governs everything else. Paths are
+   460	`docs/` unless given. Quotation marks mark exact source words; *paraphrase* marks the rest. The file:line column
+   461	is the source citation; the replacement column points into this amendment.
+   462	
+   463	| # | Registered sentence | file:line | Replacement for V1 | Kind |
+   464	|---|---|---|---|---|
+   465	| 1 | "Before any code, the central guarantee is established by a machine-checked formal model and proof … No time bound … the Phase 1 / H1b clock does not start until Band 0 is resolved" | `phase-0-prereg.md:102-107` | A9.2's single code gate; P8 by prose proof plus vectors, time-boxed, not machine-checked; the 30 Oct ceiling and slip rule replace "No time bound"; H1b withdrawn | W |
+   466	| 2 | "Band 0 (H0) must be resolved before Phase 1 begins"; "Only then does **Phase 1a** begin …, marked by an explicit, dated, signed commit declaring the build runway open" | `phase-0-prereg.md:714-732` | The prerequisite changes: the recorded 30 Oct V1 exit (A9.2), not H0's resolution, opens Phase 1a for V1-profile code only; H0 stays unresolved. The explicit, dated, signed opening commit remains | G |
+   467	| 3 | Capstone gate: every ledgered cross-model assumption discharged with a broken companion | `phase-0-prereg-amendment-3.md:220-231` | Strict correct-form rows only; case (d), divergences and withheld results stay with the capstone | G |
+   468	| 4 | "Done when (v1 product)" and the kill criterion | `phase-0-prereg.md:589-617` | Not V1; kept as the later product done-line | C |
+   469	| 5 | H1a red-bar "for each attack family … and each degradation scenario" | `phase-0-prereg.md:203-208` | A9.5's suite; degradation cases move to their capability | G |
+   470	| 6 | H1b: LocalStack, 1/sec, within 7 days of the H1a freeze | `phase-0-prereg.md:210-224` | Withdrawn for V1, not falsified | H |
+   471	| 7 | P6: `key_authorized(declared) ∧ no revocation effective at or before anchor_time` | `phase-0-prereg-amendment-1.md:199-214` | Not evaluated; `revocation: NOT_EVALUATED` (A9.4) | W |
+   472	| 8 | A4.3's rewritten revocation-after-anchor sentence | `phase-0-prereg-amendment-4.md:111-123` | As row 7 | W |
+   473	| 9 | §4.4 "Revocation is time-relative … `INVALID`" | `phase-0-prereg.md:537-546` | As row 7 | W |
+   474	| 10 | Standing mechanism modelled "before Band 0 exit" | `formal/spike/FIRST-LINK-SPIKE.md:50-56` | Moves to Protocol standing | G |
+   475	| 11 | Standing invariant | `phase-0-prereg-amendment-3.md:531-557` | No TLR; standing `ABSENT/NOT_ISSUED_IN_PROFILE`, reported separately | C |
+   476	| 12 | Refusal-record decomposition, commitment, companions | `phase-0-prereg-amendment-3.md:572-581`, `:816-828` | Bounded local refusal returned by the API | C |
+   477	| 13 | Integrated lifecycle model green before the H1a crypto-core freeze | `phase-0-prereg-amendment-3.md:783-806` | Trigger moves to Wrapping and renewal; the 30 Oct profile freeze is not the crypto-core freeze | G |
+   478	| 14 | Custodial renewal "before the old mechanism becomes unreliable" | `phase-0-prereg-amendment-3.md:273-278` | No renewal; custody and dependency manifest stated (A9.5) | C |
+   479	| 15 | KMS and local GPG "independent failure domains"; *paraphrase:* they fail for uncorrelated reasons (source: "They fail for *uncorrelated* reasons"), so durability does not rest on any single domain surviving; and "two independent signatures whose validity does not share a failure domain" | `phase-0-prereg.md:292-299`, `:304-305` | Narrowed to C3's non-claim: separate technical failure domains under a single controller; no separation of control or independent fates; under the fallback both slots share P-256's failure. The registered local-GPG placement is replaced for V1 by A9.6's slot-2 custody alternatives, both through the external policy signer; rule O and the gpg fingerprint scheme are retained. The spec's restatements (`implementation-spec.md:226`, `:604-610`) follow this row as consequences; they are not new author rulings | R |
+   480	| 16 | A8.4's new query ("a new query, predicted red under C-C15(i) … run with A8.3's batch") and its spec edits (O-74, R-6.44 innermost) | `phase-0-prereg-amendment-8.md:95-98`, `:100-106` | Postponed with standing; A8 remains the source record | G |
+   481	| 17 | Prototype scenario expectations | `prototype/consumers/scenarios.py:72-133` | Kept as history; A9.1's mapping registered prospectively | T |
+   482	| 18 | Dead-project (clean-room) demonstration | `phase-0-prereg-amendment-3.md:371-378` | Not run for V1; the dead-service test is | G |
+   483	| 19 | Forward-link successor slot registered "before format freeze with a slot-bearing golden vector" | `implementation-spec.md:651-656`; `formal/spike/standing-probe/AMENDMENTS-2026-08-31.md:159-206` | Not in V1; a later profile carries it | C, G |
+   484	| 20 | §4.7 review recency attested (hard rule) | `phase-0-prereg.md:564-572` | Not offered by V1; moves with the product done-line | C |
+   485	| 21 | Custodial parameter schema and clock roles ratified at Band 0 | `phase-0-prereg-amendment-3.md:435-451` | Trigger moves to Wrapping and renewal | G |
+   840	  ALG_UNKNOWN`, not an additional `SCHEMA` failure (section 1). [OWNER 2026-10-14, r2-F01]
+   841	- **Receipt consistency, explicit** [OWNER 2026-10-14, r2-F02]: "Both frames' signer fingerprints equal the
+   842	  corresponding manifest fingerprints (RECEIPT_SLOT); their common byte substrings are equal
+   843	  (RECEIPT_COMMON_MISMATCH); common issuer and alg equal manifest issuer and alg (RECEIPT_MANIFEST_MISMATCH). Stage 4
+   844	  checks common.manifest_sha256 against SHA256(F_manifest), using RECEIPT_MANIFEST_MISMATCH; when both common objects
+   845	  are available, check each in kms/gpg order. These checks never require signature validity or channel
+   846	  authentication." All are `INVALID`. Anchor digest verification stays in the receipt OTS check; with the
+   847	  `a_sig`-only route there is no second externally transported tuple to reconcile. A9's bytes/signature binding
+   848	  remains required; this completes the specification and permits omitting none of these checks. Listed in section
+   849	  15.7 (rows 4 and 6).
+   850	- **W1 (malleability).** Decided. No V1 semantic, standing or attempt identifier is derived from signature bytes. The
+   851	  anchor digest commits to them by design and is not an identifier. V1 does not require unique signatures and
+   852	  normalizes none. The unhashed OpenPGP area carries no meaning. A changed signature fails the anchor
+   853	  (`RECEIPT_ANCHOR_MISMATCH`). [ENC §3.5:339-355; ENC §8:735-739; A9:295-296] The half-day argument that no strict
+   854	  query relies on signature uniqueness is a separate item (DD:89; step 10).
+   855	
+   856	## 7. Time
+   857	
+   858	### 7.1 The T rule
+   859	
+   860	- T is the time of the verified attestation at the **lowest block height** in the presented OTS proof; both T and
+   861	  its confirmations come from that attestation. It is presentation-sensitive: a different presentation of the same
+   862	  receipt can select a different T. [A9 C5 as revised 2026-10-14; DD:56, 98-99; OWNER 2026-10-14, G03] *Dated
+   863	  correction 2026-10-14: this bullet previously read "T is the time of the earliest verified attestation", A9's
+   864	  earlier wording. "Earliest" means chain order, not least nTime: header times are not monotone, and the two
+   865	  selection rules can give different verdicts on the same proof.*
+   866	- No lower bound and no priority. Header times are chain-time proxies. [A9:144]
+   867	- The three conjuncts at k = 6 (`DepthK = k − 1 = 5`): `declared − ε ≤ anchor_time`; `anchor_time ≤ declared + δ`;
+   868	  `confirmed_at ≤ declared + δ`. All three are evaluated together. [SPEC R-4.41:985; SPEC R-5.19:1352; SPEC
+   869	  V33-V36:1342-1346; A9:105-106]
+   870	- A real proof carries several attestations hours apart and nothing in the proof names T (M3). [FT:20; DD:98]
+   871	- **T ≡ `anchor_time`.** For the receipt proof, T = `anchor_time` = nTime(h*), where h* is the lowest qualifying
+   872	  height. The same value feeds conjuncts 1 and 2, the C4 window rule and the reported T. Two qualifying attestations
+   873	  at the same height give the same T. [OWNER 2026-10-14, G03] *(Was: "`OPEN (step 8):` one sentence stating whether
+   874	  T is the `anchor_time` of the three conjuncts", 2026-10-13.)*
+   875	- **`confirmed_at`** = nTime(h* + 5): the including block plus five successors, k = 6 (SPEC R-3.45, R-4.42). A
+   876	  failure gives `INVALID`: `TIME_BEFORE_DECLARED_EPSILON`, `TIME_AFTER_DECLARED_DELTA` or `CONFIRMATION_LATE`.
+   877	  Nonmonotone header times can give `confirmed_at` < T; that is not a failure, and there is no monotonicity check.
+   878	  [OWNER 2026-10-14, G04]
+   879	- **Qualifying ("verified") attestation.** A Bitcoin attestation at height h qualifies if and only if (a) the
+   880	  bundled header at h exists and its merkle root equals the attestation message; (b) headers h … h+5 are all
+   881	  bundled; (c) each equals its pin, `hex(reverse(SHA256d(header))) = pin[height]`; (d) for i = h+1 … h+5,
+   882	  `header_i.prev = SHA256d(header_{i−1})`. [OWNER 2026-10-14, G05] *(Was: "`OPEN (step 8):` what 'verified' means
+   883	  for an attestation", 2026-10-13.)*
+   884	- **Selection.** Attestation selection is existential over qualifying branches. A syntactically valid Bitcoin
+   885	  attestation without a complete h..h+5 segment is nonqualifying, not a required failed check. It supplies no time or
+   886	  trust fact. All supplied headers, including unused ones, are independently checked against pins (section 7.2).
+   887	  The selected anchor, rather than every unverified attestation, is the referent of "anchors beyond the newest pin"
+   888	  (A9 C6 as revised 2026-10-14). [OWNER 2026-10-14, G05]
+   889	- **Proof outcomes.** A pinned bundled header at h whose merkle root ≠ the attestation message: `INVALID /
+   890	  OTS_MERKLE_MISMATCH` (a contradicted branch fails the proof). No qualifying attestation: `UNVERIFIABLE /
+   891	  HEADERS_MISSING` if any Bitcoin attestation is present, `UNVERIFIABLE / ANCHOR_PENDING_ONLY` if only pending ones;
+   892	  the snapshot uses `SNAPSHOT_NOT_ANCHORED` and git `GIT_NOT_ANCHORED`. [OWNER 2026-10-14, G05]
+   893	- **Time arithmetic.** Times are integer seconds since 1970-01-01T00:00:00Z without leap seconds; nTime is the
+   894	  header's uint32; RFC 3339 fields convert by days-from-civil (proleptic Gregorian); comparisons are inclusive.
+   895	  [OWNER 2026-10-14, G03]
+   896	- **OTS and txid encoding**: section 15.2. [OWNER 2026-10-14, G20]
+   897	- **txid scope and selected-height aggregation** [OWNER 2026-10-14, r2-F08]: "§15.2's transaction-shape and
+   898	  txid-equality check applies only to receipt_anchor. The snapshot/git proofs use the closed OTS grammar and header
+   899	  qualification, with no txid comparison. Select h* before the receipt txid check; any satisfying qualifying path at
+   900	  exactly h* passes that check. Never switch to a higher height merely to find a matching txid." **Owner choice
+   901	  (fail-closed), stated separately:** the **transaction-shape and merkle-suffix subset** (section 15.2, parts 1, 2
+   902	  and 4, without part 3's txid comparison) also applies to the selected height of the snapshot and git proofs; a
+   903	  failure there is `INVALID / OTS_TX_SHAPE`, and any qualifying path at exactly that proof's h* satisfying the
+   904	  subset passes. No receipt txid is compared with the snapshot or git proof; the three proofs normally anchor in
+   905	  different transactions. *(Dated correction 2026-10-14: section 15.7's "OTS (as 11 …)" imported the receipt's
+   906	  txid check into proofs that carry no txid.)*
+   907	
+   908	### 7.2 Header pins
+   909	
+   910	- Every bundle header must be in the pinned set. Otherwise the verdict is `UNVERIFIABLE / HEADERS_NOT_COVERED`.
+   911	  There is no retarget logic, because the pins cover every accepted header. [A9:156; DD:99]
+   912	- **Conflict.** A supplied header at a pinned height with a different hash gives `INVALID / HEADER_CONFLICTS_PIN`:
+   913	  it is contradictory evidence. A9.1's "a bundle header outside the pins" is read as a header **at a height the pins
+   914	  do not cover**. [OWNER 2026-10-14, G23] A10.5 stage 1 (signed 2026-10-18) registers this reading as A9's meaning:
+   915	  no pin at the height gives `UNVERIFIABLE / HEADERS_NOT_COVERED`, a header differing from its pin gives `INVALID /
+     1	# V1 service contract and failure model
+     2	
+     3	> **Status: OWNER DRAFT, 2026-10-19** (Claude Opus 5.5, owner instance). It restates what A9.1 and A10 already
+     4	> registered. It changes no registered sentence; if it disagrees with A9 or A10, they win and this page is wrong.
+     5	> Revised the same day after a full Codex review (`docs/reviews/v1-contract/CODEX-REVIEW.md`, VC-01 to VC-25, all
+     6	> applied; `DISPOSITION.md`). Purpose: one page that the formal models, the conformance cases, the service and the
+     7	> testers are all checked against, so that when two of them disagree we can see whether the contract, the model or
+     8	> the code is at fault (the author's method, travelog 2026-10-19).
+     9	
+    10	## 1. What a client gets
+    11	
+    12	The client sends bytes. Tessera returns a **receipt**: a bundle that anyone can check later, without Tessera
+    13	running and without our help.
+    14	
+    15	## 2. Guarantees
+    16	
+    17	**Conditions.** Every guarantee assumes the registered cryptographic, key-use, authority, chain-history and
+    18	distribution assumptions (A9:32–52, A9:128–136). In particular: nobody misused the service's signing capability,
+    19	SHA-256 and OpenTimestamps hold, and the checker's verifier release is authentic.
+    20	
+    21	When those hold, a checker who has the receipt, the published verifier and its trust configuration can establish:
+    22	
+    23	| # | Guarantee | Source |
+    24	|---|---|---|
+    25	| G1 | **Exact bytes.** The receipt binds these exact bytes. Change one bit and the check fails. | C1 |
+    26	| G2 | **Presented to Tessera.** The bytes were presented to the Tessera V1 service at some issuance. | C2 |
+    27	| G3 | **Both signatures.** Both of the service's keys signed. A missing, stripped or swapped signature fails. | C3 |
+    28	| G4 | **The keys were Tessera's.** DNSSEC (`_tessera-v1.wamason.com`, at the snapshot's own anchored time) and a signed git commit (at its own evidence time) named the keys for the service's domain. The git commit was in the Bitcoin chain at least 6 blocks before the receipt. | C4, A10.6 |
+    29	| G5 | **Existed by a block.** The signed bytes and both signatures existed before a specific Bitcoin block: the lowest-height qualifying block in the presented proof, confirmed 6 deep. | C5, A10.1, A10.5 |
+    30	| G6 | **A real-time bound, under an unchecked assumption.** A-UTC says at least one of that block and its 5 successors has a time stamp at most 2 hours behind when it was made. If A-UTC holds, the bytes existed before U (the latest of those 6 times, plus 2 hours). U is reported separately and never changes the verdict. | A10.1.1 |
+    31	| G7 | **Window, two checks only.** The declared issue time is not before the keys' window opened, and the chain time T is not after it closed. This does not prove the signing happened inside the window. | C4, A10.2 |
+    32	| G8 | **No Tessera needed.** The verdict depends only on the inputs above. | C6 |
+    33	| G9 | **A typed verdict.** Once the trust configuration is authenticated, the verifier returns `VALID_STRICT`, `INVALID` or `UNVERIFIABLE`, with a reason code and `revocation: NOT_EVALUATED`, `historical_security: NOT_EVALUATED`, `standing: ABSENT/NOT_ISSUED_IN_PROFILE`. Missing required evidence prevents acceptance. A valid receipt still leaves everything in §3 unestablished. If the trust configuration is not authenticated, there is no receipt verdict. | C7; A9.5 trust-configuration authority; V1-PROFILE §5 (`TRUST_CONFIG_UNAUTHENTICATED`) |
+    34	| G10 | **Honest receipts cannot be moved.** If an attacker takes over the DNS and git authority records while the service's own keys stay secret and unmisused, it cannot move honestly signed frames to other keys or bytes, or change their signer sets, whether they were signed before or after the takeover. | A10.4 |
+    35	**No G11.** The service-key listing (A10.4.1) is not in V1, by the author's ruling of 2026-10-23 (E9 row 2,
+    36	`docs/reviews/e9-packet/AUTHOR-RULINGS.md`; `docs/decisions/2026-10-19-listing-cut.md`). G10 holds while the independent release boundary of A9.5 holds.
+    37	**New receipts under an attacker's own keys pass when both authority channels are captured.**
+    38	
+    39	## 3. Not guaranteed
+    40	
+    41	Each of these is a deliberate limit, not a missing feature.
+    42	
+    43	- **Who submitted the bytes**, or that a replayed receipt suits the current transaction (case f).
+    44	- **What the bytes mean**, or that they are true. A contract inside the bytes is the checker's to verify (cases i, i′).
+    45	- **That a key was not revoked** (cases e, e′).
+    46	- **That an algorithm or a key was still safe** when it signed.
+    47	- **Any lower time bound or priority.** "Existed by" is never "existed after" or "came first".
+    48	- **Real time without A-UTC.** Without it, only chain order is claimed.
+    49	- **Standing** of any kind.
+    50	- **Separate control of the two keys.** One controller holds both. Capturing the issuing AWS account means both
+    51	  slots can sign.
+    52	- **Visibility.** Publishing the authority records is the issuer's duty; the verifier does not check it. V1
+    53	  guarantees no detection or public exposure of a capture, of new receipts, or of a release given to one party.
+    54	- **That DNSSEC shows publication before issue.**
+    55	- **Anything after a Bitcoin reorganization of 6 or more blocks.**
+    56	- **Renewal, degraded modes, or wrappers.** These are refused (`UNVERIFIABLE`), including honest ones (cases d2, h:
+    57	  the two registered false rejects).
+    58	- **One receipt per presentation.** A receipt id (SHA-256 of `A_sig`) names a receipt, not a presentation. Signing
+    59	  is randomized, so the same honest frames can carry more than one valid signature set and therefore more than one
+    60	  valid receipt, each with its own T. Each still meets G1–G10. (Owner, 2026-10-19, from finding E-02 of the first
+    61	  real run.)
+    62	- **Stability of T and U across different proofs.** A different proof or pin set can select a different block.
+    63	- **Protection for a checker who skips authenticating the verifier release** or runs a substituted one.
+    64	
+    65	## 4. Failure model
+    66	
+    67	| Failure or attacker | What still holds |
+    68	|---|---|
+    69	| Tessera disappears | Everything in §2, if the holder kept the receipt and the verifier release. Reconstruction after the project dies is not demonstrated. |
+    70	| Attacker alters a receipt or moves its signatures | Rejected (G1, G3, G10). |
+    71	| Attacker uses its own keys, authority records not captured | Rejected: the required authority evidence does not name them (G4). |
+    72	| Attacker captures both DNS and git authority records | Honest receipts protected (G10). New receipts under its own keys **pass** (the listing was cut). |
+    73	| Attacker captures the issuing AWS account | **Not protected.** It can issue receipts that verify. |
+    74	| Attacker steals the release key | Not protected: it can publish releases with a trust configuration of its choosing. This is distribution compromise, which A9 excludes (A9:47–52). A checker who installs no later release is unaffected. |
+    75	| Bitcoin miners lie about time | G5 holds (chain order). G6 holds only under A-UTC. |
+    76	| Bitcoin reorganizes fewer than 6 blocks | G5 holds. |
+    77	
+    78	## 5. Pairing: where each guarantee is checked
+    79	
+    80	The method needs every guarantee checked twice: once by a formal model or inspection, once by tests against the
+    81	implementation. When the two disagree, we fix the contract, the model or the code. This is a first mapping, not
+    82	yet checked case by case.
+    83	
+    84	**These are mappings, not pairs.** A pair, in the method's sense, runs the same scenario on both sides, so that a
+    85	disagreement means something. Here the model side and the test side were written separately, for different
+    86	scenarios, and none of the rows below runs one scenario through both. The tupay project's M1 found the same gap in
+    87	its own workflow ("the pairs were not pairs", `../tupay/experiments/M1-result.md`). Making real pairs (shared
+    88	scenarios, and a `derives: G…` tag on each case and model element) is post-freeze work. (Owner, 2026-10-21.)
+    89	
+    90	| # | Model side | Test side (`prototype/conformance/cases-index.json` groups) |
+    91	|---|---|---|
+    92	| G1 | P1, P8 (prose proof and vectors) | container, codec, field grammar, numbers, spec binding, receipt consistency, OTS |
+    93	| G2 | P1 | A9.1 mapping |
+    94	| G3 | P2, P3 | signature profile, possession, hybrid semantics, hybrid routing, hybrid positive, keys, receipt consistency |
+    95	| G4 | P10, S-P3: abstract authority and key binding only | DNSSEC, DNS record, git, chain order, authority isolation, pinned D |
+    96	| G5 | P5, P5c: temporal and confirmation rules. Existence before the block is an assumption, not modelled. | OTS, proofs, time |
+    97	| G6 | none | UTC assessment (UTC-01..UTC-10: honest, nonmonotone ×2, 2106 boundary, lowest-height segment, reported with INVALID and UNVERIFIABLE, null with T null ×3); `prototype/indep-verifier/tests/test_utc_assessment.py` (11 tests, including the real-1 receipt's headers 972187..972192); `prototype/e2e/tests/test_driver_dry.py::test_dry_run_utc_assessment`. Built 2026-10-19 (profile §7.4). A-UTC itself is unchecked by design |
+    98	| G7 | none (P5/P5c model related rules, not these endpoints) | time |
+    99	| G8 | P9: contract and code inspection; no discharging model is required | offline reproducibility vectors not built (`release checker` tests configuration updates) |
+   100	| G9 | P4 | dispatch, aggregation, A9.1 mapping, container (d2), trust config |
+   101	| G10 | S-P3 (honest-material key binding) | none named; honest-material transplant tests to be identified or built |
+   102	
+   103	**Gaps this table shows.**
+   104	- Model missing: G6 (tests added 2026-10-19; A-UTC is an assumption, not a modelled property), G7's endpoints, and
+   105	  concrete authority (G4 beyond the abstract model).
+   106	- Tests missing: G8's offline reproducibility vectors, G10's honest-material transplant cases.
+   107	
+   108	## 6. What the tester does (4 December)
+   109	
+   110	One independent tester, who meets the criteria in `docs/V1-TESTER-BRIEF.md`, takes a receipt bundle and the
+   111	verifier release and runs the verifier. For each case in A9.1's scenario mapping, the tester decides from the
+   112	documentation alone whether to rely on the receipt, with no help from the project. **Pass:** no unsafe accepts,
+   113	and false rejects only on d2 and h. The result is that one tester's result.
+   100	### keywords
+   101	
+   102	- Row 2, service-key listing, KEEP, CUT, attacker-selected keys, DNS, git authority, future issuance, pre-receipt commitment, listing-cut.md
+   103	
+   104	## User preferences
+   105	
+   106	- When beginning Tessera work, the user explicitly welcomes read-only exploration and questions before edits -> start with repository orientation and questions, not edits or commits. [Task 1]
+   107	- The user wants mechanical review separated from author decisions -> label facts, model/test evidence, owner recommendations, pending rulings, adopted changes, and unverified claims separately. [Task 1]
+   108	- The user dislikes context-assuming “cold reads” -> assemble the current promise, assumptions, open decisions, and consequences in plain language instead of making them reconstruct amendment tables. [Task 1]
+   109	- The user wants anti-sycophantic review and precise claims: distinguish “bytes/metadata were preserved or changed” from claims about truth, authorship, or meaning. [Task 1]
+   110	- For the E9 Row 2 choice, the user favored bounded staged scope: V1 complexity is already high, initial use is expected to be low, and the protection can be added for future issuance -> do not add complexity merely for a stronger theoretical guarantee; disclose the limitation precisely. [Task 2]
+   111	
+   112	## Reusable knowledge
+   113	
+   114	- Tessera’s central claim is binding exact presented bytes to signatures and a temporal anchor, not truth or submitter identity. Amend-don’t-rewrite applies: amendments outrank tracker summaries, and proposed/checked/discharged/owner-decided states must remain distinct. [Task 1]
+   115	- Plain-language rendering and the prototype exposed gaps formal/document review missed: revocation lacked a source, relying parties could misread verdicts, byte layouts were underspecified, and Amendment 9 overclaimed Bitcoin header time. [Task 1]
+   116	- Amendment 10’s service-key listing was cut in `docs/decisions/2026-10-19-listing-cut.md`; V1 therefore does not protect against new receipts under attacker-selected keys once both authority channels are captured. A receipt alone does not provide an authentic historical verifier/release package or trust provenance. [Task 1][Task 2]
+   117	- KEEP would block fresh attacker-key receipts after both DNS and git authority capture only for a user with an authentic listed verifier; CUT knowingly permits them while honest receipts remain protected under registered assumptions. Future issuance can add the listing, but cannot retroactively establish its required pre-receipt commitment for already-issued receipts. The author CUT is an independent scope decision, not the registered schedule-slip cut order. [Task 2]
+   118	- The retained HIGH R3-01 custody issue is that the reviewed build was not explicitly bound to the exact archive later signed/distributed. Green P8 vectors, end-to-end tests, independent-verifier tests, and a recorded 352/352 differential agreement are evidence of those checks, not a general service discharge. [Task 1]
+   119	- The desired evidence model is preservation plus visible gaps: a chain cannot prove omitted history never existed, but expected anchors, links, or independently preserved records can make breaks visible. [Task 1]
+   120	
+
+codex
+Step 3 still permits a race: a worker can observe eligibility before B, while an expirer fetches older or partial evidence and wins the compare-and-set before the latch write. CAS prevents two writes from winning on one version; it does not ensure the timely observation wins. I’m also checking whether the new refusal rule can terminate an attempt whose timely eligibility remains unknown to that worker.
+exec
+/bin/bash -lc "nl -ba docs/phase-0-prereg-amendment-9.md | sed -n '455,490p'
+git show 270ca49:docs/V1-PROFILE.md | nl -ba | sed -n '855,892p'
+nl -ba docs/decisions/2026-10-27-service-clock-tolerance.md | sed -n '1,150p'
+rg -n 'A2.1|predicate|refusal' docs/phase-0-prereg-amendment-9.md" in /home/tony/projects/tessera
+ succeeded in 0ms:
+   455	## A9.7 What changed
+   456	
+   457	**Registered sentences changed.** Kind: **W** weakened, **C** capability not offered by V1, **G** gate or trigger
+   458	moved, **H** hypothesis withdrawn, **T** test registration, **R** replaced or narrowed for V1, **K** clarified. Every
+   459	change applies to `tessera-v1-strict` only; each sentence stays standing and governs everything else. Paths are
+   460	`docs/` unless given. Quotation marks mark exact source words; *paraphrase* marks the rest. The file:line column
+   461	is the source citation; the replacement column points into this amendment.
+   462	
+   463	| # | Registered sentence | file:line | Replacement for V1 | Kind |
+   464	|---|---|---|---|---|
+   465	| 1 | "Before any code, the central guarantee is established by a machine-checked formal model and proof … No time bound … the Phase 1 / H1b clock does not start until Band 0 is resolved" | `phase-0-prereg.md:102-107` | A9.2's single code gate; P8 by prose proof plus vectors, time-boxed, not machine-checked; the 30 Oct ceiling and slip rule replace "No time bound"; H1b withdrawn | W |
+   466	| 2 | "Band 0 (H0) must be resolved before Phase 1 begins"; "Only then does **Phase 1a** begin …, marked by an explicit, dated, signed commit declaring the build runway open" | `phase-0-prereg.md:714-732` | The prerequisite changes: the recorded 30 Oct V1 exit (A9.2), not H0's resolution, opens Phase 1a for V1-profile code only; H0 stays unresolved. The explicit, dated, signed opening commit remains | G |
+   467	| 3 | Capstone gate: every ledgered cross-model assumption discharged with a broken companion | `phase-0-prereg-amendment-3.md:220-231` | Strict correct-form rows only; case (d), divergences and withheld results stay with the capstone | G |
+   468	| 4 | "Done when (v1 product)" and the kill criterion | `phase-0-prereg.md:589-617` | Not V1; kept as the later product done-line | C |
+   469	| 5 | H1a red-bar "for each attack family … and each degradation scenario" | `phase-0-prereg.md:203-208` | A9.5's suite; degradation cases move to their capability | G |
+   470	| 6 | H1b: LocalStack, 1/sec, within 7 days of the H1a freeze | `phase-0-prereg.md:210-224` | Withdrawn for V1, not falsified | H |
+   471	| 7 | P6: `key_authorized(declared) ∧ no revocation effective at or before anchor_time` | `phase-0-prereg-amendment-1.md:199-214` | Not evaluated; `revocation: NOT_EVALUATED` (A9.4) | W |
+   472	| 8 | A4.3's rewritten revocation-after-anchor sentence | `phase-0-prereg-amendment-4.md:111-123` | As row 7 | W |
+   473	| 9 | §4.4 "Revocation is time-relative … `INVALID`" | `phase-0-prereg.md:537-546` | As row 7 | W |
+   474	| 10 | Standing mechanism modelled "before Band 0 exit" | `formal/spike/FIRST-LINK-SPIKE.md:50-56` | Moves to Protocol standing | G |
+   475	| 11 | Standing invariant | `phase-0-prereg-amendment-3.md:531-557` | No TLR; standing `ABSENT/NOT_ISSUED_IN_PROFILE`, reported separately | C |
+   476	| 12 | Refusal-record decomposition, commitment, companions | `phase-0-prereg-amendment-3.md:572-581`, `:816-828` | Bounded local refusal returned by the API | C |
+   477	| 13 | Integrated lifecycle model green before the H1a crypto-core freeze | `phase-0-prereg-amendment-3.md:783-806` | Trigger moves to Wrapping and renewal; the 30 Oct profile freeze is not the crypto-core freeze | G |
+   478	| 14 | Custodial renewal "before the old mechanism becomes unreliable" | `phase-0-prereg-amendment-3.md:273-278` | No renewal; custody and dependency manifest stated (A9.5) | C |
+   479	| 15 | KMS and local GPG "independent failure domains"; *paraphrase:* they fail for uncorrelated reasons (source: "They fail for *uncorrelated* reasons"), so durability does not rest on any single domain surviving; and "two independent signatures whose validity does not share a failure domain" | `phase-0-prereg.md:292-299`, `:304-305` | Narrowed to C3's non-claim: separate technical failure domains under a single controller; no separation of control or independent fates; under the fallback both slots share P-256's failure. The registered local-GPG placement is replaced for V1 by A9.6's slot-2 custody alternatives, both through the external policy signer; rule O and the gpg fingerprint scheme are retained. The spec's restatements (`implementation-spec.md:226`, `:604-610`) follow this row as consequences; they are not new author rulings | R |
+   480	| 16 | A8.4's new query ("a new query, predicted red under C-C15(i) … run with A8.3's batch") and its spec edits (O-74, R-6.44 innermost) | `phase-0-prereg-amendment-8.md:95-98`, `:100-106` | Postponed with standing; A8 remains the source record | G |
+   481	| 17 | Prototype scenario expectations | `prototype/consumers/scenarios.py:72-133` | Kept as history; A9.1's mapping registered prospectively | T |
+   482	| 18 | Dead-project (clean-room) demonstration | `phase-0-prereg-amendment-3.md:371-378` | Not run for V1; the dead-service test is | G |
+   483	| 19 | Forward-link successor slot registered "before format freeze with a slot-bearing golden vector" | `implementation-spec.md:651-656`; `formal/spike/standing-probe/AMENDMENTS-2026-08-31.md:159-206` | Not in V1; a later profile carries it | C, G |
+   484	| 20 | §4.7 review recency attested (hard rule) | `phase-0-prereg.md:564-572` | Not offered by V1; moves with the product done-line | C |
+   485	| 21 | Custodial parameter schema and clock roles ratified at Band 0 | `phase-0-prereg-amendment-3.md:435-451` | Trigger moves to Wrapping and renewal | G |
+   486	| 22 | "numbers must be exactly representable as IEEE 754 doubles … string-encoded, never a JSON number"; restated in A7's canonical-payload reading ("under the precision rule of the original §4.3") | `phase-0-prereg.md:501-505`; `phase-0-prereg-amendment-7.md:33-39` | A9.8's value-preserving rule | R |
+   487	| 23 | Rejection of "numbers not exactly representable as IEEE 754 doubles" | `phase-0-prereg-amendment-1.md:268-270` | A9.8's value-preserving rule | R |
+   488	| 24 | "signatures and anchors commit to a framed envelope" (R-3.9); restated in A7 ("Signatures and anchors commit to the signed frame") | `phase-0-prereg-amendment-1.md:255-264`; `phase-0-prereg-amendment-7.md:33-39` | Signatures commit to frames; the receipt anchor commits to frames plus their exact signatures (A9.5) | K |
+   489	| 25 | "Hybrid classical+PQ dual signing is explicitly deferred to a deployment profile or later amendment" | `phase-0-prereg-amendment-3.md:480-482` | If the spike passes, V1 is that deployment profile, governed with the branch-registration supplement (A9.6); otherwise unchanged | R (conditional) |
+   490	| 26 | P7's amended discharge: the verdict-independence half by S-P7 Q4's control and companions and "one H1a conformance vector" on the band-1 docket | `phase-0-prereg-amendment-6.md:43-57` | The wrapper half and its H1a vector move to Wrapping and renewal (A9.3); P7's type-separation half stays on the 30 Oct gate | G |
+   855	
+   856	## 7. Time
+   857	
+   858	### 7.1 The T rule
+   859	
+   860	- T is the time of the verified attestation at the **lowest block height** in the presented OTS proof; both T and
+   861	  its confirmations come from that attestation. It is presentation-sensitive: a different presentation of the same
+   862	  receipt can select a different T. [A9 C5 as revised 2026-10-14; DD:56, 98-99; OWNER 2026-10-14, G03] *Dated
+   863	  correction 2026-10-14: this bullet previously read "T is the time of the earliest verified attestation", A9's
+   864	  earlier wording. "Earliest" means chain order, not least nTime: header times are not monotone, and the two
+   865	  selection rules can give different verdicts on the same proof.*
+   866	- No lower bound and no priority. Header times are chain-time proxies. [A9:144]
+   867	- The three conjuncts at k = 6 (`DepthK = k − 1 = 5`): `declared − ε ≤ anchor_time`; `anchor_time ≤ declared + δ`;
+   868	  `confirmed_at ≤ declared + δ`. All three are evaluated together. [SPEC R-4.41:985; SPEC R-5.19:1352; SPEC
+   869	  V33-V36:1342-1346; A9:105-106]
+   870	- A real proof carries several attestations hours apart and nothing in the proof names T (M3). [FT:20; DD:98]
+   871	- **T ≡ `anchor_time`.** For the receipt proof, T = `anchor_time` = nTime(h*), where h* is the lowest qualifying
+   872	  height. The same value feeds conjuncts 1 and 2, the C4 window rule and the reported T. Two qualifying attestations
+   873	  at the same height give the same T. [OWNER 2026-10-14, G03] *(Was: "`OPEN (step 8):` one sentence stating whether
+   874	  T is the `anchor_time` of the three conjuncts", 2026-10-13.)*
+   875	- **`confirmed_at`** = nTime(h* + 5): the including block plus five successors, k = 6 (SPEC R-3.45, R-4.42). A
+   876	  failure gives `INVALID`: `TIME_BEFORE_DECLARED_EPSILON`, `TIME_AFTER_DECLARED_DELTA` or `CONFIRMATION_LATE`.
+   877	  Nonmonotone header times can give `confirmed_at` < T; that is not a failure, and there is no monotonicity check.
+   878	  [OWNER 2026-10-14, G04]
+   879	- **Qualifying ("verified") attestation.** A Bitcoin attestation at height h qualifies if and only if (a) the
+   880	  bundled header at h exists and its merkle root equals the attestation message; (b) headers h … h+5 are all
+   881	  bundled; (c) each equals its pin, `hex(reverse(SHA256d(header))) = pin[height]`; (d) for i = h+1 … h+5,
+   882	  `header_i.prev = SHA256d(header_{i−1})`. [OWNER 2026-10-14, G05] *(Was: "`OPEN (step 8):` what 'verified' means
+   883	  for an attestation", 2026-10-13.)*
+   884	- **Selection.** Attestation selection is existential over qualifying branches. A syntactically valid Bitcoin
+   885	  attestation without a complete h..h+5 segment is nonqualifying, not a required failed check. It supplies no time or
+   886	  trust fact. All supplied headers, including unused ones, are independently checked against pins (section 7.2).
+   887	  The selected anchor, rather than every unverified attestation, is the referent of "anchors beyond the newest pin"
+   888	  (A9 C6 as revised 2026-10-14). [OWNER 2026-10-14, G05]
+   889	- **Proof outcomes.** A pinned bundled header at h whose merkle root ≠ the attestation message: `INVALID /
+   890	  OTS_MERKLE_MISMATCH` (a contradicted branch fails the proof). No qualifying attestation: `UNVERIFIABLE /
+   891	  HEADERS_MISSING` if any Bitcoin attestation is present, `UNVERIFIABLE / ANCHOR_PENDING_ONLY` if only pending ones;
+   892	  the snapshot uses `SNAPSHOT_NOT_ANCHORED` and git `GIT_NOT_ANCHORED`. [OWNER 2026-10-14, G05]
+     1	# Service clock tolerance (2026-10-27)
+     2	
+     3	> **Status: OWNER DECISION, CLARIFY**, by the owner instance (Claude Opus 5.5), 2026-10-27. It concerns the
+     4	> service-level times in the owner's resolutions (`docs/V1-SERVICE-RESOLUTIONS.md`, stamped at `2411714`): S4, S5,
+     5	> S6 and L1. It changes no receipt guarantee. No guarantee in `docs/V1-CONTRACT.md` depends on these times, and the
+     6	> verifier checks none of them. It follows three Codex confirmation rounds on the issuer (`docs/reviews/issuer/
+     7	> CODEX-CONFIRM.md`, `-2.md`, `-3.md`). The third swept the whole package and found that the remaining problem is a
+     8	> limit, not a bug (CF3-01).
+     9	
+    10	## The limit
+    11	
+    12	The issuer decides on its own clock, and every decision is now taken on a clock reading made after the records it
+    13	depends on (CF2-02, CF3-02, CF3-03). But the write that makes a decision visible can take effect later than that
+    14	reading, and no client-side check can bound when AWS commits a request already sent. AWS documents that a write
+    15	reported as failed may still have succeeded.
+    16	
+    17	## What the issuer bounds
+    18	
+    19	- **Its own time per AWS call.** Connection 5 s, response 20 s, 4 attempts in standard retry mode: about 3 minutes
+    20	  at most (`tessera_issue/lambda_app.py`, `AWS_CLIENT_CONFIG`; a test keeps it under a third of the lease).
+    21	- **Completion.** COMPLETE is confirmed only when at least the 15-minute writer lease remains before the 24-hour
+    22	  deadline (CF2-01). Inside the last lease a finished request stays ACCEPTED, and at the deadline it is FAILED.
+    23	- **Late writers.** Cleanup keeps deleting until 15 minutes after an end (CF-02).
+    24	
+    25	## The stated tolerance
+    26	
+    27	Each service-level transition (FAILED at 24 hours, COMPLETE, the 30-day retention and deletion, the acceptance
+    28	stop, and the 5-minute receipt links) may become visible up to **15 minutes** after the time it records. This
+    29	assumes AWS commits or rejects every request within 15 minutes of its being sent.
+    30	
+    31	For the acceptance stop this is harmless by design: acceptance stops 120 hours before the window ends, and signing
+    32	stops at 96 hours (L1), so a late admission has 24 hours of slack. Those 96 hours are the runbook's operating margin,
+    33	an owner control, and not a registered rule (L1 says so). For signing itself, the check that counts is the signer's
+    34	own `sign_by` and signing stop, enforced at the signer (IS-03, IS-09). That too is an owner operating control. Both
+    35	signers now enforce it (`service/signer-kms`, `service/signer-gcp`), and this tolerance does not touch it.
+    36	(Corrected 2026-10-27 after the signer review's binding-text precheck: this first called it "the binding check".)
+    37	
+    38	## Why stop here
+    39	
+    40	Each review round found one more site of the same shape. A protocol that did not depend on commit time would need
+    41	the store to time-stamp commits authoritatively. That is redesign for a 15-minute fuzz on service promises that no
+    42	receipt depends on. The author's yardstick: *"build something that works, with known limitations."* If AWS ever
+    43	violates the assumption, a symptom is a status change that appears up to minutes late. No receipt is affected.
+143:| C4 Authority | DNSSEC (owner name D, evaluated at the snapshot's own anchored time) and the anchored git key assertion (full commit→tree→blob path) authenticated K for D, with the issuance window, at their evidence times. **Chain-order pre-commitment** (OWNER DECISION 2026-10-14, BROADEN; `docs/reviews/spec-sufficiency/` F01): the git assertion's selected anchor height plus 5 is lower than the receipt's selected anchor height, so the window was confirmed at k = 6 in the chain before the receipt was anchored. The verifier fixes the required set. | Revocation not evaluated. Not public publication of the commit. Neither channel commits to any receipt (CODEX-REVIEW 3). Pre-commitment is chain order, not UTC (A2.1); DNSSEC evidence establishes no publication before issue. |
+144:| C5 Time | The frames **and their exact signatures** existed no later than T, the verified attestation at the lowest block height in the presented OTS proof (both T and its confirmations come from that attestation; OWNER DECISION 2026-10-14, F03: header times are not monotone, so "earliest" means chain order); the three-conjunct predicate holds at k = 6. | Presentation-sensitive T. No lower bound, no priority. Header times are chain-time proxies. Reorganization deeper than k is a residual. |
+165:- *Issuer invariant:* a receipt ships only when complete; an operator refusal never concerns a shipped receipt.
+215:  refusal, A9.4's missing-capture negative control (C7 evidence), H3 measured. 4 Dec: relying-party test and
+238:| E6b, refusal decomposition and both companions | **Portable refusal records** |
+261:  an authenticated safe-before cutoff per algorithm and per key, compared against T with A2.1's chain-time
+274:  per-algorithm cutoff compared with T, with A2.1's chain-time uncertainty; authenticated per-key theft cutoffs are
+317:  endpoint in snapshot chain time, not by a finite UTC duration under A2.1. Historical authority-key safety and the
+404:  this refusal is enforced by the policy signer, not by the HSM's generic signing API. Separation of control stays a
+445:   explicit backward-skew assumption that V1 does not establish: A2.1 registers no finite bound on B − C, and
+476:| 12 | Refusal-record decomposition, commitment, companions | `phase-0-prereg-amendment-3.md:572-581`, `:816-828` | Bounded local refusal returned by the API | C |
+510:break-chain attacks (`:203-205`); the P4 check-result partition (later algorithm-policy effects are narrowed by row 29); A2.1's predicate; the credibility line; §8's "does not proceed"
+
+exec
+/bin/bash -lc 'mktemp -d' in /home/tony/projects/tessera
+ succeeded in 0ms:
+/tmp/tmp.f0QJh9236H
+
+exec
+/bin/bash -lc "python - <<'PY'
+from itertools import combinations
+out=[]
+for slots in combinations(range(6),3):
+    ls=iter(['Lread','Lobserve','Lcas']); es=iter(['Eread','Efetch','Ecas'])
+    s=[next(ls) if i in slots else next(es) for i in range(6)]
+    if s.index('Lobserve')>s.index('Efetch'): continue
+    v=0; state='OPEN'; versions={}
+    for event in s:
+        who=event[0]
+        if event.endswith('read'): versions[who]=v if state=='OPEN' else None
+        if event.endswith('cas') and versions.get(who)==v and state=='OPEN':
+            state='LATCHED' if who=='L' else 'EXPIRED'; v+=1
+    out.append((s,state))
+with open('/tmp/tmp.f0QJh9236H/interleavings.txt','w') as f:
+    for s,state in out: f.write(' '.join(s)+' => '+state+'\\n')
+print('Schedules with timely L observation before post-B E fetch:',len(out))
+print('Expiry wins despite timely observation:',sum(state=='EXPIRED' for _,state in out))
+for s,state in out:
+    if state=='EXPIRED': print(' '.join(s),'=>',state)
+PY
+nl -ba docs/phase-0-prereg-amendment-9.md | sed -n '158,168p;503,513p'" in /home/tony/projects/tessera
+ succeeded in 0ms:
+Schedules with timely L observation before post-B E fetch: 10
+Expiry wins despite timely observation: 3
+Lread Lobserve Eread Efetch Ecas Lcas => EXPIRED
+Lread Eread Lobserve Efetch Ecas Lcas => EXPIRED
+Eread Lread Lobserve Efetch Ecas Lcas => EXPIRED
+   158	- *Bundle:* spec identifier and hash (signed); spec and conformance vectors (content-addressed); a bound
+   159	  plain-language purpose preamble; a dependency manifest (RFC 8785, OpenPGP, the signature algorithms in use,
+   160	  SHA-256, SHA-1 for git object linkage, the DNSSEC algorithms in the chain, OTS, Bitcoin headers).
+   161	- *Verification:* strict only; one layer; no wrappers, renewal, TLR or waiver policy.
+   162	- *Stable field set* (A9.4): the verdict, its reason code, T, `revocation`, `historical_security` and standing.
+   163	- *Parameters:* A9.2.
+   164	- *Issuance:* an operated API (API Gateway + Lambda + KMS).
+   165	- *Issuer invariant:* a receipt ships only when complete; an operator refusal never concerns a shipped receipt.
+   166	
+   167	**Separations.** V1 is a profile and milestone, not the "v1 product" done-line (`phase-0-prereg.md:589-617`),
+   168	which stands with the H2 panel and kill criterion. V1 is not the production version. H1b is withdrawn for V1,
+   503	visible, and not counted as registered changes; acknowledged in `V1-DERIVATION-DRAFT.md:212-216`):
+   504	- E10's extraction timing moves to 13 Nov (`formal/BAND0-EXIT.md:69-70`, `:96-97`).
+   505	- The exit-status reading for V1 (`implementation-spec.md:2197-2198`): the 30 Oct exit is V1's, not Band 0's.
+   506	
+   507	**Named and not changed:** "The PQ signature implementation … gates the production version"
+   508	(`phase-0-prereg-amendment-3.md:473-476`; V1 is not the production version); A1's monotonic key lifecycle (`phase-0-prereg-amendment-1.md:216-224`; any rotation
+   509	issues a new key); H3's three cost numbers (`phase-0-prereg.md:232-248`); the red-bar/CI rule (`:548-553`);
+   510	break-chain attacks (`:203-205`); the P4 check-result partition (later algorithm-policy effects are narrowed by row 29); A2.1's predicate; the credibility line; §8's "does not proceed"
+   511	clause.
+   512	
+   513	**In sum:** two weakenings (P6, rows 7–9; the code rule, row 1); one hypothesis withdrawn (H1b, row 6); eleven gates
+
+codex
+**Verdict: not ready to implement.** The revision fixes the predicate definition, removes the early latch cutoff, and corrects the twelve-day claim. Step 3 still does not establish latch-winning atomicity; steps 4 and 6 introduce additional ways to discard protected attempts.
+
+Review was read-only. Scratch enumeration is in [interleavings.txt](/tmp/tmp.f0QJh9236H/interleavings.txt). No repository edits or git writes were made.
+
+### A. Confirmation of IL-01–07
+
+Here, **CLOSED** means the revised design addresses the finding, not that implementation conformance has been established.
+
+| Finding | Status | Assessment |
+|---|---|---|
+| **IL-01: eligibility definition** | **CLOSED** | [Revision:18–22](/home/tony/projects/tessera/docs/decisions/2026-10-29-issuance-lifecycle.md:18) includes authenticated, attempt-bound evidence, six-deep burial, and all three conjuncts. This matches A2.1’s “**full three-conjunct temporal predicate**” ([A2:91–94](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-2.md:91)), A2.2’s `declared − ε ≤ anchor_time`, `anchor_time ≤ declared + δ`, and `confirmed_at ≤ declared + δ` ([A2:220–224](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-2.md:220)). A3.7.3 expressly retains “the three-conjunct temporal predicate plus the burial-depth requirement,” without requiring the whole envelope verification at ship ([A3:659–673](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-3.md:659)). |
+| **IL-02: latch boundary and atomicity** | **PARTIAL** | The prohibited margin is removed at revision:47–48, 81–83. However, re-observation plus CAS does not meet “**inclusive and latch-winning**” or “**Atomicity of the latch against the expiry transition**” ([A2:153–160](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-2.md:153)). See ILC-01. |
+| **IL-03: late-observation policy** | **CLOSED** | [Revision:58–59](/home/tony/projects/tessera/docs/decisions/2026-10-29-issuance-lifecycle.md:58) consistently permits late-observed eligibility while open and prohibits reopening expired attempts. A2.1 says an attempt whose lag exceeds S “**may be refused**” ([A2:135–138](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-2.md:135)); refusal is optional. The policy is permissible, although its concurrency implementation remains defective. |
+| **IL-04: nominal budget** | **CLOSED** | Revision:33–34, 79–80 correctly follow “a **nominal lifecycle budget**” and “**not a proven wall-clock bound**” ([A2:271–274](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-2.md:271)). |
+| **IL-05: durable refusal and API** | **PARTIAL** | Revision:67–71 specifies atomic durable refusal and API delivery; revision:91 includes CL-03’s reason set. These address “**explicit refusal, durably recorded**” and refusal “**in the same step**” as final expiry ([A2:265–281](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-2.md:265)). A9.7 row 12 substitutes “**Bounded local refusal returned by the API**” ([A9:476](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-9.md:476)). But `EVIDENCE_UNAVAILABLE` lacks a safe terminal-transition rule; see ILC-03. |
+| **IL-06: change inventory/public semantics** | **CLOSED** | Revision:85–105 incorporates the identified implementation, test and prose sites. Revision:78–80 withdraws misleading `fail_after` semantics. This closes the design inventory finding; it does not certify that future edits cover every dependency. |
+| **IL-07: isolation and failure handling** | **PARTIAL** | Attempt isolation and signing closure are substantially addressed. Revision:64 follows A9.5: “**A retry that changes any committed byte needs a fresh stamp**”; the registered order freezes signatures before stamping ([A9:290–296](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-9.md:290)). Permanent-failure classification and post-latch discard remain underspecified; see ILC-02 and ILC-04. |
+
+The profile was checked using `git show 270ca49:docs/V1-PROFILE.md`. Its §7.1 states:
+
+> “T is the time of the verified attestation at the **lowest block height** in the presented OTS proof” — lines 860–862.
+
+> “It is presentation-sensitive: a different presentation of the same receipt can select a different T.” — lines 861–862.
+
+Qualification requires the pinned, linked `h…h+5` segment, and an incomplete branch “supplies no time or trust fact” — lines 879–888. These qualifications are central to the remaining defects.
+
+### B. Step 3 concurrency review
+
+**ILC-01 — High: re-observation does not make a timely observation win.**
+
+Affected text: [revision:45–59](/home/tony/projects/tessera/docs/decisions/2026-10-29-issuance-lifecycle.md:45), especially the assertion at lines 54–56.
+
+Let L be the latching worker and E the expiring worker. Both initially read version v, OPEN.
+
+| Interleaving or condition | Result |
+|---|---|
+| L observes qualifying evidence by B and commits its latch before E’s CAS | Safe: E’s CAS fails. |
+| E reads first; L subsequently commits; E then tries its old-version write | Safe: E’s CAS fails. |
+| L observes by B; its write stalls; E reads OPEN after B, independently fetches an older/pending proof, and commits expiry | **Violation:** L’s CAS subsequently fails. A timely-eligible attempt expires. |
+| E fetches partial evidence; L has the complete pinned segment; E treats “predicate not established” as false | **Same violation.** Successful fetching is not proof of completeness or absence. |
+| L crashes after timely observation but before its write; E later obtains poorer evidence | No durable observation protects the attempt. It may expire. Crash recovery is unspecified. |
+| E fetches pending evidence; OTS upgrade becomes available; L fetches it by B; E delays its expiry write until after B | **Violation possible.** E’s decision is based on evidence that no longer represents what another worker observed. |
+| Both independently fetch the same complete qualifying evidence | E cannot legitimately conclude false. Re-observation works in this restricted case. |
+| Explorers disagree | Neither “the latest fetch wins” nor one worker’s failure establishes authoritative absence. The design gives no reconciliation rule. |
+| A reorganisation shallower than six displaces a successor near the tip | It can disrupt a newly six-deep observation without removing its inclusion block. A later fetch can lack the former six-header view. Re-fetching must not silently erase the preserved authenticated observation; pin conflicts require explicit handling. |
+| Workers’ wall clocks differ | One can decide “after B” while another records “at B.” The note does not define a common lifecycle clock or ordering that makes these decisions consistent. Its visibility tolerance supplies neither. |
+
+A small exhaustive enumeration of the six read/observe/write events, constrained so L’s timely observation precedes E’s post-B fetch, produced **10 schedules; expiry won in three** when E received stale negative evidence. This is a bounded counterexample enumeration, not a model discharge.
+
+The decisive schedule is:
+
+```text
+L reads v
+L observes qualifying evidence at B
+E reads v, OPEN
+E reads time > B and fetches stale/pending evidence
+E CAS(v → EXPIRED) succeeds
+L CAS(v → LATCHED) fails
+```
+
+CAS establishes exclusive writes. It does **not** establish precedence of an earlier observation over a later terminal write. Step 3 therefore **does not meet the registered latch obligation**.
+
+For a fixed, correctly authenticated presentation, these races do not by themselves allow a false predicate to latch: step 2 still requires it to hold. Accepting an observation after B is also expressly permitted by this design. However, the design must distinguish a valid latch on one presentation from a later, different presentation that fails.
+
+The repair must specify how observation and terminal decisions are serialized, how pending observations survive crashes, and how stale/partial evidence is distinguished from a conclusive negative. Another CAS alone is insufficient.
+
+**ILC-03 — High: the unavailable-evidence timeout bypasses the protection step 3 needs.**
+
+Affected text: [revision:56–59, 67–71](/home/tony/projects/tessera/docs/decisions/2026-10-29-issuance-lifecycle.md:56).
+
+“Evidence unavailable means do not expire” permits an **unbounded wait** under an indefinitely unavailable source. Calling twelve days nominal is correct, but A2.3 still makes termination a contract obligation ([A2:288–289](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-2.md:288)).
+
+Step 6 supplies a finite operating timeout, but elapsed time alone does not establish its authorization:
+
+- A2.1 permits refusal when the observation lag exceeds S.
+- An outage at E does not establish that no worker observed eligibility by B.
+- A timely observation may be pending, crashed before persistence, or durably latched elsewhere.
+- Step 6 does not expressly restrict this refusal to an unlatched OPEN attempt or make it respect the latch/expiry serialization.
+
+Consequently, **step 6 is not demonstrated consistent with A2.1 and A2.3**. A finite refusal policy can be compatible for genuinely unprotected attempts; this note does not define how it establishes that condition. It must never refuse a latched attempt merely because evidence later becomes unavailable.
+
+### C. Discard, signing closure and shipping
+
+**ILC-02 — High: step 4’s example does not establish permanent failure.**
+
+Affected text: [revision:60–62](/home/tony/projects/tessera/docs/decisions/2026-10-29-issuance-lifecycle.md:60).
+
+A2.1 authorizes discard when:
+
+> “the predicate fails **at issuance time**” — [A2:161–162](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-2.md:161).
+
+It does not make every unsuccessful evidence fetch an irrevocable failure.
+
+A currently presented proof whose lowest qualifying height has a late timestamp can later acquire a **lower qualifying attestation**. The selected T and confirmation segment then change. With nonmonotone header times, neither height order nor one late timestamp proves every possible qualifying presentation fails.
+
+Thus step 4 is consistent **only when permanence is actually established**. Its example, as written, establishes failure of the current presentation, not permanent failure of the attempt. It could discard an attempt for which another worker already holds timely qualifying evidence.
+
+Signing closure in [revision:63–66](/home/tony/projects/tessera/docs/decisions/2026-10-29-issuance-lifecycle.md:63) is otherwise sound: it prevents fresh signatures while preserving latched and already signed/stamped attempts that can finish. Refusal for `SIGNING_CLOSED` must occur only after the current attempt has legitimately ended and a fresh attempt would require prohibited signing.
+
+**ILC-04 — Medium: step 7 has a valid safety exception but an overbroad discard category.**
+
+Affected text: [revision:72–77](/home/tony/projects/tessera/docs/decisions/2026-10-29-issuance-lifecycle.md:72).
+
+Two registered constraints limit shipping:
+
+> “a receipt ships only when complete; an operator refusal never concerns a shipped receipt” — [A9:165](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-9.md:165).
+
+> “An attempt whose T would exceed not-after is not shipped.” — [A9:422–423](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-9.md:422).
+
+Accordingly, **a temporal latch does not compel shipping an incomplete or otherwise prohibited receipt**. Step 7’s genuine, irreparable `T > not-after` case is consistent with the issuer invariant. Neither the temporal predicate nor A3.7.3 establishes full envelope validity.
+
+However:
+
+- “A verifier verdict other than `VALID_STRICT`” is not itself evidence of permanent failure.
+- Missing snapshots, proofs, headers or storage objects can be recoverable.
+- A different proof can select a different T; the issuer must preserve the qualifying presentation rather than replace it with a worse one and call the result incurable.
+- A2.1:161–162 addresses failure of the temporal predicate, not arbitrary post-latch finalization failures.
+
+**Step 7 honours the shipping obligation only if “permanent” means that the frozen attempt cannot be completed lawfully, including by recovering evidence and using its preserved qualifying proof.** As written, it does not establish that restriction tightly enough. A valid, complete, timely-eligible attempt must not be discarded for scheduling delay, transient dependency failure, or an avoidable change of presentation.
+
+### D. Additional defect
+
+**ILC-05 — Medium: terminal-state guards and retry recovery remain unspecified.**
+
+At [revision:45–75](/home/tony/projects/tessera/docs/decisions/2026-10-29-issuance-lifecycle.md:45), step 2 describes a CAS latch without explicitly requiring OPEN/current-attempt state; steps 4 and 7 do not specify equivalent guarded discard transitions. Step 5 also leaves recovery between ending attempt i and creating i+1 undefined.
+
+Require explicit transition guards, atomic attempt allocation or idempotent recovery, and re-evaluation after CAS failure. Otherwise delayed workers can act on ended attempts, retries can duplicate, or a crash can leave the request between attempts. “An expired attempt is never reopened” states the intended invariant but does not specify its enforcement.
+
+### Owner prechecks
+
+| Check | Result | Evidence |
+|---|---|---|
+| **1. Capture row** | **PASS** | Revision:18–22, 41–44 makes no claim that dual-channel capture rejects attacker keys or reveals capture. [Contract:35–37, 72–73](/home/tony/projects/tessera/docs/V1-CONTRACT.md:35) still governs: attacker-key receipts can pass; issuing-account capture permits signing. |
+| **2. Trigger clause** | **FAIL** | Revision:60–62 treats failure of one presented proof as permanent attempt failure. Revision:67–71 uses evidence unavailability as a refusal trigger without establishing absence of protected timely eligibility. Neither cited registered consequence follows from those facts alone. |
+| **3. Requester** | **PASS** | Revision:41–44, 63–66 discusses attempt-labelled signature work and signing closure; it makes no security claim based solely on key location or independent signer control. This does not establish requester authorization conformance. |
+| **4. Binding text** | **FAIL** | Revision:54–56 asserts a latch guarantee its mechanism does not provide. Revision:60–62 and 67–71 permit terminal outcomes without establishing their compatibility with A2.1’s protected eligibility. Owner operating numbers cannot override that registered obligation. |
+
+
+hook: Stop
+hook: Stop Completed
+tokens used
+36,473
+**Verdict: not ready to implement.** The revision fixes the predicate definition, removes the early latch cutoff, and corrects the twelve-day claim. Step 3 still does not establish latch-winning atomicity; steps 4 and 6 introduce additional ways to discard protected attempts.
+
+Review was read-only. Scratch enumeration is in [interleavings.txt](/tmp/tmp.f0QJh9236H/interleavings.txt). No repository edits or git writes were made.
+
+### A. Confirmation of IL-01–07
+
+Here, **CLOSED** means the revised design addresses the finding, not that implementation conformance has been established.
+
+| Finding | Status | Assessment |
+|---|---|---|
+| **IL-01: eligibility definition** | **CLOSED** | [Revision:18–22](/home/tony/projects/tessera/docs/decisions/2026-10-29-issuance-lifecycle.md:18) includes authenticated, attempt-bound evidence, six-deep burial, and all three conjuncts. This matches A2.1’s “**full three-conjunct temporal predicate**” ([A2:91–94](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-2.md:91)), A2.2’s `declared − ε ≤ anchor_time`, `anchor_time ≤ declared + δ`, and `confirmed_at ≤ declared + δ` ([A2:220–224](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-2.md:220)). A3.7.3 expressly retains “the three-conjunct temporal predicate plus the burial-depth requirement,” without requiring the whole envelope verification at ship ([A3:659–673](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-3.md:659)). |
+| **IL-02: latch boundary and atomicity** | **PARTIAL** | The prohibited margin is removed at revision:47–48, 81–83. However, re-observation plus CAS does not meet “**inclusive and latch-winning**” or “**Atomicity of the latch against the expiry transition**” ([A2:153–160](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-2.md:153)). See ILC-01. |
+| **IL-03: late-observation policy** | **CLOSED** | [Revision:58–59](/home/tony/projects/tessera/docs/decisions/2026-10-29-issuance-lifecycle.md:58) consistently permits late-observed eligibility while open and prohibits reopening expired attempts. A2.1 says an attempt whose lag exceeds S “**may be refused**” ([A2:135–138](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-2.md:135)); refusal is optional. The policy is permissible, although its concurrency implementation remains defective. |
+| **IL-04: nominal budget** | **CLOSED** | Revision:33–34, 79–80 correctly follow “a **nominal lifecycle budget**” and “**not a proven wall-clock bound**” ([A2:271–274](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-2.md:271)). |
+| **IL-05: durable refusal and API** | **PARTIAL** | Revision:67–71 specifies atomic durable refusal and API delivery; revision:91 includes CL-03’s reason set. These address “**explicit refusal, durably recorded**” and refusal “**in the same step**” as final expiry ([A2:265–281](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-2.md:265)). A9.7 row 12 substitutes “**Bounded local refusal returned by the API**” ([A9:476](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-9.md:476)). But `EVIDENCE_UNAVAILABLE` lacks a safe terminal-transition rule; see ILC-03. |
+| **IL-06: change inventory/public semantics** | **CLOSED** | Revision:85–105 incorporates the identified implementation, test and prose sites. Revision:78–80 withdraws misleading `fail_after` semantics. This closes the design inventory finding; it does not certify that future edits cover every dependency. |
+| **IL-07: isolation and failure handling** | **PARTIAL** | Attempt isolation and signing closure are substantially addressed. Revision:64 follows A9.5: “**A retry that changes any committed byte needs a fresh stamp**”; the registered order freezes signatures before stamping ([A9:290–296](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-9.md:290)). Permanent-failure classification and post-latch discard remain underspecified; see ILC-02 and ILC-04. |
+
+The profile was checked using `git show 270ca49:docs/V1-PROFILE.md`. Its §7.1 states:
+
+> “T is the time of the verified attestation at the **lowest block height** in the presented OTS proof” — lines 860–862.
+
+> “It is presentation-sensitive: a different presentation of the same receipt can select a different T.” — lines 861–862.
+
+Qualification requires the pinned, linked `h…h+5` segment, and an incomplete branch “supplies no time or trust fact” — lines 879–888. These qualifications are central to the remaining defects.
+
+### B. Step 3 concurrency review
+
+**ILC-01 — High: re-observation does not make a timely observation win.**
+
+Affected text: [revision:45–59](/home/tony/projects/tessera/docs/decisions/2026-10-29-issuance-lifecycle.md:45), especially the assertion at lines 54–56.
+
+Let L be the latching worker and E the expiring worker. Both initially read version v, OPEN.
+
+| Interleaving or condition | Result |
+|---|---|
+| L observes qualifying evidence by B and commits its latch before E’s CAS | Safe: E’s CAS fails. |
+| E reads first; L subsequently commits; E then tries its old-version write | Safe: E’s CAS fails. |
+| L observes by B; its write stalls; E reads OPEN after B, independently fetches an older/pending proof, and commits expiry | **Violation:** L’s CAS subsequently fails. A timely-eligible attempt expires. |
+| E fetches partial evidence; L has the complete pinned segment; E treats “predicate not established” as false | **Same violation.** Successful fetching is not proof of completeness or absence. |
+| L crashes after timely observation but before its write; E later obtains poorer evidence | No durable observation protects the attempt. It may expire. Crash recovery is unspecified. |
+| E fetches pending evidence; OTS upgrade becomes available; L fetches it by B; E delays its expiry write until after B | **Violation possible.** E’s decision is based on evidence that no longer represents what another worker observed. |
+| Both independently fetch the same complete qualifying evidence | E cannot legitimately conclude false. Re-observation works in this restricted case. |
+| Explorers disagree | Neither “the latest fetch wins” nor one worker’s failure establishes authoritative absence. The design gives no reconciliation rule. |
+| A reorganisation shallower than six displaces a successor near the tip | It can disrupt a newly six-deep observation without removing its inclusion block. A later fetch can lack the former six-header view. Re-fetching must not silently erase the preserved authenticated observation; pin conflicts require explicit handling. |
+| Workers’ wall clocks differ | One can decide “after B” while another records “at B.” The note does not define a common lifecycle clock or ordering that makes these decisions consistent. Its visibility tolerance supplies neither. |
+
+A small exhaustive enumeration of the six read/observe/write events, constrained so L’s timely observation precedes E’s post-B fetch, produced **10 schedules; expiry won in three** when E received stale negative evidence. This is a bounded counterexample enumeration, not a model discharge.
+
+The decisive schedule is:
+
+```text
+L reads v
+L observes qualifying evidence at B
+E reads v, OPEN
+E reads time > B and fetches stale/pending evidence
+E CAS(v → EXPIRED) succeeds
+L CAS(v → LATCHED) fails
+```
+
+CAS establishes exclusive writes. It does **not** establish precedence of an earlier observation over a later terminal write. Step 3 therefore **does not meet the registered latch obligation**.
+
+For a fixed, correctly authenticated presentation, these races do not by themselves allow a false predicate to latch: step 2 still requires it to hold. Accepting an observation after B is also expressly permitted by this design. However, the design must distinguish a valid latch on one presentation from a later, different presentation that fails.
+
+The repair must specify how observation and terminal decisions are serialized, how pending observations survive crashes, and how stale/partial evidence is distinguished from a conclusive negative. Another CAS alone is insufficient.
+
+**ILC-03 — High: the unavailable-evidence timeout bypasses the protection step 3 needs.**
+
+Affected text: [revision:56–59, 67–71](/home/tony/projects/tessera/docs/decisions/2026-10-29-issuance-lifecycle.md:56).
+
+“Evidence unavailable means do not expire” permits an **unbounded wait** under an indefinitely unavailable source. Calling twelve days nominal is correct, but A2.3 still makes termination a contract obligation ([A2:288–289](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-2.md:288)).
+
+Step 6 supplies a finite operating timeout, but elapsed time alone does not establish its authorization:
+
+- A2.1 permits refusal when the observation lag exceeds S.
+- An outage at E does not establish that no worker observed eligibility by B.
+- A timely observation may be pending, crashed before persistence, or durably latched elsewhere.
+- Step 6 does not expressly restrict this refusal to an unlatched OPEN attempt or make it respect the latch/expiry serialization.
+
+Consequently, **step 6 is not demonstrated consistent with A2.1 and A2.3**. A finite refusal policy can be compatible for genuinely unprotected attempts; this note does not define how it establishes that condition. It must never refuse a latched attempt merely because evidence later becomes unavailable.
+
+### C. Discard, signing closure and shipping
+
+**ILC-02 — High: step 4’s example does not establish permanent failure.**
+
+Affected text: [revision:60–62](/home/tony/projects/tessera/docs/decisions/2026-10-29-issuance-lifecycle.md:60).
+
+A2.1 authorizes discard when:
+
+> “the predicate fails **at issuance time**” — [A2:161–162](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-2.md:161).
+
+It does not make every unsuccessful evidence fetch an irrevocable failure.
+
+A currently presented proof whose lowest qualifying height has a late timestamp can later acquire a **lower qualifying attestation**. The selected T and confirmation segment then change. With nonmonotone header times, neither height order nor one late timestamp proves every possible qualifying presentation fails.
+
+Thus step 4 is consistent **only when permanence is actually established**. Its example, as written, establishes failure of the current presentation, not permanent failure of the attempt. It could discard an attempt for which another worker already holds timely qualifying evidence.
+
+Signing closure in [revision:63–66](/home/tony/projects/tessera/docs/decisions/2026-10-29-issuance-lifecycle.md:63) is otherwise sound: it prevents fresh signatures while preserving latched and already signed/stamped attempts that can finish. Refusal for `SIGNING_CLOSED` must occur only after the current attempt has legitimately ended and a fresh attempt would require prohibited signing.
+
+**ILC-04 — Medium: step 7 has a valid safety exception but an overbroad discard category.**
+
+Affected text: [revision:72–77](/home/tony/projects/tessera/docs/decisions/2026-10-29-issuance-lifecycle.md:72).
+
+Two registered constraints limit shipping:
+
+> “a receipt ships only when complete; an operator refusal never concerns a shipped receipt” — [A9:165](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-9.md:165).
+
+> “An attempt whose T would exceed not-after is not shipped.” — [A9:422–423](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-9.md:422).
+
+Accordingly, **a temporal latch does not compel shipping an incomplete or otherwise prohibited receipt**. Step 7’s genuine, irreparable `T > not-after` case is consistent with the issuer invariant. Neither the temporal predicate nor A3.7.3 establishes full envelope validity.
+
+However:
+
+- “A verifier verdict other than `VALID_STRICT`” is not itself evidence of permanent failure.
+- Missing snapshots, proofs, headers or storage objects can be recoverable.
+- A different proof can select a different T; the issuer must preserve the qualifying presentation rather than replace it with a worse one and call the result incurable.
+- A2.1:161–162 addresses failure of the temporal predicate, not arbitrary post-latch finalization failures.
+
+**Step 7 honours the shipping obligation only if “permanent” means that the frozen attempt cannot be completed lawfully, including by recovering evidence and using its preserved qualifying proof.** As written, it does not establish that restriction tightly enough. A valid, complete, timely-eligible attempt must not be discarded for scheduling delay, transient dependency failure, or an avoidable change of presentation.
+
+### D. Additional defect
+
+**ILC-05 — Medium: terminal-state guards and retry recovery remain unspecified.**
+
+At [revision:45–75](/home/tony/projects/tessera/docs/decisions/2026-10-29-issuance-lifecycle.md:45), step 2 describes a CAS latch without explicitly requiring OPEN/current-attempt state; steps 4 and 7 do not specify equivalent guarded discard transitions. Step 5 also leaves recovery between ending attempt i and creating i+1 undefined.
+
+Require explicit transition guards, atomic attempt allocation or idempotent recovery, and re-evaluation after CAS failure. Otherwise delayed workers can act on ended attempts, retries can duplicate, or a crash can leave the request between attempts. “An expired attempt is never reopened” states the intended invariant but does not specify its enforcement.
+
+### Owner prechecks
+
+| Check | Result | Evidence |
+|---|---|---|
+| **1. Capture row** | **PASS** | Revision:18–22, 41–44 makes no claim that dual-channel capture rejects attacker keys or reveals capture. [Contract:35–37, 72–73](/home/tony/projects/tessera/docs/V1-CONTRACT.md:35) still governs: attacker-key receipts can pass; issuing-account capture permits signing. |
+| **2. Trigger clause** | **FAIL** | Revision:60–62 treats failure of one presented proof as permanent attempt failure. Revision:67–71 uses evidence unavailability as a refusal trigger without establishing absence of protected timely eligibility. Neither cited registered consequence follows from those facts alone. |
+| **3. Requester** | **PASS** | Revision:41–44, 63–66 discusses attempt-labelled signature work and signing closure; it makes no security claim based solely on key location or independent signer control. This does not establish requester authorization conformance. |
+| **4. Binding text** | **FAIL** | Revision:54–56 asserts a latch guarantee its mechanism does not provide. Revision:60–62 and 67–71 permit terminal outcomes without establishing their compatibility with A2.1’s protected eligibility. Owner operating numbers cannot override that registered obligation. |
+
+

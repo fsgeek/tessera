@@ -1,0 +1,1153 @@
+Reading additional input from stdin...
+OpenAI Codex v0.165.0
+--------
+workdir: /home/tony/projects/tessera
+model: gpt-6.1-sol
+provider: openai
+approval: never
+sandbox: danger-full-access
+reasoning effort: none
+reasoning summaries: none
+session id: 01a188fb-021c-7c93-b0c8-b0042a816759
+--------
+user
+Narrow confirmation for Project Tessera at /home/tony/projects/tessera (read-only, no git writes; scratch only under a fresh mktemp -d). The custody choice in docs/phase-0-prereg-amendment-11.md was changed from a pending author ruling to an owner decision (Option 1) adopted by the author's signature; see the last section of docs/reviews/amendment-11/DISPOSITION.md. Edits: the header disclosure, the §A11.5 item 2 heading and ruling block, change-table row 7, and service/issuer/DEPLOY.md step 0. Check only: (1) is every place that said 'pending' or asked the author to choose now consistent, with no leftover pending wording, blank or contradiction anywhere in A11 or DEPLOY.md; (2) is the retrospective-relaxation disclosure still intact and is it still clear that the relaxation takes effect only by the author's signature (an owner cannot change registered text alone); (3) does Option 2 remain accurately stated as the alternative not taken; (4) did anything else change. Number findings A11D-01.... One-line verdict: ready for the author's signature or not.
+codex
+I’ll check the named files and disposition against the diff, read-only, and keep any scratch work in a fresh temporary directory.
+exec
+/bin/bash -lc "rg -n 'amendment-11|A11|custody' /home/tony/.codex/memories/MEMORY.md" in /home/tony/projects/tessera
+ succeeded in 0ms:
+79:# Task Group: Tessera V1 claims, trust bootstrap, and release-key custody
+81:scope: Read-only review of V1/A10 claims, service-key substitution limits, relying-party evidence, and release custody without treating textual consistency or green tests as final discharge.
+82:applies_to: cwd=/home/tony/projects/tessera; reuse_rule=recheck live amendments, decisions, release evidence, and custody status before treating time-specific V1 findings as current.
+88:- rollout_summaries/2026-10-07T14-55-20-HO7O-tessera_mcp_repair_v1_review_and_formal_implementation_workf.md (cwd=/home/tony/projects/tessera, rollout_path=/home/tony/.codex/sessions/2026/10/07/rollout-2026-10-07T14-55-20-01a116dc-9fd4-7a50-8cf0-e833088c88e4.jsonl, updated_at=2026-10-23T06:22:42+00:00, thread_id=01a116dc-9fd4-7a50-8cf0-e833088c88e4, listing cut; custody issue remains pre-release work)
+92:- Amendment-10, `utc_assessment`, service-key-listing, attacker-selected keys, future adjudicator, trust provenance, release-key custody, R3-01, plain-language review, P8 vectors, differential testing
+118:- The retained HIGH R3-01 custody issue is that the reviewed build was not explicitly bound to the exact archive later signed/distributed. Green P8 vectors, end-to-end tests, independent-verifier tests, and a recorded 352/352 differential agreement are evidence of those checks, not a general service discharge. [Task 1]
+
+exec
+/bin/bash -lc "pwd; rg --files -g AGENTS.md -g '*amendment-11*' -g 'DISPOSITION.md' -g 'DEPLOY.md'; git status --short; git diff --stat" in /home/tony/projects/tessera
+ succeeded in 0ms:
+/home/tony/projects/tessera
+docs/phase-0-prereg-amendment-11.md
+docs/reviews/e6a/DISPOSITION.md
+docs/reviews/a9-final-delta/DISPOSITION.md
+docs/reviews/v1-contract/DISPOSITION.md
+docs/reviews/h2-record/DISPOSITION.md
+docs/reviews/service-contract/DISPOSITION.md
+docs/reviews/custody/DISPOSITION.md
+docs/reviews/v1-profile-r2/DISPOSITION.md
+docs/reviews/utc-capture-memo/DISPOSITION.md
+docs/reviews/p3-profile/DISPOSITION.md
+docs/reviews/levadura-contradictions/DISPOSITION.md
+docs/reviews/profile-2026-10-19/DISPOSITION.md
+docs/reviews/e18-signoff/DISPOSITION.md
+docs/reviews/e9-packet/DISPOSITION.md
+docs/reviews/e10/DISPOSITION.md
+docs/reviews/amendment-9/DISPOSITION.md
+docs/reviews/issuer/DISPOSITION.md
+docs/reviews/amendment-10/DISPOSITION.md
+docs/reviews/signers/DISPOSITION.md
+docs/reviews/amendment-10-r4/DISPOSITION.md
+docs/reviews/amendment-10-r2/DISPOSITION.md
+docs/reviews/v1-profile/DISPOSITION.md
+docs/reviews/p8-falsification/DISPOSITION.md
+docs/reviews/preamble/DISPOSITION.md
+docs/reviews/amendment-10-r3/DISPOSITION.md
+docs/reviews/anchor-signatures/DISPOSITION.md
+docs/reviews/r22/DISPOSITION.md
+docs/reviews/amendment-11/DISPOSITION.md
+docs/reviews/exit-pages/DISPOSITION.md
+docs/reviews/a9-custody/DISPOSITION.md
+service/issuer/DEPLOY.md
+ M docs/reviews/OWNER-PRECHECKS.md
+ M docs/reviews/amendment-11/DISPOSITION.md
+ M service/issuer/DEPLOY.md
+?? docs/decisions/2026-10-29-issuance-lifecycle.md
+?? docs/phase-0-prereg-amendment-11.md
+?? docs/reviews/amendment-11/CODEX-CONFIRM-CONSOLIDATED.md
+?? docs/reviews/amendment-11/CODEX-CONFIRM-ITEM4.md
+?? docs/reviews/amendment-11/CODEX-CONFIRM-ROW8.md
+?? docs/reviews/amendment-11/CODEX-REVIEW-CONSOLIDATED.md
+?? docs/reviews/amendment-11/codex-confirm-consolidated.log
+?? docs/reviews/amendment-11/codex-confirm-decision.log
+?? docs/reviews/amendment-11/codex-confirm-item4.log
+?? docs/reviews/amendment-11/codex-confirm-row8.log
+?? docs/reviews/amendment-11/codex-consolidated.log
+?? docs/reviews/issuance-lifecycle/
+?? formal/tla/issuer-lifecycle/
+ docs/reviews/OWNER-PRECHECKS.md          |  4 +-
+ docs/reviews/amendment-11/DISPOSITION.md | 77 ++++++++++++++++++++++++++++++++
+ service/issuer/DEPLOY.md                 |  9 ++++
+ 3 files changed, 89 insertions(+), 1 deletion(-)
+
+exec
+/bin/bash -lc 'for p in /AGENTS.md /home/AGENTS.md /home/tony/AGENTS.md /home/tony/projects/AGENTS.md /home/tony/projects/tessera/AGENTS.md; do if test -f "$p"; then cat "$p"; fi; done; mktemp -d; nl -ba docs/phase-0-prereg-amendment-11.md; nl -ba service/issuer/DEPLOY.md; tail -n 160 docs/reviews/amendment-11/DISPOSITION.md' in /home/tony/projects/tessera
+ succeeded in 0ms:
+/tmp/tmp.G23P2BK8P6
+     1	# Tessera — Phase 0 Pre-Registration, Amendment 11 — P3's verification profile as a floor and a duty; dependency sweeps; consistency repairs; the slot-2 boundary (DRAFT, 2026-10-29)
+     2	
+     3	> **Status: DRAFT by the owner instance (Claude Opus 5.5). Not signed.** This is one consolidated consistency
+     4	> amendment. It was revised after the Codex non-author review and its confirmations
+     5	> (`docs/reviews/amendment-11/CODEX-REVIEW.md`, `CODEX-CONFIRM*.md`; `DISPOSITION.md`), then consolidated after
+     6	> Levadura's consistency panel (obs-0185; `/home/tony/projects/levadura_salvaje/docs/tessera-a11-canary-scorecard.md`).
+     7	> The panel's finding ids (c002 to c147) are cited where they apply. The author's first commit containing the final
+     8	> text is its signing act. Layered on the original and Amendments 1–10, none of which is edited. Every registered
+     9	> sentence this amendment changes is listed in §A11.3. One choice (§A11.5 item 2, the slot-2 custody reading)
+    10	> is recorded as an owner decision, Option 1, which the author's signature adopts. It is a retrospective relaxation,
+    11	> disclosed below.
+    12	>
+    13	> **Outcomes informed this amendment** (the original's amendment rule). Each change is disclosed separately.
+    14	> - **§A11.2, P3.** The P3 evidence (`formal/p3-verification-profile/`) was built and reviewed before this text.
+    15	>   Building it exposed the stale checklist. No P3 result failed and is relabelled here. The floor's shape is the
+    16	>   author's proposal of 2026-10-28.
+    17	> - **§A11.5 item 2, the slot-2 boundary.** If the author picks Option 1, it is a **retrospective relaxation** of a
+    18	>   deadline-qualified restriction. It is proposed after the 21 Oct deadline, and after the candidate code
+    19	>   (`service/signer-gcp/`) was written and reviewed.
+    20	> - **§A11.5 item 5, K-R's enforcement.** The owner's placement decision (2026-10-27) moved KMS signing from the
+    21	>   issuer role to a dedicated policy signer and said it changed no registered sentence. It changed the
+    22	>   supplement's description of who computes μ and who may sign. The confirmation review found this.
+    23	> - **§A11.5 item 3, the spike keys.** The owner's deployment draft had contradicted a registered commitment. That
+    24	>   draft is withdrawn. This amendment does not change the spike-key sentence.
+    25	> - **The Levadura panel.** It found that this amendment's own K-R change committed §A11.1's defect class three times
+    26	>   (scorecard:9-13). The first draft's K-R row left ENCODING-V1 §5.2, the supplement's §1, and the supplement's
+    27	>   §11 item 6 naming the issuer as the KMS caller, and §A11.5 item 3 called item 6 "unchanged". The K-R row in
+    28	>   §A11.3 now lists all seven locations.
+    29	> - **The owner's sweep.** It had not read the frozen specification (`spec.bin`: A9, A10, PROOF, V1-PROFILE,
+    30	>   ENCODING-V1, the hybrid supplement; `formal/freeze-v1/FREEZE-RECORD.md:16`) beyond profile §8, nor the hybrid
+    31	>   supplement (`docs/reviews/stale-dependencies/SWEEP-2026-10-28.md:3-4`, `:20-21`; scorecard:15-16). Most of the
+    32	>   panel's rows below are in that text.
+    33	
+    34	## A11.1 What went wrong
+    35	
+    36	P3's assumption half (A1 §P3, `phase-0-prereg-amendment-1.md:144-148`) requires the verification profile to record
+    37	the *exact library and version, accepted signature encodings, public-key validation behavior, low-order-point
+    38	handling, cofactor equation variant, and negative test vectors for each*. Two of those fields name concepts of
+    39	Ed25519-style curves, which A1 used as its example (`:136`). V1 later registered OpenPGP P-256 and then, on
+    40	2026-10-16, the hybrid ML-DSA-65 + P-256 (`formal/p8/HYBRID-REGISTRATION-RECORD.md`). Neither registration re-read the
+    41	checklist.
+    42	
+    43	For ML-DSA, the two curve fields have no referent. The other four fields still apply in full. So the checklist
+    44	names nothing specific to ML-DSA's own verification pitfalls: it **demands too little**. Nothing had been accepted
+    45	on it. The assumption half was open (`formal/PROPERTIES.md:37`) and due after the freeze
+    46	(`formal/freeze-v1/FREEZE-RECORD.md:81`).
+    47	
+    48	The method's defect: **a registered decision can change what an earlier registered sentence refers to, and nothing
+    49	requires anyone to re-read that sentence.** §A11.4 adds that duty.
+    50	
+    51	## A11.2 P3's verification profile: floor and duty
+    52	
+    53	**The proofs are unchanged.** P3's model half assumes a verifier with stated behaviour. The assumption half is
+    54	bounded implementation evidence that the shipped verifier has that behaviour. It does not show that every model
+    55	assumption is preserved in general.
+    56	
+    57	1. **Fields kept.** All six of A1's fields stay. For each algorithm in the governing specification they are read as
+    58	   follows:
+    59	
+    60	   | A1 field | ECDSA P-256 (rule O) | ML-DSA-65 (rule R) |
+    61	   |---|---|---|
+    62	   | exact library and version | `cryptography` and its bundled OpenSSL, identified by wheel tag and native-library SHA-256 | same |
+    63	   | accepted signature encodings | OpenPGP v4 packet; MPI rules; r, s ∈ [1, n−1]; rule-O policy | exact 3309 bytes; strict hint and z encoding |
+    64	   | public-key validation | exact uncompressed point; coordinates < p; on the curve; checked before the library | exact SPKI; no algebraic validation exists |
+    65	   | low-order-point handling | cofactor 1: infinity rejected as a key and as the equation's result; invalid-curve points rejected | no referent. Replaced by: degenerate-key behaviour recorded |
+    66	   | cofactor equation variant | cofactor 1: a single variant; x(R) reduced mod n | no referent. Replaced by: the FIPS 204 interface (pure, empty context), with every other interface rejected |
+    67	   | negative vectors for each | owner vectors plus Wycheproof | owner vectors plus Wycheproof |
+    68	
+    69	2. **Floor (registered).** The evidence is the files listed in
+    70	   `formal/p3-verification-profile/FLOOR-MANIFEST.sha256`, whose SHA-256 is fixed at signing. At this draft it is
+    71	   `844cb7ff8df59f047d2ea48536ddb30bad5b3e93684acbce6a4dad1241aee42d`, covering 15 files. They hold:
+    72	   - the owner harness (`test_p3_profile.py`): 123 owner vectors (F2 65, F3 37, F4 8, F5 13; PROFILE.md:22-25) in
+    73	     224 tests, 223 passing. `test_deployed_zip_identity` is skipped until a deployed package is supplied
+    74	     (PROFILE.md §8, :274-281). §6 mutates nine verifier checks, and removing each one turns tests red
+    75	     (PROFILE.md:243-258);
+    76	   - Wycheproof commit `d17cc89fa5c8f4f4d378b5385ebf75da5d0926c9`, three files pinned by SHA-256: 968 tests.
+    77	     - **ML-DSA-65** runs end to end through the verifier. Two disagreements, tcId 3 and 4, are V1 policy (empty
+    78	       context only).
+    79	     - **ECDSA P-256** runs through the verifier's key validation, MPI rules, range policy and verification, with
+    80	       the digest substituted. 219 non-strict DER cases are tested at library level only. 21 P1363 strings of the
+    81	       wrong length reach neither interface. There are no disagreements.
+    82	3. **Discharge.** Adopting this floor is not discharging P3. P3's assumption half is discharged only when:
+    83	   - (a) the manifest verifies;
+    84	   - (b) every test in it passes;
+    85	   - (c) the exact deployable zip produced by the recorded `service/issuer/package.py` build is retained with its
+    86	     SHA-256. Its verifier files are byte-identical to the tree the passing floor run exercised, and its
+    87	     `cryptography` binding and wheel tag match F1. After deployment, that zip's SHA-256, base64-encoded, matches
+    88	     AWS's `CodeSha256` for every function to which the discharge applies (`test_deployed_zip_identity`). The
+    89	     record names the source and test inputs, the packager, the archive digest, the AWS functions and the
+    90	     comparison result. This establishes deployment-package identity under the recorded build and AWS's reported
+    91	     digest. It does **not** assert that ZIP extractors agree on an archive's contents: they can disagree, and
+    92	     Lambda's extractor is not publicly documented (`docs/reviews/amendment-11/CODEX-CONFIRM-3B.md`). The
+    93	     packager writes fresh canonical entries, which is what limits that exposure;
+    94	   - (d) no disagreement or finding affecting a required behaviour is unresolved. A recorded defect blocks
+    95	     discharge until it is fixed and re-tested.
+    96	4. **Operational duty (not a registered result).** The floor's checks, and the latest published vectors for each
+    97	   algorithm in use, are re-run when one of the following happens. Each trigger states what it detects. Each run is
+    98	   recorded with its date, inputs and outcome, and attested by the operator.
+    99	   - **The tested code changes** (a verifier release, or a change to the signature library's version or build). This
+   100	     is required, not chosen: the floor's evidence is bound to specific bytes (the manifest hash and F1's wheel
+   101	     digest), and other bytes are not covered by it.
+   102	   - **The published vectors for an algorithm in use change** (new or changed Wycheproof files for ML-DSA-65 or
+   103	     ECDSA P-256/SHA-256). This catches new public knowledge of verification pitfalls. Commits that touch other
+   104	     algorithms are not triggers.
+   105	   - **A published advisory or erratum names the signature library, its bundled OpenSSL, or a standard in use**
+   106	     (FIPS 204; the OpenPGP or ECDSA specifications V1 cites). This catches new knowledge that never reaches the
+   107	     vector suite.
+   108	   - **A calendar backstop, at least every three months.** This is an operating guess, not a derived interval: it
+   109	     covers sources the triggers above do not watch. After a year of run records, the owner reviews whether any run
+   110	     found something the event triggers missed, and adjusts the interval on that evidence.
+   111	5. **What a later finding changes.**
+   112	   - **A security-policy finding** (an algorithm, parameter or key later judged weak) never rewrites a V1 verdict.
+   113	     It reaches relying parties as a historical-security result, beside the verdict and its stable fields
+   114	     (A9.4, `phase-0-prereg-amendment-9.md:267-283`).
+   115	   - **An implementation-conformance defect** (the verifier disagrees with the governing specification, for example
+   116	     by accepting a malformed or prohibited case the specification rejects, A9:278) is not preserved as V1
+   117	     behaviour. It is fixed in a signed release, which names the affected releases and says what changed. A silent
+   118	     change to the verifier is never permitted.
+   119	
+   120	## A11.3 Registered sentences changed
+   121	
+   122	Profile locators are at the frozen commit `270ca49`. The live `docs/V1-PROFILE.md` is byte-identical to it. Kinds
+   123	follow A9.7. In rows 3, 4, 7 and 8 the "Was" cell spans several passages, so it is a paraphrase; only the words in
+   124	quotation marks are exact.
+   125	
+   126	| # | Source | Was | Now |
+   127	|---|---|---|---|
+   128	| 1 | `phase-0-prereg.md:401-404` (c147) | "KMS/GPG domain separation (§3.1) reduces correlated compromise; … the §4.2 threat model and TTL bound the local-key blast radius" | (V1) "separate technical custody domains under a single controller (C3 non-claim, A9:449-453); OpenTimestamps constrains backdating; the slot-2 key is non-exportable hardware outside the issuing AWS account (A9.6, A9:375-376), which prevents key export, not misuse; there is no local service key in V1". Kind R, beside A9.7 row 15 |
+   129	| 2 | `phase-0-prereg.md:640-643` (c111, §6 restatement) | "Rejected in favor of dual-signing (C) across independent failure domains" | (V1) as A9.7 row 15 (A9:479): narrowed to C3's non-claim, separate technical failure domains under a single controller, with no separation of control or independent fates (A9:449-451). Kind R, row 15 extended |
+   130	| 3 | `phase-0-prereg-amendment-1.md:144-148` | the six fields, the two curve fields named in Ed25519's terms | the six fields as read in §A11.2 item 1; the floor and discharge conditions of items 2–3 |
+   131	| 4 | `phase-0-prereg-amendment-1.md:182`, `:494-495`; `phase-0-prereg-amendment-2.md:111-112`, `:268-269` (c032) | δ, ε (and k, N, S) "ratified (or revised, on the record) at Band 0 exit" | for `tessera-v1-strict`: ratified by the author's signature on A9 (A9.2, A9:223-225: δ = 72 h, ε = 24 h, k = 6, N = 3, S = 24 h). Outside V1: unchanged, still at Band 0 exit. Kind G |
+   132	| 5 | `phase-0-prereg-amendment-1.md:444-448` (c023) | "at issue time, two channels with independent operational failure modes asserted the same key authority"; "tampering with both external channels, at or before issue time" | (V1) "two channels asserted the same key authority at their evidence times (A9 C4): the git assertion by chain order before the receipt's anchor; DNSSEC at the snapshot's own anchored time, which establishes no publication before issue (A9:143)". Kind W, already in effect from A9's signature and listed late here |
+   133	| 6 | `phase-0-prereg-amendment-2.md:299-301` (c007) | "(the OTS proof over its canonical bytes)" | (V1) "(the OTS proof over `SHA256(A_sig)`, which commits to both frames and their exact detached signatures, A9.5)" (A9:290-292). The rest of A2.4, including one proof per receipt and the txid as identity handle, is unchanged. Kind K, as A9.7 row 24 (A9:488) for the sister sentences |
+   134	| 7 | `phase-0-prereg-amendment-9.md:389-392`; `270ca49:docs/V1-PROFILE.md:1017-1040` (custody record, :1024-1025, :1033-1040) and `:1428-1436` (§14.2 item 5) (c062) | the boundary as "the selected, deadline-qualified custody implementation", described through `prototype/policy-signer/` with its 2026-10-14 evidence | **Option 1 (§A11.5 item 2; owner decision, adopted by signing).** The deadline qualification attaches to the selected custody option and boundary, and the named replacement `service/signer-gcp/` runs under conditions (i)–(iv). *(Option 2, not taken: these sentences unchanged, and the registered fallback, A9:372-374, taken.)* |
+   135	| 8 | `phase-0-prereg-amendment-10.md:443-447`, `:449-457`, `:462` (A10.4 option (e), A10.4.1); A10.7 rows 25–33 and 37–39 (`:761-769`, `:773-775`); the plain-language summary `:106-124`, the additions list `:213-226`, the row-26 note `:432`, the closing summary `:795-799` and the reconciliation item `:810-812` (c018, c103; A11X-02, A11XC-01) | option (e) AUTHOR ADOPTED with A10.4.1; the listing cut only "for schedule reasons" (`:455-456`); "rows 25–33 and 37–39 only on (e)" (`:446-447`) | (V1) option (e) is narrowed by the author's E9 row 2 ruling of 2026-10-23 (`docs/reviews/e9-packet/AUTHOR-RULINGS.md:5-12`). It is an author scope decision, not the schedule cut order. A10.4.1 and rows 25–32 and 37–39 do not apply to V1. The passages at `:106-124` ("Key substitution: option (e)", "the limits", "time"), `:213-226` (the listing's field, check, reason codes and invariants) and `:432` describe the listing as a V1 mechanism. They are kept as the dated record of the 2026-10-18 adoption, with the author's words, and are superseded as descriptions of V1: in V1 no verifier rejects a receipt for keys missing from a list, no listing pre-commitment or listing-evidence preservation duty exists, and after capture of both authority channels a receipt under the attacker's own keys passes (`docs/V1-CONTRACT.md` §2 after G10, §4). The closing summary's listing mechanisms and "option (e) deliberately rejects new cases: receipts under unlisted keys, and receipts whose listing was not pre-committed" (`:795-799`) are superseded for V1 in the same way, and the listing parts of the reconciliation item at `:810-812` (the listing-evidence package, the listing subchecks and their total-order rows, the C0/C1 bootstrap) are withdrawn as V1 work. Every other mention of A10.4.1 in A10 (the status block `:13-28`, the author's quotations `:273` and `:620`, the "no longer open" note `:805`, and the mechanism section `:462-611`, all of A10.4.1) is the dated record of the adoption or the mechanism text itself, superseded for V1 by this row. The frozen copies in `formal/freeze-v1/objects/spec.bin` are covered by the same disposition; their bytes are not edited. The owner grepped every registered and frozen text for the listing's vocabulary on 2026-10-29, and no other mention remains undisposed. Release-key custody (A10.4.2) is separate and unchanged. Option (a) applies (rows 15–16). A10.4.2 (rows 34–36) is unchanged. Row 33 stands as registered cut-order text, since (e) is narrowed, not withdrawn. Its "second item cut is the service-key listing" has no referent in V1. Its other sentences (option (a) applies, the absence of new-key protection is stated, no cure for release-key independence) are met by the ruling and profile §5 (`270ca49:docs/V1-PROFILE.md:619-623`). Profile :619-622 and :1258-1262 are then consistent as written. Kind C/W, recorded here because no signed change table lists it |
+   136	| 9 | `phase-0-prereg-amendment-10.md:675` | "as amended by rows 15 and 25" | "as amended by row 15" (row 25 does not apply to V1; row 8 above) |
+   137	| 10 | `formal/p8/PROOF.md:134-135`, `:485` (c088; A11X-04) | :134-135 "no V1 check reads them"; :485 "No check reads it, and B never computes it." | "no V1 check relies on them as a hash or for key selection: the profile checks only their structure (length, version octet, consistency with type 16; V1-PROFILE §8, `270ca49:docs/V1-PROFILE.md:1105-1107`) and never compares them with the transported key". At :485, "No check reads it" becomes "No V1 check relies on it as a SHA-1 value; the profile validates its structure only (as above)"; "B never computes it" stays, as a statement about implementation B. Assumption (H) is unaffected: SHA-1's properties are not relied on. Kind K |
+   138	| 11 | `formal/p8/ENCODING-V1.md:334` (c002, §3.2 `alg` row) | "The id names the scheme: 'a v4 OpenPGP binary-document signature whose document is the frame, ECDSA P-256, SHA-256' (G-57 kept)." | "An id names its scheme. The classical id `OPENPGP4-ECDSA-P256-SHA256` names 'a v4 OpenPGP binary-document signature whose document is the frame, ECDSA P-256, SHA-256' (G-57 kept). The pair id V1 issues (`:322-323`) names ML-DSA-65, pure mode, empty context (rule R) in slot `kms` and that OpenPGP scheme (rule O) in slot `gpg` (§5.2; HYBRID-SUPPLEMENT §1)." Kind K |
+   139	| 12 | **K-R.** `formal/p8/HYBRID-SUPPLEMENT.md:61-64`, `:152-153`, `:173-174`, `:524`, `:533`, `:274-276` (the supplement's copy of the E§5.2 replacement text); `formal/p8/ENCODING-V1.md:557-559` (c004, c008, c011, c097, c108; A11X-01) | :61 "it is the issuer's only path"; :63-64 "the issuer always computes `μ` … and sends `μ`"; :152-153 "Every issuer KMS `Sign` call on the key is `MessageType EXTERNAL_MU`, with `μ` computed by the issuer from such an `F`"; :173-174 "(K-R) is an issuer-code and IAM assumption: the key policy grants `kms:Sign` only to the issuer role, and the issuer code builds only V1 frames"; :524 "the issuer always uses EXTERNAL_MU for the kms slot, attestations and possession alike"; :533 "`kms:Sign` only for the issuer role"; ENC:557-558 and its copy at supplement :274-275 "The issuer obtains `S_kms` (attestation and possession) from KMS with `MessageType EXTERNAL_MU` only, sending μ" | In each sentence, the actor that computes `μ` and calls `kms:Sign` is the KMS-slot policy signer (`service/signer-kms/`). It runs in the issuing AWS account under its own IAM role. It computes `μ` only from an `F` it has validated: tag, alg, key fingerprint, ε (attestation frames only; manifests carry no declared time, HYBRID-SUPPLEMENT:495), `sign_by`, the signing stop (`service/signer-kms/tessera_sign_kms/signer.py:176-185`). Its role is the only `kms:Sign` principal, and the issuer roles hold no KMS permission (`service/signer-kms/infra/main.tf:33-34`; `service/issuer/infra/main.tf:181`). :173-174 reads: "(K-R) is a signer-code and IAM assumption: the key policy grants `kms:Sign` only to the KMS-slot policy signer's role, and that signer signs only V1 frames it has validated." **The (K-R) restrictions are unchanged** (:151-153, :157): the key signs only V1 tagged strings, in pure mode with the empty context, and is used by no other protocol or service. Only the actor that enforces them changes, so the wording of :152-153 changes as stated. The historical capture labels "selected issuer path" and "issuer-computed μ" (:76, :353, :412, :478) describe the 2026-10-13/14 captures and still fit (A11X-01, A11X-05). EXTERNAL_MU only, for attestations and possession alike, is unchanged. The verifier side is unchanged. Kind R |
+   140	| 13 | `formal/p8/HYBRID-SUPPLEMENT.md:154-155` (c121) | "They satisfy the same assumption, because the message is a V1 tagged string." | "The genuine-frame RAW captures (SIG-G1, P-G1) satisfy the same assumption. SIG-H5 (RAW) and SIG-H6 (EXTERNAL_MU) were made over spike frames tagged `tessera-v1/receipt`, which is not in T (:344-345), under the spike key. That key is never a production key and is deleted under §11 item 6 (§A11.5 item 3), so (K-R) for the production key is unaffected." Kind K |
+   141	| 14 | `270ca49:docs/V1-PROFILE.md:1244-1245` (c041, d3) | "one attacker key in both slots, honest DNS evidence, `git` absent: `INVALID / DNS_KEY_MISMATCH` (row 15.1)" | "Under the pair id: the attacker's own key of the right type in each slot (ML-DSA-65 SPKI in kms, P-256 v4 body in gpg; :1064-1065), with consistent manifest, possession and signatures, honest DNS evidence, `git` absent: `INVALID / DNS_KEY_MISMATCH` (row 15.1), dominating `UNVERIFIABLE / MEMBER_MISSING:git`." The A9.1 outcome, INVALID, is unchanged. The fixture bytes are regenerated. Kind K (fixture only) |
+   142	| 15 | `270ca49:docs/V1-PROFILE.md:1029` (custody record) | "HYBRID-SUPPLEMENT §9 item 6", a stale locator | `formal/p8/HYBRID-SUPPLEMENT.md` §11 item 6, the spike-key sentence at :525-526. The frozen bytes are unchanged; this corrects the locator only |
+   143	
+   144	## A11.4 Dependency duty for registered decisions
+   145	
+   146	When a registered decision changes a parameter (an algorithm, a custody form, a channel, a horizon, a scope, a key),
+   147	the owner sweeps the registered texts for sentences whose referent the change alters. Each one is recorded as
+   148	amended, superseded, still fitting or open, before the decision's change is treated as complete. An owner decision
+   149	that touches a registered parameter is checked against those texts before it is recorded.
+   150	
+   151	## A11.5 Results of the first sweep (2026-10-28)
+   152	
+   153	The sweep covered the original, Amendments 1–10, the freeze, the tracker and the author-rulings files
+   154	(`docs/reviews/stale-dependencies/SWEEP-2026-10-28.md`). The owner checked each finding against its source. The
+   155	review added item 3. The sweep did not read the rest of the frozen specification or the hybrid supplement
+   156	(`SWEEP-2026-10-28.md:3-4`, `:20-21`). The Levadura panel read them. Its findings are §A11.3 rows 1, 2, 4–6, 8 and
+   157	10–14, §A11.6 and §A11.7.
+   158	
+   159	**Scope from now on.** Every sweep under §A11.4 reads the frozen specification object in full (`spec.bin`: A9, A10,
+   160	PROOF, V1-PROFILE, ENCODING-V1 and the hybrid supplement; `formal/freeze-v1/FREEZE-RECORD.md:16`), as well as the
+   161	original, every amendment, the freeze record, the tracker and the author-rulings files.
+   162	
+   163	1. **H3 (`phase-0-prereg.md:232-248`): not amended.** H3 is a hypothesis with a stated falsifier. Its examples are
+   164	   AWS-based, but they do not restrict it to AWS. It is measured over the whole deployed system, every provider
+   165	   included. A measurement protocol is recorded before measurement. It covers retained resources (including the
+   166	   compliance-locked trail bucket), defines the demonstration and idle periods, and reports the three numbers
+   167	   separately. A slot-2 signer and an issuer poller that run through the operating window conflict with "idle
+   168	   compute exactly $0". If that or another number fails, H3 is reported as falsified. The operating window is not
+   169	   redefined as a demonstration to avoid this.
+   170	2. **The slot-2 enforcement boundary: an owner decision (Option 1), adopted by the author's signature.** A9.6 requires the final custody implementation to
+   171	   be deadline-qualified (`phase-0-prereg-amendment-9.md:389-392`). The frozen record keeps "the selected,
+   172	   deadline-qualified custody implementation" (`270ca49:docs/V1-PROFILE.md:1024-1025`). It describes it through
+   173	   `prototype/policy-signer/` (:1033-1037), which met the deadline on 2026-10-14 (:1038-1040; §14.2 item 5,
+   174	   :1429-1435). That qualification stands as historical evidence.
+   175	
+   176	   Production cannot run the prototype. Instrument code under `prototype/` stays instrument code, and service code
+   177	   that ports it must earn its own evidence on its own bytes (`formal/freeze-v1/FREEZE-RECORD.md:62-64`). Nothing an
+   178	   instrument produces discharges an obligation (A9:198-200). The E9 ruling R5b (`docs/reviews/e9-packet/AUTHOR-RULINGS.md:54`)
+   179	   allows porting instrument code with evidence earned on the resulting bytes. It does not address A9.6's
+   180	   deadline-qualified custody, so it does not settle this question. The registered texts do not say whether a
+   181	   post-deadline port counts as "the selected, deadline-qualified custody implementation". Each reading keeps a
+   182	   different registered text. A choice is needed, and the relaxation it makes needs the author's signature.
+   183	
+   184	   > **OWNER DECISION FOR THE AUTHOR'S SIGNATURE (2026-10-29): Option 1.** Asked whether this is irreversible or
+   185	   > scope-changing, the owner answered no to both for Option 1. It changes no V1 scope. The practical lock-in is
+   186	   > the first production receipt under the hybrid keys, at deployment, not this text, and a later amendment can
+   187	   > revisit it before then. Option 2 is the scope change (it drops PQ and amends the freeze) and buys no claim V1
+   188	   > makes. The authority Option 1 needs is the author's signature on this amendment. **Signing adopts Option 1.**
+   189	   > If the author disagrees, the text changes before signing. Both options are kept below as stated before the
+   190	   > choice.
+   191	   >
+   192	   > **Option 1: the custody implementation is the custody option and boundary (port permitted; keeps the hybrid).**
+   193	   > A signed row says the A9.6 deadline qualification (A9:389-392; `270ca49:docs/V1-PROFILE.md:1024-1025`,
+   194	   > `:1429-1435`) attaches to the selected custody option and boundary: GCP Cloud KMS HSM, P-256, non-exportable,
+   195	   > behind a queue-pulling policy signer with the A9.6 checks (A9:382-388). The 2026-10-14 instrument run evidenced
+   196	   > that option, and A9.2 lets an instrument select among registered branches (A9:198-199). Production runs the
+   197	   > service port `service/signer-gcp/`, provided that before the first shipped receipt:
+   198	   > - (i) it preserves **every A9.6 custody and policy requirement**: complete-frame validation; the declared-time
+   199	   >   check on its own clock before signing; the issuing account able to enqueue but not to invoke the key, change
+   200	   >   the policy or clock, or obtain key-use credentials; and the key dedicated to V1 type-0x00 documents. It also
+   201	   >   preserves every property in the frozen custody record (`270ca49:docs/V1-PROFILE.md:1017-1040`) except the
+   202	   >   identity of the implementation, its 2026-10-14 deadline evidence and its prototype paths, which this option
+   203	   >   replaces;
+   204	   > - (ii) the external custody record names the deployed implementation, its image digest and its configuration;
+   205	   > - (iii) deployed evidence is earned on the new bytes. That means: a deployed positive signature that verifies
+   206	   >   offline; deployed refusals for a malformed frame, a wrong tag, a wrong alg, a wrong fingerprint and a declared
+   207	   >   time outside ε; a review of every principal that can cause a signature or administer the signer
+   208	   >   (`service/issuer/DEPLOY.md` step 8); and verified retirement of every other signing path (step 7);
+   209	   > - (iv) all of it identifies the tested image and configuration.
+   210	   >
+   211	   > This keeps FREEZE-RECORD.md:62, A9.2 and A9.6's custody and policy requirements. It overrides the code-identity
+   212	   > reading of "the selected, deadline-qualified custody implementation" (profile :1024-1025) and of A9.6's "final
+   213	   > custody implementation" (A9:389-390). Cost: it is a retrospective relaxation, made after the deadline and after
+   214	   > the candidate code existed. It is disclosed as such in the header.
+   215	   >
+   216	   > **Option 2: the code-identity reading is kept (A9.6 fallback).** No port can be deadline-qualified, and the
+   217	   > prototype cannot run production, so the hybrid's custody condition cannot be met. A9.6's own consequence
+   218	   > applies: "otherwise the registered fallback is taken" (A9:391; cut order A9:211-212). That is classical P-256
+   219	   > in both slots (A9:372-374), with slot 2 still under A9.6 custody through a ported service signer. The fallback
+   220	   > has no 21 Oct custody deadline. This keeps A9.6, A9.2 and FREEZE-RECORD.md:62 literally. Cost: it drops the PQ
+   221	   > slot. A9:346-350 records PQ as the author's stated preference, not a claim requirement, and the first item cut.
+   222	   > It changes the frozen catalog's `alg` (`formal/freeze-v1/objects/catalog.json`; FREEZE-RECORD.md:16, :20), so
+   223	   > the freeze must be amended or redone before issuing. The 2026-10-16 hybrid registration becomes moot.
+   224	   >
+   225	   > Chosen: **Option 1**, by the owner, adopted by the author's signature on this amendment.
+   226	
+   227	   **Owner recommendation (a recommendation, not a decision): Option 1.** It keeps every custody and policy
+   228	   requirement and re-earns all evidence on the bytes that run. Option 2 keeps the deadline text literally but
+   229	   gives up the author's stated preference and reopens the freeze. Until the author rules, issuance does not start
+   230	   (§A11.7, `service/issuer/DEPLOY.md`).
+   231	3. **The spike keys (`formal/p8/HYBRID-SUPPLEMENT.md` §11 item 6, :524-526).** The spike-key sentence (:525-526)
+   232	   is **unchanged**: "Both spike keys are deleted after the re-capture verifies, once the review clears." The
+   233	   item's first sentence (:524), "the issuer always uses EXTERNAL_MU for the kms slot", is changed by §A11.3 row 12
+   234	   (K-R). The owner's deployment draft (2026-10-27) reused the spike keys as production keys. That contradicted
+   235	   this commitment, and the draft is withdrawn. Production uses new keys (`service/issuer/DEPLOY.md`), recorded in
+   236	   the external custody record before use.
+   237	4. **A dangling cross-reference (`phase-0-prereg-amendment-10.md:675`).** Row 25 does not apply to V1 (E9 row 2,
+   238	   2026-10-23; §A11.3 row 8). This is a CLARIFY: the fallback cites row 15 only (§A11.3 row 9).
+   239	5. **K-R's enforcement (`formal/p8/HYBRID-SUPPLEMENT.md:61-64`, `:148-174`, `:524`, `:533`;
+   240	   `formal/p8/ENCODING-V1.md:557-559`): amended in wording, the assumption unchanged.** (K-R) itself stands: the
+   241	   ML-DSA-65 key signs only V1 tagged strings, in pure mode with the empty context, under EXTERNAL_MU, for no other
+   242	   protocol. What changes is who enforces it. The supplement and ENCODING-V1 §5.2 name the issuer as the computer
+   243	   of `μ` and the issuer role as the only `kms:Sign` principal. In V1 as designed (deployment pending), a
+   244	   dedicated policy signer validates the complete frame (tag, alg, key fingerprint, ε for attestation frames only,
+   245	   `sign_by`, the signing stop) *before* computing `μ`. Manifests carry no declared time, so ε does not apply to
+   246	   possession signing (HYBRID-SUPPLEMENT:495; `service/signer-kms/tessera_sign_kms/signer.py:180-184`). The
+   247	   signer's role is the only `kms:Sign` principal (`service/signer-kms/`; key policy in
+   248	   `service/signer-kms/infra/main.tf`). This narrows what a captured issuer role alone can get signed. It does not
+   249	   change the supplement's stated limit: "whoever may call `kms:Sign` on the key can sign any message by computing
+   250	   `μ`" (:171-172). An administrator of the account can still grant that (`PutKeyPolicy`), which is C3.
+   251	
+   252	## A11.6 Clarifications
+   253	
+   254	These are readings, not changes. Each narrows or clarifies only and adds no claim.
+   255	
+   256	1. **ENCODING-V1 §5.2 rule O *Reasons* (c021). Narrowing.** "ENCODING-V1 §5.2 rule O *Reasons*
+   257	   (`formal/p8/ENCODING-V1.md:538-544`) record the 2026-10-12 GnuPG observation that motivated the legacy-header
+   258	   form. Rule O itself is unchanged. Under the pair id, the gpg slot's packet is assembled by the slot-2 policy
+   259	   signer (profile §8 custody record, `270ca49:docs/V1-PROFILE.md:1033-1036`), and it is a Tessera-assembled packet
+   260	   held to the same form as :541 requires. :541's 'KMS slot's packet' describes the classical id only, because
+   261	   under the pair id the kms slot emits rule R and has no packet."
+   262	2. **W1 and receipt identity (c033). Clarifying.** "Profile §6 W1 (`270ca49:docs/V1-PROFILE.md:850-851`) 'is not an
+   263	   identifier' has the sense of its cited source ENC §3.5 (`formal/p8/ENCODING-V1.md:400-402`): no semantic,
+   264	   standing or attempt identifier, and no identifier of the statement, is derived from signature bytes. §9's 'A
+   265	   receipt's identity is SHA256(A_sig)' (:1183-1187) is an exact-bytes identity for deduplicating and referring to
+   266	   one receipt's claim-bearing bytes. Two receipts of one statement with different valid signatures are different
+   267	   receipts. Neither text widens the other."
+   268	3. **"Both OpenPGP adapters" (c056). Narrowing.** "Profile §6 issuer duties 'Both OpenPGP adapters'
+   269	   (`270ca49:docs/V1-PROFILE.md:386-387`) and 'both OpenPGP adapters and the repository signer' (:392-393) mean
+   270	   every OpenPGP signer in use. Under the pair id that is the gpg slot's policy signer (and the repository signer).
+   271	   The kms slot emits rule R, to which the rule-O policy does not apply. Both apply under the classical id."
+   272	
+   273	**Not confirmed: c145.** It read profile §14.2 item 1's "YubiKey 2 is not in hand" (`270ca49:docs/V1-PROFILE.md:1396-1397`)
+   274	as naming YubiKey 2 the release key. No text does. The runbook says the release key is "Not YubiKey 2"
+   275	(`docs/V1-OPERATIONS-RUNBOOK.md:125`). Nothing is needed.
+   276	
+   277	## A11.7 Owner-document repairs (not registered text)
+   278	
+   279	These are owner documents. The owner makes each repair outside this amendment. They are listed so the record shows
+   280	where each one belongs.
+   281	
+   282	- **c016.** `docs/V1-SERVICE-RESOLUTIONS.md:23` (S4): the 24-hour terminal FAILED conflicts with A2's
+   283	  `declared + δ + S` expiry (`phase-0-prereg-amendment-2.md:260-264`, 96 h at A9.2's values) and A9:422. S4 keeps
+   284	  "usually complete within 3 hours" as a non-guaranteed figure. A request ends only by the registered lifecycle:
+   285	  COMPLETE, or REFUSED when its N attempts are exhausted (A2.3). The issuer had no attempts, no latch and no
+   286	  refusal, so this is more than an edit. The owner's design is `docs/decisions/2026-10-29-issuance-lifecycle.md`,
+   287	  reviewed in `docs/reviews/issuance-lifecycle/`. This amendment does not
+   288	  restate that design, which is still under review; the design document governs its own content. Whatever it
+   289	  settles must meet A2.1 and A2.3 as registered, including the latch that excludes expiry (A2.1 `:153-160`) and "every
+   290	  timely-eligible attempt ships" (`:143-145`). **Signing this amendment does not accept any residual the design
+   291	  states** (at present, an on-time observation lost before it is persisted, followed by permanent loss of the
+   292	  evidence, which could end in refusal). Such a residual is assessed in the lifecycle work, against the registered
+   293	  text, and needs its own author decision if it remains. Matching edits: CL-03 items
+   294	  1 and 2 (`docs/V1-CLARIFICATIONS.md`), the clock-tolerance decision, `service/issuer/DESIGN.md`, and the issuer
+   295	  code and tests (inventory in the design). A shorter hard bound needs a signed amendment (A2.1 `:139-142`).
+   296	- **c036.** `service/issuer/DEPLOY.md`: a gate before the session's first step makes the whole deployment wait for
+   297	  the §A11.5 item 2 ruling, recorded in this amendment's signed text. Until then, issuance cannot start. No prototype fallback is added. Under Option 2, steps 5–7 and the key section are
+   298	  rewritten for the classical fallback.
+   299	- **c093.** `formal/PROPERTIES.md:167-168`: add S, and record that for `tessera-v1-strict` all five parameters were
+   300	  ratified by the author's signature on A9 (A9:223-225). The Band 0 exit item stays open outside V1 (§A11.3 row 4).
+   301	- **c136.** `docs/V1-SERVICE-RESOLUTIONS.md:26` (S7): replace "(H3)" with a cost derived from H3's three
+   302	  measurements, stated with its derivation. Per-receipt cost is not an H3 number (`phase-0-prereg.md:232-248`).
+   303	
+   304	Repairs to this draft itself, applied above: c004 (row 12's locators and item 5's range), c030 (Option 1 condition
+   305	(i)), c055 (§A11.2 item 2's counts), c062 (row 7's sources), c097 (item 3), c108 (ε in row 12 and item 5), and
+   306	c006 (the barred prototype default removed from item 2).
+     1	# Deploying the V1 issuer and its signers (owner, 2026-10-27)
+     2	
+     3	> **Status: OWNER DRAFT, revised after the signer review** (`docs/reviews/signers/CODEX-REVIEW.md`, SG-01 to SG-05).
+     4	> These are the steps for the first deployment. No agent runs any of them: `terraform apply` and every AWS write
+     5	> run in the author's login session, from commands written out here in full. GCP steps can run on the NUC, where
+     6	> `gcloud` is logged in.
+     7	
+     8	## Before the session (owner, no credentials)
+     9	
+    10	1. `service/verifier/install.sh` has been run, so the pinned SHA-1DC binary exists.
+    11	2. All suites are green: issuer, `service/signer-kms`, `service/signer-gcp` (`.venv/bin/python -m pytest -q` in each).
+    12	3. Packages, each built deterministically (record each SHA-256):
+    13	   - `cd service/issuer && .venv/bin/python package.py dist/issuer-bootstrap.zip`
+    14	   - `cd service/signer-kms && .venv/bin/python package.py dist/signer-kms.zip`
+    15	
+    16	## Keys and what counts as production — OWNER DECISION, revised 2026-10-28
+    17	
+    18	**V1 uses new production keys, not the spike keys.** The hybrid registration commits to deleting both spike keys
+    19	(`formal/p8/HYBRID-SUPPLEMENT.md` §11 item 6, lines 524-526): "Both spike keys are deleted after the re-capture
+    20	verifies, once the review clears." The first version of this section reused them. That contradicted the
+    21	commitment, and Codex found it (`docs/reviews/amendment-11/CODEX-REVIEW.md`, A11-03). In the session:
+    22	
+    23	- **KMS:** `aws kms create-key --key-spec ML_DSA_65 --key-usage SIGN_VERIFY`. Its id and fingerprint are
+    24	  `kms_key_id` and `key_fp` in step 5.
+    25	- **Slot 2:** a new HSM key in keyring `tessera-v1` (`gcloud kms keys create ... --protection-level=hsm
+    26	  --default-algorithm=ec-sign-p256-sha256 --purpose=asymmetric-signing`). Its version, `createTime` and fingerprint
+    27	  are exported as `SLOT2_KEY`, `SLOT2_KEY_VERSION`, `SLOT2_KEY_CREATED` and `SLOT2_KEY_FP` for
+    28	  `service/signer-gcp/deploy.sh`, which has no key defaults (the version number defaults to 1) and refuses the spike key.
+    29	- Both keys are recorded in the external custody record before either signs (profile §8).
+    30	- The spike keys are deleted (KMS: schedule deletion; GCP: destroy the key version) once the conditions in the
+    31	  supplement hold.
+    32	
+    33	**Nothing separates TEST from production at signing time** (signer review, Q3). From the moment a window's
+    34	authority records name the new keys, every receipt they sign is a production receipt. The smoke test below
+    35	produces a real receipt over honest smoke-test content.
+    36	
+    37	## In the session (author logged in: `aws login --profile tessera`)
+    38	
+    39	0. **Gate: the slot-2 custody decision** (Amendment 11 §A11.5 item 2, c036). Do not run any step below until
+    40	   Amendment 11 is signed. The draft records Option 1 as the owner's decision, which the author's signature adopts;
+    41	   if the signed text says otherwise, follow it.
+    42	   - **Option 1:** steps 1–10 run as written. `service/signer-gcp/` is the production slot-2 signer, subject to
+    43	     conditions (i)–(iv) of the ruling.
+    44	   - **Option 2:** the classical fallback applies. Steps 1–10 and the keys section must first be rewritten (both
+    45	     slots OpenPGP P-256, with the frozen catalog amended), so stop here.
+    46	   - Under neither option does production use `prototype/` code (`formal/freeze-v1/FREEZE-RECORD.md:62`).
+    47	
+    48	1. **Issuer, bootstrap.** `terraform -chdir=infra plan -var lambda_zip=../dist/issuer-bootstrap.zip -out tfplan`.
+    49	   Read the plan together, then `terraform -chdir=infra apply tfplan`. The bootstrap package has no `install.json`,
+    50	   so pre-ship refuses and no receipt can ship from it.
+    51	2. **Install facts on Lambda.**
+    52	   `aws lambda invoke --profile tessera --function-name <poller> --payload '{"tessera":"install-facts"}' --cli-binary-format raw-in-base64-out install-facts.json`
+    53	3. **Runtime version.** `aws lambda get-function-configuration --profile tessera --function-name <poller>
+    54	   --query RuntimeVersionConfig.RuntimeVersionArn --output text`. This value is `RUNTIME_ARN` below.
+    55	4. **Issuer, deployable and pinned.** `.venv/bin/python package.py dist/issuer.zip --install-json install-facts.json`,
+    56	   then plan and apply with `-var lambda_zip=../dist/issuer.zip -var runtime_version_arn=$RUNTIME_ARN`. That pins
+    57	   both functions (`aws_lambda_runtime_management_config`, SG-05), so AWS cannot patch the runtime under the recorded
+    58	   Unicode digest. Collecting the facts hashes the SHA-1DC binary but does not run it. Step 9 shows it runs.
+    59	5. **KMS signer.** `terraform -chdir=../signer-kms/infra plan` with the issuer's queue and bucket outputs,
+    60	   `kms_key_id`, `key_fp` and `trail_retention_days`. The retention has no default, because Object Lock COMPLIANCE
+    61	   retention can never be shortened; choose it here. The plan **replaces the key's whole policy**: the account root
+    62	   keeps key administration (including `PutKeyPolicy`), only the signer role may `kms:Sign`, and everyone else is
+    63	   explicitly denied it. Read that diff, then apply.
+    64	6. **Slot-2 signer** (GCP; `service/signer-gcp/README.md`). Run `deploy.sh` steps in order: `sas`, `role`, then
+    65	   re-apply the issuer with `signer_principals`, then `keyiam`, `registry`, `build`, `job`, `run-now`, `scheduler`,
+    66	   `harden`.
+    67	7. **Gate: retire the prototype signer** (SG-03). `deploy.sh retire-instrument` must end with "instrument retired
+    68	   and verified". It fails on any error other than "already gone", disables the old service account, and checks that
+    69	   nothing of the instrument can still sign. Issuance does not start until this passes.
+    70	8. **Gate: who can cause a signature** (SG-04). List the principals that hold, on the AWS side,
+    71	   `lambda:InvokeFunction` on the signer, `iam:PassRole` on the signer role, `sqs:SendMessage` on either request
+    72	   queue, and `kms:PutKeyPolicy`. On the GCP side, list those that hold `run.jobs.runWithOverrides` or
+    73	   `run.jobs.update` on the job, `iam.serviceAccounts.actAs` / token creation on the runtime account, and
+    74	   `cloudkms.cryptoKeyVersions.useToSign` on the key. Record the lists in `docs/reviews/signers/REQUESTERS.md`.
+    75	   Anything beyond the issuer, the signers and the author's administrator identity is removed before issuance.
+    76	9. **Window and smoke test.** Upload `config/window.json` (L1 dates, both key fingerprints) to the result bucket.
+    77	   Then send one real request through the API, run it to VALID_STRICT through `service/verifier`, and include a
+    78	   negative control. This is the first run of pre-ship on Lambda, so it also shows the packaged detector works there.
+    79	10. **Deployed-package identity** (Amendment 11 §A11.2 3(c)). Read `CodeSha256` for both issuer functions
+    80	    (`aws lambda get-function-configuration --profile tessera --function-name <api|poller> --query CodeSha256
+    81	    --output text`), then run, from `service/verifier`:
+    82	    `TESSERA_LAMBDA_ZIP=../issuer/dist/issuer.zip TESSERA_LAMBDA_CODESHA256=<api>,<poller> .venv/bin/python -m pytest -q
+    83	    ../../formal/p3-verification-profile`. Keep the output, the two values and the zip's SHA-256 together in the run
+    84	    record. `CodeSha256` is base64 of the raw digest; `package.py` prints hex, and the test converts.
+    85	
+    86	## Not deployment gates, but release gates (still open; `formal/freeze-v1/FREEZE-RECORD.md:84-91`)
+    87	
+    88	Before the first **public verifier release**: the custody procedure and its rehearsal; the production release key;
+    89	the fingerprint channels the author names; the release-format vectors; the **GCP VPC Service Controls perimeter**;
+    90	and a **policy for responses the signer was not asked for** (E-06). Deployment does not cancel any of them.
+# Amendment 11 review: owner disposition (2026-10-28)
+
+The review is `CODEX-REVIEW.md` (verdict: not ready; A11-01 to A11-07, two prechecks FAILED). All findings were
+applied to the draft. The revised draft goes to one confirmation pass before the author.
+
+| ID | Sev | Disposition |
+|---|---|---|
+| A11-01 | High | All six A1 fields are kept, with per-algorithm readings (§A11.2 item 1). The evidence is pinned by `FLOOR-MANIFEST.sha256`, whose hash is fixed at signing and must be regenerated if any listed file changes first. Discharge conditions (a)–(d) require the deployed-zip identity check, and an unresolved defect blocks discharge. Adoption is distinguished from discharge. |
+| A11-02 | High | Disclosed as a retrospective relaxation after the deadline and after the code existed. The historical qualification is kept and does not extend to the replacement. R5b is cited, with why it does not settle the question. The hybrid with the replacement depends on the ruling. |
+| A11-03 | High | Accepted against the owner. `DEPLOY.md` reused the spike keys, contradicting HYBRID-SUPPLEMENT §11 item 6. Reversed: production uses new keys. Added as sweep item 3. §A11.4 now requires owner decisions on registered parameters to be checked first. |
+| A11-04 | High | Condition (i) preserves every A9.6 custody and policy requirement, plus the frozen record's properties. Conditions (iii) and (iv) define the re-earned evidence and the identification of the tested image and configuration. |
+| A11-05 | Med | §A11.2 item 5 distinguishes security-policy findings (historical security, beside the verdict) from conformance defects (fixed in a named release, never preserved). |
+| A11-06 | Low | The split is stated: 219 DER cases at library level, 21 P1363 cases reaching neither interface. |
+| A11-07 | Med | Each outcome-informed change is disclosed separately. The blanket claim of vacuity is replaced (only the two curve fields lack a referent for ML-DSA). The stale PENDING sentence is removed. |
+| H3 | — | Wording changed to "AWS-based examples". A measurement protocol is required before measurement, and redefining the window as a demonstration is ruled out. |
+| Citations | — | The custody citation is pinned to `270ca49:docs/V1-PROFILE.md:1023-1037`. S1 is cited as an owner operational resolution (`V1-SERVICE-RESOLUTIONS.md:20`). The stale supplement locator is corrected in §A11.3. |
+| Precheck: trigger | FAIL→fixed | A11-02 |
+| Precheck: binding text | FAIL→fixed | S1's authority level is stated |
+
+## Confirmation (`CODEX-CONFIRM.md`): owner disposition
+
+Six findings were CLOSED, A11-01 was PARTIAL, and the wider sweep found one registered commitment and two stale
+defaults. All four prechecks PASSED.
+
+| ID | Disposition |
+|---|---|
+| A11C-01 (High) | `check_zip` now requires that the zip's `tessera_verify/` hold exactly the tested verifier's files, byte for byte, as well as the wheel identity. Negative control (owner, 2026-10-28): the real package passes, and the same package with one byte changed in `codec.py` fails, naming the file. (A first control run failed on both zips because the owner's harness shared a `ZipInfo` between two archives and corrupted a CRC. That was a harness bug, found and fixed before the result was read.) The manifest was regenerated and its new hash is in A11 §A11.2. |
+| K-R (sweep C1) | Added as A11 §A11.5 item 5, with a §A11.3 row and a header disclosure. The assumption (K-R) is unchanged; the enforcement wording (who computes μ, who may `kms:Sign`) goes to the author. The placement decision's "changes no registered sentence" is corrected in place. |
+| Spike-key defaults (sweep C2) | `service/signer-gcp/deploy.sh` has no production-key defaults. It requires `SLOT2_KEY`, `SLOT2_KEY_CREATED` and `SLOT2_KEY_FP`, and refuses the spike key (both refusals checked; no gcloud call is made). The spike key is named separately (`SPIKE_KEY`) for `retire-instrument` only. The README and DEPLOY.md are updated. |
+| Release gates (sweep C3) | The VPC SC perimeter and the E-06 policy are listed in DEPLOY.md as open release gates. |
+| Sweep H3 wording | Reconciled with the amendment: "AWS-based examples". |
+
+## Second confirmation (`CODEX-CONFIRM-2.md`): owner disposition
+
+The K-R item and the deployment-key repair passed, and all four prechecks PASSED. A11C-01 stayed open: Codex built
+a zip with `./tessera_verify/codec.py` beside the genuine file, which passed `check_zip` and then overwrote the
+checked file on extraction.
+
+- **Fix.** `check_zip` accepts only canonical, unique, relative POSIX entry names, so no `./`, `..`, leading
+  `/`, backslash or duplicate. It also refuses symlink entries, which Codex did not raise; the owner added it.
+- **Tests.** Codex's attack and five variants are refusal tests, the symlink case is a sixth, and a clean zip must
+  pass as a positive control.
+- **Owner controls.**
+  - The first version of these tests passed vacuously. The hand-built zip failed the wheel-digest check before it
+    reached the path check, and that was found by removing the path check and seeing the tests still pass. A
+    fixture now records a stand-in binding digest so the zip reaches the path check.
+  - With the path check removed, the `./`, leading-`/` and backslash aliases are accepted (3 tests fail), so the
+    check carries them. The `//`, `..` and exact-duplicate aliases are also refused by the file-set and content
+    comparison.
+  - The genuine package built by `service/issuer/package.py` still passes.
+- **Wording.** "As deployed" became "as designed (deployment pending)". The K-R citation is `:173-174`. "No
+  defaults" became "no key defaults (the version number defaults to 1)".
+- **Manifest.** Regenerated; its hash in A11 §A11.2 is `a69204e9f69a2af3a0bcac96991b55109b0ff0f3efdd6e2182424dd347a24a88`.
+
+The final repair was verified by the owner's tests and controls, including Codex's exact construction. No further
+Codex round was run on it.
+
+## Third confirmation (`CODEX-CONFIRM-3A.md`, `CODEX-CONFIRM-3B.md`, 2026-10-29): owner disposition
+
+The author asked that Codex, not the owner, confirm the owner's fix claims. The first run was blocked by OpenAI's
+filter ("flagged for possible cybersecurity risk"), probably because the owner's brief asked Codex to "try to break"
+the check and named archive-manipulation techniques. It was re-run as two briefs describing the defensive purpose.
+
+- **3A (the owner's claims): all CONFIRMED.** These are the refusals, the positive controls (Codex's fresh build of
+  the genuine package reproduced the owner's digest `1bfcc569…6446`), the earlier vacuity and its repair, and the
+  division between the checks.
+- **3B (is the check the right design): `check_zip` cannot establish the claim.** In 23 benign archives, `check_zip`
+  passed several on which Python's zipfile and Info-ZIP disagree. AWS does not document Lambda's extractor.
+  Disposition, following Codex's recommendation:
+  - §A11.2 3(c) is rewritten in Codex's suggested form. The deployed package is bound by exact digest: the zip the
+    recorded packager built, matched base64-encoded to AWS `CodeSha256` for every covered function. The amendment
+    states that this is package identity, not agreement among extractors.
+  - `test_deployed_zip_identity` requires `TESSERA_LAMBDA_CODESHA256` as well as the zip. The owner's controls:
+    matching digests for two functions pass, and one wrong digest fails. `test_A11C3B_code_sha256_comparison`
+    checks the encoding: hex, as `package.py` prints it, is not AWS's form.
+  - The comment in `check_zip` no longer claims that "what extraction writes is exactly what was compared". It is
+    build-content evidence.
+  - `DEPLOY.md` step 10 reads `CodeSha256` for both functions and runs the floor against the deployed zip.
+  - The post-extraction claim (a deployed manifest check of extracted files) is not adopted for V1. The bounded
+    package-identity claim is what the amendment states.
+  - Codex's note that Terraform does not publish Lambda versions stands. Publishing a version conditional on
+    `CodeSha256` is a V2 candidate.
+- The manifest was regenerated. The floor gives 1201 passed, 1 skipped.
+
+## Consolidated draft review (`CODEX-REVIEW-CONSOLIDATED.md`, 2026-10-29): owner disposition
+
+The draft was consolidated from the Levadura panel's 28 findings. The review found that all 28 are accounted for
+and the custody options are stated neutrally. It found three high findings, two of them the panel's own pattern
+again (a fix that leaves a copy of the text elsewhere unchanged), and three prechecks FAILED. All findings applied:
+
+| ID | Sev | Disposition |
+|---|---|---|
+| A11X-01 | High | The K-R row adds the supplement's copy of the E§5.2 sentence (`HYBRID-SUPPLEMENT.md:274-276`). The historical "issuer-computed μ" capture labels are stated to still fit. |
+| A11X-02 | High | Row 8 adds A10's plain-language passages (`:106-124`), its additions list (`:213-226`) and the row-26 note (`:432`). They are kept as the dated record of the 2026-10-18 adoption and superseded as descriptions of V1. In V1 no listing rejection, pre-commitment or preservation duty exists, and attacker-key receipts pass after capture of both channels (V1-CONTRACT §2, §4). |
+| A11X-03 | High | The owner's own c016 sentence said expiry could "override" a latch, which A2.1 forbids. It now says the latch excludes expiry and describes the revision-3 design (one writer; expiry only after B plus the lease, on fresh evidence). |
+| A11X-04 | Med | Row 10 adds `PROOF.md:485` ("No check reads it"), scoped as in :134-135. "B never computes it" stays. |
+| A11X-05 | Low | The K-R row no longer calls source wording "unchanged". The unchanged restrictions are named and cited (:151-153, :157), and the actor change is stated. |
+| Paraphrases | — | The table states that the "Was" cells of rows 3, 4, 7 and 8 are paraphrases; only quoted words are exact. |
+
+The owner repairs in §A11.7 remain listed, not done (the live S4 still has the 24-hour rule). They are done with the
+issuer lifecycle change.
+
+## Consolidated confirmation (`CODEX-CONFIRM-CONSOLIDATED.md`): owner disposition
+
+A11X-01 to -05 and the paraphrase labelling were CLOSED. A11XC-01 (High): row 8 still missed A10's closing summary
+(`:795-799`, "deliberately rejects new cases: receipts under unlisted keys") and the listing parts of the
+reconciliation item (`:810-812`). This was the fourth missed copy for the listing cut, so the owner did not repair
+it alone. The owner grepped every registered text (prereg, A1–A10, PROOF, ENCODING-V1, HYBRID-SUPPLEMENT,
+HYBRID-REGISTRATION-RECORD, FREEZE-RECORD, profile at `270ca49`) for the listing's vocabulary (`service_keys`,
+`SERVICE_KEYS_NOT_LISTED`, `unlisted`, `LISTING_`, `A10.4.1`, `key listing`, `listing evidence`, `listing
+pre-commit`). Every hit is now disposed by row 8: either named explicitly or covered as adoption history, the
+mechanism section or frozen copies. A9:157 and profile :531 ("unlisted rollover") are DNSSEC terms, unrelated.
+
+**Row-8 confirmation (`CODEX-CONFIRM-ROW8.md`):** A11XC-01 CLOSED; independent wider search found no undisposed hit. Ready for the author. Owner tidy: the mechanism-section range is corrected to `:462-611` (all of A10.4.1, which ends where A10.4.2 begins at :612).
+
+## Author's pre-signing Codex read (relayed by the author, 2026-10-29): owner disposition
+
+The author ran the draft by Codex before ruling. Codex leaned toward Option 1 and asked for two bounded corrections.
+Both are applied:
+- **DEPLOY.md gate.** A step 0 now makes the whole deployment wait for the §A11.5 item 2 ruling, recorded in the
+  signed amendment. It states what each option means for the steps, and that no option uses `prototype/` code.
+  A11.7 c036 is updated to match.
+- **Stale lifecycle summary in A11.7 c016.** The summary described revision 3 (expiry after the boundary plus the
+  write lease), while the design is now at revision 4 (expiry only on complete negative evidence, no lease timing).
+  The owner had revised the design twice after writing the summary. A11 now defers to the design document instead
+  of restating it. Following Codex's caution, it also says that **signing A11 does not accept any residual the
+  lifecycle design states**: such a residual is assessed in the lifecycle work against A2.1 and A2.3, and needs its
+  own author decision if it remains.
+
+Codex also noted that §A11.2 item 4 is a continuing operational duty: re-runs on every verifier or library change,
+every new upstream vector commit, and at least quarterly. This is stated in the amendment, and the author should
+weigh it as an ongoing cost, not a one-time approval.
+
+## Author's question on the operational triggers (2026-10-29): owner disposition
+
+The author asked whether §A11.2 item 4's triggers are the right boundaries or educated guesses. Owner assessment:
+- Code or library change is required: the evidence is bound to bytes.
+- "Every upstream vector commit" had the right purpose at the wrong grain: it now triggers only on files for the
+  algorithms in use.
+- "Quarterly" was a guess standing in for knowledge outside the vector suite. It is replaced by advisory and erratum
+  triggers, plus a calendar backstop labelled as an operating guess, to be reviewed on a year of run records.
+
+Item 4 is rewritten so that each trigger states what it detects. This is an unreviewed edit to the draft. The
+owner's confirmation runs before signing.
+
+A boundary candidate raised to the author, not added to A11: the verifier's DNSSEC signature checks (RSA alg 8,
+ECDSA P-256 alg 13, which ground G4) are inventoried but not profiled (`formal/p3-verification-profile/PROFILE.md:54-58`).
+No registered property asks for a verification profile for them.
+
+## Custody ruling as an owner decision (2026-10-29)
+
+The author asked whether the custody ruling is irreversible or scope-changing. Owner's answer:
+- Option 1 is neither. It changes no V1 scope. The practical lock-in is the first production receipt under the
+  hybrid keys, at deployment, and a later amendment can revisit it before then.
+- Option 2 is the scope change: it drops PQ and amends the freeze, for no claim V1 makes.
+
+So the choice does not need the author's separate ruling. It needs his signature, because Option 1 relaxes a
+registered reading, and signing A11 gives that. The ruling block, the header, §A11.5 item 2, change-table row 7 and
+DEPLOY step 0 now record Option 1 as the owner's decision, adopted by signing. Option 2 is kept as the alternative
+not taken, and the retrospective-relaxation disclosure is unchanged.
+
+exec
+/bin/bash -lc "nl -ba docs/phase-0-prereg-amendment-11.md | sed -n '145,310p'; nl -ba service/issuer/DEPLOY.md | head -n 48; git diff -- service/issuer/DEPLOY.md; rg -n -i 'pending|choose|choice|picks|option [12]|ruling|signature|signing|____|TBD' docs/phase-0-prereg-amendment-11.md service/issuer/DEPLOY.md; rg --files docs/reviews/amendment-11" in /home/tony/projects/tessera
+ succeeded in 0ms:
+   145	
+   146	When a registered decision changes a parameter (an algorithm, a custody form, a channel, a horizon, a scope, a key),
+   147	the owner sweeps the registered texts for sentences whose referent the change alters. Each one is recorded as
+   148	amended, superseded, still fitting or open, before the decision's change is treated as complete. An owner decision
+   149	that touches a registered parameter is checked against those texts before it is recorded.
+   150	
+   151	## A11.5 Results of the first sweep (2026-10-28)
+   152	
+   153	The sweep covered the original, Amendments 1–10, the freeze, the tracker and the author-rulings files
+   154	(`docs/reviews/stale-dependencies/SWEEP-2026-10-28.md`). The owner checked each finding against its source. The
+   155	review added item 3. The sweep did not read the rest of the frozen specification or the hybrid supplement
+   156	(`SWEEP-2026-10-28.md:3-4`, `:20-21`). The Levadura panel read them. Its findings are §A11.3 rows 1, 2, 4–6, 8 and
+   157	10–14, §A11.6 and §A11.7.
+   158	
+   159	**Scope from now on.** Every sweep under §A11.4 reads the frozen specification object in full (`spec.bin`: A9, A10,
+   160	PROOF, V1-PROFILE, ENCODING-V1 and the hybrid supplement; `formal/freeze-v1/FREEZE-RECORD.md:16`), as well as the
+   161	original, every amendment, the freeze record, the tracker and the author-rulings files.
+   162	
+   163	1. **H3 (`phase-0-prereg.md:232-248`): not amended.** H3 is a hypothesis with a stated falsifier. Its examples are
+   164	   AWS-based, but they do not restrict it to AWS. It is measured over the whole deployed system, every provider
+   165	   included. A measurement protocol is recorded before measurement. It covers retained resources (including the
+   166	   compliance-locked trail bucket), defines the demonstration and idle periods, and reports the three numbers
+   167	   separately. A slot-2 signer and an issuer poller that run through the operating window conflict with "idle
+   168	   compute exactly $0". If that or another number fails, H3 is reported as falsified. The operating window is not
+   169	   redefined as a demonstration to avoid this.
+   170	2. **The slot-2 enforcement boundary: an owner decision (Option 1), adopted by the author's signature.** A9.6 requires the final custody implementation to
+   171	   be deadline-qualified (`phase-0-prereg-amendment-9.md:389-392`). The frozen record keeps "the selected,
+   172	   deadline-qualified custody implementation" (`270ca49:docs/V1-PROFILE.md:1024-1025`). It describes it through
+   173	   `prototype/policy-signer/` (:1033-1037), which met the deadline on 2026-10-14 (:1038-1040; §14.2 item 5,
+   174	   :1429-1435). That qualification stands as historical evidence.
+   175	
+   176	   Production cannot run the prototype. Instrument code under `prototype/` stays instrument code, and service code
+   177	   that ports it must earn its own evidence on its own bytes (`formal/freeze-v1/FREEZE-RECORD.md:62-64`). Nothing an
+   178	   instrument produces discharges an obligation (A9:198-200). The E9 ruling R5b (`docs/reviews/e9-packet/AUTHOR-RULINGS.md:54`)
+   179	   allows porting instrument code with evidence earned on the resulting bytes. It does not address A9.6's
+   180	   deadline-qualified custody, so it does not settle this question. The registered texts do not say whether a
+   181	   post-deadline port counts as "the selected, deadline-qualified custody implementation". Each reading keeps a
+   182	   different registered text. A choice is needed, and the relaxation it makes needs the author's signature.
+   183	
+   184	   > **OWNER DECISION FOR THE AUTHOR'S SIGNATURE (2026-10-29): Option 1.** Asked whether this is irreversible or
+   185	   > scope-changing, the owner answered no to both for Option 1. It changes no V1 scope. The practical lock-in is
+   186	   > the first production receipt under the hybrid keys, at deployment, not this text, and a later amendment can
+   187	   > revisit it before then. Option 2 is the scope change (it drops PQ and amends the freeze) and buys no claim V1
+   188	   > makes. The authority Option 1 needs is the author's signature on this amendment. **Signing adopts Option 1.**
+   189	   > If the author disagrees, the text changes before signing. Both options are kept below as stated before the
+   190	   > choice.
+   191	   >
+   192	   > **Option 1: the custody implementation is the custody option and boundary (port permitted; keeps the hybrid).**
+   193	   > A signed row says the A9.6 deadline qualification (A9:389-392; `270ca49:docs/V1-PROFILE.md:1024-1025`,
+   194	   > `:1429-1435`) attaches to the selected custody option and boundary: GCP Cloud KMS HSM, P-256, non-exportable,
+   195	   > behind a queue-pulling policy signer with the A9.6 checks (A9:382-388). The 2026-10-14 instrument run evidenced
+   196	   > that option, and A9.2 lets an instrument select among registered branches (A9:198-199). Production runs the
+   197	   > service port `service/signer-gcp/`, provided that before the first shipped receipt:
+   198	   > - (i) it preserves **every A9.6 custody and policy requirement**: complete-frame validation; the declared-time
+   199	   >   check on its own clock before signing; the issuing account able to enqueue but not to invoke the key, change
+   200	   >   the policy or clock, or obtain key-use credentials; and the key dedicated to V1 type-0x00 documents. It also
+   201	   >   preserves every property in the frozen custody record (`270ca49:docs/V1-PROFILE.md:1017-1040`) except the
+   202	   >   identity of the implementation, its 2026-10-14 deadline evidence and its prototype paths, which this option
+   203	   >   replaces;
+   204	   > - (ii) the external custody record names the deployed implementation, its image digest and its configuration;
+   205	   > - (iii) deployed evidence is earned on the new bytes. That means: a deployed positive signature that verifies
+   206	   >   offline; deployed refusals for a malformed frame, a wrong tag, a wrong alg, a wrong fingerprint and a declared
+   207	   >   time outside ε; a review of every principal that can cause a signature or administer the signer
+   208	   >   (`service/issuer/DEPLOY.md` step 8); and verified retirement of every other signing path (step 7);
+   209	   > - (iv) all of it identifies the tested image and configuration.
+   210	   >
+   211	   > This keeps FREEZE-RECORD.md:62, A9.2 and A9.6's custody and policy requirements. It overrides the code-identity
+   212	   > reading of "the selected, deadline-qualified custody implementation" (profile :1024-1025) and of A9.6's "final
+   213	   > custody implementation" (A9:389-390). Cost: it is a retrospective relaxation, made after the deadline and after
+   214	   > the candidate code existed. It is disclosed as such in the header.
+   215	   >
+   216	   > **Option 2: the code-identity reading is kept (A9.6 fallback).** No port can be deadline-qualified, and the
+   217	   > prototype cannot run production, so the hybrid's custody condition cannot be met. A9.6's own consequence
+   218	   > applies: "otherwise the registered fallback is taken" (A9:391; cut order A9:211-212). That is classical P-256
+   219	   > in both slots (A9:372-374), with slot 2 still under A9.6 custody through a ported service signer. The fallback
+   220	   > has no 21 Oct custody deadline. This keeps A9.6, A9.2 and FREEZE-RECORD.md:62 literally. Cost: it drops the PQ
+   221	   > slot. A9:346-350 records PQ as the author's stated preference, not a claim requirement, and the first item cut.
+   222	   > It changes the frozen catalog's `alg` (`formal/freeze-v1/objects/catalog.json`; FREEZE-RECORD.md:16, :20), so
+   223	   > the freeze must be amended or redone before issuing. The 2026-10-16 hybrid registration becomes moot.
+   224	   >
+   225	   > Chosen: **Option 1**, by the owner, adopted by the author's signature on this amendment.
+   226	
+   227	   **Owner recommendation (a recommendation, not a decision): Option 1.** It keeps every custody and policy
+   228	   requirement and re-earns all evidence on the bytes that run. Option 2 keeps the deadline text literally but
+   229	   gives up the author's stated preference and reopens the freeze. Until the author rules, issuance does not start
+   230	   (§A11.7, `service/issuer/DEPLOY.md`).
+   231	3. **The spike keys (`formal/p8/HYBRID-SUPPLEMENT.md` §11 item 6, :524-526).** The spike-key sentence (:525-526)
+   232	   is **unchanged**: "Both spike keys are deleted after the re-capture verifies, once the review clears." The
+   233	   item's first sentence (:524), "the issuer always uses EXTERNAL_MU for the kms slot", is changed by §A11.3 row 12
+   234	   (K-R). The owner's deployment draft (2026-10-27) reused the spike keys as production keys. That contradicted
+   235	   this commitment, and the draft is withdrawn. Production uses new keys (`service/issuer/DEPLOY.md`), recorded in
+   236	   the external custody record before use.
+   237	4. **A dangling cross-reference (`phase-0-prereg-amendment-10.md:675`).** Row 25 does not apply to V1 (E9 row 2,
+   238	   2026-10-23; §A11.3 row 8). This is a CLARIFY: the fallback cites row 15 only (§A11.3 row 9).
+   239	5. **K-R's enforcement (`formal/p8/HYBRID-SUPPLEMENT.md:61-64`, `:148-174`, `:524`, `:533`;
+   240	   `formal/p8/ENCODING-V1.md:557-559`): amended in wording, the assumption unchanged.** (K-R) itself stands: the
+   241	   ML-DSA-65 key signs only V1 tagged strings, in pure mode with the empty context, under EXTERNAL_MU, for no other
+   242	   protocol. What changes is who enforces it. The supplement and ENCODING-V1 §5.2 name the issuer as the computer
+   243	   of `μ` and the issuer role as the only `kms:Sign` principal. In V1 as designed (deployment pending), a
+   244	   dedicated policy signer validates the complete frame (tag, alg, key fingerprint, ε for attestation frames only,
+   245	   `sign_by`, the signing stop) *before* computing `μ`. Manifests carry no declared time, so ε does not apply to
+   246	   possession signing (HYBRID-SUPPLEMENT:495; `service/signer-kms/tessera_sign_kms/signer.py:180-184`). The
+   247	   signer's role is the only `kms:Sign` principal (`service/signer-kms/`; key policy in
+   248	   `service/signer-kms/infra/main.tf`). This narrows what a captured issuer role alone can get signed. It does not
+   249	   change the supplement's stated limit: "whoever may call `kms:Sign` on the key can sign any message by computing
+   250	   `μ`" (:171-172). An administrator of the account can still grant that (`PutKeyPolicy`), which is C3.
+   251	
+   252	## A11.6 Clarifications
+   253	
+   254	These are readings, not changes. Each narrows or clarifies only and adds no claim.
+   255	
+   256	1. **ENCODING-V1 §5.2 rule O *Reasons* (c021). Narrowing.** "ENCODING-V1 §5.2 rule O *Reasons*
+   257	   (`formal/p8/ENCODING-V1.md:538-544`) record the 2026-10-12 GnuPG observation that motivated the legacy-header
+   258	   form. Rule O itself is unchanged. Under the pair id, the gpg slot's packet is assembled by the slot-2 policy
+   259	   signer (profile §8 custody record, `270ca49:docs/V1-PROFILE.md:1033-1036`), and it is a Tessera-assembled packet
+   260	   held to the same form as :541 requires. :541's 'KMS slot's packet' describes the classical id only, because
+   261	   under the pair id the kms slot emits rule R and has no packet."
+   262	2. **W1 and receipt identity (c033). Clarifying.** "Profile §6 W1 (`270ca49:docs/V1-PROFILE.md:850-851`) 'is not an
+   263	   identifier' has the sense of its cited source ENC §3.5 (`formal/p8/ENCODING-V1.md:400-402`): no semantic,
+   264	   standing or attempt identifier, and no identifier of the statement, is derived from signature bytes. §9's 'A
+   265	   receipt's identity is SHA256(A_sig)' (:1183-1187) is an exact-bytes identity for deduplicating and referring to
+   266	   one receipt's claim-bearing bytes. Two receipts of one statement with different valid signatures are different
+   267	   receipts. Neither text widens the other."
+   268	3. **"Both OpenPGP adapters" (c056). Narrowing.** "Profile §6 issuer duties 'Both OpenPGP adapters'
+   269	   (`270ca49:docs/V1-PROFILE.md:386-387`) and 'both OpenPGP adapters and the repository signer' (:392-393) mean
+   270	   every OpenPGP signer in use. Under the pair id that is the gpg slot's policy signer (and the repository signer).
+   271	   The kms slot emits rule R, to which the rule-O policy does not apply. Both apply under the classical id."
+   272	
+   273	**Not confirmed: c145.** It read profile §14.2 item 1's "YubiKey 2 is not in hand" (`270ca49:docs/V1-PROFILE.md:1396-1397`)
+   274	as naming YubiKey 2 the release key. No text does. The runbook says the release key is "Not YubiKey 2"
+   275	(`docs/V1-OPERATIONS-RUNBOOK.md:125`). Nothing is needed.
+   276	
+   277	## A11.7 Owner-document repairs (not registered text)
+   278	
+   279	These are owner documents. The owner makes each repair outside this amendment. They are listed so the record shows
+   280	where each one belongs.
+   281	
+   282	- **c016.** `docs/V1-SERVICE-RESOLUTIONS.md:23` (S4): the 24-hour terminal FAILED conflicts with A2's
+   283	  `declared + δ + S` expiry (`phase-0-prereg-amendment-2.md:260-264`, 96 h at A9.2's values) and A9:422. S4 keeps
+   284	  "usually complete within 3 hours" as a non-guaranteed figure. A request ends only by the registered lifecycle:
+   285	  COMPLETE, or REFUSED when its N attempts are exhausted (A2.3). The issuer had no attempts, no latch and no
+   286	  refusal, so this is more than an edit. The owner's design is `docs/decisions/2026-10-29-issuance-lifecycle.md`,
+   287	  reviewed in `docs/reviews/issuance-lifecycle/`. This amendment does not
+   288	  restate that design, which is still under review; the design document governs its own content. Whatever it
+   289	  settles must meet A2.1 and A2.3 as registered, including the latch that excludes expiry (A2.1 `:153-160`) and "every
+   290	  timely-eligible attempt ships" (`:143-145`). **Signing this amendment does not accept any residual the design
+   291	  states** (at present, an on-time observation lost before it is persisted, followed by permanent loss of the
+   292	  evidence, which could end in refusal). Such a residual is assessed in the lifecycle work, against the registered
+   293	  text, and needs its own author decision if it remains. Matching edits: CL-03 items
+   294	  1 and 2 (`docs/V1-CLARIFICATIONS.md`), the clock-tolerance decision, `service/issuer/DESIGN.md`, and the issuer
+   295	  code and tests (inventory in the design). A shorter hard bound needs a signed amendment (A2.1 `:139-142`).
+   296	- **c036.** `service/issuer/DEPLOY.md`: a gate before the session's first step makes the whole deployment wait for
+   297	  the §A11.5 item 2 ruling, recorded in this amendment's signed text. Until then, issuance cannot start. No prototype fallback is added. Under Option 2, steps 5–7 and the key section are
+   298	  rewritten for the classical fallback.
+   299	- **c093.** `formal/PROPERTIES.md:167-168`: add S, and record that for `tessera-v1-strict` all five parameters were
+   300	  ratified by the author's signature on A9 (A9:223-225). The Band 0 exit item stays open outside V1 (§A11.3 row 4).
+   301	- **c136.** `docs/V1-SERVICE-RESOLUTIONS.md:26` (S7): replace "(H3)" with a cost derived from H3's three
+   302	  measurements, stated with its derivation. Per-receipt cost is not an H3 number (`phase-0-prereg.md:232-248`).
+   303	
+   304	Repairs to this draft itself, applied above: c004 (row 12's locators and item 5's range), c030 (Option 1 condition
+   305	(i)), c055 (§A11.2 item 2's counts), c062 (row 7's sources), c097 (item 3), c108 (ε in row 12 and item 5), and
+   306	c006 (the barred prototype default removed from item 2).
+     1	# Deploying the V1 issuer and its signers (owner, 2026-10-27)
+     2	
+     3	> **Status: OWNER DRAFT, revised after the signer review** (`docs/reviews/signers/CODEX-REVIEW.md`, SG-01 to SG-05).
+     4	> These are the steps for the first deployment. No agent runs any of them: `terraform apply` and every AWS write
+     5	> run in the author's login session, from commands written out here in full. GCP steps can run on the NUC, where
+     6	> `gcloud` is logged in.
+     7	
+     8	## Before the session (owner, no credentials)
+     9	
+    10	1. `service/verifier/install.sh` has been run, so the pinned SHA-1DC binary exists.
+    11	2. All suites are green: issuer, `service/signer-kms`, `service/signer-gcp` (`.venv/bin/python -m pytest -q` in each).
+    12	3. Packages, each built deterministically (record each SHA-256):
+    13	   - `cd service/issuer && .venv/bin/python package.py dist/issuer-bootstrap.zip`
+    14	   - `cd service/signer-kms && .venv/bin/python package.py dist/signer-kms.zip`
+    15	
+    16	## Keys and what counts as production — OWNER DECISION, revised 2026-10-28
+    17	
+    18	**V1 uses new production keys, not the spike keys.** The hybrid registration commits to deleting both spike keys
+    19	(`formal/p8/HYBRID-SUPPLEMENT.md` §11 item 6, lines 524-526): "Both spike keys are deleted after the re-capture
+    20	verifies, once the review clears." The first version of this section reused them. That contradicted the
+    21	commitment, and Codex found it (`docs/reviews/amendment-11/CODEX-REVIEW.md`, A11-03). In the session:
+    22	
+    23	- **KMS:** `aws kms create-key --key-spec ML_DSA_65 --key-usage SIGN_VERIFY`. Its id and fingerprint are
+    24	  `kms_key_id` and `key_fp` in step 5.
+    25	- **Slot 2:** a new HSM key in keyring `tessera-v1` (`gcloud kms keys create ... --protection-level=hsm
+    26	  --default-algorithm=ec-sign-p256-sha256 --purpose=asymmetric-signing`). Its version, `createTime` and fingerprint
+    27	  are exported as `SLOT2_KEY`, `SLOT2_KEY_VERSION`, `SLOT2_KEY_CREATED` and `SLOT2_KEY_FP` for
+    28	  `service/signer-gcp/deploy.sh`, which has no key defaults (the version number defaults to 1) and refuses the spike key.
+    29	- Both keys are recorded in the external custody record before either signs (profile §8).
+    30	- The spike keys are deleted (KMS: schedule deletion; GCP: destroy the key version) once the conditions in the
+    31	  supplement hold.
+    32	
+    33	**Nothing separates TEST from production at signing time** (signer review, Q3). From the moment a window's
+    34	authority records name the new keys, every receipt they sign is a production receipt. The smoke test below
+    35	produces a real receipt over honest smoke-test content.
+    36	
+    37	## In the session (author logged in: `aws login --profile tessera`)
+    38	
+    39	0. **Gate: the slot-2 custody decision** (Amendment 11 §A11.5 item 2, c036). Do not run any step below until
+    40	   Amendment 11 is signed. The draft records Option 1 as the owner's decision, which the author's signature adopts;
+    41	   if the signed text says otherwise, follow it.
+    42	   - **Option 1:** steps 1–10 run as written. `service/signer-gcp/` is the production slot-2 signer, subject to
+    43	     conditions (i)–(iv) of the ruling.
+    44	   - **Option 2:** the classical fallback applies. Steps 1–10 and the keys section must first be rewritten (both
+    45	     slots OpenPGP P-256, with the frozen catalog amended), so stop here.
+    46	   - Under neither option does production use `prototype/` code (`formal/freeze-v1/FREEZE-RECORD.md:62`).
+    47	
+    48	1. **Issuer, bootstrap.** `terraform -chdir=infra plan -var lambda_zip=../dist/issuer-bootstrap.zip -out tfplan`.
+diff --git a/service/issuer/DEPLOY.md b/service/issuer/DEPLOY.md
+index 9f59134..1d94834 100644
+--- a/service/issuer/DEPLOY.md
++++ b/service/issuer/DEPLOY.md
+@@ -36,6 +36,15 @@ produces a real receipt over honest smoke-test content.
+ 
+ ## In the session (author logged in: `aws login --profile tessera`)
+ 
++0. **Gate: the slot-2 custody decision** (Amendment 11 §A11.5 item 2, c036). Do not run any step below until
++   Amendment 11 is signed. The draft records Option 1 as the owner's decision, which the author's signature adopts;
++   if the signed text says otherwise, follow it.
++   - **Option 1:** steps 1–10 run as written. `service/signer-gcp/` is the production slot-2 signer, subject to
++     conditions (i)–(iv) of the ruling.
++   - **Option 2:** the classical fallback applies. Steps 1–10 and the keys section must first be rewritten (both
++     slots OpenPGP P-256, with the frozen catalog amended), so stop here.
++   - Under neither option does production use `prototype/` code (`formal/freeze-v1/FREEZE-RECORD.md:62`).
++
+ 1. **Issuer, bootstrap.** `terraform -chdir=infra plan -var lambda_zip=../dist/issuer-bootstrap.zip -out tfplan`.
+    Read the plan together, then `terraform -chdir=infra apply tfplan`. The bootstrap package has no `install.json`,
+    so pre-ship refuses and no receipt can ship from it.
+service/issuer/DEPLOY.md:26:  --default-algorithm=ec-sign-p256-sha256 --purpose=asymmetric-signing`). Its version, `createTime` and fingerprint
+service/issuer/DEPLOY.md:33:**Nothing separates TEST from production at signing time** (signer review, Q3). From the moment a window's
+service/issuer/DEPLOY.md:40:   Amendment 11 is signed. The draft records Option 1 as the owner's decision, which the author's signature adopts;
+service/issuer/DEPLOY.md:42:   - **Option 1:** steps 1–10 run as written. `service/signer-gcp/` is the production slot-2 signer, subject to
+service/issuer/DEPLOY.md:43:     conditions (i)–(iv) of the ruling.
+service/issuer/DEPLOY.md:44:   - **Option 2:** the classical fallback applies. Steps 1–10 and the keys section must first be rewritten (both
+service/issuer/DEPLOY.md:61:   retention can never be shortened; choose it here. The plan **replaces the key's whole policy**: the account root
+service/issuer/DEPLOY.md:70:8. **Gate: who can cause a signature** (SG-04). List the principals that hold, on the AWS side,
+docs/phase-0-prereg-amendment-11.md:8:> text is its signing act. Layered on the original and Amendments 1–10, none of which is edited. Every registered
+docs/phase-0-prereg-amendment-11.md:9:> sentence this amendment changes is listed in §A11.3. One choice (§A11.5 item 2, the slot-2 custody reading)
+docs/phase-0-prereg-amendment-11.md:10:> is recorded as an owner decision, Option 1, which the author's signature adopts. It is a retrospective relaxation,
+docs/phase-0-prereg-amendment-11.md:17:> - **§A11.5 item 2, the slot-2 boundary.** If the author picks Option 1, it is a **retrospective relaxation** of a
+docs/phase-0-prereg-amendment-11.md:20:> - **§A11.5 item 5, K-R's enforcement.** The owner's placement decision (2026-10-27) moved KMS signing from the
+docs/phase-0-prereg-amendment-11.md:37:the *exact library and version, accepted signature encodings, public-key validation behavior, low-order-point
+docs/phase-0-prereg-amendment-11.md:63:   | accepted signature encodings | OpenPGP v4 packet; MPI rules; r, s ∈ [1, n−1]; rule-O policy | exact 3309 bytes; strict hint and z encoding |
+docs/phase-0-prereg-amendment-11.md:70:   `formal/p3-verification-profile/FLOOR-MANIFEST.sha256`, whose SHA-256 is fixed at signing. At this draft it is
+docs/phase-0-prereg-amendment-11.md:99:   - **The tested code changes** (a verifier release, or a change to the signature library's version or build). This
+docs/phase-0-prereg-amendment-11.md:105:   - **A published advisory or erratum names the signature library, its bundled OpenSSL, or a standard in use**
+docs/phase-0-prereg-amendment-11.md:129:| 2 | `phase-0-prereg.md:640-643` (c111, §6 restatement) | "Rejected in favor of dual-signing (C) across independent failure domains" | (V1) as A9.7 row 15 (A9:479): narrowed to C3's non-claim, separate technical failure domains under a single controller, with no separation of control or independent fates (A9:449-451). Kind R, row 15 extended |
+docs/phase-0-prereg-amendment-11.md:131:| 4 | `phase-0-prereg-amendment-1.md:182`, `:494-495`; `phase-0-prereg-amendment-2.md:111-112`, `:268-269` (c032) | δ, ε (and k, N, S) "ratified (or revised, on the record) at Band 0 exit" | for `tessera-v1-strict`: ratified by the author's signature on A9 (A9.2, A9:223-225: δ = 72 h, ε = 24 h, k = 6, N = 3, S = 24 h). Outside V1: unchanged, still at Band 0 exit. Kind G |
+docs/phase-0-prereg-amendment-11.md:132:| 5 | `phase-0-prereg-amendment-1.md:444-448` (c023) | "at issue time, two channels with independent operational failure modes asserted the same key authority"; "tampering with both external channels, at or before issue time" | (V1) "two channels asserted the same key authority at their evidence times (A9 C4): the git assertion by chain order before the receipt's anchor; DNSSEC at the snapshot's own anchored time, which establishes no publication before issue (A9:143)". Kind W, already in effect from A9's signature and listed late here |
+docs/phase-0-prereg-amendment-11.md:133:| 6 | `phase-0-prereg-amendment-2.md:299-301` (c007) | "(the OTS proof over its canonical bytes)" | (V1) "(the OTS proof over `SHA256(A_sig)`, which commits to both frames and their exact detached signatures, A9.5)" (A9:290-292). The rest of A2.4, including one proof per receipt and the txid as identity handle, is unchanged. Kind K, as A9.7 row 24 (A9:488) for the sister sentences |
+docs/phase-0-prereg-amendment-11.md:134:| 7 | `phase-0-prereg-amendment-9.md:389-392`; `270ca49:docs/V1-PROFILE.md:1017-1040` (custody record, :1024-1025, :1033-1040) and `:1428-1436` (§14.2 item 5) (c062) | the boundary as "the selected, deadline-qualified custody implementation", described through `prototype/policy-signer/` with its 2026-10-14 evidence | **Option 1 (§A11.5 item 2; owner decision, adopted by signing).** The deadline qualification attaches to the selected custody option and boundary, and the named replacement `service/signer-gcp/` runs under conditions (i)–(iv). *(Option 2, not taken: these sentences unchanged, and the registered fallback, A9:372-374, taken.)* |
+docs/phase-0-prereg-amendment-11.md:135:| 8 | `phase-0-prereg-amendment-10.md:443-447`, `:449-457`, `:462` (A10.4 option (e), A10.4.1); A10.7 rows 25–33 and 37–39 (`:761-769`, `:773-775`); the plain-language summary `:106-124`, the additions list `:213-226`, the row-26 note `:432`, the closing summary `:795-799` and the reconciliation item `:810-812` (c018, c103; A11X-02, A11XC-01) | option (e) AUTHOR ADOPTED with A10.4.1; the listing cut only "for schedule reasons" (`:455-456`); "rows 25–33 and 37–39 only on (e)" (`:446-447`) | (V1) option (e) is narrowed by the author's E9 row 2 ruling of 2026-10-23 (`docs/reviews/e9-packet/AUTHOR-RULINGS.md:5-12`). It is an author scope decision, not the schedule cut order. A10.4.1 and rows 25–32 and 37–39 do not apply to V1. The passages at `:106-124` ("Key substitution: option (e)", "the limits", "time"), `:213-226` (the listing's field, check, reason codes and invariants) and `:432` describe the listing as a V1 mechanism. They are kept as the dated record of the 2026-10-18 adoption, with the author's words, and are superseded as descriptions of V1: in V1 no verifier rejects a receipt for keys missing from a list, no listing pre-commitment or listing-evidence preservation duty exists, and after capture of both authority channels a receipt under the attacker's own keys passes (`docs/V1-CONTRACT.md` §2 after G10, §4). The closing summary's listing mechanisms and "option (e) deliberately rejects new cases: receipts under unlisted keys, and receipts whose listing was not pre-committed" (`:795-799`) are superseded for V1 in the same way, and the listing parts of the reconciliation item at `:810-812` (the listing-evidence package, the listing subchecks and their total-order rows, the C0/C1 bootstrap) are withdrawn as V1 work. Every other mention of A10.4.1 in A10 (the status block `:13-28`, the author's quotations `:273` and `:620`, the "no longer open" note `:805`, and the mechanism section `:462-611`, all of A10.4.1) is the dated record of the adoption or the mechanism text itself, superseded for V1 by this row. The frozen copies in `formal/freeze-v1/objects/spec.bin` are covered by the same disposition; their bytes are not edited. The owner grepped every registered and frozen text for the listing's vocabulary on 2026-10-29, and no other mention remains undisposed. Release-key custody (A10.4.2) is separate and unchanged. Option (a) applies (rows 15–16). A10.4.2 (rows 34–36) is unchanged. Row 33 stands as registered cut-order text, since (e) is narrowed, not withdrawn. Its "second item cut is the service-key listing" has no referent in V1. Its other sentences (option (a) applies, the absence of new-key protection is stated, no cure for release-key independence) are met by the ruling and profile §5 (`270ca49:docs/V1-PROFILE.md:619-623`). Profile :619-622 and :1258-1262 are then consistent as written. Kind C/W, recorded here because no signed change table lists it |
+docs/phase-0-prereg-amendment-11.md:138:| 11 | `formal/p8/ENCODING-V1.md:334` (c002, §3.2 `alg` row) | "The id names the scheme: 'a v4 OpenPGP binary-document signature whose document is the frame, ECDSA P-256, SHA-256' (G-57 kept)." | "An id names its scheme. The classical id `OPENPGP4-ECDSA-P256-SHA256` names 'a v4 OpenPGP binary-document signature whose document is the frame, ECDSA P-256, SHA-256' (G-57 kept). The pair id V1 issues (`:322-323`) names ML-DSA-65, pure mode, empty context (rule R) in slot `kms` and that OpenPGP scheme (rule O) in slot `gpg` (§5.2; HYBRID-SUPPLEMENT §1)." Kind K |
+docs/phase-0-prereg-amendment-11.md:139:| 12 | **K-R.** `formal/p8/HYBRID-SUPPLEMENT.md:61-64`, `:152-153`, `:173-174`, `:524`, `:533`, `:274-276` (the supplement's copy of the E§5.2 replacement text); `formal/p8/ENCODING-V1.md:557-559` (c004, c008, c011, c097, c108; A11X-01) | :61 "it is the issuer's only path"; :63-64 "the issuer always computes `μ` … and sends `μ`"; :152-153 "Every issuer KMS `Sign` call on the key is `MessageType EXTERNAL_MU`, with `μ` computed by the issuer from such an `F`"; :173-174 "(K-R) is an issuer-code and IAM assumption: the key policy grants `kms:Sign` only to the issuer role, and the issuer code builds only V1 frames"; :524 "the issuer always uses EXTERNAL_MU for the kms slot, attestations and possession alike"; :533 "`kms:Sign` only for the issuer role"; ENC:557-558 and its copy at supplement :274-275 "The issuer obtains `S_kms` (attestation and possession) from KMS with `MessageType EXTERNAL_MU` only, sending μ" | In each sentence, the actor that computes `μ` and calls `kms:Sign` is the KMS-slot policy signer (`service/signer-kms/`). It runs in the issuing AWS account under its own IAM role. It computes `μ` only from an `F` it has validated: tag, alg, key fingerprint, ε (attestation frames only; manifests carry no declared time, HYBRID-SUPPLEMENT:495), `sign_by`, the signing stop (`service/signer-kms/tessera_sign_kms/signer.py:176-185`). Its role is the only `kms:Sign` principal, and the issuer roles hold no KMS permission (`service/signer-kms/infra/main.tf:33-34`; `service/issuer/infra/main.tf:181`). :173-174 reads: "(K-R) is a signer-code and IAM assumption: the key policy grants `kms:Sign` only to the KMS-slot policy signer's role, and that signer signs only V1 frames it has validated." **The (K-R) restrictions are unchanged** (:151-153, :157): the key signs only V1 tagged strings, in pure mode with the empty context, and is used by no other protocol or service. Only the actor that enforces them changes, so the wording of :152-153 changes as stated. The historical capture labels "selected issuer path" and "issuer-computed μ" (:76, :353, :412, :478) describe the 2026-10-13/14 captures and still fit (A11X-01, A11X-05). EXTERNAL_MU only, for attestations and possession alike, is unchanged. The verifier side is unchanged. Kind R |
+docs/phase-0-prereg-amendment-11.md:141:| 14 | `270ca49:docs/V1-PROFILE.md:1244-1245` (c041, d3) | "one attacker key in both slots, honest DNS evidence, `git` absent: `INVALID / DNS_KEY_MISMATCH` (row 15.1)" | "Under the pair id: the attacker's own key of the right type in each slot (ML-DSA-65 SPKI in kms, P-256 v4 body in gpg; :1064-1065), with consistent manifest, possession and signatures, honest DNS evidence, `git` absent: `INVALID / DNS_KEY_MISMATCH` (row 15.1), dominating `UNVERIFIABLE / MEMBER_MISSING:git`." The A9.1 outcome, INVALID, is unchanged. The fixture bytes are regenerated. Kind K (fixture only) |
+docs/phase-0-prereg-amendment-11.md:153:The sweep covered the original, Amendments 1–10, the freeze, the tracker and the author-rulings files
+docs/phase-0-prereg-amendment-11.md:161:original, every amendment, the freeze record, the tracker and the author-rulings files.
+docs/phase-0-prereg-amendment-11.md:170:2. **The slot-2 enforcement boundary: an owner decision (Option 1), adopted by the author's signature.** A9.6 requires the final custody implementation to
+docs/phase-0-prereg-amendment-11.md:178:   instrument produces discharges an obligation (A9:198-200). The E9 ruling R5b (`docs/reviews/e9-packet/AUTHOR-RULINGS.md:54`)
+docs/phase-0-prereg-amendment-11.md:182:   different registered text. A choice is needed, and the relaxation it makes needs the author's signature.
+docs/phase-0-prereg-amendment-11.md:184:   > **OWNER DECISION FOR THE AUTHOR'S SIGNATURE (2026-10-29): Option 1.** Asked whether this is irreversible or
+docs/phase-0-prereg-amendment-11.md:185:   > scope-changing, the owner answered no to both for Option 1. It changes no V1 scope. The practical lock-in is
+docs/phase-0-prereg-amendment-11.md:187:   > revisit it before then. Option 2 is the scope change (it drops PQ and amends the freeze) and buys no claim V1
+docs/phase-0-prereg-amendment-11.md:188:   > makes. The authority Option 1 needs is the author's signature on this amendment. **Signing adopts Option 1.**
+docs/phase-0-prereg-amendment-11.md:189:   > If the author disagrees, the text changes before signing. Both options are kept below as stated before the
+docs/phase-0-prereg-amendment-11.md:190:   > choice.
+docs/phase-0-prereg-amendment-11.md:192:   > **Option 1: the custody implementation is the custody option and boundary (port permitted; keeps the hybrid).**
+docs/phase-0-prereg-amendment-11.md:199:   >   check on its own clock before signing; the issuing account able to enqueue but not to invoke the key, change
+docs/phase-0-prereg-amendment-11.md:205:   > - (iii) deployed evidence is earned on the new bytes. That means: a deployed positive signature that verifies
+docs/phase-0-prereg-amendment-11.md:207:   >   time outside ε; a review of every principal that can cause a signature or administer the signer
+docs/phase-0-prereg-amendment-11.md:208:   >   (`service/issuer/DEPLOY.md` step 8); and verified retirement of every other signing path (step 7);
+docs/phase-0-prereg-amendment-11.md:216:   > **Option 2: the code-identity reading is kept (A9.6 fallback).** No port can be deadline-qualified, and the
+docs/phase-0-prereg-amendment-11.md:225:   > Chosen: **Option 1**, by the owner, adopted by the author's signature on this amendment.
+docs/phase-0-prereg-amendment-11.md:227:   **Owner recommendation (a recommendation, not a decision): Option 1.** It keeps every custody and policy
+docs/phase-0-prereg-amendment-11.md:228:   requirement and re-earns all evidence on the bytes that run. Option 2 keeps the deadline text literally but
+docs/phase-0-prereg-amendment-11.md:243:   of `μ` and the issuer role as the only `kms:Sign` principal. In V1 as designed (deployment pending), a
+docs/phase-0-prereg-amendment-11.md:245:   `sign_by`, the signing stop) *before* computing `μ`. Manifests carry no declared time, so ε does not apply to
+docs/phase-0-prereg-amendment-11.md:246:   possession signing (HYBRID-SUPPLEMENT:495; `service/signer-kms/tessera_sign_kms/signer.py:180-184`). The
+docs/phase-0-prereg-amendment-11.md:264:   standing or attempt identifier, and no identifier of the statement, is derived from signature bytes. §9's 'A
+docs/phase-0-prereg-amendment-11.md:266:   one receipt's claim-bearing bytes. Two receipts of one statement with different valid signatures are different
+docs/phase-0-prereg-amendment-11.md:290:  timely-eligible attempt ships" (`:143-145`). **Signing this amendment does not accept any residual the design
+docs/phase-0-prereg-amendment-11.md:297:  the §A11.5 item 2 ruling, recorded in this amendment's signed text. Until then, issuance cannot start. No prototype fallback is added. Under Option 2, steps 5–7 and the key section are
+docs/phase-0-prereg-amendment-11.md:300:  ratified by the author's signature on A9 (A9:223-225). The Band 0 exit item stays open outside V1 (§A11.3 row 4).
+docs/phase-0-prereg-amendment-11.md:304:Repairs to this draft itself, applied above: c004 (row 12's locators and item 5's range), c030 (Option 1 condition
+docs/reviews/amendment-11/CODEX-CONFIRM-2.md
+docs/reviews/amendment-11/CODEX-CONFIRM-3A.md
+docs/reviews/amendment-11/codex.log
+docs/reviews/amendment-11/CODEX-CONFIRM-CONSOLIDATED.md
+docs/reviews/amendment-11/codex-consolidated.log
+docs/reviews/amendment-11/CODEX-CONFIRM.md
+docs/reviews/amendment-11/codex-confirm-3a.log
+docs/reviews/amendment-11/CODEX-CONFIRM-ITEM4.md
+docs/reviews/amendment-11/codex-confirm-4.log
+docs/reviews/amendment-11/CODEX-CONFIRM-4.md
+docs/reviews/amendment-11/codex-confirm-consolidated.log
+docs/reviews/amendment-11/CODEX-CONFIRM-3B.md
+docs/reviews/amendment-11/codex-confirm-3.log
+docs/reviews/amendment-11/codex-confirm-3b.log
+docs/reviews/amendment-11/CODEX-REVIEW.md
+docs/reviews/amendment-11/DISPOSITION.md
+docs/reviews/amendment-11/codex-confirm-2.log
+docs/reviews/amendment-11/CODEX-REVIEW-CONSOLIDATED.md
+docs/reviews/amendment-11/codex-confirm-decision.log
+docs/reviews/amendment-11/CODEX-CONFIRM-ROW8.md
+docs/reviews/amendment-11/codex-confirm-item4.log
+docs/reviews/amendment-11/codex-confirm.log
+docs/reviews/amendment-11/codex-confirm-row8.log
+
+codex
+A11 still has a paragraph calling Option 1 “a recommendation, not a decision” and saying “Until the author rules.” That contradicts the new decision block. I’m checking the available earlier record to bound what else changed.
+exec
+/bin/bash -lc "rg -n 'phase-0-prereg-amendment-11.md|Owner recommendation|If the author picks|PENDING|Chosen:' docs/reviews/amendment-11/codex-confirm-item4.log docs/reviews/amendment-11/codex-confirm-row8.log | head -n 35; nl -ba docs/phase-0-prereg-amendment-9.md | sed -n '368,394p'; head -n 12 docs/reviews/amendment-11/codex-confirm-item4.log; git diff --numstat" in /home/tony/projects/tessera
+ succeeded in 0ms:
+docs/reviews/amendment-11/codex-confirm-row8.log:14:Narrow confirmation for Project Tessera at /home/tony/projects/tessera (our own repository; read-only, no git writes; scratch only under a fresh mktemp -d). Your last finding: A11XC-01 in docs/reviews/amendment-11/CODEX-CONFIRM-CONSOLIDATED.md (row 8 of docs/phase-0-prereg-amendment-11.md missed A10:795-799 and :810-812). The owner's repair: row 8 (search for 'A11XC-01' in the amendment) plus a claimed exhaustive grep recorded at the end of docs/reviews/amendment-11/DISPOSITION.md. (1) Is A11XC-01 closed? (2) Independently grep every registered and frozen text (docs/phase-0-prereg.md, docs/phase-0-prereg-amendment-1..10.md, formal/p8/*.md, formal/freeze-v1/ including objects/spec.bin, and git show 270ca49:docs/V1-PROFILE.md) for any statement that the V1 verifier rejects or refuses receipts because of a key listing, or that a listing / pre-commitment / listing evidence / service_keys is a V1 duty or check, and list any hit not disposed by row 8 or by the frozen profile's own §5 cut text. Use your own search terms, not only the owner's. (3) Did the repair change anything else in the amendment? (diff against the version your last review saw is not available; compare row 8 with your previous description). Number findings A11R8-01.... One-line verdict: is the amendment ready for the author's custody ruling and signature (A11.7 owner repairs pending is not a blocker).
+docs/reviews/amendment-11/codex-confirm-row8.log:21:/bin/bash -lc "pwd; rg --files -g AGENTS.md -g '*CONSOLIDATED*' -g 'DISPOSITION.md' -g 'phase-0-prereg-amendment-11.md'" in /home/tony/projects/tessera
+docs/reviews/amendment-11/codex-confirm-row8.log:24:docs/phase-0-prereg-amendment-11.md
+docs/reviews/amendment-11/codex-confirm-row8.log:66:| A11X-01 | **CLOSED** | [A11:127](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-11.md:127) includes supplement:274–276 and classifies the historical capture labels as still fitting. |
+docs/reviews/amendment-11/codex-confirm-row8.log:67:| A11X-02 | **CLOSED** | [A11:123](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-11.md:123) explicitly supersedes all three identified passages and states that attacker-key receipts pass after dual-channel capture. Further omission below. |
+docs/reviews/amendment-11/codex-confirm-row8.log:68:| A11X-03 | **CLOSED** | [A11:270](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-11.md:270) now says the latch excludes expiry, consistent with [A2:153–160](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-2.md:153). |
+docs/reviews/amendment-11/codex-confirm-row8.log:69:| A11X-04 | **CLOSED** | [A11:125](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-11.md:125) adds PROOF:485, scopes the claim to SHA-1 reliance, and preserves the implementation-B observation. |
+docs/reviews/amendment-11/codex-confirm-row8.log:70:| A11X-05 | **CLOSED** | [A11:127](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-11.md:127) names the unchanged restrictions, corrects the locators, and explicitly changes the enforcement actor. |
+docs/reviews/amendment-11/codex-confirm-row8.log:71:| Paraphrase labelling | **CLOSED** | [A11:110–112](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-11.md:110) labels rows 3, 4, 7 and 8 as paraphrases, reserving exactness for quoted words. |
+docs/reviews/amendment-11/codex-confirm-row8.log:75:[A11:123](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-11.md:123) does not dispose of:
+docs/reviews/amendment-11/codex-confirm-row8.log:82:Extend row 8 to preserve these as adoption history while superseding the listing claims and implementation duties for V1. This follows [A11.4:134–137](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-11.md:134); it does not require rewriting historical frozen bytes.
+docs/reviews/amendment-11/codex-confirm-row8.log:92:| Trigger clause | **PASS** | [A11:123](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-11.md:123) grounds the listing cut in the author’s scope ruling; :198–205 makes the custody fallback conditional on Option 2; :270–271 excludes latched attempts from expiry. |
+docs/reviews/amendment-11/codex-confirm-row8.log:93:| Requester | **PASS** | [A11:180–190](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-11.md:180) addresses queue access and principals causing signatures; :225–232 addresses direct KMS permission and administrative bypass. |
+docs/reviews/amendment-11/codex-confirm-row8.log:94:| Binding text | **PASS** | [A11:259–273](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-11.md:259) identifies owner documents, rejects S4’s conflicting deadline, and preserves registered latch protection. Pending repairs are not represented as completed or governing exceptions. |
+docs/reviews/amendment-11/codex-confirm-row8.log:109:| A11-07 | Med | Each outcome-informed change is disclosed separately. The blanket claim of vacuity is replaced (only the two curve fields lack a referent for ML-DSA). The stale PENDING sentence is removed. |
+docs/reviews/amendment-11/codex-confirm-row8.log:210:/bin/bash -lc 'cat docs/phase-0-prereg-amendment-11.md; rg --files formal/freeze-v1 formal/p8' in /home/tony/projects/tessera
+docs/reviews/amendment-11/codex-confirm-row8.log:227:> - **§A11.5 item 2, the slot-2 boundary.** If the author picks Option 1, it is a **retrospective relaxation** of a
+docs/reviews/amendment-11/codex-confirm-row8.log:333:| 7 | `phase-0-prereg-amendment-9.md:389-392`; `270ca49:docs/V1-PROFILE.md:1017-1040` (custody record, :1024-1025, :1033-1040) and `:1428-1436` (§14.2 item 5) (c062) | the boundary as "the selected, deadline-qualified custody implementation", described through `prototype/policy-signer/` with its 2026-10-14 evidence | **PENDING the author's ruling (§A11.5 item 2).** *Option 1:* the deadline qualification attaches to the selected custody option and boundary; the named replacement `service/signer-gcp/` runs under conditions (i)–(iv). *Option 2:* these sentences are unchanged; the registered fallback (A9:372-374) is taken, and the freeze is amended or redone |
+docs/reviews/amendment-11/codex-confirm-row8.log:383:   > **AUTHOR RULING: PENDING.**
+docs/reviews/amendment-11/codex-confirm-row8.log:420:   **Owner recommendation (a recommendation, not a decision): Option 1.** It keeps every custody and policy
+docs/reviews/amendment-11/codex-confirm-row8.log:513:formal/p8/HYBRID-REGISTRATION-RECORD-PENDING.md
+docs/reviews/amendment-11/codex-confirm-row8.log:527:/bin/bash -lc "mktemp -d; sed -n '108,130p' docs/phase-0-prereg-amendment-11.md; git status --short; git log -3 --oneline" in /home/tony/projects/tessera
+docs/reviews/amendment-11/codex-confirm-row8.log:544:| 7 | `phase-0-prereg-amendment-9.md:389-392`; `270ca49:docs/V1-PROFILE.md:1017-1040` (custody record, :1024-1025, :1033-1040) and `:1428-1436` (§14.2 item 5) (c062) | the boundary as "the selected, deadline-qualified custody implementation", described through `prototype/policy-signer/` with its 2026-10-14 evidence | **PENDING the author's ruling (§A11.5 item 2).** *Option 1:* the deadline qualification attaches to the selected custody option and boundary; the named replacement `service/signer-gcp/` runs under conditions (i)–(iv). *Option 2:* these sentences are unchanged; the registered fallback (A9:372-374) is taken, and the freeze is amended or redone |
+docs/reviews/amendment-11/codex-confirm-row8.log:556:?? docs/phase-0-prereg-amendment-11.md
+docs/reviews/amendment-11/codex-confirm-row8.log:748:docs/phase-0-prereg-amendment-10.md:773:| 37 | "**Chain-order pre-commitment** (…): the git assertion's selected anchor height plus 5 is lower than the receipt's selected anchor height" (C4, claim cell) | A9:143 (C4) | Added after it: "The release that first lists the receipt's service-key entry is OpenTimestamps-stamped over its trust-configuration SHA-256, and its selected anchor height plus 5 is lower than the receipt's selected anchor height; otherwise the listing subchecks of A10.4.1 apply (`LISTING_PROOF_MISSING`, `OTS_FORMAT`, `LISTING_STAMP_MISMATCH`, `OTS_MERKLE_MISMATCH`, `HEADERS_MISSING` or `ANCHOR_PENDING_ONLY`, `OTS_TX_SHAPE`, `LISTING_NOT_PRECOMMITTED`), in the order registered there." Non-claim added: "The retrospective protection requires a conforming verifier and independently authenticated Bitcoin history for both selected anchors and their six-header segments. The receipt, listing, snapshot and git proofs must use the same independently authenticated history. For this theft protection, a signature under the possibly stolen release key is not sufficient pin authentication. Compare every used pin with independently validated Bitcoin history, or with a previously retained, independently authenticated genuine release that covers that height. An earlier release with no pin at the height supplies no witness. A party unable to establish this history has not established the retrospective protection. Authenticating only the bootstrap public-key fingerprint does not distinguish a fork signed with the stolen genuine key. An independently retained genuine release/configuration commitment can distinguish such a fork to the extent of its recorded contents and ancestry." (A10.4.1, OWNER DECISION 2026-10-18, narrowed after review r4) Option (e) only. **AUTHOR ADOPTED 2026-10-18** (with option (e); owner decision 2026-10-18, narrowed after review r4) | BROADEN | B |
+docs/reviews/amendment-11/codex-confirm-row8.log:898:formal/freeze-v1/objects/spec.bin:2799:| 37 | "**Chain-order pre-commitment** (…): the git assertion's selected anchor height plus 5 is lower than the receipt's selected anchor height" (C4, claim cell) | A9:143 (C4) | Added after it: "The release that first lists the receipt's service-key entry is OpenTimestamps-stamped over its trust-configuration SHA-256, and its selected anchor height plus 5 is lower than the receipt's selected anchor height; otherwise the listing subchecks of A10.4.1 apply (`LISTING_PROOF_MISSING`, `OTS_FORMAT`, `LISTING_STAMP_MISMATCH`, `OTS_MERKLE_MISMATCH`, `HEADERS_MISSING` or `ANCHOR_PENDING_ONLY`, `OTS_TX_SHAPE`, `LISTING_NOT_PRECOMMITTED`), in the order registered there." Non-claim added: "The retrospective protection requires a conforming verifier and independently authenticated Bitcoin history for both selected anchors and their six-header segments. The receipt, listing, snapshot and git proofs must use the same independently authenticated history. For this theft protection, a signature under the possibly stolen release key is not sufficient pin authentication. Compare every used pin with independently validated Bitcoin history, or with a previously retained, independently authenticated genuine release that covers that height. An earlier release with no pin at the height supplies no witness. A party unable to establish this history has not established the retrospective protection. Authenticating only the bootstrap public-key fingerprint does not distinguish a fork signed with the stolen genuine key. An independently retained genuine release/configuration commitment can distinguish such a fork to the extent of its recorded contents and ancestry." (A10.4.1, OWNER DECISION 2026-10-18, narrowed after review r4) Option (e) only. **AUTHOR ADOPTED 2026-10-18** (with option (e); owner decision 2026-10-18, narrowed after review r4) | BROADEN | B |
+docs/reviews/amendment-11/codex-confirm-row8.log:988:formal/freeze-v1/objects/vectors.bin:28224:        self.paths.append((list(pre_ops), ("att", TAG_PENDING, pending_payload(uri) if payload is None else payload)))
+docs/reviews/amendment-11/codex-confirm-row8.log:1044:docs/phase-0-prereg-amendment-10.md:773:| 37 | "**Chain-order pre-commitment** (…): the git assertion's selected anchor height plus 5 is lower than the receipt's selected anchor height" (C4, claim cell) | A9:143 (C4) | Added after it: "The release that first lists the receipt's service-key entry is OpenTimestamps-stamped over its trust-configuration SHA-256, and its selected anchor height plus 5 is lower than the receipt's selected anchor height; otherwise the listing subchecks of A10.4.1 apply (`LISTING_PROOF_MISSING`, `OTS_FORMAT`, `LISTING_STAMP_MISMATCH`, `OTS_MERKLE_MISMATCH`, `HEADERS_MISSING` or `ANCHOR_PENDING_ONLY`, `OTS_TX_SHAPE`, `LISTING_NOT_PRECOMMITTED`), in the order registered there." Non-claim added: "The retrospective protection requires a conforming verifier and independently authenticated Bitcoin history for both selected anchors and their six-header segments. The receipt, listing, snapshot and git proofs must use the same independently authenticated history. For this theft protection, a signature under the possibly stolen release key is not sufficient pin authentication. Compare every used pin with independently validated Bitcoin history, or with a previously retained, independently authenticated genuine release that covers that height. An earlier release with no pin at the height supplies no witness. A party unable to establish this history has not established the retrospective protection. Authenticating only the bootstrap public-key fingerprint does not distinguish a fork signed with the stolen genuine key. An independently retained genuine release/configuration commitment can distinguish such a fork to the extent of its recorded contents and ancestry." (A10.4.1, OWNER DECISION 2026-10-18, narrowed after review r4) Option (e) only. **AUTHOR ADOPTED 2026-10-18** (with option (e); owner decision 2026-10-18, narrowed after review r4) | BROADEN | B |
+docs/reviews/amendment-11/codex-confirm-row8.log:1269:docs/phase-0-prereg-amendment-10.md:773:| 37 | "**Chain-order pre-commitment** (…): the git assertion's selected anchor height plus 5 is lower than the receipt's selected anchor height" (C4, claim cell) | A9:143 (C4) | Added after it: "The release that first lists the receipt's service-key entry is OpenTimestamps-stamped over its trust-configuration SHA-256, and its selected anchor height plus 5 is lower than the receipt's selected anchor height; otherwise the listing subchecks of A10.4.1 apply (`LISTING_PROOF_MISSING`, `OTS_FORMAT`, `LISTING_STAMP_MISMATCH`, `OTS_MERKLE_MISMATCH`, `HEADERS_MISSING` or `ANCHOR_PENDING_ONLY`, `OTS_TX_SHAPE`, `LISTING_NOT_PRECOMMITTED`), in the order registered there." Non-claim added: "The retrospective protection requires a conforming verifier and independently authenticated Bitcoin history for both selected anchors and their six-header segments. The receipt, listing, snapshot and git proofs must use the same independently authenticated history. For this theft protection, a signature under the possibly stolen release key is not sufficient pin authentication. Compare every used pin with independently validated Bitcoin history, or with a previously retained, independently authenticated genuine release that covers that height. An earlier release with no pin at the height supplies no witness. A party unable to establish this history has not established the retrospective protection. Authenticating only the bootstrap public-key fingerprint does not distinguish a fork signed with the stolen genuine key. An independently retained genuine release/configuration commitment can distinguish such a fork to the extent of its recorded contents and ancestry." (A10.4.1, OWNER DECISION 2026-10-18, narrowed after review r4) Option (e) only. **AUTHOR ADOPTED 2026-10-18** (with option (e); owner decision 2026-10-18, narrowed after review r4) | BROADEN | B |
+docs/reviews/amendment-11/codex-confirm-row8.log:1286:formal/freeze-v1/objects/spec.bin:2799:| 37 | "**Chain-order pre-commitment** (…): the git assertion's selected anchor height plus 5 is lower than the receipt's selected anchor height" (C4, claim cell) | A9:143 (C4) | Added after it: "The release that first lists the receipt's service-key entry is OpenTimestamps-stamped over its trust-configuration SHA-256, and its selected anchor height plus 5 is lower than the receipt's selected anchor height; otherwise the listing subchecks of A10.4.1 apply (`LISTING_PROOF_MISSING`, `OTS_FORMAT`, `LISTING_STAMP_MISMATCH`, `OTS_MERKLE_MISMATCH`, `HEADERS_MISSING` or `ANCHOR_PENDING_ONLY`, `OTS_TX_SHAPE`, `LISTING_NOT_PRECOMMITTED`), in the order registered there." Non-claim added: "The retrospective protection requires a conforming verifier and independently authenticated Bitcoin history for both selected anchors and their six-header segments. The receipt, listing, snapshot and git proofs must use the same independently authenticated history. For this theft protection, a signature under the possibly stolen release key is not sufficient pin authentication. Compare every used pin with independently validated Bitcoin history, or with a previously retained, independently authenticated genuine release that covers that height. An earlier release with no pin at the height supplies no witness. A party unable to establish this history has not established the retrospective protection. Authenticating only the bootstrap public-key fingerprint does not distinguish a fork signed with the stolen genuine key. An independently retained genuine release/configuration commitment can distinguish such a fork to the extent of its recorded contents and ancestry." (A10.4.1, OWNER DECISION 2026-10-18, narrowed after review r4) Option (e) only. **AUTHOR ADOPTED 2026-10-18** (with option (e); owner decision 2026-10-18, narrowed after review r4) | BROADEN | B |
+docs/reviews/amendment-11/codex-confirm-row8.log:1291:- **A11R8-01 — CLOSED: A11XC-01.** [Row 8](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-11.md:123) now explicitly supersedes A10:795–799’s listing mechanisms and rejection promise, withdraws the listing-related reconciliation duties at :810–812, and covers their frozen `spec.bin` copies.
+docs/reviews/amendment-11/codex-confirm-row8.log:1304:- **A11R8-01 — CLOSED: A11XC-01.** [Row 8](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-11.md:123) now explicitly supersedes A10:795–799’s listing mechanisms and rejection promise, withdraws the listing-related reconciliation duties at :810–812, and covers their frozen `spec.bin` copies.
+docs/reviews/amendment-11/codex-confirm-item4.log:14:Narrow confirmation for Project Tessera at /home/tony/projects/tessera (read-only, no git writes; scratch only under a fresh mktemp -d). Since your last pass on docs/phase-0-prereg-amendment-11.md the owner made three edits, recorded in the last two sections of docs/reviews/amendment-11/DISPOSITION.md: (a) §A11.7 c016 now defers to the lifecycle design and states that signing does not accept its residual; (b) §A11.7 c036 and service/issuer/DEPLOY.md step 0 gate deployment on the custody ruling; (c) §A11.2 item 4's operational triggers were rewritten (each trigger states what it detects; the calendar interval is labelled an operating guess with a review point). Check only these: are they accurate against the cited sources (docs/decisions/2026-10-29-issuance-lifecycle.md; formal/freeze-v1/FREEZE-RECORD.md:62; the A11 ruling block), does item 4 still state an operational duty and not a registered result, does any of it widen a claim or contradict another part of A11, and did anything else in A11 change. Number findings A11I4-01.... One-line verdict: ready for the author's ruling and signature or not. Apply these owner prechecks to the three edits, PASS/FAIL with file:line:
+docs/reviews/amendment-11/codex-confirm-item4.log:111:docs/phase-0-prereg-amendment-11.md
+docs/reviews/amendment-11/codex-confirm-item4.log:144:/bin/bash -lc 'git status --short; git log -6 --oneline; nl -ba docs/reviews/amendment-11/DISPOSITION.md | tail -160; nl -ba docs/phase-0-prereg-amendment-11.md' in /home/tony/projects/tessera
+   368	
+   369	  All of it by 21 Oct, or the fallback is taken automatically. The offline pre-spike is feasibility evidence only
+   370	  (approximate JCS, no real KMS, a bare SLH-DSA portable slot rather than this pair); it does not satisfy the
+   371	  condition.
+   372	- **Registered fallback, otherwise:** both slots classical P-256 under P4': KMS-backed OpenPGP P-256, plus the
+   373	  `gpg` slot under slot-2 custody. The signature-inclusive anchor and the
+   374	  issuance window are retained unchanged.
+   375	- **Slot-2 custody (OWNER DECISION 2026-10-13).** The `gpg`-slot key is generated non-exportable in hardware outside
+   376	  the issuing AWS account: a token on author-controlled hardware, or an HSM-backed key at a provider other than AWS.
+   377	  The owner chooses between them, and records the choice, dated, in the profile before the 30 Oct freeze. The choice
+   378	  takes into account measured token throughput and issuance availability, and the author's concern about scalability
+   379	  (2026-10-13: *"Scalability is a real, legitimate, concern"*). Either choice satisfies the author's key-protection
+   380	  requirement (A9.0) and leaves C1–C7 unchanged. The key's authority is evidenced by the key-publication record in
+   381	  both cases.
+   382	  - *Policy signer.* In either custody option, a queue-pulling policy signer outside the issuing AWS account
+   383	    validates the complete V1 frame and enforces the declared-time check using its own clock before requesting a
+   384	    signature. The issuing AWS account can enqueue frames but cannot invoke the slot-2 key directly, change that
+   385	    policy or clock, or obtain the policy signer's key-use credentials. The slot-2 key is dedicated to V1 tagged
+   386	    type-0x00 documents (attestation and manifest-possession). The dated custody record names this enforcement
+   387	    boundary and its access policy. Non-exportability protects against key export, not signing misuse through the
+   388	    permitted queue path.
+   389	  - *Deadline.* For the hybrid, the final custody implementation must have completed the deployed-slot
+   390	    pass-condition evidence by 21 Oct. The owner may defer selection until before 30 Oct only among custody
+   391	    implementations that each met that deadline; otherwise the registered fallback is taken. A custody selection
+   392	    changes neither rule O nor any claim, pass condition or exit obligation.
+   393	  - *Limit.* Separate technical custody does not imply independent availability, independent signing fates,
+   394	    separate control or independent approval of content; C3 applies to both options.
+Reading additional input from stdin...
+OpenAI Codex v0.165.0
+--------
+workdir: /home/tony/projects/tessera
+model: gpt-6.1-sol
+provider: openai
+approval: never
+sandbox: danger-full-access
+reasoning effort: none
+reasoning summaries: none
+session id: 01a188f3-1352-7882-8594-c59e7ac90a9e
+--------
+3	1	docs/reviews/OWNER-PRECHECKS.md
+77	0	docs/reviews/amendment-11/DISPOSITION.md
+9	0	service/issuer/DEPLOY.md
+
+exec
+/bin/bash -lc "python - <<'PY'
+import re,pathlib,difflib
+s=pathlib.Path('docs/reviews/amendment-11/codex-confirm-item4.log').read_text()
+blocks=[]; b=[]
+for l in s.splitlines():
+ m=re.match(r'"'^'"\\s*(\\d+)\\t(.*)"'$'"',l)
+ if m:
+  n=int(m[1])
+  if b and n"'!=b[-1][0]+1: blocks.append(b); b=[]
+  b.append((n,m[2]))
+ elif b: blocks.append(b); b=[]
+if b:blocks.append(b)
+for b in blocks:
+ if b[0][0]==1 and '"'Amendment 11' in b[0][1] and len(b)>200:
+  old=[x[1]+'\\n' for x in b];new=pathlib.Path('docs/phase-0-prereg-amendment-11.md').read_text().splitlines(True)
+  print('BASELINE: prior item4 log, full amendment,',len(b),'lines')
+  print(''.join(difflib.unified_diff(old,new,fromfile='prior item4 read',tofile='current A11')))
+PY" in /home/tony/projects/tessera
+ succeeded in 0ms:
+BASELINE: prior item4 log, full amendment, 299 lines
+--- prior item4 read
++++ current A11
+@@ -6,8 +6,9 @@
+ > Levadura's consistency panel (obs-0185; `/home/tony/projects/levadura_salvaje/docs/tessera-a11-canary-scorecard.md`).
+ > The panel's finding ids (c002 to c147) are cited where they apply. The author's first commit containing the final
+ > text is its signing act. Layered on the original and Amendments 1–10, none of which is edited. Every registered
+-> sentence this amendment changes is listed in §A11.3. One question is put to the author as a pending ruling
+-> (§A11.5 item 2).
++> sentence this amendment changes is listed in §A11.3. One choice (§A11.5 item 2, the slot-2 custody reading)
++> is recorded as an owner decision, Option 1, which the author's signature adopts. It is a retrospective relaxation,
++> disclosed below.
+ >
+ > **Outcomes informed this amendment** (the original's amendment rule). Each change is disclosed separately.
+ > - **§A11.2, P3.** The P3 evidence (`formal/p3-verification-profile/`) was built and reviewed before this text.
+@@ -130,7 +131,7 @@
+ | 4 | `phase-0-prereg-amendment-1.md:182`, `:494-495`; `phase-0-prereg-amendment-2.md:111-112`, `:268-269` (c032) | δ, ε (and k, N, S) "ratified (or revised, on the record) at Band 0 exit" | for `tessera-v1-strict`: ratified by the author's signature on A9 (A9.2, A9:223-225: δ = 72 h, ε = 24 h, k = 6, N = 3, S = 24 h). Outside V1: unchanged, still at Band 0 exit. Kind G |
+ | 5 | `phase-0-prereg-amendment-1.md:444-448` (c023) | "at issue time, two channels with independent operational failure modes asserted the same key authority"; "tampering with both external channels, at or before issue time" | (V1) "two channels asserted the same key authority at their evidence times (A9 C4): the git assertion by chain order before the receipt's anchor; DNSSEC at the snapshot's own anchored time, which establishes no publication before issue (A9:143)". Kind W, already in effect from A9's signature and listed late here |
+ | 6 | `phase-0-prereg-amendment-2.md:299-301` (c007) | "(the OTS proof over its canonical bytes)" | (V1) "(the OTS proof over `SHA256(A_sig)`, which commits to both frames and their exact detached signatures, A9.5)" (A9:290-292). The rest of A2.4, including one proof per receipt and the txid as identity handle, is unchanged. Kind K, as A9.7 row 24 (A9:488) for the sister sentences |
+-| 7 | `phase-0-prereg-amendment-9.md:389-392`; `270ca49:docs/V1-PROFILE.md:1017-1040` (custody record, :1024-1025, :1033-1040) and `:1428-1436` (§14.2 item 5) (c062) | the boundary as "the selected, deadline-qualified custody implementation", described through `prototype/policy-signer/` with its 2026-10-14 evidence | **PENDING the author's ruling (§A11.5 item 2).** *Option 1:* the deadline qualification attaches to the selected custody option and boundary; the named replacement `service/signer-gcp/` runs under conditions (i)–(iv). *Option 2:* these sentences are unchanged; the registered fallback (A9:372-374) is taken, and the freeze is amended or redone |
++| 7 | `phase-0-prereg-amendment-9.md:389-392`; `270ca49:docs/V1-PROFILE.md:1017-1040` (custody record, :1024-1025, :1033-1040) and `:1428-1436` (§14.2 item 5) (c062) | the boundary as "the selected, deadline-qualified custody implementation", described through `prototype/policy-signer/` with its 2026-10-14 evidence | **Option 1 (§A11.5 item 2; owner decision, adopted by signing).** The deadline qualification attaches to the selected custody option and boundary, and the named replacement `service/signer-gcp/` runs under conditions (i)–(iv). *(Option 2, not taken: these sentences unchanged, and the registered fallback, A9:372-374, taken.)* |
+ | 8 | `phase-0-prereg-amendment-10.md:443-447`, `:449-457`, `:462` (A10.4 option (e), A10.4.1); A10.7 rows 25–33 and 37–39 (`:761-769`, `:773-775`); the plain-language summary `:106-124`, the additions list `:213-226`, the row-26 note `:432`, the closing summary `:795-799` and the reconciliation item `:810-812` (c018, c103; A11X-02, A11XC-01) | option (e) AUTHOR ADOPTED with A10.4.1; the listing cut only "for schedule reasons" (`:455-456`); "rows 25–33 and 37–39 only on (e)" (`:446-447`) | (V1) option (e) is narrowed by the author's E9 row 2 ruling of 2026-10-23 (`docs/reviews/e9-packet/AUTHOR-RULINGS.md:5-12`). It is an author scope decision, not the schedule cut order. A10.4.1 and rows 25–32 and 37–39 do not apply to V1. The passages at `:106-124` ("Key substitution: option (e)", "the limits", "time"), `:213-226` (the listing's field, check, reason codes and invariants) and `:432` describe the listing as a V1 mechanism. They are kept as the dated record of the 2026-10-18 adoption, with the author's words, and are superseded as descriptions of V1: in V1 no verifier rejects a receipt for keys missing from a list, no listing pre-commitment or listing-evidence preservation duty exists, and after capture of both authority channels a receipt under the attacker's own keys passes (`docs/V1-CONTRACT.md` §2 after G10, §4). The closing summary's listing mechanisms and "option (e) deliberately rejects new cases: receipts under unlisted keys, and receipts whose listing was not pre-committed" (`:795-799`) are superseded for V1 in the same way, and the listing parts of the reconciliation item at `:810-812` (the listing-evidence package, the listing subchecks and their total-order rows, the C0/C1 bootstrap) are withdrawn as V1 work. Every other mention of A10.4.1 in A10 (the status block `:13-28`, the author's quotations `:273` and `:620`, the "no longer open" note `:805`, and the mechanism section `:462-611`, all of A10.4.1) is the dated record of the adoption or the mechanism text itself, superseded for V1 by this row. The frozen copies in `formal/freeze-v1/objects/spec.bin` are covered by the same disposition; their bytes are not edited. The owner grepped every registered and frozen text for the listing's vocabulary on 2026-10-29, and no other mention remains undisposed. Release-key custody (A10.4.2) is separate and unchanged. Option (a) applies (rows 15–16). A10.4.2 (rows 34–36) is unchanged. Row 33 stands as registered cut-order text, since (e) is narrowed, not withdrawn. Its "second item cut is the service-key listing" has no referent in V1. Its other sentences (option (a) applies, the absence of new-key protection is stated, no cure for release-key independence) are met by the ruling and profile §5 (`270ca49:docs/V1-PROFILE.md:619-623`). Profile :619-622 and :1258-1262 are then consistent as written. Kind C/W, recorded here because no signed change table lists it |
+ | 9 | `phase-0-prereg-amendment-10.md:675` | "as amended by rows 15 and 25" | "as amended by row 15" (row 25 does not apply to V1; row 8 above) |
+ | 10 | `formal/p8/PROOF.md:134-135`, `:485` (c088; A11X-04) | :134-135 "no V1 check reads them"; :485 "No check reads it, and B never computes it." | "no V1 check relies on them as a hash or for key selection: the profile checks only their structure (length, version octet, consistency with type 16; V1-PROFILE §8, `270ca49:docs/V1-PROFILE.md:1105-1107`) and never compares them with the transported key". At :485, "No check reads it" becomes "No V1 check relies on it as a SHA-1 value; the profile validates its structure only (as above)"; "B never computes it" stays, as a statement about implementation B. Assumption (H) is unaffected: SHA-1's properties are not relied on. Kind K |
+@@ -166,7 +167,7 @@
+    separately. A slot-2 signer and an issuer poller that run through the operating window conflict with "idle
+    compute exactly $0". If that or another number fails, H3 is reported as falsified. The operating window is not
+    redefined as a demonstration to avoid this.
+-2. **The slot-2 enforcement boundary: for the author's ruling.** A9.6 requires the final custody implementation to
++2. **The slot-2 enforcement boundary: an owner decision (Option 1), adopted by the author's signature.** A9.6 requires the final custody implementation to
+    be deadline-qualified (`phase-0-prereg-amendment-9.md:389-392`). The frozen record keeps "the selected,
+    deadline-qualified custody implementation" (`270ca49:docs/V1-PROFILE.md:1024-1025`). It describes it through
+    `prototype/policy-signer/` (:1033-1037), which met the deadline on 2026-10-14 (:1038-1040; §14.2 item 5,
+@@ -178,9 +179,15 @@
+    allows porting instrument code with evidence earned on the resulting bytes. It does not address A9.6's
+    deadline-qualified custody, so it does not settle this question. The registered texts do not say whether a
+    post-deadline port counts as "the selected, deadline-qualified custody implementation". Each reading keeps a
+-   different registered text, so the author has to choose.
+-
+-   > **AUTHOR RULING: PENDING.**
++   different registered text. A choice is needed, and the relaxation it makes needs the author's signature.
++
++   > **OWNER DECISION FOR THE AUTHOR'S SIGNATURE (2026-10-29): Option 1.** Asked whether this is irreversible or
++   > scope-changing, the owner answered no to both for Option 1. It changes no V1 scope. The practical lock-in is
++   > the first production receipt under the hybrid keys, at deployment, not this text, and a later amendment can
++   > revisit it before then. Option 2 is the scope change (it drops PQ and amends the freeze) and buys no claim V1
++   > makes. The authority Option 1 needs is the author's signature on this amendment. **Signing adopts Option 1.**
++   > If the author disagrees, the text changes before signing. Both options are kept below as stated before the
++   > choice.
+    >
+    > **Option 1: the custody implementation is the custody option and boundary (port permitted; keeps the hybrid).**
+    > A signed row says the A9.6 deadline qualification (A9:389-392; `270ca49:docs/V1-PROFILE.md:1024-1025`,
+@@ -215,7 +222,7 @@
+    > It changes the frozen catalog's `alg` (`formal/freeze-v1/objects/catalog.json`; FREEZE-RECORD.md:16, :20), so
+    > the freeze must be amended or redone before issuing. The 2026-10-16 hybrid registration becomes moot.
+    >
+-   > The author's ruling: ______ (pending).
++   > Chosen: **Option 1**, by the owner, adopted by the author's signature on this amendment.
+ 
+    **Owner recommendation (a recommendation, not a decision): Option 1.** It keeps every custody and policy
+    requirement and re-earns all evidence on the bytes that run. Option 2 keeps the deadline text literally but
+
+
+codex
+**Verdict: not ready for the author’s signature.**
+
+- **A11D-01 — FAIL: stale choice wording remains.** [A11:227–230](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-11.md:227) still says “a recommendation, not a decision” and “Until the author rules,” contradicting the new owner decision. Also update “If the author picks Option 1” at [line 17](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-11.md:17). No custody-choice blank remains. “Deployment pending” at line 243 describes deployment status and is appropriate.
+
+- **A11D-02 — PASS: disclosure and authority preserved.** The retrospective relaxation, its post-deadline timing and already-written candidate code remain disclosed. The decision block explicitly requires the author’s signature; [DEPLOY step 0](/home/tony/projects/tessera/service/issuer/DEPLOY.md:39) gates deployment on signing. The owner’s decision alone does not amend registered text.
+
+- **A11D-03 — PASS: Option 2 remains accurate.** Its substantive description is unchanged: classical P-256 in both slots, retained slot-2 custody, no hybrid custody deadline, and an amended or rebuilt freeze before issuance. Row 7 identifies it as the alternative not taken.
+
+- **A11D-04 — PASS: no other A11 changes found.** Compared the complete amendment captured in the preceding `codex-confirm-item4.log` with the current file: differences are confined to the named custody edits. DEPLOY’s tracked diff adds only step 0; its previous wording was not available as a complete snapshot for an exact comparison.
+
+No repository files or git state were written.
+
+
+hook: Stop
+hook: Stop Completed
+tokens used
+37,653
+**Verdict: not ready for the author’s signature.**
+
+- **A11D-01 — FAIL: stale choice wording remains.** [A11:227–230](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-11.md:227) still says “a recommendation, not a decision” and “Until the author rules,” contradicting the new owner decision. Also update “If the author picks Option 1” at [line 17](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-11.md:17). No custody-choice blank remains. “Deployment pending” at line 243 describes deployment status and is appropriate.
+
+- **A11D-02 — PASS: disclosure and authority preserved.** The retrospective relaxation, its post-deadline timing and already-written candidate code remain disclosed. The decision block explicitly requires the author’s signature; [DEPLOY step 0](/home/tony/projects/tessera/service/issuer/DEPLOY.md:39) gates deployment on signing. The owner’s decision alone does not amend registered text.
+
+- **A11D-03 — PASS: Option 2 remains accurate.** Its substantive description is unchanged: classical P-256 in both slots, retained slot-2 custody, no hybrid custody deadline, and an amended or rebuilt freeze before issuance. Row 7 identifies it as the alternative not taken.
+
+- **A11D-04 — PASS: no other A11 changes found.** Compared the complete amendment captured in the preceding `codex-confirm-item4.log` with the current file: differences are confined to the named custody edits. DEPLOY’s tracked diff adds only step 0; its previous wording was not available as a complete snapshot for an exact comparison.
+
+No repository files or git state were written.
+
+
