@@ -97,8 +97,20 @@ Codex confirmation review `docs/reviews/issuer/CODEX-CONFIRM.md` (CF-01 to CF-05
   an unconfirmed COMPLETE becomes FAILED `NOT_COMPLETE_WITHIN_24H`. Both are compare-and-set writes, so they never
   both win. Status and retrieval report COMPLETE only once it is confirmed (an unconfirmed one reads as ACCEPTED, and
   the status call settles it first). The poller (in the issuer's own invocation) and the cleanup obligation settle a
-  completion an interrupted invocation left. No timing assumption is needed: a delayed obligation or terminal write
-  ends as FAILED, and a completion a client saw before the deadline stays COMPLETE.
+  completion an interrupted invocation left. A delayed obligation or terminal write ends as FAILED, and a completion
+  a client saw before the deadline stays COMPLETE. *(Corrected 2026-10-27, CF2-01: this bullet first said "no timing
+  assumption is needed". That was wrong. The confirmation is itself a write, and it can commit after the deadline.
+  See the CF2-01 bullet.)*
+- **CF2-01 (confirmation at the deadline, `CODEX-CONFIRM-2.md`):** the confirmation is confirmed only when decided
+  at least `WRITE_LEASE_S` before the deadline. It therefore commits before the deadline *if* AWS commits or rejects
+  every request within the lease, which is the same assumption as CF-02. That assumption is stated, not established
+  (CF3-01): `docs/decisions/2026-10-27-service-clock-tolerance.md`. `ended_at` is the decision's reading, which is
+  never earlier than the first COMPLETE write but may precede the confirmation's commit by up to the tolerance
+  (CF3-04). Inside the last lease a completed request stays unconfirmed (it reads as ACCEPTED), and at
+  the deadline it is FAILED `NOT_COMPLETE_WITHIN_24H`. Cleanup waits until it is settled.
+- **CF2-02, CF3-02, CF3-03 (clock after reads):** `status`, `receipt`, `submit` and repeat submissions read the
+  clock after the records they decide on, so a slow read cannot carry a stale clock past expiry or the acceptance
+  stop. What remains (a write committing later than its decision) is the stated tolerance.
 - **CF-02 (late writers):** every issuer write runs inside a Lambda invocation that saw the request ACCEPTED, so none
   lands later than `WRITE_LEASE_S` (15 min, the Lambda maximum; a test checks every Terraform timeout is within it)
   after the end was first seen. The first cleanup pass after the end records `fence_until` in the obligation; until

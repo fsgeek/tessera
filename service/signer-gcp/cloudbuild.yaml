@@ -1,0 +1,7 @@
+# Cloud Build config for the slot-2 signer image (run by deploy.sh build, with the dedicated builder service account).
+steps:
+  - name: gcr.io/cloud-builders/docker
+    args: ["build", "-f", "signer-gcp/Dockerfile", "-t", "${_IMAGE}", "."]
+images: ["${_IMAGE}"]
+options:
+  logging: CLOUD_LOGGING_ONLY

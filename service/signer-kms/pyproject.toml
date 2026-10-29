@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tessera-sign-kms"
+version = "0.0.0"
+description = "Tessera V1 KMS-slot policy signer (ML-DSA-65 in AWS KMS), Phase 1a"
+requires-python = "==3.14.*"
+# tessera-verify is the service verifier (../verifier): its frame decoder is the signer's frame grammar and its
+# signature check is the local verification after KMS signs. boto3 is needed only in the Lambda package
+# (lambda_app.from_env); tests use fake clients.
+dependencies = ["cryptography==50.0.2", "tessera-verify"]
+
+[project.optional-dependencies]
+aws = ["boto3"]
+
+[tool.setuptools]
+packages = ["tessera_sign_kms"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

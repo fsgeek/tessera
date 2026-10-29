@@ -23,13 +23,23 @@ from .signers import SlotSigner
 
 _ISSUER = None
 
+# CF3-01: bound the client's own time per AWS call (connection, response wait, retries and backoff) well inside the
+# writer lease (service.WRITE_LEASE_S). It does not bound when AWS commits a request already sent; that residual is
+# the stated service clock tolerance (docs/decisions/2026-10-27-service-clock-tolerance.md). Passed to
+# botocore.config.Config.
+AWS_CLIENT_CONFIG = {"connect_timeout": 5, "read_timeout": 20,
+                     "retries": {"mode": "standard", "total_max_attempts": 4}}
+
 
 def from_env(env=None, session=None):
     env = os.environ if env is None else env
-    if session is None:
+    kw = {}
+    if session is None:                                # the Lambda path; tests pass a fake session
         import boto3
+        from botocore.config import Config
         session = boto3.session.Session()
-    ddb, s3, sqs, sns = (session.client(n) for n in ("dynamodb", "s3", "sqs", "sns"))
+        kw["config"] = Config(**AWS_CLIENT_CONFIG)
+    ddb, s3, sqs, sns = (session.client(n, **kw) for n in ("dynamodb", "s3", "sqs", "sns"))
     results = S3ResultStore(s3, env["RESULT_BUCKET"])
     win = window_mod.load_json(results.get_config(env.get("WINDOW_OBJECT", "window.json")).decode())
     frozen = freeze.load(env["FREEZE_DIR"])
@@ -83,10 +93,25 @@ def handle_api_event(iss, event):
     return {"statusCode": status, "headers": hdrs, "body": data.decode("utf-8"), "isBase64Encoded": False}
 
 
+SHA1DC_BINARY = "/var/task/tessera-verify/bin/sha1dcsum"     # where package.py puts the detector
+
+
+def install_facts():
+    """The facts this Lambda's install.json must record (profile 15.9 R2), read where it runs: the runtime's Unicode
+    module digest differs from the build host's. Nothing is trusted from it; package.py checks the record it becomes,
+    and the verifier checks it again at startup. Built before the issuer, which needs the record to exist."""
+    import hashlib
+    from tessera_verify import install_record
+    digest = hashlib.sha256(open(SHA1DC_BINARY, "rb").read()).hexdigest()
+    return install_record.current_facts(SHA1DC_BINARY, digest)
+
+
 def api_handler(event, context):
     return handle_api_event(_issuer(), event)
 
 
 def poller_handler(event, context):
+    if isinstance(event, dict) and event.get("tessera") == "install-facts":
+        return install_facts()                         # invoked by the operator only; EventBridge never sends it
     out = pipeline.poll(_issuer())
     return json.loads(json.dumps(out, default=str))

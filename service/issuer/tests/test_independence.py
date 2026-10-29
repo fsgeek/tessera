@@ -13,7 +13,7 @@ ROOT = Path(__file__).resolve().parents[1]
 PACKAGE = ROOT / "tessera_issue"
 FORBIDDEN = re.compile(r"prototype|spike", re.I)
 SERVICE_FILES = sorted(PACKAGE.glob("*.py")) + [ROOT / "pyproject.toml"] + sorted((ROOT / "infra").glob("*.tf"))
-ALLOWED = set(sys.stdlib_module_names) | {"cryptography", "tessera_verify", "tessera_issue", "boto3"}
+ALLOWED = set(sys.stdlib_module_names) | {"cryptography", "tessera_verify", "tessera_issue", "boto3", "botocore"}
 
 
 class IndependenceTests(unittest.TestCase):

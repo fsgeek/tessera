@@ -483,3 +483,11 @@ resource "aws_api_gateway_usage_plan_key" "client" {
   key_type      = "API_KEY"
   usage_plan_id = aws_api_gateway_usage_plan.clients.id
 }
+
+# SG-05: pin both functions (both load the verifier's install record) to the runtime the record was made on.
+resource "aws_lambda_runtime_management_config" "pinned" {
+  for_each            = var.runtime_version_arn == "" ? {} : { api = aws_lambda_function.api.function_name, poller = aws_lambda_function.poller.function_name }
+  function_name       = each.value
+  update_runtime_on   = "Manual"
+  runtime_version_arn = var.runtime_version_arn
+}

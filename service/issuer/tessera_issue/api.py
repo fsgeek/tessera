@@ -9,7 +9,7 @@ another credential's lookup of the same key finds nothing (404). Behaviour: docs
 import re
 from dataclasses import dataclass, field
 
-from .service import DEADLINE_S, RETENTION_S
+from .service import DEADLINE_S, RETENTION_S, WRITE_LEASE_S
 from .util import MIB, dumps, rfc3339, sha256hex
 
 UUID_RE = re.compile(r"[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\Z")
@@ -51,15 +51,22 @@ def confirmed(rec):
 
 def settle(iss, rec, attempts=5):
     """CF-01: decide an unconfirmed COMPLETE, in place. The clock is read after the record was read, so the COMPLETE
-    commit happened no later than that reading: before the deadline it is confirmed (ended_at = that reading, never
-    earlier than the commit); at or after it the request is FAILED (NOT_COMPLETE_WITHIN_24H). Both are compare-and-set
-    writes, so a confirmation and a failure never both win, and nobody reports COMPLETE before its confirmation is
-    durable. -> rec."""
+    commit happened no later than that reading. The confirmation is itself a write, and status reports COMPLETE only
+    once it is durable (S4: the end is the status becoming COMPLETE), so it must also commit before the deadline.
+    A clock check cannot bound when a write commits; the writer lease can (CF2-01): every write runs inside one
+    Lambda invocation, so it commits within WRITE_LEASE_S of the decision. Hence: decided at least WRITE_LEASE_S
+    before the deadline, it is confirmed (ended_at = that reading, never earlier than the commit); inside the last
+    lease it is left unconfirmed (it reads as ACCEPTED, with its fail_after); at or after the deadline it is FAILED
+    (NOT_COMPLETE_WITHIN_24H). Both writes are compare-and-set, so a confirmation and a failure never both win.
+    -> rec."""
     for _ in range(attempts):
         if rec is None or confirmed(rec):
             return rec
         now = iss.clock()
-        if now < rec["created_at"] + DEADLINE_S:
+        deadline = rec["created_at"] + DEADLINE_S
+        if deadline - WRITE_LEASE_S <= now < deadline:
+            return rec                                   # CF2-01: too late to confirm, too early to fail
+        if now < deadline:
             rec.update(confirmed_at=now, ended_at=now, expires_at=now + RETENTION_S)
             rec["events"] = rec["events"][-40:] + [[now, "confirmed"]]
         else:
@@ -105,15 +112,17 @@ def _new_record(rid, credential, key, digest, length, now):
             "expires_at": None, "jobs": {}, "proofs": {}, "receipt_sha256": None, "events": []}
 
 
-def _existing(iss, rec, digest, now, body=None):
+def _existing(iss, rec, digest, body=None):
     if iss.requests.tombstone_get(rec["rid"]) is None:              # IS-04: repair a missing tombstone
         iss.requests.tombstone_put(rec["rid"], iss.tombstone_until)
     if rec["content_sha256"] != digest:
         return Response(409, {"error": "KEY_CONTENT_MISMATCH", "request_key": rec["key"]})
+    now = iss.clock()                                          # CF3-03: after the reads and the tombstone repair
     if _expired(rec, now):
         return Response(410, view(rec, now))
     if rec["state"] == "ACCEPTED" and rec["stage"] == "upload" and body is not None:
         rec = _finish_upload(iss, rec, body) or rec           # IS-05: a retry completes an interrupted upload
+        now = iss.clock()
     return Response(_original_status(rec), view(rec, now))
 
 
@@ -130,7 +139,6 @@ def _finish_upload(iss, rec, body):
 
 
 def submit(iss, credential, request_key, body):
-    now = iss.clock()
     if not credential:
         return Response(401, {"error": "UNAUTHENTICATED"})
     if not isinstance(request_key, str) or not UUID_RE.match(request_key):
@@ -141,12 +149,13 @@ def submit(iss, credential, request_key, body):
     digest = sha256hex(body)
     rec = iss.requests.get(rid)
     if rec is not None:
-        return _existing(iss, rec, digest, now, body)
+        return _existing(iss, rec, digest, body)
     if iss.requests.tombstone_get(rid) is not None:          # the record is gone; the key is never reused
         rec = iss.requests.get(rid)                          # (or it was created concurrently: answer as a repeat)
         if rec is not None:
-            return _existing(iss, rec, digest, now, body)
+            return _existing(iss, rec, digest, body)
         return Response(410, {"request_key": key, "state": "EXPIRED"})
+    now = iss.clock()                                        # CF3-02: after the reads (the create is the tolerance)
     reason = None
     if len(body) > MIB:
         reason = "TOO_LARGE"
@@ -163,20 +172,20 @@ def submit(iss, credential, request_key, body):
         rec.update(state="ACCEPTED", stage="upload")         # IS-05: own the key before storing any content
     rec["events"].append([now, "submitted", rec["state"], reason])
     if not iss.requests.create(rec, iss.tombstone_until):    # IS-04: record and tombstone in one atomic write
-        return _existing(iss, iss.requests.get(rid), digest, now, body)   # lost a race with the same key
+        return _existing(iss, iss.requests.get(rid), digest, body)        # lost a race with the same key
     if rec["state"] == "ACCEPTED":
         rec = _finish_upload(iss, rec, body) or rec
     return Response(_original_status(rec), view(rec, now))
 
 
 def status(iss, credential, key):
-    now = iss.clock()
     if not credential:
         return Response(401, {"error": "UNAUTHENTICATED"})
     if not isinstance(key, str) or not UUID_RE.match(key):
         return Response(400, {"error": "BAD_REQUEST"})
     rid = record_id(credential, key.lower())
     rec = iss.requests.get(rid)
+    now = iss.clock()                                    # CF2-02: read after the record, as receipt() does
     if rec is None:
         if iss.requests.tombstone_get(rid) is not None:
             return Response(200, {"request_key": key.lower(), "state": "EXPIRED"})
@@ -202,8 +211,8 @@ def receipt(iss, credential, key):
     rid = record_id(credential, key.lower())
     if iss.results.size("result", rid, "receipt.json") is None:
         return Response(410, {"request_key": v["request_key"], "state": "EXPIRED"})
-    now = iss.clock()                                    # CF-03: expiry again, on a fresh clock, just before minting
     rec = iss.requests.get(rid)
+    now = iss.clock()                                    # CF-03, CF2-02: after every read, just before minting
     if rec is None or _expired(rec, now):
         return Response(410, {"request_key": v["request_key"], "state": "EXPIRED"})
     url = iss.results.presign("result", rid, "receipt.json", RECEIPT_URL_TTL_S, now)

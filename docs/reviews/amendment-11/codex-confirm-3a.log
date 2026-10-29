@@ -1,0 +1,1000 @@
+Reading additional input from stdin...
+OpenAI Codex v0.165.0
+--------
+workdir: /home/tony/projects/tessera
+model: gpt-6.1-sol
+provider: openai
+approval: never
+sandbox: danger-full-access
+reasoning effort: none
+reasoning summaries: none
+session id: 01a1886f-6a4f-7481-8a6c-349ff2f58f05
+--------
+user
+Independent verification of a test-suite repair in Project Tessera at /home/tony/projects/tessera (our own repository; read-only: no repo edits, no git writes; scratch only under a fresh mktemp -d). The project author asked that you, not the owner instance, confirm the owner's claims. Context: formal/p3-verification-profile/test_p3_profile.py has a function check_zip that checks our own Lambda deployment package contains exactly the verifier code our tests exercised. Your previous review (docs/reviews/amendment-11/CODEX-CONFIRM-2.md) showed a duplicate entry with a './'-prefixed path could make the extracted file differ from the checked one. The owner's repair and its claims are in the 'Second confirmation' section of docs/reviews/amendment-11/DISPOSITION.md. Verify each claim independently and report CONFIRMED / REFUTED with evidence: (1) the path forms from your earlier review and the five variants and the symlink-entry case listed in the A11C01 tests are rejected by check_zip; (2) a clean package passes (the positive-control test) and the genuine package built by our packager passes (cd service/issuer && .venv/bin/python package.py <scratch>/p.zip; it downloads a wheel); (3) the owner says the first version of the tests passed vacuously and is now fixed: confirm the current tests exercise the path check by removing that assertion in a scratch mirror (copy formal/p3-verification-profile into <scratch>/formal/ and symlink <scratch>/service to the repo's service/, because the test file puts service/verifier first on sys.path) and reporting which tests then fail; (4) the owner's statement of which variants depend only on the path check and which are also caught by the file-set/content comparison. Run the full suite: cd service/verifier && .venv/bin/python -m pytest -q ../../formal/p3-verification-profile. Number any findings A11C3A-01... End with one line: are the owner's claims confirmed. Apply these owner prechecks to the 'Second confirmation' section, PASS/FAIL with file:line:
+
+# Owner prechecks, run by the reviewer
+
+> **Status: OWNER PROCESS, 2026-10-27.** Every owner instance has written these down as lessons and then repeated
+> the mistakes (the 2026-10-19 stone, and its 2026-10-27 postscript "Naming it did not stop it"). The author's
+> answer to "what do new owners get wrong in their first week": *"that they will behave differently from the prior
+> instances."* So these checks are not left to the owner's self-review. The owner appends this file verbatim to
+> every review brief (Codex or another family), and the reviewer reports each check as PASS or FAIL with file:line.
+
+## Checks
+
+1. **Capture row.** For every plain-language statement of what holds, what happens when an attacker controls both
+   authority channels (DNS and git)? If the text implies that the attacker's own keys are rejected, or that a
+   capture is detected or made visible, that is FAIL. Ground truth: `docs/V1-CONTRACT.md` §2 (after G10) and §4.
+2. **Trigger clause.** For every registered rule cited as authority (an amendment section, a table row, a ruling),
+   did the rule's trigger condition actually occur? Citing a consequence whose trigger has not happened is FAIL.
+3. **Requester.** For every security claim about keys or signing, who can cause a signature to be made? A claim
+   that reasons only about where a key is stored, and not about who can submit work to the signer, is FAIL.
+4. **Binding text.** For every sentence the document treats as a requirement, is it registered (a signed amendment,
+   the freeze, or a recorded author ruling), or is it something an instance wrote? An unregistered sentence used as a
+   requirement is FAIL. Since 2026-10-27, `docs/V1-SCHEDULE.md`'s ruling budget is a known instance of this.
+codex
+I’ll check the disposition against the code, run the suite and package checks, then remove the path assertion in a scratch mirror to see which tests fail. I’ll keep the repository read-only and report the four owner prechecks separately.
+exec
+/bin/bash -lc "rg -n 'amendment-11|A11C|confirmation' /home/tony/.codex/memories/MEMORY.md; pwd; rg --files -g AGENTS.md -g '*A11C*' -g 'CODEX-CONFIRM-2.md' -g 'DISPOSITION.md'" in /home/tony/projects/tessera
+ succeeded in 0ms:
+125:- Symptom: “confirmation clean,” passing vectors, or differential agreement is treated as readiness. Fix: state the exact coverage; textual confirmation did not discharge implementation, publication, cryptographic, or human-test obligations. [Task 1]
+/home/tony/projects/tessera
+docs/reviews/utc-capture-memo/DISPOSITION.md
+docs/reviews/custody/DISPOSITION.md
+docs/reviews/v1-contract/DISPOSITION.md
+docs/reviews/amendment-11/CODEX-CONFIRM-2.md
+docs/reviews/h2-record/DISPOSITION.md
+docs/reviews/amendment-11/DISPOSITION.md
+docs/reviews/e6a/DISPOSITION.md
+docs/reviews/v1-profile-r2/DISPOSITION.md
+docs/reviews/a9-custody/DISPOSITION.md
+docs/reviews/p3-profile/DISPOSITION.md
+docs/reviews/a9-final-delta/DISPOSITION.md
+docs/reviews/amendment-10/DISPOSITION.md
+docs/reviews/profile-2026-10-19/DISPOSITION.md
+docs/reviews/service-contract/DISPOSITION.md
+docs/reviews/v1-profile/DISPOSITION.md
+docs/reviews/e18-signoff/DISPOSITION.md
+docs/reviews/levadura-contradictions/DISPOSITION.md
+docs/reviews/amendment-9/DISPOSITION.md
+docs/reviews/e10/DISPOSITION.md
+docs/reviews/issuer/CODEX-CONFIRM-2.md
+docs/reviews/issuer/DISPOSITION.md
+docs/reviews/e9-packet/DISPOSITION.md
+docs/reviews/amendment-10-r4/DISPOSITION.md
+docs/reviews/amendment-10-r2/DISPOSITION.md
+docs/reviews/r22/DISPOSITION.md
+docs/reviews/p8-falsification/DISPOSITION.md
+docs/reviews/signers/DISPOSITION.md
+docs/reviews/exit-pages/DISPOSITION.md
+docs/reviews/preamble/DISPOSITION.md
+docs/reviews/anchor-signatures/DISPOSITION.md
+docs/reviews/amendment-10-r3/DISPOSITION.md
+
+exec
+/bin/bash -lc "ls -la AGENTS.md formal/AGENTS.md service/AGENTS.md; nl -ba docs/reviews/amendment-11/DISPOSITION.md; nl -ba docs/reviews/amendment-11/CODEX-CONFIRM-2.md; rg -n 'check_zip|A11C01|path|symlink' formal/p3-verification-profile/test_p3_profile.py" in /home/tony/projects/tessera
+ succeeded in 0ms:
+ls: cannot access 'AGENTS.md': No such file or directory
+ls: cannot access 'formal/AGENTS.md': No such file or directory
+ls: cannot access 'service/AGENTS.md': No such file or directory
+     1	# Amendment 11 review: owner disposition (2026-10-28)
+     2	
+     3	The review is `CODEX-REVIEW.md` (verdict: not ready; A11-01 to A11-07, two prechecks FAILED). All findings were
+     4	applied to the draft. The revised draft goes to one confirmation pass before the author.
+     5	
+     6	| ID | Sev | Disposition |
+     7	|---|---|---|
+     8	| A11-01 | High | All six A1 fields are kept, with per-algorithm readings (§A11.2 item 1). The evidence is pinned by `FLOOR-MANIFEST.sha256`, whose hash is fixed at signing and must be regenerated if any listed file changes first. Discharge conditions (a)–(d) require the deployed-zip identity check, and an unresolved defect blocks discharge. Adoption is distinguished from discharge. |
+     9	| A11-02 | High | Disclosed as a retrospective relaxation after the deadline and after the code existed. The historical qualification is kept and does not extend to the replacement. R5b is cited, with why it does not settle the question. The hybrid with the replacement depends on the ruling. |
+    10	| A11-03 | High | Accepted against the owner. `DEPLOY.md` reused the spike keys, contradicting HYBRID-SUPPLEMENT §11 item 6. Reversed: production uses new keys. Added as sweep item 3. §A11.4 now requires owner decisions on registered parameters to be checked first. |
+    11	| A11-04 | High | Condition (i) preserves every A9.6 custody and policy requirement, plus the frozen record's properties. Conditions (iii) and (iv) define the re-earned evidence and the identification of the tested image and configuration. |
+    12	| A11-05 | Med | §A11.2 item 5 distinguishes security-policy findings (historical security, beside the verdict) from conformance defects (fixed in a named release, never preserved). |
+    13	| A11-06 | Low | The split is stated: 219 DER cases at library level, 21 P1363 cases reaching neither interface. |
+    14	| A11-07 | Med | Each outcome-informed change is disclosed separately. The blanket claim of vacuity is replaced (only the two curve fields lack a referent for ML-DSA). The stale PENDING sentence is removed. |
+    15	| H3 | — | Wording changed to "AWS-based examples". A measurement protocol is required before measurement, and redefining the window as a demonstration is ruled out. |
+    16	| Citations | — | The custody citation is pinned to `270ca49:docs/V1-PROFILE.md:1023-1037`. S1 is cited as an owner operational resolution (`V1-SERVICE-RESOLUTIONS.md:20`). The stale supplement locator is corrected in §A11.3. |
+    17	| Precheck: trigger | FAIL→fixed | A11-02 |
+    18	| Precheck: binding text | FAIL→fixed | S1's authority level is stated |
+    19	
+    20	## Confirmation (`CODEX-CONFIRM.md`): owner disposition
+    21	
+    22	Six findings were CLOSED, A11-01 was PARTIAL, and the wider sweep found one registered commitment and two stale
+    23	defaults. All four prechecks PASSED.
+    24	
+    25	| ID | Disposition |
+    26	|---|---|
+    27	| A11C-01 (High) | `check_zip` now requires that the zip's `tessera_verify/` hold exactly the tested verifier's files, byte for byte, as well as the wheel identity. Negative control (owner, 2026-10-28): the real package passes, and the same package with one byte changed in `codec.py` fails, naming the file. (A first control run failed on both zips because the owner's harness shared a `ZipInfo` between two archives and corrupted a CRC. That was a harness bug, found and fixed before the result was read.) The manifest was regenerated and its new hash is in A11 §A11.2. |
+    28	| K-R (sweep C1) | Added as A11 §A11.5 item 5, with a §A11.3 row and a header disclosure. The assumption (K-R) is unchanged; the enforcement wording (who computes μ, who may `kms:Sign`) goes to the author. The placement decision's "changes no registered sentence" is corrected in place. |
+    29	| Spike-key defaults (sweep C2) | `service/signer-gcp/deploy.sh` has no production-key defaults. It requires `SLOT2_KEY`, `SLOT2_KEY_CREATED` and `SLOT2_KEY_FP`, and refuses the spike key (both refusals checked; no gcloud call is made). The spike key is named separately (`SPIKE_KEY`) for `retire-instrument` only. The README and DEPLOY.md are updated. |
+    30	| Release gates (sweep C3) | The VPC SC perimeter and the E-06 policy are listed in DEPLOY.md as open release gates. |
+    31	| Sweep H3 wording | Reconciled with the amendment: "AWS-based examples". |
+    32	
+    33	## Second confirmation (`CODEX-CONFIRM-2.md`): owner disposition
+    34	
+    35	The K-R item and the deployment-key repair passed, and all four prechecks PASSED. A11C-01 stayed open: Codex built
+    36	a zip with `./tessera_verify/codec.py` beside the genuine file, which passed `check_zip` and then overwrote the
+    37	checked file on extraction.
+    38	
+    39	- **Fix.** `check_zip` accepts only canonical, unique, relative POSIX entry names, so no `./`, `..`, leading
+    40	  `/`, backslash or duplicate. It also refuses symlink entries, which Codex did not raise; the owner added it.
+    41	- **Tests.** Codex's attack and five variants are refusal tests, the symlink case is a sixth, and a clean zip must
+    42	  pass as a positive control.
+    43	- **Owner controls.**
+    44	  - The first version of these tests passed vacuously. The hand-built zip failed the wheel-digest check before it
+    45	    reached the path check, and that was found by removing the path check and seeing the tests still pass. A
+    46	    fixture now records a stand-in binding digest so the zip reaches the path check.
+    47	  - With the path check removed, the `./`, leading-`/` and backslash aliases are accepted (3 tests fail), so the
+    48	    check carries them. The `//`, `..` and exact-duplicate aliases are also refused by the file-set and content
+    49	    comparison.
+    50	  - The genuine package built by `service/issuer/package.py` still passes.
+    51	- **Wording.** "As deployed" became "as designed (deployment pending)". The K-R citation is `:173-174`. "No
+    52	  defaults" became "no key defaults (the version number defaults to 1)".
+    53	- **Manifest.** Regenerated; its hash in A11 §A11.2 is `a69204e9f69a2af3a0bcac96991b55109b0ff0f3efdd6e2182424dd347a24a88`.
+    54	
+    55	The final repair was verified by the owner's tests and controls, including Codex's exact construction. No further
+    56	Codex round was run on it.
+     1	**NOT READY FOR SIGNATURE — A11C-01 remains open: a ZIP pathname alias passes the identity check while replacing verifier code on extraction.** The slot-2 and K-R items are author rulings, not review defects.
+     2	
+     3	Read-only review completed; scratch artifacts are under `/tmp/tmp.lWLnjgFLwZ`. No repository edits or git writes.
+     4	
+     5	1. **A11C-01: not closed.** [test_p3_profile.py:75](/home/tony/projects/tessera/formal/p3-verification-profile/test_p3_profile.py:75) checks only archive names starting literally with `tessera_verify/`. My controls produced:
+     6	
+     7	   | Package | `check_zip` |
+     8	   |---|---|
+     9	   | Matching verifier and recorded wheel | PASS |
+    10	   | Changed `tessera_verify/codec.py` | REJECT |
+    11	   | Matching files plus changed `./tessera_verify/codec.py` | **PASS** |
+    12	
+    13	   Python’s `ZipFile.extractall` normalized the last entry and overwrote the checked `codec.py` with `raise RuntimeError("substituted verifier")`. Thus different deployed verifier code can pass. Reject noncanonical paths and extraction collisions, or compare the safely extracted artifact’s effective verifier files. Preserve the separate requirement to authenticate that artifact as deployed.
+    14	
+    15	   **Manifest: PASS.** All 15 entries verify. Its SHA-256 is `4a6c644af2e38882bd40d17cb9d234623f6e52787dc023904c20c6fd38c49d66`, matching [the amendment:58](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-11.md:58).
+    16	
+    17	2. **K-R reconciliation: adequate for the author’s ruling.** [Item 5:147](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-11.md:147) accurately preserves the message restriction, pure mode, empty context, EXTERNAL_MU, dedication, and administrative-capture limitation while explicitly changing the computation and signing roles. The supplement’s actual role sentence is currently at **173–174**, beneath the cited line-170 heading.
+    18	
+    19	   No additional contradiction found in the implementation: [signer.py:99](/home/tony/projects/tessera/service/signer-kms/tessera_sign_kms/signer.py:99) computes pure-mode, empty-context μ from the raw public key and frame; [line 231](/home/tony/projects/tessera/service/signer-kms/tessera_sign_kms/signer.py:231) validates before signing. The [key policy:52](/home/tony/projects/tessera/service/signer-kms/infra/main.tf:52) grants signing to the signer role and explicitly denies other principals. Administrative policy changes remain possible, as disclosed.
+    20	
+    21	3. **Deployment-key repair: passes the bounded check.** `keyiam`, `job`, and `harden` reject missing inputs and `slot2-spike` before any cloud call. Retirement independently targets `SPIKE_KEY`; it does not require production-key inputs. Bash syntax passed, and a scratch copy with a mocked cloud command completed retirement with already-absent resources. This is not live retirement evidence.
+    22	
+    23	4. **Minor repaired-text inaccuracies:** [item 5:150](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-11.md:150) says “as deployed,” although deployment remains pending. Also, [deploy.sh:31](/home/tony/projects/tessera/service/signer-gcp/deploy.sh:31) and [DEPLOY.md:28](/home/tony/projects/tessera/service/issuer/DEPLOY.md:28) say there are no defaults, but `SLOT2_KEY_VERSION` defaults to `1`. Neither introduces a spike-key production default.
+    24	
+    25	Owner prechecks on the amendment:
+    26	
+    27	| Check | Result | File:line evidence |
+    28	|---|---|---|
+    29	| Capture row | **PASS** | `docs/phase-0-prereg-amendment-11.md:40–42,147–155`: bounded evidence and signing controls; no attacker-key rejection or capture-visibility promise. Consistent with `docs/V1-CONTRACT.md:37,72–73`. |
+    30	| Trigger clause | **PASS** | Amendment `:116–124,141–146`: replacement qualification remains a proposed ruling; deletion retains its conditions; row-25 removal follows the recorded CUT. |
+    31	| Requester | **PASS** | Amendment `:125–133,150–155`: covers enqueue/requester paths, signer authority, and administrative override. |
+    32	| Binding text | **PASS** | Amendment `:116–124,139,147`: identifies the proposed ruling and unregistered operational resolution; does not invoke the schedule’s ruling budget. |
+    33	
+15:import posixpath
+20:from pathlib import Path
+29:sys.path[:0] = [str(VERIFIER), str(VERIFIER / 'tests'), str(HERE)]
+64:    """The verifier code this floor exercised (service/verifier/tessera_verify), as {zip path: bytes}."""
+70:def check_zip(path):
+73:    with zipfile.ZipFile(path) as z:
+78:        # unique, relative POSIX paths are accepted, so what extraction writes is exactly what was compared.
+79:        bad = [n for n in names if n != posixpath.normpath(n) + ('/' if n.endswith('/') else '') or n.startswith('/')
+83:        assert links == [], links                          # a symlink entry can redirect extraction
+156:    def test_lambda_package_wheel_identity(self, tmp_path):
+159:        sys.path.insert(0, str(ISSUER))
+163:            sys.path.remove(str(ISSUER))
+166:        out = tmp_path / 'lambda.zip'
+171:        check_zip(out)
+175:        path = os.environ.get('TESSERA_LAMBDA_ZIP')
+176:        if not path:
+178:        check_zip(Path(path))
+508:def test_OBS_test_release_auth_accepts_non_p256_curve(tmp_path, hybrid):
+510:    accepted under alg 'ECDSA-P256-SHA256'. Recorded as observed behaviour, not fixed (outside P3; TEST path)."""
+514:    (tmp_path / 'r.json').write_text(json.dumps(make_release(signer, spki, b'trust', catalog)))
+515:    (tmp_path / 'k.json').write_text(json.dumps(key_file(spki)))
+516:    body = release_auth.authenticate_test_release(tmp_path / 'r.json', tmp_path / 'k.json')
+520:# ------------------------------------------------------------------------------------ A11C-01 (path aliases)
+526:    """Record a stand-in binding digest so a hand-built zip passes the wheel checks and reaches the path checks
+531:def _zip_with(tmp_path, name, extra):
+533:    out = tmp_path / name
+544:def test_A11C01_a_clean_zip_passes(tmp_path, stand_in_wheel):
+545:    check_zip(_zip_with(tmp_path, 'clean.zip', []))           # positive control: the refusals below are about paths
+551:def test_A11C01_an_alias_or_duplicate_of_a_verifier_file_is_refused(tmp_path, alias, stand_in_wheel):
+554:    z = _zip_with(tmp_path, 'alias.zip', [(alias, b'raise RuntimeError("substituted verifier")\n')])
+556:        check_zip(z)
+559:def test_A11C01_a_symlink_entry_is_refused(tmp_path, stand_in_wheel):
+560:    """An entry marked as a symlink (S_IFLNK in external_attr) can redirect extraction on unpackers that honour it."""
+561:    out = _zip_with(tmp_path, 'link.zip', [])
+567:        check_zip(out)
+
+exec
+/bin/bash -lc "sed -n '1,105p' formal/p3-verification-profile/test_p3_profile.py; sed -n '520,580p' formal/p3-verification-profile/test_p3_profile.py; nl -ba service/issuer/package.py | head -150; nl -ba docs/V1-CONTRACT.md | sed -n '25,85p'; find .. -name AGENTS.md -print" in /home/tony/projects/tessera
+ succeeded in 2929ms:
+"""P3 [assumption] half: the V1 verification profile as executable evidence (H1a).
+
+Run from service/verifier:
+    .venv/bin/python -m pytest -q ../../formal/p3-verification-profile/test_p3_profile.py
+
+Vector tests call the service verifier's own functions (tessera_verify.codec: parse_signature, sig_policy,
+public_key, signature_verifies; tessera_verify.verify.verify_bundle; tessera_verify.policy.parse_trust).
+`cryptography` is called directly only (a) to construct inputs and (b) in TestLibraryBehaviour, whose tests
+characterize the library itself and back PROFILE.md's library claims; those are labelled as such.
+"""
+import copy
+import hashlib
+import json
+import os
+import posixpath
+import shutil
+import subprocess
+import sys
+import zipfile
+from pathlib import Path
+from types import SimpleNamespace
+from unittest.mock import Mock, patch
+
+import pytest
+
+HERE = Path(__file__).resolve().parent
+VERIFIER = HERE.parent.parent / 'service' / 'verifier'
+ISSUER = HERE.parent.parent / 'service' / 'issuer'
+sys.path[:0] = [str(VERIFIER), str(VERIFIER / 'tests'), str(HERE)]
+
+from tessera_verify import install_record  # noqa: E402
+install_record.load_and_apply()  # as tests/conftest.py does: the SHA-1DC hook is an installation fact
+
+import cryptography  # noqa: E402
+from cryptography.exceptions import InvalidSignature  # noqa: E402
+from cryptography.hazmat.backends.openssl.backend import backend  # noqa: E402
+from cryptography.hazmat.primitives import hashes, serialization  # noqa: E402
+from cryptography.hazmat.primitives.asymmetric import ec, mldsa, utils  # noqa: E402
+
+from tessera_verify import codec, release_auth  # noqa: E402
+from tessera_verify.codec import (ALG, HYBRID_ALG, Fault, b64, jcs, mldsa65_encoding_valid, parse_signature,  # noqa: E402
+                                  public_key, read_anchor, registered_codecs, sha, sig_policy, signature_verifies)
+from tessera_verify.policy import parse_catalog, parse_trust  # noqa: E402
+from tessera_verify.verify import verify_bundle  # noqa: E402
+from fixtures import enc, make_fixture, make_release, key_file  # noqa: E402
+import p256  # noqa: E402
+
+VEC = HERE / 'vectors'
+F1 = json.loads((VEC / 'F1-library.json').read_text())
+SIG_FILES = ['F2-signature-encodings.json', 'F5-equation-variant.json']
+KEY_FILES = ['F3-public-key-validation.json', 'F4-low-order-points.json']
+
+
+def load(name): return json.loads((VEC / name).read_text())
+
+
+def wheel_tag(text):
+    tags = [l.split(':', 1)[1].strip() for l in text.splitlines() if l.startswith('Tag:')]
+    assert len(tags) == 1, tags
+    return tags[0]
+
+
+def tested_verifier_files():
+    """The verifier code this floor exercised (service/verifier/tessera_verify), as {zip path: bytes}."""
+    root = VERIFIER / 'tessera_verify'
+    return {('tessera_verify/' + f.relative_to(root).as_posix()): f.read_bytes()
+            for f in sorted(root.rglob('*')) if f.is_file() and '__pycache__' not in f.parts and f.suffix != '.pyc'}
+
+
+def check_zip(path):
+    """The zip carries the recorded cryptography build AND exactly the verifier code the floor tested
+    (A11C-01: a matching wheel alone would let different verifier code pass)."""
+    with zipfile.ZipFile(path) as z:
+        binding = z.read(F1['wheel']['rust_binding'])
+        tag = wheel_tag(z.read('cryptography-%s.dist-info/WHEEL' % F1['cryptography']).decode())
+        names = z.namelist()
+        # Codex confirmation 2: an alias ('./tessera_verify/codec.py') extracts over the checked file. Only canonical,
+        # unique, relative POSIX paths are accepted, so what extraction writes is exactly what was compared.
+        bad = [n for n in names if n != posixpath.normpath(n) + ('/' if n.endswith('/') else '') or n.startswith('/')
+               or '\\' in n or n.split('/')[0] in ('', '.', '..')]
+        assert bad == [] and len(names) == len(set(names)), (bad, len(names) - len(set(names)))
+        links = [i.filename for i in z.infolist() if (i.external_attr >> 16) & 0o170000 == 0o120000]
+        assert links == [], links                          # a symlink entry can redirect extraction
+        shipped = {n: z.read(n) for n in names if n.startswith('tessera_verify/') and not n.endswith('/')}
+    assert hashlib.sha256(binding).hexdigest() == F1['wheel']['rust_binding_sha256']
+    assert tag == F1['wheel']['tag']
+    tested = tested_verifier_files()
+    assert sorted(shipped) == sorted(tested), sorted(set(shipped) ^ set(tested))
+    assert [n for n in tested if shipped[n] != tested[n]] == []
+
+
+def run_sig(v, keys, docs):
+    """Function-level harness for one signature against one known-good key: signature codec (the function of rows
+    3.1/9.3), policy (9.1/9.4), then verification (9.2/9.5). Returns 'ACCEPT', the Fault code, or 'SIG_INVALID'
+    (POSSESSION_INVALID for a possession proof: same function, different row). It is NOT the bundle's order: a
+    bundle evaluates keys (5.1) before signature policy (9.1) and reports by row precedence. Precedence claims come
+    only from TestBundle."""
+    alg, slot = v['alg'], v['slot']
+    try:
+        parsed = parse_signature(bytes.fromhex(v['sig_hex']), alg, slot, registered_codecs(alg))
+        sig_policy(parsed)
+    except Fault as e:
+        return e.code
+    k = keys[v['key']]
+    key = public_key(bytes.fromhex(k['hex']), k['slot'], k['alg'])
+# ------------------------------------------------------------------------------------ A11C-01 (path aliases)
+BINDING = b'stand-in native binding'
+
+
+@pytest.fixture
+def stand_in_wheel(monkeypatch):
+    """Record a stand-in binding digest so a hand-built zip passes the wheel checks and reaches the path checks
+    (without it every case fails on the binding digest, and the alias tests would pass vacuously)."""
+    monkeypatch.setitem(F1['wheel'], 'rust_binding_sha256', hashlib.sha256(BINDING).hexdigest())
+
+
+def _zip_with(tmp_path, name, extra):
+    """A zip holding the (stand-in) wheel binding and tag, the tested verifier, and `extra` entries."""
+    out = tmp_path / name
+    with zipfile.ZipFile(out, 'w') as z:
+        z.writestr(F1['wheel']['rust_binding'], BINDING)
+        z.writestr('cryptography-%s.dist-info/WHEEL' % F1['cryptography'], 'Tag: %s\n' % F1['wheel']['tag'])
+        for n, data in tested_verifier_files().items():
+            z.writestr(n, data)
+        for n, data in extra:
+            z.writestr(n, data)
+    return out
+
+
+def test_A11C01_a_clean_zip_passes(tmp_path, stand_in_wheel):
+    check_zip(_zip_with(tmp_path, 'clean.zip', []))           # positive control: the refusals below are about paths
+
+
+@pytest.mark.parametrize('alias', ['./tessera_verify/codec.py', 'tessera_verify//codec.py',
+                                   'tessera_verify/../tessera_verify/codec.py', '/tessera_verify/codec.py',
+                                   'tessera_verify\\codec.py', 'tessera_verify/codec.py'])
+def test_A11C01_an_alias_or_duplicate_of_a_verifier_file_is_refused(tmp_path, alias, stand_in_wheel):
+    """Codex confirmation 2: './tessera_verify/codec.py' passed a literal-prefix check and overwrote the checked file
+    on extraction. Every non-canonical or duplicate entry is refused, whatever it names."""
+    z = _zip_with(tmp_path, 'alias.zip', [(alias, b'raise RuntimeError("substituted verifier")\n')])
+    with pytest.raises(AssertionError):
+        check_zip(z)
+
+
+def test_A11C01_a_symlink_entry_is_refused(tmp_path, stand_in_wheel):
+    """An entry marked as a symlink (S_IFLNK in external_attr) can redirect extraction on unpackers that honour it."""
+    out = _zip_with(tmp_path, 'link.zip', [])
+    with zipfile.ZipFile(out, 'a') as z:
+        info = zipfile.ZipInfo('tessera_link')
+        info.external_attr = (0o120777 << 16)
+        z.writestr(info, 'tessera_verify')
+    with pytest.raises(AssertionError):
+        check_zip(out)
+     1	"""Build the issuer's Lambda package (infra variable lambda_zip): tessera_issue, tessera_verify, cryptography for
+     2	Lambda's Linux, the frozen objects, the SHA-1DC detector and the Lambda's own install.json.
+     3	
+     4	    python package.py OUT.zip                       # bootstrap package: no install.json, so pre-ship refuses
+     5	    python package.py OUT.zip --install-json FILE   # deployable package
+     6	
+     7	The install record is per-installation (profile 15.9 R2): deploy the bootstrap package, invoke the poller with
+     8	{"tessera": "install-facts"}, save the answer as FILE, and build again with it. boto3 comes from the Lambda runtime,
+     9	whose version is pinned in infra (runtime_management_config) so that the Unicode module digest cannot change under
+    10	a deployed record. Needs uv (for the Linux wheel) and a built verifier (service/verifier/install.sh)."""
+    11	import argparse
+    12	import hashlib
+    13	import json
+    14	import shutil
+    15	import subprocess
+    16	import sys
+    17	import tempfile
+    18	import zipfile
+    19	from pathlib import Path
+    20	
+    21	HERE = Path(__file__).resolve().parent
+    22	VERIFIER = HERE.parent / "verifier"
+    23	FROZEN = HERE.parent.parent / "formal" / "freeze-v1" / "objects"
+    24	LAMBDA_BINARY = "/var/task/tessera-verify/bin/sha1dcsum"         # = lambda_app.SHA1DC_BINARY (a test checks)
+    25	WHEEL = ["cryptography==50.0.2"]                                 # = pyproject; the only third-party dependency
+    26	PLATFORM = "x86_64-manylinux_2_34"                               # Amazon Linux 2023 (glibc 2.34), x86_64 Lambda
+    27	FIELDS = {"format", "python", "unicode_version", "unicode_module_sha256", "sha1dc_upstream_commit", "sha1dc_binary",
+    28	          "sha1dc_binary_sha256"}
+    29	
+    30	
+    31	def die(msg):
+    32	    raise SystemExit("package: " + msg)
+    33	
+    34	
+    35	def sha256(path):
+    36	    return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+    37	
+    38	
+    39	def pinned_binary():
+    40	    """The detector install.sh built and pinned, after re-checking the pin."""
+    41	    rec = json.loads((VERIFIER / "install.json").read_text())
+    42	    binary = Path(rec["sha1dc_binary"])
+    43	    if not binary.is_file() or sha256(binary) != rec["sha1dc_binary_sha256"]:
+    44	        die("SHA-1DC binary missing or not the pinned build; run service/verifier/install.sh")
+    45	    return binary, rec
+    46	
+    47	
+    48	def check_install_record(path):
+    49	    """A Lambda install record: the install.json fields exactly, this package's binary path and digest, and the
+    50	    verifier's pinned versions. The Unicode digest can only be checked by the verifier at startup, on Lambda."""
+    51	    try:
+    52	        rec = json.loads(Path(path).read_text())
+    53	    except (OSError, ValueError) as e:
+    54	        die(f"install record unreadable: {e}")
+    55	    _, local = pinned_binary()
+    56	    if not isinstance(rec, dict) or set(rec) != FIELDS or rec["format"] != "tessera-v1-install/1":
+    57	        die("install record: wrong fields or format")
+    58	    if rec["sha1dc_binary"] != LAMBDA_BINARY or rec["sha1dc_binary_sha256"] != local["sha1dc_binary_sha256"]:
+    59	        die("install record: not this package's SHA-1DC binary")
+    60	    for k in ("python", "unicode_version", "sha1dc_upstream_commit"):
+    61	        if rec[k] != local[k]:
+    62	            die(f"install record: {k} {rec[k]!r} differs from the verifier's {local[k]!r}")
+    63	    return rec
+    64	
+    65	
+    66	def write_zip(stage, out):
+    67	    """Deterministic: sorted entries, fixed time, modes 644/755. -> SHA-256 of the zip."""
+    68	    with zipfile.ZipFile(out, "w", zipfile.ZIP_DEFLATED) as z:
+    69	        for f in sorted(p for p in Path(stage).rglob("*") if p.is_file()):
+    70	            info = zipfile.ZipInfo(f.relative_to(stage).as_posix(), (1980, 1, 1, 0, 0, 0))
+    71	            info.external_attr = (0o100755 if f.stat().st_mode & 0o111 else 0o100644) << 16
+    72	            info.compress_type = zipfile.ZIP_DEFLATED
+    73	            z.writestr(info, f.read_bytes())
+    74	    return sha256(out)
+    75	
+    76	
+    77	def build(out, install_json=None):
+    78	    binary, _ = pinned_binary()
+    79	    rec = check_install_record(install_json) if install_json else None
+    80	    ignore = shutil.ignore_patterns("__pycache__", "*.pyc", "*.egg-info")
+    81	    with tempfile.TemporaryDirectory() as tmp:
+    82	        stage = Path(tmp) / "stage"
+    83	        subprocess.run(["uv", "pip", "install", "--quiet", "--target", str(stage), "--python-version", "3.14",
+    84	                        "--python-platform", PLATFORM, "--only-binary", ":all:", *WHEEL], check=True)
+    85	        shutil.copytree(HERE / "tessera_issue", stage / "tessera_issue", ignore=ignore)
+    86	        shutil.copytree(VERIFIER / "tessera_verify", stage / "tessera_verify", ignore=ignore)
+    87	        shutil.copytree(FROZEN, stage / "freeze-v1" / "objects", ignore=ignore)
+    88	        dest = stage / LAMBDA_BINARY.removeprefix("/var/task/")
+    89	        dest.parent.mkdir(parents=True)
+    90	        shutil.copyfile(binary, dest)
+    91	        dest.chmod(0o755)
+    92	        if rec:
+    93	            (dest.parent.parent / "install.json").write_text(json.dumps(rec, indent=1, sort_keys=True) + "\n")
+    94	        digest = write_zip(stage, out)
+    95	    return digest
+    96	
+    97	
+    98	def main(argv=None):
+    99	    ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+   100	    ap.add_argument("out")
+   101	    ap.add_argument("--install-json")
+   102	    a = ap.parse_args(argv)
+   103	    digest = build(Path(a.out), a.install_json)
+   104	    kind = "deployable" if a.install_json else "BOOTSTRAP (no install.json: pre-ship refuses until rebuilt)"
+   105	    print(f"{a.out}: {kind}\nsha256 {digest}")
+   106	
+   107	
+   108	if __name__ == "__main__":
+   109	    sys.exit(main())
+    25	| G1 | **Exact bytes.** The receipt binds these exact bytes. Change one bit and the check fails. | C1 |
+    26	| G2 | **Presented to Tessera.** The bytes were presented to the Tessera V1 service at some issuance. | C2 |
+    27	| G3 | **Both signatures.** Both of the service's keys signed. A missing, stripped or swapped signature fails. | C3 |
+    28	| G4 | **The keys were Tessera's.** DNSSEC (`_tessera-v1.wamason.com`, at the snapshot's own anchored time) and a signed git commit (at its own evidence time) named the keys for the service's domain. The git commit was in the Bitcoin chain at least 6 blocks before the receipt. | C4, A10.6 |
+    29	| G5 | **Existed by a block.** The signed bytes and both signatures existed before a specific Bitcoin block: the lowest-height qualifying block in the presented proof, confirmed 6 deep. | C5, A10.1, A10.5 |
+    30	| G6 | **A real-time bound, under an unchecked assumption.** A-UTC says at least one of that block and its 5 successors has a time stamp at most 2 hours behind when it was made. If A-UTC holds, the bytes existed before U (the latest of those 6 times, plus 2 hours). U is reported separately and never changes the verdict. | A10.1.1 |
+    31	| G7 | **Window, two checks only.** The declared issue time is not before the keys' window opened, and the chain time T is not after it closed. This does not prove the signing happened inside the window. | C4, A10.2 |
+    32	| G8 | **No Tessera needed.** The verdict depends only on the inputs above. | C6 |
+    33	| G9 | **A typed verdict.** Once the trust configuration is authenticated, the verifier returns `VALID_STRICT`, `INVALID` or `UNVERIFIABLE`, with a reason code and `revocation: NOT_EVALUATED`, `historical_security: NOT_EVALUATED`, `standing: ABSENT/NOT_ISSUED_IN_PROFILE`. Missing required evidence prevents acceptance. A valid receipt still leaves everything in §3 unestablished. If the trust configuration is not authenticated, there is no receipt verdict. | C7; A9.5 trust-configuration authority; V1-PROFILE §5 (`TRUST_CONFIG_UNAUTHENTICATED`) |
+    34	| G10 | **Honest receipts cannot be moved.** If an attacker takes over the DNS and git authority records while the service's own keys stay secret and unmisused, it cannot move honestly signed frames to other keys or bytes, or change their signer sets, whether they were signed before or after the takeover. | A10.4 |
+    35	**No G11.** The service-key listing (A10.4.1) is not in V1, by the author's ruling of 2026-10-23 (E9 row 2,
+    36	`docs/reviews/e9-packet/AUTHOR-RULINGS.md`; `docs/decisions/2026-10-19-listing-cut.md`). G10 holds while the independent release boundary of A9.5 holds.
+    37	**New receipts under an attacker's own keys pass when both authority channels are captured.**
+    38	
+    39	## 3. Not guaranteed
+    40	
+    41	Each of these is a deliberate limit, not a missing feature.
+    42	
+    43	- **Who submitted the bytes**, or that a replayed receipt suits the current transaction (case f).
+    44	- **What the bytes mean**, or that they are true. A contract inside the bytes is the checker's to verify (cases i, i′).
+    45	- **That a key was not revoked** (cases e, e′).
+    46	- **That an algorithm or a key was still safe** when it signed.
+    47	- **Any lower time bound or priority.** "Existed by" is never "existed after" or "came first".
+    48	- **Real time without A-UTC.** Without it, only chain order is claimed.
+    49	- **Standing** of any kind.
+    50	- **Separate control of the two keys.** One controller holds both. Capturing the issuing AWS account means both
+    51	  slots can sign.
+    52	- **Visibility.** Publishing the authority records is the issuer's duty; the verifier does not check it. V1
+    53	  guarantees no detection or public exposure of a capture, of new receipts, or of a release given to one party.
+    54	- **That DNSSEC shows publication before issue.**
+    55	- **Anything after a Bitcoin reorganization of 6 or more blocks.**
+    56	- **Renewal, degraded modes, or wrappers.** These are refused (`UNVERIFIABLE`), including honest ones (cases d2, h:
+    57	  the two registered false rejects).
+    58	- **One receipt per presentation.** A receipt id (SHA-256 of `A_sig`) names a receipt, not a presentation. Signing
+    59	  is randomized, so the same honest frames can carry more than one valid signature set and therefore more than one
+    60	  valid receipt, each with its own T. Each still meets G1–G10. (Owner, 2026-10-19, from finding E-02 of the first
+    61	  real run.)
+    62	- **Stability of T and U across different proofs.** A different proof or pin set can select a different block.
+    63	- **Protection for a checker who skips authenticating the verifier release** or runs a substituted one.
+    64	
+    65	## 4. Failure model
+    66	
+    67	| Failure or attacker | What still holds |
+    68	|---|---|
+    69	| Tessera disappears | Everything in §2, if the holder kept the receipt and the verifier release. Reconstruction after the project dies is not demonstrated. |
+    70	| Attacker alters a receipt or moves its signatures | Rejected (G1, G3, G10). |
+    71	| Attacker uses its own keys, authority records not captured | Rejected: the required authority evidence does not name them (G4). |
+    72	| Attacker captures both DNS and git authority records | Honest receipts protected (G10). New receipts under its own keys **pass** (the listing was cut). |
+    73	| Attacker captures the issuing AWS account | **Not protected.** It can issue receipts that verify. |
+    74	| Attacker steals the release key | Not protected: it can publish releases with a trust configuration of its choosing. This is distribution compromise, which A9 excludes (A9:47–52). A checker who installs no later release is unaffected. |
+    75	| Bitcoin miners lie about time | G5 holds (chain order). G6 holds only under A-UTC. |
+    76	| Bitcoin reorganizes fewer than 6 blocks | G5 holds. |
+    77	
+    78	## 5. Pairing: where each guarantee is checked
+    79	
+    80	The method needs every guarantee checked twice: once by a formal model or inspection, once by tests against the
+    81	implementation. When the two disagree, we fix the contract, the model or the code. This is a first mapping, not
+    82	yet checked case by case.
+    83	
+    84	**These are mappings, not pairs.** A pair, in the method's sense, runs the same scenario on both sides, so that a
+    85	disagreement means something. Here the model side and the test side were written separately, for different
+../tupay/AGENTS.md
+../promptguard/openspec/AGENTS.md
+../promptguard/AGENTS.md
+../promptguard2/openspec/AGENTS.md
+../promptguard2/AGENTS.md
+../teaching/2025/CPSC416-2025W-T2/AGENTS.md
+../teaching/2025/CPSC436C-2025W-T1/capstone_clones/u410266/frontend/AGENTS.md
+../teaching/2025/CPSC436C-2025W-T1/capstone_clones/u466684/AGENTS.md
+../teaching/2025/CPSC436C-2025W-T1/capstone_clones/u421168/frontend/AGENTS.md
+../teaching/2025/CPSC436C-2025W-T1/capstone_clones/u411995/AGENTS.md
+../teaching/2025/CPSC436C-2025W-T1/capstone_clones/u466685/AGENTS.md
+../teaching/2025/CPSC436C-2025W-T1/capstone_clones/u444982/AGENTS.md
+../teaching/2025/CPSC436C-2025W-T1/AGENTS.md
+../teaching/2025/CPSC436C-2025W-T1/tmp/capstone_code_repos/CPSC436C-2025W-T1_capstone_deho/AGENTS.md
+../teaching/2025/CPSC436C-2025W-T1/tmp/capstone_code_repos/CPSC436C-2025W-T1_capstone-final-project/frontend/AGENTS.md
+../teaching/2025/CPSC436C-2025W-T2/AGENTS.md
+../teaching/2025/CPSC436C-2025W-T2/tmp/capstone/jh51/AGENTS.md
+../mallku/AGENTS.md
+../eidolon/.worktrees/nines-rc-reviewer-pass/AGENTS.md
+../eidolon/AGENTS.md
+
+exec
+/bin/bash -lc 'mktemp -d' in /home/tony/projects/tessera
+ succeeded in 0ms:
+/tmp/tmp.bt6IqG2thi
+
+exec
+/bin/bash -lc 'mkdir -p /tmp/tmp.bt6IqG2thi/formal /tmp/tmp.bt6IqG2thi/tmp; cp -a formal/p3-verification-profile /tmp/tmp.bt6IqG2thi/formal/; ln -s /home/tony/projects/tessera/service /tmp/tmp.bt6IqG2thi/service' in /home/tony/projects/tessera
+ succeeded in 0ms:
+exec
+/bin/bash -lc 'PYTHONDONTWRITEBYTECODE=1 TMPDIR=/tmp/tmp.bt6IqG2thi/tmp UV_CACHE_DIR=/tmp/tmp.bt6IqG2thi/uv-cache .venv/bin/python package.py /tmp/tmp.bt6IqG2thi/p.zip' in /home/tony/projects/tessera/service/issuer
+ succeeded in 996ms:
+/tmp/tmp.bt6IqG2thi/p.zip: BOOTSTRAP (no install.json: pre-ship refuses until rebuilt)
+sha256 1bfcc569b284a570023cfcf595231525e821e23dd1e2660f5524c2b4dbab6446
+
+exec
+/bin/bash -lc 'PYTHONDONTWRITEBYTECODE=1 TMPDIR=/tmp/tmp.bt6IqG2thi/tmp .venv/bin/python -m pytest -q ../../formal/p3-verification-profile -o cache_dir=/tmp/tmp.bt6IqG2thi/pytest-cache --basetemp=/tmp/tmp.bt6IqG2thi/pytest-full' in /home/tony/projects/tessera/service/verifier
+ succeeded in 2512ms:
+......s................................................................. [  5%]
+........................................................................ [ 11%]
+........................................................................ [ 17%]
+........................................................................ [ 23%]
+........................................................................ [ 29%]
+........................................................................ [ 35%]
+........................................................................ [ 41%]
+........................................................................ [ 47%]
+........................................................................ [ 53%]
+........................................................................ [ 59%]
+........................................................................ [ 65%]
+........................................................................ [ 71%]
+........................................................................ [ 77%]
+........................................................................ [ 83%]
+........................................................................ [ 89%]
+........................................................................ [ 95%]
+................................................
+== ecdsa_secp256r1_sha256_test.json: 484 cases
+   wycheproof=invalid    VERIFIER=LENGTH_CAP        2
+   wycheproof=invalid    VERIFIER=NOT_ROUTED      219
+   wycheproof=invalid    VERIFIER=SIG_FORMAT       30
+   wycheproof=invalid    VERIFIER=SIG_INVALID      23
+   wycheproof=invalid    VERIFIER=SIG_POLICY       36
+   wycheproof=valid      VERIFIER=ACCEPT          174
+   wycheproof=invalid    LIBRARY =SIG_INVALID     310
+   wycheproof=valid      LIBRARY =ACCEPT          174
+   acceptable cases: 0
+   VERIFIER disagreements: 0
+   LIBRARY disagreements: 0
+   NOT_ROUTED (no V1 encoding): 219; Wycheproof results {'invalid': 219}
+== ecdsa_secp256r1_sha256_p1363_test.json: 262 cases
+   wycheproof=invalid    VERIFIER=NOT_ROUTED       21
+   wycheproof=invalid    VERIFIER=SIG_FORMAT       14
+   wycheproof=invalid    VERIFIER=SIG_INVALID      18
+   wycheproof=invalid    VERIFIER=SIG_POLICY       36
+   wycheproof=valid      VERIFIER=ACCEPT          173
+   wycheproof=invalid    LIBRARY =NOT_ROUTED       21
+   wycheproof=invalid    LIBRARY =SIG_INVALID      68
+   wycheproof=valid      LIBRARY =ACCEPT          173
+   acceptable cases: 0
+   VERIFIER disagreements: 0
+   LIBRARY disagreements: 0
+   NOT_ROUTED (no V1 encoding): 21; Wycheproof results {'invalid': 21}
+== mldsa_65_verify_test.json: 210 cases
+   wycheproof=invalid    VERIFIER=KEY_FORMAT        4
+   wycheproof=invalid    VERIFIER=LENGTH_CAP        2
+   wycheproof=invalid    VERIFIER=SIG_FORMAT        1
+   wycheproof=invalid    VERIFIER=SIG_INVALID     124
+   wycheproof=valid      VERIFIER=ACCEPT           77
+   wycheproof=valid      VERIFIER=SIG_INVALID       2
+   wycheproof=invalid    LIBRARY =SIG_INVALID     122
+   wycheproof=invalid    LIBRARY =ValueError        9
+   wycheproof=valid      LIBRARY =ACCEPT           79
+   acceptable cases: 0
+   VERIFIER disagreements: 2
+     tcId   3 wycheproof=valid got=SIG_INVALID ctx=7 flags=ValidSignature :: non-empty context
+     tcId   4 wycheproof=valid got=SIG_INVALID ctx=255 flags=ValidSignature :: longest context
+   LIBRARY disagreements: 0
+   rejected by the verifier's own mldsa65_encoding_valid gate (before the library): 62; Wycheproof results {'invalid': 62}
+   evaluated under the empty context although Wycheproof gives a non-empty ctx: tcId 3 (ctx 7 B, wycheproof=valid, V1 SIG_INVALID), tcId 4 (ctx 255 B, wycheproof=valid, V1 SIG_INVALID), tcId 5 (ctx 256 B, wycheproof=invalid, V1 SIG_INVALID), tcId 153 (ctx 256 B, wycheproof=invalid, V1 SIG_INVALID), tcId 154 (ctx 256 B, wycheproof=invalid, V1 SIG_INVALID), tcId 155 (ctx 256 B, wycheproof=invalid, V1 SIG_INVALID), tcId 156 (ctx 256 B, wycheproof=invalid, V1 SIG_INVALID)
+.                        [100%]
+=============================== warnings summary ===============================
+formal/p3-verification-profile/test_p3_profile.py::tested_verifier_files
+  /home/tony/projects/tessera/service/verifier/.venv/lib/python3.14/site-packages/_pytest/python.py:171: PytestReturnNotNoneWarning: Test functions should return None, but formal/p3-verification-profile/test_p3_profile.py::tested_verifier_files returned <class 'dict'>.
+  Did you mean to use `assert` instead of `return`?
+  See https://docs.pytest.org/en/stable/how-to/assert.html#return-not-none for more information.
+    warnings.warn(
+
+formal/p3-verification-profile/test_p3_profile.py::test_A11C01_an_alias_or_duplicate_of_a_verifier_file_is_refused[tessera_verify/codec.py]
+  /home/tony/.local/share/uv/python/cpython-3.14.6-linux-x86_64-gnu/lib/python3.14/zipfile/__init__.py:1730: UserWarning: Duplicate name: 'tessera_verify/codec.py'
+    return self._open_to_write(zinfo, force_zip64=force_zip64)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+1200 passed, 1 skipped, 2 warnings in 2.42s
+
+exec
+/bin/bash -lc "cat > /tmp/tmp.bt6IqG2thi/check.py <<'PY'
+import importlib.util, pathlib, hashlib, zipfile, traceback
+root=pathlib.Path('/home/tony/projects/tessera')
+spec=importlib.util.spec_from_file_location('profile',root/'formal/p3-verification-profile/test_p3_profile.py')
+m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m)
+m.check_zip('/tmp/tmp.bt6IqG2thi/p.zip'); print('GENUINE PACKAGE: PASS')
+m.F1['wheel']['rust_binding_sha256']=hashlib.sha256(m.BINDING).hexdigest()
+tmp=pathlib.Path('/tmp/tmp.bt6IqG2thi')
+m.check_zip(m._zip_with(tmp,'clean.zip',[])); print('CLEAN: PASS')
+for i,alias in enumerate(['./tessera_verify/codec.py','tessera_verify//codec.py','tessera_verify/../tessera_verify/codec.py','/tessera_verify/codec.py','tessera_verify\\\\codec.py','tessera_verify/codec.py']):
+ p=m._zip_with(tmp,f'alias{i}.zip',[(alias,b'raise RuntimeError(\"substituted verifier\")\\n')])
+ try: m.check_zip(p)
+ except AssertionError as e: print(repr(alias),'REJECT',str(e))
+ else: print(repr(alias),'ACCEPT')
+p=m._zip_with(tmp,'symlink.zip',[])
+with zipfile.ZipFile(p,'a') as z:
+ info=zipfile.ZipInfo('tessera_link');info.external_attr=0o120777<<16;z.writestr(info,'tessera_verify')
+try: m.check_zip(p)
+except AssertionError as e: print('SYMLINK REJECT',str(e))
+mirror=tmp/'formal/p3-verification-profile/test_p3_profile.py'
+s=mirror.read_text(); target='        assert bad == [] and len(names) == len(set(names)), (bad, len(names) - len(set(names)))'
+assert s.count(target)==1
+mirror.write_text(s.replace(target,'        # path assertion removed for independent mutation control'))
+PY
+PYTHONDONTWRITEBYTECODE=1 TMPDIR=/tmp/tmp.bt6IqG2thi/tmp service/verifier/.venv/bin/python /tmp/tmp.bt6IqG2thi/check.py" in /home/tony/projects/tessera
+ succeeded in 225ms:
+/home/tony/.local/share/uv/python/cpython-3.14.6-linux-x86_64-gnu/lib/python3.14/zipfile/__init__.py:1730: UserWarning: Duplicate name: 'tessera_verify/codec.py'
+  return self._open_to_write(zinfo, force_zip64=force_zip64)
+GENUINE PACKAGE: PASS
+CLEAN: PASS
+'./tessera_verify/codec.py' REJECT (['./tessera_verify/codec.py'], 0)
+'tessera_verify//codec.py' REJECT (['tessera_verify//codec.py'], 0)
+'tessera_verify/../tessera_verify/codec.py' REJECT (['tessera_verify/../tessera_verify/codec.py'], 0)
+'/tessera_verify/codec.py' REJECT (['/tessera_verify/codec.py'], 0)
+'tessera_verify\\codec.py' REJECT (['tessera_verify\\codec.py'], 0)
+'tessera_verify/codec.py' REJECT ([], 1)
+SYMLINK REJECT ['tessera_link']
+
+exec
+/bin/bash -lc 'PYTHONDONTWRITEBYTECODE=1 TMPDIR=/tmp/tmp.bt6IqG2thi/tmp .venv/bin/python -m pytest -q /tmp/tmp.bt6IqG2thi/formal/p3-verification-profile -k A11C01 -o cache_dir=/tmp/tmp.bt6IqG2thi/mutation-cache --basetemp=/tmp/tmp.bt6IqG2thi/pytest-mutant' in /home/tony/projects/tessera/service/verifier
+ exited 1 in 868ms:
+.F..FF..                                                                 [100%]
+=================================== FAILURES ===================================
+_ test_A11C01_an_alias_or_duplicate_of_a_verifier_file_is_refused[./tessera_verify/codec.py] _
+
+tmp_path = PosixPath('/tmp/tmp.bt6IqG2thi/pytest-mutant/test_A11C01_an_alias_or_duplic0')
+alias = './tessera_verify/codec.py', stand_in_wheel = None
+
+    @pytest.mark.parametrize('alias', ['./tessera_verify/codec.py', 'tessera_verify//codec.py',
+                                       'tessera_verify/../tessera_verify/codec.py', '/tessera_verify/codec.py',
+                                       'tessera_verify\\codec.py', 'tessera_verify/codec.py'])
+    def test_A11C01_an_alias_or_duplicate_of_a_verifier_file_is_refused(tmp_path, alias, stand_in_wheel):
+        """Codex confirmation 2: './tessera_verify/codec.py' passed a literal-prefix check and overwrote the checked file
+        on extraction. Every non-canonical or duplicate entry is refused, whatever it names."""
+        z = _zip_with(tmp_path, 'alias.zip', [(alias, b'raise RuntimeError("substituted verifier")\n')])
+>       with pytest.raises(AssertionError):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE AssertionError
+
+/tmp/tmp.bt6IqG2thi/formal/p3-verification-profile/test_p3_profile.py:555: Failed
+_ test_A11C01_an_alias_or_duplicate_of_a_verifier_file_is_refused[/tessera_verify/codec.py] _
+
+tmp_path = PosixPath('/tmp/tmp.bt6IqG2thi/pytest-mutant/test_A11C01_an_alias_or_duplic3')
+alias = '/tessera_verify/codec.py', stand_in_wheel = None
+
+    @pytest.mark.parametrize('alias', ['./tessera_verify/codec.py', 'tessera_verify//codec.py',
+                                       'tessera_verify/../tessera_verify/codec.py', '/tessera_verify/codec.py',
+                                       'tessera_verify\\codec.py', 'tessera_verify/codec.py'])
+    def test_A11C01_an_alias_or_duplicate_of_a_verifier_file_is_refused(tmp_path, alias, stand_in_wheel):
+        """Codex confirmation 2: './tessera_verify/codec.py' passed a literal-prefix check and overwrote the checked file
+        on extraction. Every non-canonical or duplicate entry is refused, whatever it names."""
+        z = _zip_with(tmp_path, 'alias.zip', [(alias, b'raise RuntimeError("substituted verifier")\n')])
+>       with pytest.raises(AssertionError):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE AssertionError
+
+/tmp/tmp.bt6IqG2thi/formal/p3-verification-profile/test_p3_profile.py:555: Failed
+_ test_A11C01_an_alias_or_duplicate_of_a_verifier_file_is_refused[tessera_verify\\codec.py] _
+
+tmp_path = PosixPath('/tmp/tmp.bt6IqG2thi/pytest-mutant/test_A11C01_an_alias_or_duplic4')
+alias = 'tessera_verify\\codec.py', stand_in_wheel = None
+
+    @pytest.mark.parametrize('alias', ['./tessera_verify/codec.py', 'tessera_verify//codec.py',
+                                       'tessera_verify/../tessera_verify/codec.py', '/tessera_verify/codec.py',
+                                       'tessera_verify\\codec.py', 'tessera_verify/codec.py'])
+    def test_A11C01_an_alias_or_duplicate_of_a_verifier_file_is_refused(tmp_path, alias, stand_in_wheel):
+        """Codex confirmation 2: './tessera_verify/codec.py' passed a literal-prefix check and overwrote the checked file
+        on extraction. Every non-canonical or duplicate entry is refused, whatever it names."""
+        z = _zip_with(tmp_path, 'alias.zip', [(alias, b'raise RuntimeError("substituted verifier")\n')])
+>       with pytest.raises(AssertionError):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE AssertionError
+
+/tmp/tmp.bt6IqG2thi/formal/p3-verification-profile/test_p3_profile.py:555: Failed
+=============================== warnings summary ===============================
+test_p3_profile.py::test_A11C01_an_alias_or_duplicate_of_a_verifier_file_is_refused[tessera_verify/codec.py]
+  /home/tony/.local/share/uv/python/cpython-3.14.6-linux-x86_64-gnu/lib/python3.14/zipfile/__init__.py:1730: UserWarning: Duplicate name: 'tessera_verify/codec.py'
+    return self._open_to_write(zinfo, force_zip64=force_zip64)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED ../../../../../../tmp/tmp.bt6IqG2thi/formal/p3-verification-profile/test_p3_profile.py::test_A11C01_an_alias_or_duplicate_of_a_verifier_file_is_refused[./tessera_verify/codec.py]
+FAILED ../../../../../../tmp/tmp.bt6IqG2thi/formal/p3-verification-profile/test_p3_profile.py::test_A11C01_an_alias_or_duplicate_of_a_verifier_file_is_refused[/tessera_verify/codec.py]
+FAILED ../../../../../../tmp/tmp.bt6IqG2thi/formal/p3-verification-profile/test_p3_profile.py::test_A11C01_an_alias_or_duplicate_of_a_verifier_file_is_refused[tessera_verify\\codec.py]
+3 failed, 5 passed, 1193 deselected, 1 warning in 0.77s
+
+codex
+The clean control and genuine package both pass. Removing the path assertion makes exactly three alias tests fail: `./`, leading `/`, and backslash. The other alias tests and the symlink test still pass. I’ll check their rejection points and finish the owner prechecks.
+exec
+/bin/bash -lc "cat > /tmp/tmp.bt6IqG2thi/mutant_evidence.py <<'PY'
+import importlib.util,pathlib,hashlib,traceback,pytest
+p=pathlib.Path('/tmp/tmp.bt6IqG2thi/formal/p3-verification-profile/test_p3_profile.py')
+spec=importlib.util.spec_from_file_location('mutant',p);m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m)
+original=m.F1['wheel']['rust_binding_sha256'];m.F1['wheel']['rust_binding_sha256']=hashlib.sha256(m.BINDING).hexdigest()
+for i,a in enumerate(['tessera_verify//codec.py','tessera_verify/../tessera_verify/codec.py','tessera_verify/codec.py']):
+ try:m.check_zip(m._zip_with(p.parents[2],f'residual{i}.zip',[(a,b'changed')]))
+ except AssertionError as e:
+  frame=traceback.extract_tb(e.__traceback__)[-1];print(repr(a),frame.lineno,frame.line,str(e))
+m.F1['wheel']['rust_binding_sha256']=original
+for i,a in enumerate(['./tessera_verify/codec.py','tessera_verify//codec.py','tessera_verify/../tessera_verify/codec.py','/tessera_verify/codec.py','tessera_verify\\\\codec.py','tessera_verify/codec.py']):
+ try:m.check_zip(m._zip_with(p.parents[2],f'vacuous{i}.zip',[(a,b'changed')]))
+ except AssertionError as e:
+  frame=traceback.extract_tb(e.__traceback__)[-1];print('NO FIXTURE',repr(a),frame.lineno,frame.line)
+PY
+PYTHONDONTWRITEBYTECODE=1 service/verifier/.venv/bin/python /tmp/tmp.bt6IqG2thi/mutant_evidence.py
+nl -ba formal/p3-verification-profile/test_p3_profile.py | sed -n '74,93p'" in /home/tony/projects/tessera
+ succeeded in 140ms:
+/home/tony/.local/share/uv/python/cpython-3.14.6-linux-x86_64-gnu/lib/python3.14/zipfile/__init__.py:1730: UserWarning: Duplicate name: 'tessera_verify/codec.py'
+  return self._open_to_write(zinfo, force_zip64=force_zip64)
+'tessera_verify//codec.py' 88 assert sorted(shipped) == sorted(tested), sorted(set(shipped) ^ set(tested)) ['tessera_verify//codec.py']
+'tessera_verify/../tessera_verify/codec.py' 88 assert sorted(shipped) == sorted(tested), sorted(set(shipped) ^ set(tested)) ['tessera_verify/../tessera_verify/codec.py']
+'tessera_verify/codec.py' 89 assert [n for n in tested if shipped[n] != tested[n]] == [] 
+NO FIXTURE './tessera_verify/codec.py' 85 assert hashlib.sha256(binding).hexdigest() == F1['wheel']['rust_binding_sha256']
+NO FIXTURE 'tessera_verify//codec.py' 85 assert hashlib.sha256(binding).hexdigest() == F1['wheel']['rust_binding_sha256']
+NO FIXTURE 'tessera_verify/../tessera_verify/codec.py' 85 assert hashlib.sha256(binding).hexdigest() == F1['wheel']['rust_binding_sha256']
+NO FIXTURE '/tessera_verify/codec.py' 85 assert hashlib.sha256(binding).hexdigest() == F1['wheel']['rust_binding_sha256']
+NO FIXTURE 'tessera_verify\\codec.py' 85 assert hashlib.sha256(binding).hexdigest() == F1['wheel']['rust_binding_sha256']
+NO FIXTURE 'tessera_verify/codec.py' 85 assert hashlib.sha256(binding).hexdigest() == F1['wheel']['rust_binding_sha256']
+    74	        binding = z.read(F1['wheel']['rust_binding'])
+    75	        tag = wheel_tag(z.read('cryptography-%s.dist-info/WHEEL' % F1['cryptography']).decode())
+    76	        names = z.namelist()
+    77	        # Codex confirmation 2: an alias ('./tessera_verify/codec.py') extracts over the checked file. Only canonical,
+    78	        # unique, relative POSIX paths are accepted, so what extraction writes is exactly what was compared.
+    79	        bad = [n for n in names if n != posixpath.normpath(n) + ('/' if n.endswith('/') else '') or n.startswith('/')
+    80	               or '\\' in n or n.split('/')[0] in ('', '.', '..')]
+    81	        assert bad == [] and len(names) == len(set(names)), (bad, len(names) - len(set(names)))
+    82	        links = [i.filename for i in z.infolist() if (i.external_attr >> 16) & 0o170000 == 0o120000]
+    83	        assert links == [], links                          # a symlink entry can redirect extraction
+    84	        shipped = {n: z.read(n) for n in names if n.startswith('tessera_verify/') and not n.endswith('/')}
+    85	    assert hashlib.sha256(binding).hexdigest() == F1['wheel']['rust_binding_sha256']
+    86	    assert tag == F1['wheel']['tag']
+    87	    tested = tested_verifier_files()
+    88	    assert sorted(shipped) == sorted(tested), sorted(set(shipped) ^ set(tested))
+    89	    assert [n for n in tested if shipped[n] != tested[n]] == []
+    90	
+    91	
+    92	def run_sig(v, keys, docs):
+    93	    """Function-level harness for one signature against one known-good key: signature codec (the function of rows
+
+exec
+/bin/bash -lc "nl -ba formal/p3-verification-profile/test_p3_profile.py | sed -n '150,182p'; rg -n 'as designed|deployment pending|173.174|no key defaults|version number|a69204' docs/phase-0-prereg-amendment-11.md service/signer-gcp/deploy.sh service/issuer/DEPLOY.md; rg --files | rg 'FLOOR-MANIFEST'; git log -3 --format='%h %s' -- formal/p3-verification-profile/test_p3_profile.py" in /home/tony/projects/tessera
+ succeeded in 0ms:
+   150	    def test_installed_wheel_identity(self):
+   151	        import cryptography as c
+   152	        root = Path(c.__file__).resolve().parent
+   153	        assert hashlib.sha256((root.parent / F1['wheel']['rust_binding']).read_bytes()).hexdigest() == F1['wheel']['rust_binding_sha256']
+   154	        assert wheel_tag((root.parent / ('cryptography-%s.dist-info' % F1['cryptography']) / 'WHEEL').read_text()) == F1['wheel']['tag']
+   155	
+   156	    def test_lambda_package_wheel_identity(self, tmp_path):
+   157	        """Builds the issuer's bootstrap Lambda zip with service/issuer/package.py (its own wheel resolution) and
+   158	        checks the bundled cryptography binding against F1. Skips, with the reason, if uv or the network is absent."""
+   159	        sys.path.insert(0, str(ISSUER))
+   160	        try:
+   161	            import package
+   162	        finally:
+   163	            sys.path.remove(str(ISSUER))
+   164	        if shutil.which('uv') is None:
+   165	            pytest.skip('uv not on PATH: package.py cannot resolve the Lambda wheel here')
+   166	        out = tmp_path / 'lambda.zip'
+   167	        try:
+   168	            package.build(out)
+   169	        except (SystemExit, subprocess.CalledProcessError) as e:
+   170	            pytest.skip(f'package.py could not build (offline or missing prerequisite?): {e}')
+   171	        check_zip(out)
+   172	
+   173	    def test_deployed_zip_identity(self):
+   174	        """Set TESSERA_LAMBDA_ZIP to the deployed lambda_zip (whose SHA-256 package.py prints and infra deploys)."""
+   175	        path = os.environ.get('TESSERA_LAMBDA_ZIP')
+   176	        if not path:
+   177	            pytest.skip('TESSERA_LAMBDA_ZIP not set: no deployed package supplied to tie to this record')
+   178	        check_zip(Path(path))
+   179	
+   180	    @pytest.mark.parametrize('name', sorted(F1['calls']))
+   181	    def test_recorded_call_is_the_verifiers_call(self, name):
+   182	        src = (VERIFIER / 'tessera_verify' / 'codec.py').read_text()
+service/issuer/DEPLOY.md:28:  `service/signer-gcp/deploy.sh`, which has no key defaults (the version number defaults to 1) and refuses the spike key.
+docs/phase-0-prereg-amendment-11.md:58:   `a69204e9f69a2af3a0bcac96991b55109b0ff0f3efdd6e2182424dd347a24a88`, covering 15 files. They hold:
+docs/phase-0-prereg-amendment-11.md:93:| `formal/p8/HYBRID-SUPPLEMENT.md:151-152, :173-174, :533` (K-R) | `μ` "computed by the issuer"; "`kms:Sign` only for the issuer role" | `μ` computed by the KMS-slot policy signer (`service/signer-kms/`) from an `F` it has validated; `kms:Sign` only for that signer's role, with the issuer roles holding no KMS permission |
+docs/phase-0-prereg-amendment-11.md:150:   issuer as the computer of `μ` and the issuer role as the only `kms:Sign` principal. In V1 as designed (deployment pending), a
+formal/p3-verification-profile/FLOOR-MANIFEST.sha256
+
+exec
+/bin/bash -lc "sha256sum formal/p3-verification-profile/FLOOR-MANIFEST.sha256; sha256sum -c formal/p3-verification-profile/FLOOR-MANIFEST.sha256; nl -ba service/signer-gcp/deploy.sh | sed -n '27,35p'; nl -ba formal/p8/HYBRID-SUPPLEMENT.md | sed -n '170,176p'" in /home/tony/projects/tessera
+ succeeded in 0ms:
+a69204e9f69a2af3a0bcac96991b55109b0ff0f3efdd6e2182424dd347a24a88  formal/p3-verification-profile/FLOOR-MANIFEST.sha256
+./DIVERGENCES.md: FAILED open or read
+./gen_vectors.py: FAILED open or read
+./p256.py: FAILED open or read
+./PROFILE.md: FAILED open or read
+./test_p3_profile.py: FAILED open or read
+./test_wycheproof.py: FAILED open or read
+sha256sum: ./DIVERGENCES.md: No such file or directory
+sha256sum: ./gen_vectors.py: No such file or directory
+sha256sum: ./p256.py: No such file or directory
+sha256sum: ./PROFILE.md: No such file or directory
+sha256sum: ./test_p3_profile.py: No such file or directory
+sha256sum: ./test_wycheproof.py: No such file or directory
+sha256sum: ./vectors/F1-library.json: No such file or directory
+sha256sum: ./vectors/F2-signature-encodings.json: No such file or directory
+./vectors/F1-library.json: FAILED open or read
+./vectors/F2-signature-encodings.json: FAILED open or read
+sha256sum: ./vectors/F3-public-key-validation.json: No such file or directory
+./vectors/F3-public-key-validation.json: FAILED open or read
+./vectors/F4-low-order-points.json: FAILED open or read
+./vectors/F5-equation-variant.json: FAILED open or read
+sha256sum: ./vectors/F4-low-order-points.json: No such file or directory
+sha256sum: ./vectors/F5-equation-variant.json: No such file or directory
+sha256sum: ./wycheproof/ecdsa_secp256r1_sha256_p1363_test.json: No such file or directory
+./wycheproof/ecdsa_secp256r1_sha256_p1363_test.json: FAILED open or read
+sha256sum: ./wycheproof/ecdsa_secp256r1_sha256_test.json: No such file or directory./wycheproof/ecdsa_secp256r1_sha256_test.json: FAILED open or read
+
+sha256sum: ./wycheproof/mldsa_65_verify_test.json: No such file or directory
+./wycheproof/mldsa_65_verify_test.json: FAILED open or read
+sha256sum: ./wycheproof/SOURCE.md: No such file or directory
+./wycheproof/SOURCE.md: FAILED open or read
+sha256sum: WARNING: 15 listed files could not be read
+    27	PROJECT_NUMBER=990386490765
+    28	REGION=us-east1
+    29	KEYRING=tessera-v1
+    30	# Production key (service/issuer/DEPLOY.md "Keys"): a NEW HSM key, never the spike key, which the hybrid
+    31	# registration commits to deleting (formal/p8/HYBRID-SUPPLEMENT.md §11 item 6). No key defaults: set SLOT2_KEY, SLOT2_KEY_CREATED and SLOT2_KEY_FP (the version defaults to 1).
+    32	KEY="${SLOT2_KEY:-}"                # the production key's name in $KEYRING
+    33	KEY_VERSION_N="${SLOT2_KEY_VERSION:-1}"
+    34	KEY_CREATED="${SLOT2_KEY_CREATED:-}" # that version's createTime (epoch seconds), bound into KEY_FP
+    35	KEY_FP="${SLOT2_KEY_FP:-}"           # gpg-sha256:... of the v4 public-key packet built with KEY_CREATED
+   170	*What enforces (K-R), stated so it is not overread.*
+   171	- The HSM cannot check that a message is a V1 frame. Under EXTERNAL_MU it does not even see the message: whoever
+   172	  may call `kms:Sign` on the key can sign any message by computing `μ`.
+   173	- So (K-R) is an issuer-code and IAM assumption: the key policy grants `kms:Sign` only to the issuer role, and the
+   174	  issuer code builds only V1 frames. It is not an HSM property. The operations runbook carries the key policy.
+   175	- This is the same single-controller position C3 already states. Capture of the issuing account confers signing
+   176	  capability for both slots.
+
+exec
+/bin/bash -lc 'sha256sum -c FLOOR-MANIFEST.sha256' in /home/tony/projects/tessera/formal/p3-verification-profile
+ succeeded in 0ms:
+./DIVERGENCES.md: OK
+./gen_vectors.py: OK
+./p256.py: OK
+./PROFILE.md: OK
+./test_p3_profile.py: OK
+./test_wycheproof.py: OK
+./vectors/F1-library.json: OK
+./vectors/F2-signature-encodings.json: OK
+./vectors/F3-public-key-validation.json: OK
+./vectors/F4-low-order-points.json: OK
+./vectors/F5-equation-variant.json: OK
+./wycheproof/ecdsa_secp256r1_sha256_p1363_test.json: OK
+./wycheproof/ecdsa_secp256r1_sha256_test.json: OK
+./wycheproof/mldsa_65_verify_test.json: OK
+./wycheproof/SOURCE.md: OK
+
+codex
+Independent verification completed read-only; no repository edits or git writes. Scratch: `/tmp/tmp.bt6IqG2thi`.
+
+1. **A11C3A-01 — CONFIRMED: rejection cases.** Independently constructed packages containing each of these entries were rejected at `formal/p3-verification-profile/test_p3_profile.py:81`:
+
+   - `./tessera_verify/codec.py` — the earlier review’s attack
+   - `tessera_verify//codec.py`
+   - `tessera_verify/../tessera_verify/codec.py`
+   - `/tessera_verify/codec.py`
+   - `tessera_verify\codec.py`
+   - An exact duplicate `tessera_verify/codec.py`
+
+   The symlink entry was rejected separately at `:83`.
+
+2. **A11C3A-02 — CONFIRMED: positive controls.** The clean synthetic package passes. The genuine package built with `service/issuer/.venv/bin/python package.py /tmp/tmp.bt6IqG2thi/p.zip` also passes `check_zip`. Its SHA-256 is `1bfcc569b284a570023cfcf595231525e821e23dd1e2660f5524c2b4dbab6446`. This is a bootstrap package, not evidence of deployment.
+
+3. **A11C3A-03 — CONFIRMED: current tests detect removal of the path assertion.** Used the requested scratch mirror and service symlink; removed only the assertion at `:81`. The A11C01 tests then yielded **3 failed, 5 passed**. All failures were `DID NOT RAISE AssertionError` in `test_A11C01_an_alias_or_duplicate_of_a_verifier_file_is_refused`, for:
+
+   - `./tessera_verify/codec.py`
+   - `/tessera_verify/codec.py`
+   - `tessera_verify\codec.py`
+
+   Restoring the original recorded binding digest in this mutant reproduced the vacuity mechanism: all six alias packages failed the wheel-digest assertion at `:85`. This independently reproduces the reported failure mechanism; it does not establish the chronology of the owner’s earlier runs.
+
+4. **A11C3A-04 — CONFIRMED: division of checks.** Without the path assertion, `//` and `..` variants fail the file-set comparison at `:88`; the changed exact duplicate fails the content comparison at `:89`. The three aliases above are accepted. The symlink remains rejected by its separate assertion at `:83`.
+
+The requested full suite completed: **1200 passed, 1 skipped, 2 warnings**. The skip is the deployed-package identity check because `TESSERA_LAMBDA_ZIP` was unset. Warnings concern the collected `tested_verifier_files` helper returning a dictionary and the intentionally duplicated ZIP entry.
+
+The additional wording and manifest claims also check out: amendment `:93,150`, deployment script `:31–33`, and deployment guide `:28` contain the stated corrections. All 15 manifest entries verify; its digest matches disposition `:53`.
+
+Owner prechecks applied specifically to `docs/reviews/amendment-11/DISPOSITION.md`’s “Second confirmation” section:
+
+| Check | Result | File:line evidence |
+|---|---|---|
+| Capture row | **PASS** | Disposition `:35–56` makes bounded package-check claims, with no attacker-key rejection or capture-visibility promise; consistent with `docs/V1-CONTRACT.md:37,72–73`. |
+| Trigger clause | **PASS** | Disposition `:35–50` ties the repair to the demonstrated alias attack and reproducible controls; no untriggered registered consequence is invoked. |
+| Requester | **PASS** | Disposition `:51–52` reports wording/citation corrections, without deriving signing security from key storage. The cited supplement `:171–176` explicitly addresses who can invoke signing. |
+| Binding text | **PASS** | Disposition `:39–56` reports implementation and verification results; it does not promote instance prose or the schedule’s ruling budget into a registered requirement. |
+
+Are the owner’s claims confirmed: **YES, within the tested scope; historical vacuity was reproduced, and deployment identity remains unverified.**
+hook: Stop
+hook: Stop Completed
+tokens used
+34,069
+Independent verification completed read-only; no repository edits or git writes. Scratch: `/tmp/tmp.bt6IqG2thi`.
+
+1. **A11C3A-01 — CONFIRMED: rejection cases.** Independently constructed packages containing each of these entries were rejected at `formal/p3-verification-profile/test_p3_profile.py:81`:
+
+   - `./tessera_verify/codec.py` — the earlier review’s attack
+   - `tessera_verify//codec.py`
+   - `tessera_verify/../tessera_verify/codec.py`
+   - `/tessera_verify/codec.py`
+   - `tessera_verify\codec.py`
+   - An exact duplicate `tessera_verify/codec.py`
+
+   The symlink entry was rejected separately at `:83`.
+
+2. **A11C3A-02 — CONFIRMED: positive controls.** The clean synthetic package passes. The genuine package built with `service/issuer/.venv/bin/python package.py /tmp/tmp.bt6IqG2thi/p.zip` also passes `check_zip`. Its SHA-256 is `1bfcc569b284a570023cfcf595231525e821e23dd1e2660f5524c2b4dbab6446`. This is a bootstrap package, not evidence of deployment.
+
+3. **A11C3A-03 — CONFIRMED: current tests detect removal of the path assertion.** Used the requested scratch mirror and service symlink; removed only the assertion at `:81`. The A11C01 tests then yielded **3 failed, 5 passed**. All failures were `DID NOT RAISE AssertionError` in `test_A11C01_an_alias_or_duplicate_of_a_verifier_file_is_refused`, for:
+
+   - `./tessera_verify/codec.py`
+   - `/tessera_verify/codec.py`
+   - `tessera_verify\codec.py`
+
+   Restoring the original recorded binding digest in this mutant reproduced the vacuity mechanism: all six alias packages failed the wheel-digest assertion at `:85`. This independently reproduces the reported failure mechanism; it does not establish the chronology of the owner’s earlier runs.
+
+4. **A11C3A-04 — CONFIRMED: division of checks.** Without the path assertion, `//` and `..` variants fail the file-set comparison at `:88`; the changed exact duplicate fails the content comparison at `:89`. The three aliases above are accepted. The symlink remains rejected by its separate assertion at `:83`.
+
+The requested full suite completed: **1200 passed, 1 skipped, 2 warnings**. The skip is the deployed-package identity check because `TESSERA_LAMBDA_ZIP` was unset. Warnings concern the collected `tested_verifier_files` helper returning a dictionary and the intentionally duplicated ZIP entry.
+
+The additional wording and manifest claims also check out: amendment `:93,150`, deployment script `:31–33`, and deployment guide `:28` contain the stated corrections. All 15 manifest entries verify; its digest matches disposition `:53`.
+
+Owner prechecks applied specifically to `docs/reviews/amendment-11/DISPOSITION.md`’s “Second confirmation” section:
+
+| Check | Result | File:line evidence |
+|---|---|---|
+| Capture row | **PASS** | Disposition `:35–56` makes bounded package-check claims, with no attacker-key rejection or capture-visibility promise; consistent with `docs/V1-CONTRACT.md:37,72–73`. |
+| Trigger clause | **PASS** | Disposition `:35–50` ties the repair to the demonstrated alias attack and reproducible controls; no untriggered registered consequence is invoked. |
+| Requester | **PASS** | Disposition `:51–52` reports wording/citation corrections, without deriving signing security from key storage. The cited supplement `:171–176` explicitly addresses who can invoke signing. |
+| Binding text | **PASS** | Disposition `:39–56` reports implementation and verification results; it does not promote instance prose or the schedule’s ruling budget into a registered requirement. |
+
+Are the owner’s claims confirmed: **YES, within the tested scope; historical vacuity was reproduced, and deployment identity remains unverified.**

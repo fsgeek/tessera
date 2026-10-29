@@ -1,0 +1,2113 @@
+Reading additional input from stdin...
+OpenAI Codex v0.165.0
+--------
+workdir: /home/tony/projects/tessera
+model: gpt-6.1-sol
+provider: openai
+approval: never
+sandbox: danger-full-access
+reasoning effort: none
+reasoning summaries: none
+session id: 01a1886f-9375-7573-a32f-f49b502a8da2
+--------
+user
+Defensive design review of an integrity check in our own repository, Project Tessera, /home/tony/projects/tessera (read-only: no repo edits, no git writes; scratch only under a fresh mktemp -d). Purpose: our pre-registration amendment (docs/phase-0-prereg-amendment-11.md §A11.2 item 3(c)) will claim that before we discharge a property, we confirm our deployed AWS Lambda package contains exactly the verifier code our test suite exercised. The check is check_zip in formal/p3-verification-profile/test_p3_profile.py; it reads the archive with Python's zipfile and requires canonical, unique, relative entry names, no symlink entries, and byte equality of the tessera_verify/ files with the tested tree. We want that claim to be accurate, so we need to know where Python's zipfile view of an archive can legitimately differ from what another conforming extractor produces. Questions: (1) The ZIP format stores each name twice (local file header and central directory). Python's zipfile reads the central directory. Which widely used extractors read local headers instead or in addition, and is it documented which extractor AWS Lambda uses when it unpacks a .zip deployment package? Cite sources; say plainly if it is undocumented. (2) List the known classes of ZIP parser-consistency issues documented in public literature (e.g. differences between local and central names, extra data before or after the archive, multiple end-of-central-directory records, name-encoding flags), and for each say whether check_zip as written would detect an archive with that property. Where you can, confirm detection with a small conformance test in scratch on archives you construct (benign content only), and check how Python's zipfile and, if installed, Info-ZIP unzip, extract them. (3) Our own packager service/issuer/package.py writes the archive with Python's zipfile from a staging tree. Would a simpler and stronger check be to verify the SHA-256 of the exact zip bytes our packager produced and then deployed (AWS reports CodeSha256 for a function), rather than parsing the archive? Explain the trade-off. (4) Recommend the wording for §A11.2 item 3(c) that is accurate given (1)-(3). Number findings A11C3B-01... with severity and the evidence behind each (demonstrated vs documented vs inferred). One-line verdict: what check makes the amendment's claim true.
+codex
+I’ll review the amendment, checker, and packager read-only, then research extractor behavior and run benign conformance probes in a fresh scratch directory. I’ll distinguish demonstrated behavior from documented behavior and inference.
+exec
+/bin/bash -lc "cat /home/tony/.codex/plugins/cache/openai-curated-remote/superpowers/7.0.1/skills/using-superpowers/SKILL.md; rg -n 'formal review|amendment|reading order' /home/tony/.codex/memories/MEMORY.md" in /home/tony/projects/tessera
+ succeeded in 0ms:
+---
+name: using-superpowers
+description: Use when starting any conversation - establishes how to find and use skills, requiring skill invocation before ANY response including clarifying questions
+---
+
+<SUBAGENT-STOP>
+If you were dispatched as a subagent to execute a specific task, ignore this skill.
+</SUBAGENT-STOP>
+
+<EXTREMELY-IMPORTANT>
+If you think there is even a 1% chance a skill might apply to what you are doing, you ABSOLUTELY MUST invoke the skill.
+
+IF A SKILL APPLIES TO YOUR TASK, YOU DO NOT HAVE A CHOICE. YOU MUST USE IT.
+
+This is not negotiable. You cannot rationalize your way out of this.
+</EXTREMELY-IMPORTANT>
+
+## The Rule
+
+**Invoke relevant or requested skills BEFORE any response or action** — including clarifying questions, exploring the codebase, or checking files. If it turns out wrong for the situation, you don't have to use it.
+
+**Before entering plan mode:** if you haven't already brainstormed, invoke the brainstorming skill first.
+
+Then announce "Using [skill] to [purpose]" and follow the skill exactly. If it has a checklist, create a todo per item.
+
+## Skill Priority
+
+When multiple skills apply, process skills come first — they set the approach, then implementation skills (frontend-design, etc.) carry it out. Brainstorming and systematic-debugging are Superpowers' most common process skills, but the rule holds for any of them.
+
+- "Let's build X" → superpowers:brainstorming first, then implementation skills.
+- "Fix this bug" → superpowers:systematic-debugging first, then domain skills.
+
+## Red Flags
+
+These thoughts mean STOP—you're rationalizing:
+
+| Thought | Reality |
+|---------|---------|
+| "This is just a simple question" | Questions are tasks. Check for skills. |
+| "I need more context first" | Skill check comes BEFORE clarifying questions. |
+| "Let me explore the codebase first" | Skills tell you HOW to explore. Check first. |
+| "I can check git/files quickly" | Files lack conversation context. Check for skills. |
+| "Let me gather information first" | Skills tell you HOW to gather information. |
+| "This doesn't need a formal skill" | If a skill exists, use it. |
+| "I remember this skill" | Skills evolve. Read current version. |
+| "This doesn't count as a task" | Action = task. Check for skills. |
+| "The skill is overkill" | Simple things become complex. Use it. |
+| "I'll just do this one thing first" | Check BEFORE doing anything. |
+| "This feels productive" | Undisciplined action wastes time. Skills prevent this. |
+| "I know what that means" | Knowing the concept ≠ using the skill. Invoke it. |
+
+## Platform Adaptation
+
+If your harness appears here, read its reference file for special instructions:
+
+- Claude Code: `references/claude-code-tools.md`
+- Codex: `references/codex-tools.md`
+- Pi: `references/pi-tools.md`
+- Antigravity: `references/antigravity-tools.md`
+- Hermes Agent: `references/hermes-tools.md`
+- Muse: `references/muse-tools.md`
+
+## User Instructions
+
+User instructions (CLAUDE.md, AGENTS.md, GEMINI.md, etc, direct requests) take precedence over skills, which in turn override default behavior. Only skip skill workflows or instructions when your human partner has explicitly told you to.
+82:applies_to: cwd=/home/tony/projects/tessera; reuse_rule=recheck live amendments, decisions, release evidence, and custody status before treating time-specific V1 findings as current.
+108:- The user dislikes context-assuming “cold reads” -> assemble the current promise, assumptions, open decisions, and consequences in plain language instead of making them reconstruct amendment tables. [Task 1]
+114:- Tessera’s central claim is binding exact presented bytes to signatures and a temporal anchor, not truth or submitter identity. Amend-don’t-rewrite applies: amendments outrank tracker summaries, and proposed/checked/discharged/owner-decided states must remain distinct. [Task 1]
+181:- The freeze is the author's commit containing `PREDICTIONS.md`: no capstone model may be written or run before it; afterward builders do not edit predictions, results go to `RESULTS.md`, property changes require dated amendments, and a non-author cross-family falsification review follows. [Task 1]
+182:- The routed `REFUSAL` fork is to exercise an honest refusal-tagged signer and add query/companion by amendment, or leave REFUSAL declared-but-unexercised with the composed tag property inert. [Task 1]
+193:# Task Group: Tessera S-P3 and capstone-ledger formal review
+220:- When the user asks for a cold formal review, they want the abstraction challenged rather than rubber-stamped -> inspect the exact model, shared theory, attack judge, and machine output. [Task 1]
+270:scope: Begin work in Tessera with read-only orientation, project reading order, ownership boundaries, and formal-before-implementation status.
+286:- When beginning work, the user asked the agent to “look around, familiarize yourself,” and welcomed questions -> start read-only, follow the repository reading order, and report readiness before edits. [Task 1]
+289:- The user said “mistakes acceptable, hiding them unacceptable” -> treat preregistration, timestamps, amendments, explicit corrections, and visible residuals as evidence practices. [Task 1]
+293:- Tessera is an AWS-native attestation project and a rigorous, falsifiable engineering demonstration: formal foundations precede production implementation; amendments replace silent rewrites; AI contributes mechanics and pushback but does not own architecture. [Task 1]
+
+exec
+/bin/bash -lc "pwd; rg --files -g AGENTS.md -g README.md; sed -n '1,160p' README.md; sed -n '1,260p' formal/p3-verification-profile/test_p3_profile.py; cat service/issuer/package.py; cat docs/phase-0-prereg-amendment-11.md" in /home/tony/projects/tessera
+ succeeded in 0ms:
+/home/tony/projects/tessera
+service/signer-gcp/README.md
+docs/reviews/spec-sufficiency/indep-verifier/README.md
+README.md
+service/verifier/vendor/sha1collisiondetection/README.md
+prototype/spike/README.md
+service/verifier/README.md
+prototype/spike-pq/aws/README.md
+service/release-vectors/README.md
+service/signer-kms/README.md
+prototype/indep-verifier/README.md
+prototype/e2e/README.md
+prototype/README.md
+formal/e10/missing-capture/README.md
+prototype/vendor/sha1collisiondetection/README.md
+formal/spike/tla-probes/P9/run1-shadowed/README.md
+formal/suite/capstone/proverif/archive/README.md
+formal/spike/tla-probes/P10/run4/README.md
+formal/suite/capstone/proverif/ladder1/README.md
+formal/suite/s-standing/proverif/run1/README.md
+formal/suite/capstone/proverif/ladder2/README.md
+formal/suite/ledger-tests-2026-09-14/README.md
+# Project Tessera
+
+An AWS-native attestation service, built as a public demonstration of
+principled engineering with AI as collaborator rather than substitute.
+
+The primary objective is not the product alone. It is evidence that a
+senior engineer can close a real knowledge gap quickly—using AI for
+mechanics while owning architecture, judgment, and every decision that
+must be defended cold. The secondary objective is commercial viability
+as attestation-as-a-service; that upside is measured separately and is
+not allowed to expand the demonstration’s scope.
+
+**Credibility line** (as registered, `docs/phase-0-prereg.md` §1):
+every architecture decision here is the human author (Tony) in
+collaboration with AI agents. The purpose of the AI agents is to
+accelerate the typing, push back on my decisions, clarify them, but not
+to _make_ those decisions without consultation.
+
+Since 17 September 2026 an AI instance owns the project day to day, by
+the author's delegation; decisions it makes are labelled OWNER DECISION
+in the record, and the author's are labelled as his. An earlier wording
+of this paragraph, which was not the registered text, was read as
+requiring the author to reconstruct every decision unaided. The author
+never intended that requirement, and it is not one.
+
+Tony Mason  
+Initiated 10 June 2026  
+This README's status was refreshed on 27 October 2026 by the owner instance; the credibility line and reading order are the author's.
+
+---
+
+## What this repository is
+
+Tessera provides a neutral third party’s cryptographic binding to a
+package of information at a fixed point in time. Attestation here means:
+*this is what was presented in a bundle*, tied to a temporal anchor that
+cannot be trivially regenerated. It does not by itself vouch for the
+authenticity or truth of the contents; those guarantees, if any, ride in
+the package.
+
+The service is a cousin of [Willay](https://github.com/fsgeek/willay):
+shared cryptographic and modeling ethos, forked edges for cloud-native
+operation (KMS, S3 Object Lock, queues, observability, IaC).
+
+The method is as load-bearing as the artifact:
+
+1. **Pre-registration** — objectives, hypotheses, properties, and success
+   criteria are written, signed, and OpenTimestamps-anchored *before*
+   outcomes are known. The journal is measured against that record,
+   including honest divergence.
+2. **Formal foundation first (Band 0 / H0)** — machine-checked models of
+   the core guarantees gate later code. No Phase 1 until the foundation
+   holds or is amended on the record.
+3. **Public, falsifiable process** — multi-round adversarial review,
+   broken companions that must go red, named residuals, and a living
+   property tracker. Theater is a failure mode, not a feature.
+
+---
+
+## Current status (27 October 2026)
+
+| Layer | Status |
+|-------|--------|
+| Pre-registration | Signed, Amendments 1–10 in force. A9 sets the V1 scope; A10 covers time, authority capture and release custody (author rulings 2026-10-18). |
+| V1 contract | `docs/V1-CONTRACT.md` says what a receipt establishes and what it does not. `docs/V1-SERVICE-CONTRACT.md` is the outside view, and `docs/V1-SERVICE-RESOLUTIONS.md` holds Tessera's answers to the open items. |
+| V1 freeze | Signed 2026-10-24 (`formal/freeze-v1/FREEZE-RECORD.md`, commit `52ee179`), six days before the 30 Oct ceiling. Phase 1a (service code) is open. |
+| Real receipts | Two TEST-pipeline receipts verified `VALID_STRICT`, using real AWS KMS (ML-DSA-65), a GCP HSM (P-256), live DNSSEC and Bitcoin anchoring (`prototype/e2e/`). |
+| Service verifier | `service/verifier/`: agrees on 352/352 conformance cases and 69/69 E10 fixtures. |
+| Issuer | `service/issuer/`: built and reviewed locally, VALID_STRICT end to end on stand-in signers. Not yet deployed to AWS. |
+| Schedule | `docs/V1-SCHEDULE.md`: V1 issuing on AWS by 20 Nov; relying-party and dead-service tests, then ship or stop, by 4 Dec. |
+
+Day-to-day ownership: an AI owner instance, by the author's delegation (see above). The latest handoff is in `docs/handoff-*.md`.
+
+-------|--------|
+| Phase 0 pre-registration | Signed and amended (Amendments 1–6 in force; A3 adopted 2026-08-08/09 after a four-model cold panel; A4 signed 2026-09-06 at `5188e7a`, precision repairs and discharge paths; A5 signed 2026-09-12 at `504e662`, the probe and cross-family findings: three verifier obligations, the waived-evidence reading, the §A4.6 boundary; A6 adopted 2026-09-12, P7's discharge path, signed at the commit carrying it; the 2026-08-29 author clarification records that "before any code" means code intended for the service) |
+| Band 0 formal models | Active — TLA+ (P4, P5/P6, P5c issuance, bridge, floor-structure probe; non-discharging P9/P10 probes); ProVerif first-link spike complete, mechanism **decided** 2026-08-13 (`formal/spike/first-link/DECISION.md`); symbolic suite **built and run**: S-P3, S-P1, S-P2, S-P7, S-STANDING (`formal/suite/`), each cross-family reviewed by a non-author model, headers read by the author 2026-09-12; tracker: P1–P7 and P10 `checked` (P7 on Amendment 6), P8 and P9 open, standing row added `open` (Band 0 exit gated on it); capstone composition and P8 not begun |
+| Named residual | The author has recorded (2026-08-29) that the first-link decision rests on symbolic results he cannot yet defend cold; accepted, not waived, with closing conditions |
+| Cloud-independent crypto core | Not yet frozen (gated on Band 0) |
+| LocalStack / AWS vertical slice | Not started |
+| Application code | Minimal scaffolding only; one non-production design probe under `formal/spike/standing-probe/probe/` |
+
+---
+
+## How to read this repository
+
+Recommended order for a new reader (human or collaborator instance):
+
+1. **This file** — orientation and credibility line.
+2. [`docs/phase-0-prereg.md`](docs/phase-0-prereg.md) — the signed intent
+   and ranked objectives.
+3. [`docs/phase-0-prereg-amendment-1.md`](docs/phase-0-prereg-amendment-1.md)
+   — property list, adversary model, temporal-anchor semantics, agreement
+   gate as falsification task.
+4. [`docs/phase-0-prereg-amendment-2.md`](docs/phase-0-prereg-amendment-2.md)
+   — refinement of confirmation, refusal, anchor standing, and the
+   clock-roles ruling (adopted 2026-07-21, three review rounds).
+5. [`docs/phase-0-prereg-amendment-3.md`](docs/phase-0-prereg-amendment-3.md)
+   — identity boundary, linked evidence floors, the symbolic suite and
+   capstone gate, survivability, standing as an orthogonal dimension
+   (adopted 2026-08-08/09 after a four-model cold panel).
+6. [`formal/spike/first-link/DECISION.md`](formal/spike/first-link/DECISION.md)
+   — the first mechanism decision made under the method: criteria
+   before evidence, provenance labels, the author's residual.
+7. [`docs/tessera-cloud-demo-spec.md`](docs/tessera-cloud-demo-spec.md) —
+   demonstration architecture and capability map.
+8. [`docs/travelog.md`](docs/travelog.md) — contemporaneous journal of
+   reality against the pre-registration.
+9. [`formal/PROPERTIES.md`](formal/PROPERTIES.md) and `formal/tla/` —
+   discharge status and the models themselves.
+10. [`docs/reviews/`](docs/reviews/) — adversarial review artifacts and
+    dispositions.
+
+If the tracker and an amendment disagree, the **amendment wins**.
+
+---
+
+## Disciplines this repository enforces
+
+- **GPG-signed commits** (author identity — *who*).
+- **OpenTimestamps anchors** on commits (existence in time — *when*).
+  These are two mechanisms; both are required for the public record.
+- **Amend, do not silently rewrite** historical pre-registration
+  documents.
+- **AI as collaborator for mechanics and pushback; author owns all
+  decisions** (division of labor is explicit in the pre-registration).
+- **Falsification-style review** before load-bearing text is signed
+  (see Amendment 1 §A1.7 and the review archive).
+
+Setup for local hooks and OTS tooling lives under `scripts/` (see
+`scripts/install-hooks.sh`).
+
+---
+
+## What this is not
+
+- Not a highlight reel. Pre-registration exists so success and failure
+  are both legible.
+- Not formal-methods theater. Models state what they prove, what they
+  assume, and what remains unclaimed (especially liveness vs. safety).
+- Not an unbounded product fantasy. Commercial upside is secondary and
+  deliberately constrained.
+
+---
+
+## License and contact
+
+See repository metadata and commit history for authorship. The public
+record of the work is the git history: signed, timestamped, and open to
+scrutiny.
+
+For the living narrative of how the work actually felt and where it
+diverged from plan, start with the travelog.
+"""P3 [assumption] half: the V1 verification profile as executable evidence (H1a).
+
+Run from service/verifier:
+    .venv/bin/python -m pytest -q ../../formal/p3-verification-profile/test_p3_profile.py
+
+Vector tests call the service verifier's own functions (tessera_verify.codec: parse_signature, sig_policy,
+public_key, signature_verifies; tessera_verify.verify.verify_bundle; tessera_verify.policy.parse_trust).
+`cryptography` is called directly only (a) to construct inputs and (b) in TestLibraryBehaviour, whose tests
+characterize the library itself and back PROFILE.md's library claims; those are labelled as such.
+"""
+import copy
+import hashlib
+import json
+import os
+import posixpath
+import shutil
+import subprocess
+import sys
+import zipfile
+from pathlib import Path
+from types import SimpleNamespace
+from unittest.mock import Mock, patch
+
+import pytest
+
+HERE = Path(__file__).resolve().parent
+VERIFIER = HERE.parent.parent / 'service' / 'verifier'
+ISSUER = HERE.parent.parent / 'service' / 'issuer'
+sys.path[:0] = [str(VERIFIER), str(VERIFIER / 'tests'), str(HERE)]
+
+from tessera_verify import install_record  # noqa: E402
+install_record.load_and_apply()  # as tests/conftest.py does: the SHA-1DC hook is an installation fact
+
+import cryptography  # noqa: E402
+from cryptography.exceptions import InvalidSignature  # noqa: E402
+from cryptography.hazmat.backends.openssl.backend import backend  # noqa: E402
+from cryptography.hazmat.primitives import hashes, serialization  # noqa: E402
+from cryptography.hazmat.primitives.asymmetric import ec, mldsa, utils  # noqa: E402
+
+from tessera_verify import codec, release_auth  # noqa: E402
+from tessera_verify.codec import (ALG, HYBRID_ALG, Fault, b64, jcs, mldsa65_encoding_valid, parse_signature,  # noqa: E402
+                                  public_key, read_anchor, registered_codecs, sha, sig_policy, signature_verifies)
+from tessera_verify.policy import parse_catalog, parse_trust  # noqa: E402
+from tessera_verify.verify import verify_bundle  # noqa: E402
+from fixtures import enc, make_fixture, make_release, key_file  # noqa: E402
+import p256  # noqa: E402
+
+VEC = HERE / 'vectors'
+F1 = json.loads((VEC / 'F1-library.json').read_text())
+SIG_FILES = ['F2-signature-encodings.json', 'F5-equation-variant.json']
+KEY_FILES = ['F3-public-key-validation.json', 'F4-low-order-points.json']
+
+
+def load(name): return json.loads((VEC / name).read_text())
+
+
+def wheel_tag(text):
+    tags = [l.split(':', 1)[1].strip() for l in text.splitlines() if l.startswith('Tag:')]
+    assert len(tags) == 1, tags
+    return tags[0]
+
+
+def tested_verifier_files():
+    """The verifier code this floor exercised (service/verifier/tessera_verify), as {zip path: bytes}."""
+    root = VERIFIER / 'tessera_verify'
+    return {('tessera_verify/' + f.relative_to(root).as_posix()): f.read_bytes()
+            for f in sorted(root.rglob('*')) if f.is_file() and '__pycache__' not in f.parts and f.suffix != '.pyc'}
+
+
+def check_zip(path):
+    """The zip carries the recorded cryptography build AND exactly the verifier code the floor tested
+    (A11C-01: a matching wheel alone would let different verifier code pass)."""
+    with zipfile.ZipFile(path) as z:
+        binding = z.read(F1['wheel']['rust_binding'])
+        tag = wheel_tag(z.read('cryptography-%s.dist-info/WHEEL' % F1['cryptography']).decode())
+        names = z.namelist()
+        # Codex confirmation 2: an alias ('./tessera_verify/codec.py') extracts over the checked file. Only canonical,
+        # unique, relative POSIX paths are accepted, so what extraction writes is exactly what was compared.
+        bad = [n for n in names if n != posixpath.normpath(n) + ('/' if n.endswith('/') else '') or n.startswith('/')
+               or '\\' in n or n.split('/')[0] in ('', '.', '..')]
+        assert bad == [] and len(names) == len(set(names)), (bad, len(names) - len(set(names)))
+        links = [i.filename for i in z.infolist() if (i.external_attr >> 16) & 0o170000 == 0o120000]
+        assert links == [], links                          # a symlink entry can redirect extraction
+        shipped = {n: z.read(n) for n in names if n.startswith('tessera_verify/') and not n.endswith('/')}
+    assert hashlib.sha256(binding).hexdigest() == F1['wheel']['rust_binding_sha256']
+    assert tag == F1['wheel']['tag']
+    tested = tested_verifier_files()
+    assert sorted(shipped) == sorted(tested), sorted(set(shipped) ^ set(tested))
+    assert [n for n in tested if shipped[n] != tested[n]] == []
+
+
+def run_sig(v, keys, docs):
+    """Function-level harness for one signature against one known-good key: signature codec (the function of rows
+    3.1/9.3), policy (9.1/9.4), then verification (9.2/9.5). Returns 'ACCEPT', the Fault code, or 'SIG_INVALID'
+    (POSSESSION_INVALID for a possession proof: same function, different row). It is NOT the bundle's order: a
+    bundle evaluates keys (5.1) before signature policy (9.1) and reports by row precedence. Precedence claims come
+    only from TestBundle."""
+    alg, slot = v['alg'], v['slot']
+    try:
+        parsed = parse_signature(bytes.fromhex(v['sig_hex']), alg, slot, registered_codecs(alg))
+        sig_policy(parsed)
+    except Fault as e:
+        return e.code
+    k = keys[v['key']]
+    key = public_key(bytes.fromhex(k['hex']), k['slot'], k['alg'])
+    return 'ACCEPT' if signature_verifies(bytes.fromhex(docs[v['document']]), parsed, key) else 'SIG_INVALID'
+
+
+def run_key(v):
+    try:
+        public_key(bytes.fromhex(v['key_hex']), v['slot'], v['alg'])
+        return 'ACCEPT'
+    except Fault as e:
+        return e.code
+
+
+def sig_cases():
+    for name in SIG_FILES:
+        f = load(name)
+        for v in f['vectors']: yield pytest.param(v, f['keys'], f['documents'], id=v['id'])
+
+
+def key_cases():
+    for name in KEY_FILES:
+        for v in load(name)['vectors']: yield pytest.param(v, id=v['id'])
+
+
+def by_id(vid):
+    for name in SIG_FILES + KEY_FILES:
+        for v in load(name)['vectors']:
+            if v['id'] == vid: return v
+    raise KeyError(vid)
+
+
+# --------------------------------------------------------------------------------------------- F1
+class TestF1Library:
+    def test_installed_library_is_the_recorded_one(self):
+        assert cryptography.__version__ == F1['cryptography']
+        assert backend.openssl_version_text() == F1['openssl']
+        assert '%d.%d' % sys.version_info[:2] == F1['python']
+
+    def test_requirements_pin(self):
+        pins = [l.strip() for l in (VERIFIER / 'requirements.txt').read_text().splitlines() if l.strip()]
+        assert F1['requirements_pin'] in pins
+        assert 'cryptography==%s' % F1['cryptography'] == F1['requirements_pin']
+
+    def test_codec_uses_this_library(self):
+        assert codec.mldsa is mldsa and codec.ec is ec and codec.utils is utils
+
+    def test_installed_wheel_identity(self):
+        import cryptography as c
+        root = Path(c.__file__).resolve().parent
+        assert hashlib.sha256((root.parent / F1['wheel']['rust_binding']).read_bytes()).hexdigest() == F1['wheel']['rust_binding_sha256']
+        assert wheel_tag((root.parent / ('cryptography-%s.dist-info' % F1['cryptography']) / 'WHEEL').read_text()) == F1['wheel']['tag']
+
+    def test_lambda_package_wheel_identity(self, tmp_path):
+        """Builds the issuer's bootstrap Lambda zip with service/issuer/package.py (its own wheel resolution) and
+        checks the bundled cryptography binding against F1. Skips, with the reason, if uv or the network is absent."""
+        sys.path.insert(0, str(ISSUER))
+        try:
+            import package
+        finally:
+            sys.path.remove(str(ISSUER))
+        if shutil.which('uv') is None:
+            pytest.skip('uv not on PATH: package.py cannot resolve the Lambda wheel here')
+        out = tmp_path / 'lambda.zip'
+        try:
+            package.build(out)
+        except (SystemExit, subprocess.CalledProcessError) as e:
+            pytest.skip(f'package.py could not build (offline or missing prerequisite?): {e}')
+        check_zip(out)
+
+    def test_deployed_zip_identity(self):
+        """Set TESSERA_LAMBDA_ZIP to the deployed lambda_zip (whose SHA-256 package.py prints and infra deploys)."""
+        path = os.environ.get('TESSERA_LAMBDA_ZIP')
+        if not path:
+            pytest.skip('TESSERA_LAMBDA_ZIP not set: no deployed package supplied to tie to this record')
+        check_zip(Path(path))
+
+    @pytest.mark.parametrize('name', sorted(F1['calls']))
+    def test_recorded_call_is_the_verifiers_call(self, name):
+        src = (VERIFIER / 'tessera_verify' / 'codec.py').read_text()
+        assert src.count(F1['calls'][name]) == 1, name
+
+
+# ------------------------------------------------------------------------------------ F2, F5 (sig)
+@pytest.mark.parametrize('v,keys,docs', list(sig_cases()))
+def test_signature_vector(v, keys, docs):
+    assert run_sig(v, keys, docs) == v['expect'], v['case']
+
+
+# ------------------------------------------------------------------------------------ F3, F4 (key)
+@pytest.mark.parametrize('v', list(key_cases()))
+def test_key_vector(v):
+    assert run_key(v) == v['expect'], v['case']
+
+
+class TestControls:
+    """The vector suites cannot pass by rejecting (or accepting) everything."""
+    def test_each_file_has_accept_and_reject(self):
+        for name in SIG_FILES + KEY_FILES:
+            outcomes = {v['expect'] for v in load(name)['vectors']}
+            assert 'ACCEPT' in outcomes and len(outcomes) > 1, name
+
+    def test_each_slot_rule_has_a_positive_control(self):
+        seen = {(v['slot'], v['alg']) for n in SIG_FILES + KEY_FILES for v in load(n)['vectors'] if v['expect'] == 'ACCEPT'}
+        assert {('gpg', HYBRID_ALG), ('kms', HYBRID_ALG), ('kms', ALG)} <= seen
+
+    def test_vector_ids_unique(self):
+        ids = [v['id'] for n in SIG_FILES + KEY_FILES for v in load(n)['vectors']]
+        assert len(ids) == len(set(ids))
+
+
+# ----------------------------------------------------------------- the verifier's own ML-DSA gate
+class TestMLDSAGate:
+    MALFORMED = ['R-08', 'R-09', 'R-10', 'R-11', 'R-12', 'R-13', 'R-14']
+
+    @pytest.mark.parametrize('vid', MALFORMED)
+    def test_gate_rejects_before_library(self, vid):
+        assert mldsa65_encoding_valid(bytes.fromhex(by_id(vid)['sig_hex'])) is False
+
+    @pytest.mark.parametrize('vid', ['R-01', 'R-02', 'R-15', 'R-16'])
+    def test_gate_passes_well_encoded(self, vid):
+        assert mldsa65_encoding_valid(bytes.fromhex(by_id(vid)['sig_hex'])) is True
+
+    @pytest.mark.parametrize('vid', MALFORMED)
+    def test_rejection_does_not_depend_on_library_strictness(self, vid):
+        permissive = Mock(); permissive.verify.return_value = None
+        assert signature_verifies(b'any', bytes.fromhex(by_id(vid)['sig_hex']), permissive) is False
+        permissive.verify.assert_not_called()
+
+
+# ------------------------------------------------------------------- rule-O policy (P3R-01)
+def policy_vectors():
+    f = load('F2-signature-encodings.json')
+    return [pytest.param(v, f['keys'], f['documents'], id=v['id']) for v in f['vectors'] if v.get('verifies_without_policy')]
+
+
+class TestRuleOPolicy:
+    def test_policy_vectors_present(self):
+        outcomes = [p.values[0]['expect'] for p in policy_vectors()]
+        assert outcomes.count('SIG_POLICY') >= 15 and outcomes.count('ACCEPT') >= 5
+
+    @pytest.mark.parametrize('v,keys,docs', policy_vectors())
+    def test_policy_vector_is_correctly_signed(self, v, keys, docs):
+        """Every policy vector verifies when sig_policy is skipped, so a SIG_POLICY outcome is the policy's doing."""
+        parsed = parse_signature(bytes.fromhex(v['sig_hex']), v['alg'], v['slot'], registered_codecs(v['alg']))
+        k = keys[v['key']]
+        assert signature_verifies(bytes.fromhex(docs[v['document']]), parsed, public_key(bytes.fromhex(k['hex']), k['slot'], k['alg']))
+
+
+# --------------------------------------------------------------- high-S / low-S labels (P3R-05)
+def test_O01_is_low_s_and_O02_is_its_high_s_twin():
+    a = parse_signature(bytes.fromhex(by_id('O-01')['sig_hex']))
+    b = parse_signature(bytes.fromhex(by_id('O-02')['sig_hex']))
+    assert a.r == b.r and a.s + b.s == p256.N
+    assert a.s <= p256.N // 2 < b.s
+
+
+# ------------------------------------------------ constructed verification-equation cases (P3R-03)
+"""Build the issuer's Lambda package (infra variable lambda_zip): tessera_issue, tessera_verify, cryptography for
+Lambda's Linux, the frozen objects, the SHA-1DC detector and the Lambda's own install.json.
+
+    python package.py OUT.zip                       # bootstrap package: no install.json, so pre-ship refuses
+    python package.py OUT.zip --install-json FILE   # deployable package
+
+The install record is per-installation (profile 15.9 R2): deploy the bootstrap package, invoke the poller with
+{"tessera": "install-facts"}, save the answer as FILE, and build again with it. boto3 comes from the Lambda runtime,
+whose version is pinned in infra (runtime_management_config) so that the Unicode module digest cannot change under
+a deployed record. Needs uv (for the Linux wheel) and a built verifier (service/verifier/install.sh)."""
+import argparse
+import hashlib
+import json
+import shutil
+import subprocess
+import sys
+import tempfile
+import zipfile
+from pathlib import Path
+
+HERE = Path(__file__).resolve().parent
+VERIFIER = HERE.parent / "verifier"
+FROZEN = HERE.parent.parent / "formal" / "freeze-v1" / "objects"
+LAMBDA_BINARY = "/var/task/tessera-verify/bin/sha1dcsum"         # = lambda_app.SHA1DC_BINARY (a test checks)
+WHEEL = ["cryptography==50.0.2"]                                 # = pyproject; the only third-party dependency
+PLATFORM = "x86_64-manylinux_2_34"                               # Amazon Linux 2023 (glibc 2.34), x86_64 Lambda
+FIELDS = {"format", "python", "unicode_version", "unicode_module_sha256", "sha1dc_upstream_commit", "sha1dc_binary",
+          "sha1dc_binary_sha256"}
+
+
+def die(msg):
+    raise SystemExit("package: " + msg)
+
+
+def sha256(path):
+    return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+
+
+def pinned_binary():
+    """The detector install.sh built and pinned, after re-checking the pin."""
+    rec = json.loads((VERIFIER / "install.json").read_text())
+    binary = Path(rec["sha1dc_binary"])
+    if not binary.is_file() or sha256(binary) != rec["sha1dc_binary_sha256"]:
+        die("SHA-1DC binary missing or not the pinned build; run service/verifier/install.sh")
+    return binary, rec
+
+
+def check_install_record(path):
+    """A Lambda install record: the install.json fields exactly, this package's binary path and digest, and the
+    verifier's pinned versions. The Unicode digest can only be checked by the verifier at startup, on Lambda."""
+    try:
+        rec = json.loads(Path(path).read_text())
+    except (OSError, ValueError) as e:
+        die(f"install record unreadable: {e}")
+    _, local = pinned_binary()
+    if not isinstance(rec, dict) or set(rec) != FIELDS or rec["format"] != "tessera-v1-install/1":
+        die("install record: wrong fields or format")
+    if rec["sha1dc_binary"] != LAMBDA_BINARY or rec["sha1dc_binary_sha256"] != local["sha1dc_binary_sha256"]:
+        die("install record: not this package's SHA-1DC binary")
+    for k in ("python", "unicode_version", "sha1dc_upstream_commit"):
+        if rec[k] != local[k]:
+            die(f"install record: {k} {rec[k]!r} differs from the verifier's {local[k]!r}")
+    return rec
+
+
+def write_zip(stage, out):
+    """Deterministic: sorted entries, fixed time, modes 644/755. -> SHA-256 of the zip."""
+    with zipfile.ZipFile(out, "w", zipfile.ZIP_DEFLATED) as z:
+        for f in sorted(p for p in Path(stage).rglob("*") if p.is_file()):
+            info = zipfile.ZipInfo(f.relative_to(stage).as_posix(), (1980, 1, 1, 0, 0, 0))
+            info.external_attr = (0o100755 if f.stat().st_mode & 0o111 else 0o100644) << 16
+            info.compress_type = zipfile.ZIP_DEFLATED
+            z.writestr(info, f.read_bytes())
+    return sha256(out)
+
+
+def build(out, install_json=None):
+    binary, _ = pinned_binary()
+    rec = check_install_record(install_json) if install_json else None
+    ignore = shutil.ignore_patterns("__pycache__", "*.pyc", "*.egg-info")
+    with tempfile.TemporaryDirectory() as tmp:
+        stage = Path(tmp) / "stage"
+        subprocess.run(["uv", "pip", "install", "--quiet", "--target", str(stage), "--python-version", "3.14",
+                        "--python-platform", PLATFORM, "--only-binary", ":all:", *WHEEL], check=True)
+        shutil.copytree(HERE / "tessera_issue", stage / "tessera_issue", ignore=ignore)
+        shutil.copytree(VERIFIER / "tessera_verify", stage / "tessera_verify", ignore=ignore)
+        shutil.copytree(FROZEN, stage / "freeze-v1" / "objects", ignore=ignore)
+        dest = stage / LAMBDA_BINARY.removeprefix("/var/task/")
+        dest.parent.mkdir(parents=True)
+        shutil.copyfile(binary, dest)
+        dest.chmod(0o755)
+        if rec:
+            (dest.parent.parent / "install.json").write_text(json.dumps(rec, indent=1, sort_keys=True) + "\n")
+        digest = write_zip(stage, out)
+    return digest
+
+
+def main(argv=None):
+    ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    ap.add_argument("out")
+    ap.add_argument("--install-json")
+    a = ap.parse_args(argv)
+    digest = build(Path(a.out), a.install_json)
+    kind = "deployable" if a.install_json else "BOOTSTRAP (no install.json: pre-ship refuses until rebuilt)"
+    print(f"{a.out}: {kind}\nsha256 {digest}")
+
+
+if __name__ == "__main__":
+    sys.exit(main())
+# Tessera — Phase 0 Pre-Registration, Amendment 11 — P3's verification profile as a floor and a duty; dependency sweeps; the slot-2 boundary and the spike keys (DRAFT, 2026-10-28)
+
+> **Status: DRAFT by the owner instance (Claude Opus 5.5), revised after the Codex non-author review
+> (`docs/reviews/amendment-11/CODEX-REVIEW.md`, A11-01 to A11-07; `DISPOSITION.md`). Not signed.** The author's
+> first commit containing the final text is its signing act. Layered on the original and Amendments 1–10, none of
+> which is edited. Every registered sentence this amendment changes is listed in §A11.3.
+>
+> **Outcomes informed this amendment** (the original's amendment rule). Each change is disclosed separately.
+> - **§A11.2, P3.** The P3 evidence (`formal/p3-verification-profile/`) was built and reviewed before this text.
+>   Building it exposed the stale checklist. No P3 result failed and is relabelled here. The floor's shape is the
+>   author's proposal of 2026-10-28.
+> - **§A11.5 item 2, the slot-2 boundary.** This is a **retrospective relaxation** of a deadline-qualified
+>   restriction. It is proposed after the 21 Oct deadline, and after the candidate code (`service/signer-gcp/`) was
+>   written and reviewed.
+> - **§A11.5 item 5, K-R's enforcement.** The owner's placement decision (2026-10-27) moved KMS signing from the
+>   issuer role to a dedicated policy signer and said it changed no registered sentence. It changed the
+>   supplement's description of who computes μ and who may sign. The confirmation review found this.
+> - **§A11.5 item 3, the spike keys.** The owner's deployment draft had contradicted a registered commitment. That
+>   draft is withdrawn, and this amendment changes nothing in the commitment.
+
+## A11.1 What went wrong
+
+P3's assumption half (A1 §P3, `phase-0-prereg-amendment-1.md:144-148`) requires the verification profile to record
+the *exact library and version, accepted signature encodings, public-key validation behavior, low-order-point
+handling, cofactor equation variant, and negative test vectors for each*. Two of those fields name concepts of
+Ed25519-style curves, which A1 used as its example (`:136`). V1 later registered OpenPGP P-256 and then, on
+2026-10-16, the hybrid ML-DSA-65 + P-256 (`formal/p8/HYBRID-REGISTRATION-RECORD.md`). Neither registration re-read the
+checklist.
+
+For ML-DSA, the two curve fields have no referent. The other four fields still apply in full. So the checklist
+names nothing specific to ML-DSA's own verification pitfalls: it **demands too little**. Nothing had been accepted
+on it. The assumption half was open (`formal/PROPERTIES.md:37`) and due after the freeze
+(`formal/freeze-v1/FREEZE-RECORD.md:81`).
+
+The method's defect: **a registered decision can change what an earlier registered sentence refers to, and nothing
+requires anyone to re-read that sentence.** §A11.4 adds that duty.
+
+## A11.2 P3's verification profile: floor and duty
+
+**The proofs are unchanged.** P3's model half assumes a verifier with stated behaviour. The assumption half is
+bounded implementation evidence that the shipped verifier has that behaviour. It does not show that every model
+assumption is preserved in general.
+
+1. **Fields kept.** All six of A1's fields stay. For each algorithm in the governing specification they are read as
+   follows:
+
+   | A1 field | ECDSA P-256 (rule O) | ML-DSA-65 (rule R) |
+   |---|---|---|
+   | exact library and version | `cryptography` and its bundled OpenSSL, identified by wheel tag and native-library SHA-256 | same |
+   | accepted signature encodings | OpenPGP v4 packet; MPI rules; r, s ∈ [1, n−1]; rule-O policy | exact 3309 bytes; strict hint and z encoding |
+   | public-key validation | exact uncompressed point; coordinates < p; on the curve; checked before the library | exact SPKI; no algebraic validation exists |
+   | low-order-point handling | cofactor 1: infinity rejected as a key and as the equation's result; invalid-curve points rejected | no referent. Replaced by: degenerate-key behaviour recorded |
+   | cofactor equation variant | cofactor 1: a single variant; x(R) reduced mod n | no referent. Replaced by: the FIPS 204 interface (pure, empty context), with every other interface rejected |
+   | negative vectors for each | owner vectors plus Wycheproof | owner vectors plus Wycheproof |
+
+2. **Floor (registered).** The evidence is the files listed in
+   `formal/p3-verification-profile/FLOOR-MANIFEST.sha256`, whose SHA-256 is fixed at signing. At this draft it is
+   `a69204e9f69a2af3a0bcac96991b55109b0ff0f3efdd6e2182424dd347a24a88`, covering 15 files. They hold:
+   - the owner vectors: 223 tests, mutation-sensitive (PROFILE.md §6);
+   - Wycheproof commit `d17cc89fa5c8f4f4d378b5385ebf75da5d0926c9`, three files pinned by SHA-256: 968 tests.
+     - **ML-DSA-65** runs end to end through the verifier. Two disagreements, tcId 3 and 4, are V1 policy (empty
+       context only).
+     - **ECDSA P-256** runs through the verifier's key validation, MPI rules, range policy and verification, with
+       the digest substituted. 219 non-strict DER cases are tested at library level only. 21 P1363 strings of the
+       wrong length reach neither interface. There are no disagreements.
+3. **Discharge.** Adopting this floor is not discharging P3. P3's assumption half is discharged only when:
+   - (a) the manifest verifies;
+   - (b) every test in it passes;
+   - (c) the deployed verifier package's identity has been checked against F1 (`test_deployed_zip_identity`, run
+     with the deployed zip);
+   - (d) no disagreement or finding affecting a required behaviour is unresolved. A recorded defect blocks
+     discharge until it is fixed and re-tested.
+4. **Operational duty (not a registered result).** The floor's checks, and the latest published vectors for each
+   algorithm in use, are re-run on every verifier release, on every change to the signature library's version or
+   build, on every new upstream vector commit, and at least quarterly. Each run is recorded with its date, inputs and
+   outcome, and attested by the operator.
+5. **What a later finding changes.**
+   - **A security-policy finding** (an algorithm, parameter or key later judged weak) never rewrites a V1 verdict.
+     It reaches relying parties as a historical-security result, beside the verdict and its stable fields
+     (A9.4, `phase-0-prereg-amendment-9.md:267-283`).
+   - **An implementation-conformance defect** (the verifier disagrees with the governing specification, for example
+     by accepting a malformed or prohibited case the specification rejects, A9:278) is not preserved as V1
+     behaviour. It is fixed in a signed release, which names the affected releases and says what changed. A silent
+     change to the verifier is never permitted.
+
+## A11.3 Registered sentences changed
+
+| Source | Was | Now |
+|---|---|---|
+| `phase-0-prereg-amendment-1.md:144-148` | the six fields, the two curve fields named in Ed25519's terms | the six fields as read in §A11.2 item 1; the floor and discharge conditions of items 2–3 |
+| `phase-0-prereg-amendment-10.md:675` | "as amended by rows 15 and 25" | "as amended by row 15" (row 25 cut, E9 row 2) |
+| `phase-0-prereg-amendment-9.md:386-392`; `270ca49:docs/V1-PROFILE.md:1023-1037` | the boundary as the selected, deadline-qualified implementation, described through `prototype/policy-signer/` | *only if the author adopts §A11.5 item 2:* a named replacement under conditions (i)–(iv) |
+| `formal/p8/HYBRID-SUPPLEMENT.md:151-152, :173-174, :533` (K-R) | `μ` "computed by the issuer"; "`kms:Sign` only for the issuer role" | `μ` computed by the KMS-slot policy signer (`service/signer-kms/`) from an `F` it has validated; `kms:Sign` only for that signer's role, with the issuer roles holding no KMS permission |
+| `270ca49:docs/V1-PROFILE.md` custody record, "HYBRID-SUPPLEMENT §9 item 6" | a stale locator | `formal/p8/HYBRID-SUPPLEMENT.md` §11 item 6, lines 524-526. The frozen bytes are unchanged; this corrects the locator only |
+
+## A11.4 Dependency duty for registered decisions
+
+When a registered decision changes a parameter (an algorithm, a custody form, a channel, a horizon, a scope, a key),
+the owner sweeps the registered texts for sentences whose referent the change alters. Each one is recorded as
+amended, superseded, still fitting or open, before the decision's change is treated as complete. An owner decision
+that touches a registered parameter is checked against those texts before it is recorded.
+
+## A11.5 Results of the first sweep (2026-10-28)
+
+The sweep covered the original, Amendments 1–10, the freeze, the tracker and the author-rulings files
+(`docs/reviews/stale-dependencies/SWEEP-2026-10-28.md`). The owner checked each finding against its source. The
+review added item 3.
+
+1. **H3 (`phase-0-prereg.md:232-248`): not amended.** H3 is a hypothesis with a stated falsifier. Its examples are
+   AWS-based, but they do not restrict it to AWS. It is measured over the whole deployed system, every provider
+   included. A measurement protocol is recorded before measurement. It covers retained resources (including the
+   compliance-locked trail bucket), defines the demonstration and idle periods, and reports the three numbers
+   separately. A slot-2 signer and an issuer poller that run through the operating window conflict with "idle
+   compute exactly $0". If that or another number fails, H3 is reported as falsified. The operating window is not
+   redefined as a demonstration to avoid this.
+2. **The slot-2 enforcement boundary: for the author's ruling.** A9.6 requires the final custody implementation to
+   be deadline-qualified (`phase-0-prereg-amendment-9.md:389-392`). The frozen record keeps "the selected,
+   deadline-qualified custody implementation" (`270ca49:docs/V1-PROFILE.md:1023-1026`) and describes it through
+   `prototype/policy-signer/`, which met the deadline on 2026-10-14. That qualification stands as historical
+   evidence. It does not qualify a replacement. The E9 ruling R5b (`docs/reviews/e9-packet/AUTHOR-RULINGS.md:54`,
+   packet row 5b) allows porting instrument code with evidence earned on the resulting bytes. But it does not
+   address A9.6's deadline-qualified custody, so it does not settle this question. Keeping the hybrid **with the
+   replacement signer** depends on this ruling. Keeping it with the prototype does not.
+   **Proposed:** `service/signer-gcp/` may replace the prototype, provided that before the first shipped receipt:
+   - (i) it preserves **every A9.6 custody and policy requirement**: complete-frame validation; the declared-time
+     check on its own clock before signing; the issuing account able to enqueue but not to invoke the key, change
+     the policy or clock, or obtain key-use credentials; and the key dedicated to V1 type-0x00 documents. It also
+     preserves every property in the frozen record;
+   - (ii) the external custody record names the deployed implementation, its image digest and its configuration;
+   - (iii) deployed evidence is earned on the new bytes. That means: a deployed positive signature that verifies
+     offline; deployed refusals for a malformed frame, a wrong tag, a wrong alg, a wrong fingerprint and a declared
+     time outside ε; a review of every principal that can cause a signature or administer the signer
+     (`service/issuer/DEPLOY.md` step 8); and verified retirement of every other signing path (step 7);
+   - (iv) all of it identifies the tested image and configuration.
+
+   **Without this ruling**, production uses the deadline-qualified prototype signer. Slot 2 then has no signer-side
+   signing stop or `sign_by` (`prototype/policy-signer/signer/main.py`), and frames travel inline in SQS messages,
+   which cannot carry the 1 MiB client limit (IS-09, `docs/reviews/issuer/CODEX-REVIEW.md:35`). That limit is an
+   owner operational resolution, stamped but not registered (`docs/V1-SERVICE-RESOLUTIONS.md:20`). It would be
+   narrowed.
+3. **The spike keys (`formal/p8/HYBRID-SUPPLEMENT.md` §11 item 6, lines 524-526): unchanged.** "Both spike keys
+   are deleted after the re-capture verifies, once the review clears." The owner's deployment draft
+   (2026-10-27) reused them as production keys. That contradicted this commitment, and the draft is withdrawn.
+   Production uses new keys (`service/issuer/DEPLOY.md`), recorded in the external custody record before use.
+4. **A dangling cross-reference (`phase-0-prereg-amendment-10.md:675`).** Row 25 was cut (E9 row 2,
+   2026-10-23; profile §5). This is a CLARIFY: the fallback cites row 15 only.
+5. **K-R's enforcement (`formal/p8/HYBRID-SUPPLEMENT.md:148-172, :533`): amended in wording, the assumption
+   unchanged.** (K-R) itself stands: the ML-DSA-65 key signs only V1 tagged strings, in pure mode with the empty
+   context, under EXTERNAL_MU, for no other protocol. What changes is who enforces it. The supplement names the
+   issuer as the computer of `μ` and the issuer role as the only `kms:Sign` principal. In V1 as designed (deployment pending), a
+   dedicated policy signer validates the complete frame (tag, alg, key fingerprint, ε, `sign_by`, the signing stop)
+   *before* computing `μ`, and its role is the only `kms:Sign` principal (`service/signer-kms/`; key policy in
+   `service/signer-kms/infra/main.tf`). This narrows what a captured issuer role alone can get signed. It does not
+   change the supplement's stated limit: "whoever may call `kms:Sign` on the key can sign any message by computing
+   `μ`". An administrator of the account can still grant that (`PutKeyPolicy`), which is C3.
+
+web search: 
+web search: zip parser differential local central directory multiple EOCD Zip discrepancy research ...
+exec
+/bin/bash -lc "cat service/issuer/package.py; rg -n -A35 -B15 '3\\.|3\\(c\\)|deployed|zip|A11.2' docs/phase-0-prereg-amendment-11.md; rg -n 'source_code_hash|lambda_zip|CodeSha256' infra service/issuer; find .. -name AGENTS.md -print; sed -n '270,295p' /home/tony/.codex/memories/MEMORY.md; command -v unzip; python3 --version" in /home/tony/projects/tessera
+ succeeded in 948ms:
+"""Build the issuer's Lambda package (infra variable lambda_zip): tessera_issue, tessera_verify, cryptography for
+Lambda's Linux, the frozen objects, the SHA-1DC detector and the Lambda's own install.json.
+
+    python package.py OUT.zip                       # bootstrap package: no install.json, so pre-ship refuses
+    python package.py OUT.zip --install-json FILE   # deployable package
+
+The install record is per-installation (profile 15.9 R2): deploy the bootstrap package, invoke the poller with
+{"tessera": "install-facts"}, save the answer as FILE, and build again with it. boto3 comes from the Lambda runtime,
+whose version is pinned in infra (runtime_management_config) so that the Unicode module digest cannot change under
+a deployed record. Needs uv (for the Linux wheel) and a built verifier (service/verifier/install.sh)."""
+import argparse
+import hashlib
+import json
+import shutil
+import subprocess
+import sys
+import tempfile
+import zipfile
+from pathlib import Path
+
+HERE = Path(__file__).resolve().parent
+VERIFIER = HERE.parent / "verifier"
+FROZEN = HERE.parent.parent / "formal" / "freeze-v1" / "objects"
+LAMBDA_BINARY = "/var/task/tessera-verify/bin/sha1dcsum"         # = lambda_app.SHA1DC_BINARY (a test checks)
+WHEEL = ["cryptography==50.0.2"]                                 # = pyproject; the only third-party dependency
+PLATFORM = "x86_64-manylinux_2_34"                               # Amazon Linux 2023 (glibc 2.34), x86_64 Lambda
+FIELDS = {"format", "python", "unicode_version", "unicode_module_sha256", "sha1dc_upstream_commit", "sha1dc_binary",
+          "sha1dc_binary_sha256"}
+
+
+def die(msg):
+    raise SystemExit("package: " + msg)
+
+
+def sha256(path):
+    return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+
+
+def pinned_binary():
+    """The detector install.sh built and pinned, after re-checking the pin."""
+    rec = json.loads((VERIFIER / "install.json").read_text())
+    binary = Path(rec["sha1dc_binary"])
+    if not binary.is_file() or sha256(binary) != rec["sha1dc_binary_sha256"]:
+        die("SHA-1DC binary missing or not the pinned build; run service/verifier/install.sh")
+    return binary, rec
+
+
+def check_install_record(path):
+    """A Lambda install record: the install.json fields exactly, this package's binary path and digest, and the
+    verifier's pinned versions. The Unicode digest can only be checked by the verifier at startup, on Lambda."""
+    try:
+        rec = json.loads(Path(path).read_text())
+    except (OSError, ValueError) as e:
+        die(f"install record unreadable: {e}")
+    _, local = pinned_binary()
+    if not isinstance(rec, dict) or set(rec) != FIELDS or rec["format"] != "tessera-v1-install/1":
+        die("install record: wrong fields or format")
+    if rec["sha1dc_binary"] != LAMBDA_BINARY or rec["sha1dc_binary_sha256"] != local["sha1dc_binary_sha256"]:
+        die("install record: not this package's SHA-1DC binary")
+    for k in ("python", "unicode_version", "sha1dc_upstream_commit"):
+        if rec[k] != local[k]:
+            die(f"install record: {k} {rec[k]!r} differs from the verifier's {local[k]!r}")
+    return rec
+
+
+def write_zip(stage, out):
+    """Deterministic: sorted entries, fixed time, modes 644/755. -> SHA-256 of the zip."""
+    with zipfile.ZipFile(out, "w", zipfile.ZIP_DEFLATED) as z:
+        for f in sorted(p for p in Path(stage).rglob("*") if p.is_file()):
+            info = zipfile.ZipInfo(f.relative_to(stage).as_posix(), (1980, 1, 1, 0, 0, 0))
+            info.external_attr = (0o100755 if f.stat().st_mode & 0o111 else 0o100644) << 16
+            info.compress_type = zipfile.ZIP_DEFLATED
+            z.writestr(info, f.read_bytes())
+    return sha256(out)
+
+
+def build(out, install_json=None):
+    binary, _ = pinned_binary()
+    rec = check_install_record(install_json) if install_json else None
+    ignore = shutil.ignore_patterns("__pycache__", "*.pyc", "*.egg-info")
+    with tempfile.TemporaryDirectory() as tmp:
+        stage = Path(tmp) / "stage"
+        subprocess.run(["uv", "pip", "install", "--quiet", "--target", str(stage), "--python-version", "3.14",
+                        "--python-platform", PLATFORM, "--only-binary", ":all:", *WHEEL], check=True)
+        shutil.copytree(HERE / "tessera_issue", stage / "tessera_issue", ignore=ignore)
+        shutil.copytree(VERIFIER / "tessera_verify", stage / "tessera_verify", ignore=ignore)
+        shutil.copytree(FROZEN, stage / "freeze-v1" / "objects", ignore=ignore)
+        dest = stage / LAMBDA_BINARY.removeprefix("/var/task/")
+        dest.parent.mkdir(parents=True)
+        shutil.copyfile(binary, dest)
+        dest.chmod(0o755)
+        if rec:
+            (dest.parent.parent / "install.json").write_text(json.dumps(rec, indent=1, sort_keys=True) + "\n")
+        digest = write_zip(stage, out)
+    return digest
+
+
+def main(argv=None):
+    ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    ap.add_argument("out")
+    ap.add_argument("--install-json")
+    a = ap.parse_args(argv)
+    digest = build(Path(a.out), a.install_json)
+    kind = "deployable" if a.install_json else "BOOTSTRAP (no install.json: pre-ship refuses until rebuilt)"
+    print(f"{a.out}: {kind}\nsha256 {digest}")
+
+
+if __name__ == "__main__":
+    sys.exit(main())
+1-# Tessera — Phase 0 Pre-Registration, Amendment 11 — P3's verification profile as a floor and a duty; dependency sweeps; the slot-2 boundary and the spike keys (DRAFT, 2026-10-28)
+2-
+3-> **Status: DRAFT by the owner instance (Claude Opus 5.5), revised after the Codex non-author review
+4-> (`docs/reviews/amendment-11/CODEX-REVIEW.md`, A11-01 to A11-07; `DISPOSITION.md`). Not signed.** The author's
+5-> first commit containing the final text is its signing act. Layered on the original and Amendments 1–10, none of
+6:> which is edited. Every registered sentence this amendment changes is listed in §A11.3.
+7->
+8-> **Outcomes informed this amendment** (the original's amendment rule). Each change is disclosed separately.
+9:> - **§A11.2, P3.** The P3 evidence (`formal/p3-verification-profile/`) was built and reviewed before this text.
+10->   Building it exposed the stale checklist. No P3 result failed and is relabelled here. The floor's shape is the
+11->   author's proposal of 2026-10-28.
+12-> - **§A11.5 item 2, the slot-2 boundary.** This is a **retrospective relaxation** of a deadline-qualified
+13->   restriction. It is proposed after the 21 Oct deadline, and after the candidate code (`service/signer-gcp/`) was
+14->   written and reviewed.
+15-> - **§A11.5 item 5, K-R's enforcement.** The owner's placement decision (2026-10-27) moved KMS signing from the
+16->   issuer role to a dedicated policy signer and said it changed no registered sentence. It changed the
+17->   supplement's description of who computes μ and who may sign. The confirmation review found this.
+18-> - **§A11.5 item 3, the spike keys.** The owner's deployment draft had contradicted a registered commitment. That
+19->   draft is withdrawn, and this amendment changes nothing in the commitment.
+20-
+21-## A11.1 What went wrong
+22-
+23-P3's assumption half (A1 §P3, `phase-0-prereg-amendment-1.md:144-148`) requires the verification profile to record
+24-the *exact library and version, accepted signature encodings, public-key validation behavior, low-order-point
+25-handling, cofactor equation variant, and negative test vectors for each*. Two of those fields name concepts of
+26-Ed25519-style curves, which A1 used as its example (`:136`). V1 later registered OpenPGP P-256 and then, on
+27-2026-10-16, the hybrid ML-DSA-65 + P-256 (`formal/p8/HYBRID-REGISTRATION-RECORD.md`). Neither registration re-read the
+28-checklist.
+29-
+30-For ML-DSA, the two curve fields have no referent. The other four fields still apply in full. So the checklist
+31-names nothing specific to ML-DSA's own verification pitfalls: it **demands too little**. Nothing had been accepted
+32-on it. The assumption half was open (`formal/PROPERTIES.md:37`) and due after the freeze
+33-(`formal/freeze-v1/FREEZE-RECORD.md:81`).
+34-
+35-The method's defect: **a registered decision can change what an earlier registered sentence refers to, and nothing
+36-requires anyone to re-read that sentence.** §A11.4 adds that duty.
+37-
+38:## A11.2 P3's verification profile: floor and duty
+39-
+40-**The proofs are unchanged.** P3's model half assumes a verifier with stated behaviour. The assumption half is
+41-bounded implementation evidence that the shipped verifier has that behaviour. It does not show that every model
+42-assumption is preserved in general.
+43-
+44-1. **Fields kept.** All six of A1's fields stay. For each algorithm in the governing specification they are read as
+45-   follows:
+46-
+47-   | A1 field | ECDSA P-256 (rule O) | ML-DSA-65 (rule R) |
+48-   |---|---|---|
+49-   | exact library and version | `cryptography` and its bundled OpenSSL, identified by wheel tag and native-library SHA-256 | same |
+50-   | accepted signature encodings | OpenPGP v4 packet; MPI rules; r, s ∈ [1, n−1]; rule-O policy | exact 3309 bytes; strict hint and z encoding |
+51-   | public-key validation | exact uncompressed point; coordinates < p; on the curve; checked before the library | exact SPKI; no algebraic validation exists |
+52-   | low-order-point handling | cofactor 1: infinity rejected as a key and as the equation's result; invalid-curve points rejected | no referent. Replaced by: degenerate-key behaviour recorded |
+53-   | cofactor equation variant | cofactor 1: a single variant; x(R) reduced mod n | no referent. Replaced by: the FIPS 204 interface (pure, empty context), with every other interface rejected |
+54-   | negative vectors for each | owner vectors plus Wycheproof | owner vectors plus Wycheproof |
+55-
+56-2. **Floor (registered).** The evidence is the files listed in
+57-   `formal/p3-verification-profile/FLOOR-MANIFEST.sha256`, whose SHA-256 is fixed at signing. At this draft it is
+58-   `a69204e9f69a2af3a0bcac96991b55109b0ff0f3efdd6e2182424dd347a24a88`, covering 15 files. They hold:
+59-   - the owner vectors: 223 tests, mutation-sensitive (PROFILE.md §6);
+60-   - Wycheproof commit `d17cc89fa5c8f4f4d378b5385ebf75da5d0926c9`, three files pinned by SHA-256: 968 tests.
+61-     - **ML-DSA-65** runs end to end through the verifier. Two disagreements, tcId 3 and 4, are V1 policy (empty
+62-       context only).
+63-     - **ECDSA P-256** runs through the verifier's key validation, MPI rules, range policy and verification, with
+64-       the digest substituted. 219 non-strict DER cases are tested at library level only. 21 P1363 strings of the
+65-       wrong length reach neither interface. There are no disagreements.
+66:3. **Discharge.** Adopting this floor is not discharging P3. P3's assumption half is discharged only when:
+67-   - (a) the manifest verifies;
+68-   - (b) every test in it passes;
+69:   - (c) the deployed verifier package's identity has been checked against F1 (`test_deployed_zip_identity`, run
+70:     with the deployed zip);
+71-   - (d) no disagreement or finding affecting a required behaviour is unresolved. A recorded defect blocks
+72-     discharge until it is fixed and re-tested.
+73-4. **Operational duty (not a registered result).** The floor's checks, and the latest published vectors for each
+74-   algorithm in use, are re-run on every verifier release, on every change to the signature library's version or
+75-   build, on every new upstream vector commit, and at least quarterly. Each run is recorded with its date, inputs and
+76-   outcome, and attested by the operator.
+77-5. **What a later finding changes.**
+78-   - **A security-policy finding** (an algorithm, parameter or key later judged weak) never rewrites a V1 verdict.
+79-     It reaches relying parties as a historical-security result, beside the verdict and its stable fields
+80-     (A9.4, `phase-0-prereg-amendment-9.md:267-283`).
+81-   - **An implementation-conformance defect** (the verifier disagrees with the governing specification, for example
+82-     by accepting a malformed or prohibited case the specification rejects, A9:278) is not preserved as V1
+83-     behaviour. It is fixed in a signed release, which names the affected releases and says what changed. A silent
+84-     change to the verifier is never permitted.
+85-
+86-## A11.3 Registered sentences changed
+87-
+88-| Source | Was | Now |
+89-|---|---|---|
+90:| `phase-0-prereg-amendment-1.md:144-148` | the six fields, the two curve fields named in Ed25519's terms | the six fields as read in §A11.2 item 1; the floor and discharge conditions of items 2–3 |
+91-| `phase-0-prereg-amendment-10.md:675` | "as amended by rows 15 and 25" | "as amended by row 15" (row 25 cut, E9 row 2) |
+92-| `phase-0-prereg-amendment-9.md:386-392`; `270ca49:docs/V1-PROFILE.md:1023-1037` | the boundary as the selected, deadline-qualified implementation, described through `prototype/policy-signer/` | *only if the author adopts §A11.5 item 2:* a named replacement under conditions (i)–(iv) |
+93-| `formal/p8/HYBRID-SUPPLEMENT.md:151-152, :173-174, :533` (K-R) | `μ` "computed by the issuer"; "`kms:Sign` only for the issuer role" | `μ` computed by the KMS-slot policy signer (`service/signer-kms/`) from an `F` it has validated; `kms:Sign` only for that signer's role, with the issuer roles holding no KMS permission |
+94-| `270ca49:docs/V1-PROFILE.md` custody record, "HYBRID-SUPPLEMENT §9 item 6" | a stale locator | `formal/p8/HYBRID-SUPPLEMENT.md` §11 item 6, lines 524-526. The frozen bytes are unchanged; this corrects the locator only |
+95-
+96-## A11.4 Dependency duty for registered decisions
+97-
+98-When a registered decision changes a parameter (an algorithm, a custody form, a channel, a horizon, a scope, a key),
+99-the owner sweeps the registered texts for sentences whose referent the change alters. Each one is recorded as
+100-amended, superseded, still fitting or open, before the decision's change is treated as complete. An owner decision
+101-that touches a registered parameter is checked against those texts before it is recorded.
+102-
+103-## A11.5 Results of the first sweep (2026-10-28)
+104-
+105-The sweep covered the original, Amendments 1–10, the freeze, the tracker and the author-rulings files
+106-(`docs/reviews/stale-dependencies/SWEEP-2026-10-28.md`). The owner checked each finding against its source. The
+107:review added item 3.
+108-
+109-1. **H3 (`phase-0-prereg.md:232-248`): not amended.** H3 is a hypothesis with a stated falsifier. Its examples are
+110:   AWS-based, but they do not restrict it to AWS. It is measured over the whole deployed system, every provider
+111-   included. A measurement protocol is recorded before measurement. It covers retained resources (including the
+112-   compliance-locked trail bucket), defines the demonstration and idle periods, and reports the three numbers
+113-   separately. A slot-2 signer and an issuer poller that run through the operating window conflict with "idle
+114-   compute exactly $0". If that or another number fails, H3 is reported as falsified. The operating window is not
+115-   redefined as a demonstration to avoid this.
+116-2. **The slot-2 enforcement boundary: for the author's ruling.** A9.6 requires the final custody implementation to
+117-   be deadline-qualified (`phase-0-prereg-amendment-9.md:389-392`). The frozen record keeps "the selected,
+118-   deadline-qualified custody implementation" (`270ca49:docs/V1-PROFILE.md:1023-1026`) and describes it through
+119-   `prototype/policy-signer/`, which met the deadline on 2026-10-14. That qualification stands as historical
+120-   evidence. It does not qualify a replacement. The E9 ruling R5b (`docs/reviews/e9-packet/AUTHOR-RULINGS.md:54`,
+121-   packet row 5b) allows porting instrument code with evidence earned on the resulting bytes. But it does not
+122-   address A9.6's deadline-qualified custody, so it does not settle this question. Keeping the hybrid **with the
+123-   replacement signer** depends on this ruling. Keeping it with the prototype does not.
+124-   **Proposed:** `service/signer-gcp/` may replace the prototype, provided that before the first shipped receipt:
+125-   - (i) it preserves **every A9.6 custody and policy requirement**: complete-frame validation; the declared-time
+126-     check on its own clock before signing; the issuing account able to enqueue but not to invoke the key, change
+127-     the policy or clock, or obtain key-use credentials; and the key dedicated to V1 type-0x00 documents. It also
+128-     preserves every property in the frozen record;
+129:   - (ii) the external custody record names the deployed implementation, its image digest and its configuration;
+130:   - (iii) deployed evidence is earned on the new bytes. That means: a deployed positive signature that verifies
+131:     offline; deployed refusals for a malformed frame, a wrong tag, a wrong alg, a wrong fingerprint and a declared
+132-     time outside ε; a review of every principal that can cause a signature or administer the signer
+133-     (`service/issuer/DEPLOY.md` step 8); and verified retirement of every other signing path (step 7);
+134-   - (iv) all of it identifies the tested image and configuration.
+135-
+136-   **Without this ruling**, production uses the deadline-qualified prototype signer. Slot 2 then has no signer-side
+137-   signing stop or `sign_by` (`prototype/policy-signer/signer/main.py`), and frames travel inline in SQS messages,
+138-   which cannot carry the 1 MiB client limit (IS-09, `docs/reviews/issuer/CODEX-REVIEW.md:35`). That limit is an
+139-   owner operational resolution, stamped but not registered (`docs/V1-SERVICE-RESOLUTIONS.md:20`). It would be
+140-   narrowed.
+141:3. **The spike keys (`formal/p8/HYBRID-SUPPLEMENT.md` §11 item 6, lines 524-526): unchanged.** "Both spike keys
+142-   are deleted after the re-capture verifies, once the review clears." The owner's deployment draft
+143-   (2026-10-27) reused them as production keys. That contradicted this commitment, and the draft is withdrawn.
+144-   Production uses new keys (`service/issuer/DEPLOY.md`), recorded in the external custody record before use.
+145-4. **A dangling cross-reference (`phase-0-prereg-amendment-10.md:675`).** Row 25 was cut (E9 row 2,
+146-   2026-10-23; profile §5). This is a CLARIFY: the fallback cites row 15 only.
+147-5. **K-R's enforcement (`formal/p8/HYBRID-SUPPLEMENT.md:148-172, :533`): amended in wording, the assumption
+148-   unchanged.** (K-R) itself stands: the ML-DSA-65 key signs only V1 tagged strings, in pure mode with the empty
+149-   context, under EXTERNAL_MU, for no other protocol. What changes is who enforces it. The supplement names the
+150-   issuer as the computer of `μ` and the issuer role as the only `kms:Sign` principal. In V1 as designed (deployment pending), a
+151-   dedicated policy signer validates the complete frame (tag, alg, key fingerprint, ε, `sign_by`, the signing stop)
+152-   *before* computing `μ`, and its role is the only `kms:Sign` principal (`service/signer-kms/`; key policy in
+153-   `service/signer-kms/infra/main.tf`). This narrows what a captured issuer role alone can get signed. It does not
+154-   change the supplement's stated limit: "whoever may call `kms:Sign` on the key can sign any message by computing
+155:   `μ`". An administrator of the account can still grant that (`PutKeyPolicy`), which is C3.
+rg: infra: No such file or directory (os error 2)
+service/issuer/package.py:1:"""Build the issuer's Lambda package (infra variable lambda_zip): tessera_issue, tessera_verify, cryptography for
+service/issuer/infra/variables.tf:12:variable "lambda_zip" {
+service/issuer/infra/main.tf:335:  filename         = var.lambda_zip
+service/issuer/infra/main.tf:336:  source_code_hash = filebase64sha256(var.lambda_zip)
+service/issuer/infra/main.tf:350:  filename                       = var.lambda_zip
+service/issuer/infra/main.tf:351:  source_code_hash               = filebase64sha256(var.lambda_zip)
+service/issuer/DEPLOY.md:39:1. **Issuer, bootstrap.** `terraform -chdir=infra plan -var lambda_zip=../dist/issuer-bootstrap.zip -out tfplan`.
+service/issuer/DEPLOY.md:47:   then plan and apply with `-var lambda_zip=../dist/issuer.zip -var runtime_version_arn=$RUNTIME_ARN`. That pins
+../tupay/AGENTS.md
+../promptguard/openspec/AGENTS.md
+../promptguard/AGENTS.md
+../promptguard2/openspec/AGENTS.md
+../promptguard2/AGENTS.md
+../teaching/2025/CPSC416-2025W-T2/AGENTS.md
+../teaching/2025/CPSC436C-2025W-T1/capstone_clones/u410266/frontend/AGENTS.md
+../teaching/2025/CPSC436C-2025W-T1/capstone_clones/u466684/AGENTS.md
+../teaching/2025/CPSC436C-2025W-T1/capstone_clones/u421168/frontend/AGENTS.md
+../teaching/2025/CPSC436C-2025W-T1/capstone_clones/u411995/AGENTS.md
+../teaching/2025/CPSC436C-2025W-T1/capstone_clones/u466685/AGENTS.md
+../teaching/2025/CPSC436C-2025W-T1/capstone_clones/u444982/AGENTS.md
+../teaching/2025/CPSC436C-2025W-T1/AGENTS.md
+../teaching/2025/CPSC436C-2025W-T1/tmp/capstone_code_repos/CPSC436C-2025W-T1_capstone_deho/AGENTS.md
+../teaching/2025/CPSC436C-2025W-T1/tmp/capstone_code_repos/CPSC436C-2025W-T1_capstone-final-project/frontend/AGENTS.md
+../teaching/2025/CPSC436C-2025W-T2/AGENTS.md
+../teaching/2025/CPSC436C-2025W-T2/tmp/capstone/jh51/AGENTS.md
+../mallku/AGENTS.md
+../eidolon/.worktrees/nines-rc-reviewer-pass/AGENTS.md
+../eidolon/AGENTS.md
+scope: Begin work in Tessera with read-only orientation, project reading order, ownership boundaries, and formal-before-implementation status.
+applies_to: cwd=/home/tony/projects/tessera; reuse_rule=use for initial Tessera orientation and project-context checks; branch status, file state, and implementation status are time-specific and must be rechecked.
+
+## Task 1: Settle into Tessera and establish working context, success
+
+### rollout_summary_files
+
+- rollout_summaries/2026-09-04T22-10-39-e0yu-tessera_orientation_s_p3_and_capstone_ledger_review.md (cwd=/home/tony/projects/tessera, rollout_path=/home/tony/.codex/sessions/2026/09/04/rollout-2026-09-04T22-10-39-01a06e79-52e9-7b00-b7c2-82e12d1ddd1a.jsonl, updated_at=2026-09-15T21:20:28+00:00, thread_id=01a06e79-52e9-7b00-b7c2-82e12d1ddd1a, newer orientation and collaboration context)
+- rollout_summaries/2026-09-17T23-04-57-7kP7-tessera_orientation_and_capstone_freeze_handoff_review.md (cwd=/home/tony/projects/tessera, rollout_path=/home/tony/.codex/sessions/2026/09/17/rollout-2026-09-17T23-04-57-01a0b19d-b4c2-7fa1-a7c2-a40d68e97ce9.jsonl, updated_at=2026-09-18T02:01:03+00:00, thread_id=01a0b19d-b4c2-7fa1-a7c2-a40d68e97ce9, refreshed orientation and demonstration assessment)
+
+### keywords
+
+- Tessera, repository-orientation, README.md, phase-0-prereg, Amendments 1-3, formal/PROPERTIES.md, TLA+, ProVerif, Tamarin, `main.py`
+
+## User preferences
+
+- When beginning work, the user asked the agent to “look around, familiarize yourself,” and welcomed questions -> start read-only, follow the repository reading order, and report readiness before edits. [Task 1]
+- The user clarified that defense means education, discipline, and reconstructing principles from the record, not memorizing every detail -> explain decisions in architect-level terms and preserve author ownership of decisions. [Task 1]
+- When the user invited disagreement with “send it to the landfill,” they wanted an anti-sycophancy assessment, not reflexive reassurance -> give concrete strengths and failures, distinguish defensibility from unaided recall, and do not expand the bounded demonstration finish line without justification. [Task 1]
+- The user said “mistakes acceptable, hiding them unacceptable” -> treat preregistration, timestamps, amendments, explicit corrections, and visible residuals as evidence practices. [Task 1]
+
+## Reusable knowledge
+
+- Tessera is an AWS-native attestation project and a rigorous, falsifiable engineering demonstration: formal foundations precede production implementation; amendments replace silent rewrites; AI contributes mechanics and pushback but does not own architecture. [Task 1]
+- Read `README.md`, phase-0 preregistration and Amendments 1-3, first-link and standing decisions, cloud demo spec, travelog, `formal/PROPERTIES.md` and models, then reviews. Amendments outrank tracker summaries. [Task 1]
+- At the newer orientation, application code remained minimal (`main.py` prints “Hello from tessera!”); substantive work was in formal artifacts. Treat this and any branch/file status as time-specific. [Task 1]
+/usr/bin/unzip
+Python 3.14.6
+
+web search: 
+web search: site.commons.apache.org compress zip ZipArchiveInputStream central directory unicode extra fields ...
+codex
+The checker validates Python’s view of a supplied ZIP, but it does not query AWS to establish that the ZIP is deployed. Python also checks local filenames when it reads an entry, so a local/central name mismatch in a checked verifier file should be rejected. I’m testing unreferenced entries and Unicode extra fields next; neither has an explicit check here.
+exec
+/bin/bash -lc "mktemp -d /tmp/tessera-a11c3b.XXXXXXXX; command -v unzip; unzip -v; ls service/verifier/.venv/bin/python*; nl -ba service/issuer/infra/main.tf | sed -n '180,245p'; nl -ba formal/p3-verification-profile/test_p3_profile.py | sed -n '62,105p'" in /home/tony/projects/tessera
+ succeeded in 0ms:
+/tmp/tessera-a11c3b.yrZ1FWQq
+/usr/bin/unzip
+UnZip 6.00 of 20 April 2009, by Debian. Original by Info-ZIP.
+
+Latest sources and executables are at ftp://ftp.info-zip.org/pub/infozip/ ;
+see ftp://ftp.info-zip.org/pub/infozip/UnZip.html for other sites.
+
+Compiled with gcc 13.2.0 for Unix (Linux ELF).
+
+UnZip special compilation options:
+        ACORN_FTYPE_NFS
+        COPYRIGHT_CLEAN (PKZIP 0.9x unreducing method not supported)
+        SET_DIR_ATTRIB
+        SYMLINKS (symbolic links supported, if RTL and file system permit)
+        TIMESTAMP
+        UNIXBACKUP
+        USE_EF_UT_TIME
+        USE_UNSHRINK (PKZIP/Zip 1.x unshrinking method supported)
+        USE_DEFLATE64 (PKZIP 4.x Deflate64(tm) supported)
+        UNICODE_SUPPORT [wide-chars, char coding: UTF-8] (handle UTF-8 paths)
+        LARGE_FILE_SUPPORT (large files over 2 GiB supported)
+        ZIP64_SUPPORT (archives using Zip64 for large files supported)
+        USE_BZIP2 (PKZIP 4.6+, using bzip2 lib version 1.0.8, 13-Jul-2019)
+        VMS_TEXT_CONV
+        WILD_STOP_AT_DIR
+        [decryption, version 2.11 of 05 Jan 2007]
+
+UnZip and ZipInfo environment options:
+           UNZIP:  [none]
+        UNZIPOPT:  [none]
+         ZIPINFO:  [none]
+      ZIPINFOOPT:  [none]
+service/verifier/.venv/bin/python
+service/verifier/.venv/bin/python3
+service/verifier/.venv/bin/python3.14
+   180	
+   181	# No statement in either issuer policy grants any kms: action (tests/test_infra.py checks this).
+   182	data "aws_iam_policy_document" "api" {
+   183	  statement {
+   184	    sid       = "Requests"
+   185	    actions   = ["dynamodb:GetItem", "dynamodb:PutItem"]
+   186	    resources = [aws_dynamodb_table.requests.arn]
+   187	  }
+   188	  # IS-10: the API writes submitted content (and removes it if its request ended meanwhile) and reads receipts.
+   189	  statement {
+   190	    sid       = "WriteContent"
+   191	    actions   = ["s3:PutObject", "s3:DeleteObject"]
+   192	    resources = ["${aws_s3_bucket.results.arn}/content/*"]
+   193	  }
+   194	  statement {
+   195	    sid       = "ReadResults"
+   196	    actions   = ["s3:GetObject"]
+   197	    resources = ["${aws_s3_bucket.results.arn}/result/*"]
+   198	  }
+   199	  statement {
+   200	    sid       = "ListContent"
+   201	    actions   = ["s3:ListBucket"]
+   202	    resources = [aws_s3_bucket.results.arn]
+   203	    condition {
+   204	      test     = "StringLike"
+   205	      variable = "s3:prefix"
+   206	      values   = ["content/*"]
+   207	    }
+   208	  }
+   209	  statement {
+   210	    sid       = "Config"
+   211	    actions   = ["s3:GetObject"]
+   212	    resources = ["${aws_s3_bucket.results.arn}/config/*"]
+   213	  }
+   214	  statement {
+   215	    sid       = "Logs"
+   216	    actions   = ["logs:CreateLogStream", "logs:PutLogEvents"]
+   217	    resources = ["${aws_cloudwatch_log_group.api.arn}:*"]
+   218	  }
+   219	}
+   220	
+   221	data "aws_iam_policy_document" "poller" {
+   222	  statement {
+   223	    sid       = "Requests"
+   224	    actions   = ["dynamodb:GetItem", "dynamodb:PutItem", "dynamodb:DeleteItem", "dynamodb:Query", "dynamodb:Scan"]
+   225	    resources = [aws_dynamodb_table.requests.arn, "${aws_dynamodb_table.requests.arn}/index/pending-index"]
+   226	  }
+   227	  # IS-10: mutation only in the operational namespaces; configuration is read-only.
+   228	  statement {
+   229	    sid       = "Objects"
+   230	    actions   = ["s3:PutObject", "s3:GetObject", "s3:DeleteObject"]
+   231	    resources = ["${aws_s3_bucket.results.arn}/content/*", "${aws_s3_bucket.results.arn}/work/*", "${aws_s3_bucket.results.arn}/frames/*", "${aws_s3_bucket.results.arn}/result/*"]
+   232	  }
+   233	  statement {
+   234	    sid       = "Config"
+   235	    actions   = ["s3:GetObject"]
+   236	    resources = ["${aws_s3_bucket.results.arn}/config/*"]
+   237	  }
+   238	  statement {
+   239	    sid       = "List"
+   240	    actions   = ["s3:ListBucket"]
+   241	    resources = [aws_s3_bucket.results.arn]
+   242	  }
+   243	  statement {
+   244	    sid       = "SignerRequests"
+   245	    actions   = ["sqs:SendMessage"]
+    62	
+    63	def tested_verifier_files():
+    64	    """The verifier code this floor exercised (service/verifier/tessera_verify), as {zip path: bytes}."""
+    65	    root = VERIFIER / 'tessera_verify'
+    66	    return {('tessera_verify/' + f.relative_to(root).as_posix()): f.read_bytes()
+    67	            for f in sorted(root.rglob('*')) if f.is_file() and '__pycache__' not in f.parts and f.suffix != '.pyc'}
+    68	
+    69	
+    70	def check_zip(path):
+    71	    """The zip carries the recorded cryptography build AND exactly the verifier code the floor tested
+    72	    (A11C-01: a matching wheel alone would let different verifier code pass)."""
+    73	    with zipfile.ZipFile(path) as z:
+    74	        binding = z.read(F1['wheel']['rust_binding'])
+    75	        tag = wheel_tag(z.read('cryptography-%s.dist-info/WHEEL' % F1['cryptography']).decode())
+    76	        names = z.namelist()
+    77	        # Codex confirmation 2: an alias ('./tessera_verify/codec.py') extracts over the checked file. Only canonical,
+    78	        # unique, relative POSIX paths are accepted, so what extraction writes is exactly what was compared.
+    79	        bad = [n for n in names if n != posixpath.normpath(n) + ('/' if n.endswith('/') else '') or n.startswith('/')
+    80	               or '\\' in n or n.split('/')[0] in ('', '.', '..')]
+    81	        assert bad == [] and len(names) == len(set(names)), (bad, len(names) - len(set(names)))
+    82	        links = [i.filename for i in z.infolist() if (i.external_attr >> 16) & 0o170000 == 0o120000]
+    83	        assert links == [], links                          # a symlink entry can redirect extraction
+    84	        shipped = {n: z.read(n) for n in names if n.startswith('tessera_verify/') and not n.endswith('/')}
+    85	    assert hashlib.sha256(binding).hexdigest() == F1['wheel']['rust_binding_sha256']
+    86	    assert tag == F1['wheel']['tag']
+    87	    tested = tested_verifier_files()
+    88	    assert sorted(shipped) == sorted(tested), sorted(set(shipped) ^ set(tested))
+    89	    assert [n for n in tested if shipped[n] != tested[n]] == []
+    90	
+    91	
+    92	def run_sig(v, keys, docs):
+    93	    """Function-level harness for one signature against one known-good key: signature codec (the function of rows
+    94	    3.1/9.3), policy (9.1/9.4), then verification (9.2/9.5). Returns 'ACCEPT', the Fault code, or 'SIG_INVALID'
+    95	    (POSSESSION_INVALID for a possession proof: same function, different row). It is NOT the bundle's order: a
+    96	    bundle evaluates keys (5.1) before signature policy (9.1) and reports by row precedence. Precedence claims come
+    97	    only from TestBundle."""
+    98	    alg, slot = v['alg'], v['slot']
+    99	    try:
+   100	        parsed = parse_signature(bytes.fromhex(v['sig_hex']), alg, slot, registered_codecs(alg))
+   101	        sig_policy(parsed)
+   102	    except Fault as e:
+   103	        return e.code
+   104	    k = keys[v['key']]
+   105	    key = public_key(bytes.fromhex(k['hex']), k['slot'], k['alg'])
+
+web search: 
+web search: https://commons.apache.org/proper/commons-compress/zip.html
+exec
+/bin/bash -lc "cat > /tmp/tessera-a11c3b.yrZ1FWQq/probe.py <<'PY'
+import ast, pathlib, zipfile, hashlib, posixpath, json, sys, struct, io, zlib, subprocess, warnings
+R=pathlib.Path('/home/tony/projects/tessera'); S=pathlib.Path(__file__).parent
+src=R/'formal/p3-verification-profile/test_p3_profile.py'
+f1=json.loads((src.parent/'vectors/F1-library.json').read_text())
+ns=dict(zipfile=zipfile,hashlib=hashlib,posixpath=posixpath,F1=f1,VERIFIER=R/'service/verifier')
+tree=ast.parse(src.read_text()); nodes=[n for n in tree.body if isinstance(n,ast.FunctionDef) and n.name in ('wheel_tag','tested_verifier_files','check_zip')]
+exec(compile(ast.Module(body=nodes,type_ignores=[]),str(src),'exec'),ns)
+import cryptography
+site=pathlib.Path(cryptography.__file__).parent.parent
+files=ns['tested_verifier_files'](); files[f1['wheel']['rust_binding']]=(site/f1['wheel']['rust_binding']).read_bytes(); files['cryptography-%s.dist-info/WHEEL'%f1['cryptography']]=(site/('cryptography-%s.dist-info/WHEEL'%f1['cryptography'])).read_bytes(); files['notes.txt']=b'benign notes\\n'
+def make(extra=(),unicode_alias=False):
+ b=io.BytesIO()
+ with zipfile.ZipFile(b,'w',zipfile.ZIP_DEFLATED) as z:
+  for n,d in files.items(): z.writestr(n,d)
+  for n,d,ef,mode in extra:
+   i=zipfile.ZipInfo(n); i.extra=ef; i.external_attr=mode<<16; z.writestr(i,d)
+ return b.getvalue()
+base=make(); cases={'baseline':base}
+def mutate(name,field,value,local=True):
+ b=bytearray(base)
+ with zipfile.ZipFile(io.BytesIO(base)) as z: info=z.getinfo(name)
+ off=info.header_offset if local else base.find(b'PK\\x01\\x02'+b'',0)
+ if not local:
+  off=base.find(name.encode(),base.find(b'PK\\x01\\x02'))-46
+ b[off+field:off+field+len(value)]=value
+ return bytes(b)
+cases['local-name-checked']=mutate('tessera_verify/codec.py',30,b'T')
+cases['local-name-unchecked']=mutate('notes.txt',30,b'N')
+cases['local-method-checked']=mutate('tessera_verify/codec.py',8,struct.pack('<H',0))
+cases['local-size-checked']=mutate('tessera_verify/codec.py',18,struct.pack('<II',1,1))
+cases['local-encrypted-flag']=mutate('tessera_verify/codec.py',6,struct.pack('<H',1))
+cases['local-utf8-flag']=mutate('tessera_verify/codec.py',6,struct.pack('<H',2048))
+cases['prefix']=b'BENIGN PREFIX\\n'+base
+cases['suffix']=base+b'BENIGN SUFFIX\\n'
+e=base.rfind(b'PK\\x05\\x06'); cd=struct.unpack_from('<I',base,e+16)[0]
+b=bytearray(base); struct.pack_into('<HH',b,e+8,1,1); cases['eocd-count']=bytes(b)
+# Orphan local record, not indexed by central directory.
+tmp=io.BytesIO()
+with zipfile.ZipFile(tmp,'w') as z:z.writestr('orphan.txt',b'benign orphan\\n')
+o=tmp.getvalue(); orphan=o[:o.find(b'PK\\x01\\x02')]
+b=bytearray(base[:cd]+orphan+base[cd:]); struct.pack_into('<I',b,e+len(orphan)+16,cd+len(orphan)); cases['orphan-local']=bytes(b)
+# Second complete archive, Python's choice has all expected files.
+cases['concatenated']=o+base
+# EOCD in outer EOCD comment, both refer to same directory.
+b=bytearray(base); struct.pack_into('<H',b,e+20,22); cases['multiple-eocd']=bytes(b)+base[e:e+22]
+for label,n in [('dot-alias','./tessera_verify/codec.py'),('duplicate','notes.txt'),('case-alias','TESSERA_VERIFY/codec.py'),('nul-name','other.txt\\0tail'),('file-dir-conflict','tessera_verify')]:
+ with warnings.catch_warnings():
+  warnings.simplefilter('ignore'); cases[label]=make([(n,b'# benign extra\\n',b'',0o100644)])
+cases['symlink']=make([('benign-link',b'notes.txt',b'',0o120777)])
+name='alias.txt'; target='tessera_verify/codec.py'; payload=bytes([1])+struct.pack('<I',zlib.crc32(name.encode()))+target.encode(); ef=struct.pack('<HH',0x7075,len(payload))+payload
+cases['unicode-extra-alias']=make([(name,b'# BENIGN ALTERNATE CONTENT\\n',ef,0o100644)])
+results=[]
+for label,b in cases.items():
+ p=S/(label+'.zip'); p.write_bytes(b)
+ try: ns['check_zip'](p); check='PASS'
+ except Exception as ex: check=type(ex).__name__+': '+str(ex)[:130]
+ pd=S/(label+'-python'); pd.mkdir()
+ try:
+  with zipfile.ZipFile(p) as z:z.extractall(pd)
+  py='OK'
+ except Exception as ex:py=type(ex).__name__+': '+str(ex)[:100]
+ ud=S/(label+'-unzip'); ud.mkdir(); run=subprocess.run(['unzip','-o',str(p),'-d',str(ud)],capture_output=True,text=True)
+ targetp=ud/target
+ result=dict(case=label,check=check,python=py,unzip_rc=run.returncode,unzip_codec_matches=targetp.exists() and targetp.read_bytes()==files[target],unzip_notes=[l for l in (run.stdout+'\\n'+run.stderr).splitlines() if any(w in l.lower() for w in ('warning','mismatch','error','extra bytes','invalid','bad','incorrect'))])
+ (S/(label+'-unzip.log')).write_text(run.stdout+'\\n'+run.stderr); results.append(result)
+(S/'results.json').write_text(json.dumps(results,indent=2)); print(sys.version); print(json.dumps(results,indent=2))
+PY
+PYTHONDONTWRITEBYTECODE=1 service/verifier/.venv/bin/python /tmp/tessera-a11c3b.yrZ1FWQq/probe.py" in /home/tony/projects/tessera
+web search: 
+web search: 
+ succeeded in 8568ms:
+3.14.6 (main, Jul 18 2026, 17:01:31) [Clang 22.1.3 ]
+[
+  {
+    "case": "baseline",
+    "check": "PASS",
+    "python": "OK",
+    "unzip_rc": 0,
+    "unzip_codec_matches": true,
+    "unzip_notes": []
+  },
+  {
+    "case": "local-name-checked",
+    "check": "BadZipFile: File name in directory 'tessera_verify/codec.py' and header b'Tessera_verify/codec.py' differ.",
+    "python": "BadZipFile: File name in directory 'tessera_verify/codec.py' and header b'Tessera_verify/codec.py' differ.",
+    "unzip_rc": 1,
+    "unzip_codec_matches": true,
+    "unzip_notes": [
+      "tessera_verify/codec.py:  mismatching \"local\" filename (Tessera_verify/codec.py),"
+    ]
+  },
+  {
+    "case": "local-name-unchecked",
+    "check": "PASS",
+    "python": "BadZipFile: File name in directory 'notes.txt' and header b'Notes.txt' differ.",
+    "unzip_rc": 1,
+    "unzip_codec_matches": true,
+    "unzip_notes": [
+      "notes.txt:  mismatching \"local\" filename (Notes.txt),"
+    ]
+  },
+  {
+    "case": "local-method-checked",
+    "check": "PASS",
+    "python": "OK",
+    "unzip_rc": 2,
+    "unzip_codec_matches": false,
+    "unzip_notes": [
+      " bad CRC e29cd61a  (should be c945394f)"
+    ]
+  },
+  {
+    "case": "local-size-checked",
+    "check": "PASS",
+    "python": "OK",
+    "unzip_rc": 2,
+    "unzip_codec_matches": false,
+    "unzip_notes": [
+      "  error:  invalid compressed data to inflate"
+    ]
+  },
+  {
+    "case": "local-encrypted-flag",
+    "check": "PASS",
+    "python": "OK",
+    "unzip_rc": 0,
+    "unzip_codec_matches": true,
+    "unzip_notes": []
+  },
+  {
+    "case": "local-utf8-flag",
+    "check": "PASS",
+    "python": "OK",
+    "unzip_rc": 1,
+    "unzip_codec_matches": true,
+    "unzip_notes": [
+      "         mismatch between local and central GPF bit 11 (\"UTF-8\"),"
+    ]
+  },
+  {
+    "case": "prefix",
+    "check": "PASS",
+    "python": "OK",
+    "unzip_rc": 1,
+    "unzip_codec_matches": true,
+    "unzip_notes": [
+      "warning [/tmp/tessera-a11c3b.yrZ1FWQq/prefix.zip]:  14 extra bytes at beginning or within zipfile"
+    ]
+  },
+  {
+    "case": "suffix",
+    "check": "PASS",
+    "python": "OK",
+    "unzip_rc": 0,
+    "unzip_codec_matches": true,
+    "unzip_notes": []
+  },
+  {
+    "case": "eocd-count",
+    "check": "PASS",
+    "python": "OK",
+    "unzip_rc": 3,
+    "unzip_codec_matches": true,
+    "unzip_notes": [
+      "error:  expected central file header signature not found (file #17)."
+    ]
+  },
+  {
+    "case": "orphan-local",
+    "check": "PASS",
+    "python": "OK",
+    "unzip_rc": 0,
+    "unzip_codec_matches": true,
+    "unzip_notes": []
+  },
+  {
+    "case": "concatenated",
+    "check": "PASS",
+    "python": "OK",
+    "unzip_rc": 1,
+    "unzip_codec_matches": true,
+    "unzip_notes": [
+      "warning [/tmp/tessera-a11c3b.yrZ1FWQq/concatenated.zip]:  132 extra bytes at beginning or within zipfile"
+    ]
+  },
+  {
+    "case": "multiple-eocd",
+    "check": "BadZipFile: Bad magic number for central directory",
+    "python": "BadZipFile: Bad magic number for central directory",
+    "unzip_rc": 2,
+    "unzip_codec_matches": true,
+    "unzip_notes": [
+      "warning [/tmp/tessera-a11c3b.yrZ1FWQq/multiple-eocd.zip]:  22 extra bytes at beginning or within zipfile",
+      "error [/tmp/tessera-a11c3b.yrZ1FWQq/multiple-eocd.zip]:  reported length of central directory is"
+    ]
+  },
+  {
+    "case": "dot-alias",
+    "check": "AssertionError: (['./tessera_verify/codec.py'], 0)",
+    "python": "OK",
+    "unzip_rc": 0,
+    "unzip_codec_matches": false,
+    "unzip_notes": []
+  },
+  {
+    "case": "duplicate",
+    "check": "AssertionError: ([], 1)",
+    "python": "OK",
+    "unzip_rc": 0,
+    "unzip_codec_matches": true,
+    "unzip_notes": []
+  },
+  {
+    "case": "case-alias",
+    "check": "PASS",
+    "python": "OK",
+    "unzip_rc": 0,
+    "unzip_codec_matches": true,
+    "unzip_notes": []
+  },
+  {
+    "case": "nul-name",
+    "check": "PASS",
+    "python": "OK",
+    "unzip_rc": 0,
+    "unzip_codec_matches": true,
+    "unzip_notes": []
+  },
+  {
+    "case": "file-dir-conflict",
+    "check": "PASS",
+    "python": "IsADirectoryError: [Errno 21] Is a directory: '/tmp/tessera-a11c3b.yrZ1FWQq/file-dir-conflict-python/tessera_verify'",
+    "unzip_rc": 50,
+    "unzip_codec_matches": true,
+    "unzip_notes": [
+      "error:  cannot delete old /tmp/tessera-a11c3b.yrZ1FWQq/file-dir-conflict-unzip/tessera_verify"
+    ]
+  },
+  {
+    "case": "symlink",
+    "check": "AssertionError: ['benign-link']",
+    "python": "OK",
+    "unzip_rc": 0,
+    "unzip_codec_matches": true,
+    "unzip_notes": []
+  },
+  {
+    "case": "unicode-extra-alias",
+    "check": "AssertionError: ([], 1)",
+    "python": "OK",
+    "unzip_rc": 0,
+    "unzip_codec_matches": false,
+    "unzip_notes": []
+  }
+]
+
+web search: 
+web search: site.docs.aws.amazon.com Lambda "CodeSha256" "base64" ...
+exec
+/bin/bash -lc "PYTHONDONTWRITEBYTECODE=1 service/verifier/.venv/bin/python - <<'PY'
+import zipfile,inspect
+print(zipfile.__file__)
+print(inspect.getsource(zipfile.ZipInfo._decodeExtra))
+print(inspect.getsource(zipfile.ZipInfo._encodeFilenameFlags))
+p='/tmp/tessera-a11c3b.yrZ1FWQq/unicode-extra-alias.zip'
+with zipfile.ZipFile(p) as z:
+ for i in z.infolist()[-2:]:print(i.filename,i.orig_filename,i.extra)
+PY
+rg -n 'source_code_hash|filename|publish|runtime_management' service/issuer/infra/main.tf; sed -n '275,285p' /home/tony/.codex/memories/MEMORY.md; command -v python3.12; command -v java" in /home/tony/projects/tessera
+ succeeded in 0ms:
+/home/tony/.local/share/uv/python/cpython-3.14.6-linux-x86_64-gnu/lib/python3.14/zipfile/__init__.py
+    def _decodeExtra(self, filename_crc):
+        # Try to decode the extra field.
+        extra = self.extra
+        unpack = struct.unpack
+        while len(extra) >= 4:
+            tp, ln = unpack('<HH', extra[:4])
+            if ln+4 > len(extra):
+                raise BadZipFile("Corrupt extra field %04x (size=%d)" % (tp, ln))
+            if tp == 0x0001:
+                data = extra[4:ln+4]
+                # ZIP64 extension (large files and/or large archives)
+                try:
+                    if self.file_size in (0xFFFF_FFFF_FFFF_FFFF, 0xFFFF_FFFF):
+                        field = "File size"
+                        self.file_size, = unpack('<Q', data[:8])
+                        data = data[8:]
+                    if self.compress_size == 0xFFFF_FFFF:
+                        field = "Compress size"
+                        self.compress_size, = unpack('<Q', data[:8])
+                        data = data[8:]
+                    if self.header_offset == 0xFFFF_FFFF:
+                        field = "Header offset"
+                        self.header_offset, = unpack('<Q', data[:8])
+                except struct.error:
+                    raise BadZipFile(f"Corrupt zip64 extra field. "
+                                     f"{field} not found.") from None
+            elif tp == 0x7075:
+                data = extra[4:ln+4]
+                # Unicode Path Extra Field
+                try:
+                    up_version, up_name_crc = unpack('<BL', data[:5])
+                    if up_version == 1 and up_name_crc == filename_crc:
+                        up_unicode_name = data[5:].decode('utf-8')
+                        if up_unicode_name:
+                            self.filename = _sanitize_filename(up_unicode_name)
+                        else:
+                            import warnings
+                            warnings.warn("Empty unicode path extra field (0x7075)", stacklevel=2)
+                except struct.error as e:
+                    raise BadZipFile("Corrupt unicode path extra field (0x7075)") from e
+                except UnicodeDecodeError as e:
+                    raise BadZipFile('Corrupt unicode path extra field (0x7075): invalid utf-8 bytes') from e
+
+            extra = extra[ln+4:]
+
+    def _encodeFilenameFlags(self):
+        if self.flag_bits & _MASK_UTF_FILENAME:
+            encoding = 'ascii'
+        else:
+            encoding = 'cp437'
+        try:
+            return self.filename.encode(encoding), self.flag_bits & ~_MASK_UTF_FILENAME
+        except UnicodeEncodeError:
+            return self.filename.encode('utf-8'), self.flag_bits | _MASK_UTF_FILENAME
+
+notes.txt notes.txt b''
+tessera_verify/codec.py alias.txt b'up\x1c\x00\x011%:\xeatessera_verify/codec.py'
+335:  filename         = var.lambda_zip
+336:  source_code_hash = filebase64sha256(var.lambda_zip)
+350:  filename                       = var.lambda_zip
+351:  source_code_hash               = filebase64sha256(var.lambda_zip)
+488:resource "aws_lambda_runtime_management_config" "pinned" {
+### rollout_summary_files
+
+- rollout_summaries/2026-09-04T22-10-39-e0yu-tessera_orientation_s_p3_and_capstone_ledger_review.md (cwd=/home/tony/projects/tessera, rollout_path=/home/tony/.codex/sessions/2026/09/04/rollout-2026-09-04T22-10-39-01a06e79-52e9-7b00-b7c2-82e12d1ddd1a.jsonl, updated_at=2026-09-15T21:20:28+00:00, thread_id=01a06e79-52e9-7b00-b7c2-82e12d1ddd1a, newer orientation and collaboration context)
+- rollout_summaries/2026-09-17T23-04-57-7kP7-tessera_orientation_and_capstone_freeze_handoff_review.md (cwd=/home/tony/projects/tessera, rollout_path=/home/tony/.codex/sessions/2026/09/17/rollout-2026-09-17T23-04-57-01a0b19d-b4c2-7fa1-a7c2-a40d68e97ce9.jsonl, updated_at=2026-09-18T02:01:03+00:00, thread_id=01a0b19d-b4c2-7fa1-a7c2-a40d68e97ce9, refreshed orientation and demonstration assessment)
+
+### keywords
+
+- Tessera, repository-orientation, README.md, phase-0-prereg, Amendments 1-3, formal/PROPERTIES.md, TLA+, ProVerif, Tamarin, `main.py`
+
+## User preferences
+
+/usr/bin/python3.12
+/usr/bin/java
+
+web search: 
+web search: https://docs.aws.amazon.com/lambda/latest/api/API_PublishVersion.html
+codex
+Several probes pass `check_zip` despite inconsistent local compression methods, sizes, flags, or EOCD counts. Info-ZIP reports errors and produces different bytes for some of them. The environment uses Python 3.14.6, which recognizes Unicode Path extra fields; it rejects the straightforward Unicode alias collision. I’m checking local-only extra fields separately before drawing a broader conclusion.
+exec
+/bin/bash -lc "cp /tmp/tessera-a11c3b.yrZ1FWQq/probe.py /tmp/tessera-a11c3b.yrZ1FWQq/probe-initial.py
+python3 - <<'PY'
+p='/tmp/tessera-a11c3b.yrZ1FWQq/probe.py'
+s=open(p).read(); s=s.replace(\"results=[]\",'''# Make Unicode path extra local-only by removing it from the central header.
+u=cases['unicode-extra-alias']; uc=u.rfind(b'PK\\\\x01\\\\x02'); ue=u.rfind(b'PK\\\\x05\\\\x06')
+nl,xl=struct.unpack_from('<HH',u,uc+28); cut=uc+46+nl
+b=bytearray(u[:cut]+u[cut+xl:]); struct.pack_into('<H',b,uc+30,0); struct.pack_into('<I',b,ue-xl+12,struct.unpack_from('<I',u,ue+12)[0]-xl); cases['unicode-local-only']=bytes(b)
+# Raw NUL in both copies (ZipInfo's writer would truncate before serialization).
+b=bytearray(base)
+with zipfile.ZipFile(io.BytesIO(base)) as z: no=z.getinfo('notes.txt').header_offset
+b[no+30+8]=0; nc=base.find(b'notes.txt',cd); b[nc+8]=0; cases['raw-nul']=bytes(b)
+# Two valid alternative directories/end records: first EOCD's comment encloses a second CD+EOCD.
+d=base[cd:e]; b=bytearray(base); struct.pack_into('<H',b,e+20,len(d)+22)
+end=bytearray(base[e:e+22]); struct.pack_into('<I',end,16,e+22); cases['two-directories-eocd']=bytes(b)+d+bytes(end)
+results=[]'''); s=s.replace(\"pd.mkdir()\",\"pd.mkdir(exist_ok=True)\").replace(\"ud.mkdir()\",\"ud.mkdir(exist_ok=True)\");open(p,'w').write(s)
+PY
+PYTHONDONTWRITEBYTECODE=1 service/verifier/.venv/bin/python /tmp/tessera-a11c3b.yrZ1FWQq/probe.py > /tmp/tessera-a11c3b.yrZ1FWQq/results.txt" in /home/tony/projects/tessera
+web search: 
+web search: 
+ succeeded in 9536ms:
+exec
+/bin/bash -lc "tail -55 /tmp/tessera-a11c3b.yrZ1FWQq/results.txt; sed -n '320,375p' service/issuer/infra/main.tf; sed -n '1,70p' /tmp/tessera-a11c3b.yrZ1FWQq/unicode-local-only-unzip.log; command -v javac" in /home/tony/projects/tessera
+ exited 1 in 0ms:
+    "unzip_notes": []
+  },
+  {
+    "case": "file-dir-conflict",
+    "check": "PASS",
+    "python": "IsADirectoryError: [Errno 21] Is a directory: '/tmp/tessera-a11c3b.yrZ1FWQq/file-dir-conflict-python/tessera_verify'",
+    "unzip_rc": 50,
+    "unzip_codec_matches": true,
+    "unzip_notes": [
+      "error:  cannot delete old /tmp/tessera-a11c3b.yrZ1FWQq/file-dir-conflict-unzip/tessera_verify"
+    ]
+  },
+  {
+    "case": "symlink",
+    "check": "AssertionError: ['benign-link']",
+    "python": "OK",
+    "unzip_rc": 0,
+    "unzip_codec_matches": true,
+    "unzip_notes": []
+  },
+  {
+    "case": "unicode-extra-alias",
+    "check": "AssertionError: ([], 1)",
+    "python": "OK",
+    "unzip_rc": 0,
+    "unzip_codec_matches": false,
+    "unzip_notes": []
+  },
+  {
+    "case": "unicode-local-only",
+    "check": "PASS",
+    "python": "OK",
+    "unzip_rc": 1,
+    "unzip_codec_matches": true,
+    "unzip_notes": [
+      "alias.txt:  mismatching \"local\" filename (tessera_verify/codec.py),"
+    ]
+  },
+  {
+    "case": "raw-nul",
+    "check": "PASS",
+    "python": "OK",
+    "unzip_rc": 0,
+    "unzip_codec_matches": true,
+    "unzip_notes": []
+  },
+  {
+    "case": "two-directories-eocd",
+    "check": "PASS",
+    "python": "OK",
+    "unzip_rc": 0,
+    "unzip_codec_matches": true,
+    "unzip_notes": []
+  }
+]
+resource "aws_cloudwatch_log_group" "api" {
+  name              = "/aws/lambda/${var.name}-api"
+  retention_in_days = 30
+}
+
+resource "aws_cloudwatch_log_group" "poller" {
+  name              = "/aws/lambda/${var.name}-poller"
+  retention_in_days = 30
+}
+
+resource "aws_lambda_function" "api" {
+  function_name    = "${var.name}-api"
+  role             = aws_iam_role.api.arn
+  runtime          = var.lambda_runtime
+  handler          = "tessera_issue.lambda_app.api_handler"
+  filename         = var.lambda_zip
+  source_code_hash = filebase64sha256(var.lambda_zip)
+  timeout          = 29
+  memory_size      = 512
+  environment {
+    variables = local.lambda_env
+  }
+  depends_on = [aws_cloudwatch_log_group.api]
+}
+
+resource "aws_lambda_function" "poller" {
+  function_name                  = "${var.name}-poller"
+  role                           = aws_iam_role.poller.arn
+  runtime                        = var.lambda_runtime
+  handler                        = "tessera_issue.lambda_app.poller_handler"
+  filename                       = var.lambda_zip
+  source_code_hash               = filebase64sha256(var.lambda_zip)
+  timeout                        = 300
+  memory_size                    = 1024
+  reserved_concurrent_executions = 1 # one poller at a time; records are also compare-and-set
+  environment {
+    variables = local.lambda_env
+  }
+  depends_on = [aws_cloudwatch_log_group.poller]
+}
+
+resource "aws_cloudwatch_event_rule" "poll" {
+  name                = "${var.name}-poll"
+  schedule_expression = "rate(10 minutes)"
+}
+
+resource "aws_cloudwatch_event_target" "poll" {
+  rule = aws_cloudwatch_event_rule.poll.name
+  arn  = aws_lambda_function.poller.arn
+}
+
+resource "aws_lambda_permission" "poll" {
+  statement_id  = "AllowSchedule"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.poller.function_name
+  principal     = "events.amazonaws.com"
+Archive:  /tmp/tessera-a11c3b.yrZ1FWQq/unicode-local-only.zip
+  inflating: /tmp/tessera-a11c3b.yrZ1FWQq/unicode-local-only-unzip/tessera_verify/__init__.py  
+  inflating: /tmp/tessera-a11c3b.yrZ1FWQq/unicode-local-only-unzip/tessera_verify/__main__.py  
+  inflating: /tmp/tessera-a11c3b.yrZ1FWQq/unicode-local-only-unzip/tessera_verify/anchors.py  
+  inflating: /tmp/tessera-a11c3b.yrZ1FWQq/unicode-local-only-unzip/tessera_verify/cli.py  
+  inflating: /tmp/tessera-a11c3b.yrZ1FWQq/unicode-local-only-unzip/tessera_verify/codec.py  
+  inflating: /tmp/tessera-a11c3b.yrZ1FWQq/unicode-local-only-unzip/tessera_verify/dnssec.py  
+  inflating: /tmp/tessera-a11c3b.yrZ1FWQq/unicode-local-only-unzip/tessera_verify/git_channel.py  
+  inflating: /tmp/tessera-a11c3b.yrZ1FWQq/unicode-local-only-unzip/tessera_verify/install_record.py  
+  inflating: /tmp/tessera-a11c3b.yrZ1FWQq/unicode-local-only-unzip/tessera_verify/policy.py  
+  inflating: /tmp/tessera-a11c3b.yrZ1FWQq/unicode-local-only-unzip/tessera_verify/release_auth.py  
+  inflating: /tmp/tessera-a11c3b.yrZ1FWQq/unicode-local-only-unzip/tessera_verify/release_constants.py  
+  inflating: /tmp/tessera-a11c3b.yrZ1FWQq/unicode-local-only-unzip/tessera_verify/sha1dc.py  
+  inflating: /tmp/tessera-a11c3b.yrZ1FWQq/unicode-local-only-unzip/tessera_verify/verify.py  
+  inflating: /tmp/tessera-a11c3b.yrZ1FWQq/unicode-local-only-unzip/cryptography/hazmat/bindings/_rust.abi3.so  
+  inflating: /tmp/tessera-a11c3b.yrZ1FWQq/unicode-local-only-unzip/cryptography-50.0.2.dist-info/WHEEL  
+  inflating: /tmp/tessera-a11c3b.yrZ1FWQq/unicode-local-only-unzip/notes.txt  
+ extracting: /tmp/tessera-a11c3b.yrZ1FWQq/unicode-local-only-unzip/alias.txt  
+
+alias.txt:  mismatching "local" filename (tessera_verify/codec.py),
+         continuing with "central" filename version
+
+exec
+/bin/bash -lc "python3 - <<'PY'
+import json,pathlib
+s=pathlib.Path('/tmp/tessera-a11c3b.yrZ1FWQq'); r=json.loads((s/'results.json').read_text()); print('cases',len(r),'accepted',sum(x['check']=='PASS' for x in r))
+for name in ['local-method-checked','local-size-checked']:
+ a=(s/(name+'-python/tessera_verify/codec.py')).read_bytes();b=(s/(name+'-unzip/tessera_verify/codec.py')).read_bytes();print(name,'python bytes',len(a),'unzip bytes',len(b),'equal',a==b)
+PY
+nl -ba service/issuer/package.py | sed -n '65,107p'" in /home/tony/projects/tessera
+ succeeded in 0ms:
+cases 23 accepted 17
+local-method-checked python bytes 15338 unzip bytes 5693 equal False
+local-size-checked python bytes 15338 unzip bytes 0 equal False
+    65	
+    66	def write_zip(stage, out):
+    67	    """Deterministic: sorted entries, fixed time, modes 644/755. -> SHA-256 of the zip."""
+    68	    with zipfile.ZipFile(out, "w", zipfile.ZIP_DEFLATED) as z:
+    69	        for f in sorted(p for p in Path(stage).rglob("*") if p.is_file()):
+    70	            info = zipfile.ZipInfo(f.relative_to(stage).as_posix(), (1980, 1, 1, 0, 0, 0))
+    71	            info.external_attr = (0o100755 if f.stat().st_mode & 0o111 else 0o100644) << 16
+    72	            info.compress_type = zipfile.ZIP_DEFLATED
+    73	            z.writestr(info, f.read_bytes())
+    74	    return sha256(out)
+    75	
+    76	
+    77	def build(out, install_json=None):
+    78	    binary, _ = pinned_binary()
+    79	    rec = check_install_record(install_json) if install_json else None
+    80	    ignore = shutil.ignore_patterns("__pycache__", "*.pyc", "*.egg-info")
+    81	    with tempfile.TemporaryDirectory() as tmp:
+    82	        stage = Path(tmp) / "stage"
+    83	        subprocess.run(["uv", "pip", "install", "--quiet", "--target", str(stage), "--python-version", "3.14",
+    84	                        "--python-platform", PLATFORM, "--only-binary", ":all:", *WHEEL], check=True)
+    85	        shutil.copytree(HERE / "tessera_issue", stage / "tessera_issue", ignore=ignore)
+    86	        shutil.copytree(VERIFIER / "tessera_verify", stage / "tessera_verify", ignore=ignore)
+    87	        shutil.copytree(FROZEN, stage / "freeze-v1" / "objects", ignore=ignore)
+    88	        dest = stage / LAMBDA_BINARY.removeprefix("/var/task/")
+    89	        dest.parent.mkdir(parents=True)
+    90	        shutil.copyfile(binary, dest)
+    91	        dest.chmod(0o755)
+    92	        if rec:
+    93	            (dest.parent.parent / "install.json").write_text(json.dumps(rec, indent=1, sort_keys=True) + "\n")
+    94	        digest = write_zip(stage, out)
+    95	    return digest
+    96	
+    97	
+    98	def main(argv=None):
+    99	    ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+   100	    ap.add_argument("out")
+   101	    ap.add_argument("--install-json")
+   102	    a = ap.parse_args(argv)
+   103	    digest = build(Path(a.out), a.install_json)
+   104	    kind = "deployable" if a.install_json else "BOOTSTRAP (no install.json: pre-ship refuses until rebuilt)"
+   105	    print(f"{a.out}: {kind}\nsha256 {digest}")
+   106	
+   107	
+
+web search: 
+web search: 'Overlapped entries'
+codex
+**Verdict: bind the tested verifier tree to a ZIP produced by the trusted packager, then match that exact ZIP’s SHA-256 to AWS `CodeSha256` for the deployed function/version. `check_zip` alone does not establish the claim.**
+
+Repository and git remained read-only. All probes and extraction outputs are under [the scratch directory](/tmp/tessera-a11c3b.yrZ1FWQq), including the [probe script](/tmp/tessera-a11c3b.yrZ1FWQq/probe.py) and [results](/tmp/tessera-a11c3b.yrZ1FWQq/results.json). No AWS calls were made.
+
+**A11C3B-01 — High: the current check does not establish deployment identity. Evidence: demonstrated by code inspection.**
+
+[`test_deployed_zip_identity`](/home/tony/projects/tessera/formal/p3-verification-profile/test_p3_profile.py:181) accepts a local path from `TESSERA_LAMBDA_ZIP` and calls `check_zip`. It neither queries AWS nor compares an archive digest with AWS’s reported digest. Passing a correctly constructed, undeployed ZIP therefore satisfies it.
+
+[`check_zip`](/home/tony/projects/tessera/formal/p3-verification-profile/test_p3_profile.py:70) establishes a narrower fact: **Python’s selected archive entries contain the current verifier-tree bytes and the recorded native binding/WHEEL tag.** The assertion in its comment that this establishes exactly what extraction writes is too broad.
+
+AWS documents `CodeSha256` as the SHA-256 of the deployment package. `GetFunction` also provides a download link for the package, optionally for a specified version. Those provide the missing deployment binding. [AWS FunctionConfiguration](https://docs.aws.amazon.com/lambda/latest/api/API_FunctionConfiguration.html), [AWS GetFunction](https://docs.aws.amazon.com/lambda/latest/api/API_GetFunction.html).
+
+**A11C3B-02 — Medium: extractor behavior varies, and Lambda’s extractor is undocumented in the public AWS documentation reviewed. Evidence: documented; AWS implementation remains unknown.**
+
+“Python reads the central directory” needs qualification: it enumerates entries there, but **also reads each selected local header and compares its decoded filename with the central entry’s original filename when opening that entry**. A simple local/central filename mismatch in `codec.py` is rejected. [CPython implementation](https://raw.githubusercontent.com/python/cpython/3.14/Lib/zipfile/__init__.py).
+
+Widely used implementations differ as follows:
+
+| Implementation | Local-header involvement |
+|---|---|
+| Java `ZipInputStream`, including its `JarInputStream` subclass | Reads local entries sequentially. Oracle explicitly describes `getNextEntry()` as reading the local header. |
+| Apache Commons Compress `ZipArchiveInputStream` | Streams local entries; may return entries absent from the central directory. Its `ZipFile` instead reads the directory first. |
+| libarchive | Has streaming and seeking ZIP readers. The streaming reader uses local headers; the seeking reader consults the central directory first. Selection depends on available seeking support. |
+| Info-ZIP `unzip` | Uses the central directory **and** local headers. Here it warned about mismatched names and continued using the central filename. |
+| uv’s historical streaming installer | Publicly documented local-entry versus central-directory differentials, including duplicate and stacked archives. This describes affected historical versions, not an assertion about current uv. |
+
+Sources: [Oracle](https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/zip/ZipInputStream.html), [Apache](https://commons.apache.org/proper/commons-compress/zip.html), [libarchive](https://github.com/libarchive/libarchive/wiki/FormatZip), [Info-ZIP source](https://raw.githubusercontent.com/madler/unzip/master/extract.c), [Astral advisory](https://astral.sh/blog/uv-security-advisory-cve-2025-54368).
+
+AWS’s Python packaging documentation describes archive creation, layout and permissions, but does not identify the deployment extractor, its version, or its conflict-resolution policy. **I found no public AWS documentation establishing that Lambda uses Python `zipfile`, Info-ZIP, libarchive, or another particular extractor. Treat it as undocumented.** AWS examples using `zip` or `unzip` on the developer’s machine do not identify the server-side implementation. [AWS packaging documentation](https://docs.aws.amazon.com/lambda/latest/dg/python-package.html).
+
+Also distinguish **valid-format variation** from **recovery of malformed archives**. PKWARE requires one EOCD record and a corresponding central header for each local header. Multiple competing EOCDs and orphan local entries are therefore not simply two equally conforming interpretations of a valid archive. They remain relevant because real parsers accept such inputs differently. [PKWARE specification, §4.3](https://pkware.cachefly.net/webdocs/casestudies/APPNOTE.TXT).
+
+**A11C3B-03 — High: passing `check_zip` does not imply extractor agreement. Evidence: demonstrated locally.**
+
+I ran 23 benign cases using **Python 3.14.6** from the verifier environment and Debian **Info-ZIP UnZip 6.00**. The harness executed the actual checker and its two helper functions, extracted from the repository’s AST without importing the test module. Baseline inputs included all current verifier files and the installed native binding matching F1.
+
+Selected results:
+
+| Constructed property | `check_zip` | Python extraction | Info-ZIP extraction |
+|---|---|---|---|
+| Baseline | Pass | Success | Success |
+| Local name differs for checked `codec.py` | Reject | Reject | Warning; central name used |
+| Local name differs for unchecked `notes.txt` | **Pass** | Reject | Warning; central name used |
+| Local compression method differs for `codec.py` | **Pass** | Original bytes | Different bytes; CRC error |
+| Local compressed/uncompressed sizes changed to 1 | **Pass** | Original bytes | Empty output file; inflate error |
+| Local encryption bit differs | **Pass** | Success | Success |
+| Local UTF-8 flag differs, ASCII filename | **Pass** | Success | Warning; same verifier bytes |
+| Prepended benign bytes | **Pass** | Success | Warning; same verifier bytes |
+| Appended benign bytes | **Pass** | Success | Success |
+| Incorrect EOCD entry counts | **Pass** | Success | Error |
+| Unreferenced local entry | **Pass** | Entry ignored | Entry ignored |
+| Concatenated archives, expected archive last | **Pass** | Last archive selected | Warning; expected verifier extracted |
+| Two directories/EOCDs, first EOCD comment encloses second | **Pass** | Success | Success |
+| `./tessera_verify/codec.py` alias | Reject | Overwrites checked path | Overwrites checked path |
+| Duplicate central filename | Reject | Accepted | Accepted |
+| Unix-mode symlink entry | Reject | Extracted as ordinary content | Symlink created |
+| File named `tessera_verify` alongside its children | **Pass** | Extraction error | Extraction error |
+
+For the compression-method case, Python wrote the original **15,338-byte** `codec.py`; Info-ZIP wrote **5,693 different bytes** and reported failure. This demonstrates disagreement, **not successful silent exploitation or acceptance by Lambda**.
+
+**A11C3B-04 — Medium: protection is partial across the documented ambiguity classes. Evidence: documented taxonomy, demonstrated cases, and code-derived conclusions.**
+
+The public ZipDiff research identifies 14 classes, covered below. The detection assessments are my analysis of this checker; **D** marks a locally demonstrated example, and **I** a code-derived assessment without a dedicated probe. [ZipDiff, USENIX Security 2025, §5.2](https://www.jianjunchen.com/p/zipdiff.USESEC25.pdf).
+
+| Class | Would this checker detect it? |
+|---|---|
+| Compression-method disagreement | **No, generally. D:** local method changed on a checked entry still passes. |
+| Size disagreement, including descriptor/ZIP64 sources | **Partial. D:** local sizes can disagree and pass. Python rejects some corrupt streams, but the checker does not reconcile every size source. |
+| Filename disagreement and Unicode Path extra fields | **Partial. D:** checked ordinary local/central mismatch rejects; unchecked mismatch passes. Unicode details below. |
+| File/directory/type disagreement | **Partial. D:** Unix-mode symlinks reject, but file/ancestor-directory conflict passes. Other type representations are not comprehensively validated. |
+| Encryption-flag disagreement | **Partial. D:** local-only encryption flag passes. Encryption Python recognizes on an opened entry requires credentials or fails. |
+| Duplicate names | **Yes for Python-visible exact duplicates. D.** Hidden entries or aliases interpreted differently elsewhere escape that particular test. |
+| Invalid/special characters | **Partial. D:** a raw NUL in an unchecked entry passes after Python sanitizes its visible name. No general character-policy check exists. |
+| Path canonicalization | **Yes for the tested POSIX aliases. D:** dot components, redundant normalization and backslashes are addressed. Drive-letter syntax is not explicitly excluded. |
+| Case sensitivity | **No case-collision check. D:** uppercase extra alias passes. It remains distinct on this Linux filesystem; Windows behavior is not Lambda evidence. |
+| Streaming versus directory enumeration | **No. D:** an orphan local record passes. Descriptor boundaries, holes and some overlaps also require separate reasoning. |
+| EOCD selection | **No uniqueness check. D:** one multiple-EOCD construction passes; another malformed construction rejects incidentally. |
+| Directory-entry counts | **No consistency check. D:** false EOCD counts pass. |
+| Directory/local-header offsets | **Partial. D/I:** prefix-offset compensation passes; some bad offsets fail inside Python. There is no independent archive-layout validation. |
+| ZIP64 EOCD interpretation | **No explicit cross-source consistency check. I:** Python selects its interpretation; success is not proof another parser selects the same one. |
+
+Additional qualifications:
+
+- **Unicode is version-sensitive.** This Python 3.14.6 recognizes central Unicode Path field `0x7075`. Adding an alternate name that mapped onto `codec.py` was rejected as a duplicate. A **local-only** Unicode Path override passed; Info-ZIP warned and retained the central name. Thus “Python ignores Unicode Path fields” would be inaccurate here. Multiple fields and precedence combinations remain unexhausted. [CPython implementation](https://raw.githubusercontent.com/python/cpython/3.14/Lib/zipfile/__init__.py).
+- **Prefixes, suffixes and concatenation are not expressly rejected.** Demonstrated above; acceptance alone does not imply altered verifier content.
+- **CRC and overlap checks are inherited and selective.** Python checks CRC while reading selected content and rejects certain overlaps. `check_zip` does not read every payload or validate complete byte coverage, so those checks are not whole-archive conformance evidence. [CPython implementation](https://raw.githubusercontent.com/python/cpython/3.14/Lib/zipfile/__init__.py).
+
+These tests establish bounded counterexamples, not an exhaustive classification of everything each extractor accepts.
+
+**A11C3B-05 — High: exact archive hashing is the stronger deployment binding, provided the expected digest comes from the verified build. Evidence: demonstrated packager structure, documented AWS API, inferred assurance.**
+
+[`write_zip`](/home/tony/projects/tessera/service/issuer/package.py:66) constructs a fresh archive with Python `zipfile`, sorted paths, fixed timestamps, regular-file modes and fresh `ZipInfo` objects. It writes staged bytes rather than copying ZIP headers from dependency archives. That substantially reduces the relevant parser-ambiguity surface.
+
+For this pipeline, use:
+
+1. Freeze or record the verifier bytes actually tested; verify their equality with the staged verifier bytes and retain the F1 native-binding check.
+2. Produce the final deployable archive with the reviewed packager and record its SHA-256.
+3. Deploy those exact bytes.
+4. Compare `base64(SHA256(zip_bytes))` with AWS `CodeSha256` for **each relevant function/version**, retaining the AWS response and deployment identity.
+
+The packager prints hexadecimal; AWS’s value uses base64 representation of the raw digest. Existing Terraform specifies `filebase64sha256(var.lambda_zip)` for both API and poller, but that configuration is not itself a retained post-deployment comparison. [Terraform configuration](/home/tony/projects/tessera/service/issuer/infra/main.tf:330), [provider documentation](https://registry.terraform.io/providers/hashicorp/aws/6.4.0/docs/data-sources/lambda_function.html?lang=typescript).
+
+The trade-off is precise:
+
+| Archive-content comparison | Exact trusted-build digest comparison |
+|---|---|
+| Can validate verifier content in independently assembled archives | Rejects every byte change from the recorded build |
+| Accepts harmless repackaging differences | Requires the exact artifact; rebuilding may produce another digest |
+| Depends on the checker’s archive interpretation | Depends on trustworthy build provenance and digest recording |
+| Does not identify what AWS deployed | Establishes deployment-package identity through AWS’s reported digest |
+
+**A digest does not resolve an already-ambiguous archive:** every extractor receives the same digest even if they interpret the bytes differently. The improvement comes from binding deployment to a **known packager output with verified inputs**, rather than accepting any ZIP that passes one parser. Astral explicitly documents different extraction outcomes despite an unchanged archive digest. [Astral advisory](https://astral.sh/blog/uv-security-advisory-cve-2025-54368).
+
+Hash identity also does not independently prove which modules the runtime loaded, or cover layers and configuration. If the intended claim is literally about the **post-extraction filesystem**, add a deployed manifest check of the relevant files and native binding. Otherwise state the bounded artifact-identity claim and its build/AWS assumptions.
+
+Prefer a published version when available. AWS supports publishing conditional on `CodeSha256` and `RevisionId`, which helps avoid recording one artifact and subsequently identifying another. Current Terraform does not publish versions. [AWS PublishVersion](https://docs.aws.amazon.com/lambda/latest/api/API_PublishVersion.html).
+
+**A11C3B-06 — Recommendation: replace §A11.2 item 3(c) with an explicit evidence chain.**
+
+Suggested wording:
+
+> **(c)** the exact deployable ZIP produced by the recorded `service/issuer/package.py` build is retained with its SHA-256. Its verifier files are byte-identical to the recorded tree exercised by the passing floor run, and its cryptography binding and wheel tag match F1. After successful deployment, that ZIP’s SHA-256, encoded as base64, matches AWS `CodeSha256` for every function/version to which this discharge applies. The record identifies the source/test inputs, packager, archive digest, AWS function/version and comparison result. This establishes deployment-package identity under the recorded build and AWS deployment assumptions; it does not assert equivalence among arbitrary ZIP extractors.
+
+If you require the stronger post-extraction claim, append:
+
+> A deployed check additionally confirms that the relevant extracted verifier files and native binding match the recorded manifest.
+
+This retains `check_zip` as useful build-content evidence while replacing its unsupported extraction-equivalence inference with an explicit deployment binding.
+
+
+hook: Stop
+hook: Stop Completed
+tokens used
+104,573
+**Verdict: bind the tested verifier tree to a ZIP produced by the trusted packager, then match that exact ZIP’s SHA-256 to AWS `CodeSha256` for the deployed function/version. `check_zip` alone does not establish the claim.**
+
+Repository and git remained read-only. All probes and extraction outputs are under [the scratch directory](/tmp/tessera-a11c3b.yrZ1FWQq), including the [probe script](/tmp/tessera-a11c3b.yrZ1FWQq/probe.py) and [results](/tmp/tessera-a11c3b.yrZ1FWQq/results.json). No AWS calls were made.
+
+**A11C3B-01 — High: the current check does not establish deployment identity. Evidence: demonstrated by code inspection.**
+
+[`test_deployed_zip_identity`](/home/tony/projects/tessera/formal/p3-verification-profile/test_p3_profile.py:181) accepts a local path from `TESSERA_LAMBDA_ZIP` and calls `check_zip`. It neither queries AWS nor compares an archive digest with AWS’s reported digest. Passing a correctly constructed, undeployed ZIP therefore satisfies it.
+
+[`check_zip`](/home/tony/projects/tessera/formal/p3-verification-profile/test_p3_profile.py:70) establishes a narrower fact: **Python’s selected archive entries contain the current verifier-tree bytes and the recorded native binding/WHEEL tag.** The assertion in its comment that this establishes exactly what extraction writes is too broad.
+
+AWS documents `CodeSha256` as the SHA-256 of the deployment package. `GetFunction` also provides a download link for the package, optionally for a specified version. Those provide the missing deployment binding. [AWS FunctionConfiguration](https://docs.aws.amazon.com/lambda/latest/api/API_FunctionConfiguration.html), [AWS GetFunction](https://docs.aws.amazon.com/lambda/latest/api/API_GetFunction.html).
+
+**A11C3B-02 — Medium: extractor behavior varies, and Lambda’s extractor is undocumented in the public AWS documentation reviewed. Evidence: documented; AWS implementation remains unknown.**
+
+“Python reads the central directory” needs qualification: it enumerates entries there, but **also reads each selected local header and compares its decoded filename with the central entry’s original filename when opening that entry**. A simple local/central filename mismatch in `codec.py` is rejected. [CPython implementation](https://raw.githubusercontent.com/python/cpython/3.14/Lib/zipfile/__init__.py).
+
+Widely used implementations differ as follows:
+
+| Implementation | Local-header involvement |
+|---|---|
+| Java `ZipInputStream`, including its `JarInputStream` subclass | Reads local entries sequentially. Oracle explicitly describes `getNextEntry()` as reading the local header. |
+| Apache Commons Compress `ZipArchiveInputStream` | Streams local entries; may return entries absent from the central directory. Its `ZipFile` instead reads the directory first. |
+| libarchive | Has streaming and seeking ZIP readers. The streaming reader uses local headers; the seeking reader consults the central directory first. Selection depends on available seeking support. |
+| Info-ZIP `unzip` | Uses the central directory **and** local headers. Here it warned about mismatched names and continued using the central filename. |
+| uv’s historical streaming installer | Publicly documented local-entry versus central-directory differentials, including duplicate and stacked archives. This describes affected historical versions, not an assertion about current uv. |
+
+Sources: [Oracle](https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/zip/ZipInputStream.html), [Apache](https://commons.apache.org/proper/commons-compress/zip.html), [libarchive](https://github.com/libarchive/libarchive/wiki/FormatZip), [Info-ZIP source](https://raw.githubusercontent.com/madler/unzip/master/extract.c), [Astral advisory](https://astral.sh/blog/uv-security-advisory-cve-2025-54368).
+
+AWS’s Python packaging documentation describes archive creation, layout and permissions, but does not identify the deployment extractor, its version, or its conflict-resolution policy. **I found no public AWS documentation establishing that Lambda uses Python `zipfile`, Info-ZIP, libarchive, or another particular extractor. Treat it as undocumented.** AWS examples using `zip` or `unzip` on the developer’s machine do not identify the server-side implementation. [AWS packaging documentation](https://docs.aws.amazon.com/lambda/latest/dg/python-package.html).
+
+Also distinguish **valid-format variation** from **recovery of malformed archives**. PKWARE requires one EOCD record and a corresponding central header for each local header. Multiple competing EOCDs and orphan local entries are therefore not simply two equally conforming interpretations of a valid archive. They remain relevant because real parsers accept such inputs differently. [PKWARE specification, §4.3](https://pkware.cachefly.net/webdocs/casestudies/APPNOTE.TXT).
+
+**A11C3B-03 — High: passing `check_zip` does not imply extractor agreement. Evidence: demonstrated locally.**
+
+I ran 23 benign cases using **Python 3.14.6** from the verifier environment and Debian **Info-ZIP UnZip 6.00**. The harness executed the actual checker and its two helper functions, extracted from the repository’s AST without importing the test module. Baseline inputs included all current verifier files and the installed native binding matching F1.
+
+Selected results:
+
+| Constructed property | `check_zip` | Python extraction | Info-ZIP extraction |
+|---|---|---|---|
+| Baseline | Pass | Success | Success |
+| Local name differs for checked `codec.py` | Reject | Reject | Warning; central name used |
+| Local name differs for unchecked `notes.txt` | **Pass** | Reject | Warning; central name used |
+| Local compression method differs for `codec.py` | **Pass** | Original bytes | Different bytes; CRC error |
+| Local compressed/uncompressed sizes changed to 1 | **Pass** | Original bytes | Empty output file; inflate error |
+| Local encryption bit differs | **Pass** | Success | Success |
+| Local UTF-8 flag differs, ASCII filename | **Pass** | Success | Warning; same verifier bytes |
+| Prepended benign bytes | **Pass** | Success | Warning; same verifier bytes |
+| Appended benign bytes | **Pass** | Success | Success |
+| Incorrect EOCD entry counts | **Pass** | Success | Error |
+| Unreferenced local entry | **Pass** | Entry ignored | Entry ignored |
+| Concatenated archives, expected archive last | **Pass** | Last archive selected | Warning; expected verifier extracted |
+| Two directories/EOCDs, first EOCD comment encloses second | **Pass** | Success | Success |
+| `./tessera_verify/codec.py` alias | Reject | Overwrites checked path | Overwrites checked path |
+| Duplicate central filename | Reject | Accepted | Accepted |
+| Unix-mode symlink entry | Reject | Extracted as ordinary content | Symlink created |
+| File named `tessera_verify` alongside its children | **Pass** | Extraction error | Extraction error |
+
+For the compression-method case, Python wrote the original **15,338-byte** `codec.py`; Info-ZIP wrote **5,693 different bytes** and reported failure. This demonstrates disagreement, **not successful silent exploitation or acceptance by Lambda**.
+
+**A11C3B-04 — Medium: protection is partial across the documented ambiguity classes. Evidence: documented taxonomy, demonstrated cases, and code-derived conclusions.**
+
+The public ZipDiff research identifies 14 classes, covered below. The detection assessments are my analysis of this checker; **D** marks a locally demonstrated example, and **I** a code-derived assessment without a dedicated probe. [ZipDiff, USENIX Security 2025, §5.2](https://www.jianjunchen.com/p/zipdiff.USESEC25.pdf).
+
+| Class | Would this checker detect it? |
+|---|---|
+| Compression-method disagreement | **No, generally. D:** local method changed on a checked entry still passes. |
+| Size disagreement, including descriptor/ZIP64 sources | **Partial. D:** local sizes can disagree and pass. Python rejects some corrupt streams, but the checker does not reconcile every size source. |
+| Filename disagreement and Unicode Path extra fields | **Partial. D:** checked ordinary local/central mismatch rejects; unchecked mismatch passes. Unicode details below. |
+| File/directory/type disagreement | **Partial. D:** Unix-mode symlinks reject, but file/ancestor-directory conflict passes. Other type representations are not comprehensively validated. |
+| Encryption-flag disagreement | **Partial. D:** local-only encryption flag passes. Encryption Python recognizes on an opened entry requires credentials or fails. |
+| Duplicate names | **Yes for Python-visible exact duplicates. D.** Hidden entries or aliases interpreted differently elsewhere escape that particular test. |
+| Invalid/special characters | **Partial. D:** a raw NUL in an unchecked entry passes after Python sanitizes its visible name. No general character-policy check exists. |
+| Path canonicalization | **Yes for the tested POSIX aliases. D:** dot components, redundant normalization and backslashes are addressed. Drive-letter syntax is not explicitly excluded. |
+| Case sensitivity | **No case-collision check. D:** uppercase extra alias passes. It remains distinct on this Linux filesystem; Windows behavior is not Lambda evidence. |
+| Streaming versus directory enumeration | **No. D:** an orphan local record passes. Descriptor boundaries, holes and some overlaps also require separate reasoning. |
+| EOCD selection | **No uniqueness check. D:** one multiple-EOCD construction passes; another malformed construction rejects incidentally. |
+| Directory-entry counts | **No consistency check. D:** false EOCD counts pass. |
+| Directory/local-header offsets | **Partial. D/I:** prefix-offset compensation passes; some bad offsets fail inside Python. There is no independent archive-layout validation. |
+| ZIP64 EOCD interpretation | **No explicit cross-source consistency check. I:** Python selects its interpretation; success is not proof another parser selects the same one. |
+
+Additional qualifications:
+
+- **Unicode is version-sensitive.** This Python 3.14.6 recognizes central Unicode Path field `0x7075`. Adding an alternate name that mapped onto `codec.py` was rejected as a duplicate. A **local-only** Unicode Path override passed; Info-ZIP warned and retained the central name. Thus “Python ignores Unicode Path fields” would be inaccurate here. Multiple fields and precedence combinations remain unexhausted. [CPython implementation](https://raw.githubusercontent.com/python/cpython/3.14/Lib/zipfile/__init__.py).
+- **Prefixes, suffixes and concatenation are not expressly rejected.** Demonstrated above; acceptance alone does not imply altered verifier content.
+- **CRC and overlap checks are inherited and selective.** Python checks CRC while reading selected content and rejects certain overlaps. `check_zip` does not read every payload or validate complete byte coverage, so those checks are not whole-archive conformance evidence. [CPython implementation](https://raw.githubusercontent.com/python/cpython/3.14/Lib/zipfile/__init__.py).
+
+These tests establish bounded counterexamples, not an exhaustive classification of everything each extractor accepts.
+
+**A11C3B-05 — High: exact archive hashing is the stronger deployment binding, provided the expected digest comes from the verified build. Evidence: demonstrated packager structure, documented AWS API, inferred assurance.**
+
+[`write_zip`](/home/tony/projects/tessera/service/issuer/package.py:66) constructs a fresh archive with Python `zipfile`, sorted paths, fixed timestamps, regular-file modes and fresh `ZipInfo` objects. It writes staged bytes rather than copying ZIP headers from dependency archives. That substantially reduces the relevant parser-ambiguity surface.
+
+For this pipeline, use:
+
+1. Freeze or record the verifier bytes actually tested; verify their equality with the staged verifier bytes and retain the F1 native-binding check.
+2. Produce the final deployable archive with the reviewed packager and record its SHA-256.
+3. Deploy those exact bytes.
+4. Compare `base64(SHA256(zip_bytes))` with AWS `CodeSha256` for **each relevant function/version**, retaining the AWS response and deployment identity.
+
+The packager prints hexadecimal; AWS’s value uses base64 representation of the raw digest. Existing Terraform specifies `filebase64sha256(var.lambda_zip)` for both API and poller, but that configuration is not itself a retained post-deployment comparison. [Terraform configuration](/home/tony/projects/tessera/service/issuer/infra/main.tf:330), [provider documentation](https://registry.terraform.io/providers/hashicorp/aws/6.4.0/docs/data-sources/lambda_function.html?lang=typescript).
+
+The trade-off is precise:
+
+| Archive-content comparison | Exact trusted-build digest comparison |
+|---|---|
+| Can validate verifier content in independently assembled archives | Rejects every byte change from the recorded build |
+| Accepts harmless repackaging differences | Requires the exact artifact; rebuilding may produce another digest |
+| Depends on the checker’s archive interpretation | Depends on trustworthy build provenance and digest recording |
+| Does not identify what AWS deployed | Establishes deployment-package identity through AWS’s reported digest |
+
+**A digest does not resolve an already-ambiguous archive:** every extractor receives the same digest even if they interpret the bytes differently. The improvement comes from binding deployment to a **known packager output with verified inputs**, rather than accepting any ZIP that passes one parser. Astral explicitly documents different extraction outcomes despite an unchanged archive digest. [Astral advisory](https://astral.sh/blog/uv-security-advisory-cve-2025-54368).
+
+Hash identity also does not independently prove which modules the runtime loaded, or cover layers and configuration. If the intended claim is literally about the **post-extraction filesystem**, add a deployed manifest check of the relevant files and native binding. Otherwise state the bounded artifact-identity claim and its build/AWS assumptions.
+
+Prefer a published version when available. AWS supports publishing conditional on `CodeSha256` and `RevisionId`, which helps avoid recording one artifact and subsequently identifying another. Current Terraform does not publish versions. [AWS PublishVersion](https://docs.aws.amazon.com/lambda/latest/api/API_PublishVersion.html).
+
+**A11C3B-06 — Recommendation: replace §A11.2 item 3(c) with an explicit evidence chain.**
+
+Suggested wording:
+
+> **(c)** the exact deployable ZIP produced by the recorded `service/issuer/package.py` build is retained with its SHA-256. Its verifier files are byte-identical to the recorded tree exercised by the passing floor run, and its cryptography binding and wheel tag match F1. After successful deployment, that ZIP’s SHA-256, encoded as base64, matches AWS `CodeSha256` for every function/version to which this discharge applies. The record identifies the source/test inputs, packager, archive digest, AWS function/version and comparison result. This establishes deployment-package identity under the recorded build and AWS deployment assumptions; it does not assert equivalence among arbitrary ZIP extractors.
+
+If you require the stronger post-extraction claim, append:
+
+> A deployed check additionally confirms that the relevant extracted verifier files and native binding match the recorded manifest.
+
+This retains `check_zip` as useful build-content evidence while replacing its unsupported extraction-equivalence inference with an explicit deployment binding.
+
+

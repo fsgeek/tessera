@@ -1,0 +1,2165 @@
+Reading additional input from stdin...
+OpenAI Codex v0.164.0
+--------
+workdir: /home/tony/projects/tessera
+model: gpt-6.1-sol
+provider: openai
+approval: never
+sandbox: danger-full-access
+reasoning effort: none
+reasoning summaries: none
+session id: 01a18342-a5d5-7d11-affe-70b039ef8ff7
+--------
+user
+Bounded second confirmation for Project Tessera at /home/tony/projects/tessera. Read-only: no repo edits, no git writes; scratch only under a fresh mktemp -d. Your last pass: docs/reviews/amendment-11/CODEX-CONFIRM.md (verdict NOT READY: A11C-01 and the K-R registered commitment). Owner's repairs: the 'Confirmation' section of docs/reviews/amendment-11/DISPOSITION.md; docs/phase-0-prereg-amendment-11.md (header disclosure, §A11.3 K-R row, §A11.5 item 5, updated manifest hash); formal/p3-verification-profile/test_p3_profile.py check_zip and FLOOR-MANIFEST.sha256; service/signer-gcp/deploy.sh key variables; service/signer-gcp/README.md; service/issuer/DEPLOY.md; docs/decisions/2026-10-27-v1-signer-placement.md header. Scope ONLY: (1) is A11C-01 closed — does check_zip now bind all tested verifier code to the zip, can it be passed with different verifier code (try), and does the manifest verify and match the amendment's hash; (2) is the K-R item an accurate statement of formal/p8/HYBRID-SUPPLEMENT.md:148-172 and :533, correctly separating the unchanged assumption from the changed enforcement wording, and is anything in K-R or the supplement now contradicted by service/signer-kms (read its signer.py for mu computation and its infra key policy); (3) do the deploy.sh changes leave any path that uses the spike key for production or breaks retire-instrument; (4) any new defect in the repaired text. Then the one-line verdict: is Amendment 11 ready for the author's signature (the slot-2 item and K-R item are rulings for him, not defects)? Apply these owner prechecks to the amendment, PASS/FAIL with file:line:
+
+# Owner prechecks, run by the reviewer
+
+> **Status: OWNER PROCESS, 2026-10-27.** Every owner instance has written these down as lessons and then repeated
+> the mistakes (the 2026-10-19 stone, and its 2026-10-27 postscript "Naming it did not stop it"). The author's
+> answer to "what do new owners get wrong in their first week": *"that they will behave differently from the prior
+> instances."* So these checks are not left to the owner's self-review. The owner appends this file verbatim to
+> every review brief (Codex or another family), and the reviewer reports each check as PASS or FAIL with file:line.
+
+## Checks
+
+1. **Capture row.** For every plain-language statement of what holds, what happens when an attacker controls both
+   authority channels (DNS and git)? If the text implies that the attacker's own keys are rejected, or that a
+   capture is detected or made visible, that is FAIL. Ground truth: `docs/V1-CONTRACT.md` §2 (after G10) and §4.
+2. **Trigger clause.** For every registered rule cited as authority (an amendment section, a table row, a ruling),
+   did the rule's trigger condition actually occur? Citing a consequence whose trigger has not happened is FAIL.
+3. **Requester.** For every security claim about keys or signing, who can cause a signature to be made? A claim
+   that reasons only about where a key is stored, and not about who can submit work to the signer, is FAIL.
+4. **Binding text.** For every sentence the document treats as a requirement, is it registered (a signed amendment,
+   the freeze, or a recorded author ruling), or is it something an instance wrote? An unregistered sentence used as a
+   requirement is FAIL. Since 2026-10-27, `docs/V1-SCHEDULE.md`'s ruling budget is a known instance of this.
+codex
+I’ll check the bounded repairs, try to pass `check_zip` with different verifier code, and report the four owner prechecks with file-and-line evidence. I’ll keep the checkout read-only and use a fresh scratch directory.
+exec
+/bin/bash -lc "cat /home/tony/.codex/plugins/cache/openai-curated-remote/superpowers/7.0.1/skills/using-superpowers/SKILL.md; rg -n 'amendment-11|formal review' /home/tony/.codex/memories/MEMORY.md; pwd; rg --files -g AGENTS.md -g '*CONFIRM*' -g '*DISPOSITION*'" in /home/tony/projects/tessera
+ succeeded in 0ms:
+---
+name: using-superpowers
+description: Use when starting any conversation - establishes how to find and use skills, requiring skill invocation before ANY response including clarifying questions
+---
+
+<SUBAGENT-STOP>
+If you were dispatched as a subagent to execute a specific task, ignore this skill.
+</SUBAGENT-STOP>
+
+<EXTREMELY-IMPORTANT>
+If you think there is even a 1% chance a skill might apply to what you are doing, you ABSOLUTELY MUST invoke the skill.
+
+IF A SKILL APPLIES TO YOUR TASK, YOU DO NOT HAVE A CHOICE. YOU MUST USE IT.
+
+This is not negotiable. You cannot rationalize your way out of this.
+</EXTREMELY-IMPORTANT>
+
+## The Rule
+
+**Invoke relevant or requested skills BEFORE any response or action** — including clarifying questions, exploring the codebase, or checking files. If it turns out wrong for the situation, you don't have to use it.
+
+**Before entering plan mode:** if you haven't already brainstormed, invoke the brainstorming skill first.
+
+Then announce "Using [skill] to [purpose]" and follow the skill exactly. If it has a checklist, create a todo per item.
+
+## Skill Priority
+
+When multiple skills apply, process skills come first — they set the approach, then implementation skills (frontend-design, etc.) carry it out. Brainstorming and systematic-debugging are Superpowers' most common process skills, but the rule holds for any of them.
+
+- "Let's build X" → superpowers:brainstorming first, then implementation skills.
+- "Fix this bug" → superpowers:systematic-debugging first, then domain skills.
+
+## Red Flags
+
+These thoughts mean STOP—you're rationalizing:
+
+| Thought | Reality |
+|---------|---------|
+| "This is just a simple question" | Questions are tasks. Check for skills. |
+| "I need more context first" | Skill check comes BEFORE clarifying questions. |
+| "Let me explore the codebase first" | Skills tell you HOW to explore. Check first. |
+| "I can check git/files quickly" | Files lack conversation context. Check for skills. |
+| "Let me gather information first" | Skills tell you HOW to gather information. |
+| "This doesn't need a formal skill" | If a skill exists, use it. |
+| "I remember this skill" | Skills evolve. Read current version. |
+| "This doesn't count as a task" | Action = task. Check for skills. |
+| "The skill is overkill" | Simple things become complex. Use it. |
+| "I'll just do this one thing first" | Check BEFORE doing anything. |
+| "This feels productive" | Undisciplined action wastes time. Skills prevent this. |
+| "I know what that means" | Knowing the concept ≠ using the skill. Invoke it. |
+
+## Platform Adaptation
+
+If your harness appears here, read its reference file for special instructions:
+
+- Claude Code: `references/claude-code-tools.md`
+- Codex: `references/codex-tools.md`
+- Pi: `references/pi-tools.md`
+- Antigravity: `references/antigravity-tools.md`
+- Hermes Agent: `references/hermes-tools.md`
+- Muse: `references/muse-tools.md`
+
+## User Instructions
+
+User instructions (CLAUDE.md, AGENTS.md, GEMINI.md, etc, direct requests) take precedence over skills, which in turn override default behavior. Only skip skill workflows or instructions when your human partner has explicitly told you to.
+193:# Task Group: Tessera S-P3 and capstone-ledger formal review
+220:- When the user asks for a cold formal review, they want the abstraction challenged rather than rubber-stamped -> inspect the exact model, shared theory, attack judge, and machine output. [Task 1]
+/home/tony/projects/tessera
+docs/reviews/v1-contract/DISPOSITION.md
+docs/reviews/h2-record/DISPOSITION.md
+docs/reviews/v1-profile-r2/DISPOSITION.md
+docs/reviews/p3-profile/DISPOSITION.md
+docs/reviews/profile-2026-10-19/DISPOSITION.md
+docs/reviews/e18-signoff/DISPOSITION.md
+docs/reviews/e10/DISPOSITION.md
+docs/reviews/amendment-10-r4/DISPOSITION.md
+docs/reviews/a9-custody/DISPOSITION.md
+docs/reviews/amendment-10-r2/DISPOSITION.md
+docs/reviews/amendment-10-r2/CONFIRMATION.md
+docs/reviews/signers/DISPOSITION.md
+docs/reviews/amendment-10/DISPOSITION.md
+docs/reviews/amendment-10/CONFIRMATION.md
+docs/reviews/v1-profile/DISPOSITION.md
+docs/reviews/amendment-9/DISPOSITION.md
+docs/reviews/exit-pages/DISPOSITION.md
+docs/reviews/preamble/DISPOSITION.md
+docs/reviews/r22/DISPOSITION.md
+docs/reviews/anchor-signatures/DISPOSITION.md
+docs/reviews/utc-capture-memo/DISPOSITION.md
+docs/reviews/amendment-10-r3/DISPOSITION.md
+docs/reviews/custody/DISPOSITION.md
+docs/reviews/spec-sufficiency/A9-GAP-FIXES-CONFIRMATION.md
+docs/reviews/spec-sufficiency/DISPOSITION-RESOLUTIONS.md
+docs/reviews/service-contract/DISPOSITION.md
+docs/reviews/amendment-11/CODEX-CONFIRM.md
+docs/reviews/amendment-11/DISPOSITION.md
+docs/reviews/e6a/DISPOSITION.md
+docs/reviews/e9-packet/DISPOSITION.md
+docs/reviews/a9-final-delta/DISPOSITION.md
+docs/reviews/issuer/CODEX-CONFIRM-2.md
+docs/reviews/a9-final-delta/CONFIRMATION.md
+docs/reviews/issuer/CODEX-CONFIRM-3.md
+docs/reviews/issuer/CODEX-CONFIRM.md
+docs/reviews/issuer/DISPOSITION.md
+docs/reviews/levadura-contradictions/DISPOSITION.md
+docs/reviews/p8-falsification/DISPOSITION.md
+docs/reviews/freeze-record/CODEX-CONFIRM.md
+
+exec
+/bin/bash -lc 'cat /home/tony/.codex/memories/skills/tessera-formal-review/SKILL.md; cat docs/reviews/amendment-11/CODEX-CONFIRM.md; cat docs/reviews/amendment-11/DISPOSITION.md; nl -ba docs/phase-0-prereg-amendment-11.md' in /home/tony/projects/tessera
+ succeeded in 0ms:
+---
+name: tessera-formal-review
+description: Review a Tessera formal model or capstone-ledger claim with bounded conclusions, producer/consumer evidence, and direct artifact checks.
+argument-hint: "[artifact or review question]"
+user-invocable: false
+allowed-tools: Read, Grep, Glob, Bash
+---
+
+# Tessera formal review
+
+## When to use
+
+Use for a read-only review of Tessera ProVerif/TLA+ artifacts, S-P3, or `LEDGER.md` capstone claims. Do not use it to silently amend adopted artifacts, decide unresolved policy questions, or convert a scratch probe, companion, or viability run into discharge.
+
+## Inputs and context
+
+1. Establish the exact artifact, registered property/amendment, current adoption/status record, and requested decision.
+2. Read the relevant model and its header, predictions/results, theory library, and any routed review record. Amendments outrank trackers.
+3. Recheck live branch/status and preserve unrelated pre-existing work as user-owned.
+
+## Procedure
+
+1. Explain local terms before testing conclusions. Translate the review as: claim -> adversary -> load-bearing check -> assumptions -> non-claims -> validation evidence.
+2. State the model boundary precisely: which keys/channels are compromised, which signed bytes or frames are reused, and which attacks are outside scope.
+3. Run the registered command when practical, preserving tool version and exact result polarity. For S-P3 Q2 use:
+   ```sh
+   proverif -lib formal/suite/lib/tessera_theory.pvl formal/suite/s-p3/proverif/sp3_q2_degraded_compromised.pv
+   ```
+4. For `LEDGER.md`, read the full relevant contract and combined-consequences table, not a single section. Translate each producer/consumer relation into which component supplies information and which relies on it.
+5. For every claimed cross-model join, identify the registered producer query and a broken companion whose mutation makes the consuming query fail. If severing the producer does not affect the consumer's registered query, call the relation complementary or capstone-internal rather than cross-model.
+6. Check relation scope structurally. A key/signature transplant query cannot establish exact signing-to-presented-bytes binding: C-Q8 must inspect accepted `(key, signature, presented bytes)` triples. Require C-Q9 separately for possession over the accepted manifest, and an acceptance/execution identifier for C-Q1 completeness.
+7. For composition, ask whether all checks run on one acceptance path. A wrapper can attest that it saw a bundle, but cannot repair an original attestation that was already forgeable; separate envelope validity, standing, authorship, and adjudicator judgment.
+8. Separate registered evidence, scratch-probe evidence, header fidelity, property coverage, symbolic proof, concrete cryptographic/security claims, cross-formalism claims, and implementation conformance in the conclusion.
+
+## Efficiency plan
+
+- Start with the requested artifact plus its adjacent predictions/results and governing amendment; for a capstone review, also read the complete ledger contract and combined-consequences table.
+- Cache the claim/adversary/boundary table while comparing the model, header, and review record.
+- Stop and ask for a decision when an apparent inconsistency is a policy choice or the adoption state is unclear.
+
+## Pitfalls and fixes
+
+- Symptom: a bounded Q2 result is described as stolen-key or chain-takeover resistance. Cause: attacker scope expanded in prose. Fix: say it tests reattribution of existing honest signed bytes under explicitly modeled DSKS substitution; rotation/succession remains separate.
+- Symptom: a green companion/probe, bounded TLC run, or family-local query is treated as capstone discharge. Fix: preserve the distinction between scratch/negative-control evidence, registered coverage, cross-formalism proof, and final discharge.
+- Symptom: a ledger says “all findings accepted” or “exactly one red query.” Cause: scope/polarity was not checked. Fix: inspect the producer and consumer directly; record expected failed, retained, and witness sets when a mutation affects several queries.
+- Symptom: a copied check is called cross-model. Fix: sever the producer and require the registered consumer query to fail; otherwise label it complementary/capstone-internal.
+- Symptom: an accepted key/signature relation is used to claim exact presented-byte binding. Fix: inspect the complete accepted triple structurally and retain C-Q9's separate manifest-possession obligation.
+
+## Verification checklist
+
+- Confirm the command, model/library paths, and reported query results.
+- For capstone claims, confirm the producer query, consumer query, severing companion polarity, and whether evidence is registered rather than scratch-only.
+- Name explicit assumptions and non-claims, including concrete encoding/framing obligations when symbolic `fp` or `h` is used.
+- Confirm C-Q1 has an acceptance identifier, per-slot reports, same-acceptance completeness, strict/degraded distinction, evidence binding, possession, byte binding, type, and innermost-scope links.
+- Confirm conclusions do not move tracker/discharge status without recorded prerequisites, frozen predictions, joins, and agreement gates.
+The revision substantially resolves the earlier review, but **is not ready for signature**: the new discharge rule still lacks a binding between the tested verifier code and deployed code, and the expanded sweep found an unaccounted registered KMS-role commitment.
+
+Read-only review completed. Scratch was confined to `/tmp/tmp.4xaTjTpu57`; no repository edits or git writes were made.
+
+**A. Earlier findings**
+
+References below use `A11` for [the revised amendment](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-11.md).
+
+| Finding | Status | Evidence |
+|---|---|---|
+| A11-01 — floor and discharge prerequisites | **PARTIAL** | A11:41–69 retains the fields, pins the floor, separates adoption from discharge, and blocks unresolved defects. The deployed-code binding remains insufficient; see A11C-01 below. |
+| A11-02 — retrospective custody exception | **CLOSED** | A11:12–14 explicitly discloses the late, outcome-informed relaxation. A11:112–120 distinguishes historical qualification from replacement qualification and explains why R5b does not settle it. |
+| A11-03 — spike-key deletion | **CLOSED** | A11:137–140 preserves deletion. [DEPLOY.md:18](/home/tony/projects/tessera/service/issuer/DEPLOY.md:18) now requires new production keys; lines 23–30 prescribe replacement and deletion. Actual deletion remains an operational obligation, not a completed fact. |
+| A11-04 — complete enforcement boundary | **CLOSED** | A11:121–130 incorporates every A9.6 requirement and requires deployed positive/refusal evidence, requester/admin review, retirement, and image/configuration identification. This closes the wording finding; it does not establish deployment conformance. |
+| A11-05 — policy versus implementation defects | **CLOSED** | A11:74–81 separates later security assessments from implementation-conformance defects and requires explicit release corrections. |
+| A11-06 — 219/21 vector split | **CLOSED** | A11:60–62 states precisely which cases reach the library and which reach neither interface. |
+| A11-07 — retrospective disclosure and vacuity | **CLOSED** | A11:8–16 separately discloses the changes; A11:27 retains the four applicable ML-DSA fields. The stale PENDING statement is gone. |
+| H3 notes | **CLOSED in the amendment** | A11:105–111 uses “AWS-based,” includes every provider and retained resources, requires a prior measurement protocol, and prohibits redefining the window to avoid falsification. |
+| Citation notes | **CLOSED** | A11:89–90 pins the historical profile and corrects the supplement locator; A11:135 identifies S1 as an unregistered owner operational resolution. |
+
+The supporting sweep still needs editorial reconciliation: [SWEEP:11](/home/tony/projects/tessera/docs/reviews/stale-dependencies/SWEEP-2026-10-28.md:11) continues to describe H3 as assuming an all-AWS demonstration and “AWS-only wording,” contrary to the corrected amendment’s reading.
+
+**Manifest verification:** all **15 entries passed** `sha256sum -c`. The manifest’s own SHA-256 is:
+
+`c571ee99f55d46a4b2dceb399c872c71f829a60290c20ce933ef2e960969b4d5`
+
+This matches A11:55.
+
+**B. Defect in the revised discharge rule**
+
+**A11C-01 — High: the prescribed deployment identity check does not bind the tested verifier implementation to deployment.**
+
+[A11:63](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-11.md:63) now establishes explicit discharge conditions, including `test_deployed_zip_identity`. But:
+
+- [test_p3_profile.py:62](/home/tony/projects/tessera/formal/p3-verification-profile/test_p3_profile.py:62) checks only the zip’s cryptography native-binding hash and wheel tag.
+- [test_p3_profile.py:25](/home/tony/projects/tessera/formal/p3-verification-profile/test_p3_profile.py:25) selects the working-tree verifier; lines 39–43 import its behavior.
+- [test_p3_profile.py:151](/home/tony/projects/tessera/formal/p3-verification-profile/test_p3_profile.py:151) applies that limited zip check to the supplied artifact.
+
+Consequently, a tested checkout and deployed zip can contain different verifier Python code while sharing the same cryptography wheel. The prescribed checks can pass without establishing that the deployed implementation exhibits the tested behavior.
+
+**Required repair:** make discharge require either running the floor against verifier code extracted from the authenticated deployed artifact, or verifying an explicit identity binding between all tested verifier code and that artifact. Preserve the separate requirement to establish that the supplied artifact is actually deployed.
+
+This is a remaining inadequacy in A11-01 made consequential by the revision’s explicit discharge rule, rather than evidence that a current deployment is defective.
+
+**C. Expanded registered-record sweep**
+
+**1. Additional unresolved commitment: K-R assigns signing authority and μ computation to the issuer.**
+
+Registered side:
+
+- [HYBRID-SUPPLEMENT.md:61](/home/tony/projects/tessera/formal/p8/HYBRID-SUPPLEMENT.md:61) specifies issuer computation of external μ.
+- [HYBRID-SUPPLEMENT.md:151](/home/tony/projects/tessera/formal/p8/HYBRID-SUPPLEMENT.md:151) expressly makes issuer-computed μ part of K-R.
+- [HYBRID-SUPPLEMENT.md:170](/home/tony/projects/tessera/formal/p8/HYBRID-SUPPLEMENT.md:170) specifies `kms:Sign` only for the issuer role and issuer code constructing V1 frames.
+- [HYBRID-SUPPLEMENT.md:533](/home/tony/projects/tessera/formal/p8/HYBRID-SUPPLEMENT.md:533) repeats the issuer-role policy commitment.
+
+Current owner side:
+
+- [signer-placement decision:19](/home/tony/projects/tessera/docs/decisions/2026-10-27-v1-signer-placement.md:19) assigns signing to a separate signer role and keeps issuer roles without KMS permissions.
+- [signer-kms/README.md:3](/home/tony/projects/tessera/service/signer-kms/README.md:3) describes that separate Lambda and role; line 30 places external-μ signing there.
+- [DEPLOY.md:49](/home/tony/projects/tessera/service/issuer/DEPLOY.md:49) installs the signer-only key policy.
+
+The placement decision nevertheless says it **“changes no registered sentence”** at [line 4](/home/tony/projects/tessera/docs/decisions/2026-10-27-v1-signer-placement.md:4).
+
+This may preserve or strengthen the intended restriction on signed messages, but it changes the registered description of its enforcement. I found no explicit registered supersession covering it. A11’s [change table:85](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-11.md:85) also omits it.
+
+**Disposition needed:** explicitly reconcile K-R’s issuer/code/role wording with the dedicated policy signer, retaining pure mode, empty context, frame validation, key dedication, and the stated administrative-capture limitation. This is an existing deployment drift newly found by this confirmation sweep.
+
+**2. Spike-key correction remains inconsistent in subordinate deployment instructions.**
+
+Registered side: [HYBRID-SUPPLEMENT.md:524](/home/tony/projects/tessera/formal/p8/HYBRID-SUPPLEMENT.md:524) requires deletion after the stated conditions.
+
+Current owner documents still contain:
+
+- [deploy.sh:30](/home/tony/projects/tessera/service/signer-gcp/deploy.sh:30): `KEY=slot2-spike`, described as the key V1 uses today, with the historical creation time and fingerprint.
+- [signer-gcp/README.md:200](/home/tony/projects/tessera/service/signer-gcp/README.md:200): deployment instructions granting the production runtime access to `slot2-spike`.
+
+[DEPLOY.md:25](/home/tony/projects/tessera/service/issuer/DEPLOY.md:25) explicitly requires replacing those values, so this does **not** reopen A11-03’s policy decision. It leaves stale executable defaults and contradictory subordinate instructions. Reconcile them before deployment.
+
+**3. Retained obligations that remain pending, rather than contradicted or waived.**
+
+[FREEZE-RECORD.md:84](/home/tony/projects/tessera/formal/freeze-v1/FREEZE-RECORD.md:84) still requires the GCP VPC Service Controls perimeter and an unsolicited-response policy before the first public verifier release. The current deployment checklist’s omission of these is not a registered cancellation. They remain release gates.
+
+The registration record’s placeholder specification hash is already handled by [FREEZE-RECORD.md:25](/home/tony/projects/tessera/formal/freeze-v1/FREEZE-RECORD.md:25); it is not an additional unresolved defect.
+
+I found no further contradictory commitment in the requested records and comparisons. Draft/PENDING predecessors and archived captures were treated as historical evidence, not fresh production requirements.
+
+**Freeze verification:** reassembly from `270ca49` reproduced all five objects byte-for-byte. Their recorded hashes and lengths match; all **6 specification parts and 387 vector parts** match that commit. The frozen profile’s historical-key versus production-key distinction at `270ca49:docs/V1-PROFILE.md:1023–1030` supports using new production keys.
+
+**Owner prechecks on the revised amendment**
+
+| Check | Result | Evidence |
+|---|---|---|
+| Capture row | **PASS** | A11:37–39 makes a bounded implementation-evidence claim; A11:121–130 specifies custody controls without promising attacker-key rejection or capture visibility. Consistent with [V1-CONTRACT.md:37](/home/tony/projects/tessera/docs/V1-CONTRACT.md:37) and :72. |
+| Trigger clause | **PASS** | A11:112–120 explicitly says historical qualification does not qualify the replacement. A11:141–142 uses the explicit author CUT, not an unoccurred schedule-slip trigger. |
+| Requester | **PASS** | A11:122–129 covers the enqueue path, prohibited direct/admin capabilities, every signature-causing principal, and alternative signing paths. |
+| Binding text | **PASS** | A11:135 expressly identifies S1 as unregistered. A11:112 labels the custody exception as a proposed author ruling; the amendment does not invoke the withdrawn ruling budget. |
+
+**D. Signature readiness**
+
+The unresolved author ruling in §A11.5 item 2 is **not itself a review defect**. The revision now presents the retrospective exception and its consequences clearly enough for an author decision. Signing the final amendment should explicitly record whether that proposal is adopted; reviewer closure cannot supply that decision.
+
+Before signature, repair A11C-01 and account for the registered K-R role/computation change. Neither passing hashes nor the proposed slot-2 ruling resolves those issues.
+
+**Verdict: NOT READY FOR SIGNATURE — repair the deployed-code evidence binding and reconcile K-R’s registered issuer-role commitment.**
+
+# Amendment 11 review: owner disposition (2026-10-28)
+
+The review is `CODEX-REVIEW.md` (verdict: not ready; A11-01 to A11-07, two prechecks FAILED). All findings were
+applied to the draft. The revised draft goes to one confirmation pass before the author.
+
+| ID | Sev | Disposition |
+|---|---|---|
+| A11-01 | High | All six A1 fields are kept, with per-algorithm readings (§A11.2 item 1). The evidence is pinned by `FLOOR-MANIFEST.sha256`, whose hash is fixed at signing and must be regenerated if any listed file changes first. Discharge conditions (a)–(d) require the deployed-zip identity check, and an unresolved defect blocks discharge. Adoption is distinguished from discharge. |
+| A11-02 | High | Disclosed as a retrospective relaxation after the deadline and after the code existed. The historical qualification is kept and does not extend to the replacement. R5b is cited, with why it does not settle the question. The hybrid with the replacement depends on the ruling. |
+| A11-03 | High | Accepted against the owner. `DEPLOY.md` reused the spike keys, contradicting HYBRID-SUPPLEMENT §11 item 6. Reversed: production uses new keys. Added as sweep item 3. §A11.4 now requires owner decisions on registered parameters to be checked first. |
+| A11-04 | High | Condition (i) preserves every A9.6 custody and policy requirement, plus the frozen record's properties. Conditions (iii) and (iv) define the re-earned evidence and the identification of the tested image and configuration. |
+| A11-05 | Med | §A11.2 item 5 distinguishes security-policy findings (historical security, beside the verdict) from conformance defects (fixed in a named release, never preserved). |
+| A11-06 | Low | The split is stated: 219 DER cases at library level, 21 P1363 cases reaching neither interface. |
+| A11-07 | Med | Each outcome-informed change is disclosed separately. The blanket claim of vacuity is replaced (only the two curve fields lack a referent for ML-DSA). The stale PENDING sentence is removed. |
+| H3 | — | Wording changed to "AWS-based examples". A measurement protocol is required before measurement, and redefining the window as a demonstration is ruled out. |
+| Citations | — | The custody citation is pinned to `270ca49:docs/V1-PROFILE.md:1023-1037`. S1 is cited as an owner operational resolution (`V1-SERVICE-RESOLUTIONS.md:20`). The stale supplement locator is corrected in §A11.3. |
+| Precheck: trigger | FAIL→fixed | A11-02 |
+| Precheck: binding text | FAIL→fixed | S1's authority level is stated |
+
+## Confirmation (`CODEX-CONFIRM.md`): owner disposition
+
+Six findings were CLOSED, A11-01 was PARTIAL, and the wider sweep found one registered commitment and two stale
+defaults. All four prechecks PASSED.
+
+| ID | Disposition |
+|---|---|
+| A11C-01 (High) | `check_zip` now requires that the zip's `tessera_verify/` hold exactly the tested verifier's files, byte for byte, as well as the wheel identity. Negative control (owner, 2026-10-28): the real package passes, and the same package with one byte changed in `codec.py` fails, naming the file. (A first control run failed on both zips because the owner's harness shared a `ZipInfo` between two archives and corrupted a CRC. That was a harness bug, found and fixed before the result was read.) The manifest was regenerated and its new hash is in A11 §A11.2. |
+| K-R (sweep C1) | Added as A11 §A11.5 item 5, with a §A11.3 row and a header disclosure. The assumption (K-R) is unchanged; the enforcement wording (who computes μ, who may `kms:Sign`) goes to the author. The placement decision's "changes no registered sentence" is corrected in place. |
+| Spike-key defaults (sweep C2) | `service/signer-gcp/deploy.sh` has no production-key defaults. It requires `SLOT2_KEY`, `SLOT2_KEY_CREATED` and `SLOT2_KEY_FP`, and refuses the spike key (both refusals checked; no gcloud call is made). The spike key is named separately (`SPIKE_KEY`) for `retire-instrument` only. The README and DEPLOY.md are updated. |
+| Release gates (sweep C3) | The VPC SC perimeter and the E-06 policy are listed in DEPLOY.md as open release gates. |
+| Sweep H3 wording | Reconciled with the amendment: "AWS-based examples". |
+     1	# Tessera — Phase 0 Pre-Registration, Amendment 11 — P3's verification profile as a floor and a duty; dependency sweeps; the slot-2 boundary and the spike keys (DRAFT, 2026-10-28)
+     2	
+     3	> **Status: DRAFT by the owner instance (Claude Opus 5.5), revised after the Codex non-author review
+     4	> (`docs/reviews/amendment-11/CODEX-REVIEW.md`, A11-01 to A11-07; `DISPOSITION.md`). Not signed.** The author's
+     5	> first commit containing the final text is its signing act. Layered on the original and Amendments 1–10, none of
+     6	> which is edited. Every registered sentence this amendment changes is listed in §A11.3.
+     7	>
+     8	> **Outcomes informed this amendment** (the original's amendment rule). Each change is disclosed separately.
+     9	> - **§A11.2, P3.** The P3 evidence (`formal/p3-verification-profile/`) was built and reviewed before this text.
+    10	>   Building it exposed the stale checklist. No P3 result failed and is relabelled here. The floor's shape is the
+    11	>   author's proposal of 2026-10-28.
+    12	> - **§A11.5 item 2, the slot-2 boundary.** This is a **retrospective relaxation** of a deadline-qualified
+    13	>   restriction. It is proposed after the 21 Oct deadline, and after the candidate code (`service/signer-gcp/`) was
+    14	>   written and reviewed.
+    15	> - **§A11.5 item 5, K-R's enforcement.** The owner's placement decision (2026-10-27) moved KMS signing from the
+    16	>   issuer role to a dedicated policy signer and said it changed no registered sentence. It changed the
+    17	>   supplement's description of who computes μ and who may sign. The confirmation review found this.
+    18	> - **§A11.5 item 3, the spike keys.** The owner's deployment draft had contradicted a registered commitment. That
+    19	>   draft is withdrawn, and this amendment changes nothing in the commitment.
+    20	
+    21	## A11.1 What went wrong
+    22	
+    23	P3's assumption half (A1 §P3, `phase-0-prereg-amendment-1.md:144-148`) requires the verification profile to record
+    24	the *exact library and version, accepted signature encodings, public-key validation behavior, low-order-point
+    25	handling, cofactor equation variant, and negative test vectors for each*. Two of those fields name concepts of
+    26	Ed25519-style curves, which A1 used as its example (`:136`). V1 later registered OpenPGP P-256 and then, on
+    27	2026-10-16, the hybrid ML-DSA-65 + P-256 (`formal/p8/HYBRID-REGISTRATION-RECORD.md`). Neither registration re-read the
+    28	checklist.
+    29	
+    30	For ML-DSA, the two curve fields have no referent. The other four fields still apply in full. So the checklist
+    31	names nothing specific to ML-DSA's own verification pitfalls: it **demands too little**. Nothing had been accepted
+    32	on it. The assumption half was open (`formal/PROPERTIES.md:37`) and due after the freeze
+    33	(`formal/freeze-v1/FREEZE-RECORD.md:81`).
+    34	
+    35	The method's defect: **a registered decision can change what an earlier registered sentence refers to, and nothing
+    36	requires anyone to re-read that sentence.** §A11.4 adds that duty.
+    37	
+    38	## A11.2 P3's verification profile: floor and duty
+    39	
+    40	**The proofs are unchanged.** P3's model half assumes a verifier with stated behaviour. The assumption half is
+    41	bounded implementation evidence that the shipped verifier has that behaviour. It does not show that every model
+    42	assumption is preserved in general.
+    43	
+    44	1. **Fields kept.** All six of A1's fields stay. For each algorithm in the governing specification they are read as
+    45	   follows:
+    46	
+    47	   | A1 field | ECDSA P-256 (rule O) | ML-DSA-65 (rule R) |
+    48	   |---|---|---|
+    49	   | exact library and version | `cryptography` and its bundled OpenSSL, identified by wheel tag and native-library SHA-256 | same |
+    50	   | accepted signature encodings | OpenPGP v4 packet; MPI rules; r, s ∈ [1, n−1]; rule-O policy | exact 3309 bytes; strict hint and z encoding |
+    51	   | public-key validation | exact uncompressed point; coordinates < p; on the curve; checked before the library | exact SPKI; no algebraic validation exists |
+    52	   | low-order-point handling | cofactor 1: infinity rejected as a key and as the equation's result; invalid-curve points rejected | no referent. Replaced by: degenerate-key behaviour recorded |
+    53	   | cofactor equation variant | cofactor 1: a single variant; x(R) reduced mod n | no referent. Replaced by: the FIPS 204 interface (pure, empty context), with every other interface rejected |
+    54	   | negative vectors for each | owner vectors plus Wycheproof | owner vectors plus Wycheproof |
+    55	
+    56	2. **Floor (registered).** The evidence is the files listed in
+    57	   `formal/p3-verification-profile/FLOOR-MANIFEST.sha256`, whose SHA-256 is fixed at signing. At this draft it is
+    58	   `4a6c644af2e38882bd40d17cb9d234623f6e52787dc023904c20c6fd38c49d66`, covering 15 files. They hold:
+    59	   - the owner vectors: 223 tests, mutation-sensitive (PROFILE.md §6);
+    60	   - Wycheproof commit `d17cc89fa5c8f4f4d378b5385ebf75da5d0926c9`, three files pinned by SHA-256: 968 tests.
+    61	     - **ML-DSA-65** runs end to end through the verifier. Two disagreements, tcId 3 and 4, are V1 policy (empty
+    62	       context only).
+    63	     - **ECDSA P-256** runs through the verifier's key validation, MPI rules, range policy and verification, with
+    64	       the digest substituted. 219 non-strict DER cases are tested at library level only. 21 P1363 strings of the
+    65	       wrong length reach neither interface. There are no disagreements.
+    66	3. **Discharge.** Adopting this floor is not discharging P3. P3's assumption half is discharged only when:
+    67	   - (a) the manifest verifies;
+    68	   - (b) every test in it passes;
+    69	   - (c) the deployed verifier package's identity has been checked against F1 (`test_deployed_zip_identity`, run
+    70	     with the deployed zip);
+    71	   - (d) no disagreement or finding affecting a required behaviour is unresolved. A recorded defect blocks
+    72	     discharge until it is fixed and re-tested.
+    73	4. **Operational duty (not a registered result).** The floor's checks, and the latest published vectors for each
+    74	   algorithm in use, are re-run on every verifier release, on every change to the signature library's version or
+    75	   build, on every new upstream vector commit, and at least quarterly. Each run is recorded with its date, inputs and
+    76	   outcome, and attested by the operator.
+    77	5. **What a later finding changes.**
+    78	   - **A security-policy finding** (an algorithm, parameter or key later judged weak) never rewrites a V1 verdict.
+    79	     It reaches relying parties as a historical-security result, beside the verdict and its stable fields
+    80	     (A9.4, `phase-0-prereg-amendment-9.md:267-283`).
+    81	   - **An implementation-conformance defect** (the verifier disagrees with the governing specification, for example
+    82	     by accepting a malformed or prohibited case the specification rejects, A9:278) is not preserved as V1
+    83	     behaviour. It is fixed in a signed release, which names the affected releases and says what changed. A silent
+    84	     change to the verifier is never permitted.
+    85	
+    86	## A11.3 Registered sentences changed
+    87	
+    88	| Source | Was | Now |
+    89	|---|---|---|
+    90	| `phase-0-prereg-amendment-1.md:144-148` | the six fields, the two curve fields named in Ed25519's terms | the six fields as read in §A11.2 item 1; the floor and discharge conditions of items 2–3 |
+    91	| `phase-0-prereg-amendment-10.md:675` | "as amended by rows 15 and 25" | "as amended by row 15" (row 25 cut, E9 row 2) |
+    92	| `phase-0-prereg-amendment-9.md:386-392`; `270ca49:docs/V1-PROFILE.md:1023-1037` | the boundary as the selected, deadline-qualified implementation, described through `prototype/policy-signer/` | *only if the author adopts §A11.5 item 2:* a named replacement under conditions (i)–(iv) |
+    93	| `formal/p8/HYBRID-SUPPLEMENT.md:151-152, :170, :533` (K-R) | `μ` "computed by the issuer"; "`kms:Sign` only for the issuer role" | `μ` computed by the KMS-slot policy signer (`service/signer-kms/`) from an `F` it has validated; `kms:Sign` only for that signer's role, with the issuer roles holding no KMS permission |
+    94	| `270ca49:docs/V1-PROFILE.md` custody record, "HYBRID-SUPPLEMENT §9 item 6" | a stale locator | `formal/p8/HYBRID-SUPPLEMENT.md` §11 item 6, lines 524-526. The frozen bytes are unchanged; this corrects the locator only |
+    95	
+    96	## A11.4 Dependency duty for registered decisions
+    97	
+    98	When a registered decision changes a parameter (an algorithm, a custody form, a channel, a horizon, a scope, a key),
+    99	the owner sweeps the registered texts for sentences whose referent the change alters. Each one is recorded as
+   100	amended, superseded, still fitting or open, before the decision's change is treated as complete. An owner decision
+   101	that touches a registered parameter is checked against those texts before it is recorded.
+   102	
+   103	## A11.5 Results of the first sweep (2026-10-28)
+   104	
+   105	The sweep covered the original, Amendments 1–10, the freeze, the tracker and the author-rulings files
+   106	(`docs/reviews/stale-dependencies/SWEEP-2026-10-28.md`). The owner checked each finding against its source. The
+   107	review added item 3.
+   108	
+   109	1. **H3 (`phase-0-prereg.md:232-248`): not amended.** H3 is a hypothesis with a stated falsifier. Its examples are
+   110	   AWS-based, but they do not restrict it to AWS. It is measured over the whole deployed system, every provider
+   111	   included. A measurement protocol is recorded before measurement. It covers retained resources (including the
+   112	   compliance-locked trail bucket), defines the demonstration and idle periods, and reports the three numbers
+   113	   separately. A slot-2 signer and an issuer poller that run through the operating window conflict with "idle
+   114	   compute exactly $0". If that or another number fails, H3 is reported as falsified. The operating window is not
+   115	   redefined as a demonstration to avoid this.
+   116	2. **The slot-2 enforcement boundary: for the author's ruling.** A9.6 requires the final custody implementation to
+   117	   be deadline-qualified (`phase-0-prereg-amendment-9.md:389-392`). The frozen record keeps "the selected,
+   118	   deadline-qualified custody implementation" (`270ca49:docs/V1-PROFILE.md:1023-1026`) and describes it through
+   119	   `prototype/policy-signer/`, which met the deadline on 2026-10-14. That qualification stands as historical
+   120	   evidence. It does not qualify a replacement. The E9 ruling R5b (`docs/reviews/e9-packet/AUTHOR-RULINGS.md:54`,
+   121	   packet row 5b) allows porting instrument code with evidence earned on the resulting bytes. But it does not
+   122	   address A9.6's deadline-qualified custody, so it does not settle this question. Keeping the hybrid **with the
+   123	   replacement signer** depends on this ruling. Keeping it with the prototype does not.
+   124	   **Proposed:** `service/signer-gcp/` may replace the prototype, provided that before the first shipped receipt:
+   125	   - (i) it preserves **every A9.6 custody and policy requirement**: complete-frame validation; the declared-time
+   126	     check on its own clock before signing; the issuing account able to enqueue but not to invoke the key, change
+   127	     the policy or clock, or obtain key-use credentials; and the key dedicated to V1 type-0x00 documents. It also
+   128	     preserves every property in the frozen record;
+   129	   - (ii) the external custody record names the deployed implementation, its image digest and its configuration;
+   130	   - (iii) deployed evidence is earned on the new bytes. That means: a deployed positive signature that verifies
+   131	     offline; deployed refusals for a malformed frame, a wrong tag, a wrong alg, a wrong fingerprint and a declared
+   132	     time outside ε; a review of every principal that can cause a signature or administer the signer
+   133	     (`service/issuer/DEPLOY.md` step 8); and verified retirement of every other signing path (step 7);
+   134	   - (iv) all of it identifies the tested image and configuration.
+   135	
+   136	   **Without this ruling**, production uses the deadline-qualified prototype signer. Slot 2 then has no signer-side
+   137	   signing stop or `sign_by` (`prototype/policy-signer/signer/main.py`), and frames travel inline in SQS messages,
+   138	   which cannot carry the 1 MiB client limit (IS-09, `docs/reviews/issuer/CODEX-REVIEW.md:35`). That limit is an
+   139	   owner operational resolution, stamped but not registered (`docs/V1-SERVICE-RESOLUTIONS.md:20`). It would be
+   140	   narrowed.
+   141	3. **The spike keys (`formal/p8/HYBRID-SUPPLEMENT.md` §11 item 6, lines 524-526): unchanged.** "Both spike keys
+   142	   are deleted after the re-capture verifies, once the review clears." The owner's deployment draft
+   143	   (2026-10-27) reused them as production keys. That contradicted this commitment, and the draft is withdrawn.
+   144	   Production uses new keys (`service/issuer/DEPLOY.md`), recorded in the external custody record before use.
+   145	4. **A dangling cross-reference (`phase-0-prereg-amendment-10.md:675`).** Row 25 was cut (E9 row 2,
+   146	   2026-10-23; profile §5). This is a CLARIFY: the fallback cites row 15 only.
+   147	5. **K-R's enforcement (`formal/p8/HYBRID-SUPPLEMENT.md:148-172, :533`): amended in wording, the assumption
+   148	   unchanged.** (K-R) itself stands: the ML-DSA-65 key signs only V1 tagged strings, in pure mode with the empty
+   149	   context, under EXTERNAL_MU, for no other protocol. What changes is who enforces it. The supplement names the
+   150	   issuer as the computer of `μ` and the issuer role as the only `kms:Sign` principal. In V1 as deployed, a
+   151	   dedicated policy signer validates the complete frame (tag, alg, key fingerprint, ε, `sign_by`, the signing stop)
+   152	   *before* computing `μ`, and its role is the only `kms:Sign` principal (`service/signer-kms/`; key policy in
+   153	   `service/signer-kms/infra/main.tf`). This narrows what a captured issuer role alone can get signed. It does not
+   154	   change the supplement's stated limit: "whoever may call `kms:Sign` on the key can sign any message by computing
+   155	   `μ`". An administrator of the account can still grant that (`PutKeyPolicy`), which is C3.
+
+codex
+I’m applying the Tessera formal-review skill to distinguish the registered assumption from its enforcement wording. The amendment now explicitly presents the K-R change for the author’s ruling; I’ll check it against the supplement, signer code, and key policy.
+exec
+/bin/bash -lc 'nl -ba formal/p3-verification-profile/test_p3_profile.py | head -230; cat formal/p3-verification-profile/FLOOR-MANIFEST.sha256; nl -ba service/signer-gcp/deploy.sh; nl -ba service/signer-kms/signer.py | head -300; nl -ba service/signer-kms/infra/main.tf | head -260' in /home/tony/projects/tessera
+ succeeded in 0ms:
+     1	"""P3 [assumption] half: the V1 verification profile as executable evidence (H1a).
+     2	
+     3	Run from service/verifier:
+     4	    .venv/bin/python -m pytest -q ../../formal/p3-verification-profile/test_p3_profile.py
+     5	
+     6	Vector tests call the service verifier's own functions (tessera_verify.codec: parse_signature, sig_policy,
+     7	public_key, signature_verifies; tessera_verify.verify.verify_bundle; tessera_verify.policy.parse_trust).
+     8	`cryptography` is called directly only (a) to construct inputs and (b) in TestLibraryBehaviour, whose tests
+     9	characterize the library itself and back PROFILE.md's library claims; those are labelled as such.
+    10	"""
+    11	import copy
+    12	import hashlib
+    13	import json
+    14	import os
+    15	import shutil
+    16	import subprocess
+    17	import sys
+    18	import zipfile
+    19	from pathlib import Path
+    20	from types import SimpleNamespace
+    21	from unittest.mock import Mock, patch
+    22	
+    23	import pytest
+    24	
+    25	HERE = Path(__file__).resolve().parent
+    26	VERIFIER = HERE.parent.parent / 'service' / 'verifier'
+    27	ISSUER = HERE.parent.parent / 'service' / 'issuer'
+    28	sys.path[:0] = [str(VERIFIER), str(VERIFIER / 'tests'), str(HERE)]
+    29	
+    30	from tessera_verify import install_record  # noqa: E402
+    31	install_record.load_and_apply()  # as tests/conftest.py does: the SHA-1DC hook is an installation fact
+    32	
+    33	import cryptography  # noqa: E402
+    34	from cryptography.exceptions import InvalidSignature  # noqa: E402
+    35	from cryptography.hazmat.backends.openssl.backend import backend  # noqa: E402
+    36	from cryptography.hazmat.primitives import hashes, serialization  # noqa: E402
+    37	from cryptography.hazmat.primitives.asymmetric import ec, mldsa, utils  # noqa: E402
+    38	
+    39	from tessera_verify import codec, release_auth  # noqa: E402
+    40	from tessera_verify.codec import (ALG, HYBRID_ALG, Fault, b64, jcs, mldsa65_encoding_valid, parse_signature,  # noqa: E402
+    41	                                  public_key, read_anchor, registered_codecs, sha, sig_policy, signature_verifies)
+    42	from tessera_verify.policy import parse_catalog, parse_trust  # noqa: E402
+    43	from tessera_verify.verify import verify_bundle  # noqa: E402
+    44	from fixtures import enc, make_fixture, make_release, key_file  # noqa: E402
+    45	import p256  # noqa: E402
+    46	
+    47	VEC = HERE / 'vectors'
+    48	F1 = json.loads((VEC / 'F1-library.json').read_text())
+    49	SIG_FILES = ['F2-signature-encodings.json', 'F5-equation-variant.json']
+    50	KEY_FILES = ['F3-public-key-validation.json', 'F4-low-order-points.json']
+    51	
+    52	
+    53	def load(name): return json.loads((VEC / name).read_text())
+    54	
+    55	
+    56	def wheel_tag(text):
+    57	    tags = [l.split(':', 1)[1].strip() for l in text.splitlines() if l.startswith('Tag:')]
+    58	    assert len(tags) == 1, tags
+    59	    return tags[0]
+    60	
+    61	
+    62	def tested_verifier_files():
+    63	    """The verifier code this floor exercised (service/verifier/tessera_verify), as {zip path: bytes}."""
+    64	    root = VERIFIER / 'tessera_verify'
+    65	    return {('tessera_verify/' + f.relative_to(root).as_posix()): f.read_bytes()
+    66	            for f in sorted(root.rglob('*')) if f.is_file() and '__pycache__' not in f.parts and f.suffix != '.pyc'}
+    67	
+    68	
+    69	def check_zip(path):
+    70	    """The zip carries the recorded cryptography build AND exactly the verifier code the floor tested
+    71	    (A11C-01: a matching wheel alone would let different verifier code pass)."""
+    72	    with zipfile.ZipFile(path) as z:
+    73	        binding = z.read(F1['wheel']['rust_binding'])
+    74	        tag = wheel_tag(z.read('cryptography-%s.dist-info/WHEEL' % F1['cryptography']).decode())
+    75	        shipped = {n: z.read(n) for n in z.namelist() if n.startswith('tessera_verify/') and not n.endswith('/')}
+    76	    assert hashlib.sha256(binding).hexdigest() == F1['wheel']['rust_binding_sha256']
+    77	    assert tag == F1['wheel']['tag']
+    78	    tested = tested_verifier_files()
+    79	    assert sorted(shipped) == sorted(tested), sorted(set(shipped) ^ set(tested))
+    80	    assert [n for n in tested if shipped[n] != tested[n]] == []
+    81	
+    82	
+    83	def run_sig(v, keys, docs):
+    84	    """Function-level harness for one signature against one known-good key: signature codec (the function of rows
+    85	    3.1/9.3), policy (9.1/9.4), then verification (9.2/9.5). Returns 'ACCEPT', the Fault code, or 'SIG_INVALID'
+    86	    (POSSESSION_INVALID for a possession proof: same function, different row). It is NOT the bundle's order: a
+    87	    bundle evaluates keys (5.1) before signature policy (9.1) and reports by row precedence. Precedence claims come
+    88	    only from TestBundle."""
+    89	    alg, slot = v['alg'], v['slot']
+    90	    try:
+    91	        parsed = parse_signature(bytes.fromhex(v['sig_hex']), alg, slot, registered_codecs(alg))
+    92	        sig_policy(parsed)
+    93	    except Fault as e:
+    94	        return e.code
+    95	    k = keys[v['key']]
+    96	    key = public_key(bytes.fromhex(k['hex']), k['slot'], k['alg'])
+    97	    return 'ACCEPT' if signature_verifies(bytes.fromhex(docs[v['document']]), parsed, key) else 'SIG_INVALID'
+    98	
+    99	
+   100	def run_key(v):
+   101	    try:
+   102	        public_key(bytes.fromhex(v['key_hex']), v['slot'], v['alg'])
+   103	        return 'ACCEPT'
+   104	    except Fault as e:
+   105	        return e.code
+   106	
+   107	
+   108	def sig_cases():
+   109	    for name in SIG_FILES:
+   110	        f = load(name)
+   111	        for v in f['vectors']: yield pytest.param(v, f['keys'], f['documents'], id=v['id'])
+   112	
+   113	
+   114	def key_cases():
+   115	    for name in KEY_FILES:
+   116	        for v in load(name)['vectors']: yield pytest.param(v, id=v['id'])
+   117	
+   118	
+   119	def by_id(vid):
+   120	    for name in SIG_FILES + KEY_FILES:
+   121	        for v in load(name)['vectors']:
+   122	            if v['id'] == vid: return v
+   123	    raise KeyError(vid)
+   124	
+   125	
+   126	# --------------------------------------------------------------------------------------------- F1
+   127	class TestF1Library:
+   128	    def test_installed_library_is_the_recorded_one(self):
+   129	        assert cryptography.__version__ == F1['cryptography']
+   130	        assert backend.openssl_version_text() == F1['openssl']
+   131	        assert '%d.%d' % sys.version_info[:2] == F1['python']
+   132	
+   133	    def test_requirements_pin(self):
+   134	        pins = [l.strip() for l in (VERIFIER / 'requirements.txt').read_text().splitlines() if l.strip()]
+   135	        assert F1['requirements_pin'] in pins
+   136	        assert 'cryptography==%s' % F1['cryptography'] == F1['requirements_pin']
+   137	
+   138	    def test_codec_uses_this_library(self):
+   139	        assert codec.mldsa is mldsa and codec.ec is ec and codec.utils is utils
+   140	
+   141	    def test_installed_wheel_identity(self):
+   142	        import cryptography as c
+   143	        root = Path(c.__file__).resolve().parent
+   144	        assert hashlib.sha256((root.parent / F1['wheel']['rust_binding']).read_bytes()).hexdigest() == F1['wheel']['rust_binding_sha256']
+   145	        assert wheel_tag((root.parent / ('cryptography-%s.dist-info' % F1['cryptography']) / 'WHEEL').read_text()) == F1['wheel']['tag']
+   146	
+   147	    def test_lambda_package_wheel_identity(self, tmp_path):
+   148	        """Builds the issuer's bootstrap Lambda zip with service/issuer/package.py (its own wheel resolution) and
+   149	        checks the bundled cryptography binding against F1. Skips, with the reason, if uv or the network is absent."""
+   150	        sys.path.insert(0, str(ISSUER))
+   151	        try:
+   152	            import package
+   153	        finally:
+   154	            sys.path.remove(str(ISSUER))
+   155	        if shutil.which('uv') is None:
+   156	            pytest.skip('uv not on PATH: package.py cannot resolve the Lambda wheel here')
+   157	        out = tmp_path / 'lambda.zip'
+   158	        try:
+   159	            package.build(out)
+   160	        except (SystemExit, subprocess.CalledProcessError) as e:
+   161	            pytest.skip(f'package.py could not build (offline or missing prerequisite?): {e}')
+   162	        check_zip(out)
+   163	
+   164	    def test_deployed_zip_identity(self):
+   165	        """Set TESSERA_LAMBDA_ZIP to the deployed lambda_zip (whose SHA-256 package.py prints and infra deploys)."""
+   166	        path = os.environ.get('TESSERA_LAMBDA_ZIP')
+   167	        if not path:
+   168	            pytest.skip('TESSERA_LAMBDA_ZIP not set: no deployed package supplied to tie to this record')
+   169	        check_zip(Path(path))
+   170	
+   171	    @pytest.mark.parametrize('name', sorted(F1['calls']))
+   172	    def test_recorded_call_is_the_verifiers_call(self, name):
+   173	        src = (VERIFIER / 'tessera_verify' / 'codec.py').read_text()
+   174	        assert src.count(F1['calls'][name]) == 1, name
+   175	
+   176	
+   177	# ------------------------------------------------------------------------------------ F2, F5 (sig)
+   178	@pytest.mark.parametrize('v,keys,docs', list(sig_cases()))
+   179	def test_signature_vector(v, keys, docs):
+   180	    assert run_sig(v, keys, docs) == v['expect'], v['case']
+   181	
+   182	
+   183	# ------------------------------------------------------------------------------------ F3, F4 (key)
+   184	@pytest.mark.parametrize('v', list(key_cases()))
+   185	def test_key_vector(v):
+   186	    assert run_key(v) == v['expect'], v['case']
+   187	
+   188	
+   189	class TestControls:
+   190	    """The vector suites cannot pass by rejecting (or accepting) everything."""
+   191	    def test_each_file_has_accept_and_reject(self):
+   192	        for name in SIG_FILES + KEY_FILES:
+   193	            outcomes = {v['expect'] for v in load(name)['vectors']}
+   194	            assert 'ACCEPT' in outcomes and len(outcomes) > 1, name
+   195	
+   196	    def test_each_slot_rule_has_a_positive_control(self):
+   197	        seen = {(v['slot'], v['alg']) for n in SIG_FILES + KEY_FILES for v in load(n)['vectors'] if v['expect'] == 'ACCEPT'}
+   198	        assert {('gpg', HYBRID_ALG), ('kms', HYBRID_ALG), ('kms', ALG)} <= seen
+   199	
+   200	    def test_vector_ids_unique(self):
+   201	        ids = [v['id'] for n in SIG_FILES + KEY_FILES for v in load(n)['vectors']]
+   202	        assert len(ids) == len(set(ids))
+   203	
+   204	
+   205	# ----------------------------------------------------------------- the verifier's own ML-DSA gate
+   206	class TestMLDSAGate:
+   207	    MALFORMED = ['R-08', 'R-09', 'R-10', 'R-11', 'R-12', 'R-13', 'R-14']
+   208	
+   209	    @pytest.mark.parametrize('vid', MALFORMED)
+   210	    def test_gate_rejects_before_library(self, vid):
+   211	        assert mldsa65_encoding_valid(bytes.fromhex(by_id(vid)['sig_hex'])) is False
+   212	
+   213	    @pytest.mark.parametrize('vid', ['R-01', 'R-02', 'R-15', 'R-16'])
+   214	    def test_gate_passes_well_encoded(self, vid):
+   215	        assert mldsa65_encoding_valid(bytes.fromhex(by_id(vid)['sig_hex'])) is True
+   216	
+   217	    @pytest.mark.parametrize('vid', MALFORMED)
+   218	    def test_rejection_does_not_depend_on_library_strictness(self, vid):
+   219	        permissive = Mock(); permissive.verify.return_value = None
+   220	        assert signature_verifies(b'any', bytes.fromhex(by_id(vid)['sig_hex']), permissive) is False
+   221	        permissive.verify.assert_not_called()
+   222	
+   223	
+   224	# ------------------------------------------------------------------- rule-O policy (P3R-01)
+   225	def policy_vectors():
+   226	    f = load('F2-signature-encodings.json')
+   227	    return [pytest.param(v, f['keys'], f['documents'], id=v['id']) for v in f['vectors'] if v.get('verifies_without_policy')]
+   228	
+   229	
+   230	class TestRuleOPolicy:
+86658819361485c2375f8b064fdbd1d0285ce079618f5ceb07025d07227495e3  ./DIVERGENCES.md
+f2ac7c1fcd37126cef5cbf3cea404e5fb3c6a2f9690fa13a265801e300d911db  ./gen_vectors.py
+f4517258711cc53174b1e862eebb7684679f945fac56c0866ec62c86e6705ec2  ./p256.py
+5b173a552441e6ed479755c006fdf8f5f652433f7a68c748006d8dbd284054bb  ./PROFILE.md
+8194b887ceea1847c69f4e9716603c7889153d079b7eb03cb1e2d11f258c7993  ./test_p3_profile.py
+6c1d4ee1cd8216164a9afc1ec30f21a5f4b7135487d1535026950e8a70474a9b  ./test_wycheproof.py
+62771b5fc362655605e65b833082e8ee55954611ee356ff85b815c674920bfe4  ./vectors/F1-library.json
+c8823aebb3eee26349240ae3eec86ec75cc090a0ff854951114854da18ad98e5  ./vectors/F2-signature-encodings.json
+ec11969af5f753c96102ad17d22d4b533f584969fa1d29abd243630b08b8b2b7  ./vectors/F3-public-key-validation.json
+7d0e95c4cd8eab7c31b691977265e2eaeda827ea2bb55818b1e58467f3fcb81a  ./vectors/F4-low-order-points.json
+397a143a949b9a531e0ce833b884c7c4a4e1d2406414b2f5bd9c6e563098e292  ./vectors/F5-equation-variant.json
+c60de693930e386c3a5472d08081623ef8504decc54b38ac01ec6b2a2575c986  ./wycheproof/ecdsa_secp256r1_sha256_p1363_test.json
+182db4f3e230f6f9fa9f800d2a614dede30284b8e8438bbfe1171905402e9332  ./wycheproof/ecdsa_secp256r1_sha256_test.json
+1ca235f61928421a173a171780beb00264ae9155dc33c52a11e1766cc7979034  ./wycheproof/mldsa_65_verify_test.json
+c41e42a24954e11d458d0204ec72d15d43e6fc101484d6d143a58803197fbf25  ./wycheproof/SOURCE.md
+     1	#!/usr/bin/env bash
+     2	# Tessera V1 slot-2 policy signer: deployment (service/signer-gcp/README.md "Deploy"). OWNER DRAFT: not yet run.
+     3	# Idempotent: every step checks for the resource first. Run the steps one at a time, in the order README.md "Deploy"
+     4	# gives: `terraform apply` for the issuer falls between `role` and `job`, so there is no `all`.
+     5	#
+     6	#   service/signer-gcp/deploy.sh <step>
+     7	#     sas | role | keyiam | registry | build | job | run-now | scheduler | harden | retire-instrument
+     8	#
+     9	# Inputs (environment), needed by `job` and `role`:
+    10	#   REQUEST_QUEUE_URL, RESPONSE_QUEUE_URL   terraform output signer_queues (the "gpg" entry), service/issuer/infra
+    11	#   FRAME_BUCKET                            terraform output result_bucket
+    12	#   SIGN_UNTIL                              the window's signing stop: issuance-not-after minus 96 h, YYYY-MM-DDTHH:MM:SSZ
+    13	#
+    14	# Scopes: GCP project tessera-slot2 (us-east1) and AWS account 477139661040 (profile tessera, us-east-2) only. Creates
+    15	# no static credential: no AWS access keys and no GCP service-account keys. The signer reaches AWS by
+    16	# AssumeRoleWithWebIdentity with a Google-issued ID token for its own service account, then AssumeRole into the
+    17	# issuer's Terraform signer role (tessera-v1-issuer-signer-gpg), whose principal is the federated role made here.
+    18	set -euo pipefail
+    19	
+    20	HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+    21	SERVICE="$(cd "$HERE/.." && pwd)"
+    22	AWS="$HOME/.local/bin/aws --profile tessera --region us-east-2"
+    23	GCLOUD="$HOME/.local/bin/gcloud"
+    24	GC="$GCLOUD --project=tessera-slot2 --quiet"
+    25	ACCOUNT=477139661040
+    26	PROJECT=tessera-slot2
+    27	PROJECT_NUMBER=990386490765
+    28	REGION=us-east1
+    29	KEYRING=tessera-v1
+    30	# Production key (service/issuer/DEPLOY.md "Keys"): a NEW HSM key, never the spike key, which the hybrid
+    31	# registration commits to deleting (formal/p8/HYBRID-SUPPLEMENT.md §11 item 6). No defaults: set all four.
+    32	KEY="${SLOT2_KEY:-}"                # the production key's name in $KEYRING
+    33	KEY_VERSION_N="${SLOT2_KEY_VERSION:-1}"
+    34	KEY_CREATED="${SLOT2_KEY_CREATED:-}" # that version's createTime (epoch seconds), bound into KEY_FP
+    35	KEY_FP="${SLOT2_KEY_FP:-}"           # gpg-sha256:... of the v4 public-key packet built with KEY_CREATED
+    36	KEY_VERSION="projects/$PROJECT/locations/$REGION/keyRings/$KEYRING/cryptoKeys/$KEY/cryptoKeyVersions/$KEY_VERSION_N"
+    37	SPIKE_KEY=slot2-spike               # the 2026-10-14 instrument's key: only retire-instrument touches it
+    38	
+    39	SIGNER_SA=tessera-signer-gpg@$PROJECT.iam.gserviceaccount.com     # runtime: KMS sign + view public key, on $KEY only
+    40	INVOKER_SA=tessera-signer-invoker@$PROJECT.iam.gserviceaccount.com # Cloud Scheduler: run.invoker on the job only
+    41	BUILDER_SA=slot2-builder@$PROJECT.iam.gserviceaccount.com          # Cloud Build: push to the repo only (exists)
+    42	REPO=tessera-signer
+    43	IMAGE_BASE="$REGION-docker.pkg.dev/$PROJECT/$REPO/signer-gpg"
+    44	SRC_BUCKET=gs://tessera-slot2-build-src                            # exists (7-day lifecycle, builder read only)
+    45	JOB=tessera-signer-gpg
+    46	SCHED=tessera-signer-gpg-tick
+    47	
+    48	ISSUER_SIGNER_ROLE=tessera-v1-issuer-signer-gpg                    # made by service/issuer/infra (signer_principals)
+    49	FED_ROLE=tessera-v1-signer-gpg-federated                           # made here; the gpg entry of signer_principals
+    50	AUDIENCE=tessera-v1-signer-gpg                                     # the ID token's audience (trust condition oaud)
+    51	
+    52	say() { printf '\n== %s\n' "$*"; }
+    53	need() { [ -n "${!1:-}" ] || { echo "$1 is not set (see the header of $0)"; exit 2; }; }
+    54	
+    55	sas() {
+    56	  say "service accounts (no keys are ever created for them)"
+    57	  for sa in tessera-signer-gpg:"Tessera V1 slot-2 signer runtime" tessera-signer-invoker:"Tessera V1 slot-2 signer scheduler"; do
+    58	    name=${sa%%:*}; desc=${sa#*:}
+    59	    $GC iam service-accounts describe "$name@$PROJECT.iam.gserviceaccount.com" >/dev/null 2>&1 \
+    60	      || $GC iam service-accounts create "$name" --display-name="$desc"
+    61	  done
+    62	}
+    63	
+    64	need_key() { for v in SLOT2_KEY SLOT2_KEY_CREATED SLOT2_KEY_FP; do need $v; done
+    65	  [ "$KEY" != "$SPIKE_KEY" ] || { echo "SLOT2_KEY is the spike key; V1 uses a new production key"; exit 2; }; }
+    66	
+    67	keyiam() {
+    68	  need_key
+    69	  say "key IAM: $SIGNER_SA gets cloudkms.signer + cloudkms.publicKeyViewer on $KEY only"
+    70	  for role in roles/cloudkms.signer roles/cloudkms.publicKeyViewer; do
+    71	    $GC kms keys add-iam-policy-binding $KEY --keyring=$KEYRING --location=$REGION \
+    72	      --member="serviceAccount:$SIGNER_SA" --role=$role >/dev/null
+    73	  done
+    74	  $GC kms keys get-iam-policy $KEY --keyring=$KEYRING --location=$REGION
+    75	}
+    76	
+    77	registry() {
+    78	  say "artifact registry repo $REPO (builder may push)"
+    79	  $GC artifacts repositories describe $REPO --location=$REGION >/dev/null 2>&1 \
+    80	    || $GC artifacts repositories create $REPO --location=$REGION --repository-format=docker \
+    81	         --description="Tessera V1 slot-2 signer images"
+    82	  $GC artifacts repositories add-iam-policy-binding $REPO --location=$REGION \
+    83	    --member="serviceAccount:$BUILDER_SA" --role=roles/artifactregistry.writer >/dev/null
+    84	}
+    85	
+    86	build() {
+    87	  say "stage signer-gcp + verifier, build the image (Cloud Build, builder SA)"
+    88	  local ctx; ctx="$(mktemp -d)"
+    89	  mkdir -p "$ctx/signer-gcp" "$ctx/verifier"
+    90	  cp "$HERE"/{Dockerfile,requirements.txt,pyproject.toml,cloudbuild.yaml} "$ctx/signer-gcp/"
+    91	  cp -r "$HERE/tessera_signer" "$ctx/signer-gcp/"
+    92	  cp "$SERVICE/verifier/pyproject.toml" "$ctx/verifier/"
+    93	  cp -r "$SERVICE/verifier/tessera_verify" "$ctx/verifier/"
+    94	  find "$ctx" -name __pycache__ -type d -prune -exec rm -r -- {} +
+    95	  printf '__pycache__/\n' > "$ctx/.gcloudignore"
+    96	  local tag; tag="$(cd "$ctx" && find . -type f ! -name .gcloudignore -print0 | sort -z | xargs -0 sha256sum | sha256sum | cut -c1-16)"
+    97	  $GC builds submit "$ctx" --region=$REGION --config="$ctx/signer-gcp/cloudbuild.yaml" \
+    98	    --substitutions=_IMAGE="$IMAGE_BASE:$tag" \
+    99	    --service-account="projects/$PROJECT/serviceAccounts/$BUILDER_SA" \
+   100	    --gcs-source-staging-dir="$SRC_BUCKET/source"
+   101	  rm -rf -- "${ctx:?}"
+   102	  $GC artifacts docker images describe "$IMAGE_BASE:$tag" --format='value(image_summary.digest)' > "$HERE/.image-digest"
+   103	  echo "image: $IMAGE_BASE@$(cat "$HERE/.image-digest")"
+   104	}
+   105	
+   106	signer_uid() { $GC iam service-accounts describe "$SIGNER_SA" --format='value(uniqueId)'; }
+   107	
+   108	role() {
+   109	  say "AWS role $FED_ROLE: web identity (accounts.google.com), only $SIGNER_SA; may only assume $ISSUER_SIGNER_ROLE"
+   110	  local uid; uid="$(signer_uid)"
+   111	  local trust; trust=$(cat <<EOF
+   112	{"Version":"2012-10-17","Statement":[{"Effect":"Allow","Principal":{"Federated":"accounts.google.com"},
+   113	 "Action":"sts:AssumeRoleWithWebIdentity",
+   114	 "Condition":{"StringEquals":{"accounts.google.com:sub":"$uid","accounts.google.com:aud":"$uid",
+   115	                              "accounts.google.com:oaud":"$AUDIENCE"}}}]}
+   116	EOF
+   117	)
+   118	  local perms; perms=$(cat <<EOF
+   119	{"Version":"2012-10-17","Statement":[{"Sid":"ChainToIssuerSignerRole","Effect":"Allow","Action":"sts:AssumeRole",
+   120	 "Resource":"arn:aws:iam::$ACCOUNT:role/$ISSUER_SIGNER_ROLE"}]}
+   121	EOF
+   122	)
+   123	  if $AWS iam get-role --role-name $FED_ROLE >/dev/null 2>&1; then
+   124	    $AWS iam update-assume-role-policy --role-name $FED_ROLE --policy-document "$trust"
+   125	  else
+   126	    $AWS iam create-role --role-name $FED_ROLE --assume-role-policy-document "$trust" --max-session-duration 3600 \
+   127	      --description "Tessera V1 slot-2 signer (GCP $SIGNER_SA): web identity, chains to $ISSUER_SIGNER_ROLE" \
+   128	      --tags Key=project,Value=tessera Key=purpose,Value=signer-gpg --query Role.Arn --output text
+   129	  fi
+   130	  $AWS iam put-role-policy --role-name $FED_ROLE --policy-name chain-to-issuer-signer --policy-document "$perms"
+   131	  echo "set signer_principals = { gpg = \"arn:aws:iam::$ACCOUNT:role/$FED_ROLE\" } in the issuer's tfvars"
+   132	}
+   133	
+   134	job() {
+   135	  need_key
+   136	  need REQUEST_QUEUE_URL; need RESPONSE_QUEUE_URL; need FRAME_BUCKET; need SIGN_UNTIL
+   137	  say "Cloud Run job $JOB (a job, not a service: no endpoint)"
+   138	  local digest; digest="$(cat "$HERE/.image-digest")"
+   139	  local env="REQUEST_QUEUE_URL=$REQUEST_QUEUE_URL,RESPONSE_QUEUE_URL=$RESPONSE_QUEUE_URL,FRAME_BUCKET=$FRAME_BUCKET"
+   140	  env+=",AWS_ROLE_ARN=arn:aws:iam::$ACCOUNT:role/$FED_ROLE,AWS_AUDIENCE=$AUDIENCE,AWS_REGION_QUEUES=us-east-2"
+   141	  env+=",AWS_CHAIN_ROLE_ARN=arn:aws:iam::$ACCOUNT:role/$ISSUER_SIGNER_ROLE"
+   142	  env+=",KMS_KEY_VERSION=$KEY_VERSION,KEY_CREATED=$KEY_CREATED,KEY_FP=$KEY_FP,SIGN_UNTIL=$SIGN_UNTIL"
+   143	  env+=",SIGNER_IMAGE=$IMAGE_BASE@$digest,RUN_SECONDS=40,WAIT_SECONDS=5,VISIBILITY_SECONDS=120"
+   144	  $GC run jobs deploy $JOB --region=$REGION --image="$IMAGE_BASE@$digest" --service-account="$SIGNER_SA" \
+   145	    --set-env-vars="$env" --tasks=1 --parallelism=1 --max-retries=0 --task-timeout=150s \
+   146	    --cpu=1 --memory=512Mi --labels=project=tessera,purpose=signer-gpg
+   147	  $GC run jobs add-iam-policy-binding $JOB --region=$REGION \
+   148	    --member="serviceAccount:$INVOKER_SA" --role=roles/run.invoker >/dev/null
+   149	}
+   150	
+   151	scheduler() {
+   152	  say "Cloud Scheduler $SCHED: every minute, runs the job as $INVOKER_SA (OAuth); E-01: keep it running while signing is possible"
+   153	  local uri="https://run.googleapis.com/v2/projects/$PROJECT/locations/$REGION/jobs/$JOB:run"
+   154	  if $GC scheduler jobs describe $SCHED --location=$REGION >/dev/null 2>&1; then
+   155	    $GC scheduler jobs update http $SCHED --location=$REGION --schedule="* * * * *" --uri="$uri" \
+   156	      --http-method=POST --oauth-service-account-email="$INVOKER_SA"
+   157	  else
+   158	    $GC scheduler jobs create http $SCHED --location=$REGION --schedule="* * * * *" --uri="$uri" \
+   159	      --http-method=POST --oauth-service-account-email="$INVOKER_SA" --time-zone=UTC --attempt-deadline=60s
+   160	  fi
+   161	}
+   162	
+   163	harden() {
+   164	  need_key
+   165	  say "check: no project-level grant that can change the job or the key (the 2026-10-14 removals still hold)"
+   166	  $GC projects remove-iam-policy-binding $PROJECT --condition=None \
+   167	    --member="serviceAccount:$PROJECT_NUMBER-compute@developer.gserviceaccount.com" --role=roles/editor >/dev/null 2>&1 || true
+   168	  $GC projects remove-iam-policy-binding $PROJECT --condition=None \
+   169	    --member="serviceAccount:$PROJECT_NUMBER@cloudbuild.gserviceaccount.com" --role=roles/cloudbuild.builds.builder >/dev/null 2>&1 || true
+   170	  $GC projects get-iam-policy $PROJECT --format=json
+   171	  $GC kms keys get-iam-policy $KEY --keyring=$KEYRING --location=$REGION --format=json
+   172	}
+   173	
+   174	OLD_SA=slot2-signer@$PROJECT.iam.gserviceaccount.com              # the 2026-10-14 instrument's runtime account
+   175	
+   176	# SG-03: absent is the only tolerated failure. gone CMD... succeeds iff CMD reports that the thing does not exist.
+   177	gone() { local out; if out=$("$@" 2>&1); then return 1; fi; grep -qiE 'not.?found|cannot find|does not exist' <<<"$out"; }
+   178	die() { echo "retire-instrument: $*" >&2; exit 1; }
+   179	
+   180	retire_instrument() {
+   181	  say "retire the 2026-10-14 instrument: its job reads another queue and can also cause $SPIKE_KEY signatures"
+   182	  gone $GC scheduler jobs describe slot2-signer-tick --location=$REGION \
+   183	    || $GC scheduler jobs delete slot2-signer-tick --location=$REGION
+   184	  gone $GC run jobs describe slot2-signer --region=$REGION || $GC run jobs delete slot2-signer --region=$REGION
+   185	  for role in roles/cloudkms.signer roles/cloudkms.publicKeyViewer; do
+   186	    if $GC kms keys get-iam-policy $SPIKE_KEY --keyring=$KEYRING --location=$REGION --format=json | grep -q "$OLD_SA"; then
+   187	      $GC kms keys remove-iam-policy-binding $SPIKE_KEY --keyring=$KEYRING --location=$REGION \
+   188	        --member="serviceAccount:$OLD_SA" --role=$role >/dev/null
+   189	    fi
+   190	  done
+   191	  # Disabling the account ends every route through it at once, including grants inherited from the project.
+   192	  gone $GC iam service-accounts describe "$OLD_SA" || $GC iam service-accounts disable "$OLD_SA"
+   193	
+   194	  say "verify: nothing of the instrument can still sign"
+   195	  gone $GC scheduler jobs describe slot2-signer-tick --location=$REGION || die "scheduler slot2-signer-tick remains"
+   196	  gone $GC run jobs describe slot2-signer --region=$REGION || die "job slot2-signer remains"
+   197	  ! $GC kms keys get-iam-policy $SPIKE_KEY --keyring=$KEYRING --location=$REGION --format=json | grep -q "$OLD_SA" \
+   198	    || die "$OLD_SA still bound on $SPIKE_KEY"
+   199	  ! $GC projects get-iam-policy $PROJECT --format=json | grep -q "$OLD_SA" || die "$OLD_SA still bound on $PROJECT"
+   200	  gone $GC iam service-accounts describe "$OLD_SA" \
+   201	    || [ "$($GC iam service-accounts describe "$OLD_SA" --format='value(disabled)')" = "True" ] \
+   202	    || die "$OLD_SA is not disabled"
+   203	  say "instrument retired and verified"
+   204	}
+   205	
+   206	run_now() { $GC run jobs execute $JOB --region=$REGION --wait; }
+   207	
+   208	case "${1:-}" in
+   209	  sas|keyiam|registry|build|role|job|scheduler|harden) "$1" ;;
+   210	  run-now) run_now ;;
+   211	  retire-instrument) retire_instrument ;;
+   212	  *) echo "usage: $0 sas|role|keyiam|registry|build|job|run-now|scheduler|harden|retire-instrument"; exit 2 ;;
+   213	esac
+nl: service/signer-kms/signer.py: No such file or directory
+     1	data "aws_caller_identity" "current" {}
+     2	data "aws_partition" "current" {}
+     3	
+     4	data "aws_sqs_queue" "requests" {
+     5	  name = "${var.issuer_name}-kms-requests"
+     6	}
+     7	
+     8	data "aws_sqs_queue" "responses" {
+     9	  name = "${var.issuer_name}-kms-responses"
+    10	}
+    11	
+    12	locals {
+    13	  account   = data.aws_caller_identity.current.account_id
+    14	  root      = "arn:${data.aws_partition.current.partition}:iam::${local.account}:root"
+    15	  trail_arn = "arn:${data.aws_partition.current.partition}:cloudtrail:${var.region}:${local.account}:trail/${var.name}-trail"
+    16	  signer_env = {
+    17	    KMS_KEY_ID         = data.aws_kms_key.signer.arn
+    18	    KEY_FP             = var.key_fp
+    19	    SIGN_UNTIL         = var.sign_until
+    20	    RESPONSE_QUEUE_URL = data.aws_sqs_queue.responses.url
+    21	    FRAMES_BUCKET      = var.frames_bucket
+    22	  }
+    23	}
+    24	
+    25	# ------------------------------------------------------------------------------------------------ the key
+    26	# The window's kms key already exists (kms_key_id); this module never creates one. (The provider pinned here,
+    27	# hashicorp/aws 5.100, does not accept customer_master_key_spec = "ML_DSA_65", so a new key is made outside
+    28	# Terraform, and is a new window key: new key assertion, new DNS record.)
+    29	data "aws_kms_key" "signer" {
+    30	  key_id = var.kms_key_id
+    31	}
+    32	
+    33	# The signer role is the only principal allowed kms:Sign (and kms:GetPublicKey). Account administration keeps the
+    34	# key manageable but holds neither; the Deny makes an IAM grant of kms:Sign to any other principal ineffective, so
+    35	# obtaining a signature otherwise needs PutKeyPolicy or a change to the signer role or its code: management events,
+    36	# recorded by the trail below. That an IAM administrator can do those is C3 (README "Who can cause a signature").
+    37	data "aws_iam_policy_document" "key" {
+    38	  statement {
+    39	    sid = "KeyAdministrationWithoutSign"
+    40	    actions = [
+    41	      "kms:CancelKeyDeletion", "kms:CreateAlias", "kms:DeleteAlias", "kms:DescribeKey", "kms:DisableKey",
+    42	      "kms:EnableKey", "kms:GetKeyPolicy", "kms:GetKeyRotationStatus", "kms:ListAliases", "kms:ListGrants",
+    43	      "kms:ListKeyPolicies", "kms:ListResourceTags", "kms:PutKeyPolicy", "kms:RetireGrant", "kms:RevokeGrant",
+    44	      "kms:ScheduleKeyDeletion", "kms:TagResource", "kms:UntagResource", "kms:UpdateAlias", "kms:UpdateKeyDescription",
+    45	    ]
+    46	    resources = ["*"]
+    47	    principals {
+    48	      type        = "AWS"
+    49	      identifiers = [local.root]
+    50	    }
+    51	  }
+    52	  statement {
+    53	    sid       = "SignerRoleOnly"
+    54	    actions   = ["kms:Sign", "kms:GetPublicKey"]
+    55	    resources = ["*"]
+    56	    principals {
+    57	      type        = "AWS"
+    58	      identifiers = [aws_iam_role.signer.arn]
+    59	    }
+    60	  }
+    61	  statement {
+    62	    sid       = "DenySignToEveryoneElse"
+    63	    effect    = "Deny"
+    64	    actions   = ["kms:Sign"]
+    65	    resources = ["*"]
+    66	    principals {
+    67	      type        = "AWS"
+    68	      identifiers = ["*"]
+    69	    }
+    70	    condition {
+    71	      test     = "ArnNotEquals"
+    72	      variable = "aws:PrincipalArn"
+    73	      values   = [aws_iam_role.signer.arn]
+    74	    }
+    75	  }
+    76	}
+    77	
+    78	resource "aws_kms_key_policy" "signer" {
+    79	  key_id = data.aws_kms_key.signer.id
+    80	  policy = data.aws_iam_policy_document.key.json
+    81	}
+    82	
+    83	# ------------------------------------------------------------------------------------------------ signer role
+    84	data "aws_iam_policy_document" "lambda_assume" {
+    85	  statement {
+    86	    actions = ["sts:AssumeRole"]
+    87	    principals {
+    88	      type        = "Service"
+    89	      identifiers = ["lambda.amazonaws.com"]
+    90	    }
+    91	  }
+    92	}
+    93	
+    94	resource "aws_iam_role" "signer" {
+    95	  name               = "${var.name}-role"
+    96	  assume_role_policy = data.aws_iam_policy_document.lambda_assume.json
+    97	}
+    98	
+    99	# Queues, frames and logs only. Signing rights come from the key policy above, not from IAM.
+   100	data "aws_iam_policy_document" "signer" {
+   101	  statement {
+   102	    sid       = "Requests"
+   103	    actions   = ["sqs:ReceiveMessage", "sqs:DeleteMessage", "sqs:GetQueueAttributes"]
+   104	    resources = [data.aws_sqs_queue.requests.arn]
+   105	  }
+   106	  statement {
+   107	    sid       = "Responses"
+   108	    actions   = ["sqs:SendMessage"]
+   109	    resources = [data.aws_sqs_queue.responses.arn]
+   110	  }
+   111	  # IS-09: frames too large for a queue message are read by digest-bound reference.
+   112	  statement {
+   113	    sid       = "Frames"
+   114	    actions   = ["s3:GetObject"]
+   115	    resources = ["arn:${data.aws_partition.current.partition}:s3:::${var.frames_bucket}/frames/*"]
+   116	  }
+   117	  statement {
+   118	    sid       = "Logs"
+   119	    actions   = ["logs:CreateLogStream", "logs:PutLogEvents"]
+   120	    resources = ["${aws_cloudwatch_log_group.signer.arn}:*"]
+   121	  }
+   122	}
+   123	
+   124	resource "aws_iam_role_policy" "signer" {
+   125	  name   = "signer-kms"
+   126	  role   = aws_iam_role.signer.id
+   127	  policy = data.aws_iam_policy_document.signer.json
+   128	}
+   129	
+   130	# ------------------------------------------------------------------------------------------------ Lambda
+   131	resource "aws_cloudwatch_log_group" "signer" {
+   132	  name              = "/aws/lambda/${var.name}"
+   133	  retention_in_days = var.log_retention_days
+   134	}
+   135	
+   136	resource "aws_lambda_function" "signer" {
+   137	  function_name    = var.name
+   138	  role             = aws_iam_role.signer.arn
+   139	  runtime          = var.lambda_runtime
+   140	  handler          = "tessera_sign_kms.lambda_app.handler"
+   141	  filename         = var.lambda_zip
+   142	  source_code_hash = filebase64sha256(var.lambda_zip)
+   143	  timeout          = 60 # within the request queue's 120 s visibility timeout
+   144	  memory_size      = 512
+   145	  environment {
+   146	    variables = local.signer_env
+   147	  }
+   148	  depends_on = [aws_cloudwatch_log_group.signer, aws_iam_role_policy.signer]
+   149	}
+   150	
+   151	resource "aws_lambda_event_source_mapping" "requests" {
+   152	  event_source_arn        = data.aws_sqs_queue.requests.arn
+   153	  function_name           = aws_lambda_function.signer.arn
+   154	  batch_size              = 10
+   155	  function_response_types = ["ReportBatchItemFailures"] # transient failures are redelivered, not dropped
+   156	  scaling_config {
+   157	    maximum_concurrency = 2
+   158	  }
+   159	}
+   160	
+   161	# ------------------------------------------------------------------------------------------------ CloudTrail
+   162	# Management events, read and write, KMS not excluded: kms:Sign and kms:GetPublicKey are KMS management (read)
+   163	# events in CloudTrail, as are PutKeyPolicy, IAM and Lambda changes and StopLogging. Object Lock COMPLIANCE: what
+   164	# is written cannot be deleted or overwritten by anyone until its retention ends; stopping the trail is itself logged.
+   165	resource "aws_s3_bucket" "trail" {
+   166	  bucket_prefix       = "${var.name}-trail-"
+   167	  object_lock_enabled = true
+   168	}
+   169	
+   170	resource "aws_s3_bucket_versioning" "trail" {
+   171	  bucket = aws_s3_bucket.trail.id
+   172	  versioning_configuration {
+   173	    status = "Enabled" # required by Object Lock
+   174	  }
+   175	}
+   176	
+   177	resource "aws_s3_bucket_object_lock_configuration" "trail" {
+   178	  bucket = aws_s3_bucket.trail.id
+   179	  rule {
+   180	    default_retention {
+   181	      mode = "COMPLIANCE"
+   182	      days = var.trail_retention_days
+   183	    }
+   184	  }
+   185	  depends_on = [aws_s3_bucket_versioning.trail]
+   186	}
+   187	
+   188	resource "aws_s3_bucket_public_access_block" "trail" {
+   189	  bucket                  = aws_s3_bucket.trail.id
+   190	  block_public_acls       = true
+   191	  block_public_policy     = true
+   192	  ignore_public_acls      = true
+   193	  restrict_public_buckets = true
+   194	}
+   195	
+   196	resource "aws_s3_bucket_ownership_controls" "trail" {
+   197	  bucket = aws_s3_bucket.trail.id
+   198	  rule {
+   199	    object_ownership = "BucketOwnerEnforced"
+   200	  }
+   201	}
+   202	
+   203	resource "aws_s3_bucket_server_side_encryption_configuration" "trail" {
+   204	  bucket = aws_s3_bucket.trail.id
+   205	  rule {
+   206	    apply_server_side_encryption_by_default {
+   207	      sse_algorithm = "AES256" # SSE-S3
+   208	    }
+   209	  }
+   210	}
+   211	
+   212	data "aws_iam_policy_document" "trail_bucket" {
+   213	  statement {
+   214	    sid       = "CloudTrailAclCheck"
+   215	    actions   = ["s3:GetBucketAcl"]
+   216	    resources = [aws_s3_bucket.trail.arn]
+   217	    principals {
+   218	      type        = "Service"
+   219	      identifiers = ["cloudtrail.amazonaws.com"]
+   220	    }
+   221	    condition {
+   222	      test     = "StringEquals"
+   223	      variable = "aws:SourceArn"
+   224	      values   = [local.trail_arn]
+   225	    }
+   226	  }
+   227	  statement {
+   228	    sid       = "CloudTrailWrite"
+   229	    actions   = ["s3:PutObject"]
+   230	    resources = ["${aws_s3_bucket.trail.arn}/AWSLogs/${local.account}/*"]
+   231	    principals {
+   232	      type        = "Service"
+   233	      identifiers = ["cloudtrail.amazonaws.com"]
+   234	    }
+   235	    condition {
+   236	      test     = "StringEquals"
+   237	      variable = "s3:x-amz-acl"
+   238	      values   = ["bucket-owner-full-control"]
+   239	    }
+   240	    condition {
+   241	      test     = "StringEquals"
+   242	      variable = "aws:SourceArn"
+   243	      values   = [local.trail_arn]
+   244	    }
+   245	  }
+   246	  statement {
+   247	    sid       = "DenyInsecureTransport"
+   248	    effect    = "Deny"
+   249	    actions   = ["s3:*"]
+   250	    resources = [aws_s3_bucket.trail.arn, "${aws_s3_bucket.trail.arn}/*"]
+   251	    principals {
+   252	      type        = "*"
+   253	      identifiers = ["*"]
+   254	    }
+   255	    condition {
+   256	      test     = "Bool"
+   257	      variable = "aws:SecureTransport"
+   258	      values   = ["false"]
+   259	    }
+   260	  }
+
+exec
+/bin/bash -lc "nl -ba formal/p8/HYBRID-SUPPLEMENT.md | sed -n '148,175p;518,536p'; nl -ba service/signer-kms/tessera_sign_kms/signer.py; nl -ba service/issuer/DEPLOY.md | head -125; nl -ba service/signer-gcp/README.md | sed -n '185,235p'; nl -ba docs/decisions/2026-10-27-v1-signer-placement.md | head -40; nl -ba docs/V1-CONTRACT.md | sed -n '25,85p'; rg --files service/verifier/tessera_verify; rg -n 'import|sha1' service/verifier/tessera_verify/install_record.py; ls service/verifier/.venv/bin/python; rg -n 'zip|build' service/issuer/package.py; git status --short; mktemp -d" in /home/tony/projects/tessera
+ succeeded in 0ms:
+   148	that sentence still describes the `gpg` slot and does not describe the `kms` slot. Under the pair id, (K) is
+   149	replaced by two assumptions:
+   150	
+   151	- **(K-R), slot `kms`.** The ML-DSA-65 key signs only messages `F ∈ Frm(attest) ∪ Frm(manifest)` (V1 tagged strings),
+   152	  in pure mode with the empty context. Every issuer KMS `Sign` call on the key is `MessageType EXTERNAL_MU`, with
+   153	  `μ` computed by the issuer from such an `F` and this key's raw public key (§1; owner decision 6).
+   154	  - The spike's `MessageType RAW` calls (message exactly `F`) are comparative captures, not the issuer path.
+   155	  - They satisfy the same assumption, because the message is a V1 tagged string.
+   156	
+   157	  The key is used with no other context, never in HashML-DSA mode, and by no other protocol or service.
+   158	- **(K-O), slot `gpg`.** Unchanged: V1 tagged strings, as OpenPGP type-0x00 documents, through the policy signer
+   159	  (A9.6, slot-2 custody).
+   160	
+   161	*Why the type-0x00 clause has no rule-R counterpart.* In rule O the signed hash input is `F ‖ trailer`, and type 0x00
+   162	is what excludes text mode's line-ending rewrite (E§3.5). Rule R signs `F` itself, with no transformation, so there
+   163	is nothing to exclude. Domain separation comes from the bytes:
+   164	- every V1 tagged string begins with a tag-length byte in 0x11–0x1d (Lemma 4, Remark 10);
+   165	- pure mode's `M'` begins `0x00`, where HashML-DSA's begins `0x01` (FIPS 204's own separation, should the key ever
+   166	  be misused in that mode).
+   167	
+   168	PROOF uses (K) only in Remark 10, and Remark 10's argument holds unchanged with message = `F`.
+   169	
+   170	*What enforces (K-R), stated so it is not overread.*
+   171	- The HSM cannot check that a message is a V1 frame. Under EXTERNAL_MU it does not even see the message: whoever
+   172	  may call `kms:Sign` on the key can sign any message by computing `μ`.
+   173	- So (K-R) is an issuer-code and IAM assumption: the key policy grants `kms:Sign` only to the issuer role, and the
+   174	  issuer code builds only V1 frames. It is not an HSM property. The operations runbook carries the key policy.
+   175	- This is the same single-controller position C3 already states. Capture of the issuing account confers signing
+   518	1. Re-capture genuine V1 hybrid frames: **done** (HS-01, §10.3).
+   519	2. The gpg-slot custody is the GCP Cloud KMS HSM, with no token capture. The deployed policy-signer path is still
+   520	   owed (§10.4).
+   521	3. Malformed ML-DSA internals are `SIG_INVALID`. The codec stays length-only, and PROOF Lemma 7a is unchanged.
+   522	4. The identifier, as proposed.
+   523	5. **Resolved:** the key encoding and K-R stay in this supplement. Registration edits only E§5.2 (§7).
+   524	6. **Resolved:** the issuer always uses EXTERNAL_MU for the kms slot, attestations and possession alike. RAW
+   525	   captures are comparative. `vectors_sha256` covers the hybrid files at the freeze. Both spike keys are deleted
+   526	   after the re-capture verifies, once the review clears (REPORT.md).
+   527	
+   528	**Still open:**
+   529	- HS-02 deployed-slot evidence through the policy signer, by 21 Oct (§10.4).
+   530	- HS-04 profile-conformance cases (a)–(e), run in `prototype/conformance`.
+   531	- The frozen verification-spec hash and the final supplement and E§5.2 hashes, entered in the registration record
+   532	  (§9).
+   533	- KMS key policy for (K-R) (runbook): `kms:Sign` only for the issuer role. Restricting `kms:MessageType` to
+   534	  EXTERNAL_MU now matches the selected path, but it cannot bind what a μ hashes.
+   535	- Optional: distinct slot-A and slot-B honest witnesses in the P3 hybrid models (§6).
+     1	"""The KMS-slot policy signer (docs/decisions/2026-10-27-v1-signer-placement.md): the only principal that may ask
+     2	AWS KMS for an ML-DSA-65 signature with the window's kms key. It reads the issuer's requests (service/issuer,
+     3	tessera_issue/signers.py SlotSigner wire protocol), applies the policy below, signs, verifies locally, and answers.
+     4	
+     5	Request (untrusted): {"request_id", "frame_b64", "sign_by"} or, for a large frame (IS-09), {"request_id",
+     6	"frame_ref", "frame_sha256", "sign_by"}. Response: {"request_id", "status": "SIGNED" | "REFUSED", "sig_b64"?,
+     7	"reason"?, "detail"?, "frame_sha256"?, "signer": {...}}.
+     8	
+     9	Policy, all before KMS is called (as the slot-2 signer, prototype/policy-signer/signer/main.py, and the issuer's
+    10	StandInSigner):
+    11	  - the request is exactly one of the two shapes; sign_by is required (IS-03);
+    12	  - IS-09: a referenced frame is fetched from frames/<rid>/<sha256> and refused unless its SHA-256 is frame_sha256;
+    13	  - the frame decodes, under the service verifier's own decoder, as tessera-v1/attest or tessera-v1/manifest;
+    14	  - its alg is the hybrid pair (the kms slot exists only there);
+    15	  - attest: signer.key_fp is this key's fingerprint; manifest: key_fp is this key's fingerprint;
+    16	  - attest: |declared_issue_time - clock| <= EPS (24 h, A9.2);
+    17	  - IS-03: the clock, read immediately before the KMS call, is not past sign_by nor the configured signing stop.
+    18	After signing: the signature must pass the verifier's rule-R codec and verify over the full frame; and the clock is
+    19	read again, so a signature KMS returned after the stop is withheld (SIGNING_STOPPED), logged, never sent.
+    20	
+    21	Transient failures (KMS or S3 errors, a failed self-check) raise Retry while the message has been received fewer
+    22	than MAX_RECEIVES times, so SQS delivers it again; after that they are refused (SIGNING_ERROR). Every refusal is a
+    23	response, never a silent drop. Every signature and every refusal is one structured log line. EPS and the policy are
+    24	code; nothing in a request changes them."""
+    25	import base64
+    26	import datetime as dt
+    27	import hashlib
+    28	import json
+    29	import re
+    30	
+    31	from tessera_verify.codec import (HYBRID_ALG, Fault, parse_signature, public_key, read_frame, registered_codecs,
+    32	                                  sig_policy, signature_verifies)
+    33	
+    34	EPS = 24 * 3600                       # A9.2: refuse iff |declared - clock| > EPS
+    35	MAX_BODY = 1 << 20                    # an SQS message is at most 1 MiB
+    36	MAX_FRAME = 1 << 25                   # a referenced frame: read_frame's payload cap (2^24) plus generous slack
+    37	MAX_RECEIVES = 3                      # transient errors: retried by redelivery, then refused
+    38	SPKI_MLDSA65_PREFIX = bytes.fromhex("308207b2300b0609608648016503040312038207a100")
+    39	T_MANIFEST = b"tessera-v1/manifest"
+    40	RE_RID = re.compile(r"[A-Za-z0-9._:-]{1,128}")
+    41	RE_HEX64 = re.compile(r"[0-9a-f]{64}")
+    42	RE_REF = re.compile(r"frames/[0-9a-f]{64}/([0-9a-f]{64})")        # the issuer's frames/<rid>/<sha256> (IS-09)
+    43	REGISTRY = registered_codecs(HYBRID_ALG)
+    44	SHAPES = (frozenset({"request_id", "frame_b64", "sign_by"}),
+    45	          frozenset({"request_id", "frame_ref", "frame_sha256", "sign_by"}))
+    46	
+    47	
+    48	class Refuse(Exception):
+    49	    def __init__(self, reason, detail=""):
+    50	        super().__init__(reason)
+    51	        self.reason, self.detail = reason, detail
+    52	
+    53	
+    54	class Retry(Exception):
+    55	    """Leave the message on the queue: SQS delivers it again."""
+    56	
+    57	
+    58	class KeyMismatch(RuntimeError):
+    59	    """The KMS key is not the pinned key: the signer does not start."""
+    60	
+    61	
+    62	def sha256hex(b):
+    63	    return hashlib.sha256(b).hexdigest()
+    64	
+    65	
+    66	def b64e(b):
+    67	    return base64.b64encode(bytes(b)).decode("ascii")
+    68	
+    69	
+    70	def b64d(s):
+    71	    raw = base64.b64decode(s, validate=True)
+    72	    if base64.b64encode(raw).decode("ascii") != s:
+    73	        raise ValueError("non-canonical base64")
+    74	    return raw
+    75	
+    76	
+    77	def ts(s):
+    78	    """'YYYY-MM-DDTHH:MM:SSZ' -> integer seconds (no leap seconds), exactly the issuer's util.ts grammar."""
+    79	    if not isinstance(s, str) or not re.fullmatch(r"\d{4}-\d\d-\d\dT\d\d:\d\d:\d\dZ", s):
+    80	        raise ValueError("not an RFC 3339 UTC second: " + repr(s))
+    81	    y, m, d = int(s[0:4]), int(s[5:7]), int(s[8:10])
+    82	    if not (1 <= m <= 12 and 1 <= d <= 31 and int(s[11:13]) < 24 and int(s[14:16]) < 60 and int(s[17:19]) < 60):
+    83	        raise ValueError("not an RFC 3339 UTC second: " + repr(s))
+    84	    y -= m <= 2
+    85	    era = (y if y >= 0 else y - 399) // 400
+    86	    yoe = y - era * 400
+    87	    doe = yoe * 365 + yoe // 4 - yoe // 100 + (153 * (m + (-3 if m > 2 else 9)) + 2) // 5 + d - 1
+    88	    return (era * 146097 + doe - 719468) * 86400 + int(s[11:13]) * 3600 + int(s[14:16]) * 60 + int(s[17:19])
+    89	
+    90	
+    91	def rfc3339(t):
+    92	    return dt.datetime.fromtimestamp(int(t), dt.UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
+    93	
+    94	
+    95	def fp_kms(spki):
+    96	    return "spki-sha256:" + sha256hex(spki)
+    97	
+    98	
+    99	def external_mu(pk_raw, message):
+   100	    """FIPS 204 external mu for pure ML-DSA with an empty context: what KMS signs under MessageType EXTERNAL_MU."""
+   101	    return hashlib.shake_256(hashlib.shake_256(pk_raw).digest(64) + b"\x00\x00" + message).digest(64)
+   102	
+   103	
+   104	class KmsSigner:
+   105	    """kms: a boto3-style KMS client; fetch(ref) -> bytes | None (None: no such object; raises on other errors);
+   106	    log(dict) writes one structured line; clock() -> int seconds."""
+   107	    slot = "kms"
+   108	
+   109	    def __init__(self, kms, key_id, key_fp, sign_until, fetch, clock, log):
+   110	        if not re.fullmatch(r"spki-sha256:[0-9a-f]{64}", key_fp or ""):
+   111	            raise KeyMismatch("no pinned key fingerprint (KEY_FP) configured")
+   112	        self.kms, self.key_id, self.sign_until, self.fetch, self.clock, self.log = (
+   113	            kms, key_id, int(sign_until), fetch, clock, log)
+   114	        pk = kms.get_public_key(KeyId=key_id)
+   115	        if pk.get("KeySpec") != "ML_DSA_65" or "ML_DSA_SHAKE_256" not in pk.get("SigningAlgorithms", []):
+   116	            raise KeyMismatch(f"key {key_id} is {pk.get('KeySpec')}, not an ML-DSA-65 signing key")
+   117	        spki = bytes(pk["PublicKey"])
+   118	        try:
+   119	            self.pub = public_key(spki, "kms", HYBRID_ALG)           # the verifier's KEY_FORMAT gate
+   120	        except Fault as e:
+   121	            raise KeyMismatch(f"key {key_id}: {e.code}") from None
+   122	        if fp_kms(spki) != key_fp:
+   123	            raise KeyMismatch(f"KMS key fingerprint {fp_kms(spki)} is not the pinned {key_fp}; refusing to run")
+   124	        self.spki, self.fp, self.pk_raw = spki, key_fp, spki[len(SPKI_MLDSA65_PREFIX):]
+   125	        self.key_arn = pk.get("KeyId", key_id)
+   126	
+   127	    # ------------------------------------------------------------------------------------------- policy
+   128	    def _request(self, body):
+   129	        if not isinstance(body, str) or len(body.encode()) > MAX_BODY:
+   130	            raise Refuse("BAD_REQUEST", "message missing or larger than 1 MiB")
+   131	        try:
+   132	            req = json.loads(body)
+   133	        except ValueError:
+   134	            raise Refuse("BAD_REQUEST", "not JSON") from None
+   135	        if not isinstance(req, dict):
+   136	            raise Refuse("BAD_REQUEST", "not a JSON object")
+   137	        return req
+   138	
+   139	    def _frame(self, req):
+   140	        """-> (frame, sign_by). IS-09: a referenced frame is the object whose SHA-256 the issuer named."""
+   141	        if frozenset(req) not in SHAPES:
+   142	            raise Refuse("BAD_REQUEST", "fields " + ",".join(sorted(req)))
+   143	        try:
+   144	            sign_by = ts(req["sign_by"])
+   145	        except ValueError:
+   146	            raise Refuse("BAD_REQUEST", "sign_by") from None
+   147	        if "frame_b64" in req:
+   148	            try:
+   149	                return b64d(req["frame_b64"]), sign_by
+   150	            except (ValueError, TypeError):
+   151	                raise Refuse("BAD_REQUEST", "frame_b64 is not canonical base64") from None
+   152	        ref, want = req["frame_ref"], req["frame_sha256"]
+   153	        m = RE_REF.fullmatch(ref) if isinstance(ref, str) else None
+   154	        if m is None or not isinstance(want, str) or not RE_HEX64.fullmatch(want) or m.group(1) != want:
+   155	            raise Refuse("BAD_REQUEST", "frame_ref must be frames/<rid>/<frame_sha256>")
+   156	        try:
+   157	            frame = self.fetch(ref)
+   158	        except Exception as e:  # noqa: BLE001  S3 error other than "no such object": transient
+   159	            raise Retry(f"fetch {ref}: {type(e).__name__}: {e}") from None
+   160	        if frame is None:
+   161	            raise Refuse("FRAME_UNAVAILABLE", ref)
+   162	        if len(frame) > MAX_FRAME:
+   163	            raise Refuse("FRAME_TOO_LARGE", str(len(frame)))
+   164	        if sha256hex(frame) != want:
+   165	            raise Refuse("FRAME_DIGEST_MISMATCH", f"object {sha256hex(frame)}, named {want}")
+   166	        return frame, sign_by
+   167	
+   168	    def check_frame(self, frame, now):
+   169	        """Frame grammar and content policy. -> "attest" | "manifest"."""
+   170	        kind = "manifest" if frame[:1 + len(T_MANIFEST)] == bytes([len(T_MANIFEST)]) + T_MANIFEST else "attest"
+   171	        try:
+   172	            obj = read_frame(frame, "tessera-v1/" + kind)
+   173	        except Fault as e:
+   174	            raise Refuse(e.code, kind) from None
+   175	        alg, fp = (obj["alg"], obj["key_fp"]) if kind == "manifest" else (obj["common"]["alg"], obj["signer"]["key_fp"])
+   176	        if alg != HYBRID_ALG:
+   177	            raise Refuse("ALG_NOT_ALLOWED", alg)
+   178	        if fp != self.fp:
+   179	            raise Refuse("KEY_FP_MISMATCH", fp)
+   180	        if kind == "attest":
+   181	            declared = ts(obj["common"]["declared_issue_time"])
+   182	            if abs(declared - now) > EPS:
+   183	                raise Refuse("DECLARED_TIME_OUTSIDE_EPSILON",
+   184	                             f"declared {rfc3339(declared)}, signer clock {rfc3339(now)}, epsilon {EPS} s")
+   185	        return kind
+   186	
+   187	    def _stopped(self, now, sign_by):
+   188	        if now > self.sign_until:
+   189	            return f"clock {rfc3339(now)} past the signing stop {rfc3339(self.sign_until)}"
+   190	        if now > sign_by:
+   191	            return f"clock {rfc3339(now)} past sign_by {rfc3339(sign_by)}"
+   192	        return None
+   193	
+   194	    # ------------------------------------------------------------------------------------------- signing
+   195	    def verify(self, frame, sig):
+   196	        """The issuer's check (signers.verify_slot_signature): rule-R codec, then ML-DSA-65 over the exact frame."""
+   197	        try:
+   198	            parsed = parse_signature(sig, HYBRID_ALG, "kms", REGISTRY)
+   199	            sig_policy(parsed)
+   200	            return signature_verifies(frame, parsed, self.pub)
+   201	        except Fault:
+   202	            return False
+   203	
+   204	    def _kms_sign(self, frame):
+   205	        try:
+   206	            sig = self.kms.sign(KeyId=self.key_id, Message=external_mu(self.pk_raw, frame), MessageType="EXTERNAL_MU",
+   207	                                SigningAlgorithm="ML_DSA_SHAKE_256")["Signature"]
+   208	        except Exception as e:  # noqa: BLE001  KMS or network: transient
+   209	            raise Retry(f"kms sign: {type(e).__name__}: {e}") from None
+   210	        return bytes(sig)
+   211	
+   212	    # ------------------------------------------------------------------------------------------- one message
+   213	    def _signer_info(self, now):
+   214	        return {"clock": rfc3339(now), "slot": self.slot, "key_fp": self.fp, "epsilon_s": EPS,
+   215	                "sign_until": rfc3339(self.sign_until)}
+   216	
+   217	    def handle(self, body, receive_count=1, message_id=None):
+   218	        """-> the response dict to send, or raises Retry (the message is left for redelivery)."""
+   219	        rid, frame_sha, sig_sha, now = None, None, None, self.clock()
+   220	        line = {"event": None, "message_id": message_id, "receive_count": receive_count, "slot": self.slot,
+   221	                "key_fp": self.fp}
+   222	        try:
+   223	            try:
+   224	                req = self._request(body)
+   225	                rid = req.get("request_id")
+   226	                if not isinstance(rid, str) or not RE_RID.fullmatch(rid):
+   227	                    rid = None
+   228	                    raise Refuse("BAD_REQUEST", "request_id")
+   229	                frame, sign_by = self._frame(req)
+   230	                frame_sha = sha256hex(frame)
+   231	                kind = self.check_frame(frame, self.clock())
+   232	                now = self.clock()                    # IS-03: immediately before the signing operation
+   233	                stopped = self._stopped(now, sign_by)
+   234	                if stopped:
+   235	                    raise Refuse("SIGNING_STOPPED", stopped)
+   236	                sig = self._kms_sign(frame)
+   237	                sig_sha = sha256hex(sig)
+   238	                if not self.verify(frame, sig):
+   239	                    raise Retry(f"KMS signature {sig_sha} does not verify over the full frame")
+   240	                now = self.clock()
+   241	                stopped = self._stopped(now, sign_by)
+   242	                if stopped:                           # signed, but returned after the stop: withheld
+   243	                    raise Refuse("SIGNING_STOPPED", "signature withheld: " + stopped)
+   244	            except Retry as e:
+   245	                if receive_count < MAX_RECEIVES:
+   246	                    self.log(dict(line, event="retry", request_id=rid, frame_sha256=frame_sha,
+   247	                                  signature_sha256=sig_sha, detail=str(e)))
+   248	                    raise
+   249	                raise Refuse("SIGNING_ERROR", f"after {receive_count} receives: {e}") from None
+   250	            except Refuse:
+   251	                raise
+   252	            except Exception as e:  # noqa: BLE001  a bug must not drop the request silently or loop forever
+   253	                if receive_count < MAX_RECEIVES:
+   254	                    self.log(dict(line, event="retry", request_id=rid, frame_sha256=frame_sha,
+   255	                                  signature_sha256=sig_sha, detail=f"{type(e).__name__}: {e}"))
+   256	                    raise Retry(str(e)) from None
+   257	                raise Refuse("INTERNAL_ERROR", f"{type(e).__name__}: {e}") from None
+   258	        except Refuse as r:
+   259	            resp = {"request_id": rid, "status": "REFUSED", "reason": r.reason, "detail": r.detail,
+   260	                    "signer": self._signer_info(now)}
+   261	            if frame_sha:
+   262	                resp["frame_sha256"] = frame_sha
+   263	            self.log(dict(line, event="refused", request_id=rid, frame_sha256=frame_sha, signature_sha256=sig_sha,
+   264	                          reason=r.reason, detail=r.detail, clock=rfc3339(now)))
+   265	            return resp
+   266	        self.log(dict(line, event="signed", request_id=rid, frame_sha256=frame_sha, signature_sha256=sig_sha,
+   267	                      kind=kind, clock=rfc3339(now)))
+   268	        return {"request_id": rid, "status": "SIGNED", "sig_b64": b64e(sig), "frame_sha256": frame_sha,
+   269	                "signer": self._signer_info(now)}
+     1	# Deploying the V1 issuer and its signers (owner, 2026-10-27)
+     2	
+     3	> **Status: OWNER DRAFT, revised after the signer review** (`docs/reviews/signers/CODEX-REVIEW.md`, SG-01 to SG-05).
+     4	> These are the steps for the first deployment. No agent runs any of them: `terraform apply` and every AWS write
+     5	> run in the author's login session, from commands written out here in full. GCP steps can run on the NUC, where
+     6	> `gcloud` is logged in.
+     7	
+     8	## Before the session (owner, no credentials)
+     9	
+    10	1. `service/verifier/install.sh` has been run, so the pinned SHA-1DC binary exists.
+    11	2. All suites are green: issuer, `service/signer-kms`, `service/signer-gcp` (`.venv/bin/python -m pytest -q` in each).
+    12	3. Packages, each built deterministically (record each SHA-256):
+    13	   - `cd service/issuer && .venv/bin/python package.py dist/issuer-bootstrap.zip`
+    14	   - `cd service/signer-kms && .venv/bin/python package.py dist/signer-kms.zip`
+    15	
+    16	## Keys and what counts as production — OWNER DECISION, revised 2026-10-28
+    17	
+    18	**V1 uses new production keys, not the spike keys.** The hybrid registration commits to deleting both spike keys
+    19	(`formal/p8/HYBRID-SUPPLEMENT.md` §11 item 6, lines 524-526): "Both spike keys are deleted after the re-capture
+    20	verifies, once the review clears." The first version of this section reused them. That contradicted the
+    21	commitment, and Codex found it (`docs/reviews/amendment-11/CODEX-REVIEW.md`, A11-03). In the session:
+    22	
+    23	- **KMS:** `aws kms create-key --key-spec ML_DSA_65 --key-usage SIGN_VERIFY`. Its id and fingerprint are
+    24	  `kms_key_id` and `key_fp` in step 5.
+    25	- **Slot 2:** a new HSM key in keyring `tessera-v1` (`gcloud kms keys create ... --protection-level=hsm
+    26	  --default-algorithm=ec-sign-p256-sha256 --purpose=asymmetric-signing`). Its version, `createTime` and fingerprint
+    27	  are exported as `SLOT2_KEY`, `SLOT2_KEY_VERSION`, `SLOT2_KEY_CREATED` and `SLOT2_KEY_FP` for
+    28	  `service/signer-gcp/deploy.sh`, which has no defaults and refuses the spike key.
+    29	- Both keys are recorded in the external custody record before either signs (profile §8).
+    30	- The spike keys are deleted (KMS: schedule deletion; GCP: destroy the key version) once the conditions in the
+    31	  supplement hold.
+    32	
+    33	**Nothing separates TEST from production at signing time** (signer review, Q3). From the moment a window's
+    34	authority records name the new keys, every receipt they sign is a production receipt. The smoke test below
+    35	produces a real receipt over honest smoke-test content.
+    36	
+    37	## In the session (author logged in: `aws login --profile tessera`)
+    38	
+    39	1. **Issuer, bootstrap.** `terraform -chdir=infra plan -var lambda_zip=../dist/issuer-bootstrap.zip -out tfplan`.
+    40	   Read the plan together, then `terraform -chdir=infra apply tfplan`. The bootstrap package has no `install.json`,
+    41	   so pre-ship refuses and no receipt can ship from it.
+    42	2. **Install facts on Lambda.**
+    43	   `aws lambda invoke --profile tessera --function-name <poller> --payload '{"tessera":"install-facts"}' --cli-binary-format raw-in-base64-out install-facts.json`
+    44	3. **Runtime version.** `aws lambda get-function-configuration --profile tessera --function-name <poller>
+    45	   --query RuntimeVersionConfig.RuntimeVersionArn --output text`. This value is `RUNTIME_ARN` below.
+    46	4. **Issuer, deployable and pinned.** `.venv/bin/python package.py dist/issuer.zip --install-json install-facts.json`,
+    47	   then plan and apply with `-var lambda_zip=../dist/issuer.zip -var runtime_version_arn=$RUNTIME_ARN`. That pins
+    48	   both functions (`aws_lambda_runtime_management_config`, SG-05), so AWS cannot patch the runtime under the recorded
+    49	   Unicode digest. Collecting the facts hashes the SHA-1DC binary but does not run it. Step 9 shows it runs.
+    50	5. **KMS signer.** `terraform -chdir=../signer-kms/infra plan` with the issuer's queue and bucket outputs,
+    51	   `kms_key_id`, `key_fp` and `trail_retention_days`. The retention has no default, because Object Lock COMPLIANCE
+    52	   retention can never be shortened; choose it here. The plan **replaces the key's whole policy**: the account root
+    53	   keeps key administration (including `PutKeyPolicy`), only the signer role may `kms:Sign`, and everyone else is
+    54	   explicitly denied it. Read that diff, then apply.
+    55	6. **Slot-2 signer** (GCP; `service/signer-gcp/README.md`). Run `deploy.sh` steps in order: `sas`, `role`, then
+    56	   re-apply the issuer with `signer_principals`, then `keyiam`, `registry`, `build`, `job`, `run-now`, `scheduler`,
+    57	   `harden`.
+    58	7. **Gate: retire the prototype signer** (SG-03). `deploy.sh retire-instrument` must end with "instrument retired
+    59	   and verified". It fails on any error other than "already gone", disables the old service account, and checks that
+    60	   nothing of the instrument can still sign. Issuance does not start until this passes.
+    61	8. **Gate: who can cause a signature** (SG-04). List the principals that hold, on the AWS side,
+    62	   `lambda:InvokeFunction` on the signer, `iam:PassRole` on the signer role, `sqs:SendMessage` on either request
+    63	   queue, and `kms:PutKeyPolicy`. On the GCP side, list those that hold `run.jobs.runWithOverrides` or
+    64	   `run.jobs.update` on the job, `iam.serviceAccounts.actAs` / token creation on the runtime account, and
+    65	   `cloudkms.cryptoKeyVersions.useToSign` on the key. Record the lists in `docs/reviews/signers/REQUESTERS.md`.
+    66	   Anything beyond the issuer, the signers and the author's administrator identity is removed before issuance.
+    67	9. **Window and smoke test.** Upload `config/window.json` (L1 dates, both key fingerprints) to the result bucket.
+    68	   Then send one real request through the API, run it to VALID_STRICT through `service/verifier`, and include a
+    69	   negative control. This is the first run of pre-ship on Lambda, so it also shows the packaged detector works there.
+    70	
+    71	## Not deployment gates, but release gates (still open; `formal/freeze-v1/FREEZE-RECORD.md:84-91`)
+    72	
+    73	Before the first **public verifier release**: the custody procedure and its rehearsal; the production release key;
+    74	the fingerprint channels the author names; the release-format vectors; the **GCP VPC Service Controls perimeter**;
+    75	and a **policy for responses the signer was not asked for** (E-06). Deployment does not cancel any of them.
+   185	  sent but its delete failed, the next run signs again, and both responses carry the same request id and verify
+   186	  (`test_redelivery_after_a_failed_delete_signs_again_in_a_later_run`). The issuer's drain records the second
+   187	  response as a duplicate. A request whose `sign_by` has passed by the time a run reaches it is refused
+   188	  (`test_late_request_past_sign_by_is_refused_not_signed`). That puts a time bound on any late signature.
+   189	
+   190	## Deploy
+   191	
+   192	Requires `gcloud` (logged in, project `tessera-slot2`) and the `tessera` AWS profile. Nothing below has been run.
+   193	
+   194	```bash
+   195	cd service/signer-gcp && .venv/bin/python -m pytest -q          # green first
+   196	export REQUEST_QUEUE_URL=...  RESPONSE_QUEUE_URL=...  FRAME_BUCKET=...   # terraform output signer_queues / result_bucket
+   197	export SIGN_UNTIL=YYYY-MM-DDTHH:MM:SSZ                           # issuance-not-after minus 96 h
+   198	./deploy.sh sas                 # runtime and scheduler service accounts
+   199	./deploy.sh role                # AWS federated role (needs the runtime account's unique ID)
+   200	#   then, in service/issuer/infra: signer_principals = { gpg = "<printed ARN>" }; terraform apply
+   201	./deploy.sh keyiam              # cloudkms.signer + publicKeyViewer on $SLOT2_KEY (the NEW production key) for the runtime account only
+   202	./deploy.sh registry            # artifact repo tessera-signer
+   203	./deploy.sh build               # stages signer-gcp + verifier, Cloud Build, records .image-digest
+   204	./deploy.sh job                 # Cloud Run job tessera-signer-gpg, image by digest
+   205	./deploy.sh run-now             # one execution; its log must show "start" with the pinned key_fp, then "done"
+   206	./deploy.sh scheduler           # every minute while signing is possible
+   207	./deploy.sh harden              # re-check project and key IAM
+   208	./deploy.sh retire-instrument   # delete slot2-signer job/scheduler and its key grants (requester check item 4)
+   209	```
+   210	
+   211	## Tests
+   212	
+   213	```bash
+   214	uv venv .venv --python 3.14 && uv pip install -p .venv/bin/python cryptography==50.0.2 pytest
+   215	.venv/bin/python -m pytest -q
+   216	```
+   217	
+   218	`pyproject.toml` puts `../verifier` and `../issuer` on the test path. The issuer is used only by
+   219	`test_issuer_protocol.py`. `test_independence.py` checks that the package imports nothing from `prototype/`,
+   220	`formal/` or the issuer.
+   221	
+   222	## Not done, or not known
+   223	
+   224	- Nothing has run against real Cloud KMS, SQS, S3 or STS. The adapters are tested over fake transports only.
+   225	- The `python:3.14-slim` base image is referenced by tag, not digest. It should be pinned by digest before the first
+   226	  real build.
+   227	- The policy does not pin the frame's `issuer` domain, or the manifest's `key_fp` (the KMS slot's fingerprint). A
+   228	  captor of the queue could get the gpg key's possession signature over a manifest that pairs it with a KMS key of
+   229	  its own. Whether that is within C3 as registered is for the owner to judge. Configuration could narrow it.
+   230	- No review has been run. A Codex review and an owner read come before deployment.
+     1	# Where V1's signers and services run (2026-10-27)
+     2	
+     3	> **Status: OWNER DECISION**, by the owner instance (Claude Opus 5.5), 2026-10-27. It closes the "signer split"
+     4	> item that the 2026-10-26 handoff left open as an author question. It changes no guarantee in `docs/V1-CONTRACT.md`. *(Corrected 2026-10-28: it first said it changed no
+     5	> registered sentence. It changes K-R's enforcement wording in `formal/p8/HYBRID-SUPPLEMENT.md` (who computes `μ`,
+     6	> who may `kms:Sign`); that is Amendment 11 §A11.5 item 5, for the author.)* Contestable by the author at any time.
+     7	
+     8	## Why this is the owner's call
+     9	
+    10	On 2026-10-24 the author agreed to put the AWS-slot caller in an Azure VM and the GCP-slot caller on Linode. On
+    11	2026-10-26 the previous owner withdrew the reason it had given for that: a signer outside the issuing account still
+    12	signs whatever the issuer sends it, so the split does not stop a captured issuer from getting signatures. Asked
+    13	today what he wanted Azure and Linode for, the author said: *"I'd suggested them as places for the service. We have
+    14	the linode instance, and I have a budget ($70/mo) via my MSDN subscription for Azure."* They were offered as
+    15	resources, not as a requirement. Choosing among resources is owner work.
+    16	
+    17	## Decision
+    18	
+    19	1. **Slot 2 (GCP HSM, P-256) stays as it is**: the existing GCP policy signer, its own policy and its own logs.
+    20	2. **The KMS slot (ML-DSA-65) is signed by a policy signer in the issuing AWS account**, under its own IAM role. That
+    21	   role is the only principal granted `kms:Sign` on the key. The issuer roles keep no KMS permissions (already true,
+    22	   `service/issuer/infra/main.tf:181`, checked by `tests/test_infra.py`). The signer reads frames from the existing
+    23	   per-slot SQS queue and applies the same policy as slot 2.
+    24	3. **CloudTrail**, with all management events, read and write, including KMS (`kms:Sign` is a management read event
+    25	   in CloudTrail, not a data event; corrected the same day by the signer build), writes to an S3 bucket with Object
+    26	   Lock in compliance mode. A captor can stop the trail from then on, but cannot delete what is already logged, and stopping the trail
+    27	   is itself logged. This supports the AJ7 capture-notice recommendation. It adds no claim: V1 still promises no
+    28	   detection.
+    29	4. **No Azure or Linode in any signing path in V1.** Linode keeps serving wamason.com and never holds a signing role.
+    30	   Azure is used for the **dead-service test** (4 Dec). A clean VM outside AWS verifies receipts with the Tessera
+    31	   endpoint switched off. This uses the author's MSDN credit for the one V1 test that benefits from being off AWS.
+    32	5. **A separate AWS signing account** (the previous owner's recommendation) is recorded as a **V2 candidate**, next to
+    33	   the disjoint-authorities design (A9.3). Moving the KMS signer to another account later means redeploying
+    34	   `service/signer-kms/infra` there with cross-account access to the queues and frames. That is a deployment change,
+    35	   not a redesign. (Corrected the same day: this first said it was a change of one variable.)
+    36	
+    37	## Checks run on this decision
+    38	
+    39	- **Who can ask for a signature?** For the KMS slot: whatever can write to its SQS request queue (the issuer
+    40	  roles), and any principal with IAM administration in the account, which can rewrite the key policy (`PutKeyPolicy`, held by the account root) to grant itself `kms:Sign`; an ordinary IAM grant cannot override the key policy's explicit Deny (corrected after the signer review, Q1). The full list of narrower routes, such as direct Lambda invocation and `iam:PassRole`, is in the signer READMEs and is checked at deployment (`service/issuer/DEPLOY.md` step 8). The same
+    25	| G1 | **Exact bytes.** The receipt binds these exact bytes. Change one bit and the check fails. | C1 |
+    26	| G2 | **Presented to Tessera.** The bytes were presented to the Tessera V1 service at some issuance. | C2 |
+    27	| G3 | **Both signatures.** Both of the service's keys signed. A missing, stripped or swapped signature fails. | C3 |
+    28	| G4 | **The keys were Tessera's.** DNSSEC (`_tessera-v1.wamason.com`, at the snapshot's own anchored time) and a signed git commit (at its own evidence time) named the keys for the service's domain. The git commit was in the Bitcoin chain at least 6 blocks before the receipt. | C4, A10.6 |
+    29	| G5 | **Existed by a block.** The signed bytes and both signatures existed before a specific Bitcoin block: the lowest-height qualifying block in the presented proof, confirmed 6 deep. | C5, A10.1, A10.5 |
+    30	| G6 | **A real-time bound, under an unchecked assumption.** A-UTC says at least one of that block and its 5 successors has a time stamp at most 2 hours behind when it was made. If A-UTC holds, the bytes existed before U (the latest of those 6 times, plus 2 hours). U is reported separately and never changes the verdict. | A10.1.1 |
+    31	| G7 | **Window, two checks only.** The declared issue time is not before the keys' window opened, and the chain time T is not after it closed. This does not prove the signing happened inside the window. | C4, A10.2 |
+    32	| G8 | **No Tessera needed.** The verdict depends only on the inputs above. | C6 |
+    33	| G9 | **A typed verdict.** Once the trust configuration is authenticated, the verifier returns `VALID_STRICT`, `INVALID` or `UNVERIFIABLE`, with a reason code and `revocation: NOT_EVALUATED`, `historical_security: NOT_EVALUATED`, `standing: ABSENT/NOT_ISSUED_IN_PROFILE`. Missing required evidence prevents acceptance. A valid receipt still leaves everything in §3 unestablished. If the trust configuration is not authenticated, there is no receipt verdict. | C7; A9.5 trust-configuration authority; V1-PROFILE §5 (`TRUST_CONFIG_UNAUTHENTICATED`) |
+    34	| G10 | **Honest receipts cannot be moved.** If an attacker takes over the DNS and git authority records while the service's own keys stay secret and unmisused, it cannot move honestly signed frames to other keys or bytes, or change their signer sets, whether they were signed before or after the takeover. | A10.4 |
+    35	**No G11.** The service-key listing (A10.4.1) is not in V1, by the author's ruling of 2026-10-23 (E9 row 2,
+    36	`docs/reviews/e9-packet/AUTHOR-RULINGS.md`; `docs/decisions/2026-10-19-listing-cut.md`). G10 holds while the independent release boundary of A9.5 holds.
+    37	**New receipts under an attacker's own keys pass when both authority channels are captured.**
+    38	
+    39	## 3. Not guaranteed
+    40	
+    41	Each of these is a deliberate limit, not a missing feature.
+    42	
+    43	- **Who submitted the bytes**, or that a replayed receipt suits the current transaction (case f).
+    44	- **What the bytes mean**, or that they are true. A contract inside the bytes is the checker's to verify (cases i, i′).
+    45	- **That a key was not revoked** (cases e, e′).
+    46	- **That an algorithm or a key was still safe** when it signed.
+    47	- **Any lower time bound or priority.** "Existed by" is never "existed after" or "came first".
+    48	- **Real time without A-UTC.** Without it, only chain order is claimed.
+    49	- **Standing** of any kind.
+    50	- **Separate control of the two keys.** One controller holds both. Capturing the issuing AWS account means both
+    51	  slots can sign.
+    52	- **Visibility.** Publishing the authority records is the issuer's duty; the verifier does not check it. V1
+    53	  guarantees no detection or public exposure of a capture, of new receipts, or of a release given to one party.
+    54	- **That DNSSEC shows publication before issue.**
+    55	- **Anything after a Bitcoin reorganization of 6 or more blocks.**
+    56	- **Renewal, degraded modes, or wrappers.** These are refused (`UNVERIFIABLE`), including honest ones (cases d2, h:
+    57	  the two registered false rejects).
+    58	- **One receipt per presentation.** A receipt id (SHA-256 of `A_sig`) names a receipt, not a presentation. Signing
+    59	  is randomized, so the same honest frames can carry more than one valid signature set and therefore more than one
+    60	  valid receipt, each with its own T. Each still meets G1–G10. (Owner, 2026-10-19, from finding E-02 of the first
+    61	  real run.)
+    62	- **Stability of T and U across different proofs.** A different proof or pin set can select a different block.
+    63	- **Protection for a checker who skips authenticating the verifier release** or runs a substituted one.
+    64	
+    65	## 4. Failure model
+    66	
+    67	| Failure or attacker | What still holds |
+    68	|---|---|
+    69	| Tessera disappears | Everything in §2, if the holder kept the receipt and the verifier release. Reconstruction after the project dies is not demonstrated. |
+    70	| Attacker alters a receipt or moves its signatures | Rejected (G1, G3, G10). |
+    71	| Attacker uses its own keys, authority records not captured | Rejected: the required authority evidence does not name them (G4). |
+    72	| Attacker captures both DNS and git authority records | Honest receipts protected (G10). New receipts under its own keys **pass** (the listing was cut). |
+    73	| Attacker captures the issuing AWS account | **Not protected.** It can issue receipts that verify. |
+    74	| Attacker steals the release key | Not protected: it can publish releases with a trust configuration of its choosing. This is distribution compromise, which A9 excludes (A9:47–52). A checker who installs no later release is unaffected. |
+    75	| Bitcoin miners lie about time | G5 holds (chain order). G6 holds only under A-UTC. |
+    76	| Bitcoin reorganizes fewer than 6 blocks | G5 holds. |
+    77	
+    78	## 5. Pairing: where each guarantee is checked
+    79	
+    80	The method needs every guarantee checked twice: once by a formal model or inspection, once by tests against the
+    81	implementation. When the two disagree, we fix the contract, the model or the code. This is a first mapping, not
+    82	yet checked case by case.
+    83	
+    84	**These are mappings, not pairs.** A pair, in the method's sense, runs the same scenario on both sides, so that a
+    85	disagreement means something. Here the model side and the test side were written separately, for different
+service/verifier/tessera_verify/__init__.py
+service/verifier/tessera_verify/__main__.py
+service/verifier/tessera_verify/install_record.py
+service/verifier/tessera_verify/policy.py
+service/verifier/tessera_verify/anchors.py
+service/verifier/tessera_verify/codec.py
+service/verifier/tessera_verify/cli.py
+service/verifier/tessera_verify/sha1dc.py
+service/verifier/tessera_verify/release_auth.py
+service/verifier/tessera_verify/release_constants.py
+service/verifier/tessera_verify/verify.py
+service/verifier/tessera_verify/dnssec.py
+service/verifier/tessera_verify/git_channel.py
+4:import hashlib
+5:import json
+6:import os
+7:import sys
+8:import unicodedata
+9:from pathlib import Path
+10:from . import release_constants, sha1dc
+11:from .codec import Fault, demand
+14:FIELDS = {'format', 'python', 'unicode_version', 'unicode_module_sha256', 'sha1dc_upstream_commit',
+15:          'sha1dc_binary', 'sha1dc_binary_sha256'}
+26:def current_facts(sha1dc_binary, sha1dc_binary_sha256):
+29:            'sha1dc_upstream_commit': sha1dc.UPSTREAM_COMMIT, 'sha1dc_binary': str(sha1dc_binary),
+30:            'sha1dc_binary_sha256': sha1dc_binary_sha256}
+49:    demand(rec['sha1dc_upstream_commit'] == sha1dc.UPSTREAM_COMMIT, 'INSTALL_RECORD_INVALID')
+50:    sha1dc.configure(rec['sha1dc_binary'], rec['sha1dc_binary_sha256'])
+51:    demand(sha1dc.functional(), 'SHA1DC_UNAVAILABLE')   # missing or non-functional detector: startup refusal (15.9 R2)
+service/verifier/.venv/bin/python
+1:"""Build the issuer's Lambda package (infra variable lambda_zip): tessera_issue, tessera_verify, cryptography for
+4:    python package.py OUT.zip                       # bootstrap package: no install.json, so pre-ship refuses
+5:    python package.py OUT.zip --install-json FILE   # deployable package
+8:{"tessera": "install-facts"}, save the answer as FILE, and build again with it. boto3 comes from the Lambda runtime,
+18:import zipfile
+44:        die("SHA-1DC binary missing or not the pinned build; run service/verifier/install.sh")
+66:def write_zip(stage, out):
+67:    """Deterministic: sorted entries, fixed time, modes 644/755. -> SHA-256 of the zip."""
+68:    with zipfile.ZipFile(out, "w", zipfile.ZIP_DEFLATED) as z:
+70:            info = zipfile.ZipInfo(f.relative_to(stage).as_posix(), (1980, 1, 1, 0, 0, 0))
+72:            info.compress_type = zipfile.ZIP_DEFLATED
+77:def build(out, install_json=None):
+94:        digest = write_zip(stage, out)
+103:    digest = build(Path(a.out), a.install_json)
+ M README.md
+ M docs/V1-CLARIFICATIONS.md
+ M docs/V1-SCHEDULE.md
+ M docs/reviews/issuer/DISPOSITION.md
+ M service/issuer/DESIGN.md
+ M service/issuer/infra/main.tf
+ M service/issuer/infra/variables.tf
+ M service/issuer/tessera_issue/api.py
+ M service/issuer/tessera_issue/lambda_app.py
+ M service/issuer/tessera_issue/pipeline.py
+ M service/issuer/tests/test_confirm_fixes.py
+ M service/issuer/tests/test_independence.py
+ M service/issuer/tests/test_infra.py
+?? docs/decisions/2026-10-27-service-clock-tolerance.md
+?? docs/decisions/2026-10-27-v1-signer-placement.md
+?? docs/phase-0-prereg-amendment-11.md
+?? docs/reviews/OWNER-PRECHECKS.md
+?? docs/reviews/amendment-11/
+?? docs/reviews/issuer/CODEX-CONFIRM-2.md
+?? docs/reviews/issuer/CODEX-CONFIRM-3.md
+?? docs/reviews/issuer/codex-confirm-2.log
+?? docs/reviews/issuer/codex-confirm-3.log
+?? docs/reviews/p3-profile/
+?? docs/reviews/signers/
+?? docs/reviews/stale-dependencies/
+?? formal/e10/missing-capture/
+?? formal/p3-verification-profile/
+?? service/issuer/DEPLOY.md
+?? service/issuer/package.py
+?? service/issuer/tests/test_package.py
+?? service/signer-gcp/
+?? service/signer-kms/
+/tmp/tmp.lWLnjgFLwZ
+
+exec
+/bin/bash -lc "sed -n '1,40p' service/issuer/DEPLOY.md; rg -n 'SLOT2_KEY|spike' service/signer-gcp/README.md; sed -n '77,99p' service/issuer/package.py; nl -ba /home/tony/.codex/memories/MEMORY.md | sed -n '193,207p'; nl -ba /home/tony/.codex/memories/skills/tessera-formal-review/SKILL.md | head -30; sha256sum FLOOR-MANIFEST.sha256; sha256sum -c FLOOR-MANIFEST.sha256" in /home/tony/projects/tessera/formal/p3-verification-profile
+ succeeded in 0ms:
+sed: can't read service/issuer/DEPLOY.md: No such file or directory
+rg: service/signer-gcp/README.md: IO error for operation on service/signer-gcp/README.md: No such file or directory (os error 2)
+sed: can't read service/issuer/package.py: No such file or directory
+   193	# Task Group: Tessera S-P3 and capstone-ledger formal review
+   194	
+   195	scope: Run read-only, predictions-first reviews of S-P3 and capstone composition without treating scratch evidence, local companions, or bounded runs as discharge.
+   196	applies_to: cwd=/home/tony/projects/tessera; reuse_rule=use for `LEDGER.md`, S-P3, DSKS, capstone, producer/consumer, or composition reviews; recheck live files, adoption, predictions, and tool output before relying on time-specific results.
+   197	
+   198	## Task 1: Review S-P3 Q2 degraded-mode anti-DSKS key binding, success
+   199	
+   200	### rollout_summary_files
+   201	
+   202	- rollout_summaries/2026-09-04T22-10-39-e0yu-tessera_orientation_s_p3_and_capstone_ledger_review.md (cwd=/home/tony/projects/tessera, rollout_path=/home/tony/.codex/sessions/2026/09/04/rollout-2026-09-04T22-10-39-01a06e79-52e9-7b00-b7c2-82e12d1ddd1a.jsonl, updated_at=2026-09-15T21:20:28+00:00, thread_id=01a06e79-52e9-7b00-b7c2-82e12d1ddd1a, ProVerif 2.05 rerun verified the bounded Q2 claim)
+   203	
+   204	### keywords
+   205	
+   206	- S-P3, Q2, DSKS, key-binding, `sp3_q2_degraded_compromised.pv`, `tessera_theory.pvl`, Reattributed, PossessionTransplanted, AcceptS, `fp`, `h`, Layer-2, P8
+   207	
+     1	---
+     2	name: tessera-formal-review
+     3	description: Review a Tessera formal model or capstone-ledger claim with bounded conclusions, producer/consumer evidence, and direct artifact checks.
+     4	argument-hint: "[artifact or review question]"
+     5	user-invocable: false
+     6	allowed-tools: Read, Grep, Glob, Bash
+     7	---
+     8	
+     9	# Tessera formal review
+    10	
+    11	## When to use
+    12	
+    13	Use for a read-only review of Tessera ProVerif/TLA+ artifacts, S-P3, or `LEDGER.md` capstone claims. Do not use it to silently amend adopted artifacts, decide unresolved policy questions, or convert a scratch probe, companion, or viability run into discharge.
+    14	
+    15	## Inputs and context
+    16	
+    17	1. Establish the exact artifact, registered property/amendment, current adoption/status record, and requested decision.
+    18	2. Read the relevant model and its header, predictions/results, theory library, and any routed review record. Amendments outrank trackers.
+    19	3. Recheck live branch/status and preserve unrelated pre-existing work as user-owned.
+    20	
+    21	## Procedure
+    22	
+    23	1. Explain local terms before testing conclusions. Translate the review as: claim -> adversary -> load-bearing check -> assumptions -> non-claims -> validation evidence.
+    24	2. State the model boundary precisely: which keys/channels are compromised, which signed bytes or frames are reused, and which attacks are outside scope.
+    25	3. Run the registered command when practical, preserving tool version and exact result polarity. For S-P3 Q2 use:
+    26	   ```sh
+    27	   proverif -lib formal/suite/lib/tessera_theory.pvl formal/suite/s-p3/proverif/sp3_q2_degraded_compromised.pv
+    28	   ```
+    29	4. For `LEDGER.md`, read the full relevant contract and combined-consequences table, not a single section. Translate each producer/consumer relation into which component supplies information and which relies on it.
+    30	5. For every claimed cross-model join, identify the registered producer query and a broken companion whose mutation makes the consuming query fail. If severing the producer does not affect the consumer's registered query, call the relation complementary or capstone-internal rather than cross-model.
+4a6c644af2e38882bd40d17cb9d234623f6e52787dc023904c20c6fd38c49d66  FLOOR-MANIFEST.sha256
+./DIVERGENCES.md: OK
+./gen_vectors.py: OK
+./p256.py: OK
+./PROFILE.md: OK
+./test_p3_profile.py: OK
+./test_wycheproof.py: OK
+./vectors/F1-library.json: OK
+./vectors/F2-signature-encodings.json: OK
+./vectors/F3-public-key-validation.json: OK
+./vectors/F4-low-order-points.json: OK
+./vectors/F5-equation-variant.json: OK
+./wycheproof/ecdsa_secp256r1_sha256_p1363_test.json: OK
+./wycheproof/ecdsa_secp256r1_sha256_test.json: OK
+./wycheproof/mldsa_65_verify_test.json: OK
+./wycheproof/SOURCE.md: OK
+
+exec
+/bin/bash -lc "PYTHONDONTWRITEBYTECODE=1 service/verifier/.venv/bin/python -B - <<'PY'
+import runpy, pathlib, zipfile, cryptography
+root=pathlib.Path('/home/tony/projects/tessera')
+scratch=pathlib.Path('/tmp/tmp.lWLnjgFLwZ')
+m=runpy.run_path(str(root/'formal/p3-verification-profile/test_p3_profile.py'))
+f=m['F1']; site=pathlib.Path(cryptography.__file__).parent.parent
+files=m['tested_verifier_files']()
+files[f['wheel']['rust_binding']]=(site/f['wheel']['rust_binding']).read_bytes()
+wheel='cryptography-%s.dist-info/WHEEL'%f['cryptography']; files[wheel]=(site/wheel).read_bytes()
+for label in ['good','changed','alias']:
+ p=scratch/(label+'.zip')
+ with zipfile.ZipFile(p,'w') as z:
+  for n,b in files.items(): z.writestr(n,b+b'\\n# different verifier\\n' if label=='changed' and n=='tessera_verify/codec.py' else b)
+  if label=='alias': z.writestr('./tessera_verify/codec.py',b'raise RuntimeError(\"substituted verifier\")\\n')
+ try: m['check_zip'](p); print(label,'CHECK PASS')
+ except AssertionError as e: print(label,'CHECK REJECT',str(e))
+ if label=='alias':
+  target=scratch/'extracted'; zipfile.ZipFile(p).extractall(target)
+  print('extracted codec:',(target/'tessera_verify/codec.py').read_text())
+print('scratch',scratch)
+PY
+sed -n '1,40p' service/issuer/DEPLOY.md
+rg -n 'SLOT2_KEY|spike' service/signer-gcp/README.md
+sed -n '77,99p' service/issuer/package.py
+bash -n service/signer-gcp/deploy.sh" in /home/tony/projects/tessera
+ succeeded in 292ms:
+good CHECK PASS
+changed CHECK REJECT 
+alias CHECK PASS
+extracted codec: raise RuntimeError("substituted verifier")
+
+scratch /tmp/tmp.lWLnjgFLwZ
+# Deploying the V1 issuer and its signers (owner, 2026-10-27)
+
+> **Status: OWNER DRAFT, revised after the signer review** (`docs/reviews/signers/CODEX-REVIEW.md`, SG-01 to SG-05).
+> These are the steps for the first deployment. No agent runs any of them: `terraform apply` and every AWS write
+> run in the author's login session, from commands written out here in full. GCP steps can run on the NUC, where
+> `gcloud` is logged in.
+
+## Before the session (owner, no credentials)
+
+1. `service/verifier/install.sh` has been run, so the pinned SHA-1DC binary exists.
+2. All suites are green: issuer, `service/signer-kms`, `service/signer-gcp` (`.venv/bin/python -m pytest -q` in each).
+3. Packages, each built deterministically (record each SHA-256):
+   - `cd service/issuer && .venv/bin/python package.py dist/issuer-bootstrap.zip`
+   - `cd service/signer-kms && .venv/bin/python package.py dist/signer-kms.zip`
+
+## Keys and what counts as production — OWNER DECISION, revised 2026-10-28
+
+**V1 uses new production keys, not the spike keys.** The hybrid registration commits to deleting both spike keys
+(`formal/p8/HYBRID-SUPPLEMENT.md` §11 item 6, lines 524-526): "Both spike keys are deleted after the re-capture
+verifies, once the review clears." The first version of this section reused them. That contradicted the
+commitment, and Codex found it (`docs/reviews/amendment-11/CODEX-REVIEW.md`, A11-03). In the session:
+
+- **KMS:** `aws kms create-key --key-spec ML_DSA_65 --key-usage SIGN_VERIFY`. Its id and fingerprint are
+  `kms_key_id` and `key_fp` in step 5.
+- **Slot 2:** a new HSM key in keyring `tessera-v1` (`gcloud kms keys create ... --protection-level=hsm
+  --default-algorithm=ec-sign-p256-sha256 --purpose=asymmetric-signing`). Its version, `createTime` and fingerprint
+  are exported as `SLOT2_KEY`, `SLOT2_KEY_VERSION`, `SLOT2_KEY_CREATED` and `SLOT2_KEY_FP` for
+  `service/signer-gcp/deploy.sh`, which has no defaults and refuses the spike key.
+- Both keys are recorded in the external custody record before either signs (profile §8).
+- The spike keys are deleted (KMS: schedule deletion; GCP: destroy the key version) once the conditions in the
+  supplement hold.
+
+**Nothing separates TEST from production at signing time** (signer review, Q3). From the moment a window's
+authority records name the new keys, every receipt they sign is a production receipt. The smoke test below
+produces a real receipt over honest smoke-test content.
+
+## In the session (author logged in: `aws login --profile tessera`)
+
+1. **Issuer, bootstrap.** `terraform -chdir=infra plan -var lambda_zip=../dist/issuer-bootstrap.zip -out tfplan`.
+   Read the plan together, then `terraform -chdir=infra apply tfplan`. The bootstrap package has no `install.json`,
+48:- `KEY_CREATED` is the creation time bound into the published fingerprint. The configured values for `slot2-spike`
+50:  2026-10-27; it is not a test. For the production key (`SLOT2_KEY_*`, a new key), the job's startup check rebuilds the fingerprint from the
+201:./deploy.sh keyiam              # cloudkms.signer + publicKeyViewer on $SLOT2_KEY (the NEW production key) for the runtime account only
+def build(out, install_json=None):
+    binary, _ = pinned_binary()
+    rec = check_install_record(install_json) if install_json else None
+    ignore = shutil.ignore_patterns("__pycache__", "*.pyc", "*.egg-info")
+    with tempfile.TemporaryDirectory() as tmp:
+        stage = Path(tmp) / "stage"
+        subprocess.run(["uv", "pip", "install", "--quiet", "--target", str(stage), "--python-version", "3.14",
+                        "--python-platform", PLATFORM, "--only-binary", ":all:", *WHEEL], check=True)
+        shutil.copytree(HERE / "tessera_issue", stage / "tessera_issue", ignore=ignore)
+        shutil.copytree(VERIFIER / "tessera_verify", stage / "tessera_verify", ignore=ignore)
+        shutil.copytree(FROZEN, stage / "freeze-v1" / "objects", ignore=ignore)
+        dest = stage / LAMBDA_BINARY.removeprefix("/var/task/")
+        dest.parent.mkdir(parents=True)
+        shutil.copyfile(binary, dest)
+        dest.chmod(0o755)
+        if rec:
+            (dest.parent.parent / "install.json").write_text(json.dumps(rec, indent=1, sort_keys=True) + "\n")
+        digest = write_zip(stage, out)
+    return digest
+
+
+def main(argv=None):
+    ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+
+codex
+The repaired check rejects a direct change to `codec.py`, but I found a bypass: an added `./tessera_verify/codec.py` entry passes `check_zip` and overwrites the checked file when extracted with Python’s ZIP extractor. A11C-01 therefore remains open. All 15 manifest entries verify, and the manifest hash matches the amendment.
+exec
+/bin/bash -lc "PYTHONDONTWRITEBYTECODE=1 python3 -B - <<'PY'
+from pathlib import Path
+import subprocess,os
+s=Path('/tmp/tmp.lWLnjgFLwZ'); src=Path('service/signer-gcp/deploy.sh').read_text()
+fake=s/'gcloud'; fake.write_text('#"'!/bin/bash'"\\nprintf \"%s\\\\n\" \""'$*" >> /tmp/tmp.lWLnjgFLwZ/cloud-calls'"\\nif [[ \""'$*" == *describe* ]]; then echo "not found" >&2; exit 1; fi'"\\necho \"{}\"\\n'); fake.chmod(0o755)
+p=s/'deploy.sh'; p.write_text(src.replace('GCLOUD=\""'$HOME/.local/bin/gcloud"'"','GCLOUD=\"/tmp/tmp.lWLnjgFLwZ/gcloud\"'))
+base={k:v for k,v in os.environ.items() if not k.startswith('SLOT2_')}
+for step in ['keyiam','job','harden']:
+ for name, extra in [('missing',{}),('spike',{'SLOT2_KEY':'slot2-spike','SLOT2_KEY_CREATED':'1','SLOT2_KEY_FP':'x'})]:
+  r=subprocess.run(['bash',str(p),step],env=base|extra,capture_output=True,text=True)
+  print(step,name,r.returncode,r.stdout.strip())
+print('cloud calls before retirement:',(s/'cloud-calls').exists())
+r=subprocess.run(['bash',str(p),'retire-instrument'],env=base,capture_output=True,text=True)
+print('retire no production vars, absent resources:',r.returncode,r.stdout.strip(),r.stderr.strip())
+print((s/'cloud-calls').read_text())
+PY
+nl -ba service/signer-gcp/README.md | sed -n '42,54p'
+nl -ba service/issuer/DEPLOY.md | sed -n '23,32p'
+nl -ba formal/p8/HYBRID-SUPPLEMENT.md | sed -n '170,180p'
+rg -n 'kms:|kms\\*' service/issuer/infra/main.tf" in /home/tony/projects/tessera
+ succeeded in 0ms:
+keyiam missing 2 SLOT2_KEY is not set (see the header of /tmp/tmp.lWLnjgFLwZ/deploy.sh)
+keyiam spike 2 SLOT2_KEY is the spike key; V1 uses a new production key
+job missing 2 SLOT2_KEY is not set (see the header of /tmp/tmp.lWLnjgFLwZ/deploy.sh)
+job spike 2 SLOT2_KEY is the spike key; V1 uses a new production key
+harden missing 2 SLOT2_KEY is not set (see the header of /tmp/tmp.lWLnjgFLwZ/deploy.sh)
+harden spike 2 SLOT2_KEY is the spike key; V1 uses a new production key
+cloud calls before retirement: False
+retire no production vars, absent resources: 0 == retire the 2026-10-14 instrument: its job reads another queue and can also cause slot2-spike signatures
+
+== verify: nothing of the instrument can still sign
+
+== instrument retired and verified 
+--project=tessera-slot2 --quiet scheduler jobs describe slot2-signer-tick --location=us-east1
+--project=tessera-slot2 --quiet run jobs describe slot2-signer --region=us-east1
+--project=tessera-slot2 --quiet kms keys get-iam-policy slot2-spike --keyring=tessera-v1 --location=us-east1 --format=json
+--project=tessera-slot2 --quiet kms keys get-iam-policy slot2-spike --keyring=tessera-v1 --location=us-east1 --format=json
+--project=tessera-slot2 --quiet iam service-accounts describe slot2-signer@tessera-slot2.iam.gserviceaccount.com
+--project=tessera-slot2 --quiet scheduler jobs describe slot2-signer-tick --location=us-east1
+--project=tessera-slot2 --quiet run jobs describe slot2-signer --region=us-east1
+--project=tessera-slot2 --quiet kms keys get-iam-policy slot2-spike --keyring=tessera-v1 --location=us-east1 --format=json
+--project=tessera-slot2 --quiet projects get-iam-policy tessera-slot2 --format=json
+--project=tessera-slot2 --quiet iam service-accounts describe slot2-signer@tessera-slot2.iam.gserviceaccount.com
+
+    42	  said ε "fails safe"). A clock running slow would sign after `SIGN_UNTIL` or `sign_by`. Every check runs on one
+    43	  clock reading taken after the frame is in hand and immediately before signing or resending. A signature the HSM
+    44	  returns after a cutoff is withheld and logged, but the HSM has still produced it (SG-01).
+    45	- **The service verifier's codec is correct.** It is the same code that verifies receipts. The 2026-10-14 instrument
+    46	  used P8 implementation A instead. The two can name the same rejection differently. The issuer records the reason
+    47	  and does not interpret it.
+    48	- `KEY_CREATED` is the creation time bound into the published fingerprint. The configured values for `slot2-spike`
+    49	  v1 reproduce the pinned `gpg-sha256:b6e37f7c…077c` from the archived public key. This was checked once by hand on
+    50	  2026-10-27; it is not a test. For the production key (`SLOT2_KEY_*`, a new key), the job's startup check rebuilds the fingerprint from the
+    51	  live public key and `KEY_CREATED`, and refuses to run on a mismatch.
+    52	- The Cloud KMS `publicKey` response carries `protectionLevel`. This is assumed from the API reference and not
+    53	  checked against the live API. If the field is absent, the job refuses to run (fail safe, but it blocks deployment).
+    54	- `SIGN_UNTIL` is set per window (issuance-not-after − 96 h), and the job is redeployed when the window changes.
+    23	- **KMS:** `aws kms create-key --key-spec ML_DSA_65 --key-usage SIGN_VERIFY`. Its id and fingerprint are
+    24	  `kms_key_id` and `key_fp` in step 5.
+    25	- **Slot 2:** a new HSM key in keyring `tessera-v1` (`gcloud kms keys create ... --protection-level=hsm
+    26	  --default-algorithm=ec-sign-p256-sha256 --purpose=asymmetric-signing`). Its version, `createTime` and fingerprint
+    27	  are exported as `SLOT2_KEY`, `SLOT2_KEY_VERSION`, `SLOT2_KEY_CREATED` and `SLOT2_KEY_FP` for
+    28	  `service/signer-gcp/deploy.sh`, which has no defaults and refuses the spike key.
+    29	- Both keys are recorded in the external custody record before either signs (profile §8).
+    30	- The spike keys are deleted (KMS: schedule deletion; GCP: destroy the key version) once the conditions in the
+    31	  supplement hold.
+    32	
+   170	*What enforces (K-R), stated so it is not overread.*
+   171	- The HSM cannot check that a message is a V1 frame. Under EXTERNAL_MU it does not even see the message: whoever
+   172	  may call `kms:Sign` on the key can sign any message by computing `μ`.
+   173	- So (K-R) is an issuer-code and IAM assumption: the key policy grants `kms:Sign` only to the issuer role, and the
+   174	  issuer code builds only V1 frames. It is not an HSM property. The operations runbook carries the key policy.
+   175	- This is the same single-controller position C3 already states. Capture of the issuing account confers signing
+   176	  capability for both slots.
+   177	
+   178	## 5. R-3.12 for the mixed pair
+   179	
+   180	R-3.12: *"the six non-fingerprint fields of every required signer's frame — object type, algorithm, identity,
+181:# No statement in either issuer policy grants any kms: action (tests/test_infra.py checks this).
+
+codex
+**NOT READY FOR SIGNATURE — A11C-01 remains open: a ZIP pathname alias passes the identity check while replacing verifier code on extraction.** The slot-2 and K-R items are author rulings, not review defects.
+
+Read-only review completed; scratch artifacts are under `/tmp/tmp.lWLnjgFLwZ`. No repository edits or git writes.
+
+1. **A11C-01: not closed.** [test_p3_profile.py:75](/home/tony/projects/tessera/formal/p3-verification-profile/test_p3_profile.py:75) checks only archive names starting literally with `tessera_verify/`. My controls produced:
+
+   | Package | `check_zip` |
+   |---|---|
+   | Matching verifier and recorded wheel | PASS |
+   | Changed `tessera_verify/codec.py` | REJECT |
+   | Matching files plus changed `./tessera_verify/codec.py` | **PASS** |
+
+   Python’s `ZipFile.extractall` normalized the last entry and overwrote the checked `codec.py` with `raise RuntimeError("substituted verifier")`. Thus different deployed verifier code can pass. Reject noncanonical paths and extraction collisions, or compare the safely extracted artifact’s effective verifier files. Preserve the separate requirement to authenticate that artifact as deployed.
+
+   **Manifest: PASS.** All 15 entries verify. Its SHA-256 is `4a6c644af2e38882bd40d17cb9d234623f6e52787dc023904c20c6fd38c49d66`, matching [the amendment:58](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-11.md:58).
+
+2. **K-R reconciliation: adequate for the author’s ruling.** [Item 5:147](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-11.md:147) accurately preserves the message restriction, pure mode, empty context, EXTERNAL_MU, dedication, and administrative-capture limitation while explicitly changing the computation and signing roles. The supplement’s actual role sentence is currently at **173–174**, beneath the cited line-170 heading.
+
+   No additional contradiction found in the implementation: [signer.py:99](/home/tony/projects/tessera/service/signer-kms/tessera_sign_kms/signer.py:99) computes pure-mode, empty-context μ from the raw public key and frame; [line 231](/home/tony/projects/tessera/service/signer-kms/tessera_sign_kms/signer.py:231) validates before signing. The [key policy:52](/home/tony/projects/tessera/service/signer-kms/infra/main.tf:52) grants signing to the signer role and explicitly denies other principals. Administrative policy changes remain possible, as disclosed.
+
+3. **Deployment-key repair: passes the bounded check.** `keyiam`, `job`, and `harden` reject missing inputs and `slot2-spike` before any cloud call. Retirement independently targets `SPIKE_KEY`; it does not require production-key inputs. Bash syntax passed, and a scratch copy with a mocked cloud command completed retirement with already-absent resources. This is not live retirement evidence.
+
+4. **Minor repaired-text inaccuracies:** [item 5:150](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-11.md:150) says “as deployed,” although deployment remains pending. Also, [deploy.sh:31](/home/tony/projects/tessera/service/signer-gcp/deploy.sh:31) and [DEPLOY.md:28](/home/tony/projects/tessera/service/issuer/DEPLOY.md:28) say there are no defaults, but `SLOT2_KEY_VERSION` defaults to `1`. Neither introduces a spike-key production default.
+
+Owner prechecks on the amendment:
+
+| Check | Result | File:line evidence |
+|---|---|---|
+| Capture row | **PASS** | `docs/phase-0-prereg-amendment-11.md:40–42,147–155`: bounded evidence and signing controls; no attacker-key rejection or capture-visibility promise. Consistent with `docs/V1-CONTRACT.md:37,72–73`. |
+| Trigger clause | **PASS** | Amendment `:116–124,141–146`: replacement qualification remains a proposed ruling; deletion retains its conditions; row-25 removal follows the recorded CUT. |
+| Requester | **PASS** | Amendment `:125–133,150–155`: covers enqueue/requester paths, signer authority, and administrative override. |
+| Binding text | **PASS** | Amendment `:116–124,139,147`: identifies the proposed ruling and unregistered operational resolution; does not invoke the schedule’s ruling budget. |
+
+
+hook: Stop
+hook: Stop Completed
+tokens used
+45,892
+**NOT READY FOR SIGNATURE — A11C-01 remains open: a ZIP pathname alias passes the identity check while replacing verifier code on extraction.** The slot-2 and K-R items are author rulings, not review defects.
+
+Read-only review completed; scratch artifacts are under `/tmp/tmp.lWLnjgFLwZ`. No repository edits or git writes.
+
+1. **A11C-01: not closed.** [test_p3_profile.py:75](/home/tony/projects/tessera/formal/p3-verification-profile/test_p3_profile.py:75) checks only archive names starting literally with `tessera_verify/`. My controls produced:
+
+   | Package | `check_zip` |
+   |---|---|
+   | Matching verifier and recorded wheel | PASS |
+   | Changed `tessera_verify/codec.py` | REJECT |
+   | Matching files plus changed `./tessera_verify/codec.py` | **PASS** |
+
+   Python’s `ZipFile.extractall` normalized the last entry and overwrote the checked `codec.py` with `raise RuntimeError("substituted verifier")`. Thus different deployed verifier code can pass. Reject noncanonical paths and extraction collisions, or compare the safely extracted artifact’s effective verifier files. Preserve the separate requirement to authenticate that artifact as deployed.
+
+   **Manifest: PASS.** All 15 entries verify. Its SHA-256 is `4a6c644af2e38882bd40d17cb9d234623f6e52787dc023904c20c6fd38c49d66`, matching [the amendment:58](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-11.md:58).
+
+2. **K-R reconciliation: adequate for the author’s ruling.** [Item 5:147](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-11.md:147) accurately preserves the message restriction, pure mode, empty context, EXTERNAL_MU, dedication, and administrative-capture limitation while explicitly changing the computation and signing roles. The supplement’s actual role sentence is currently at **173–174**, beneath the cited line-170 heading.
+
+   No additional contradiction found in the implementation: [signer.py:99](/home/tony/projects/tessera/service/signer-kms/tessera_sign_kms/signer.py:99) computes pure-mode, empty-context μ from the raw public key and frame; [line 231](/home/tony/projects/tessera/service/signer-kms/tessera_sign_kms/signer.py:231) validates before signing. The [key policy:52](/home/tony/projects/tessera/service/signer-kms/infra/main.tf:52) grants signing to the signer role and explicitly denies other principals. Administrative policy changes remain possible, as disclosed.
+
+3. **Deployment-key repair: passes the bounded check.** `keyiam`, `job`, and `harden` reject missing inputs and `slot2-spike` before any cloud call. Retirement independently targets `SPIKE_KEY`; it does not require production-key inputs. Bash syntax passed, and a scratch copy with a mocked cloud command completed retirement with already-absent resources. This is not live retirement evidence.
+
+4. **Minor repaired-text inaccuracies:** [item 5:150](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-11.md:150) says “as deployed,” although deployment remains pending. Also, [deploy.sh:31](/home/tony/projects/tessera/service/signer-gcp/deploy.sh:31) and [DEPLOY.md:28](/home/tony/projects/tessera/service/issuer/DEPLOY.md:28) say there are no defaults, but `SLOT2_KEY_VERSION` defaults to `1`. Neither introduces a spike-key production default.
+
+Owner prechecks on the amendment:
+
+| Check | Result | File:line evidence |
+|---|---|---|
+| Capture row | **PASS** | `docs/phase-0-prereg-amendment-11.md:40–42,147–155`: bounded evidence and signing controls; no attacker-key rejection or capture-visibility promise. Consistent with `docs/V1-CONTRACT.md:37,72–73`. |
+| Trigger clause | **PASS** | Amendment `:116–124,141–146`: replacement qualification remains a proposed ruling; deletion retains its conditions; row-25 removal follows the recorded CUT. |
+| Requester | **PASS** | Amendment `:125–133,150–155`: covers enqueue/requester paths, signer authority, and administrative override. |
+| Binding text | **PASS** | Amendment `:116–124,139,147`: identifies the proposed ruling and unregistered operational resolution; does not invoke the schedule’s ruling budget. |
+
+

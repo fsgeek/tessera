@@ -33,3 +33,31 @@ procedure on what is blocking it and brings the author one choice: cut scope or 
 **Budget.** The author's time: about 2 h a week and at most 8 load-bearing rulings in total. Tokens: within the
 subscription, tiered Sonnet core / Opus advisor / Haiku grunt, no Fable unless justified. AWS: a small monthly
 cap, set by the author.
+
+> **Correction, 2026-10-27 (owner).** The budget paragraph was the owner instance's planning figure. It was never
+> put to the author, and the author did not accept it with the dates: *"I didn't even know there was a ruling
+> budget before this."* It does not bind. The owner still routes only load-bearing decisions to the author. The
+> count of eight is withdrawn; earlier documents that cite it (`V1-DERIVATION-DRAFT.md:277` and the reviews that
+> quote it) are left as written, because they are history.
+
+## What "ship" means on 4 December — OWNER PROPOSAL, 2026-10-27
+
+The author asked the owner to propose this. He recalled that at the start he had pictured *"a usable endpoint
+someone can call"*. Shipping V1 means all of the following:
+
+1. **A usable endpoint.** `POST /v1/requests` on AWS (API Gateway and Lambda, as built in `service/issuer/`), with
+   both real signers. Clients are invited and get an API key. V1 is free (the S7 recommendation), the content
+   limit is 1 MiB, and there is no availability target (S8).
+2. **A public verifier release**, signed with the release key on the author's YubiKey, in the live-boot ceremony
+   on the System76 machine (`docs/V1-RELEASE-KEY-CUSTODY-DRAFT.md`). This is the custody gate the author ruled on
+   2026-10-18. It takes one session with the author, planned for the week of 16 November.
+3. **A service page on wamason.com.** It states the claim, the §3 limits of `docs/V1-CONTRACT.md` (including the
+   case where both channels are captured), how to call the endpoint, and how to verify without us.
+4. **The two 4 Dec tests pass.**
+   - *Relying party:* a model from a family that has not worked on Tessera or tupay's T1 gets only the published
+     documentation and must reach the safe verdict on every scenario. If the author knows a human integrator
+     willing to try, their run counts as well, and more.
+   - *Dead service:* on a clean Azure VM, with the AWS endpoint switched off, receipts are verified using only the
+     public release and the receipts (`docs/decisions/2026-10-27-v1-signer-placement.md` §4).
+
+Ship or stop stays the author's decision. This list says what he would be deciding on.

@@ -58,3 +58,9 @@ variable "signer_principals" {
   type        = map(string)
   default     = {}
 }
+
+variable "runtime_version_arn" {
+  description = "SG-05: the Lambda runtime version the install record was made on (DEPLOY.md). Empty only for the bootstrap deployment; set, both functions are pinned to it and AWS cannot patch the runtime under the recorded Unicode module digest."
+  type        = string
+  default     = ""
+}

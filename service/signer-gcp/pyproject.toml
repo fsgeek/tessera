@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tessera-signer-gcp"
+version = "0.0.0"
+description = "Tessera V1 slot-2 policy signer (GCP Cloud KMS HSM, P-256, OpenPGP v4), Phase 1a"
+requires-python = "==3.14.*"
+# tessera-verify is the service verifier (../verifier), used as a library: the frame codec, and the same signature
+# checks the issuer runs on what this signer returns. boto3 is needed only in the image (main.from_env); tests use
+# fake clients.
+dependencies = ["cryptography==50.0.2", "tessera-verify"]
+
+[project.optional-dependencies]
+aws = ["boto3"]
+
+[tool.setuptools]
+packages = ["tessera_signer"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+# The verifier is the declared dependency; the issuer is on the path for the protocol conformance tests only.
+pythonpath = [".", "../verifier", "../issuer"]

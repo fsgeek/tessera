@@ -23,8 +23,9 @@ retries outstanding obligations: content, work files and frames once the request
 anything left) 30 days after the end. An obligation is dropped only when the listing shows nothing left, and not
 before the late writers' lease (WRITE_LEASE_S, CF-02) has run out.
 
-Completion (CF-01): COMPLETE is committed unconfirmed and then settled (api.settle): confirmed when a clock reading
-taken after the commit is still before the deadline, FAILED otherwise."""
+Completion (CF-01, CF2-01): COMPLETE is committed unconfirmed and then settled (api.settle). It is confirmed when a
+clock reading taken after the commit is at least the writer lease before the deadline, left unconfirmed inside the
+last lease, and FAILED at or after the deadline."""
 import json
 
 from tessera_verify.anchors import parse_ots, select
@@ -108,8 +109,9 @@ def _cleanup_one(iss, rid, doc, now=None):
     rec = iss.requests.get(rid)
     if rec is not None and not confirmed(rec):
         settle(iss, rec)                               # CF-01: an unconfirmed COMPLETE left by an interrupted end
-    if rec is not None and rec["state"] == "ACCEPTED":
-        return False                                   # not ended (an obligation written before a lost commit)
+    if rec is not None and (rec["state"] == "ACCEPTED" or not confirmed(rec)):
+        return False                                   # not ended (an obligation written before a lost commit), or
+                                                       # CF2-01: COMPLETE inside the last lease, settled at the deadline
     seen = iss.clock()                                 # read after the record: no earlier than the end's commit
     expired = rec is None or seen >= rec["ended_at"] + RETENTION_S
     namespaces = END_NS + ("result",) if (expired or rec["state"] != "COMPLETE") else END_NS

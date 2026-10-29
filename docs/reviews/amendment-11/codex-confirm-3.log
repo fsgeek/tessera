@@ -1,0 +1,482 @@
+Reading additional input from stdin...
+OpenAI Codex v0.165.0
+--------
+workdir: /home/tony/projects/tessera
+model: gpt-6.1-sol
+provider: openai
+approval: never
+sandbox: danger-full-access
+reasoning effort: none
+reasoning summaries: none
+session id: 01a1886e-eec6-75a1-8e45-e544207a872a
+--------
+user
+Adversarial confirmation for Project Tessera at /home/tony/projects/tessera. Read-only: no repo edits, no git writes; scratch only under a fresh mktemp -d. The author asked that you, not the owner, confirm the owner's claims about the final A11C-01 repair. Your last pass: docs/reviews/amendment-11/CODEX-CONFIRM-2.md (a './tessera_verify/codec.py' alias passed check_zip). The owner's claims are in the 'Second confirmation' section of docs/reviews/amendment-11/DISPOSITION.md; the code is check_zip and the A11C01 tests in formal/p3-verification-profile/test_p3_profile.py. Run: cd service/verifier && .venv/bin/python -m pytest -q ../../formal/p3-verification-profile.
+
+Part A, verify each owner claim independently: (1) your exact construction and the five variants plus the symlink case are refused; (2) a clean zip passes (positive control) and the genuine package built by service/issuer/package.py passes (build it into scratch: cd service/issuer && .venv/bin/python package.py <scratch>/p.zip; it downloads a wheel); (3) the owner says the first version of the tests passed vacuously and was fixed — confirm the current tests reach the path check (e.g. remove the path assertion in a scratch mirror of formal/p3-verification-profile next to a symlinked service/ tree, since the test puts service/verifier first on sys.path, and see which tests fail); (4) the owner's split: './', leading '/', backslash refused only by the path check; '//', '..', exact duplicate also by the file-set/content comparison. Confirm or refute each.
+
+Part B, try to break check_zip so that the verifier code that would be EXTRACTED differs from what check_zip compared, while check_zip passes. At least try: local file header name differing from the central directory name (Python reads the central directory; other unpackers such as Info-ZIP unzip or whatever AWS Lambda uses may read local headers); data prepended or appended to the archive; multiple central directories / end records; Unicode normalization and case variants; NUL bytes in names; UTF-8 flag vs CP437 name decoding; directory entries that shadow files; ZIP64 quirks; entries whose stored CRC or size disagree. For each, say whether check_zip passes it and whether a real unpacker (try UnZip 6.00 of 20 April 2009, by Debian. Original by Info-ZIP.
+
+Usage: unzip [-Z] [-opts[modifiers]] file[.zip] [list] [-x xlist] [-d exdir]
+  Default action is to extract files in list, except those in xlist, to exdir;
+  file[.zip] may be a wildcard.  -Z => ZipInfo mode ("unzip -Z" for usage).
+
+  -p  extract files to pipe, no messages     -l  list files (short format)
+  -f  freshen existing files, create none    -t  test compressed archive data
+  -u  update files, create if necessary      -z  display archive comment only
+  -v  list verbosely/show version info       -T  timestamp archive to latest
+  -x  exclude files that follow (in xlist)   -d  extract files into exdir
+modifiers:
+  -n  never overwrite existing files         -q  quiet mode (-qq => quieter)
+  -o  overwrite files WITHOUT prompting      -a  auto-convert any text files
+  -j  junk paths (do not make directories)   -aa treat ALL files as text
+  -U  use escapes for all non-ASCII Unicode  -UU ignore any Unicode fields
+  -C  match filenames case-insensitively     -L  make (some) names lowercase
+  -X  restore UID/GID info                   -V  retain VMS version numbers
+  -K  keep setuid/setgid/tacky permissions   -M  pipe through "more" pager
+  -O CHARSET  specify a character encoding for DOS, Windows and OS/2 archives
+  -I CHARSET  specify a character encoding for UNIX and other archives
+
+See "unzip -hh" or unzip.txt for more help.  Examples:
+  unzip data1 -x joe   => extract all files except joe from zipfile data1.zip
+  unzip -p foo | more  => send contents of foo.zip via pipe into program more
+  unzip -fo foo ReadMe => quietly replace existing ReadMe if archive file newer if installed, and Python extractall) would then extract different verifier bytes. Separate what you demonstrated from what you infer about AWS Lambda's unpacker (state what is known about it; do not guess).
+
+Part C: is the remaining claim in docs/phase-0-prereg-amendment-11.md §A11.2 item 3(c) (deployed-package identity) now honest given what you found, or does it need narrowing (e.g. 'the zip as read by Python's zipfile')? Number findings A11C3-01... with severity, demonstrated scenario, fix. One-line verdict: is A11C-01 closed. Apply these owner prechecks to the DISPOSITION 'Second confirmation' section, PASS/FAIL with file:line:
+
+# Owner prechecks, run by the reviewer
+
+> **Status: OWNER PROCESS, 2026-10-27.** Every owner instance has written these down as lessons and then repeated
+> the mistakes (the 2026-10-19 stone, and its 2026-10-27 postscript "Naming it did not stop it"). The author's
+> answer to "what do new owners get wrong in their first week": *"that they will behave differently from the prior
+> instances."* So these checks are not left to the owner's self-review. The owner appends this file verbatim to
+> every review brief (Codex or another family), and the reviewer reports each check as PASS or FAIL with file:line.
+
+## Checks
+
+1. **Capture row.** For every plain-language statement of what holds, what happens when an attacker controls both
+   authority channels (DNS and git)? If the text implies that the attacker's own keys are rejected, or that a
+   capture is detected or made visible, that is FAIL. Ground truth: `docs/V1-CONTRACT.md` §2 (after G10) and §4.
+2. **Trigger clause.** For every registered rule cited as authority (an amendment section, a table row, a ruling),
+   did the rule's trigger condition actually occur? Citing a consequence whose trigger has not happened is FAIL.
+3. **Requester.** For every security claim about keys or signing, who can cause a signature to be made? A claim
+   that reasons only about where a key is stored, and not about who can submit work to the signer, is FAIL.
+4. **Binding text.** For every sentence the document treats as a requirement, is it registered (a signed amendment,
+   the freeze, or a recorded author ruling), or is it something an instance wrote? An unregistered sentence used as a
+   requirement is FAIL. Since 2026-10-27, `docs/V1-SCHEDULE.md`'s ruling budget is a known instance of this.
+2026-10-29T16:12:14.630906Z ERROR codex_memories_write::phase2: Phase 2 no changes
+codex
+I’ll independently test the repair and extraction behavior, then assess the registered claim and owner prechecks. I’ll keep the repository read-only and put all generated files in a fresh scratch directory.
+exec
+/bin/bash -lc 'mktemp -d /tmp/tessera-a11c3.XXXXXX' in /home/tony/projects/tessera
+ succeeded in 0ms:
+/tmp/tessera-a11c3.B9zHI9
+
+exec
+/bin/bash -lc "rg -n 'A11|confirmation' /home/tony/.codex/memories/MEMORY.md" in /home/tony/projects/tessera
+ succeeded in 0ms:
+125:- Symptom: “confirmation clean,” passing vectors, or differential agreement is treated as readiness. Fix: state the exact coverage; textual confirmation did not discharge implementation, publication, cryptographic, or human-test obligations. [Task 1]
+
+exec
+/bin/bash -lc "pwd; rg --files -g AGENTS.md -g '*CONFIRM*' -g '*DISPOSITION*'" in /home/tony/projects/tessera
+ succeeded in 0ms:
+/home/tony/projects/tessera
+docs/reviews/v1-contract/DISPOSITION.md
+docs/reviews/h2-record/DISPOSITION.md
+docs/reviews/v1-profile-r2/DISPOSITION.md
+docs/reviews/p3-profile/DISPOSITION.md
+docs/reviews/profile-2026-10-19/DISPOSITION.md
+docs/reviews/e18-signoff/DISPOSITION.md
+docs/reviews/e10/DISPOSITION.md
+docs/reviews/amendment-10-r4/DISPOSITION.md
+docs/reviews/amendment-10-r2/DISPOSITION.md
+docs/reviews/amendment-10-r2/CONFIRMATION.md
+docs/reviews/amendment-10-r3/DISPOSITION.md
+docs/reviews/exit-pages/DISPOSITION.md
+docs/reviews/a9-custody/DISPOSITION.md
+docs/reviews/preamble/DISPOSITION.md
+docs/reviews/levadura-contradictions/DISPOSITION.md
+docs/reviews/amendment-10/DISPOSITION.md
+docs/reviews/amendment-10/CONFIRMATION.md
+docs/reviews/r22/DISPOSITION.md
+docs/reviews/v1-profile/DISPOSITION.md
+docs/reviews/issuer/CODEX-CONFIRM-2.md
+docs/reviews/signers/DISPOSITION.md
+docs/reviews/issuer/CODEX-CONFIRM-3.md
+docs/reviews/issuer/CODEX-CONFIRM.md
+docs/reviews/issuer/DISPOSITION.md
+docs/reviews/utc-capture-memo/DISPOSITION.md
+docs/reviews/amendment-9/DISPOSITION.md
+docs/reviews/freeze-record/CODEX-CONFIRM.md
+docs/reviews/anchor-signatures/DISPOSITION.md
+docs/reviews/custody/DISPOSITION.md
+docs/reviews/amendment-11/CODEX-CONFIRM-2.md
+docs/reviews/amendment-11/CODEX-CONFIRM.md
+docs/reviews/amendment-11/DISPOSITION.md
+docs/reviews/e6a/DISPOSITION.md
+docs/reviews/spec-sufficiency/A9-GAP-FIXES-CONFIRMATION.md
+docs/reviews/spec-sufficiency/DISPOSITION-RESOLUTIONS.md
+docs/reviews/p8-falsification/DISPOSITION.md
+docs/reviews/a9-final-delta/DISPOSITION.md
+docs/reviews/a9-final-delta/CONFIRMATION.md
+docs/reviews/service-contract/DISPOSITION.md
+docs/reviews/e9-packet/DISPOSITION.md
+
+exec
+/bin/bash -lc "cat docs/reviews/amendment-11/CODEX-CONFIRM-2.md; nl -ba docs/reviews/amendment-11/DISPOSITION.md; rg -n 'def check_zip|A11C01|sys.path' formal/p3-verification-profile/test_p3_profile.py; cat service/issuer/package.py; rg -n -A18 -B8 '3\\(c\\)|deployed|A11.2' docs/phase-0-prereg-amendment-11.md" in /home/tony/projects/tessera
+ succeeded in 0ms:
+**NOT READY FOR SIGNATURE — A11C-01 remains open: a ZIP pathname alias passes the identity check while replacing verifier code on extraction.** The slot-2 and K-R items are author rulings, not review defects.
+
+Read-only review completed; scratch artifacts are under `/tmp/tmp.lWLnjgFLwZ`. No repository edits or git writes.
+
+1. **A11C-01: not closed.** [test_p3_profile.py:75](/home/tony/projects/tessera/formal/p3-verification-profile/test_p3_profile.py:75) checks only archive names starting literally with `tessera_verify/`. My controls produced:
+
+   | Package | `check_zip` |
+   |---|---|
+   | Matching verifier and recorded wheel | PASS |
+   | Changed `tessera_verify/codec.py` | REJECT |
+   | Matching files plus changed `./tessera_verify/codec.py` | **PASS** |
+
+   Python’s `ZipFile.extractall` normalized the last entry and overwrote the checked `codec.py` with `raise RuntimeError("substituted verifier")`. Thus different deployed verifier code can pass. Reject noncanonical paths and extraction collisions, or compare the safely extracted artifact’s effective verifier files. Preserve the separate requirement to authenticate that artifact as deployed.
+
+   **Manifest: PASS.** All 15 entries verify. Its SHA-256 is `4a6c644af2e38882bd40d17cb9d234623f6e52787dc023904c20c6fd38c49d66`, matching [the amendment:58](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-11.md:58).
+
+2. **K-R reconciliation: adequate for the author’s ruling.** [Item 5:147](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-11.md:147) accurately preserves the message restriction, pure mode, empty context, EXTERNAL_MU, dedication, and administrative-capture limitation while explicitly changing the computation and signing roles. The supplement’s actual role sentence is currently at **173–174**, beneath the cited line-170 heading.
+
+   No additional contradiction found in the implementation: [signer.py:99](/home/tony/projects/tessera/service/signer-kms/tessera_sign_kms/signer.py:99) computes pure-mode, empty-context μ from the raw public key and frame; [line 231](/home/tony/projects/tessera/service/signer-kms/tessera_sign_kms/signer.py:231) validates before signing. The [key policy:52](/home/tony/projects/tessera/service/signer-kms/infra/main.tf:52) grants signing to the signer role and explicitly denies other principals. Administrative policy changes remain possible, as disclosed.
+
+3. **Deployment-key repair: passes the bounded check.** `keyiam`, `job`, and `harden` reject missing inputs and `slot2-spike` before any cloud call. Retirement independently targets `SPIKE_KEY`; it does not require production-key inputs. Bash syntax passed, and a scratch copy with a mocked cloud command completed retirement with already-absent resources. This is not live retirement evidence.
+
+4. **Minor repaired-text inaccuracies:** [item 5:150](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-11.md:150) says “as deployed,” although deployment remains pending. Also, [deploy.sh:31](/home/tony/projects/tessera/service/signer-gcp/deploy.sh:31) and [DEPLOY.md:28](/home/tony/projects/tessera/service/issuer/DEPLOY.md:28) say there are no defaults, but `SLOT2_KEY_VERSION` defaults to `1`. Neither introduces a spike-key production default.
+
+Owner prechecks on the amendment:
+
+| Check | Result | File:line evidence |
+|---|---|---|
+| Capture row | **PASS** | `docs/phase-0-prereg-amendment-11.md:40–42,147–155`: bounded evidence and signing controls; no attacker-key rejection or capture-visibility promise. Consistent with `docs/V1-CONTRACT.md:37,72–73`. |
+| Trigger clause | **PASS** | Amendment `:116–124,141–146`: replacement qualification remains a proposed ruling; deletion retains its conditions; row-25 removal follows the recorded CUT. |
+| Requester | **PASS** | Amendment `:125–133,150–155`: covers enqueue/requester paths, signer authority, and administrative override. |
+| Binding text | **PASS** | Amendment `:116–124,139,147`: identifies the proposed ruling and unregistered operational resolution; does not invoke the schedule’s ruling budget. |
+
+     1	# Amendment 11 review: owner disposition (2026-10-28)
+     2	
+     3	The review is `CODEX-REVIEW.md` (verdict: not ready; A11-01 to A11-07, two prechecks FAILED). All findings were
+     4	applied to the draft. The revised draft goes to one confirmation pass before the author.
+     5	
+     6	| ID | Sev | Disposition |
+     7	|---|---|---|
+     8	| A11-01 | High | All six A1 fields are kept, with per-algorithm readings (§A11.2 item 1). The evidence is pinned by `FLOOR-MANIFEST.sha256`, whose hash is fixed at signing and must be regenerated if any listed file changes first. Discharge conditions (a)–(d) require the deployed-zip identity check, and an unresolved defect blocks discharge. Adoption is distinguished from discharge. |
+     9	| A11-02 | High | Disclosed as a retrospective relaxation after the deadline and after the code existed. The historical qualification is kept and does not extend to the replacement. R5b is cited, with why it does not settle the question. The hybrid with the replacement depends on the ruling. |
+    10	| A11-03 | High | Accepted against the owner. `DEPLOY.md` reused the spike keys, contradicting HYBRID-SUPPLEMENT §11 item 6. Reversed: production uses new keys. Added as sweep item 3. §A11.4 now requires owner decisions on registered parameters to be checked first. |
+    11	| A11-04 | High | Condition (i) preserves every A9.6 custody and policy requirement, plus the frozen record's properties. Conditions (iii) and (iv) define the re-earned evidence and the identification of the tested image and configuration. |
+    12	| A11-05 | Med | §A11.2 item 5 distinguishes security-policy findings (historical security, beside the verdict) from conformance defects (fixed in a named release, never preserved). |
+    13	| A11-06 | Low | The split is stated: 219 DER cases at library level, 21 P1363 cases reaching neither interface. |
+    14	| A11-07 | Med | Each outcome-informed change is disclosed separately. The blanket claim of vacuity is replaced (only the two curve fields lack a referent for ML-DSA). The stale PENDING sentence is removed. |
+    15	| H3 | — | Wording changed to "AWS-based examples". A measurement protocol is required before measurement, and redefining the window as a demonstration is ruled out. |
+    16	| Citations | — | The custody citation is pinned to `270ca49:docs/V1-PROFILE.md:1023-1037`. S1 is cited as an owner operational resolution (`V1-SERVICE-RESOLUTIONS.md:20`). The stale supplement locator is corrected in §A11.3. |
+    17	| Precheck: trigger | FAIL→fixed | A11-02 |
+    18	| Precheck: binding text | FAIL→fixed | S1's authority level is stated |
+    19	
+    20	## Confirmation (`CODEX-CONFIRM.md`): owner disposition
+    21	
+    22	Six findings were CLOSED, A11-01 was PARTIAL, and the wider sweep found one registered commitment and two stale
+    23	defaults. All four prechecks PASSED.
+    24	
+    25	| ID | Disposition |
+    26	|---|---|
+    27	| A11C-01 (High) | `check_zip` now requires that the zip's `tessera_verify/` hold exactly the tested verifier's files, byte for byte, as well as the wheel identity. Negative control (owner, 2026-10-28): the real package passes, and the same package with one byte changed in `codec.py` fails, naming the file. (A first control run failed on both zips because the owner's harness shared a `ZipInfo` between two archives and corrupted a CRC. That was a harness bug, found and fixed before the result was read.) The manifest was regenerated and its new hash is in A11 §A11.2. |
+    28	| K-R (sweep C1) | Added as A11 §A11.5 item 5, with a §A11.3 row and a header disclosure. The assumption (K-R) is unchanged; the enforcement wording (who computes μ, who may `kms:Sign`) goes to the author. The placement decision's "changes no registered sentence" is corrected in place. |
+    29	| Spike-key defaults (sweep C2) | `service/signer-gcp/deploy.sh` has no production-key defaults. It requires `SLOT2_KEY`, `SLOT2_KEY_CREATED` and `SLOT2_KEY_FP`, and refuses the spike key (both refusals checked; no gcloud call is made). The spike key is named separately (`SPIKE_KEY`) for `retire-instrument` only. The README and DEPLOY.md are updated. |
+    30	| Release gates (sweep C3) | The VPC SC perimeter and the E-06 policy are listed in DEPLOY.md as open release gates. |
+    31	| Sweep H3 wording | Reconciled with the amendment: "AWS-based examples". |
+    32	
+    33	## Second confirmation (`CODEX-CONFIRM-2.md`): owner disposition
+    34	
+    35	The K-R item and the deployment-key repair passed, and all four prechecks PASSED. A11C-01 stayed open: Codex built
+    36	a zip with `./tessera_verify/codec.py` beside the genuine file, which passed `check_zip` and then overwrote the
+    37	checked file on extraction.
+    38	
+    39	- **Fix.** `check_zip` accepts only canonical, unique, relative POSIX entry names, so no `./`, `..`, leading
+    40	  `/`, backslash or duplicate. It also refuses symlink entries, which Codex did not raise; the owner added it.
+    41	- **Tests.** Codex's attack and five variants are refusal tests, the symlink case is a sixth, and a clean zip must
+    42	  pass as a positive control.
+    43	- **Owner controls.**
+    44	  - The first version of these tests passed vacuously. The hand-built zip failed the wheel-digest check before it
+    45	    reached the path check, and that was found by removing the path check and seeing the tests still pass. A
+    46	    fixture now records a stand-in binding digest so the zip reaches the path check.
+    47	  - With the path check removed, the `./`, leading-`/` and backslash aliases are accepted (3 tests fail), so the
+    48	    check carries them. The `//`, `..` and exact-duplicate aliases are also refused by the file-set and content
+    49	    comparison.
+    50	  - The genuine package built by `service/issuer/package.py` still passes.
+    51	- **Wording.** "As deployed" became "as designed (deployment pending)". The K-R citation is `:173-174`. "No
+    52	  defaults" became "no key defaults (the version number defaults to 1)".
+    53	- **Manifest.** Regenerated; its hash in A11 §A11.2 is `a69204e9f69a2af3a0bcac96991b55109b0ff0f3efdd6e2182424dd347a24a88`.
+    54	
+    55	The final repair was verified by the owner's tests and controls, including Codex's exact construction. No further
+    56	Codex round was run on it.
+29:sys.path[:0] = [str(VERIFIER), str(VERIFIER / 'tests'), str(HERE)]
+70:def check_zip(path):
+159:        sys.path.insert(0, str(ISSUER))
+163:            sys.path.remove(str(ISSUER))
+544:def test_A11C01_a_clean_zip_passes(tmp_path, stand_in_wheel):
+551:def test_A11C01_an_alias_or_duplicate_of_a_verifier_file_is_refused(tmp_path, alias, stand_in_wheel):
+559:def test_A11C01_a_symlink_entry_is_refused(tmp_path, stand_in_wheel):
+"""Build the issuer's Lambda package (infra variable lambda_zip): tessera_issue, tessera_verify, cryptography for
+Lambda's Linux, the frozen objects, the SHA-1DC detector and the Lambda's own install.json.
+
+    python package.py OUT.zip                       # bootstrap package: no install.json, so pre-ship refuses
+    python package.py OUT.zip --install-json FILE   # deployable package
+
+The install record is per-installation (profile 15.9 R2): deploy the bootstrap package, invoke the poller with
+{"tessera": "install-facts"}, save the answer as FILE, and build again with it. boto3 comes from the Lambda runtime,
+whose version is pinned in infra (runtime_management_config) so that the Unicode module digest cannot change under
+a deployed record. Needs uv (for the Linux wheel) and a built verifier (service/verifier/install.sh)."""
+import argparse
+import hashlib
+import json
+import shutil
+import subprocess
+import sys
+import tempfile
+import zipfile
+from pathlib import Path
+
+HERE = Path(__file__).resolve().parent
+VERIFIER = HERE.parent / "verifier"
+FROZEN = HERE.parent.parent / "formal" / "freeze-v1" / "objects"
+LAMBDA_BINARY = "/var/task/tessera-verify/bin/sha1dcsum"         # = lambda_app.SHA1DC_BINARY (a test checks)
+WHEEL = ["cryptography==50.0.2"]                                 # = pyproject; the only third-party dependency
+PLATFORM = "x86_64-manylinux_2_34"                               # Amazon Linux 2023 (glibc 2.34), x86_64 Lambda
+FIELDS = {"format", "python", "unicode_version", "unicode_module_sha256", "sha1dc_upstream_commit", "sha1dc_binary",
+          "sha1dc_binary_sha256"}
+
+
+def die(msg):
+    raise SystemExit("package: " + msg)
+
+
+def sha256(path):
+    return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+
+
+def pinned_binary():
+    """The detector install.sh built and pinned, after re-checking the pin."""
+    rec = json.loads((VERIFIER / "install.json").read_text())
+    binary = Path(rec["sha1dc_binary"])
+    if not binary.is_file() or sha256(binary) != rec["sha1dc_binary_sha256"]:
+        die("SHA-1DC binary missing or not the pinned build; run service/verifier/install.sh")
+    return binary, rec
+
+
+def check_install_record(path):
+    """A Lambda install record: the install.json fields exactly, this package's binary path and digest, and the
+    verifier's pinned versions. The Unicode digest can only be checked by the verifier at startup, on Lambda."""
+    try:
+        rec = json.loads(Path(path).read_text())
+    except (OSError, ValueError) as e:
+        die(f"install record unreadable: {e}")
+    _, local = pinned_binary()
+    if not isinstance(rec, dict) or set(rec) != FIELDS or rec["format"] != "tessera-v1-install/1":
+        die("install record: wrong fields or format")
+    if rec["sha1dc_binary"] != LAMBDA_BINARY or rec["sha1dc_binary_sha256"] != local["sha1dc_binary_sha256"]:
+        die("install record: not this package's SHA-1DC binary")
+    for k in ("python", "unicode_version", "sha1dc_upstream_commit"):
+        if rec[k] != local[k]:
+            die(f"install record: {k} {rec[k]!r} differs from the verifier's {local[k]!r}")
+    return rec
+
+
+def write_zip(stage, out):
+    """Deterministic: sorted entries, fixed time, modes 644/755. -> SHA-256 of the zip."""
+    with zipfile.ZipFile(out, "w", zipfile.ZIP_DEFLATED) as z:
+        for f in sorted(p for p in Path(stage).rglob("*") if p.is_file()):
+            info = zipfile.ZipInfo(f.relative_to(stage).as_posix(), (1980, 1, 1, 0, 0, 0))
+            info.external_attr = (0o100755 if f.stat().st_mode & 0o111 else 0o100644) << 16
+            info.compress_type = zipfile.ZIP_DEFLATED
+            z.writestr(info, f.read_bytes())
+    return sha256(out)
+
+
+def build(out, install_json=None):
+    binary, _ = pinned_binary()
+    rec = check_install_record(install_json) if install_json else None
+    ignore = shutil.ignore_patterns("__pycache__", "*.pyc", "*.egg-info")
+    with tempfile.TemporaryDirectory() as tmp:
+        stage = Path(tmp) / "stage"
+        subprocess.run(["uv", "pip", "install", "--quiet", "--target", str(stage), "--python-version", "3.14",
+                        "--python-platform", PLATFORM, "--only-binary", ":all:", *WHEEL], check=True)
+        shutil.copytree(HERE / "tessera_issue", stage / "tessera_issue", ignore=ignore)
+        shutil.copytree(VERIFIER / "tessera_verify", stage / "tessera_verify", ignore=ignore)
+        shutil.copytree(FROZEN, stage / "freeze-v1" / "objects", ignore=ignore)
+        dest = stage / LAMBDA_BINARY.removeprefix("/var/task/")
+        dest.parent.mkdir(parents=True)
+        shutil.copyfile(binary, dest)
+        dest.chmod(0o755)
+        if rec:
+            (dest.parent.parent / "install.json").write_text(json.dumps(rec, indent=1, sort_keys=True) + "\n")
+        digest = write_zip(stage, out)
+    return digest
+
+
+def main(argv=None):
+    ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    ap.add_argument("out")
+    ap.add_argument("--install-json")
+    a = ap.parse_args(argv)
+    digest = build(Path(a.out), a.install_json)
+    kind = "deployable" if a.install_json else "BOOTSTRAP (no install.json: pre-ship refuses until rebuilt)"
+    print(f"{a.out}: {kind}\nsha256 {digest}")
+
+
+if __name__ == "__main__":
+    sys.exit(main())
+1-# Tessera — Phase 0 Pre-Registration, Amendment 11 — P3's verification profile as a floor and a duty; dependency sweeps; the slot-2 boundary and the spike keys (DRAFT, 2026-10-28)
+2-
+3-> **Status: DRAFT by the owner instance (Claude Opus 5.5), revised after the Codex non-author review
+4-> (`docs/reviews/amendment-11/CODEX-REVIEW.md`, A11-01 to A11-07; `DISPOSITION.md`). Not signed.** The author's
+5-> first commit containing the final text is its signing act. Layered on the original and Amendments 1–10, none of
+6-> which is edited. Every registered sentence this amendment changes is listed in §A11.3.
+7->
+8-> **Outcomes informed this amendment** (the original's amendment rule). Each change is disclosed separately.
+9:> - **§A11.2, P3.** The P3 evidence (`formal/p3-verification-profile/`) was built and reviewed before this text.
+10->   Building it exposed the stale checklist. No P3 result failed and is relabelled here. The floor's shape is the
+11->   author's proposal of 2026-10-28.
+12-> - **§A11.5 item 2, the slot-2 boundary.** This is a **retrospective relaxation** of a deadline-qualified
+13->   restriction. It is proposed after the 21 Oct deadline, and after the candidate code (`service/signer-gcp/`) was
+14->   written and reviewed.
+15-> - **§A11.5 item 5, K-R's enforcement.** The owner's placement decision (2026-10-27) moved KMS signing from the
+16->   issuer role to a dedicated policy signer and said it changed no registered sentence. It changed the
+17->   supplement's description of who computes μ and who may sign. The confirmation review found this.
+18-> - **§A11.5 item 3, the spike keys.** The owner's deployment draft had contradicted a registered commitment. That
+19->   draft is withdrawn, and this amendment changes nothing in the commitment.
+20-
+21-## A11.1 What went wrong
+22-
+23-P3's assumption half (A1 §P3, `phase-0-prereg-amendment-1.md:144-148`) requires the verification profile to record
+24-the *exact library and version, accepted signature encodings, public-key validation behavior, low-order-point
+25-handling, cofactor equation variant, and negative test vectors for each*. Two of those fields name concepts of
+26-Ed25519-style curves, which A1 used as its example (`:136`). V1 later registered OpenPGP P-256 and then, on
+27-2026-10-16, the hybrid ML-DSA-65 + P-256 (`formal/p8/HYBRID-REGISTRATION-RECORD.md`). Neither registration re-read the
+--
+30-For ML-DSA, the two curve fields have no referent. The other four fields still apply in full. So the checklist
+31-names nothing specific to ML-DSA's own verification pitfalls: it **demands too little**. Nothing had been accepted
+32-on it. The assumption half was open (`formal/PROPERTIES.md:37`) and due after the freeze
+33-(`formal/freeze-v1/FREEZE-RECORD.md:81`).
+34-
+35-The method's defect: **a registered decision can change what an earlier registered sentence refers to, and nothing
+36-requires anyone to re-read that sentence.** §A11.4 adds that duty.
+37-
+38:## A11.2 P3's verification profile: floor and duty
+39-
+40-**The proofs are unchanged.** P3's model half assumes a verifier with stated behaviour. The assumption half is
+41-bounded implementation evidence that the shipped verifier has that behaviour. It does not show that every model
+42-assumption is preserved in general.
+43-
+44-1. **Fields kept.** All six of A1's fields stay. For each algorithm in the governing specification they are read as
+45-   follows:
+46-
+47-   | A1 field | ECDSA P-256 (rule O) | ML-DSA-65 (rule R) |
+48-   |---|---|---|
+49-   | exact library and version | `cryptography` and its bundled OpenSSL, identified by wheel tag and native-library SHA-256 | same |
+50-   | accepted signature encodings | OpenPGP v4 packet; MPI rules; r, s ∈ [1, n−1]; rule-O policy | exact 3309 bytes; strict hint and z encoding |
+51-   | public-key validation | exact uncompressed point; coordinates < p; on the curve; checked before the library | exact SPKI; no algebraic validation exists |
+52-   | low-order-point handling | cofactor 1: infinity rejected as a key and as the equation's result; invalid-curve points rejected | no referent. Replaced by: degenerate-key behaviour recorded |
+53-   | cofactor equation variant | cofactor 1: a single variant; x(R) reduced mod n | no referent. Replaced by: the FIPS 204 interface (pure, empty context), with every other interface rejected |
+54-   | negative vectors for each | owner vectors plus Wycheproof | owner vectors plus Wycheproof |
+55-
+56-2. **Floor (registered).** The evidence is the files listed in
+--
+61-     - **ML-DSA-65** runs end to end through the verifier. Two disagreements, tcId 3 and 4, are V1 policy (empty
+62-       context only).
+63-     - **ECDSA P-256** runs through the verifier's key validation, MPI rules, range policy and verification, with
+64-       the digest substituted. 219 non-strict DER cases are tested at library level only. 21 P1363 strings of the
+65-       wrong length reach neither interface. There are no disagreements.
+66-3. **Discharge.** Adopting this floor is not discharging P3. P3's assumption half is discharged only when:
+67-   - (a) the manifest verifies;
+68-   - (b) every test in it passes;
+69:   - (c) the deployed verifier package's identity has been checked against F1 (`test_deployed_zip_identity`, run
+70:     with the deployed zip);
+71-   - (d) no disagreement or finding affecting a required behaviour is unresolved. A recorded defect blocks
+72-     discharge until it is fixed and re-tested.
+73-4. **Operational duty (not a registered result).** The floor's checks, and the latest published vectors for each
+74-   algorithm in use, are re-run on every verifier release, on every change to the signature library's version or
+75-   build, on every new upstream vector commit, and at least quarterly. Each run is recorded with its date, inputs and
+76-   outcome, and attested by the operator.
+77-5. **What a later finding changes.**
+78-   - **A security-policy finding** (an algorithm, parameter or key later judged weak) never rewrites a V1 verdict.
+79-     It reaches relying parties as a historical-security result, beside the verdict and its stable fields
+80-     (A9.4, `phase-0-prereg-amendment-9.md:267-283`).
+81-   - **An implementation-conformance defect** (the verifier disagrees with the governing specification, for example
+82-     by accepting a malformed or prohibited case the specification rejects, A9:278) is not preserved as V1
+83-     behaviour. It is fixed in a signed release, which names the affected releases and says what changed. A silent
+84-     change to the verifier is never permitted.
+85-
+86-## A11.3 Registered sentences changed
+87-
+88-| Source | Was | Now |
+89-|---|---|---|
+90:| `phase-0-prereg-amendment-1.md:144-148` | the six fields, the two curve fields named in Ed25519's terms | the six fields as read in §A11.2 item 1; the floor and discharge conditions of items 2–3 |
+91-| `phase-0-prereg-amendment-10.md:675` | "as amended by rows 15 and 25" | "as amended by row 15" (row 25 cut, E9 row 2) |
+92-| `phase-0-prereg-amendment-9.md:386-392`; `270ca49:docs/V1-PROFILE.md:1023-1037` | the boundary as the selected, deadline-qualified implementation, described through `prototype/policy-signer/` | *only if the author adopts §A11.5 item 2:* a named replacement under conditions (i)–(iv) |
+93-| `formal/p8/HYBRID-SUPPLEMENT.md:151-152, :173-174, :533` (K-R) | `μ` "computed by the issuer"; "`kms:Sign` only for the issuer role" | `μ` computed by the KMS-slot policy signer (`service/signer-kms/`) from an `F` it has validated; `kms:Sign` only for that signer's role, with the issuer roles holding no KMS permission |
+94-| `270ca49:docs/V1-PROFILE.md` custody record, "HYBRID-SUPPLEMENT §9 item 6" | a stale locator | `formal/p8/HYBRID-SUPPLEMENT.md` §11 item 6, lines 524-526. The frozen bytes are unchanged; this corrects the locator only |
+95-
+96-## A11.4 Dependency duty for registered decisions
+97-
+98-When a registered decision changes a parameter (an algorithm, a custody form, a channel, a horizon, a scope, a key),
+99-the owner sweeps the registered texts for sentences whose referent the change alters. Each one is recorded as
+100-amended, superseded, still fitting or open, before the decision's change is treated as complete. An owner decision
+101-that touches a registered parameter is checked against those texts before it is recorded.
+102-
+103-## A11.5 Results of the first sweep (2026-10-28)
+104-
+105-The sweep covered the original, Amendments 1–10, the freeze, the tracker and the author-rulings files
+106-(`docs/reviews/stale-dependencies/SWEEP-2026-10-28.md`). The owner checked each finding against its source. The
+107-review added item 3.
+108-
+109-1. **H3 (`phase-0-prereg.md:232-248`): not amended.** H3 is a hypothesis with a stated falsifier. Its examples are
+110:   AWS-based, but they do not restrict it to AWS. It is measured over the whole deployed system, every provider
+111-   included. A measurement protocol is recorded before measurement. It covers retained resources (including the
+112-   compliance-locked trail bucket), defines the demonstration and idle periods, and reports the three numbers
+113-   separately. A slot-2 signer and an issuer poller that run through the operating window conflict with "idle
+114-   compute exactly $0". If that or another number fails, H3 is reported as falsified. The operating window is not
+115-   redefined as a demonstration to avoid this.
+116-2. **The slot-2 enforcement boundary: for the author's ruling.** A9.6 requires the final custody implementation to
+117-   be deadline-qualified (`phase-0-prereg-amendment-9.md:389-392`). The frozen record keeps "the selected,
+118-   deadline-qualified custody implementation" (`270ca49:docs/V1-PROFILE.md:1023-1026`) and describes it through
+119-   `prototype/policy-signer/`, which met the deadline on 2026-10-14. That qualification stands as historical
+120-   evidence. It does not qualify a replacement. The E9 ruling R5b (`docs/reviews/e9-packet/AUTHOR-RULINGS.md:54`,
+121-   packet row 5b) allows porting instrument code with evidence earned on the resulting bytes. But it does not
+122-   address A9.6's deadline-qualified custody, so it does not settle this question. Keeping the hybrid **with the
+123-   replacement signer** depends on this ruling. Keeping it with the prototype does not.
+124-   **Proposed:** `service/signer-gcp/` may replace the prototype, provided that before the first shipped receipt:
+125-   - (i) it preserves **every A9.6 custody and policy requirement**: complete-frame validation; the declared-time
+126-     check on its own clock before signing; the issuing account able to enqueue but not to invoke the key, change
+127-     the policy or clock, or obtain key-use credentials; and the key dedicated to V1 type-0x00 documents. It also
+128-     preserves every property in the frozen record;
+129:   - (ii) the external custody record names the deployed implementation, its image digest and its configuration;
+130:   - (iii) deployed evidence is earned on the new bytes. That means: a deployed positive signature that verifies
+131:     offline; deployed refusals for a malformed frame, a wrong tag, a wrong alg, a wrong fingerprint and a declared
+132-     time outside ε; a review of every principal that can cause a signature or administer the signer
+133-     (`service/issuer/DEPLOY.md` step 8); and verified retirement of every other signing path (step 7);
+134-   - (iv) all of it identifies the tested image and configuration.
+135-
+136-   **Without this ruling**, production uses the deadline-qualified prototype signer. Slot 2 then has no signer-side
+137-   signing stop or `sign_by` (`prototype/policy-signer/signer/main.py`), and frames travel inline in SQS messages,
+138-   which cannot carry the 1 MiB client limit (IS-09, `docs/reviews/issuer/CODEX-REVIEW.md:35`). That limit is an
+139-   owner operational resolution, stamped but not registered (`docs/V1-SERVICE-RESOLUTIONS.md:20`). It would be
+140-   narrowed.
+141-3. **The spike keys (`formal/p8/HYBRID-SUPPLEMENT.md` §11 item 6, lines 524-526): unchanged.** "Both spike keys
+142-   are deleted after the re-capture verifies, once the review clears." The owner's deployment draft
+143-   (2026-10-27) reused them as production keys. That contradicted this commitment, and the draft is withdrawn.
+144-   Production uses new keys (`service/issuer/DEPLOY.md`), recorded in the external custody record before use.
+145-4. **A dangling cross-reference (`phase-0-prereg-amendment-10.md:675`).** Row 25 was cut (E9 row 2,
+146-   2026-10-23; profile §5). This is a CLARIFY: the fallback cites row 15 only.
+147-5. **K-R's enforcement (`formal/p8/HYBRID-SUPPLEMENT.md:148-172, :533`): amended in wording, the assumption
+148-   unchanged.** (K-R) itself stands: the ML-DSA-65 key signs only V1 tagged strings, in pure mode with the empty
+149-   context, under EXTERNAL_MU, for no other protocol. What changes is who enforces it. The supplement names the
+
+ERROR: This content was flagged for possible cybersecurity risk. If this seems wrong, try rephrasing your request. If you’re doing authorized security work that requires more cyber permissive safeguards, apply for Daybreak access via https://platform.openai.com/settings/organization/status-and-access before retrying.
+ERROR: This content was flagged for possible cybersecurity risk. If this seems wrong, try rephrasing your request. If you’re doing authorized security work that requires more cyber permissive safeguards, apply for Daybreak access via https://platform.openai.com/settings/organization/status-and-access before retrying.
+tokens used
+7,751

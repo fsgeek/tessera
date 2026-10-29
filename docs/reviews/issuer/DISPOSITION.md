@@ -55,3 +55,36 @@ FAILED flip) rather than reproducing an old failure. Design changes: DESIGN.md, 
 
 Still open, unchanged: deployed-signer enforcement of `sign_by` and the configured signing stop, and digest-bound
 `frame_ref` retrieval (IS-03, IS-09), are a pre-issuance integration gate outside `service/issuer`.
+
+## Second confirmation (`CODEX-CONFIRM-2.md`, 2026-10-27): owner disposition
+
+Owner instance (Claude Opus 5.5), 2026-10-27. Codex judged CF-02, CF-04 and CF-05 closed, and CF-01 and CF-03
+partial, because each fix opened a new race of the same shape: the clock was read, then a slow storage call ran,
+and the check used the stale reading. All findings were applied. The issuer suite passes 113 with none skipped
+(Terraform 1.16.7 is now installed, and `terraform validate` runs).
+
+| ID | Sev | Fix | Regression test(s) |
+|---|---|---|---|
+| CF2-01 | High | A clock check cannot bound when a write commits; the writer lease can, and it is the assumption CF-02 already rests on. `api.settle` confirms only when the decision is at least `WRITE_LEASE_S` before the deadline, so the confirmation commits before the deadline if AWS commits within the lease (stated, not established: CF3-01). Inside the last lease it leaves the request unconfirmed: it reads as ACCEPTED with its `fail_after`, and at the deadline it is FAILED. `_cleanup_one` treats an unconfirmed request as not ended, so it is cleaned up normally once settled. Cost: a request that finishes in the last 15 minutes of its 24 hours fails (S4 states about 3 hours as usual). The DESIGN.md CF-01 bullet's "no timing assumption is needed" was wrong and is corrected. | `test_CF2_01_confirmation_that_commits_late_never_reads_as_complete` (Codex's reproduction), `test_CF2_01_inside_the_last_lease_reads_as_accepted_until_the_deadline`, `test_CF2_01_a_confirmation_decided_before_the_last_lease_commits_before_the_deadline` (guards against an over-strict margin; it passes on the old code too); `test_CF01_completion_seen_before_the_deadline_never_turns_into_failed` moved to before the last lease |
+| CF2-02 | Med | `api.receipt` reads the record first and then the clock, immediately before minting. `api.status` had the same order (clock, then record) and is changed the same way. | `test_CF2_02_no_url_is_minted_after_expiry_even_if_the_record_read_is_slow` (Codex's reproduction, counting `presign` calls) |
+
+Not changed: Codex's note that the pre-fix sources cannot be recovered from `dc5b601^` is right. The issuer was
+first committed at `dc5b601`, so the pre-fix listings exist only in the review logs.
+
+## Third confirmation, a sweep of the whole class (`CODEX-CONFIRM-3.md`, 2026-10-27): owner disposition
+
+Owner instance, 2026-10-27. The brief asked for every site where a clock reading is compared with a deadline, expiry,
+stop or lease while a blocking call runs in between, not only for confirmation of CF2. Codex listed 25 sites. The
+owner prechecks all passed on the changed prose. The issuer suite passes 116 with none skipped.
+
+| ID | Sev | Disposition | Regression test(s) |
+|---|---|---|---|
+| CF3-01 | High | **Stated as a limit, with the client side bounded.** No client check can bound when AWS commits a request already sent. The AWS clients now get explicit timeouts and retries: about 3 minutes worst case, kept under a third of the lease by a test. The remaining assumption is recorded as the service clock tolerance (`docs/decisions/2026-10-27-service-clock-tolerance.md`): service-level transitions may become visible up to 15 minutes after the time they record. No receipt guarantee depends on these times. DESIGN.md and this file now call the CF2-01 bound conditional. | `test_CF3_01_aws_client_time_is_bounded_well_inside_the_writer_lease` |
+| CF3-02 | Med | Read half fixed: `submit` reads the clock after the record and tombstone reads. Create half: within the tolerance. Harmless by design, since acceptance stops 120 h before the window ends and signing stops at 96 h (L1). | `test_CF3_02_a_slow_admission_read_cannot_admit_after_acceptance_closes` (Codex's reproduction) |
+| CF3-03 | Med | Fixed: `_existing` reads the clock after the tombstone repair, and again after an upload recovery. | `test_CF3_03_a_slow_repeat_read_cannot_report_an_expired_request_as_complete` (Codex's reproduction) |
+| CF3-04 | Med | Within the tolerance: `ended_at` is the decision's reading and may precede the confirmation's commit by up to 15 minutes, which shortens the 30-day retention by at most that. The DESIGN.md wording "never earlier than the commit" is narrowed to the first COMPLETE write. | — (a stated limit) |
+| CF3-05 | Med (cond.) | Within the tolerance. On Lambda, credentials come from environment variables, which botocore does not refresh, so presigning should not block. This is OWNER ANALYSIS, not verified on Lambda. A URL minted seconds late lives for 300 s. | — |
+
+Sites Codex judged unsafe as a claim about signing (frames and signing stop, `pipeline.py:290-337`) depend on the
+signer's own `sign_by` and signing stop. That is the open pre-issuance integration gate (IS-03, IS-09), unchanged.
+No further confirmation round is planned for this class. The next issuer review is the deployment review.

@@ -1,0 +1,21 @@
+{
+ "field": "F1 exact library and version, and the exact calls",
+ "requirements_pin": "cryptography==50.0.2",
+ "cryptography": "50.0.2",
+ "openssl": "OpenSSL 4.0.3 29 Sep 2026",
+ "python": "3.14",
+ "calls": {
+  "mldsa65_key": "mldsa.MLDSA65PublicKey.from_public_bytes(raw[22:])",
+  "mldsa65_verify": "key.verify(sig,document,context=b'')",
+  "p256_key": "ec.EllipticCurvePublicNumbers(x,y,ec.SECP256R1()).public_key()",
+  "p256_verify": "key.verify(utils.encode_dss_signature(sig.r,sig.s),digest,ec.ECDSA(utils.Prehashed(hashes.SHA256())))"
+ },
+ "source": "service/verifier/tessera_verify/codec.py",
+ "note": "A change to any of these values or call strings makes test_p3_profile.py::TestF1Library fail; the profile must then be re-recorded and its vectors re-run. A different supported build needs its own record.",
+ "wheel": {
+  "tag": "cp311-abi3-manylinux_2_34_x86_64",
+  "rust_binding": "cryptography/hazmat/bindings/_rust.abi3.so",
+  "rust_binding_sha256": "1e5d23fa66915204b9b67202a46993844d81cda56f6ad52cead2def37617ee29",
+  "note": "cryptography wheels bundle OpenSSL statically; this binding file is the identity of the tested backend. The verifier venv and the wheel service/issuer/package.py resolves for Lambda (x86_64-manylinux_2_34) have the same tag and digest (Codex review 2026-10-27; re-checked by TestF1Library)."
+ }
+}

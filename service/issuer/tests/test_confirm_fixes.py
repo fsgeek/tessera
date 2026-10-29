@@ -34,8 +34,8 @@ def s3_loc():
     return loc
 
 
-def at_assemble(loc, key):
-    """-> (rid, deadline) with the request about to be assembled, the clock one second before its deadline."""
+def at_assemble(loc, key, before=1):
+    """-> (rid, deadline) with the request about to be assembled, the clock `before` seconds before its deadline."""
     _, rid = submit(loc, key)
     for _ in range(100):
         rec = loc.iss.requests.get(rid)
@@ -44,7 +44,7 @@ def at_assemble(loc, key):
         loc.tick()
     assert rec["stage"] == "assemble"
     deadline = rec["created_at"] + DEADLINE_S
-    loc.clock.t = deadline - 1
+    loc.clock.t = deadline - before
     return rid, deadline
 
 
@@ -93,7 +93,8 @@ def test_CF01_slow_terminal_write_cannot_carry_completion_past_the_deadline(loc,
 def test_CF01_completion_seen_before_the_deadline_never_turns_into_failed(loc, key):
     """The COMPLETE write lands before the deadline and a client sees it; the writer only gets the answer after
     the deadline. The client's view must stay COMPLETE (no flip), with ended_at no earlier than the commit."""
-    rid, deadline = at_assemble(loc, key)
+    t0 = WRITE_LEASE_S + 1                                   # CF2-01: decided before the last lease
+    rid, deadline = at_assemble(loc, key, before=t0)
     store = loc.iss.requests
     real, seen = store.save, []
 
@@ -102,14 +103,14 @@ def test_CF01_completion_seen_before_the_deadline_never_turns_into_failed(loc, k
         if rec["state"] == "COMPLETE" and not seen:
             seen.append(None)
             seen[0] = api.status(loc.iss, "cred-A", key).body["state"]      # a client polls meanwhile
-            loc.clock.advance(2)
+            loc.clock.advance(t0 + 1)
         return ok
     store.save = commit_then_slow
     pipeline.poll(loc.iss)
     store.save = real
     rec = store.get(rid)
     assert seen == ["COMPLETE"] and rec["state"] == "COMPLETE"
-    assert rec["ended_at"] == deadline - 1 and rec["confirmed_at"] == deadline - 1
+    assert rec["ended_at"] == deadline - t0 and rec["confirmed_at"] == deadline - t0
     assert api.receipt(loc.iss, "cred-A", key).status == 303
 
 
@@ -194,6 +195,59 @@ def test_CF02_write_lease_covers_every_lambda_timeout():
     assert timeouts and max(timeouts) <= WRITE_LEASE_S
 
 
+# ------------------------------------------------------------------------------------------------ CF2-01
+# docs/reviews/issuer/CODEX-CONFIRM-2.md. A clock check before a write does not bound when the write commits; the
+# writer lease does. A confirmation decided at least WRITE_LEASE_S before the deadline commits before it.
+def test_CF2_01_confirmation_that_commits_late_never_reads_as_complete(loc, key):
+    """Codex's reproduction: decided at deadline - 1, the confirmation write lands at deadline + 1."""
+    rid, deadline = at_assemble(loc, key)
+    store = loc.iss.requests
+    real = store.save
+
+    def slow_confirm(rec):
+        if rec.get("confirmed_at") is not None:
+            loc.clock.advance(2)
+        return real(rec)
+    store.save = slow_confirm
+    pipeline.poll(loc.iss)
+    store.save = real
+    rec = store.get(rid)
+    assert rec.get("confirmed_at") is None                   # inside the last lease nothing is confirmed
+    loc.clock.t = max(loc.clock(), deadline)
+    pipeline.poll(loc.iss)
+    assert_failed_late(loc, key, rid, deadline)
+
+
+def test_CF2_01_inside_the_last_lease_reads_as_accepted_until_the_deadline(loc, key):
+    rid, deadline = at_assemble(loc, key, before=WRITE_LEASE_S)
+    pipeline.poll(loc.iss)
+    body = api.status(loc.iss, "cred-A", key).body
+    assert body["state"] == "ACCEPTED" and "ended_at" not in body
+    assert api.receipt(loc.iss, "cred-A", key).status == 409
+    loc.clock.t = deadline
+    pipeline.poll(loc.iss)
+    assert_failed_late(loc, key, rid, deadline)
+
+
+def test_CF2_01_a_confirmation_decided_before_the_last_lease_commits_before_the_deadline(loc, key):
+    """The slowest a write can be is the lease: decided at deadline - lease - 1, it commits at deadline - 1."""
+    rid, deadline = at_assemble(loc, key, before=WRITE_LEASE_S + 1)
+    store = loc.iss.requests
+    real, committed = store.save, []
+
+    def slowest_confirm(rec):
+        if rec.get("confirmed_at") is not None and not committed:
+            loc.clock.advance(WRITE_LEASE_S)
+            committed.append(loc.clock())
+        return real(rec)
+    store.save = slowest_confirm
+    pipeline.poll(loc.iss)
+    store.save = real
+    rec = store.get(rid)
+    assert rec["state"] == "COMPLETE" and committed and committed[0] < deadline
+    assert api.receipt(loc.iss, "cred-A", key).status == 303
+
+
 # ------------------------------------------------------------------------------------------------ CF-03
 def test_CF03_no_url_is_minted_after_expiry_even_if_the_object_check_is_slow(key):
     loc = s3_loc()
@@ -270,3 +324,64 @@ def test_CF04_one_failing_deletion_does_not_starve_other_cleanups(key):
     calls[0] = 0
     pipeline.poll(loc.iss)
     assert not blobs(loc, r1, "content") and not blobs(loc, r1, "work")
+
+
+# ------------------------------------------------------------------------------------------------ CF2-02
+def test_CF2_02_no_url_is_minted_after_expiry_even_if_the_record_read_is_slow(key):
+    """Codex's reproduction: the clock was read before the record, so a slow read carried minting past expiry."""
+    loc = s3_loc()
+    _, rid = submit(loc, key)
+    rec = loc.run_until_done(rid)
+    expiry = rec["ended_at"] + RETENTION_S
+    loc.clock.t = expiry - 1
+    real, calls = loc.iss.requests.get, []
+
+    def slow(r):
+        calls.append(r)
+        if len(calls) == 2:                                  # the read just before minting
+            loc.clock.advance(2)
+        return real(r)
+    loc.iss.requests.get = slow
+    minted, presign = [], loc.iss.results.presign
+    loc.iss.results.presign = lambda *a: minted.append(a) or presign(*a)
+    assert api.receipt(loc.iss, "cred-A", key).status == 410
+    assert not minted
+
+
+# ------------------------------------------------------------------------------------------------ CF3
+# docs/reviews/issuer/CODEX-CONFIRM-3.md. Clock readings are taken after the reads they decide on (CF3-02 read half,
+# CF3-03). What a client cannot bound, the remote commit time of a write, is the stated tolerance in
+# docs/decisions/2026-10-27-service-clock-tolerance.md; the client's own time is bounded by the botocore config.
+def test_CF3_02_a_slow_admission_read_cannot_admit_after_acceptance_closes(key):
+    loc = local.build(FROZEN)
+    loc.clock.t = loc.iss.window.accept_until - 1
+    real = loc.iss.requests.get
+
+    def slow(rid):
+        loc.clock.advance(2)
+        return real(rid)
+    loc.iss.requests.get = slow
+    r = api.submit(loc.iss, "cred-A", key, b"TEST content")
+    assert r.body["state"] == "REFUSED" and r.body["reason"] == "OUTSIDE_WINDOW", r.body
+
+
+def test_CF3_03_a_slow_repeat_read_cannot_report_an_expired_request_as_complete(key):
+    loc = local.build(FROZEN)
+    _, rid = submit(loc, key)
+    rec = loc.run_until_done(rid)
+    loc.clock.t = rec["ended_at"] + RETENTION_S - 1
+    real = loc.iss.requests.get
+
+    def slow(r):
+        loc.clock.advance(2)
+        return real(r)
+    loc.iss.requests.get = slow
+    r = api.submit(loc.iss, "cred-A", key, b"TEST content")
+    assert r.status == 410 and r.body["state"] == "EXPIRED", (r.status, r.body)
+
+
+def test_CF3_01_aws_client_time_is_bounded_well_inside_the_writer_lease():
+    from tessera_issue.lambda_app import AWS_CLIENT_CONFIG as c
+    attempts = c["retries"]["total_max_attempts"]
+    worst = attempts * (c["connect_timeout"] + c["read_timeout"]) + attempts * 20  # standard backoff caps at 20 s
+    assert c["retries"]["mode"] == "standard" and worst < WRITE_LEASE_S / 3, worst

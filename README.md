@@ -25,7 +25,7 @@ never intended that requirement, and it is not one.
 
 Tony Mason  
 Initiated 10 June 2026  
-This README reflects the repository as of 12 September 2026 (Band 0 — the formal foundation, H0). Status refreshed by the AI collaborator under the July delegation; the credibility line and reading order are the author's.
+This README's status was refreshed on 27 October 2026 by the owner instance; the credibility line and reading order are the author's.
 
 ---
 
@@ -57,19 +57,27 @@ The method is as load-bearing as the artifact:
 
 ---
 
-## Current status (12 September 2026)
+## Current status (27 October 2026)
 
 | Layer | Status |
 |-------|--------|
+| Pre-registration | Signed, Amendments 1–10 in force. A9 sets the V1 scope; A10 covers time, authority capture and release custody (author rulings 2026-10-18). |
+| V1 contract | `docs/V1-CONTRACT.md` says what a receipt establishes and what it does not. `docs/V1-SERVICE-CONTRACT.md` is the outside view, and `docs/V1-SERVICE-RESOLUTIONS.md` holds Tessera's answers to the open items. |
+| V1 freeze | Signed 2026-10-24 (`formal/freeze-v1/FREEZE-RECORD.md`, commit `52ee179`), six days before the 30 Oct ceiling. Phase 1a (service code) is open. |
+| Real receipts | Two TEST-pipeline receipts verified `VALID_STRICT`, using real AWS KMS (ML-DSA-65), a GCP HSM (P-256), live DNSSEC and Bitcoin anchoring (`prototype/e2e/`). |
+| Service verifier | `service/verifier/`: agrees on 352/352 conformance cases and 69/69 E10 fixtures. |
+| Issuer | `service/issuer/`: built and reviewed locally, VALID_STRICT end to end on stand-in signers. Not yet deployed to AWS. |
+| Schedule | `docs/V1-SCHEDULE.md`: V1 issuing on AWS by 20 Nov; relying-party and dead-service tests, then ship or stop, by 4 Dec. |
+
+Day-to-day ownership: an AI owner instance, by the author's delegation (see above). The latest handoff is in `docs/handoff-*.md`.
+
+-------|--------|
 | Phase 0 pre-registration | Signed and amended (Amendments 1–6 in force; A3 adopted 2026-08-08/09 after a four-model cold panel; A4 signed 2026-09-06 at `5188e7a`, precision repairs and discharge paths; A5 signed 2026-09-12 at `504e662`, the probe and cross-family findings: three verifier obligations, the waived-evidence reading, the §A4.6 boundary; A6 adopted 2026-09-12, P7's discharge path, signed at the commit carrying it; the 2026-08-29 author clarification records that "before any code" means code intended for the service) |
 | Band 0 formal models | Active — TLA+ (P4, P5/P6, P5c issuance, bridge, floor-structure probe; non-discharging P9/P10 probes); ProVerif first-link spike complete, mechanism **decided** 2026-08-13 (`formal/spike/first-link/DECISION.md`); symbolic suite **built and run**: S-P3, S-P1, S-P2, S-P7, S-STANDING (`formal/suite/`), each cross-family reviewed by a non-author model, headers read by the author 2026-09-12; tracker: P1–P7 and P10 `checked` (P7 on Amendment 6), P8 and P9 open, standing row added `open` (Band 0 exit gated on it); capstone composition and P8 not begun |
 | Named residual | The author has recorded (2026-08-29) that the first-link decision rests on symbolic results he cannot yet defend cold; accepted, not waived, with closing conditions |
 | Cloud-independent crypto core | Not yet frozen (gated on Band 0) |
 | LocalStack / AWS vertical slice | Not started |
 | Application code | Minimal scaffolding only; one non-production design probe under `formal/spike/standing-probe/probe/` |
-
-We are deliberately early in product code and late in protocol precision.
-That ordering is intentional.
 
 ---
 

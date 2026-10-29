@@ -1,0 +1,84 @@
+{
+ "generated_with": {
+  "cryptography": "50.0.2",
+  "openssl": "OpenSSL 4.0.3 29 Sep 2026",
+  "python": "3.14.6"
+ },
+ "generator": "formal/p3-verification-profile/gen_vectors.py",
+ "field": "F4 low-order / invalid-curve points (translated)",
+ "kind": "key",
+ "vectors": [
+  {
+   "id": "L-01",
+   "case": "gpg: point at infinity as 04 || 0^64 (the encoding some libraries use for O)",
+   "slot": "gpg",
+   "alg": "KMS-MLDSA65-PURE-GPG-OPENPGP4-ECDSA-P256-SHA256",
+   "key_hex": "040000000013082a8648ce3d03010702030400000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+   "expect": "KEY_FORMAT",
+   "why": "finite point required; (0,0) is not on P-256"
+  },
+  {
+   "id": "L-02",
+   "case": "gpg: point at infinity as the single octet 00 in place of the point",
+   "slot": "gpg",
+   "alg": "KMS-MLDSA65-PURE-GPG-OPENPGP4-ECDSA-P256-SHA256",
+   "key_hex": "040000000013082a8648ce3d030107020300",
+   "expect": "KEY_FORMAT",
+   "why": "SEC1 infinity encoding"
+  },
+  {
+   "id": "L-03",
+   "case": "gpg: order-2 point (1, 0) of y^2 = x^3 - 3x + 2 (invalid-curve, small order)",
+   "slot": "gpg",
+   "alg": "KMS-MLDSA65-PURE-GPG-OPENPGP4-ECDSA-P256-SHA256",
+   "key_hex": "040000000013082a8648ce3d03010702030400000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000000",
+   "expect": "KEY_FORMAT",
+   "why": "on-curve check excludes invalid-curve points"
+  },
+  {
+   "id": "L-04",
+   "case": "gpg: point of y^2 = x^3 - 3x + 7 (invalid curve)",
+   "slot": "gpg",
+   "alg": "KMS-MLDSA65-PURE-GPG-OPENPGP4-ECDSA-P256-SHA256",
+   "key_hex": "040000000013082a8648ce3d0301070203040000000000000000000000000000000000000000000000000000000000000001085ec5a4af40176b63189069aeffcb229c96d3e046e0283ed2f9dac21b15ad3c",
+   "expect": "KEY_FORMAT",
+   "why": "on-curve check"
+  },
+  {
+   "id": "L-05",
+   "case": "gpg: negated key (x, p - y) (positive control: a valid, different key)",
+   "slot": "gpg",
+   "alg": "KMS-MLDSA65-PURE-GPG-OPENPGP4-ECDSA-P256-SHA256",
+   "key_hex": "040000000013082a8648ce3d0301070203049b0d935391f9298cc88bfd828e5b4eeea6c22f879813f21120823f2662e5e5207b948f56df12fb2c05c3cdb0e57c02ec8422db3b2d8fbc7b6411ca87b9028f2b",
+   "expect": "ACCEPT",
+   "why": "h = 1: every finite on-curve point has order n"
+  },
+  {
+   "id": "L-06",
+   "case": "kms fallback: point at infinity 04 || 0^64",
+   "slot": "kms",
+   "alg": "OPENPGP4-ECDSA-P256-SHA256",
+   "key_hex": "3059301306072a8648ce3d020106082a8648ce3d0301070342000400000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+   "expect": "KEY_FORMAT",
+   "why": "finite point required"
+  },
+  {
+   "id": "L-07",
+   "case": "kms fallback: order-2 invalid-curve point (1, 0)",
+   "slot": "kms",
+   "alg": "OPENPGP4-ECDSA-P256-SHA256",
+   "key_hex": "3059301306072a8648ce3d020106082a8648ce3d0301070342000400000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000000",
+   "expect": "KEY_FORMAT",
+   "why": "on-curve check"
+  },
+  {
+   "id": "L-08",
+   "case": "kms fallback: SPKI with a 1-byte BIT STRING holding 00 (infinity)",
+   "slot": "kms",
+   "alg": "OPENPGP4-ECDSA-P256-SHA256",
+   "key_hex": "3019301306072a8648ce3d020106082a8648ce3d03010703020000",
+   "expect": "KEY_FORMAT",
+   "why": "exact 91-byte encoding"
+  }
+ ]
+}

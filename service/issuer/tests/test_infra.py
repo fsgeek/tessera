@@ -87,3 +87,10 @@ def test_terraform_fmt_and_validate_offline():
         pytest.skip("providers not initialised locally; init would download")
     r = subprocess.run(["terraform", "validate"], cwd=INFRA, capture_output=True, text=True)
     assert r.returncode == 0, r.stdout + r.stderr
+
+
+def test_SG05_both_functions_are_pinned_to_the_install_record_runtime():
+    m = (INFRA / "main.tf").read_text()
+    block = re.search(r'resource "aws_lambda_runtime_management_config" "pinned" \{(.*?)\n\}', m, re.S).group(1)
+    assert 'update_runtime_on   = "Manual"' in block and "var.runtime_version_arn" in block
+    assert "aws_lambda_function.api." in block and "aws_lambda_function.poller." in block
