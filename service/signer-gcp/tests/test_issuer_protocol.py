@@ -24,7 +24,7 @@ def stash_into(env):
 
 
 def answers(issuer):
-    return {body["request_id"]: body for _, body in issuer.receive(10)}
+    return {body["request_id"]: body for _, body, _age in issuer.receive(10)}
 
 
 def test_issuer_fingerprint_matches_the_signers(env, issuer):
@@ -79,7 +79,7 @@ def test_issuer_retry_of_the_same_frame_reuses_the_id_and_the_signature(env, iss
     issuer.send(rid, data, sign_by=SIGN_UNTIL)
     issuer.send(rid, data, sign_by=SIGN_UNTIL)
     env.run()
-    got = [body for _, body in issuer.receive(10)]
+    got = [body for _, body, _age in issuer.receive(10)]
     assert [b["request_id"] for b in got] == [rid, rid]
     assert got[0]["sig_b64"] == got[1]["sig_b64"] and len(env.kms.signed) == 1
 

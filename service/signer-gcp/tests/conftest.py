@@ -19,6 +19,8 @@ SIGN_UNTIL = T0 + 10 * 86400
 KEY_VERSION = "projects/tessera-slot2/locations/us-east1/keyRings/tessera-v1/cryptoKeys/slot2/cryptoKeyVersions/1"
 KEY_CREATED = 1791946553
 REQ, RESP, BUCKET = "https://sqs.test/gpg-requests", "https://sqs.test/gpg-responses", "issuer-results"
+VERIFIER_CLI = (__import__("pathlib").Path(__file__).resolve().parents[3] / "service" / "verifier" / ".venv" / "bin"
+                / "tessera-verify")                                # read by service/issuer/tests/helpers.py
 
 
 def attest(key_fp, declared, alg=ALG, content=None):

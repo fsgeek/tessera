@@ -586,7 +586,9 @@ def _send(iss, rec, a, job):
     frame = iss.results.get("work", rec["rid"], f"{a['id']}/{j['frame']}")
 
     def stash(data):                                   # IS-09: immutable, digest-named, deleted with the request
-        name = f"{a['id']}-{sha256hex(data)}"
+        # The name is exactly the frame's SHA-256: both signers refuse any other frames/<rid>/<name> (their RE_REF).
+        # Digest naming already separates attempts, whose frames differ; identical bytes share one object.
+        name = sha256hex(data)
         iss.results.put("frames", rec["rid"], name, data)
         return iss.results.ref("frames", rec["rid"], name)
     # IS-03: every signer refuses after the window's signing stop. The former per-request bound (acceptance + 24 h)

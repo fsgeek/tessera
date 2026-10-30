@@ -61,7 +61,7 @@ The method is as load-bearing as the artifact:
 
 | Layer | Status |
 |-------|--------|
-| Pre-registration | Signed, Amendments 1–10 in force. A9 sets the V1 scope; A10 covers time, authority capture and release custody (author rulings 2026-10-18). |
+| Pre-registration | Signed, Amendments 1–11 in force. A9 sets the V1 scope; A10 covers time, authority capture and release custody (author rulings 2026-10-18); A11 (P3 profile, dependency sweeps, K-R enforcement by the signer role, slot-2 custody) was **signed 2026-10-29 at `f01e086`**. Its header still reads "DRAFT … Not signed" because signed text is never edited; the signing commit is its signing act (A11 preamble). A reviewer reading only the file will think it unsigned (Codex did, 2026-10-30, ISI-02). |
 | V1 contract | `docs/V1-CONTRACT.md` says what a receipt establishes and what it does not. `docs/V1-SERVICE-CONTRACT.md` is the outside view, and `docs/V1-SERVICE-RESOLUTIONS.md` holds Tessera's answers to the open items. |
 | V1 freeze | Signed 2026-10-24 (`formal/freeze-v1/FREEZE-RECORD.md`, commit `52ee179`), six days before the 30 Oct ceiling. Phase 1a (service code) is open. |
 | Real receipts | Two TEST-pipeline receipts verified `VALID_STRICT`, using real AWS KMS (ML-DSA-65), a GCP HSM (P-256), live DNSSEC and Bitcoin anchoring (`prototype/e2e/`). |

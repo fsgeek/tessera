@@ -10,8 +10,9 @@
 1. `service/verifier/install.sh` has been run, so the pinned SHA-1DC binary exists.
 2. All suites are green: issuer, `service/signer-kms`, `service/signer-gcp` (`.venv/bin/python -m pytest -q` in each).
 3. Packages, each built deterministically (record each SHA-256):
-   - `cd service/issuer && .venv/bin/python package.py dist/issuer-bootstrap.zip`
-   - `cd service/signer-kms && .venv/bin/python package.py dist/signer-kms.zip`
+   - `cd service/issuer && mkdir -p dist && .venv/bin/python package.py dist/issuer-bootstrap.zip`
+   - `cd service/signer-kms && mkdir -p dist && .venv/bin/python package.py dist/signer-kms.zip`
+   (`package.py` does not create `dist/`.) The run record for each deployment is `service/issuer/DEPLOY-RUN.md`.
 
 ## Keys and what counts as production — OWNER DECISION, revised 2026-10-28
 

@@ -63,7 +63,7 @@ def test_slot_signer_round_trip_inline_and_by_reference(ctx):
     assert EventSourceMapping(ctx.signer, req, resp).process() == 2
     got = issuer_side.receive(10)
     assert len(got) == 2
-    for handle, body in got:
+    for handle, body, _age in got:
         assert body["status"] == "SIGNED"
         assert issuer_side.verify(ids[body["request_id"]], base64.b64decode(body["sig_b64"]))
         issuer_side.ack(handle)

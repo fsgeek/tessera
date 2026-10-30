@@ -1,0 +1,98 @@
+diff --git a/service/issuer/tessera_issue/pipeline.py b/service/issuer/tessera_issue/pipeline.py
+index 5aeb3de..d5d8d75 100644
+--- a/service/issuer/tessera_issue/pipeline.py
++++ b/service/issuer/tessera_issue/pipeline.py
+@@ -586,7 +586,9 @@ def _send(iss, rec, a, job):
+     frame = iss.results.get("work", rec["rid"], f"{a['id']}/{j['frame']}")
+ 
+     def stash(data):                                   # IS-09: immutable, digest-named, deleted with the request
+-        name = f"{a['id']}-{sha256hex(data)}"
++        # The name is exactly the frame's SHA-256: both signers refuse any other frames/<rid>/<name> (their RE_REF).
++        # Digest naming already separates attempts, whose frames differ; identical bytes share one object.
++        name = sha256hex(data)
+         iss.results.put("frames", rec["rid"], name, data)
+         return iss.results.ref("frames", rec["rid"], name)
+     # IS-03: every signer refuses after the window's signing stop. The former per-request bound (acceptance + 24 h)
+diff --git a/service/issuer/tests/test_review_fixes.py b/service/issuer/tests/test_review_fixes.py
+index 00f9d3c..ea61b9b 100644
+--- a/service/issuer/tests/test_review_fixes.py
++++ b/service/issuer/tests/test_review_fixes.py
+@@ -373,6 +373,24 @@ def test_IS09_frame_reference_is_digest_bound(loc, key):
+     assert rec["stage"] == "signing"
+ 
+ 
++# The deployed signers accept only frames/<rid>/<frame_sha256> (signer-kms RE_REF also requires the name to equal
++# frame_sha256). The stand-in signer does not check the form, so an attempt-prefixed name passed here while both
++# real signers refused every by-reference request BAD_REQUEST (found 2026-10-30 in the signer suites).
++DEPLOYED_SIGNER_REF = re.compile(r"frames/[0-9a-f]{64}/([0-9a-f]{64})")
++
++
++def test_IS09_frame_reference_has_the_form_the_deployed_signers_accept(loc, key):
++    _, rid = submit(loc, key, b"x" * MIB)
++    loc.tick(run_signers=False)
++    sent = [json.loads(m["body"]) for slot in ("kms", "gpg") for m in loc.workers[slot].requests.msgs.values()]
++    by_ref = [b for b in sent if "frame_ref" in b]
++    assert by_ref
++    for b in by_ref:
++        m = DEPLOYED_SIGNER_REF.fullmatch(b["frame_ref"])
++        assert m and m.group(1) == b["frame_sha256"], b["frame_ref"]
++        assert b["frame_ref"].split("/")[1] == rid
++
++
+ # ------------------------------------------------------------------------------------------------ IS-10
+ MAIN_TF = (Path(__file__).resolve().parents[1] / "infra" / "main.tf").read_text()
+ 
+diff --git a/service/signer-gcp/tests/fakes.py b/service/signer-gcp/tests/fakes.py
+index 403ddf8..44f4da4 100644
+--- a/service/signer-gcp/tests/fakes.py
++++ b/service/signer-gcp/tests/fakes.py
+@@ -91,9 +91,11 @@ class QueueView:
+         return self.sqs.send_message(QueueUrl=self.url, MessageBody=body)["MessageId"]
+ 
+     def receive(self, max_messages=10, wait_s=0):
+-        from types import SimpleNamespace
+-        r = self.sqs.receive_message(QueueUrl=self.url, MaxNumberOfMessages=max_messages, VisibilityTimeout=60)
+-        return [SimpleNamespace(id=m["MessageId"], body=m["Body"], handle=m["ReceiptHandle"])
++        from tessera_issue.queues import Message      # the issuer's message shape (ILC-I6 age key, ILC-I9 receives)
++        r = self.sqs.receive_message(QueueUrl=self.url, MaxNumberOfMessages=max_messages, VisibilityTimeout=60,
++                                     MessageSystemAttributeNames=("ApproximateReceiveCount",))
++        return [Message(m["MessageId"], m["Body"], m["ReceiptHandle"], None, 0,
++                        int(m["Attributes"]["ApproximateReceiveCount"]))
+                 for m in r.get("Messages", [])]
+ 
+     def delete(self, handle):
+diff --git a/service/signer-gcp/tests/test_issuer_protocol.py b/service/signer-gcp/tests/test_issuer_protocol.py
+index d0a3da6..5f18e4f 100644
+--- a/service/signer-gcp/tests/test_issuer_protocol.py
++++ b/service/signer-gcp/tests/test_issuer_protocol.py
+@@ -24,7 +24,7 @@ def stash_into(env):
+ 
+ 
+ def answers(issuer):
+-    return {body["request_id"]: body for _, body in issuer.receive(10)}
++    return {body["request_id"]: body for _, body, _age in issuer.receive(10)}
+ 
+ 
+ def test_issuer_fingerprint_matches_the_signers(env, issuer):
+@@ -79,7 +79,7 @@ def test_issuer_retry_of_the_same_frame_reuses_the_id_and_the_signature(env, iss
+     issuer.send(rid, data, sign_by=SIGN_UNTIL)
+     issuer.send(rid, data, sign_by=SIGN_UNTIL)
+     env.run()
+-    got = [body for _, body in issuer.receive(10)]
++    got = [body for _, body, _age in issuer.receive(10)]
+     assert [b["request_id"] for b in got] == [rid, rid]
+     assert got[0]["sig_b64"] == got[1]["sig_b64"] and len(env.kms.signed) == 1
+ 
+diff --git a/service/signer-kms/tests/test_roundtrip.py b/service/signer-kms/tests/test_roundtrip.py
+index 4f5d8ce..6251032 100644
+--- a/service/signer-kms/tests/test_roundtrip.py
++++ b/service/signer-kms/tests/test_roundtrip.py
+@@ -63,7 +63,7 @@ def test_slot_signer_round_trip_inline_and_by_reference(ctx):
+     assert EventSourceMapping(ctx.signer, req, resp).process() == 2
+     got = issuer_side.receive(10)
+     assert len(got) == 2
+-    for handle, body in got:
++    for handle, body, _age in got:
+         assert body["status"] == "SIGNED"
+         assert issuer_side.verify(ids[body["request_id"]], base64.b64decode(body["sig_b64"]))
+         issuer_side.ack(handle)

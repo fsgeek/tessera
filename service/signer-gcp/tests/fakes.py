@@ -91,9 +91,11 @@ class QueueView:
         return self.sqs.send_message(QueueUrl=self.url, MessageBody=body)["MessageId"]
 
     def receive(self, max_messages=10, wait_s=0):
-        from types import SimpleNamespace
-        r = self.sqs.receive_message(QueueUrl=self.url, MaxNumberOfMessages=max_messages, VisibilityTimeout=60)
-        return [SimpleNamespace(id=m["MessageId"], body=m["Body"], handle=m["ReceiptHandle"])
+        from tessera_issue.queues import Message      # the issuer's message shape (ILC-I6 age key, ILC-I9 receives)
+        r = self.sqs.receive_message(QueueUrl=self.url, MaxNumberOfMessages=max_messages, VisibilityTimeout=60,
+                                     MessageSystemAttributeNames=("ApproximateReceiveCount",))
+        return [Message(m["MessageId"], m["Body"], m["ReceiptHandle"], None, 0,
+                        int(m["Attributes"]["ApproximateReceiveCount"]))
                 for m in r.get("Messages", [])]
 
     def delete(self, handle):

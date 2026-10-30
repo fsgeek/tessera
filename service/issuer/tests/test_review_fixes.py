@@ -373,6 +373,24 @@ def test_IS09_frame_reference_is_digest_bound(loc, key):
     assert rec["stage"] == "signing"
 
 
+# The deployed signers accept only frames/<rid>/<frame_sha256> (signer-kms RE_REF also requires the name to equal
+# frame_sha256). The stand-in signer does not check the form, so an attempt-prefixed name passed here while both
+# real signers refused every by-reference request BAD_REQUEST (found 2026-10-30 in the signer suites).
+DEPLOYED_SIGNER_REF = re.compile(r"frames/[0-9a-f]{64}/([0-9a-f]{64})")
+
+
+def test_IS09_frame_reference_has_the_form_the_deployed_signers_accept(loc, key):
+    _, rid = submit(loc, key, b"x" * MIB)
+    loc.tick(run_signers=False)
+    sent = [json.loads(m["body"]) for slot in ("kms", "gpg") for m in loc.workers[slot].requests.msgs.values()]
+    by_ref = [b for b in sent if "frame_ref" in b]
+    assert by_ref
+    for b in by_ref:
+        m = DEPLOYED_SIGNER_REF.fullmatch(b["frame_ref"])
+        assert m and m.group(1) == b["frame_sha256"], b["frame_ref"]
+        assert b["frame_ref"].split("/")[1] == rid
+
+
 # ------------------------------------------------------------------------------------------------ IS-10
 MAIN_TF = (Path(__file__).resolve().parents[1] / "infra" / "main.tf").read_text()
 
