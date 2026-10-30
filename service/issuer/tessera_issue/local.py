@@ -70,6 +70,9 @@ def build(objects_dir, start="2026-11-02T00:00:00Z", window_days=30, wire=False,
                  signers=signers, calendars=[cal], headers=hdr, dns=dns,
                  preship=PreShip(frozen, window.trust_base), clock=clock)
     iss.wakes = wakes
+    iss.elapsed_clock = clock                        # the stand-in's monotonic clock is its fake clock
+    import random
+    iss.rng = random.Random(seed)                    # reproducible drain order in local runs and tests
     workers = {s: StandInSigner(s, k, *queues[s], clock, sign_until=window.sign_until, fetch=iss.results.get_ref)
                for s, k in (("kms", world.kms_key), ("gpg", world.gpg_key))}
     return Local(iss, world, workers, clock)

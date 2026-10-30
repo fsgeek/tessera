@@ -34,9 +34,21 @@ def check_links(hdrs):
 
 class ExplorerHeaders(HeaderSource):
     def __init__(self, base_urls, transport):
+        from .deadline import HTTP_WORST_S, guarded_transport
         if len(base_urls) < 2:
             raise ValueError("at least two independent explorers")
-        self.bases, self.transport = [u.rstrip("/") for u in base_urls], transport
+        self.bases = [u.rstrip("/") for u in base_urls]
+        self.transport = guarded_transport(transport, "explorer", HTTP_WORST_S)     # ILC-I-02: each request
+
+    def tip_worst_s(self):
+        """Worst case of tip(): one request per explorer (ILC-I-02: the explorer count is part of it)."""
+        from .deadline import HTTP_WORST_S
+        return len(self.bases) * HTTP_WORST_S
+
+    def height_worst_s(self):
+        """Worst case of headers([h]): the block hash and the header from every explorer."""
+        from .deadline import HTTP_WORST_S
+        return 2 * len(self.bases) * HTTP_WORST_S
 
     def _get(self, url):
         status, body = self.transport("GET", url, None)

@@ -31,11 +31,26 @@ by the API", class **C**: a capability not offered by V1. A9.3 (`:238`) moves th
 operator state. It is not a signed or portable record, and it carries no commitment and no publication. It is
 *bounded* in three ways:
 
-1. **Closed reasons.** Refusals are typed from a fixed set: REFUSED with `TOO_LARGE`, `OUTSIDE_WINDOW`, `CLOSING`,
-   `SIGNING_UNAVAILABLE` or `BAD_REQUEST`, and FAILED with a stated reason. Nothing else is said about a refused
-   request.
-2. **Bounded in time.** Every accepted request ends COMPLETE or FAILED within 24 hours of acceptance (S4), within
-   the stated service clock tolerance (`docs/decisions/2026-10-27-service-clock-tolerance.md`).
+1. **Closed reasons.** Refusals are typed from a fixed set. At submission: REFUSED with `TOO_LARGE`,
+   `OUTSIDE_WINDOW`, `CLOSING`, `SIGNING_UNAVAILABLE` or `BAD_REQUEST`. After acceptance: REFUSED with
+   `ATTEMPTS_EXHAUSTED`, `SIGNING_CLOSED` or `CONTENT_UNAVAILABLE` (the content was lost after an attempt was
+   allocated and could not be recovered). Each ended attempt's reason is listed:
+   - `EXPIRED` and `DISCARDED`, each with its cause: a failed conjunct on complete evidence;
+     `EVIDENCE_CONTRADICTED`; `SNAPSHOT_IMPOSSIBLE`; `T_AFTER_NOT_AFTER` (A9 issuer invariant); `PRESHIP:INVALID/<code>@<row>` for a failure in the
+     attempt's frozen material; `SIGNER_REFUSED:<reason>`; or the request-level causes `SIGNING_CLOSED` and
+     `CONTENT_UNAVAILABLE` when they end the current attempt;
+   - an unrecognised or oversized signer reason, reported as `UNRECOGNIZED_REASON`.
+
+   One case precedes any attempt: FAILED `CONTENT_UNAVAILABLE`, when the content is not available before attempt 1
+   is allocated (the upload never completed, or completed content was lost before allocation). Nothing
+   else is said about a refused request. *(Revised 2026-10-29 and 2026-10-30, Amendment 11 c016 and the issuer
+   implementation review ILI-01 to ILI-08: FAILED is withdrawn after acceptance, except before any attempt.)*
+2. **Bounded by the registered lifecycle, not by a clock.** An accepted request ends only as A2.1 and A2.3 allow:
+   at most N = 3 attempts, each expiring only after `declared + δ + S` and only on complete negative evidence. N ×
+   (δ + S) is a nominal budget, not a bound. *(Narrowed 2026-10-29: the earlier "within 24 hours of acceptance (S4)"
+   is withdrawn, because it contradicted A2. While the author's decision on unobtainable evidence is pending, an
+   attempt whose evidence never completes stays open, so no time bound is claimed;
+   `docs/decisions/2026-10-29-issuance-lifecycle.md`, step 5 and "Implementation boundary".)*
 3. **Bounded in scope.** By A9's issuer invariant, a refusal never concerns a shipped receipt
    (`phase-0-prereg-amendment-9.md:165`).
 

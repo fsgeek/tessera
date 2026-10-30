@@ -1,0 +1,36 @@
+TLC2 Version 2026.07.31.184830 (rev: 30cc360)
+Running breadth-first search Model-Checking with fp 3 and seed 1491551579662352350 with 12 workers on 12 cores with 7068MB heap and 64MB offheap memory [pid: 2837081] (Linux 6.8.0-139-generic amd64, Ubuntu 21.0.12.1 64bit, MSBDiskFPSet, DiskStateQueue).
+Parsing file /home/tony/projects/tessera/formal/tla/issuer-lifecycle/IssuerLifecycleR53.tla
+Parsing file /tmp/tlc-11799448353146433132/Integers.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Integers.tla)
+Parsing file /tmp/tlc-11799448353146433132/FiniteSets.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/FiniteSets.tla)
+Parsing file /tmp/tlc-11799448353146433132/Naturals.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Naturals.tla)
+Parsing file /tmp/tlc-11799448353146433132/Sequences.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Sequences.tla)
+Semantic processing of module Naturals
+Semantic processing of module Integers
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module IssuerLifecycleR53
+*** Warnings: 1
+
+line 120, col 3 to line 120, col 8 of module IssuerLifecycleR53
+
+Multiple declarations or definitions for symbol starts.  
+This duplicates the one at line 119, col 33 to line 119, col 38 of module IssuerLifecycleR53.
+
+
+
+Linting of module IssuerLifecycleR53
+Starting... (2026-10-30 00:48:45)
+Computing initial states...
+Finished computing initial states: 1 distinct state generated at 2026-10-30 00:48:45.
+Progress(22) at 2026-10-30 00:48:48: 879,019 states generated (879,019 s/min), 272,335 distinct states found (272,335 ds/min), 57,260 states left on queue.
+Progress(64) at 2026-10-30 00:49:48: 30,668,847 states generated (29,789,828 s/min), 8,105,041 distinct states found (7,832,706 ds/min), 43,132 states left on queue.
+Model checking completed. No error has been found.
+  Estimates of the probability that TLC did not check all reachable states
+  because two distinct states had the same fingerprint:
+  calculated (optimistic):  val = 1.0E-5
+  based on the actual fingerprints:  val = 1.4E-6
+31537272 states generated, 8322323 distinct states found, 0 states left on queue.
+The depth of the complete state graph search is 80.
+The average outdegree of the complete state graph is 1 (minimum is 0, the maximum 6 and the 95th percentile is 3).
+Finished in 01min 06s at (2026-10-30 00:49:51)

@@ -184,25 +184,38 @@ def stamp(digest, calendars, nonce):
 
 def upgrade(raw, calendars):
     """Replace each pending attestation whose calendar now has a complete timestamp. -> (new bytes, changed)."""
+    new, changed, _, _ = upgrade_bounded(raw, calendars)
+    return new, changed
+
+
+def upgrade_bounded(raw, calendars, keep_going=None, start=0):
+    """upgrade(), asking keep_going() before each calendar request and beginning with the pending attestation at index
+    `start` (mod their number), so a caller that keeps the returned position durably serves every pending calendar in
+    turn across invocations instead of revisiting the same first ones (ILC-I-05). When keep_going() answers False
+    the remaining pending attestations are left as they are.
+    -> (new bytes, changed, finished: every pending attestation was asked, next start position)."""
     by_uri = {c.uri: c for c in calendars}
     digest, root = parse_file(raw)
-    changed = False
-    for node, msg in list(walk(root, digest)):
-        for it in list(node.items):
-            if it[0] == "att" and it[1] == PENDING:
-                cal = by_uri.get(pending_uri(it[2]))
-                if cal is None:
-                    continue
-                try:
-                    got = cal.fetch(msg)
-                except (OSError, CalendarError):
-                    got = None
-                if got:
-                    sub = parse_timestamp(got)
-                    node.items.remove(it)
-                    node.merge(sub)
-                    changed = True
-    return serialize_file(digest, root), changed
+    pending = [(node, msg, it) for node, msg in list(walk(root, digest)) for it in list(node.items)
+               if it[0] == "att" and it[1] == PENDING and pending_uri(it[2]) in by_uri]
+    n = len(pending)
+    changed, finished, nxt = False, True, 0
+    for j in range(n):
+        k = (start + j) % n
+        node, msg, it = pending[k]
+        if keep_going is not None and not keep_going():
+            finished, nxt = False, k
+            break
+        try:
+            got = by_uri[pending_uri(it[2])].fetch(msg)
+        except (OSError, CalendarError):
+            got = None
+        if got:
+            sub = parse_timestamp(got)
+            node.items.remove(it)
+            node.merge(sub)
+            changed = True
+    return serialize_file(digest, root), changed, finished, nxt
 
 
 def lowest_btc_height(raw):
@@ -212,6 +225,33 @@ def lowest_btc_height(raw):
     except Fault as e:
         raise OtsError(e.code) from None
     return min((a.height for a in p.bitcoin), default=None)
+
+
+def prune_to_height(raw, height, merkle_root=None):
+    """Keep only the branches ending in a Bitcoin attestation at `height` (and, when merkle_root is given, whose
+    attested message IS that block's merkle root: a contradicted branch is dropped). The preserved presentation of a
+    latch is pruned this way, so whatever headers later travel with it, its lowest qualifying height (and so T) cannot
+    move to another attestation (profile 7.1: T is presentation-sensitive), and it carries no contradiction.
+    -> (file bytes, number of contradicted attestations at `height` dropped)."""
+    digest, root = parse_file(raw)
+    dropped = [0]
+
+    def keep(node, msg):
+        items = []
+        for it in node.items:
+            if it[0] == "att":
+                if it[1] == BTC and _Reader(it[2]).varuint() == height:
+                    if merkle_root is None or msg == merkle_root:
+                        items.append(it)
+                    else:
+                        dropped[0] += 1
+            elif keep(it[3], apply(it[1], it[2], msg)):
+                items.append(it)
+        node.items = items
+        return bool(items)
+    if not keep(root, digest):
+        raise OtsError(f"no qualifying Bitcoin attestation at height {height}")
+    return serialize_file(digest, root), dropped[0]
 
 
 def k6_ready(raw, tip):
@@ -227,7 +267,9 @@ class HttpCalendar:
     """The public calendar protocol over an injected transport(method, url, body) -> (status, bytes)."""
 
     def __init__(self, uri, transport):
-        self.uri, self.transport = uri.rstrip("/"), transport
+        from .deadline import HTTP_WORST_S, guarded_transport
+        self.uri = uri.rstrip("/")
+        self.transport = guarded_transport(transport, "calendar", HTTP_WORST_S)     # ILC-I-02
 
     def submit(self, message):
         status, body = self.transport("POST", self.uri + "/digest", message)
@@ -244,18 +286,43 @@ class HttpCalendar:
         return body
 
 
-def urllib_transport(timeout=20):
-    """Real HTTP for the deployed issuer (not used by the tests)."""
+def _sock_timeout(response, seconds):
+    """Give the response's socket only the time left of the request's total (CPython's http.client layout)."""
+    try:
+        response.fp.raw._sock.settimeout(seconds)
+    except AttributeError:
+        pass
+
+
+def urllib_transport(timeout=None):
+    """Real HTTP for the deployed issuer (not used by the tests). ILC-I-02: the request's TOTAL time is bounded by its
+    timeout (service.HTTP_TIMEOUT_S), capped by what the poller's deadline leaves (deadline.call_timeout): the socket
+    timeout covers each blocking operation, and the body is read in chunks against the total."""
+    import time
     import urllib.error
     import urllib.request
+    from .deadline import call_timeout
+    from .service import HTTP_TIMEOUT_S
 
     def t(method, url, body):
+        total = call_timeout(timeout or HTTP_TIMEOUT_S)
+        end = time.monotonic() + total
         req = urllib.request.Request(url, data=body, method=method,
                                      headers={"Accept": "application/vnd.opentimestamps.v1",
                                               "User-Agent": "tessera-issuer/1"})
         try:
-            with urllib.request.urlopen(req, timeout=timeout) as r:
-                return r.status, r.read(1 << 20)
+            with urllib.request.urlopen(req, timeout=total) as r:
+                out = b""
+                while len(out) < (1 << 20):
+                    left = end - time.monotonic()
+                    if left <= 0:
+                        raise TimeoutError(f"{url}: over {total:.0f} s")
+                    _sock_timeout(r, left)
+                    chunk = r.read(min(65536, (1 << 20) - len(out)))
+                    if not chunk:
+                        break
+                    out += chunk
+                return r.status, out
         except urllib.error.HTTPError as e:
             return e.code, b""
     return t

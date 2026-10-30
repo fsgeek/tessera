@@ -1,0 +1,1301 @@
+################ WITNESS ResidualLostLatchNoKill
+Error: Invariant ResidualLostLatchNoKill is violated.
+State 1: <Initial predicate>
+/\ decl = <<0>>
+/\ firstCF = <<-1>>
+/\ cur = 1
+/\ obsAt = <<"no">>
+/\ obsKilled = <<FALSE>>
+/\ now = 0
+/\ e1 = <<0>>
+/\ e2 = <<0>>
+/\ faults = 0
+/\ failTicks = <<{}>>
+/\ polled = FALSE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ fi = <<{}>>
+/\ spreadOK = <<TRUE>>
+/\ fp = <<0>>
+/\ ver = <<0>>
+/\ st = <<"open">>
+/\ bur = <<-1>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        rus |-> -1,
+        rfp |-> 0,
+        rfi |-> {},
+        fver |-> 0,
+        cls |-> "-",
+        started |-> 0,
+        fat |-> 0 ] ]
+/\ pass = <<FALSE>>
+/\ us = <<-1>>
+/\ starts = 0
+/\ lostLive = <<FALSE>>
+/\ p5ok = <<TRUE>>
+
+State 2: <Tick line 174, col 3 to line 180, col 77 of module IssuerLifecycleR53>
+/\ decl = <<0>>
+/\ firstCF = <<-1>>
+/\ cur = 1
+/\ obsAt = <<"no">>
+/\ obsKilled = <<FALSE>>
+/\ now = 1
+/\ e1 = <<0>>
+/\ e2 = <<0>>
+/\ faults = 0
+/\ failTicks = <<{}>>
+/\ polled = FALSE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ fi = <<{}>>
+/\ spreadOK = <<TRUE>>
+/\ fp = <<0>>
+/\ ver = <<0>>
+/\ st = <<"open">>
+/\ bur = <<-1>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        rus |-> -1,
+        rfp |-> 0,
+        rfi |-> {},
+        fver |-> 0,
+        cls |-> "-",
+        started |-> 0,
+        fat |-> 0 ] ]
+/\ pass = <<FALSE>>
+/\ us = <<-1>>
+/\ starts = 0
+/\ lostLive = <<FALSE>>
+/\ p5ok = <<TRUE>>
+
+State 3: <Bury(1) line 185, col 3 to line 188, col 46 of module IssuerLifecycleR53>
+/\ decl = <<0>>
+/\ firstCF = <<-1>>
+/\ cur = 1
+/\ obsAt = <<"no">>
+/\ obsKilled = <<FALSE>>
+/\ now = 1
+/\ e1 = <<0>>
+/\ e2 = <<0>>
+/\ faults = 0
+/\ failTicks = <<{}>>
+/\ polled = FALSE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ fi = <<{}>>
+/\ spreadOK = <<TRUE>>
+/\ fp = <<0>>
+/\ ver = <<0>>
+/\ st = <<"open">>
+/\ bur = <<1>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        rus |-> -1,
+        rfp |-> 0,
+        rfi |-> {},
+        fver |-> 0,
+        cls |-> "-",
+        started |-> 0,
+        fat |-> 0 ] ]
+/\ pass = <<TRUE>>
+/\ us = <<-1>>
+/\ starts = 0
+/\ lostLive = <<FALSE>>
+/\ p5ok = <<TRUE>>
+
+State 4: <Attest1(1) line 190, col 3 to line 191, col 53 of module IssuerLifecycleR53>
+/\ decl = <<0>>
+/\ firstCF = <<-1>>
+/\ cur = 1
+/\ obsAt = <<"no">>
+/\ obsKilled = <<FALSE>>
+/\ now = 1
+/\ e1 = <<1>>
+/\ e2 = <<0>>
+/\ faults = 0
+/\ failTicks = <<{}>>
+/\ polled = FALSE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ fi = <<{}>>
+/\ spreadOK = <<TRUE>>
+/\ fp = <<0>>
+/\ ver = <<0>>
+/\ st = <<"open">>
+/\ bur = <<1>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        rus |-> -1,
+        rfp |-> 0,
+        rfi |-> {},
+        fver |-> 0,
+        cls |-> "-",
+        started |-> 0,
+        fat |-> 0 ] ]
+/\ pass = <<TRUE>>
+/\ us = <<-1>>
+/\ starts = 0
+/\ lostLive = <<FALSE>>
+/\ p5ok = <<TRUE>>
+
+State 5: <Segment1(1) line 196, col 3 to line 197, col 53 of module IssuerLifecycleR53>
+/\ decl = <<0>>
+/\ firstCF = <<-1>>
+/\ cur = 1
+/\ obsAt = <<"no">>
+/\ obsKilled = <<FALSE>>
+/\ now = 1
+/\ e1 = <<2>>
+/\ e2 = <<0>>
+/\ faults = 0
+/\ failTicks = <<{}>>
+/\ polled = FALSE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ fi = <<{}>>
+/\ spreadOK = <<TRUE>>
+/\ fp = <<0>>
+/\ ver = <<0>>
+/\ st = <<"open">>
+/\ bur = <<1>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        rus |-> -1,
+        rfp |-> 0,
+        rfi |-> {},
+        fver |-> 0,
+        cls |-> "-",
+        started |-> 0,
+        fat |-> 0 ] ]
+/\ pass = <<TRUE>>
+/\ us = <<-1>>
+/\ starts = 0
+/\ lostLive = <<FALSE>>
+/\ p5ok = <<TRUE>>
+
+State 6: <Start("poller") line 224, col 3 to line 237, col 77 of module IssuerLifecycleR53>
+/\ decl = <<0>>
+/\ firstCF = <<-1>>
+/\ cur = 1
+/\ obsAt = <<"no">>
+/\ obsKilled = <<FALSE>>
+/\ now = 1
+/\ e1 = <<2>>
+/\ e2 = <<0>>
+/\ faults = 0
+/\ failTicks = <<{}>>
+/\ polled = TRUE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ fi = <<{}>>
+/\ spreadOK = <<TRUE>>
+/\ fp = <<0>>
+/\ ver = <<0>>
+/\ st = <<"open">>
+/\ bur = <<1>>
+/\ inv = [ poller |->
+      [ pc |-> "read",
+        att |-> 1,
+        rst |-> "open",
+        rus |-> -1,
+        rfp |-> 0,
+        rfi |-> {},
+        fver |-> 0,
+        cls |-> "-",
+        started |-> 1,
+        fat |-> 0 ] ]
+/\ pass = <<TRUE>>
+/\ us = <<-1>>
+/\ starts = 1
+/\ lostLive = <<FALSE>>
+/\ p5ok = <<TRUE>>
+
+State 7: <Fence("poller") line 246, col 3 to line 249, col 84 of module IssuerLifecycleR53>
+/\ decl = <<0>>
+/\ firstCF = <<-1>>
+/\ cur = 1
+/\ obsAt = <<"no">>
+/\ obsKilled = <<FALSE>>
+/\ now = 1
+/\ e1 = <<2>>
+/\ e2 = <<0>>
+/\ faults = 0
+/\ failTicks = <<{}>>
+/\ polled = TRUE
+/\ pending = { [ att |-> 1,
+    fat |-> 0,
+    p |-> "poller",
+    sent |-> 1,
+    from |-> "open",
+    to |-> "fence",
+    gver |-> 0,
+    st0 |-> 1,
+    dec |-> 1,
+    orphan |-> FALSE,
+    dup |-> FALSE ] }
+/\ rreason = "-"
+/\ req = "active"
+/\ fi = <<{}>>
+/\ spreadOK = <<TRUE>>
+/\ fp = <<0>>
+/\ ver = <<0>>
+/\ st = <<"open">>
+/\ bur = <<1>>
+/\ inv = [ poller |->
+      [ pc |-> "fencing",
+        att |-> 1,
+        rst |-> "open",
+        rus |-> -1,
+        rfp |-> 0,
+        rfi |-> {},
+        fver |-> 0,
+        cls |-> "-",
+        started |-> 1,
+        fat |-> 0 ] ]
+/\ pass = <<TRUE>>
+/\ us = <<-1>>
+/\ starts = 1
+/\ lostLive = <<FALSE>>
+/\ p5ok = <<TRUE>>
+
+State 8: <Store line 405, col 11 to line 405, col 49 of module IssuerLifecycleR53>
+/\ decl = <<0>>
+/\ firstCF = <<-1>>
+/\ cur = 1
+/\ obsAt = <<"no">>
+/\ obsKilled = <<FALSE>>
+/\ now = 1
+/\ e1 = <<2>>
+/\ e2 = <<0>>
+/\ faults = 0
+/\ failTicks = <<{}>>
+/\ polled = TRUE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ fi = <<{}>>
+/\ spreadOK = <<TRUE>>
+/\ fp = <<0>>
+/\ ver = <<1>>
+/\ st = <<"open">>
+/\ bur = <<1>>
+/\ inv = [ poller |->
+      [ pc |-> "fenced",
+        att |-> 1,
+        rst |-> "open",
+        rus |-> -1,
+        rfp |-> 0,
+        rfi |-> {},
+        fver |-> 1,
+        cls |-> "-",
+        started |-> 1,
+        fat |-> 0 ] ]
+/\ pass = <<TRUE>>
+/\ us = <<-1>>
+/\ starts = 1
+/\ lostLive = <<FALSE>>
+/\ p5ok = <<TRUE>>
+
+State 9: <Fetch("poller") line 253, col 3 to line 263, col 38 of module IssuerLifecycleR53>
+/\ decl = <<0>>
+/\ firstCF = <<-1>>
+/\ cur = 1
+/\ obsAt = <<"timely">>
+/\ obsKilled = <<FALSE>>
+/\ now = 1
+/\ e1 = <<2>>
+/\ e2 = <<0>>
+/\ faults = 0
+/\ failTicks = <<{}>>
+/\ polled = TRUE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ fi = <<{}>>
+/\ spreadOK = <<TRUE>>
+/\ fp = <<0>>
+/\ ver = <<1>>
+/\ st = <<"open">>
+/\ bur = <<1>>
+/\ inv = [ poller |->
+      [ pc |-> "fetched",
+        att |-> 1,
+        rst |-> "open",
+        rus |-> -1,
+        rfp |-> 0,
+        rfi |-> {},
+        fver |-> 1,
+        cls |-> "elig",
+        started |-> 1,
+        fat |-> 1 ] ]
+/\ pass = <<TRUE>>
+/\ us = <<-1>>
+/\ starts = 1
+/\ lostLive = <<FALSE>>
+/\ p5ok = <<TRUE>>
+
+State 10: <Send("poller") line 284, col 3 to line 311, col 96 of module IssuerLifecycleR53>
+/\ decl = <<0>>
+/\ firstCF = <<-1>>
+/\ cur = 1
+/\ obsAt = <<"timely">>
+/\ obsKilled = <<FALSE>>
+/\ now = 1
+/\ e1 = <<2>>
+/\ e2 = <<0>>
+/\ faults = 0
+/\ failTicks = <<{}>>
+/\ polled = TRUE
+/\ pending = { [ att |-> 1,
+    fat |-> 1,
+    p |-> "poller",
+    sent |-> 1,
+    from |-> "open",
+    to |-> "latched",
+    gver |-> 1,
+    st0 |-> 1,
+    dec |-> 1,
+    orphan |-> FALSE,
+    dup |-> FALSE ] }
+/\ rreason = "-"
+/\ req = "active"
+/\ fi = <<{}>>
+/\ spreadOK = <<TRUE>>
+/\ fp = <<0>>
+/\ ver = <<1>>
+/\ st = <<"open">>
+/\ bur = <<1>>
+/\ inv = [ poller |->
+      [ pc |-> "await",
+        att |-> 1,
+        rst |-> "open",
+        rus |-> -1,
+        rfp |-> 0,
+        rfi |-> {},
+        fver |-> 1,
+        cls |-> "elig",
+        started |-> 1,
+        fat |-> 1 ] ]
+/\ pass = <<TRUE>>
+/\ us = <<-1>>
+/\ starts = 1
+/\ lostLive = <<FALSE>>
+/\ p5ok = <<TRUE>>
+
+State 11: <Store line 405, col 11 to line 405, col 49 of module IssuerLifecycleR53>
+/\ decl = <<0>>
+/\ firstCF = <<-1>>
+/\ cur = 1
+/\ obsAt = <<"timely">>
+/\ obsKilled = <<FALSE>>
+/\ now = 1
+/\ e1 = <<2>>
+/\ e2 = <<0>>
+/\ faults = 1
+/\ failTicks = <<{}>>
+/\ polled = TRUE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ fi = <<{}>>
+/\ spreadOK = <<TRUE>>
+/\ fp = <<0>>
+/\ ver = <<1>>
+/\ st = <<"open">>
+/\ bur = <<1>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        rus |-> -1,
+        rfp |-> 0,
+        rfi |-> {},
+        fver |-> 0,
+        cls |-> "-",
+        started |-> 0,
+        fat |-> 0 ] ]
+/\ pass = <<TRUE>>
+/\ us = <<-1>>
+/\ starts = 1
+/\ lostLive = <<FALSE>>
+/\ p5ok = <<TRUE>>
+
+State 12: <Start("poller") line 224, col 3 to line 237, col 77 of module IssuerLifecycleR53>
+/\ decl = <<0>>
+/\ firstCF = <<-1>>
+/\ cur = 1
+/\ obsAt = <<"timely">>
+/\ obsKilled = <<FALSE>>
+/\ now = 1
+/\ e1 = <<2>>
+/\ e2 = <<0>>
+/\ faults = 1
+/\ failTicks = <<{}>>
+/\ polled = TRUE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ fi = <<{}>>
+/\ spreadOK = <<TRUE>>
+/\ fp = <<0>>
+/\ ver = <<1>>
+/\ st = <<"open">>
+/\ bur = <<1>>
+/\ inv = [ poller |->
+      [ pc |-> "read",
+        att |-> 1,
+        rst |-> "open",
+        rus |-> -1,
+        rfp |-> 0,
+        rfi |-> {},
+        fver |-> 1,
+        cls |-> "-",
+        started |-> 1,
+        fat |-> 0 ] ]
+/\ pass = <<TRUE>>
+/\ us = <<-1>>
+/\ starts = 2
+/\ lostLive = <<FALSE>>
+/\ p5ok = <<TRUE>>
+
+State 13: <Tick line 174, col 3 to line 180, col 77 of module IssuerLifecycleR53>
+/\ decl = <<0>>
+/\ firstCF = <<-1>>
+/\ cur = 1
+/\ obsAt = <<"timely">>
+/\ obsKilled = <<FALSE>>
+/\ now = 2
+/\ e1 = <<2>>
+/\ e2 = <<0>>
+/\ faults = 1
+/\ failTicks = <<{}>>
+/\ polled = FALSE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ fi = <<{}>>
+/\ spreadOK = <<TRUE>>
+/\ fp = <<0>>
+/\ ver = <<1>>
+/\ st = <<"open">>
+/\ bur = <<1>>
+/\ inv = [ poller |->
+      [ pc |-> "read",
+        att |-> 1,
+        rst |-> "open",
+        rus |-> -1,
+        rfp |-> 0,
+        rfi |-> {},
+        fver |-> 1,
+        cls |-> "-",
+        started |-> 1,
+        fat |-> 0 ] ]
+/\ pass = <<TRUE>>
+/\ us = <<-1>>
+/\ starts = 0
+/\ lostLive = <<FALSE>>
+/\ p5ok = <<TRUE>>
+
+State 14: <Fence("poller") line 246, col 3 to line 249, col 84 of module IssuerLifecycleR53>
+/\ decl = <<0>>
+/\ firstCF = <<-1>>
+/\ cur = 1
+/\ obsAt = <<"timely">>
+/\ obsKilled = <<FALSE>>
+/\ now = 2
+/\ e1 = <<2>>
+/\ e2 = <<0>>
+/\ faults = 1
+/\ failTicks = <<{}>>
+/\ polled = FALSE
+/\ pending = { [ att |-> 1,
+    fat |-> 0,
+    p |-> "poller",
+    sent |-> 2,
+    from |-> "open",
+    to |-> "fence",
+    gver |-> 1,
+    st0 |-> 1,
+    dec |-> 2,
+    orphan |-> FALSE,
+    dup |-> FALSE ] }
+/\ rreason = "-"
+/\ req = "active"
+/\ fi = <<{}>>
+/\ spreadOK = <<TRUE>>
+/\ fp = <<0>>
+/\ ver = <<1>>
+/\ st = <<"open">>
+/\ bur = <<1>>
+/\ inv = [ poller |->
+      [ pc |-> "fencing",
+        att |-> 1,
+        rst |-> "open",
+        rus |-> -1,
+        rfp |-> 0,
+        rfi |-> {},
+        fver |-> 1,
+        cls |-> "-",
+        started |-> 1,
+        fat |-> 0 ] ]
+/\ pass = <<TRUE>>
+/\ us = <<-1>>
+/\ starts = 0
+/\ lostLive = <<FALSE>>
+/\ p5ok = <<TRUE>>
+
+State 15: <Store line 405, col 11 to line 405, col 49 of module IssuerLifecycleR53>
+/\ decl = <<0>>
+/\ firstCF = <<-1>>
+/\ cur = 1
+/\ obsAt = <<"timely">>
+/\ obsKilled = <<FALSE>>
+/\ now = 2
+/\ e1 = <<2>>
+/\ e2 = <<0>>
+/\ faults = 1
+/\ failTicks = <<{}>>
+/\ polled = FALSE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ fi = <<{}>>
+/\ spreadOK = <<TRUE>>
+/\ fp = <<0>>
+/\ ver = <<2>>
+/\ st = <<"open">>
+/\ bur = <<1>>
+/\ inv = [ poller |->
+      [ pc |-> "fenced",
+        att |-> 1,
+        rst |-> "open",
+        rus |-> -1,
+        rfp |-> 0,
+        rfi |-> {},
+        fver |-> 2,
+        cls |-> "-",
+        started |-> 1,
+        fat |-> 0 ] ]
+/\ pass = <<TRUE>>
+/\ us = <<-1>>
+/\ starts = 0
+/\ lostLive = <<FALSE>>
+/\ p5ok = <<TRUE>>
+
+State 16: <Fetch("poller") line 253, col 3 to line 263, col 38 of module IssuerLifecycleR53>
+/\ decl = <<0>>
+/\ firstCF = <<-1>>
+/\ cur = 1
+/\ obsAt = <<"timely">>
+/\ obsKilled = <<FALSE>>
+/\ now = 2
+/\ e1 = <<2>>
+/\ e2 = <<0>>
+/\ faults = 1
+/\ failTicks = <<{}>>
+/\ polled = FALSE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ fi = <<{}>>
+/\ spreadOK = <<TRUE>>
+/\ fp = <<0>>
+/\ ver = <<2>>
+/\ st = <<"open">>
+/\ bur = <<1>>
+/\ inv = [ poller |->
+      [ pc |-> "fetched",
+        att |-> 1,
+        rst |-> "open",
+        rus |-> -1,
+        rfp |-> 0,
+        rfi |-> {},
+        fver |-> 2,
+        cls |-> "err",
+        started |-> 1,
+        fat |-> 2 ] ]
+/\ pass = <<TRUE>>
+/\ us = <<-1>>
+/\ starts = 0
+/\ lostLive = <<FALSE>>
+/\ p5ok = <<TRUE>>
+
+State 17: <Send("poller") line 284, col 3 to line 311, col 96 of module IssuerLifecycleR53>
+/\ decl = <<0>>
+/\ firstCF = <<-1>>
+/\ cur = 1
+/\ obsAt = <<"timely">>
+/\ obsKilled = <<FALSE>>
+/\ now = 2
+/\ e1 = <<2>>
+/\ e2 = <<0>>
+/\ faults = 1
+/\ failTicks = <<{}>>
+/\ polled = FALSE
+/\ pending = { [ att |-> 1,
+    fat |-> 2,
+    p |-> "poller",
+    sent |-> 2,
+    from |-> "open",
+    to |-> "fail",
+    gver |-> 2,
+    st0 |-> 1,
+    dec |-> 2,
+    orphan |-> FALSE,
+    dup |-> FALSE ] }
+/\ rreason = "-"
+/\ req = "active"
+/\ fi = <<{}>>
+/\ spreadOK = <<TRUE>>
+/\ fp = <<0>>
+/\ ver = <<2>>
+/\ st = <<"open">>
+/\ bur = <<1>>
+/\ inv = [ poller |->
+      [ pc |-> "await",
+        att |-> 1,
+        rst |-> "open",
+        rus |-> -1,
+        rfp |-> 0,
+        rfi |-> {},
+        fver |-> 2,
+        cls |-> "err",
+        started |-> 1,
+        fat |-> 2 ] ]
+/\ pass = <<TRUE>>
+/\ us = <<-1>>
+/\ starts = 0
+/\ lostLive = <<FALSE>>
+/\ p5ok = <<TRUE>>
+
+State 18: <Store line 405, col 11 to line 405, col 49 of module IssuerLifecycleR53>
+/\ decl = <<0>>
+/\ firstCF = <<2>>
+/\ cur = 1
+/\ obsAt = <<"timely">>
+/\ obsKilled = <<FALSE>>
+/\ now = 2
+/\ e1 = <<2>>
+/\ e2 = <<0>>
+/\ faults = 1
+/\ failTicks = <<{2}>>
+/\ polled = FALSE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ fi = <<{2}>>
+/\ spreadOK = <<TRUE>>
+/\ fp = <<1>>
+/\ ver = <<3>>
+/\ st = <<"open">>
+/\ bur = <<1>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        rus |-> -1,
+        rfp |-> 0,
+        rfi |-> {},
+        fver |-> 0,
+        cls |-> "-",
+        started |-> 0,
+        fat |-> 0 ] ]
+/\ pass = <<TRUE>>
+/\ us = <<2>>
+/\ starts = 0
+/\ lostLive = <<FALSE>>
+/\ p5ok = <<TRUE>>
+
+State 19: <Start("poller") line 224, col 3 to line 237, col 77 of module IssuerLifecycleR53>
+/\ decl = <<0>>
+/\ firstCF = <<2>>
+/\ cur = 1
+/\ obsAt = <<"timely">>
+/\ obsKilled = <<FALSE>>
+/\ now = 2
+/\ e1 = <<2>>
+/\ e2 = <<0>>
+/\ faults = 1
+/\ failTicks = <<{2}>>
+/\ polled = TRUE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ fi = <<{2}>>
+/\ spreadOK = <<TRUE>>
+/\ fp = <<1>>
+/\ ver = <<3>>
+/\ st = <<"open">>
+/\ bur = <<1>>
+/\ inv = [ poller |->
+      [ pc |-> "read",
+        att |-> 1,
+        rst |-> "open",
+        rus |-> 2,
+        rfp |-> 1,
+        rfi |-> {2},
+        fver |-> 3,
+        cls |-> "-",
+        started |-> 2,
+        fat |-> 0 ] ]
+/\ pass = <<TRUE>>
+/\ us = <<2>>
+/\ starts = 1
+/\ lostLive = <<FALSE>>
+/\ p5ok = <<TRUE>>
+
+State 20: <Tick line 174, col 3 to line 180, col 77 of module IssuerLifecycleR53>
+/\ decl = <<0>>
+/\ firstCF = <<2>>
+/\ cur = 1
+/\ obsAt = <<"timely">>
+/\ obsKilled = <<FALSE>>
+/\ now = 3
+/\ e1 = <<2>>
+/\ e2 = <<0>>
+/\ faults = 1
+/\ failTicks = <<{2}>>
+/\ polled = FALSE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ fi = <<{2}>>
+/\ spreadOK = <<TRUE>>
+/\ fp = <<1>>
+/\ ver = <<3>>
+/\ st = <<"open">>
+/\ bur = <<1>>
+/\ inv = [ poller |->
+      [ pc |-> "read",
+        att |-> 1,
+        rst |-> "open",
+        rus |-> 2,
+        rfp |-> 1,
+        rfi |-> {2},
+        fver |-> 3,
+        cls |-> "-",
+        started |-> 2,
+        fat |-> 0 ] ]
+/\ pass = <<TRUE>>
+/\ us = <<2>>
+/\ starts = 0
+/\ lostLive = <<FALSE>>
+/\ p5ok = <<TRUE>>
+
+State 21: <Fence("poller") line 246, col 3 to line 249, col 84 of module IssuerLifecycleR53>
+/\ decl = <<0>>
+/\ firstCF = <<2>>
+/\ cur = 1
+/\ obsAt = <<"timely">>
+/\ obsKilled = <<FALSE>>
+/\ now = 3
+/\ e1 = <<2>>
+/\ e2 = <<0>>
+/\ faults = 1
+/\ failTicks = <<{2}>>
+/\ polled = FALSE
+/\ pending = { [ att |-> 1,
+    fat |-> 0,
+    p |-> "poller",
+    sent |-> 3,
+    from |-> "open",
+    to |-> "fence",
+    gver |-> 3,
+    st0 |-> 2,
+    dec |-> 3,
+    orphan |-> FALSE,
+    dup |-> FALSE ] }
+/\ rreason = "-"
+/\ req = "active"
+/\ fi = <<{2}>>
+/\ spreadOK = <<TRUE>>
+/\ fp = <<1>>
+/\ ver = <<3>>
+/\ st = <<"open">>
+/\ bur = <<1>>
+/\ inv = [ poller |->
+      [ pc |-> "fencing",
+        att |-> 1,
+        rst |-> "open",
+        rus |-> 2,
+        rfp |-> 1,
+        rfi |-> {2},
+        fver |-> 3,
+        cls |-> "-",
+        started |-> 2,
+        fat |-> 0 ] ]
+/\ pass = <<TRUE>>
+/\ us = <<2>>
+/\ starts = 0
+/\ lostLive = <<FALSE>>
+/\ p5ok = <<TRUE>>
+
+State 22: <Store line 405, col 11 to line 405, col 49 of module IssuerLifecycleR53>
+/\ decl = <<0>>
+/\ firstCF = <<2>>
+/\ cur = 1
+/\ obsAt = <<"timely">>
+/\ obsKilled = <<FALSE>>
+/\ now = 3
+/\ e1 = <<2>>
+/\ e2 = <<0>>
+/\ faults = 1
+/\ failTicks = <<{2}>>
+/\ polled = FALSE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ fi = <<{2}>>
+/\ spreadOK = <<TRUE>>
+/\ fp = <<1>>
+/\ ver = <<4>>
+/\ st = <<"open">>
+/\ bur = <<1>>
+/\ inv = [ poller |->
+      [ pc |-> "fenced",
+        att |-> 1,
+        rst |-> "open",
+        rus |-> 2,
+        rfp |-> 1,
+        rfi |-> {2},
+        fver |-> 4,
+        cls |-> "-",
+        started |-> 2,
+        fat |-> 0 ] ]
+/\ pass = <<TRUE>>
+/\ us = <<2>>
+/\ starts = 0
+/\ lostLive = <<FALSE>>
+/\ p5ok = <<TRUE>>
+
+State 23: <Fetch("poller") line 253, col 3 to line 263, col 38 of module IssuerLifecycleR53>
+/\ decl = <<0>>
+/\ firstCF = <<2>>
+/\ cur = 1
+/\ obsAt = <<"timely">>
+/\ obsKilled = <<FALSE>>
+/\ now = 3
+/\ e1 = <<2>>
+/\ e2 = <<0>>
+/\ faults = 1
+/\ failTicks = <<{2}>>
+/\ polled = FALSE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ fi = <<{2}>>
+/\ spreadOK = <<TRUE>>
+/\ fp = <<1>>
+/\ ver = <<4>>
+/\ st = <<"open">>
+/\ bur = <<1>>
+/\ inv = [ poller |->
+      [ pc |-> "fetched",
+        att |-> 1,
+        rst |-> "open",
+        rus |-> 2,
+        rfp |-> 1,
+        rfi |-> {2},
+        fver |-> 4,
+        cls |-> "err",
+        started |-> 2,
+        fat |-> 3 ] ]
+/\ pass = <<TRUE>>
+/\ us = <<2>>
+/\ starts = 0
+/\ lostLive = <<FALSE>>
+/\ p5ok = <<TRUE>>
+
+State 24: <Send("poller") line 284, col 3 to line 311, col 96 of module IssuerLifecycleR53>
+/\ decl = <<0>>
+/\ firstCF = <<2>>
+/\ cur = 1
+/\ obsAt = <<"timely">>
+/\ obsKilled = <<FALSE>>
+/\ now = 3
+/\ e1 = <<2>>
+/\ e2 = <<0>>
+/\ faults = 1
+/\ failTicks = <<{2}>>
+/\ polled = FALSE
+/\ pending = { [ att |-> 1,
+    fat |-> 3,
+    p |-> "poller",
+    sent |-> 3,
+    from |-> "open",
+    to |-> "fail",
+    gver |-> 4,
+    st0 |-> 2,
+    dec |-> 3,
+    orphan |-> FALSE,
+    dup |-> FALSE ] }
+/\ rreason = "-"
+/\ req = "active"
+/\ fi = <<{2}>>
+/\ spreadOK = <<TRUE>>
+/\ fp = <<1>>
+/\ ver = <<4>>
+/\ st = <<"open">>
+/\ bur = <<1>>
+/\ inv = [ poller |->
+      [ pc |-> "await",
+        att |-> 1,
+        rst |-> "open",
+        rus |-> 2,
+        rfp |-> 1,
+        rfi |-> {2},
+        fver |-> 4,
+        cls |-> "err",
+        started |-> 2,
+        fat |-> 3 ] ]
+/\ pass = <<TRUE>>
+/\ us = <<2>>
+/\ starts = 0
+/\ lostLive = <<FALSE>>
+/\ p5ok = <<TRUE>>
+
+State 25: <Store line 405, col 11 to line 405, col 49 of module IssuerLifecycleR53>
+/\ decl = <<0>>
+/\ firstCF = <<2>>
+/\ cur = 1
+/\ obsAt = <<"timely">>
+/\ obsKilled = <<FALSE>>
+/\ now = 3
+/\ e1 = <<2>>
+/\ e2 = <<0>>
+/\ faults = 1
+/\ failTicks = <<{2, 3}>>
+/\ polled = FALSE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ fi = <<{2, 3}>>
+/\ spreadOK = <<TRUE>>
+/\ fp = <<2>>
+/\ ver = <<5>>
+/\ st = <<"open">>
+/\ bur = <<1>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        rus |-> -1,
+        rfp |-> 0,
+        rfi |-> {},
+        fver |-> 0,
+        cls |-> "-",
+        started |-> 0,
+        fat |-> 0 ] ]
+/\ pass = <<TRUE>>
+/\ us = <<2>>
+/\ starts = 0
+/\ lostLive = <<FALSE>>
+/\ p5ok = <<TRUE>>
+
+State 26: <Tick line 174, col 3 to line 180, col 77 of module IssuerLifecycleR53>
+/\ decl = <<0>>
+/\ firstCF = <<2>>
+/\ cur = 1
+/\ obsAt = <<"timely">>
+/\ obsKilled = <<FALSE>>
+/\ now = 4
+/\ e1 = <<2>>
+/\ e2 = <<0>>
+/\ faults = 1
+/\ failTicks = <<{2, 3}>>
+/\ polled = FALSE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ fi = <<{2, 3}>>
+/\ spreadOK = <<TRUE>>
+/\ fp = <<2>>
+/\ ver = <<5>>
+/\ st = <<"open">>
+/\ bur = <<1>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        rus |-> -1,
+        rfp |-> 0,
+        rfi |-> {},
+        fver |-> 0,
+        cls |-> "-",
+        started |-> 0,
+        fat |-> 0 ] ]
+/\ pass = <<TRUE>>
+/\ us = <<2>>
+/\ starts = 0
+/\ lostLive = <<FALSE>>
+/\ p5ok = <<TRUE>>
+
+State 27: <Start("poller") line 224, col 3 to line 237, col 77 of module IssuerLifecycleR53>
+/\ decl = <<0>>
+/\ firstCF = <<2>>
+/\ cur = 1
+/\ obsAt = <<"timely">>
+/\ obsKilled = <<FALSE>>
+/\ now = 4
+/\ e1 = <<2>>
+/\ e2 = <<0>>
+/\ faults = 1
+/\ failTicks = <<{2, 3}>>
+/\ polled = TRUE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ fi = <<{2, 3}>>
+/\ spreadOK = <<TRUE>>
+/\ fp = <<2>>
+/\ ver = <<5>>
+/\ st = <<"open">>
+/\ bur = <<1>>
+/\ inv = [ poller |->
+      [ pc |-> "read",
+        att |-> 1,
+        rst |-> "open",
+        rus |-> 2,
+        rfp |-> 2,
+        rfi |-> {2, 3},
+        fver |-> 5,
+        cls |-> "-",
+        started |-> 4,
+        fat |-> 0 ] ]
+/\ pass = <<TRUE>>
+/\ us = <<2>>
+/\ starts = 1
+/\ lostLive = <<FALSE>>
+/\ p5ok = <<TRUE>>
+
+State 28: <Fence("poller") line 246, col 3 to line 249, col 84 of module IssuerLifecycleR53>
+/\ decl = <<0>>
+/\ firstCF = <<2>>
+/\ cur = 1
+/\ obsAt = <<"timely">>
+/\ obsKilled = <<FALSE>>
+/\ now = 4
+/\ e1 = <<2>>
+/\ e2 = <<0>>
+/\ faults = 1
+/\ failTicks = <<{2, 3}>>
+/\ polled = TRUE
+/\ pending = { [ att |-> 1,
+    fat |-> 0,
+    p |-> "poller",
+    sent |-> 4,
+    from |-> "open",
+    to |-> "fence",
+    gver |-> 5,
+    st0 |-> 4,
+    dec |-> 4,
+    orphan |-> FALSE,
+    dup |-> FALSE ] }
+/\ rreason = "-"
+/\ req = "active"
+/\ fi = <<{2, 3}>>
+/\ spreadOK = <<TRUE>>
+/\ fp = <<2>>
+/\ ver = <<5>>
+/\ st = <<"open">>
+/\ bur = <<1>>
+/\ inv = [ poller |->
+      [ pc |-> "fencing",
+        att |-> 1,
+        rst |-> "open",
+        rus |-> 2,
+        rfp |-> 2,
+        rfi |-> {2, 3},
+        fver |-> 5,
+        cls |-> "-",
+        started |-> 4,
+        fat |-> 0 ] ]
+/\ pass = <<TRUE>>
+/\ us = <<2>>
+/\ starts = 1
+/\ lostLive = <<FALSE>>
+/\ p5ok = <<TRUE>>
+
+State 29: <Store line 405, col 11 to line 405, col 49 of module IssuerLifecycleR53>
+/\ decl = <<0>>
+/\ firstCF = <<2>>
+/\ cur = 1
+/\ obsAt = <<"timely">>
+/\ obsKilled = <<FALSE>>
+/\ now = 4
+/\ e1 = <<2>>
+/\ e2 = <<0>>
+/\ faults = 1
+/\ failTicks = <<{2, 3}>>
+/\ polled = TRUE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ fi = <<{2, 3}>>
+/\ spreadOK = <<TRUE>>
+/\ fp = <<2>>
+/\ ver = <<6>>
+/\ st = <<"open">>
+/\ bur = <<1>>
+/\ inv = [ poller |->
+      [ pc |-> "fenced",
+        att |-> 1,
+        rst |-> "open",
+        rus |-> 2,
+        rfp |-> 2,
+        rfi |-> {2, 3},
+        fver |-> 6,
+        cls |-> "-",
+        started |-> 4,
+        fat |-> 0 ] ]
+/\ pass = <<TRUE>>
+/\ us = <<2>>
+/\ starts = 1
+/\ lostLive = <<FALSE>>
+/\ p5ok = <<TRUE>>
+
+State 30: <Fetch("poller") line 253, col 3 to line 263, col 38 of module IssuerLifecycleR53>
+/\ decl = <<0>>
+/\ firstCF = <<2>>
+/\ cur = 1
+/\ obsAt = <<"timely">>
+/\ obsKilled = <<FALSE>>
+/\ now = 4
+/\ e1 = <<2>>
+/\ e2 = <<0>>
+/\ faults = 1
+/\ failTicks = <<{2, 3}>>
+/\ polled = TRUE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ fi = <<{2, 3}>>
+/\ spreadOK = <<TRUE>>
+/\ fp = <<2>>
+/\ ver = <<6>>
+/\ st = <<"open">>
+/\ bur = <<1>>
+/\ inv = [ poller |->
+      [ pc |-> "fetched",
+        att |-> 1,
+        rst |-> "open",
+        rus |-> 2,
+        rfp |-> 2,
+        rfi |-> {2, 3},
+        fver |-> 6,
+        cls |-> "err",
+        started |-> 4,
+        fat |-> 4 ] ]
+/\ pass = <<TRUE>>
+/\ us = <<2>>
+/\ starts = 1
+/\ lostLive = <<FALSE>>
+/\ p5ok = <<TRUE>>
+
+State 31: <Send("poller") line 284, col 3 to line 311, col 96 of module IssuerLifecycleR53>
+/\ decl = <<0>>
+/\ firstCF = <<2>>
+/\ cur = 1
+/\ obsAt = <<"timely">>
+/\ obsKilled = <<FALSE>>
+/\ now = 4
+/\ e1 = <<2>>
+/\ e2 = <<0>>
+/\ faults = 1
+/\ failTicks = <<{2, 3}>>
+/\ polled = TRUE
+/\ pending = { [ att |-> 1,
+    fat |-> 4,
+    p |-> "poller",
+    sent |-> 4,
+    from |-> "open",
+    to |-> "unavail",
+    gver |-> 6,
+    st0 |-> 4,
+    dec |-> 4,
+    orphan |-> FALSE,
+    dup |-> FALSE ] }
+/\ rreason = "-"
+/\ req = "active"
+/\ fi = <<{2, 3}>>
+/\ spreadOK = <<TRUE>>
+/\ fp = <<2>>
+/\ ver = <<6>>
+/\ st = <<"open">>
+/\ bur = <<1>>
+/\ inv = [ poller |->
+      [ pc |-> "await",
+        att |-> 1,
+        rst |-> "open",
+        rus |-> 2,
+        rfp |-> 2,
+        rfi |-> {2, 3},
+        fver |-> 6,
+        cls |-> "err",
+        started |-> 4,
+        fat |-> 4 ] ]
+/\ pass = <<TRUE>>
+/\ us = <<2>>
+/\ starts = 1
+/\ lostLive = <<FALSE>>
+/\ p5ok = <<TRUE>>
+
+State 32: <Store line 405, col 11 to line 405, col 49 of module IssuerLifecycleR53>
+/\ decl = <<0>>
+/\ firstCF = <<2>>
+/\ cur = 1
+/\ obsAt = <<"timely">>
+/\ obsKilled = <<FALSE>>
+/\ now = 4
+/\ e1 = <<2>>
+/\ e2 = <<0>>
+/\ faults = 1
+/\ failTicks = <<{2, 3}>>
+/\ polled = TRUE
+/\ pending = {}
+/\ rreason = "ATTEMPTS_EXHAUSTED"
+/\ req = "refused"
+/\ fi = <<{}>>
+/\ spreadOK = <<TRUE>>
+/\ fp = <<0>>
+/\ ver = <<7>>
+/\ st = <<"unavail">>
+/\ bur = <<1>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        rus |-> -1,
+        rfp |-> 0,
+        rfi |-> {},
+        fver |-> 0,
+        cls |-> "-",
+        started |-> 0,
+        fat |-> 0 ] ]
+/\ pass = <<TRUE>>
+/\ us = <<-1>>
+/\ starts = 1
+/\ lostLive = <<FALSE>>
+/\ p5ok = <<TRUE>>
+
+2261068 states generated, 722985 distinct states found, 80398 states left on queue.
+The depth of the complete state graph search is 35.
+Finished in 06s at (2026-10-30 00:50:18)

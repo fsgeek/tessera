@@ -124,7 +124,8 @@ class LiveDns(SnapshotSource):
     """Resolver capture for the deployed issuer. transport(query wire) -> response wire."""
 
     def __init__(self, transport):
-        self.transport = transport
+        from .deadline import DNS_WORST_S, guarded_transport
+        self.transport = guarded_transport(transport, "dns", DNS_WORST_S)          # ILC-I-02: each query
 
     def capture(self, now):
         responses = []
@@ -134,18 +135,32 @@ class LiveDns(SnapshotSource):
 
 
 def udp_tcp_transport(server="1.1.1.1", timeout=10):
-    """Real resolver access (not used by the tests): UDP, then TCP when truncated."""
+    """Real resolver access (not used by the tests): UDP, then TCP when truncated. ILC-I-02: the query's TOTAL time is
+    at most 2 x timeout (deadline.DNS_WORST_S), capped by what the poller's deadline leaves; every blocking operation
+    gets only the time remaining of that total."""
+    import time
+    from .deadline import call_timeout
+
     def t(q):
+        end = time.monotonic() + call_timeout(2 * timeout)
+
+        def left():
+            rest = end - time.monotonic()
+            if rest <= 0:
+                raise DnsError("resolver query over its time")
+            return min(timeout, rest)
         with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
-            s.settimeout(timeout)
+            s.settimeout(left())
             s.sendto(q, (server, 53))
             r, _ = s.recvfrom(65535)
         if truncated(r):                       # IS-11: header TC bit, before any record is parsed
-            with socket.create_connection((server, 53), timeout=timeout) as s:
+            with socket.create_connection((server, 53), timeout=left()) as s:
                 s.sendall(struct.pack(">H", len(q)) + q)
+                s.settimeout(left())
                 n = struct.unpack(">H", s.recv(2))[0]
                 r = b""
                 while len(r) < n:
+                    s.settimeout(left())
                     chunk = s.recv(n - len(r))
                     if not chunk:
                         raise DnsError("TCP response truncated")

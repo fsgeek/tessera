@@ -41,10 +41,28 @@ def test_request_store_dynamodb_with_ttl_and_pending_index():
     assert 'name            = "pending-index"' in m
 
 
-def test_result_store_s3_lifecycle_30_days_on_every_prefix():
+def test_result_store_lifecycle_expires_only_cleanup_due_objects():
+    """Rewritten for the registered lifecycle (design revision 5.3.1, ILC3-04 / ILC4-01; was
+    test_result_store_s3_lifecycle_30_days_on_every_prefix): the former rule expired every object under content/,
+    work/, frames/ and result/ 31 days after creation, whatever state its request was in, and could delete a live
+    attempt's material. Now no rule expires an object by prefix or age alone; the only expiration is filtered on the
+    cleanup-due tag, which the cleanup obligation sets when deletion is due, and the poller may set that tag."""
+    from tessera_issue.stores import CLEANUP_TAG
     m = TF["main.tf"]
-    assert re.search(r'for_each = \["content/", "work/", "frames/", "result/"\]', m)
-    assert re.search(r"retention = 30", m) and "days = local.retention" in m
+    block = re.search(r'resource "aws_s3_bucket_lifecycle_configuration" "results" \{(.*?)\n\}', m, re.S).group(1)
+    rules = re.findall(r"\n  rule \{(.*?)\n  \}", block, re.S)
+    expiring = [r for r in rules if "expiration" in r]
+    assert len(expiring) == 1 and "dynamic" not in block and "noncurrent" not in block
+    tag = re.search(r'tag \{\s*key\s*= "([^"]+)"\s*value = "([^"]+)"', expiring[0])
+    assert tag and (tag.group(1), tag.group(2)) == CLEANUP_TAG
+    assert "prefix" not in expiring[0] and "and {" not in expiring[0]
+    for r in rules:
+        if r is not expiring[0]:
+            assert "expiration" not in r and "abort_incomplete_multipart_upload" in r
+    for prefix in ("content/", "work/", "frames/", "result/"):
+        assert prefix not in block
+    objects = re.search(r'sid\s+= "Objects"\s*actions\s+= \[([^\]]*)\]', m).group(1)
+    assert '"s3:PutObjectTagging"' in objects
     assert "block_public_policy     = true" in m and "aws:SecureTransport" in m
 
 
@@ -54,7 +72,7 @@ def test_signer_queues_and_wake_topics_per_slot():
               'resource "aws_sns_topic" "wake"'):
         assert r in m
     assert m.count("for_each                   = toset(local.slots)") == 2
-    assert 'slots     = ["kms", "gpg"]' in m
+    assert re.search(r'slots\s+= \["kms", "gpg"\]', m)
 
 
 def test_api_gateway_requires_api_keys_on_every_route():

@@ -3,19 +3,23 @@ imported only by lambda_app.from_env). Nothing here calls KMS: the issuer holds 
 
 DynamoDB table (one table, partition key "pk"):
   REQ#<rid>      request record: "doc" (JSON), "version" (N), "pending_shard" = "1" while ACCEPTED (sparse GSI
-                 "pending-index"), "expires_at" (N, the table's TTL attribute) = ended_at + 30 days
+                 "pending-index"), "expires_at" (N, the table's TTL attribute) = ended_at + 30 days (absent while the
+                 request is live), and the lifecycle guard fields "lstate", "latt", "lastate" (request state, current
+                 attempt id, current attempt state) that a guarded save conditions on with the version
   KEY#<rid>      content-free key tombstone, expires_at = after issuance closes
   SIGREQ#<id>    signer request id -> request, job, slot, frame hash; expires_at = 30 days after sending
   SIGLOG#<uuid>  one signer response as logged (E-02); no expiry. A "used" response is logged under the
                  deterministic key SIGLOG#USED#<signer request id>#<signature sha256> so sealing can require it (IS-01)
   CLEAN#<rid>    a cleanup obligation (IS-07), pending_shard = "2" in the same sparse index; no expiry
+  POLLER#cursor  the poller's scheduling cursor (ILI-05): the request id it last started on
 S3 bucket: content/<rid>/..., work/<rid>/..., frames/<rid>/<sha256> (large frames, read by the signers by reference),
-result/<rid>/receipt.json, config/window.json. The poller deletes each request's objects itself (IS-07); the
-lifecycle rules are a backstop only."""
+result/<rid>/receipt.json, config/window.json. The poller deletes each request's objects itself (IS-07), first
+tagging them cleanup-due; the bucket's lifecycle rule expires only tagged objects, as a backstop (5.3.1)."""
 import json
 import uuid
 
-from .stores import NAMESPACES, RequestStore, ResultStore
+from .deadline import AWS_WORST_S, GuardedClient, guarded
+from .stores import CLEANUP_TAG, NAMESPACES, RequestStore, ResultStore, lifecycle_guard
 
 
 def _conditional_failed(exc):
@@ -37,18 +41,24 @@ def _not_found(exc):
 
 
 class DynamoRequestStore(RequestStore):
+    request_worst_s = AWS_WORST_S
     INDEX = "pending-index"
 
     def __init__(self, client, table):
-        self.c, self.t = client, table
+        self.c, self.t = GuardedClient(client, "dynamodb"), table      # ILC-I-02: every request guarded
 
     def _get(self, pk):
         it = self.c.get_item(TableName=self.t, Key={"pk": {"S": pk}}, ConsistentRead=True).get("Item")
         return it
 
+    GUARD_ATTRS = (("state", "lstate"), ("attempt", "latt"), ("astate", "lastate"))
+
     def _item(self, rec):
         item = {"pk": {"S": "REQ#" + rec["rid"]}, "doc": {"S": json.dumps(rec, sort_keys=True)},
                 "version": {"N": str(rec["version"])}}
+        g = lifecycle_guard(rec)
+        for field, attr in self.GUARD_ATTRS:
+            item[attr] = {"S": str(g[field] or "")}
         if rec["state"] == "ACCEPTED":
             item["pending_shard"] = {"S": "1"}
         if rec.get("expires_at") is not None:
@@ -75,13 +85,18 @@ class DynamoRequestStore(RequestStore):
                 return False
             raise
 
-    def save(self, rec):
+    def save(self, rec, expect=None):
         old = rec["version"]
         rec["version"] = old + 1
+        cond, names, values = "#v = :v", {"#v": "version"}, {":v": {"N": str(old)}}
+        if expect is not None:                        # the lifecycle guard, evaluated atomically with the version
+            for field, attr in self.GUARD_ATTRS:
+                cond += f" AND #{attr} = :{attr}"
+                names["#" + attr] = attr
+                values[":" + attr] = {"S": str(expect[field] or "")}
         try:
-            self.c.put_item(TableName=self.t, Item=self._item(rec), ConditionExpression="#v = :v",
-                            ExpressionAttributeNames={"#v": "version"},
-                            ExpressionAttributeValues={":v": {"N": str(old)}})
+            self.c.put_item(TableName=self.t, Item=self._item(rec), ConditionExpression=cond,
+                            ExpressionAttributeNames=names, ExpressionAttributeValues=values)
             return True
         except Exception as e:  # noqa: BLE001
             rec["version"] = old
@@ -167,6 +182,24 @@ class DynamoRequestStore(RequestStore):
     def cleanup_done(self, rid):
         self.c.delete_item(TableName=self.t, Key={"pk": {"S": "CLEAN#" + rid}})
 
+    def active_page(self, token, limit):
+        """ILC-I2-04: one page of the sparse pending index; the token is DynamoDB's LastEvaluatedKey."""
+        kw = {"TableName": self.t, "IndexName": self.INDEX, "KeyConditionExpression": "#s = :one",
+              "ExpressionAttributeNames": {"#s": "pending_shard"}, "ExpressionAttributeValues": {":one": {"S": "1"}},
+              "Limit": limit}
+        if token:
+            kw["ExclusiveStartKey"] = token
+        r = self.c.query(**kw)
+        return [it["pk"]["S"][4:] for it in r.get("Items", [])], r.get("LastEvaluatedKey")
+
+    def cursor_get(self):
+        it = self._get("POLLER#cursor")
+        return json.loads(it["doc"]["S"]) if it else None
+
+    def cursor_put(self, position):
+        self.c.put_item(TableName=self.t, Item={"pk": {"S": "POLLER#cursor"},
+                                                "doc": {"S": json.dumps(position, sort_keys=True)}})
+
     def siglog(self):
         out, start = [], None
         while True:
@@ -182,10 +215,11 @@ class DynamoRequestStore(RequestStore):
 
 
 class S3ResultStore(ResultStore):
+    request_worst_s = AWS_WORST_S                 # ILC-I2-03: what the poller reserves for one write
     """Receipt URLs (IS-06): short-lived (<= 300 s) pre-signed GETs, minted per request after the API's credential check."""
 
     def __init__(self, client, bucket):
-        self.c, self.b = client, bucket
+        self.c, self.b = GuardedClient(client, "s3"), bucket             # ILC-I-02: every request guarded
 
     @staticmethod
     def key(ns, rid, name):
@@ -196,9 +230,16 @@ class S3ResultStore(ResultStore):
     def put(self, ns, rid, name, data):
         self.c.put_object(Bucket=self.b, Key=self.key(ns, rid, name), Body=bytes(data), ServerSideEncryption="AES256")
 
+    def _read(self, key):
+        """ILC-I2-01: get_object returns before the body is read; the request and its body read are ONE guarded
+        request, so the body read runs under the deadline too."""
+        raw = self.c._client
+        return guarded(AWS_WORST_S, lambda: raw.get_object(Bucket=self.b, Key=key)["Body"].read(),
+                       what="s3.get_object")
+
     def get(self, ns, rid, name):
         try:
-            return self.c.get_object(Bucket=self.b, Key=self.key(ns, rid, name))["Body"].read()
+            return self._read(self.key(ns, rid, name))
         except Exception as e:  # noqa: BLE001
             if _not_found(e):
                 return None
@@ -235,6 +276,13 @@ class S3ResultStore(ResultStore):
             if not token:
                 return sorted(out)
 
+    def mark_due(self, ns, rid):
+        """Tag every object under (ns, rid) cleanup-due (5.3.1); the lifecycle backstop expires only tagged objects.
+        A per-object error raises, and the obligation is retried."""
+        for name in self.names(ns, rid):
+            self.c.put_object_tagging(Bucket=self.b, Key=self.key(ns, rid, name),
+                                      Tagging={"TagSet": [{"Key": CLEANUP_TAG[0], "Value": CLEANUP_TAG[1]}]})
+
     def size(self, ns, rid, name):
         try:
             return int(self.c.head_object(Bucket=self.b, Key=self.key(ns, rid, name))["ContentLength"])
@@ -248,14 +296,14 @@ class S3ResultStore(ResultStore):
             "get_object", Params={"Bucket": self.b, "Key": self.key(ns, rid, name)}, ExpiresIn=int(expires_in))
 
     def get_config(self, name):
-        return self.c.get_object(Bucket=self.b, Key="config/" + name)["Body"].read()
+        return self._read("config/" + name)
 
 
 class SnsWake:
     """E-01: wake a slot's signer on demand by publishing to its topic (the signer side subscribes)."""
 
     def __init__(self, client, topics):
-        self.c, self.topics = client, topics
+        self.c, self.topics = GuardedClient(client, "sns"), topics      # ILC-I-02: every request guarded
 
     def __call__(self, slot):
         arn = self.topics.get(slot)

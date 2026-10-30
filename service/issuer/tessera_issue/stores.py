@@ -10,8 +10,25 @@ signers by digest-bound reference; deleted when the request ends) and "result" (
 after the end).
 
 Cleanup obligations (IS-07) are kept apart from the request record, so a failed deletion is retried by the poller
-whatever state the request is in, and the 30-day deletion of results does not depend on S3 lifecycle timing."""
+whatever state the request is in, and the 30-day deletion of results does not depend on S3 lifecycle timing.
+
+Lifecycle guard (design steps 1 and 5): every lifecycle write is a compare-and-set on the record version AND on the
+expected (request state, current attempt id, current attempt state), evaluated atomically by the store, so a write
+meant for an ended attempt, or decided on a version it did not read, fails (the model's GuardOK).
+
+Storage lifetime (design revision 5.3.1): no age rule applies to a live request's objects. When the cleanup
+obligation finds deletion due, it first marks the objects `cleanup-due` (mark_due), then deletes them; an S3
+lifecycle rule expires only marked objects, as a backstop for deletions that keep failing."""
 import copy
+
+CLEANUP_TAG = ("cleanup-due", "true")
+
+
+def lifecycle_guard(rec):
+    """-> the guarded fields of a record as stored: request state, current attempt id, current attempt state."""
+    n = rec.get("cur") or 0
+    att = rec["attempts"][n - 1] if n else None
+    return {"state": rec.get("state"), "attempt": att["id"] if att else "", "astate": att["state"] if att else ""}
 
 
 class RequestStore:
@@ -22,8 +39,9 @@ class RequestStore:
         """Insert iff absent, together with the key's tombstone in the same atomic write (IS-04). -> bool."""
         raise NotImplementedError
 
-    def save(self, rec):
-        """Compare-and-set on rec["version"]; on success the stored and the passed record get version + 1."""
+    def save(self, rec, expect=None):
+        """Compare-and-set on rec["version"] and, when given, on expect == lifecycle_guard(stored record); on success
+        the stored and the passed record get version + 1. -> bool."""
         raise NotImplementedError
 
     def active(self):
@@ -61,6 +79,18 @@ class RequestStore:
     def cleanup_done(self, rid):
         raise NotImplementedError
 
+    def active_page(self, token, limit):
+        """ILC-I2-04: one bounded page of the ids of ACCEPTED requests, starting after the opaque position `token`
+        (None: from the start). -> (ids, next token or None at the end)."""
+        raise NotImplementedError
+
+    def cursor_get(self):
+        """ILI-05, ILC-I2-04: the poller's durable scheduling position (a JSON-able dict), or None."""
+        raise NotImplementedError
+
+    def cursor_put(self, rid):
+        raise NotImplementedError
+
 
 NAMESPACES = ("content", "work", "frames", "result")
 
@@ -77,6 +107,10 @@ class ResultStore:
 
     def names(self, ns, rid):
         """-> names stored under (ns, rid)."""
+        raise NotImplementedError
+
+    def mark_due(self, ns, rid):
+        """Tag every object under (ns, rid) cleanup-due; called only once their deletion is due (5.3.1)."""
         raise NotImplementedError
 
     def size(self, ns, rid, name):
@@ -107,6 +141,19 @@ class InMemoryRequestStore(RequestStore):
 
     def __init__(self):
         self.recs, self.tombs, self.sigreqs, self.log, self.cleanups = {}, {}, {}, [], {}
+        self.cursor = None
+
+    def active_page(self, token, limit):
+        ids = sorted(r["rid"] for r in self.recs.values() if r["state"] == "ACCEPTED" and (token is None or
+                                                                                          r["rid"] > token))
+        page = ids[:limit]
+        return page, (page[-1] if len(ids) > limit else None)
+
+    def cursor_get(self):
+        return copy.deepcopy(self.cursor)
+
+    def cursor_put(self, position):
+        self.cursor = copy.deepcopy(position)
 
     def get(self, rid):
         r = self.recs.get(rid)
@@ -121,9 +168,11 @@ class InMemoryRequestStore(RequestStore):
             self.tombs.setdefault(rec["rid"], {"rid": rec["rid"], "keep_until": tombstone_until})
         return True
 
-    def save(self, rec):
+    def save(self, rec, expect=None):
         cur = self.recs.get(rec["rid"])
         if cur is None or cur["version"] != rec["version"]:
+            return False
+        if expect is not None and lifecycle_guard(cur) != expect:
             return False
         rec["version"] += 1
         self.recs[rec["rid"]] = copy.deepcopy(rec)
@@ -175,12 +224,17 @@ class InMemoryRequestStore(RequestStore):
 
 class InMemoryResultStore(ResultStore):
     def __init__(self):
-        self.blobs = {}
+        self.blobs, self.tags = {}, {}
 
     def put(self, ns, rid, name, data):
         if ns not in NAMESPACES:
             raise ValueError(ns)
         self.blobs[(ns, rid, name)] = bytes(data)
+        self.tags.pop((ns, rid, name), None)            # a new object version carries no tag (as S3 PutObject)
+
+    def mark_due(self, ns, rid):
+        for k in [k for k in self.blobs if k[0] == ns and k[1] == rid]:
+            self.tags[k] = dict([CLEANUP_TAG])
 
     def get(self, ns, rid, name):
         return self.blobs.get((ns, rid, name))
@@ -188,6 +242,7 @@ class InMemoryResultStore(ResultStore):
     def delete(self, ns, rid):
         for k in [k for k in self.blobs if k[0] == ns and k[1] == rid]:
             del self.blobs[k]
+            self.tags.pop(k, None)
 
     def presign(self, ns, rid, name, expires_in, now):
         return f"memory://{ns}/{rid}/{name}?expires={int(now) + int(expires_in)}"

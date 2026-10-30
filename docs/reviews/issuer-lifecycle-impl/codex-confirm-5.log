@@ -1,0 +1,1135 @@
+Reading additional input from stdin...
+OpenAI Codex v0.165.0
+--------
+workdir: /home/tony/projects/tessera
+model: gpt-6.1-sol
+provider: openai
+approval: never
+sandbox: danger-full-access
+reasoning effort: none
+reasoning summaries: none
+session id: 01a18b54-4328-7b22-8bea-ac11c1b80abb
+--------
+user
+Narrow confirmation for Project Tessera at /home/tony/projects/tessera (our own repository; read-only, no repo edits, no git writes; scratch only under a fresh mktemp -d). Your last pass: docs/reviews/issuer-lifecycle-impl/CODEX-CONFIRM-4.md (ILC-I4-01). Owner decision: the durable rotation write is removed; the drain's starting signer slot is floor(invocation wall-clock start / 600 s) mod number of slots (service/issuer/tessera_issue/pipeline.py; DESIGN.md; tests/test_lifecycle_round3.py). Run: cd service/issuer && .venv/bin/python -m pytest -q (219 expected). (1) Re-run your reduced-budget probe /tmp/tmp.6rbTsKov9q/test_rotation.py and the cold-start probe /tmp/tmp.pyt6bZDeCk/test_third.py: is GPG served? (2) Can the time-derived slot starve a queue: schedule drift, EventBridge redelivery landing repeatedly in windows of the same parity, Lambda retries, clock skew, the 10-minute schedule versus 600 s? If a parity lock-in is possible, how likely and what bounds it? (3) Any new defect. One-line verdict: ready for deployment work with the step-5 gate closed (remaining items being stated limits awaiting the author's termination decision), or not.
+codex
+I’ll check the prior finding and current changes, run the issuer suite and both probes, then assess whether the time-derived slot can starve GPG. I’ll keep the repository read-only and put scratch files in a fresh temporary directory.
+exec
+/bin/bash -lc 'cat /home/tony/.codex/plugins/cache/openai-curated-remote/superpowers/7.0.1/skills/using-superpowers/SKILL.md' in /home/tony/projects/tessera
+ succeeded in 0ms:
+---
+name: using-superpowers
+description: Use when starting any conversation - establishes how to find and use skills, requiring skill invocation before ANY response including clarifying questions
+---
+
+<SUBAGENT-STOP>
+If you were dispatched as a subagent to execute a specific task, ignore this skill.
+</SUBAGENT-STOP>
+
+<EXTREMELY-IMPORTANT>
+If you think there is even a 1% chance a skill might apply to what you are doing, you ABSOLUTELY MUST invoke the skill.
+
+IF A SKILL APPLIES TO YOUR TASK, YOU DO NOT HAVE A CHOICE. YOU MUST USE IT.
+
+This is not negotiable. You cannot rationalize your way out of this.
+</EXTREMELY-IMPORTANT>
+
+## The Rule
+
+**Invoke relevant or requested skills BEFORE any response or action** — including clarifying questions, exploring the codebase, or checking files. If it turns out wrong for the situation, you don't have to use it.
+
+**Before entering plan mode:** if you haven't already brainstormed, invoke the brainstorming skill first.
+
+Then announce "Using [skill] to [purpose]" and follow the skill exactly. If it has a checklist, create a todo per item.
+
+## Skill Priority
+
+When multiple skills apply, process skills come first — they set the approach, then implementation skills (frontend-design, etc.) carry it out. Brainstorming and systematic-debugging are Superpowers' most common process skills, but the rule holds for any of them.
+
+- "Let's build X" → superpowers:brainstorming first, then implementation skills.
+- "Fix this bug" → superpowers:systematic-debugging first, then domain skills.
+
+## Red Flags
+
+These thoughts mean STOP—you're rationalizing:
+
+| Thought | Reality |
+|---------|---------|
+| "This is just a simple question" | Questions are tasks. Check for skills. |
+| "I need more context first" | Skill check comes BEFORE clarifying questions. |
+| "Let me explore the codebase first" | Skills tell you HOW to explore. Check first. |
+| "I can check git/files quickly" | Files lack conversation context. Check for skills. |
+| "Let me gather information first" | Skills tell you HOW to gather information. |
+| "This doesn't need a formal skill" | If a skill exists, use it. |
+| "I remember this skill" | Skills evolve. Read current version. |
+| "This doesn't count as a task" | Action = task. Check for skills. |
+| "The skill is overkill" | Simple things become complex. Use it. |
+| "I'll just do this one thing first" | Check BEFORE doing anything. |
+| "This feels productive" | Undisciplined action wastes time. Skills prevent this. |
+| "I know what that means" | Knowing the concept ≠ using the skill. Invoke it. |
+
+## Platform Adaptation
+
+If your harness appears here, read its reference file for special instructions:
+
+- Claude Code: `references/claude-code-tools.md`
+- Codex: `references/codex-tools.md`
+- Pi: `references/pi-tools.md`
+- Antigravity: `references/antigravity-tools.md`
+- Hermes Agent: `references/hermes-tools.md`
+- Muse: `references/muse-tools.md`
+
+## User Instructions
+
+User instructions (CLAUDE.md, AGENTS.md, GEMINI.md, etc, direct requests) take precedence over skills, which in turn override default behavior. Only skip skill workflows or instructions when your human partner has explicitly told you to.
+
+exec
+/bin/bash -lc "rg -n 'ILC|lifecycle|CONFIRM-4' /home/tony/.codex/memories/MEMORY.md; rg --files -g AGENTS.md -g '*CONFIRM-4*' -g DESIGN.md -g test_lifecycle_round3.py -g pipeline.py" in /home/tony/projects/tessera
+ succeeded in 0ms:
+34:- Amendment 11, P3, FLOOR-MANIFEST.sha256, slot-2 custody, Option 1, Option 2, `1201 passed, 1 skipped, 2 warnings`, deployed-package identity, service/issuer/DEPLOY.md, issuance lifecycle, GCP, P-256
+53:- Before signing, add an explicit pending-ruling gate to `service/issuer/DEPLOY.md:55-60` and reconcile Amendment 11 `:270-271`'s lease-based expiry description with `docs/decisions/2026-10-29-issuance-lifecycle.md:57-76`, which uses complete negative evidence and no lease timing. The lifecycle retains a residual where timely eligibility may be observed but lost before persistence if evidence becomes permanently unavailable. [Task 3]
+60:- Symptom: Amendment 11 is described as ready for signature or deployment. Cause: the author has not ruled Option 1 or Option 2, deployment instructions assume slot-2 deployment, or consistency is treated as package/implementation/formal discharge. Fix: require the author's own ruling, align dependent instructions and lifecycle wording, then obtain deployment/package identity and other required evidence. [Task 3]
+docs/reviews/issuer-lifecycle-impl/CODEX-CONFIRM-4.md
+docs/reviews/issuance-lifecycle/CODEX-CONFIRM-4.md
+docs/reviews/amendment-11/CODEX-CONFIRM-4.md
+service/issuer/DESIGN.md
+service/issuer/tests/test_lifecycle_round3.py
+service/issuer/tessera_issue/pipeline.py
+prototype/policy-signer/DESIGN.md
+
+exec
+/bin/bash -lc 'cat docs/reviews/issuer-lifecycle-impl/CODEX-CONFIRM-4.md; cat /tmp/tmp.6rbTsKov9q/test_rotation.py; cat /tmp/tmp.pyt6bZDeCk/test_third.py' in /home/tony/projects/tessera
+ succeeded in 0ms:
+**Verdict: not ready for deployment work with the step-5 gate closed; a reduced-budget scheduling defect remains.**
+
+Validation: **217 passed in 130.67 seconds**. No repository edits or git writes; scratch: [/tmp/tmp.6rbTsKov9q](/tmp/tmp.6rbTsKov9q).
+
+**ILC-I4-01 — Medium: rotation can remain stuck when an empty first queue consumes the checkpoint budget.**
+
+At [pipeline.py:392](/home/tony/projects/tessera/service/issuer/tessera_issue/pipeline.py:392), an empty batch leaves rotation unchanged. A later non-empty batch triggers the rotation write without reserving its cost.
+
+Independent reproduction, using the real guarded adapters:
+
+- Poll budget **190 seconds**, SQS calls **60 seconds**, KMS empty, two valid GPG responses queued.
+- Two receives consume 120 seconds, leaving **60 seconds** after the reserve. The rotation write requires **73 seconds** admission and is refused. Request-position writes cannot rescue it under that budget.
+- After **12 polls**, durable rotation remained zero, both GPG signatures were absent, and both replies remained queued.
+- Forcing GPG to start under the **same budget** allowed both signatures to be recorded.
+
+This demonstrates avoidable scheduling starvation with obtainable responses. The reproduction uses a reduced budget; the original 290-second scenario is repaired. Evidence: [probe](/tmp/tmp.6rbTsKov9q/test_rotation.py), [log](/tmp/tmp.6rbTsKov9q/rotation.log). Reserve the rotation checkpoint before spending receives, and ensure empty-queue turns advance fairly.
+
+The other requested confirmations:
+
+1. **Original cold-start probe: repaired.** GPG was served, all four signatures were recorded, and the request reached `evidence`. Its old starvation assertion failed as expected. [Log](/tmp/tmp.6rbTsKov9q/third.log).
+2. **Write guarding: yes.** Rotation uses the same deadline-guarded `cursor_put` as other poller-position writes. Reads are strongly consistent; writes are unconditional, with infrastructure limiting the poller to one concurrent invocation. Budget refusal can nevertheless cause ILC-I4-01.
+3. **DESIGN drain wording: accurate.** [Lines 224–226](/home/tony/projects/tessera/service/issuer/DESIGN.md:224) correctly describe cooperative allocation and possible overshoot. The rotation statement needs qualification or the repair above.
+4. **No other new defect identified in this narrow pass.** Step 5 remains closed; diagnostic unavailability history authorizes no ending.import uuid
+from conftest import loc,key
+from test_lifecycle_confirm import aws_wire,SLOW,SlowClient
+from test_lifecycle import get,att
+from helpers import submit
+from tessera_issue import pipeline
+
+def setup(monkeypatch):
+    monkeypatch.setitem(SLOW,'sqs',0)
+    loc,_=aws_wire('sqs')
+    _,rid=submit(loc,str(uuid.uuid4()))
+    pipeline.poll(loc.iss)
+    for wk in loc.workers.values(): wk.process()
+    # Deliver KMS first, leave only the valid GPG replies awaiting collection.
+    for handle,body in loc.iss.signers['kms'].receive():
+        pipeline._take(loc.iss,'kms',loc.iss.signers['kms'],body)
+        loc.iss.signers['kms'].ack(handle)
+    loc.iss.requests.cursor_put({'drain_turn':0})
+    for signer in loc.iss.signers.values():
+        signer.responses.client._client._delay=60
+    return loc,rid
+
+def test_short_budget_empty_first_queue(monkeypatch):
+    loc,rid=setup(monkeypatch)
+    for i in range(12):
+        out=pipeline.poll(loc.iss,budget_s=190)
+        print('SHORT',i,out,loc.iss.requests.cursor_get())
+    print('RESULT',get(loc,rid)['stage'],[(k,bool(v['sig_sha256'])) for k,v in att(get(loc,rid))['jobs'].items()],len(loc.workers['gpg'].responses))
+    assert get(loc,rid)['stage']=='signing'
+    assert all(not v['sig_sha256'] for k,v in att(get(loc,rid))['jobs'].items() if 'gpg' in k)
+    # Control: starting with GPG at the same budget consumes the valid responses.
+    loc.iss.requests.cursor_put({'drain_turn':1})
+    for _ in range(6):
+        loc.iss.requests.cursor_put({'drain_turn':1})
+        pipeline.poll(loc.iss,budget_s=190)
+    print('CONTROL',get(loc,rid)['stage'])
+    assert all(v['sig_sha256'] for k,v in att(get(loc,rid))['jobs'].items() if 'gpg' in k)
+import sys,json,uuid
+sys.path.insert(0,'/home/tony/projects/tessera/service/issuer/tests')
+from conftest import loc,key
+from tessera_issue import pipeline
+from test_lifecycle import att,get,poll,to_evidence,bury,declared
+from test_lifecycle_confirm import aws_wire,SLOW
+from helpers import submit
+from tessera_issue.util import HOUR
+
+def test_cold_starts_starve_second_signer(monkeypatch):
+    monkeypatch.setitem(SLOW,'sqs',20)
+    loc,_=aws_wire('sqs')
+    _,rid=submit(loc,str(uuid.uuid4()))
+    pipeline.poll(loc.iss)
+    for wk in loc.workers.values(): wk.process()
+    junk=json.dumps({'request_id':'req-'+'0'*40,'status':'SIGNED','sig_b64':'AAAA'})
+    for n in range(8):
+        for _ in range(100): loc.workers['kms'].responses.send(junk)
+        loc.iss.drain_turn=0 # fresh Lambda issuer object; persistent stores and queues retained
+        pipeline.poll(loc.iss)
+    rec=get(loc,rid)
+    print('COLD',rec['stage'],[(k,v['sig_sha256'] is not None) for k,v in att(rec)['jobs'].items()],len(loc.workers['gpg'].responses))
+    assert rec['stage']=='signing'
+    assert all(not v['sig_sha256'] for k,v in att(rec)['jobs'].items() if 'gpg' in k)
+    assert len(loc.workers['gpg'].responses)>0
+    pipeline.poll(loc.iss) # a warm continuation starts with GPG
+    print('WARM',get(loc,rid)['stage'])
+    assert get(loc,rid)['stage']=='stamp'
+
+def test_no_snapshot_timely_capture_allowed(loc,key):
+    good=loc.iss.dns.capture
+    loc.iss.dns.capture=lambda now:b'bad'
+    _,rid=submit(loc,key)
+    a=att(to_evidence(loc,rid))
+    bury(loc,declared(a)+HOUR)
+    poll(loc)
+    assert get(loc,rid)['stage']=='snapshot'
+    loc.iss.dns.capture=good
+    poll(loc)
+    assert get(loc,rid)['stage']=='finalize'
+    assert att(get(loc,rid))['state']=='latched'
+
+def test_drain_share_is_cooperative_not_a_cap(monkeypatch):
+    monkeypatch.setitem(SLOW,'sqs',60)
+    loc,_=aws_wire('sqs')
+    q=loc.workers['kms'].responses
+    junk=json.dumps({'request_id':'req-'+'0'*40,'status':'SIGNED','sig_b64':'AAAA'})
+    for _ in range(30): q.send(junk)
+    from tessera_issue import deadline
+    start=loc.clock()
+    with deadline.Installed(deadline.Deadline(loc.iss.elapsed_clock,290,10)):
+        pipeline.drain(loc.iss,share_s=290/3)
+    span=loc.clock()-start
+    print('DRAIN_SHARE',span,290/3)
+    assert span>290/3
+
+exec
+/bin/bash -lc "cat /home/tony/.codex/plugins/cache/openai-curated-remote/superpowers/7.0.1/skills/verification-before-completion/SKILL.md; rg -n 'slot|rotation|600|drain|clock' service/issuer/tessera_issue/pipeline.py service/issuer/DESIGN.md service/issuer/tests/test_lifecycle_round3.py; rg --files -g AGENTS.md /home/tony/projects /home/tony 2>/dev/null | head -30" in /home/tony/projects/tessera
+ succeeded in 0ms:
+---
+name: verification-before-completion
+description: Use when about to claim work is complete, fixed, or passing, before committing or creating PRs - requires running verification commands and confirming output before making any success claims; evidence before assertions always
+---
+
+# Verification Before Completion
+
+## Overview
+
+**Core principle:** Evidence before claims, always.
+
+**Violating the letter of this rule is violating the spirit of this rule.**
+
+## The Iron Law
+
+```
+NO COMPLETION CLAIMS WITHOUT FRESH VERIFICATION EVIDENCE
+```
+
+If you haven't run the verification command in this message, you cannot claim it passes.
+
+## The Gate Function
+
+```
+BEFORE claiming any status or expressing satisfaction:
+
+1. IDENTIFY: What command proves this claim?
+2. RUN: Execute the FULL command (fresh, complete)
+3. READ: Full output, check exit code, count failures
+4. VERIFY: Does output confirm the claim?
+   - If NO: State actual status with evidence
+   - If YES: State claim WITH evidence
+5. ONLY THEN: Make the claim
+
+Skip any step = lying, not verifying
+```
+
+## Common Failures
+
+| Claim | Requires | Not Sufficient |
+|-------|----------|----------------|
+| Tests pass | Test command output: 0 failures | Previous run, "should pass" |
+| Linter clean | Linter output: 0 errors | Partial check, extrapolation |
+| Build succeeds | Build command: exit 0 | Linter passing, logs look good |
+| Bug fixed | Test original symptom: passes | Code changed, assumed fixed |
+| Regression test works | Red-green cycle verified | Test passes once |
+| Agent completed | VCS diff shows changes | Agent reports "success" |
+| Requirements met | Line-by-line checklist | Tests passing |
+
+## Red Flags - STOP
+
+- Using "should", "probably", "seems to"
+- Expressing satisfaction before verification ("Great!", "Perfect!", "Done!", etc.)
+- About to commit/push/PR without verification
+- Trusting agent success reports
+- Relying on partial verification
+- Thinking "just this once"
+- Tired and wanting work over
+- **ANY wording implying success without having run verification**
+
+## Rationalization Prevention
+
+| Excuse | Reality |
+|--------|---------|
+| "Should work now" | RUN the verification |
+| "I'm confident" | Confidence ≠ evidence |
+| "Just this once" | No exceptions |
+| "Linter passed" | Linter ≠ compiler |
+| "Agent said success" | Verify independently |
+| "I'm tired" | Exhaustion ≠ excuse |
+| "Partial check is enough" | Partial proves nothing |
+| "Different words so rule doesn't apply" | Spirit over letter |
+
+## Key Patterns
+
+**Tests:**
+```
+✅ [Run test command] [See: 34/34 pass] "All tests pass"
+❌ "Should pass now" / "Looks correct"
+```
+
+**Regression tests (TDD Red-Green):**
+```
+✅ Write → Run (pass) → Revert fix → Run (MUST FAIL) → Restore → Run (pass)
+❌ "I've written a regression test" (without red-green verification)
+```
+
+**Build:**
+```
+✅ [Run build] [See: exit 0] "Build passes"
+❌ "Linter passed" (linter doesn't check compilation)
+```
+
+**Requirements:**
+```
+✅ Re-read plan → Create checklist → Verify each → Report gaps or completion
+❌ "Tests pass, phase complete"
+```
+
+**Agent delegation:**
+```
+✅ Agent reports success → Check VCS diff → Verify changes → Report actual state
+❌ Trust agent report
+```
+
+## When To Apply
+
+**ALWAYS before:**
+- ANY variation of success/completion claims
+- ANY expression of satisfaction
+- ANY positive statement about work state
+- Committing, PR creation, task completion
+- Moving to next task
+- Delegating to agents
+
+**Rule applies to:**
+- Exact phrases
+- Paraphrases and synonyms
+- Implications of success
+- ANY communication suggesting completion/correctness
+service/issuer/tests/test_lifecycle_round3.py:34:    clock = [0]
+service/issuer/tests/test_lifecycle_round3.py:35:    with deadline.Installed(deadline.Deadline(lambda: clock[0], 290, 10)):
+service/issuer/tests/test_lifecycle_round3.py:40:def test_ILCI2_01_the_invocation_deadline_runs_on_a_monotonic_clock_not_the_wall_clock(loc, key):
+service/issuer/tests/test_lifecycle_round3.py:41:    """A wall-clock step during a poll (NTP, a skewed host) does not consume or extend the invocation's time: the
+service/issuer/tests/test_lifecycle_round3.py:42:    deadline is measured on the issuer's elapsed (monotonic) clock."""
+service/issuer/tests/test_lifecycle_round3.py:45:    wall = loc.iss.clock
+service/issuer/tests/test_lifecycle_round3.py:50:        return wall() + 10_000 * steps[0]                 # the wall clock jumps forward on every reading
+service/issuer/tests/test_lifecycle_round3.py:51:    loc.iss.clock = stepping_wall
+service/issuer/tests/test_lifecycle_round3.py:53:    loc.iss.clock = wall
+service/issuer/tests/test_lifecycle_round3.py:84:    loc.clock.t = declared(att(rec)) + DELTA + 100
+service/issuer/tests/test_lifecycle_round3.py:118:            loc.clock.advance(20)
+service/issuer/tests/test_lifecycle_round3.py:152:    """Fairness between work classes: draining signer responses has a share of each invocation, so a queue that is
+service/issuer/tests/test_lifecycle_round3.py:196:    loc.clock.t = declared(a) + 2 * HOUR
+service/issuer/tests/test_lifecycle_round3.py:211:    loc.clock.t = declared(a) + DELTA + 100
+service/issuer/tests/test_lifecycle_round3.py:219:def test_ILCI3_01_the_drain_rotation_survives_cold_starts(monkeypatch):
+service/issuer/tests/test_lifecycle_round3.py:222:    signers rebuilt KMS first) before every poll. The starting slot is persisted with the poller's position, so the
+service/issuer/tests/test_lifecycle_round3.py:234:        for attr in ("drain_turn",):                      # a cold start: nothing kept in memory
+service/issuer/tests/test_lifecycle_round3.py:245:    wait; every SQS request takes 60 s; every poll has a 190 s budget. The starting slot is derived from the poll's
+service/issuer/tests/test_lifecycle_round3.py:265:def test_ILCI4_01_the_starting_slot_alternates_by_schedule_window(loc):
+service/issuer/tests/test_lifecycle_round3.py:267:    real = pipeline._drain_start_slot
+service/issuer/tests/test_lifecycle_round3.py:272:    pipeline._drain_start_slot = record
+service/issuer/tests/test_lifecycle_round3.py:276:            loc.clock.advance(600)
+service/issuer/tests/test_lifecycle_round3.py:278:        pipeline._drain_start_slot = real
+service/issuer/DESIGN.md:19:| Signers | Two **policy signers** behind one interface: the issuer enqueues a frame and reads a signed response | SQS request and response queues per slot. The slot-2 signer exists (GCP). The KMS-slot signer runs wherever the author's decision puts it. The issuer holds no signing credential. |
+service/issuer/DESIGN.md:71:  (`SIGNING_STOPPED`). The stand-in signer does this. **Open:** the deployed slot-2 signer and the KMS-slot signer
+service/issuer/DESIGN.md:99:- **IS-02:** COMPLETE is decided on a fresh clock in the terminal transition, and `ended_at` is the actual
+service/issuer/DESIGN.md:107:  obligation first and reads the clock only after that. COMPLETE is then committed *unconfirmed* and settled
+service/issuer/DESIGN.md:108:  (`api.settle`): whoever reads the committed record and then reads the clock before the deadline confirms it
+service/issuer/DESIGN.md:120:  (CF3-01): `docs/decisions/2026-10-27-service-clock-tolerance.md`. `ended_at` is the decision's reading, which is
+service/issuer/DESIGN.md:124:- **CF2-02, CF3-02, CF3-03 (clock after reads):** `status`, `receipt`, `submit` and repeat submissions read the
+service/issuer/DESIGN.md:125:  clock after the records they decide on, so a slow read cannot carry a stale clock past expiry or the acceptance
+service/issuer/DESIGN.md:132:- **CF-03 (expiry at minting):** the receipt endpoint re-reads the record and the clock after the object check and
+service/issuer/DESIGN.md:214:  "never overrun" claim is withdrawn). One deadline (`tessera_issue/deadline.py`), measured on a monotonic clock,
+service/issuer/DESIGN.md:223:  requests are enumerated in bounded pages from a durable position moved before each request (ILC-I2-04), and draining
+service/issuer/DESIGN.md:226:  one slow unit can overrun it; it is not a total-time claim. The signer slot the drain starts with is derived from
+service/issuer/DESIGN.md:227:  the poll's scheduled time, floor(the invocation's wall-clock start reading / 600 s) mod the number of slots
+service/issuer/DESIGN.md:229:  windows; two polls in one window may start with the same slot, and the next window alternates. Running out of time never ends an attempt.
+service/issuer/DESIGN.md:253:  open. `unavailable_since` and `failed_intervals` (runs of `fetch_start // 600`) are written for diagnosis only.
+service/issuer/tessera_issue/pipeline.py:11:Each poll first drains every signer response queue (E-02), then advances each ACCEPTED request by at most one stage,
+service/issuer/tessera_issue/pipeline.py:136:DRAIN_SHARE = 1 / 3              # ILC-I2-04: at most this share of an invocation drains signer responses
+service/issuer/tessera_issue/pipeline.py:150:    return deadline.CURRENT.get() or deadline.Deadline(iss.clock, float("inf"), 0)
+service/issuer/tessera_issue/pipeline.py:170:    """One scheduled tick under one deadline (ILC-I-02; its clock is monotonic, ILC-I2-01). Work classes share the
+service/issuer/tessera_issue/pipeline.py:171:    invocation (ILC-I2-04): draining signer responses may use at most DRAIN_SHARE of it; requests then get the rest.
+service/issuer/tessera_issue/pipeline.py:175:    wall_start = iss.clock()                           # ILC-I4-01: the invocation's start reading (schedule window)
+service/issuer/tessera_issue/pipeline.py:176:    d = deadline.Deadline(getattr(iss, "elapsed_clock", None) or iss.clock,          # ILC-I2-01: monotonic
+service/issuer/tessera_issue/pipeline.py:178:    out = {"drained": 0, "advanced": {}, "cleaned": 0}
+service/issuer/tessera_issue/pipeline.py:181:            out["drained"] = drain(iss, share_s=DRAIN_SHARE * d.limit, wall_start=wall_start)
+service/issuer/tessera_issue/pipeline.py:194:    keep = {k: v for k, v in position.items() if k not in ("token", "skip", "drain_turn")}
+service/issuer/tessera_issue/pipeline.py:239:    now = iss.clock()
+service/issuer/tessera_issue/pipeline.py:268:    now = max(now, iss.clock())                        # ended_at read after the obligation is durable (IS-02)
+service/issuer/tessera_issue/pipeline.py:321:    seen = iss.clock()                                 # read after the record: no earlier than the end's commit
+service/issuer/tessera_issue/pipeline.py:345:    now, n = iss.clock(), 0
+service/issuer/tessera_issue/pipeline.py:356:# ------------------------------------------------------------------------------------------------ E-02 drain
+service/issuer/tessera_issue/pipeline.py:362:def _drain_start_slot(iss, wall_start, n):
+service/issuer/tessera_issue/pipeline.py:363:    """ILC-I3-01 / ILC-I4-01 (owner decision): the signer slot the drain starts with is derived from the poll's
+service/issuer/tessera_issue/pipeline.py:364:    SCHEDULED time: floor(wall-clock start reading / poll interval) mod the number of slots. It needs no write (so no
+service/issuer/tessera_issue/pipeline.py:366:    windows; two polls in one window may start with the same slot, and the next window alternates."""
+service/issuer/tessera_issue/pipeline.py:370:def drain(iss, max_batches=50, share_s=float("inf"), wall_start=None):
+service/issuer/tessera_issue/pipeline.py:371:    """Read every slot's response queue. Every response is logged (request id, slot, status, frame hash when the
+service/issuer/tessera_issue/pipeline.py:372:    id is known, signature hash) whether or not it is used, and then deleted from the queue. ILC-I2-04: draining
+service/issuer/tessera_issue/pipeline.py:376:    start = d.clock()
+service/issuer/tessera_issue/pipeline.py:379:        return d.clock() - start >= share_s or d.available() < MIN_REQUEST_S
+service/issuer/tessera_issue/pipeline.py:380:    slots = list(iss.signers.items())
+service/issuer/tessera_issue/pipeline.py:381:    turn = _drain_start_slot(iss, iss.clock() if wall_start is None else wall_start, len(slots))
+service/issuer/tessera_issue/pipeline.py:383:        for slot, signer in slots[turn:] + slots[:turn]:
+service/issuer/tessera_issue/pipeline.py:394:                        _take(iss, slot, signer, body)
+service/issuer/tessera_issue/pipeline.py:398:                        iss.note("response", slot, "not taken:", type(e).__name__, e)
+service/issuer/tessera_issue/pipeline.py:403:        iss.note("drain out of time:", e)
+service/issuer/tessera_issue/pipeline.py:425:def _take(iss, slot, signer, body):
+service/issuer/tessera_issue/pipeline.py:429:    now = iss.clock()
+service/issuer/tessera_issue/pipeline.py:441:    entry = {"at": rfc3339(now), "slot": slot,
+service/issuer/tessera_issue/pipeline.py:448:    if idx is None or idx.get("slot") != slot:
+service/issuer/tessera_issue/pipeline.py:523:                    and iss.signers[j["slot"]].verify(frame, sig)):
+service/issuer/tessera_issue/pipeline.py:539:    iss.signers[j["slot"]].send(j["request_id"], frame, sign_by=iss.window.sign_until, stash=stash)
+service/issuer/tessera_issue/pipeline.py:603:    for job, slot, fname in JOBS:
+service/issuer/tessera_issue/pipeline.py:604:        srid = request_id(f"{rec['rid']}/{aid}", slot, frames[fname])
+service/issuer/tessera_issue/pipeline.py:605:        jobs[job] = {"slot": slot, "frame": fname, "frame_sha256": sha256hex(frames[fname]), "request_id": srid,
+service/issuer/tessera_issue/pipeline.py:607:        iss.requests.sigreq_put(srid, {"rid": rec["rid"], "attempt": aid, "job": job, "slot": slot,
+service/issuer/tessera_issue/pipeline.py:616:    for slot in iss.signers:
+service/issuer/tessera_issue/pipeline.py:617:        iss.signers[slot].wake()                     # E-01: started on demand, once per batch
+service/issuer/tessera_issue/pipeline.py:637:        iss.requests.sigreq_put(j["request_id"], {"rid": rec["rid"], "attempt": a["id"], "job": k, "slot": j["slot"],
+service/issuer/tessera_issue/pipeline.py:641:    slots = set()
+service/issuer/tessera_issue/pipeline.py:644:        slots.add(j["slot"])
+service/issuer/tessera_issue/pipeline.py:645:    for s in slots:
+service/issuer/tessera_issue/pipeline.py:657:        if (s is None or sha256hex(s) != j["sig_sha256"] or not iss.signers[j["slot"]].verify(f, s)
+service/issuer/tessera_issue/pipeline.py:666:        for (f, obj, s, _), slot in zip(read_anchor(a_sig, registered_codecs(ALG)), ("kms", "gpg")):
+service/issuer/tessera_issue/pipeline.py:667:            if not iss.signers[slot].verify(f, s) or obj["common"]["manifest_sha256"] != sha256hex(get("manifest")):
+service/issuer/tessera_issue/pipeline.py:913:    fetch_start = iss.clock()
+service/issuer/tessera_issue/pipeline.py:975:    now = iss.clock()                                 # Send: the decision's reading
+service/issuer/tessera_issue/pipeline.py:1120:    result = deadline.guarded(deadline.PRESHIP_WORST_S, iss.preship.check, bundle, hdrs, iss.clock(),
+/home/tony/projects/promptguard2/AGENTS.md
+/home/tony/projects/promptguard2/AGENTS.md
+/home/tony/projects/promptguard2/openspec/AGENTS.md
+/home/tony/projects/promptguard2/openspec/AGENTS.md
+/home/tony/projects/mallku/AGENTS.md
+/home/tony/projects/teaching/2025/CPSC436C-2025W-T2/AGENTS.md
+/home/tony/projects/eidolon/AGENTS.md
+/home/tony/projects/eidolon/AGENTS.md
+/home/tony/projects/promptguard/AGENTS.md
+/home/tony/projects/promptguard/openspec/AGENTS.md
+/home/tony/projects/tupay/AGENTS.md
+/home/tony/projects/mallku/AGENTS.md
+/home/tony/projects/teaching/2025/CPSC436C-2025W-T1/tmp/capstone_code_repos/CPSC436C-2025W-T1_capstone-final-project/frontend/AGENTS.md
+/home/tony/projects/teaching/2025/CPSC436C-2025W-T1/tmp/capstone_code_repos/CPSC436C-2025W-T1_capstone_deho/AGENTS.md
+/home/tony/projects/promptguard/AGENTS.md
+/home/tony/projects/teaching/2025/CPSC436C-2025W-T2/AGENTS.md
+/home/tony/projects/promptguard/openspec/AGENTS.md
+/home/tony/projects/teaching/2025/CPSC436C-2025W-T1/AGENTS.md
+/home/tony/projects/teaching/2025/CPSC416-2025W-T2/AGENTS.md
+/home/tony/projects/tupay/AGENTS.md
+/home/tony/projects/teaching/2025/CPSC436C-2025W-T1/capstone_clones/u444982/AGENTS.md
+/home/tony/projects/teaching/2025/CPSC436C-2025W-T1/capstone_clones/u466685/AGENTS.md
+/home/tony/projects/teaching/2025/CPSC436C-2025W-T1/capstone_clones/u411995/AGENTS.md
+/home/tony/projects/teaching/2025/CPSC436C-2025W-T1/tmp/capstone_code_repos/CPSC436C-2025W-T1_capstone-final-project/frontend/AGENTS.md
+/home/tony/projects/teaching/2025/CPSC436C-2025W-T1/tmp/capstone_code_repos/CPSC436C-2025W-T1_capstone_deho/AGENTS.md
+/home/tony/projects/teaching/2025/CPSC436C-2025W-T1/AGENTS.md
+/home/tony/projects/teaching/2025/CPSC436C-2025W-T1/capstone_clones/u421168/frontend/AGENTS.md
+/home/tony/projects/teaching/2025/CPSC436C-2025W-T1/capstone_clones/u444982/AGENTS.md
+/home/tony/git-backup/wam-threadripper/promptguard.untracked/promptguard2/AGENTS.md
+/home/tony/projects/teaching/2025/CPSC436C-2025W-T1/capstone_clones/u466685/AGENTS.md
+
+codex
+I’m using the verification-before-completion skill to base the verdict on fresh results. The durable rotation write is gone. The remaining question is whether invocation start times reliably visit both slot parities.
+exec
+/bin/bash -lc 'mktemp -d' in /home/tony/projects/tessera
+ succeeded in 0ms:
+/tmp/tmp.vRDSdlYGSl
+
+exec
+/bin/bash -lc "sed -n '160,205p' service/issuer/tessera_issue/pipeline.py; sed -n '356,407p' service/issuer/tessera_issue/pipeline.py; sed -n '215,290p' service/issuer/tests/test_lifecycle_round3.py; rg -n 'rate\\(|cron\\(|retry|Retry|600|10 minutes|MaximumEventAge' service/issuer/infra* service/issuer -g '*.tf' -g '*yaml' -g '*.py' | head -65; sed -n '1,130p' service/issuer/tests/test_lifecycle_confirm.py" in /home/tony/projects/tessera
+ succeeded in 0ms:
+    return f() if f else 4 * deadline.HTTP_WORST_S
+
+
+def _tip(iss):
+    deadline.ensure(_tip_worst(iss), "tip")
+    return iss.headers.tip()
+
+
+# ------------------------------------------------------------------------------------------------ the poller
+def poll(iss, budget_s=None):
+    """One scheduled tick under one deadline (ILC-I-02; its clock is monotonic, ILC-I2-01). Work classes share the
+    invocation (ILC-I2-04): draining signer responses may use at most DRAIN_SHARE of it; requests then get the rest.
+    Requests are enumerated in bounded pages from a DURABLE continuation position (RequestStore.active_page and the
+    poller cursor), and the position is moved past a request BEFORE it is worked on, so neither a long active list
+    nor a request that exhausts (or kills) an invocation takes the others' turns. -> summary dict."""
+    wall_start = iss.clock()                           # ILC-I4-01: the invocation's start reading (schedule window)
+    d = deadline.Deadline(getattr(iss, "elapsed_clock", None) or iss.clock,          # ILC-I2-01: monotonic
+                          iss.budget_s if budget_s is None else budget_s, POLL_RESERVE_S)
+    out = {"drained": 0, "advanced": {}, "cleaned": 0}
+    with deadline.Installed(d):
+        try:
+            out["drained"] = drain(iss, share_s=DRAIN_SHARE * d.limit, wall_start=wall_start)
+            _serve_requests(iss, d, out)
+            if d.available() >= MIN_REQUEST_S:
+                out["cleaned"] = cleanup(iss)
+        except OutOfBudget as e:                       # out of time outside a request's turn: resumed next poll
+            iss.note("poll out of time:", e)
+            out["out_of_time"] = True
+    return out
+
+
+def _serve_requests(iss, d, out):
+    store = iss.requests
+    position = _position(iss)
+    keep = {k: v for k, v in position.items() if k not in ("token", "skip", "drain_turn")}
+
+    def put(pos):
+        store.cursor_put(dict(keep, **pos))
+    cur = {"token": position.get("token"), "skip": position.get("skip", 0)}
+    seen, served, wrapped = set(), 0, False
+    while True:
+        rids, nxt = store.active_page(cur["token"], ENUM_PAGE)
+        if not rids and cur["token"] is not None and not wrapped:
+            cur, wrapped = {"token": None, "skip": 0}, True            # end of the list: start again from the top
+            continue
+        for i in range(cur["skip"], len(rids)):
+# ------------------------------------------------------------------------------------------------ E-02 drain
+def _position(iss):
+    cur = iss.requests.cursor_get()
+    return cur if isinstance(cur, dict) else {}
+
+
+def _drain_start_slot(iss, wall_start, n):
+    """ILC-I3-01 / ILC-I4-01 (owner decision): the signer slot the drain starts with is derived from the poll's
+    SCHEDULED time: floor(wall-clock start reading / poll interval) mod the number of slots. It needs no write (so no
+    budget can be spent before it takes effect), survives cold starts, and alternates across the 10-minute schedule
+    windows; two polls in one window may start with the same slot, and the next window alternates."""
+    return (int(wall_start) // POLL_INTERVAL_S) % max(1, n)
+
+
+def drain(iss, max_batches=50, share_s=float("inf"), wall_start=None):
+    """Read every slot's response queue. Every response is logged (request id, slot, status, frame hash when the
+    id is known, signature hash) whether or not it is used, and then deleted from the queue. ILC-I2-04: draining
+    stops once it has used `share_s` of the invocation (or the deadline refuses a request); what is left stays queued
+    and is delivered again, so a continuously replenished queue cannot starve request work."""
+    n, d = 0, _deadline(iss)
+    start = d.clock()
+
+    def over():
+        return d.clock() - start >= share_s or d.available() < MIN_REQUEST_S
+    slots = list(iss.signers.items())
+    turn = _drain_start_slot(iss, iss.clock() if wall_start is None else wall_start, len(slots))
+    try:
+        for slot, signer in slots[turn:] + slots[:turn]:
+            for _ in range(max_batches):
+                if over():
+                    return n
+                batch = signer.receive(10)
+                if not batch:
+                    break
+                for handle, body in batch:
+                    if over():
+                        return n                   # not acknowledged: delivered again after the visibility timeout
+                    try:
+                        _take(iss, slot, signer, body)
+                    except OutOfBudget:
+                        raise
+                    except Exception as e:  # noqa: BLE001  not acknowledged: the queue delivers it again
+                        iss.note("response", slot, "not taken:", type(e).__name__, e)
+                        continue
+                    signer.ack(handle)
+                    n += 1
+    except OutOfBudget as e:
+        iss.note("drain out of time:", e)
+    return n
+
+
+def _bounded(raw):
+    assert end["reason"] == "SNAPSHOT_IMPOSSIBLE" and end["evidence"]["snapshot_reason"] == "NO_SNAPSHOT"
+
+
+# ================================================================================================ ILC-I3-01
+def test_ILCI3_01_the_drain_rotation_survives_cold_starts(monkeypatch):
+    """Codex's eight-cold-start probe (docs/reviews/issuer-lifecycle-impl/CODEX-CONFIRM-3.md): 20 s SQS calls, the
+    KMS response queue refilled before every poll, and a cold start (a fresh issuer object: in-memory state lost,
+    signers rebuilt KMS first) before every poll. The starting slot is persisted with the poller's position, so the
+    GPG queue gets its turns and the request reaches stamp."""
+    monkeypatch.setitem(SLOW, "sqs", 20)
+    loc, _ = aws_wire("sqs")
+    _, rid = submit(loc, str(uuid.uuid4()))
+    pipeline.poll(loc.iss)
+    for wk in loc.workers.values():
+        wk.process()
+    junk = json.dumps({"request_id": "req-" + "0" * 40, "status": "SIGNED", "sig_b64": "AAAA"})
+    for _ in range(8):
+        for _ in range(100):
+            loc.workers["kms"].responses.send(junk)
+        for attr in ("drain_turn",):                      # a cold start: nothing kept in memory
+            loc.iss.__dict__.pop(attr, None)
+        pipeline.poll(loc.iss)
+        if get(loc, rid)["stage"] != "signing":
+            break
+    assert get(loc, rid)["stage"] in ("stamp", "evidence")
+
+
+# ================================================================================================ ILC-I4-01
+def test_ILCI4_01_an_empty_first_queue_under_a_reduced_budget_does_not_starve_the_other_signer(monkeypatch):
+    """Codex's reduced-budget probe (docs/reviews/issuer-lifecycle-impl/CODEX-CONFIRM-4.md): only valid GPG replies
+    wait; every SQS request takes 60 s; every poll has a 190 s budget. The starting slot is derived from the poll's
+    scheduled time (no write to spend budget on), so it alternates across schedule windows and GPG is served."""
+    monkeypatch.setitem(SLOW, "sqs", 0)
+    loc, _ = aws_wire("sqs")
+    _, rid = submit(loc, str(uuid.uuid4()))
+    pipeline.poll(loc.iss)
+    for wk in loc.workers.values():
+        wk.process()
+    for handle, body in loc.iss.signers["kms"].receive():         # KMS delivered; only GPG replies wait
+        pipeline._take(loc.iss, "kms", loc.iss.signers["kms"], body)
+        loc.iss.signers["kms"].ack(handle)
+    for signer in loc.iss.signers.values():
+        signer.responses.client._client._delay = 60
+    for _ in range(12):
+        pipeline.poll(loc.iss, budget_s=190)
+        if all(v["sig_sha256"] for v in att(get(loc, rid))["jobs"].values()):
+            break
+    assert all(v["sig_sha256"] for k, v in att(get(loc, rid))["jobs"].items() if "gpg" in k)
+
+
+def test_ILCI4_01_the_starting_slot_alternates_by_schedule_window(loc):
+    starts = []
+    real = pipeline._drain_start_slot
+
+    def record(iss, wall, n):
+        starts.append(real(iss, wall, n))
+        return starts[-1]
+    pipeline._drain_start_slot = record
+    try:
+        for _ in range(4):
+            pipeline.poll(loc.iss)
+            loc.clock.advance(600)
+    finally:
+        pipeline._drain_start_slot = real
+    assert starts == [starts[0], 1 - starts[0], starts[0], 1 - starts[0]]
+service/issuer/infra/main.tf:159:  message_retention_seconds  = 1209600 # 14 days: late answers stay until the poller logs and deletes them (E-02)
+service/issuer/infra/main.tf:374:  schedule_expression = "rate(10 minutes)"
+service/issuer/infra/main.tf:159:  message_retention_seconds  = 1209600 # 14 days: late answers stay until the poller logs and deletes them (E-02)
+service/issuer/infra/main.tf:374:  schedule_expression = "rate(10 minutes)"
+service/issuer/tests/test_states.py:189:    assert [e for e in rec["events"] if e[1] == "preship-retry"][-1][3] == "UNVERIFIABLE/GIT_SIGNER_NOT_CONFIGURED"
+service/issuer/tests/test_faults.py:201:    assert w.sign_until < rec["ended_at"] <= w.sign_until + 600
+service/issuer/tessera_issue/stand_in.py:35:        self.blocks = {base_height: {"time": clock() - 600, "txs": [sha256d(b"TEST coinbase %d" % base_height)]}}
+service/issuer/tessera_issue/stand_in.py:167:    for i, b in enumerate(rdata):
+service/issuer/tessera_issue/stand_in.py:224:                (D, T_DNSKEY, [self.w_ksk.rdata, self.w_zsk.rdata], 3600, self.w_ksk, D),
+service/issuer/tessera_issue/stand_in.py:317:            self.clock.advance(600)
+service/issuer/tests/helpers.py:36:                        "--bundle", str(out / "bundle.json")], capture_output=True, text=True, timeout=600)
+service/issuer/tests/test_aws_adapters.py:154:        clock.advance(600)
+service/issuer/tests/test_lifecycle_round3.py:95:                         ("RRSIG_TIME_AMBIGUOUS", "snapshot"), ("KSK_OUTSIDE_RELIANCE_PERIOD", "retry"),
+service/issuer/tests/test_lifecycle_round3.py:96:                         ("TRUST_HORIZON", "retry"), ("NO_TRUSTED_KSK_USABLE", "retry"),
+service/issuer/tests/test_lifecycle_round3.py:97:                         ("TRUSTED_KSK_SIGNATURE_INVALID", "retry"), ("DNSSEC_SIGNATURE_INVALID", "retry")]:
+service/issuer/tests/test_lifecycle_round3.py:276:            loc.clock.advance(600)
+service/issuer/tessera_issue/pipeline.py:26:            PRESERVED presentation; pre-ship checks (verifier library); ship, or recapture the snapshot, or retry, or
+service/issuer/tessera_issue/pipeline.py:127:ROW_RANK = {r: i for i, r in enumerate(ROWS)}
+service/issuer/tessera_issue/pipeline.py:314:    CF-02: a writer that read the request while it was ACCEPTED (an upload retry, a response consumer, a stale
+service/issuer/tessera_issue/pipeline.py:632:    resend = [(k, j) for k, j in jobs.items() if not j["sig_sha256"] and now - j["sent_at"] >= iss.signer_retry_s]
+service/issuer/tessera_issue/pipeline.py:798:        out = {h: seg[80 * i:80 * (i + 1)] for i, h in enumerate(hs)}
+service/issuer/tessera_issue/pipeline.py:1024:      "retry"     anything else, including every configuration-dependent snapshot result (13.5 and 13.4's header
+service/issuer/tessera_issue/pipeline.py:1026:    Without a ledger (no per-row result) nothing is frozen or snapshot: retry."""
+service/issuer/tessera_issue/pipeline.py:1028:        return "retry", None
+service/issuer/tessera_issue/pipeline.py:1039:    return "retry", bad[0] if bad else None
+service/issuer/tessera_issue/pipeline.py:1142:    if last[1:] != ["preship-retry", aid, what]:
+service/issuer/tessera_issue/pipeline.py:1144:        _event(rec, now, "preship-retry", aid, what)
+service/issuer/tests/test_confirm_fixes.py:157:    def late(ns, r, name, data):                             # the retry's S3 write overlaps the 15-minute failure
+service/issuer/tests/test_confirm_fixes.py:267:    loc.clock.t = B_of(a) + 3600
+service/issuer/tessera_issue/local.py:30:    def tick(self, run_signers=True, mine=True, step=600):
+service/issuer/tests/test_e2e.py:58:    rids = [submit(loc, k, f"request {i}".encode())[1] for i, k in enumerate(keys)]
+service/issuer/tessera_issue/ots.py:88:        for i, it in enumerate(self.items):
+service/issuer/tests/test_lifecycle.py:287:    loc.clock.t = B_of(a) + 600
+service/issuer/tests/test_lifecycle.py:317:    """Resend: an ending write retried after an ambiguous response applies once; the retry fails its guard."""
+service/issuer/tests/test_lifecycle.py:520:    for t in [b - 600, b, b + 1, b + 600, b + 1200, b + DAY, b + 30 * DAY, b + 60 * DAY]:
+service/issuer/tessera_issue/lambda_app.py:2:poller_handler (EventBridge schedule, every 10 minutes; reserved concurrency 1). from_env() builds the issuer from
+service/issuer/tessera_issue/service.py:12:POLL_INTERVAL_S = 600               # the poller's schedule (infra: rate(10 minutes)); indexes failed_intervals, which
+service/issuer/tessera_issue/service.py:46:    signer_retry_s: int = SIGNER_RETRY_S
+service/issuer/tests/test_infra.py:92:    assert 'schedule_expression = "rate(10 minutes)"' in m and "reserved_concurrent_executions = 1" in m
+service/issuer/tests/test_independence.py:25:                for n, line in enumerate(f.read_text().splitlines(), 1) if FORBIDDEN.search(line)]
+service/issuer/tessera_issue/api.py:93:        rec = _finish_upload(iss, rec, body) or rec           # IS-05: a retry completes an interrupted upload
+service/issuer/tessera_issue/api.py:104:    cur = iss.requests.get(rec["rid"])                         # moved on concurrently (another retry, the poller)
+service/issuer/tests/test_lifecycle_confirm.py:42:    assert "KSK_OUTSIDE_RELIANCE_PERIOD" in [e for e in rec["events"] if e[1] == "preship-retry"][-1][3]
+service/issuer/tests/test_lifecycle_confirm.py:55:    for row, reason, kind in [("13.5", "KSK_OUTSIDE_RELIANCE_PERIOD", "retry"), ("13.5", "RRSIG_NOT_VALID_AT_EVAL_TIME",
+service/issuer/tests/test_lifecycle_confirm.py:57:                              ("13.4", "OTS_MERKLE_MISMATCH", "retry"), ("13.7", "SNAPSHOT_TIME", "snapshot"),
+service/issuer/tests/test_lifecycle_confirm.py:140:        loc.clock.advance(600)
+service/issuer/tests/test_lifecycle_confirm.py:151:def test_ILCI02_the_worst_case_counts_explorers_and_retry_attempts():
+service/issuer/tests/test_lifecycle_confirm.py:267:        loc.clock.advance(600)
+service/issuer/tessera_issue/util.py:14:EPS, DELTA, K = 24 * 3600, 72 * 3600, 6                     # profile section 1; the verifier owns them
+service/issuer/tessera_issue/util.py:15:HOUR, DAY = 3600, 86400
+service/issuer/tessera_issue/util.py:66:    return _days_from_civil(y, mo, d) * 86400 + int(s[11:13]) * 3600 + int(s[14:16]) * 60 + int(s[17:19])
+service/issuer/tessera_issue/util.py:82:    return f"{y:04d}-{m:02d}-{d:02d}T{rem // 3600:02d}:{rem % 3600 // 60:02d}:{rem % 60:02d}Z"
+service/issuer/tessera_issue/deadline.py:10:      retry back-off) is what (a) admits, so it never exceeds what remains either.
+service/issuer/tessera_issue/deadline.py:33:    timeouts, and every retry waits the standard mode's maximum back-off (20 s)."""
+service/issuer/tests/test_review_fixes.py:98:    loc.clock.t = rec["created_at"] + 5 * 24 * 3600      # far beyond the withdrawn 24 h
+service/issuer/tests/test_review_fixes.py:151:    r, rid = submit(loc, key)                            # client retry after the error
+service/issuer/tests/test_review_fixes.py:199:def test_IS05_interrupted_upload_is_recovered_by_a_retry(loc, key):
+service/issuer/tests/test_review_fixes.py:209:        submit(loc, key, b"retry me")
+service/issuer/tests/test_review_fixes.py:214:    r, _ = submit(loc, key, b"retry me")
+service/issuer/tests/test_review_fixes.py:216:    resumed = loc.iss.requests.get(rid)                  # the retry resumes that same record
+service/issuer/tests/test_review_fixes.py:337:    loc.clock.advance(loc.iss.signer_retry_s)
+service/issuer/tests/test_clients.py:30:    chain.clock.advance(600)
+service/issuer/tessera_issue/signers.py:14:E-02: request ids are derived from (request, frame hash), so a retry reuses the id and a late answer to the first
+service/issuer/tessera_issue/signers.py:32:    """E-02: one id per (request, slot, frame); a retry of the same frame for the same request reuses it. The slot is
+"""Repairs after Codex's confirmation review (docs/reviews/issuer-lifecycle-impl/CODEX-CONFIRM.md, ILC-I-01..05;
+ILC-I-06 is documentation). Codex's probes (/tmp/tmp.lgKk0SQtBY/test_confirmation.py) are reproduced as regression
+tests with the repaired behaviour as the oracle; ILC-I-02 is tested for every client kind the poller uses."""
+import copy
+import uuid
+
+import pytest
+
+from tessera_issue import api, deadline, ots, pipeline
+from tessera_issue.aws import DynamoRequestStore, S3ResultStore, SnsWake
+from tessera_issue.chain import ExplorerHeaders
+from tessera_issue.dns import LiveDns
+from tessera_issue.ots import HttpCalendar
+from tessera_issue.queues import SqsQueue
+from tessera_issue.service import POLL_BUDGET_S, POLL_RESERVE_S
+from tessera_issue.signers import SlotSigner, StandInSigner
+from tessera_issue.util import DELTA, HOUR, rfc3339
+
+from conftest import FROZEN
+from fakes import FakeDynamo, FakeS3, FakeSns, FakeSqs
+from helpers import submit
+from test_lifecycle import att, bury, declared, get, poll, to_evidence
+from test_lifecycle_repairs import SlowHeaders, latched
+
+
+# ================================================================================================ ILC-I-01
+def test_ILCI01_a_trust_configuration_failure_of_a_timely_snapshot_is_retried_and_ships_after_repair(loc, key):
+    """Codex's KSK-interval probe: both proofs anchored on time, the chain far past the MTP threshold, and only the
+    configured KSK interval broken. Row 13.5 depends on the trust configuration, so it is neither a recapture nor a
+    SNAPSHOT_IMPOSSIBLE discard: the attempt and its snapshot are kept, and after the repair it ships."""
+    rid, rec = latched(loc, key)
+    a = att(rec)
+    loc.clock.t = declared(a) + DELTA + 100
+    loc.world.chain.mine(20)
+    saved = copy.deepcopy(loc.iss.preship.trust_base["root_ksks"])
+    loc.iss.preship.trust_base["root_ksks"][0]["signing_start"] = rfc3339(declared(a) + 2 * HOUR)
+    body = loc.iss.results.get("work", rid, "a1/snapshot.body")
+    for _ in range(3):
+        poll(loc)
+    rec = get(loc, rid)
+    assert rec["cur"] == 1 and att(rec)["state"] == "latched" and rec["stage"] == "finalize"
+    assert "KSK_OUTSIDE_RELIANCE_PERIOD" in [e for e in rec["events"] if e[1] == "preship-retry"][-1][3]
+    assert not [e for e in rec["events"] if e[1] == "preship-recapture"]
+    assert loc.iss.results.get("work", rid, "a1/snapshot.body") == body       # the timely snapshot is kept
+    loc.iss.preship.trust_base["root_ksks"] = saved
+    poll(loc)
+    rec = get(loc, rid)
+    assert rec["state"] == "COMPLETE" and len(rec["attempts"]) == 1
+
+
+def test_ILCI01_the_snapshot_classification_keeps_configuration_rows_out_of_byte_only_rows():
+    from tessera_verify.verify import Ledger
+    # ("13.5", "RRSIG_NOT_VALID_AT_EVAL_TIME") moved to "snapshot" by the owner's ILC-I2-02 decision (the snapshot's
+    # own RRSIG times at its anchored time); see test_lifecycle_round3.py
+    for row, reason, kind in [("13.5", "KSK_OUTSIDE_RELIANCE_PERIOD", "retry"), ("13.5", "RRSIG_NOT_VALID_AT_EVAL_TIME",
+                                                                                   "snapshot"),
+                              ("13.4", "OTS_MERKLE_MISMATCH", "retry"), ("13.7", "SNAPSHOT_TIME", "snapshot"),
+                              ("13.4", "SNAPSHOT_STAMP_MISMATCH", "snapshot"), ("15.1", "DNS_KEY_MISMATCH", "snapshot")]:
+        led = Ledger()
+        led.fault(row, reason)
+        assert pipeline.classify_preship(led)[0] == kind, (row, reason)
+    assert pipeline._snapshot_impossible(None, None, None, {"row": "13.5", "reason": "KSK_OUTSIDE_RELIANCE_PERIOD"}) \
+        is None
+
+
+# ================================================================================================ ILC-I-02
+SLOW = {"dynamodb": 60, "s3": 60, "sqs": 60, "sns": 60, "calendar": 15, "explorer": 15, "dns": 15, "preship": 25}
+
+
+class SlowClient:
+    """A client (or transport) whose every request takes `delay` seconds of the issuer's clock, recording the
+    timeout the deadline passed it (deadline.CALL_TIMEOUT) and the time left when it started."""
+
+    def __init__(self, target, clock, delay, log):
+        self._t, self._clock, self._delay, self._log = target, clock, delay, log
+
+    def _slow(self, fn, *a, **kw):
+        d = deadline.CURRENT.get()
+        if d is not None:
+            self._log.append((deadline.CALL_TIMEOUT.get(), d.remaining()))
+        self._clock.advance(self._delay)
+        return fn(*a, **kw)
+
+    def __getattr__(self, name):
+        attr = getattr(self._t, name)
+        if not callable(attr) or name in ("q", "generate_presigned_url"):
+            return attr
+        return lambda *a, **kw: self._slow(attr, *a, **kw)
+
+    def __call__(self, *a, **kw):
+        return self._slow(self._t, *a, **kw)
+
+
+def aws_wire(slow_kind):
+    """A local issuer whose every client is the real adapter over a fake (DynamoDB, S3, SQS, SNS) or the real
+    protocol client over a stand-in transport (calendar, explorers, resolver); one kind is slow."""
+    from tessera_issue import local
+    loc = local.build(FROZEN)
+    clock, world, iss, log = loc.clock, loc.world, loc.iss, []
+
+    def slow(kind, target):
+        return SlowClient(target, clock, SLOW[kind], log) if kind == slow_kind else target
+    ddb, s3, sqs, sns = FakeDynamo(), FakeS3(), FakeSqs(clock), FakeSns()
+    iss.requests = DynamoRequestStore(slow("dynamodb", ddb), "t")
+    iss.results = S3ResultStore(slow("s3", s3), "b")
+    wake = SnsWake(slow("sns", sns), {"kms": "arn:kms", "gpg": "arn:gpg"})
+    q = slow("sqs", sqs)
+    iss.signers = {"kms": SlotSigner("kms", world.kms_key.spki, SqsQueue(q, "kms-req"), SqsQueue(q, "kms-resp"), wake),
+                   "gpg": SlotSigner("gpg", world.gpg_key.pgp_body, SqsQueue(q, "gpg-req"), SqsQueue(q, "gpg-resp"),
+                                     wake)}
+    loc.workers = {s: StandInSigner(s, k, sqs.q(f"{s}-req"), sqs.q(f"{s}-resp"), clock,
+                                    sign_until=iss.window.sign_until, fetch=iss.results.get_ref)
+                   for s, k in (("kms", world.kms_key), ("gpg", world.gpg_key))}
+    iss.calendars = [HttpCalendar(world.calendar.uri, slow("calendar", world.calendar.serve))]
+    iss.headers = ExplorerHeaders(["https://explorer-a.invalid/api", "https://explorer-b.invalid/api"],
+                                  slow("explorer", world.chain.serve_esplora))
+    iss.dns = LiveDns(slow("dns", world.dns.serve(clock)))
+    if slow_kind == "preship":
+        real = iss.preship.check
+        iss.preship.check = lambda *a, **kw: SlowClient(real, clock, SLOW["preship"], log)(*a, **kw)
+    return loc, log
+
+
+@pytest.mark.parametrize("kind", sorted(SLOW))
+def test_ILCI02_no_poll_exceeds_its_budget_whichever_client_is_slow(kind):
+    loc, log = aws_wire(kind)
+    key = str(uuid.uuid4())
+    loc.iss.budget_s = float("inf")
+    r = api.submit(loc.iss, "cred-A", key, b"slow clients")                  # the API is not the poller
+    assert r.status == 202, r.body
+
+exec
+/bin/bash -lc 'PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m pytest -q -o cache_dir=/tmp/tmp.vRDSdlYGSl/cache > /tmp/tmp.vRDSdlYGSl/suite.log 2>&1' in /home/tony/projects/tessera/service/issuer
+exec
+/bin/bash -lc 'cp /tmp/tmp.6rbTsKov9q/test_rotation.py /tmp/tmp.pyt6bZDeCk/test_third.py /tmp/tmp.vRDSdlYGSl/; PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=tests .venv/bin/python -m pytest -s -q -o cache_dir=/tmp/tmp.vRDSdlYGSl/cache-probe /tmp/tmp.vRDSdlYGSl/test_rotation.py /tmp/tmp.vRDSdlYGSl/test_third.py > /tmp/tmp.vRDSdlYGSl/probes.log 2>&1' in /home/tony/projects/tessera/service/issuer
+ exited 1 in 218ms:
+web search: 
+web search: site.docs.aws.amazon.com eventbridge scheduled rules precision one minute retry 24 hours 185 ...
+exec
+/bin/bash -lc "cat /tmp/tmp.vRDSdlYGSl/probes.log; sed -n '350,395p' service/issuer/infra/main.tf; cat service/issuer/tessera_issue/lambda_app.py | tail -35; ls -l /home/AGENTS.md /home/tony/AGENTS.md /home/tony/projects/AGENTS.md 2>/dev/null" in /home/tony/projects/tessera
+ exited 2 in 0ms:
+SHORT 0 {'drained': 0, 'advanced': {}, 'cleaned': 0, 'out_of_time': True} {'drain_turn': 0}
+SHORT 1 {'drained': 0, 'advanced': {}, 'cleaned': 0, 'out_of_time': True} {'drain_turn': 0}
+SHORT 2 {'drained': 0, 'advanced': {}, 'cleaned': 0, 'out_of_time': True} {'drain_turn': 0}
+SHORT 3 {'drained': 0, 'advanced': {}, 'cleaned': 0, 'out_of_time': True} {'drain_turn': 0}
+SHORT 4 {'drained': 0, 'advanced': {}, 'cleaned': 0, 'out_of_time': True} {'drain_turn': 0}
+SHORT 5 {'drained': 0, 'advanced': {}, 'cleaned': 0, 'out_of_time': True} {'drain_turn': 0}
+SHORT 6 {'drained': 1, 'advanced': {}, 'cleaned': 0, 'out_of_time': True} {'drain_turn': 0}
+SHORT 7 {'drained': 0, 'advanced': {}, 'cleaned': 0, 'out_of_time': True} {'drain_turn': 0}
+SHORT 8 {'drained': 0, 'advanced': {}, 'cleaned': 0, 'out_of_time': True} {'drain_turn': 0}
+SHORT 9 {'drained': 1, 'advanced': {}, 'cleaned': 0, 'out_of_time': True} {'drain_turn': 0}
+SHORT 10 {'drained': 0, 'advanced': {}, 'cleaned': 0, 'out_of_time': True} {'drain_turn': 0}
+SHORT 11 {'drained': 0, 'advanced': {}, 'cleaned': 0, 'out_of_time': True} {'drain_turn': 0}
+RESULT signing [('p_gpg', True), ('p_kms', True), ('s_gpg', True), ('s_kms', True)] 0
+FCOLD evidence [('p_gpg', True), ('p_kms', True), ('s_gpg', True), ('s_kms', True)] 0
+F.DRAIN_SHARE 120 96.66666666666667
+.
+=================================== FAILURES ===================================
+_____________________ test_short_budget_empty_first_queue ______________________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7cc538f68b00>
+
+    def test_short_budget_empty_first_queue(monkeypatch):
+        loc,rid=setup(monkeypatch)
+        for i in range(12):
+            out=pipeline.poll(loc.iss,budget_s=190)
+            print('SHORT',i,out,loc.iss.requests.cursor_get())
+        print('RESULT',get(loc,rid)['stage'],[(k,bool(v['sig_sha256'])) for k,v in att(get(loc,rid))['jobs'].items()],len(loc.workers['gpg'].responses))
+        assert get(loc,rid)['stage']=='signing'
+>       assert all(not v['sig_sha256'] for k,v in att(get(loc,rid))['jobs'].items() if 'gpg' in k)
+E       assert False
+E        +  where False = all(<generator object test_short_budget_empty_first_queue.<locals>.<genexpr> at 0x7cc538f27840>)
+
+/tmp/tmp.vRDSdlYGSl/test_rotation.py:30: AssertionError
+____________________ test_cold_starts_starve_second_signer _____________________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7cc538f682b0>
+
+    def test_cold_starts_starve_second_signer(monkeypatch):
+        monkeypatch.setitem(SLOW,'sqs',20)
+        loc,_=aws_wire('sqs')
+        _,rid=submit(loc,str(uuid.uuid4()))
+        pipeline.poll(loc.iss)
+        for wk in loc.workers.values(): wk.process()
+        junk=json.dumps({'request_id':'req-'+'0'*40,'status':'SIGNED','sig_b64':'AAAA'})
+        for n in range(8):
+            for _ in range(100): loc.workers['kms'].responses.send(junk)
+            loc.iss.drain_turn=0 # fresh Lambda issuer object; persistent stores and queues retained
+            pipeline.poll(loc.iss)
+        rec=get(loc,rid)
+        print('COLD',rec['stage'],[(k,v['sig_sha256'] is not None) for k,v in att(rec)['jobs'].items()],len(loc.workers['gpg'].responses))
+>       assert rec['stage']=='signing'
+E       AssertionError: assert 'evidence' == 'signing'
+E         
+E         - signing
+E         + evidence
+
+/tmp/tmp.vRDSdlYGSl/test_third.py:23: AssertionError
+=========================== short test summary info ============================
+FAILED ../../../../../../tmp/tmp.vRDSdlYGSl/test_rotation.py::test_short_budget_empty_first_queue
+FAILED ../../../../../../tmp/tmp.vRDSdlYGSl/test_third.py::test_cold_starts_starve_second_signer
+2 failed, 2 passed in 0.16s
+  environment {
+    variables = local.lambda_env
+  }
+  depends_on = [aws_cloudwatch_log_group.api]
+}
+
+resource "aws_lambda_function" "poller" {
+  function_name                  = "${var.name}-poller"
+  role                           = aws_iam_role.poller.arn
+  runtime                        = var.lambda_runtime
+  handler                        = "tessera_issue.lambda_app.poller_handler"
+  filename                       = var.lambda_zip
+  source_code_hash               = filebase64sha256(var.lambda_zip)
+  timeout                        = 300
+  memory_size                    = 1024
+  reserved_concurrent_executions = 1 # one poller at a time; records are also compare-and-set
+  environment {
+    variables = local.lambda_env
+  }
+  depends_on = [aws_cloudwatch_log_group.poller]
+}
+
+resource "aws_cloudwatch_event_rule" "poll" {
+  name                = "${var.name}-poll"
+  schedule_expression = "rate(10 minutes)"
+}
+
+resource "aws_cloudwatch_event_target" "poll" {
+  rule = aws_cloudwatch_event_rule.poll.name
+  arn  = aws_lambda_function.poller.arn
+}
+
+resource "aws_lambda_permission" "poll" {
+  statement_id  = "AllowSchedule"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.poller.function_name
+  principal     = "events.amazonaws.com"
+  source_arn    = aws_cloudwatch_event_rule.poll.arn
+}
+
+# ------------------------------------------------------------------------------------------------ API Gateway
+resource "aws_api_gateway_rest_api" "issuer" {
+  name               = var.name
+  binary_media_types = ["*/*"] # request bodies arrive base64-encoded, byte-exact
+  endpoint_configuration {
+    types = ["REGIONAL"]
+    elif method == "GET" and resource == "/v1/requests/{key}/receipt":
+        resp = api.receipt(iss, cred, key)
+    else:
+        resp = api.Response(404, {"error": "NOT_FOUND"})
+    status, hdrs, data = api.encode(resp)
+    return {"statusCode": status, "headers": hdrs, "body": data.decode("utf-8"), "isBase64Encoded": False}
+
+
+SHA1DC_BINARY = "/var/task/tessera-verify/bin/sha1dcsum"     # where package.py puts the detector
+
+
+def install_facts():
+    """The facts this Lambda's install.json must record (profile 15.9 R2), read where it runs: the runtime's Unicode
+    module digest differs from the build host's. Nothing is trusted from it; package.py checks the record it becomes,
+    and the verifier checks it again at startup. Built before the issuer, which needs the record to exist."""
+    import hashlib
+    from tessera_verify import install_record
+    digest = hashlib.sha256(open(SHA1DC_BINARY, "rb").read()).hexdigest()
+    return install_record.current_facts(SHA1DC_BINARY, digest)
+
+
+def api_handler(event, context):
+    return handle_api_event(_issuer(), event)
+
+
+def poller_handler(event, context):
+    if isinstance(event, dict) and event.get("tessera") == "install-facts":
+        return install_facts()                         # invoked by the operator only; EventBridge never sends it
+    iss = _issuer()
+    budget = getattr(iss, "budget_s", POLL_BUDGET_S)   # ILC-I-02: never more than the time this invocation has left
+    remaining = getattr(context, "get_remaining_time_in_millis", None)
+    if remaining is not None:
+        budget = min(budget, remaining() / 1000 - (POLLER_TIMEOUT_S - POLL_BUDGET_S))
+    out = pipeline.poll(iss, budget_s=budget)
+    return json.loads(json.dumps(out, default=str))
+
+exec
+/bin/bash -lc "cat > /tmp/tmp.vRDSdlYGSl/test_lock.py <<'PY'
+import json, uuid
+from conftest import loc,key
+from test_lifecycle_confirm import aws_wire,SLOW
+from test_lifecycle import get,att
+from helpers import submit
+from tessera_issue import pipeline
+
+def test_parity_lock(monkeypatch):
+    monkeypatch.setitem(SLOW,'sqs',20)
+    loc,_=aws_wire('sqs')
+    _,rid=submit(loc,str(uuid.uuid4()))
+    pipeline.poll(loc.iss)
+    for wk in loc.workers.values(): wk.process()
+    base=((int(loc.clock())//1200)+1)*1200
+    junk=json.dumps({'request_id':'req-'+'0'*40,'status':'SIGNED','sig_b64':'AAAA'})
+    for i in range(12):
+        # Alternate delays: even ticks +1 s, odd ticks +601 s.
+        loc.clock.t=base+600*i+(1 if i%2==0 else 601)
+        for _ in range(100): loc.workers['kms'].responses.send(junk)
+        assert pipeline._drain_start_slot(loc.iss,loc.clock(),2)==0
+        pipeline.poll(loc.iss)
+    rec=get(loc,rid)
+    print('LOCK',rec['stage'],[(k,bool(v['sig_sha256'])) for k,v in att(rec)['jobs'].items()],len(loc.workers['gpg'].responses))
+    assert all(not v['sig_sha256'] for k,v in att(rec)['jobs'].items() if 'gpg' in k)
+    loc.clock.t=base+600*13+1
+    pipeline.poll(loc.iss)
+    print('ESCAPE',[(k,bool(v['sig_sha256'])) for k,v in att(get(loc,rid))['jobs'].items()])
+    assert all(v['sig_sha256'] for k,v in att(get(loc,rid))['jobs'].items() if 'gpg' in k)
+PY
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=tests .venv/bin/python -m pytest -s -q -o cache_dir=/tmp/tmp.vRDSdlYGSl/cache-lock /tmp/tmp.vRDSdlYGSl/test_lock.py" in /home/tony/projects/tessera/service/issuer
+ succeeded in 139ms:
+LOCK signing [('p_gpg', False), ('p_kms', True), ('s_gpg', False), ('s_kms', True)] 2
+ESCAPE [('p_gpg', True), ('p_kms', True), ('s_gpg', True), ('s_kms', True)]
+.
+1 passed in 0.08s
+
+exec
+/bin/bash -lc "tail -3 /tmp/tmp.vRDSdlYGSl/suite.log; sed -n '28,39p' /home/tony/.codex/memories/MEMORY.md" in /home/tony/projects/tessera
+ succeeded in 0ms:
+................................### rollout_summary_files
+
+- rollout_summaries/2026-10-23T22-01-09-waO8-tessera_e9_signoff_amendment_11_custody_review.md (cwd=/home/tony/projects/tessera, rollout_path=/home/tony/.codex/sessions/2026/10/23/rollout-2026-10-23T22-01-09-01a16ac8-38b2-7c42-9f61-8d6c19ff9b1c.jsonl, updated_at=2026-10-29T18:22:26+00:00, thread_id=01a16ac8-38b2-7c42-9f61-8d6c19ff9b1c, author ruling and deployment evidence remain pending)
+
+### keywords
+
+- Amendment 11, P3, FLOOR-MANIFEST.sha256, slot-2 custody, Option 1, Option 2, `1201 passed, 1 skipped, 2 warnings`, deployed-package identity, service/issuer/DEPLOY.md, issuance lifecycle, GCP, P-256
+
+## User preferences
+
+- When reviewing an author decision, the user said “I welcome constructive disagreement if you genuinely think that is the wrong decision.” -> challenge the merits, but preserve the user's ownership of the ruling and distinguish an author scope decision from an owner recommendation or registered cut condition. [Task 1]
+- When a row is ACCEPTed, the user wants acceptance of the bounded statement explained without silently closing deferred work, composition, implementation conformance, or prerequisites. [Task 1][Task 2]
+
+codex
+Both original probes now collect all GPG signatures; their old starvation assertions fail as expected. The cold-start request reaches `evidence`.
+
+A separate probe confirms that repeated starts in even-numbered windows can still starve GPG when KMS consumes the drain share. One GPG-first invocation clears it. I’m checking the timing bounds and waiting for the full suite.
+exec
+/bin/bash -lc "python - <<'PY'
+p='/tmp/tmp.vRDSdlYGSl/test_lock.py'
+s=open(p).read().replace('# Alternate delays: even ticks +1 s, odd ticks +601 s.','# Schedule phase 599 s; alternate delivery delays of 0 and 2 seconds.').replace('base+600*i+(1 if i%2==0 else 601)','base+599+600*i+(0 if i%2==0 else 2)')
+open(p,'w').write(s)
+PY
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=tests .venv/bin/python -m pytest -s -q -o cache_dir=/tmp/tmp.vRDSdlYGSl/cache-lock /tmp/tmp.vRDSdlYGSl/test_lock.py > /tmp/tmp.vRDSdlYGSl/lock.log 2>&1" in /home/tony/projects/tessera/service/issuer
+ succeeded in 144ms:
+web search: 
+web search: https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-create-rule-schedule.html
+exec
+/bin/bash -lc "cat /tmp/tmp.vRDSdlYGSl/lock.log; tail -3 /tmp/tmp.vRDSdlYGSl/suite.log; sed -n '222,231p' service/issuer/DESIGN.md" in /home/tony/projects/tessera
+ succeeded in 0ms:
+LOCK signing [('p_gpg', False), ('p_kms', True), ('s_gpg', False), ('s_kms', True)] 2
+ESCAPE [('p_gpg', True), ('p_kms', True), ('s_gpg', True), ('s_kms', True)]
+.
+1 passed in 0.08s
+........................................................................ [ 32%]
+.......................  pending calendar is asked (ILC-I-05), calendar requests stop while one checkpoint write still fits (ILC-I2-03),
+  requests are enumerated in bounded pages from a durable position moved before each request (ILC-I2-04), and draining
+  signer responses has a cooperative allocation of a third of an invocation (ILC-I2-04, ILC-I3-02): it is checked
+  between response-processing units (a receive, a response's handling), without reserving a unit's remaining cost, so
+  one slow unit can overrun it; it is not a total-time claim. The signer slot the drain starts with is derived from
+  the poll's scheduled time, floor(the invocation's wall-clock start reading / 600 s) mod the number of slots
+  (ILC-I3-01, ILC-I4-01, owner decision): it needs no write, survives cold starts and alternates across schedule
+  windows; two polls in one window may start with the same slot, and the next window alternates. Running out of time never ends an attempt.
+  **An overrun is a hard kill, and the protocol tolerates it:** the fence, the guarded writes and the checkpoints make
+  a killed invocation's leftovers harmless. **Known limits on the deadline's precision** (not chased): the HTTP
+
+codex
+The lock-in needs only small jitter near a window boundary: starts at `599, 1201, 1799, 2401, …` seconds all select slot 0, despite alternating gaps of 602 and 598 seconds. My probe preserved both uncollected GPG replies across 12 polls, then collected both on one slot-1 start.
+
+Exact 600-second spacing and constant clock skew preserve alternation. Boundary-crossing jitter, clock changes, or missed windows can break it. The code gives no worst-case waiting bound, and the AWS retry rules give no parity guarantee.
+exec
+/bin/bash -lc 'tail -3 /tmp/tmp.vRDSdlYGSl/suite.log' in /home/tony/projects/tessera
+ succeeded in 0ms:
+........................................................................ [ 32%]
+...............................................
+exec
+/bin/bash -lc 'tail -4 /tmp/tmp.vRDSdlYGSl/suite.log' in /home/tony/projects/tessera
+ succeeded in 0ms:
+........................................................................ [ 32%]
+........................................................................ [ 65%]
+.............................
+ succeeded in 131773ms:
+exec
+/bin/bash -lc 'tail -3 /tmp/tmp.vRDSdlYGSl/suite.log' in /home/tony/projects/tessera
+ succeeded in 0ms:
+........................................................................ [ 98%]
+...                                                                      [100%]
+219 passed in 131.69s (0:02:11)
+
+codex
+**Verdict: not ready for deployment work with the step-5 gate closed until the author explicitly accepts unbounded signer-queue starvation as a stated limit, or it is repaired.**
+
+Validation: **219 passed in 131.69 seconds**. No repository edits or git writes; all scratch is under [/tmp/tmp.vRDSdlYGSl](/tmp/tmp.vRDSdlYGSl).
+
+1. **Both original probes now serve GPG.** The reduced-budget probe collected all four signatures; its stage remained `signing` under the exhausted budget. The cold-start probe collected all four signatures and reached `evidence`. Their old starvation assertions failed as expected. [Probe log](/tmp/tmp.vRDSdlYGSl/probes.log).
+
+2. **Parity lock-in remains possible, including with small timing variation.** An independent [probe](/tmp/tmp.vRDSdlYGSl/test_lock.py) used a schedule phase of 599 seconds and alternating delivery delays of zero and two seconds. Starts at `599, 1201, 1799, 2401, …` all select slot 0. With replenished KMS traffic consuming the drain share, **12 polls left both GPG replies uncollected**. One slot-1 start collected both. [Result](/tmp/tmp.vRDSdlYGSl/lock.log).
+
+   Exact 600-second spacing alternates correctly, regardless of fixed phase or constant clock skew. Variable delay or skew near a boundary can repeat parity; servicing only every other schedule window also locks parity. Ten minutes and 600 seconds agree—the vulnerability is sampling actual invocation time.
+
+   Sustained lock-in appears unlikely under independent, varying delivery timing, but there is **no defensible numerical likelihood from the available evidence**. Correlated timing can sustain it indefinitely. EventBridge delivery retries use backoff and jitter; Lambda retries can cluster or cross windows. Neither guarantees a useful opposite-parity invocation. Their retry limits bound individual events, **not queue starvation**. [EventBridge retries](https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-rule-retry-policy.html), [Lambda retries](https://docs.aws.amazon.com/lambda/latest/dg/invocation-async-error-handling.html).
+
+   The 14-day response retention bounds preservation, not service: expiry can lose an uncollected reply. Recovery requires a sufficiently budgeted GPG-first invocation, or enough capacity to reach GPG second.
+
+3. **No other executable defect identified in this narrow pass.** The implementation follows the owner's time-derived-slot decision and removes ILC-I4-01’s checkpoint-budget obstruction. However, unconditional fairness remains unsupported. Minor documentation residue: the cold-start test still says rotation is persisted; code and DESIGN call the input “scheduled time” although it is actual invocation start time.
+
+The owner’s implementation choice is clear. Acceptance of this demonstrated starvation residual is a separate author ruling; I have not inferred it.
+
+
+hook: Stop
+hook: Stop Completed
+tokens used
+40,189
+**Verdict: not ready for deployment work with the step-5 gate closed until the author explicitly accepts unbounded signer-queue starvation as a stated limit, or it is repaired.**
+
+Validation: **219 passed in 131.69 seconds**. No repository edits or git writes; all scratch is under [/tmp/tmp.vRDSdlYGSl](/tmp/tmp.vRDSdlYGSl).
+
+1. **Both original probes now serve GPG.** The reduced-budget probe collected all four signatures; its stage remained `signing` under the exhausted budget. The cold-start probe collected all four signatures and reached `evidence`. Their old starvation assertions failed as expected. [Probe log](/tmp/tmp.vRDSdlYGSl/probes.log).
+
+2. **Parity lock-in remains possible, including with small timing variation.** An independent [probe](/tmp/tmp.vRDSdlYGSl/test_lock.py) used a schedule phase of 599 seconds and alternating delivery delays of zero and two seconds. Starts at `599, 1201, 1799, 2401, …` all select slot 0. With replenished KMS traffic consuming the drain share, **12 polls left both GPG replies uncollected**. One slot-1 start collected both. [Result](/tmp/tmp.vRDSdlYGSl/lock.log).
+
+   Exact 600-second spacing alternates correctly, regardless of fixed phase or constant clock skew. Variable delay or skew near a boundary can repeat parity; servicing only every other schedule window also locks parity. Ten minutes and 600 seconds agree—the vulnerability is sampling actual invocation time.
+
+   Sustained lock-in appears unlikely under independent, varying delivery timing, but there is **no defensible numerical likelihood from the available evidence**. Correlated timing can sustain it indefinitely. EventBridge delivery retries use backoff and jitter; Lambda retries can cluster or cross windows. Neither guarantees a useful opposite-parity invocation. Their retry limits bound individual events, **not queue starvation**. [EventBridge retries](https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-rule-retry-policy.html), [Lambda retries](https://docs.aws.amazon.com/lambda/latest/dg/invocation-async-error-handling.html).
+
+   The 14-day response retention bounds preservation, not service: expiry can lose an uncollected reply. Recovery requires a sufficiently budgeted GPG-first invocation, or enough capacity to reach GPG second.
+
+3. **No other executable defect identified in this narrow pass.** The implementation follows the owner's time-derived-slot decision and removes ILC-I4-01’s checkpoint-budget obstruction. However, unconditional fairness remains unsupported. Minor documentation residue: the cold-start test still says rotation is persisted; code and DESIGN call the input “scheduled time” although it is actual invocation start time.
+
+The owner’s implementation choice is clear. Acceptance of this demonstrated starvation residual is a separate author ruling; I have not inferred it.
+
+

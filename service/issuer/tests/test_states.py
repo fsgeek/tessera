@@ -1,6 +1,7 @@
 """Unit tests for every client-visible state transition (DESIGN.md test group 1), including duplicate keys and
-key/content mismatch. States: ACCEPTED -> COMPLETE | FAILED; REFUSED at submission; any ended state -> EXPIRED
-30 days after it ended (V1-SERVICE-RESOLUTIONS S3-S6, L1)."""
+key/content mismatch. States: ACCEPTED -> COMPLETE | REFUSED (ATTEMPTS_EXHAUSTED, SIGNING_CLOSED) | FAILED (an upload
+never finished, before any attempt); REFUSED at submission; any ended state -> EXPIRED 30 days after it ended
+(V1-SERVICE-RESOLUTIONS S3-S6, L1; the attempt lifecycle of docs/decisions/2026-10-29-issuance-lifecycle.md)."""
 import uuid
 
 import pytest
@@ -81,7 +82,13 @@ def test_outside_window_before_opening_and_after_acceptance_cutoff(loc):
     loc.clock.t = w.accept_until + 1
     r = submit(loc, str(uuid.uuid4()))[0]
     assert r.status == 403 and r.body["reason"] == "OUTSIDE_WINDOW"
-    assert w.na - w.accept_until == 120 * HOUR and w.na - w.sign_until == 96 * HOUR
+    # L1 (revised 2026-10-29, A11 c016): acceptance stops delta + S + 24 h before signing stops, so a first
+    # attempt always has its full registered lifecycle before signing stops.
+    from tessera_issue.util import DELTA
+    from tessera_issue.service import SLACK_S
+    assert w.na - w.sign_until == 96 * HOUR
+    assert w.sign_until - w.accept_until == DELTA + SLACK_S + 24 * HOUR
+    assert w.na - w.accept_until == 216 * HOUR
 
 
 def test_closing_and_signing_unavailable(loc):
@@ -136,8 +143,8 @@ def test_accepted_to_complete_through_every_stage(loc, key):
         if loc.iss.requests.get(rid)["state"] != "ACCEPTED":
             break
     moves = [(a, b) for a, b in seen if a != b]
-    assert moves == [("frames", "signing"), ("signing", "stamp"), ("stamp", "confirm"), ("confirm", "headers"),
-                     ("headers", "assemble"), ("assemble", "COMPLETE")]
+    assert moves == [("frames", "signing"), ("signing", "stamp"), ("stamp", "evidence"), ("evidence", "finalize"),
+                     ("finalize", "COMPLETE")]
     v = view(loc, key).body
     assert v["state"] == "COMPLETE" and "reason" not in v
     data, digest = fetch_receipt(loc, key)
@@ -147,25 +154,43 @@ def test_accepted_to_complete_through_every_stage(loc, key):
     assert fetch_receipt(loc, key)[0] == data            # identical result every time
 
 
-def test_accepted_to_failed_when_a_signer_refuses(loc, key):
+def test_accepted_to_refused_when_a_signer_refuses_every_attempt(loc, key):
+    """Rewritten against the registered lifecycle (was FAILED SIGNER_REFUSED:...): a signer refusal discards that
+    (unsigned, unstamped) attempt and the next one is allocated in the same write; after N refused attempts the request
+    is REFUSED ATTEMPTS_EXHAUSTED, listing each attempt's reason."""
     _, rid = submit(loc, key)
     loc.workers["gpg"].clock = lambda: loc.clock() + 2 * DAY                 # its clock is off by more than epsilon
-    rec = loc.run_until_done(rid, max_ticks=10)
-    assert rec["state"] == "FAILED" and rec["reason"] == "SIGNER_REFUSED:DECLARED_TIME_OUTSIDE_EPSILON"
+    rec = loc.run_until_done(rid, max_ticks=20)
+    assert rec["state"] == "REFUSED" and rec["reason"] == "ATTEMPTS_EXHAUSTED"
+    assert [a["end"]["reason"] for a in rec["attempts"]] == ["SIGNER_REFUSED:DECLARED_TIME_OUTSIDE_EPSILON"] * 3
+    assert view(loc, key).body["attempts"] == [
+        {"attempt": n, "outcome": "DISCARDED", "reason": "SIGNER_REFUSED:DECLARED_TIME_OUTSIDE_EPSILON"}
+        for n in (1, 2, 3)]
     assert not [k for k in loc.iss.results.blobs if k[1] == rid and k[0] in ("content", "work")]
 
 
-def test_accepted_to_failed_when_the_pre_ship_check_fails(loc, key):
+def test_a_pre_ship_failure_that_the_frozen_attempt_can_outlive_is_retried_not_failed(loc, key):
+    """Rewritten against the registered lifecycle (was FAILED PRESHIP:UNVERIFIABLE/GIT_SIGNER_NOT_CONFIGURED): a latched
+    attempt is discarded only for a failure its committed bytes cannot cure (design step 7). A misconfigured trust
+    base is the issuer's, not the attempt's: the attempt stays latched, the reason is recorded, and once the
+    configuration is repaired it ships."""
     _, rid = submit(loc, key)
     import copy
-    tb = copy.deepcopy(loc.iss.window.trust_base)
+    real = loc.iss.preship.trust_base
+    tb = copy.deepcopy(real)
     from tessera_issue.testkeys import P256Key
     from tessera_issue.util import b64e
     tb["repository_keys"][0]["key"] = b64e(P256Key("not the repository key", 1790000000).pgp_body)
     loc.iss.preship.trust_base = tb
-    rec = loc.run_until_done(rid)
-    assert rec["state"] == "FAILED" and rec["reason"] == "PRESHIP:UNVERIFIABLE/GIT_SIGNER_NOT_CONFIGURED"
+    for _ in range(15):
+        loc.tick()
+    rec = loc.iss.requests.get(rid)
+    assert rec["state"] == "ACCEPTED" and rec["attempts"][0]["state"] == "latched" and len(rec["attempts"]) == 1
+    assert [e for e in rec["events"] if e[1] == "preship-retry"][-1][3] == "UNVERIFIABLE/GIT_SIGNER_NOT_CONFIGURED"
     assert api.receipt(loc.iss, "cred-A", key).status == 409
+    loc.iss.preship.trust_base = real
+    rec = loc.run_until_done(rid)
+    assert rec["state"] == "COMPLETE" and api.receipt(loc.iss, "cred-A", key).status == 303
 
 
 def test_stamp_waits_for_the_git_proof_to_reach_k6(loc, key):
@@ -206,11 +231,19 @@ def test_snapshot_is_recaptured_when_it_does_not_validate(loc, key):
 # ------------------------------------------------------------------------------------------------ expiry
 @pytest.mark.parametrize("ending", ["COMPLETE", "REFUSED", "FAILED"])
 def test_every_ended_state_expires_after_30_days(loc, key, ending):
+    """FAILED is reached by an abandoned upload (CONTENT_UNAVAILABLE); it was the 24 h rule, which is withdrawn."""
     if ending == "REFUSED":
         loc.iss.closing = True
     if ending == "FAILED":
-        loc.workers["kms"].process = lambda limit=None: 0                     # never answers
-    _, rid = submit(loc, key, b"expiring")
+        real = loc.iss.results.put
+        loc.iss.results.put = lambda *a: (_ for _ in ()).throw(OSError("upload interrupted"))
+        with pytest.raises(OSError):
+            submit(loc, key, b"expiring")
+        loc.iss.results.put = real
+        rid = api.record_id("cred-A", key)
+        loc.clock.advance(pipeline.UPLOAD_GRACE_S)
+    else:
+        _, rid = submit(loc, key, b"expiring")
     rec = loc.run_until_done(rid, max_ticks=300) if ending != "REFUSED" else loc.iss.requests.get(rid)
     assert rec["state"] == ending
     loc.clock.t = rec["ended_at"] + RETENTION_S - 1

@@ -62,7 +62,7 @@ def test_several_requests_in_flight_share_blocks_and_all_verify(tmp_path):
             break
     recs = [loc.iss.requests.get(r) for r in rids]
     assert [r["state"] for r in recs] == ["COMPLETE"] * 4
-    assert len({r["proofs"]["receipt"]["h"] for r in recs}) == 1         # one block, several transactions
+    assert len({r["attempts"][-1]["latch"]["height"] for r in recs}) == 1    # one block, several transactions
     assert len({r["receipt_sha256"] for r in recs}) == 4
     rc, out, _ = verify_with_cli(loc, fetch_receipt(loc, keys[-1])[0], tmp_path)
     assert rc == 0 and out["stable"]["verdict"] == "VALID_STRICT"

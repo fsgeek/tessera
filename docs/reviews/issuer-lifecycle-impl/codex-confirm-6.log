@@ -1,0 +1,1788 @@
+Reading additional input from stdin...
+OpenAI Codex v0.165.0
+--------
+workdir: /home/tony/projects/tessera
+model: gpt-6.1-sol
+provider: openai
+approval: never
+sandbox: danger-full-access
+reasoning effort: none
+reasoning summaries: none
+session id: 01a18b70-9873-7161-a042-478d23ba38e7
+--------
+user
+Narrow confirmation for Project Tessera at /home/tony/projects/tessera (our own repository; read-only, no repo edits, no git writes; scratch only under a fresh mktemp -d). Your last pass: docs/reviews/issuer-lifecycle-impl/CODEX-CONFIRM-5.md (parity lock-in). Owner decision implemented: each signer slot gets its own guaranteed drain share every poll (one-sixth each; unused share passes on; the first response of each received batch is always handled before the share is checked), and the starting slot comes from the EventBridge event's scheduled time with a fallback (service/issuer/tessera_issue/pipeline.py, lambda_app.py, DESIGN.md, tests). Run: cd service/issuer && .venv/bin/python -m pytest -q (222 expected). (1) Re-run your lock-in probe /tmp/tmp.vRDSdlYGSl/test_lock.py, the reduced-budget probe /tmp/tmp.6rbTsKov9q/test_rotation.py and the cold-start probe /tmp/tmp.pyt6bZDeCk/test_third.py. (2) Can any slot still be starved with obtainable responses (e.g. the first-response exception letting one slot overrun so the next slot's share is gone, a receive alone exceeding a share, budget too small for even one receive per slot)? If a residual exists only when the invocation budget cannot fit one receive per slot, say so plainly — that is the stated slow-dependency limit, not a scheduling defect. (3) Any new defect. One-line verdict: ready for deployment work with the step-5 gate closed (remaining items being stated limits awaiting the author's termination decision), or not.
+codex
+I’ll read the prior confirmation and slot-drain changes, run the issuer suite and three probes, then check for remaining starvation paths. I’ll keep the repository read-only and put any scratch work in a fresh temporary directory.
+exec
+/bin/bash -lc "cat /home/tony/.codex/plugins/cache/openai-curated-remote/superpowers/7.0.1/skills/using-superpowers/SKILL.md; rg -n 'issuer|lock-in|CONFIRM-5' /home/tony/.codex/memories/MEMORY.md" in /home/tony/projects/tessera
+ succeeded in 0ms:
+---
+name: using-superpowers
+description: Use when starting any conversation - establishes how to find and use skills, requiring skill invocation before ANY response including clarifying questions
+---
+
+<SUBAGENT-STOP>
+If you were dispatched as a subagent to execute a specific task, ignore this skill.
+</SUBAGENT-STOP>
+
+<EXTREMELY-IMPORTANT>
+If you think there is even a 1% chance a skill might apply to what you are doing, you ABSOLUTELY MUST invoke the skill.
+
+IF A SKILL APPLIES TO YOUR TASK, YOU DO NOT HAVE A CHOICE. YOU MUST USE IT.
+
+This is not negotiable. You cannot rationalize your way out of this.
+</EXTREMELY-IMPORTANT>
+
+## The Rule
+
+**Invoke relevant or requested skills BEFORE any response or action** — including clarifying questions, exploring the codebase, or checking files. If it turns out wrong for the situation, you don't have to use it.
+
+**Before entering plan mode:** if you haven't already brainstormed, invoke the brainstorming skill first.
+
+Then announce "Using [skill] to [purpose]" and follow the skill exactly. If it has a checklist, create a todo per item.
+
+## Skill Priority
+
+When multiple skills apply, process skills come first — they set the approach, then implementation skills (frontend-design, etc.) carry it out. Brainstorming and systematic-debugging are Superpowers' most common process skills, but the rule holds for any of them.
+
+- "Let's build X" → superpowers:brainstorming first, then implementation skills.
+- "Fix this bug" → superpowers:systematic-debugging first, then domain skills.
+
+## Red Flags
+
+These thoughts mean STOP—you're rationalizing:
+
+| Thought | Reality |
+|---------|---------|
+| "This is just a simple question" | Questions are tasks. Check for skills. |
+| "I need more context first" | Skill check comes BEFORE clarifying questions. |
+| "Let me explore the codebase first" | Skills tell you HOW to explore. Check first. |
+| "I can check git/files quickly" | Files lack conversation context. Check for skills. |
+| "Let me gather information first" | Skills tell you HOW to gather information. |
+| "This doesn't need a formal skill" | If a skill exists, use it. |
+| "I remember this skill" | Skills evolve. Read current version. |
+| "This doesn't count as a task" | Action = task. Check for skills. |
+| "The skill is overkill" | Simple things become complex. Use it. |
+| "I'll just do this one thing first" | Check BEFORE doing anything. |
+| "This feels productive" | Undisciplined action wastes time. Skills prevent this. |
+| "I know what that means" | Knowing the concept ≠ using the skill. Invoke it. |
+
+## Platform Adaptation
+
+If your harness appears here, read its reference file for special instructions:
+
+- Claude Code: `references/claude-code-tools.md`
+- Codex: `references/codex-tools.md`
+- Pi: `references/pi-tools.md`
+- Antigravity: `references/antigravity-tools.md`
+- Hermes Agent: `references/hermes-tools.md`
+- Muse: `references/muse-tools.md`
+
+## User Instructions
+
+User instructions (CLAUDE.md, AGENTS.md, GEMINI.md, etc, direct requests) take precedence over skills, which in turn override default behavior. Only skip skill workflows or instructions when your human partner has explicitly told you to.
+34:- Amendment 11, P3, FLOOR-MANIFEST.sha256, slot-2 custody, Option 1, Option 2, `1201 passed, 1 skipped, 2 warnings`, deployed-package identity, service/issuer/DEPLOY.md, issuance lifecycle, GCP, P-256
+53:- Before signing, add an explicit pending-ruling gate to `service/issuer/DEPLOY.md:55-60` and reconcile Amendment 11 `:270-271`'s lease-based expiry description with `docs/decisions/2026-10-29-issuance-lifecycle.md:57-76`, which uses complete negative evidence and no lease timing. The lifecycle retains a residual where timely eligibility may be observed but lost before persistence if evidence becomes permanently unavailable. [Task 3]
+255:- Do not describe Q2 as issuer-key theft, chain takeover, rotation, or succession resistance, and do not claim fingerprints “multiply” cryptographic difficulty. State the extra equality constraint and its concrete assumptions. [Task 1]
+
+exec
+/bin/bash -lc "pwd; rg --files -g AGENTS.md -g '*CONFIRM-5*'; cat /home/tony/.codex/plugins/cache/openai-curated-remote/superpowers/7.0.1/skills/verification-before-completion/SKILL.md; cat docs/reviews/issuer-lifecycle-impl/CODEX-CONFIRM-5.md; cat /tmp/tmp.vRDSdlYGSl/test_lock.py /tmp/tmp.6rbTsKov9q/test_rotation.py /tmp/tmp.pyt6bZDeCk/test_third.py" in /home/tony/projects/tessera
+ succeeded in 0ms:
+/home/tony/projects/tessera
+docs/reviews/issuer-lifecycle-impl/CODEX-CONFIRM-5.md
+---
+name: verification-before-completion
+description: Use when about to claim work is complete, fixed, or passing, before committing or creating PRs - requires running verification commands and confirming output before making any success claims; evidence before assertions always
+---
+
+# Verification Before Completion
+
+## Overview
+
+**Core principle:** Evidence before claims, always.
+
+**Violating the letter of this rule is violating the spirit of this rule.**
+
+## The Iron Law
+
+```
+NO COMPLETION CLAIMS WITHOUT FRESH VERIFICATION EVIDENCE
+```
+
+If you haven't run the verification command in this message, you cannot claim it passes.
+
+## The Gate Function
+
+```
+BEFORE claiming any status or expressing satisfaction:
+
+1. IDENTIFY: What command proves this claim?
+2. RUN: Execute the FULL command (fresh, complete)
+3. READ: Full output, check exit code, count failures
+4. VERIFY: Does output confirm the claim?
+   - If NO: State actual status with evidence
+   - If YES: State claim WITH evidence
+5. ONLY THEN: Make the claim
+
+Skip any step = lying, not verifying
+```
+
+## Common Failures
+
+| Claim | Requires | Not Sufficient |
+|-------|----------|----------------|
+| Tests pass | Test command output: 0 failures | Previous run, "should pass" |
+| Linter clean | Linter output: 0 errors | Partial check, extrapolation |
+| Build succeeds | Build command: exit 0 | Linter passing, logs look good |
+| Bug fixed | Test original symptom: passes | Code changed, assumed fixed |
+| Regression test works | Red-green cycle verified | Test passes once |
+| Agent completed | VCS diff shows changes | Agent reports "success" |
+| Requirements met | Line-by-line checklist | Tests passing |
+
+## Red Flags - STOP
+
+- Using "should", "probably", "seems to"
+- Expressing satisfaction before verification ("Great!", "Perfect!", "Done!", etc.)
+- About to commit/push/PR without verification
+- Trusting agent success reports
+- Relying on partial verification
+- Thinking "just this once"
+- Tired and wanting work over
+- **ANY wording implying success without having run verification**
+
+## Rationalization Prevention
+
+| Excuse | Reality |
+|--------|---------|
+| "Should work now" | RUN the verification |
+| "I'm confident" | Confidence ≠ evidence |
+| "Just this once" | No exceptions |
+| "Linter passed" | Linter ≠ compiler |
+| "Agent said success" | Verify independently |
+| "I'm tired" | Exhaustion ≠ excuse |
+| "Partial check is enough" | Partial proves nothing |
+| "Different words so rule doesn't apply" | Spirit over letter |
+
+## Key Patterns
+
+**Tests:**
+```
+✅ [Run test command] [See: 34/34 pass] "All tests pass"
+❌ "Should pass now" / "Looks correct"
+```
+
+**Regression tests (TDD Red-Green):**
+```
+✅ Write → Run (pass) → Revert fix → Run (MUST FAIL) → Restore → Run (pass)
+❌ "I've written a regression test" (without red-green verification)
+```
+
+**Build:**
+```
+✅ [Run build] [See: exit 0] "Build passes"
+❌ "Linter passed" (linter doesn't check compilation)
+```
+
+**Requirements:**
+```
+✅ Re-read plan → Create checklist → Verify each → Report gaps or completion
+❌ "Tests pass, phase complete"
+```
+
+**Agent delegation:**
+```
+✅ Agent reports success → Check VCS diff → Verify changes → Report actual state
+❌ Trust agent report
+```
+
+## When To Apply
+
+**ALWAYS before:**
+- ANY variation of success/completion claims
+- ANY expression of satisfaction
+- ANY positive statement about work state
+- Committing, PR creation, task completion
+- Moving to next task
+- Delegating to agents
+
+**Rule applies to:**
+- Exact phrases
+- Paraphrases and synonyms
+- Implications of success
+- ANY communication suggesting completion/correctness
+**Verdict: not ready for deployment work with the step-5 gate closed until the author explicitly accepts unbounded signer-queue starvation as a stated limit, or it is repaired.**
+
+Validation: **219 passed in 131.69 seconds**. No repository edits or git writes; all scratch is under [/tmp/tmp.vRDSdlYGSl](/tmp/tmp.vRDSdlYGSl).
+
+1. **Both original probes now serve GPG.** The reduced-budget probe collected all four signatures; its stage remained `signing` under the exhausted budget. The cold-start probe collected all four signatures and reached `evidence`. Their old starvation assertions failed as expected. [Probe log](/tmp/tmp.vRDSdlYGSl/probes.log).
+
+2. **Parity lock-in remains possible, including with small timing variation.** An independent [probe](/tmp/tmp.vRDSdlYGSl/test_lock.py) used a schedule phase of 599 seconds and alternating delivery delays of zero and two seconds. Starts at `599, 1201, 1799, 2401, …` all select slot 0. With replenished KMS traffic consuming the drain share, **12 polls left both GPG replies uncollected**. One slot-1 start collected both. [Result](/tmp/tmp.vRDSdlYGSl/lock.log).
+
+   Exact 600-second spacing alternates correctly, regardless of fixed phase or constant clock skew. Variable delay or skew near a boundary can repeat parity; servicing only every other schedule window also locks parity. Ten minutes and 600 seconds agree—the vulnerability is sampling actual invocation time.
+
+   Sustained lock-in appears unlikely under independent, varying delivery timing, but there is **no defensible numerical likelihood from the available evidence**. Correlated timing can sustain it indefinitely. EventBridge delivery retries use backoff and jitter; Lambda retries can cluster or cross windows. Neither guarantees a useful opposite-parity invocation. Their retry limits bound individual events, **not queue starvation**. [EventBridge retries](https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-rule-retry-policy.html), [Lambda retries](https://docs.aws.amazon.com/lambda/latest/dg/invocation-async-error-handling.html).
+
+   The 14-day response retention bounds preservation, not service: expiry can lose an uncollected reply. Recovery requires a sufficiently budgeted GPG-first invocation, or enough capacity to reach GPG second.
+
+3. **No other executable defect identified in this narrow pass.** The implementation follows the owner's time-derived-slot decision and removes ILC-I4-01’s checkpoint-budget obstruction. However, unconditional fairness remains unsupported. Minor documentation residue: the cold-start test still says rotation is persisted; code and DESIGN call the input “scheduled time” although it is actual invocation start time.
+
+The owner’s implementation choice is clear. Acceptance of this demonstrated starvation residual is a separate author ruling; I have not inferred it.
+
+import json, uuid
+from conftest import loc,key
+from test_lifecycle_confirm import aws_wire,SLOW
+from test_lifecycle import get,att
+from helpers import submit
+from tessera_issue import pipeline
+
+def test_parity_lock(monkeypatch):
+    monkeypatch.setitem(SLOW,'sqs',20)
+    loc,_=aws_wire('sqs')
+    _,rid=submit(loc,str(uuid.uuid4()))
+    pipeline.poll(loc.iss)
+    for wk in loc.workers.values(): wk.process()
+    base=((int(loc.clock())//1200)+1)*1200
+    junk=json.dumps({'request_id':'req-'+'0'*40,'status':'SIGNED','sig_b64':'AAAA'})
+    for i in range(12):
+        # Schedule phase 599 s; alternate delivery delays of 0 and 2 seconds.
+        loc.clock.t=base+599+600*i+(0 if i%2==0 else 2)
+        for _ in range(100): loc.workers['kms'].responses.send(junk)
+        assert pipeline._drain_start_slot(loc.iss,loc.clock(),2)==0
+        pipeline.poll(loc.iss)
+    rec=get(loc,rid)
+    print('LOCK',rec['stage'],[(k,bool(v['sig_sha256'])) for k,v in att(rec)['jobs'].items()],len(loc.workers['gpg'].responses))
+    assert all(not v['sig_sha256'] for k,v in att(rec)['jobs'].items() if 'gpg' in k)
+    loc.clock.t=base+600*13+1
+    pipeline.poll(loc.iss)
+    print('ESCAPE',[(k,bool(v['sig_sha256'])) for k,v in att(get(loc,rid))['jobs'].items()])
+    assert all(v['sig_sha256'] for k,v in att(get(loc,rid))['jobs'].items() if 'gpg' in k)
+import uuid
+from conftest import loc,key
+from test_lifecycle_confirm import aws_wire,SLOW,SlowClient
+from test_lifecycle import get,att
+from helpers import submit
+from tessera_issue import pipeline
+
+def setup(monkeypatch):
+    monkeypatch.setitem(SLOW,'sqs',0)
+    loc,_=aws_wire('sqs')
+    _,rid=submit(loc,str(uuid.uuid4()))
+    pipeline.poll(loc.iss)
+    for wk in loc.workers.values(): wk.process()
+    # Deliver KMS first, leave only the valid GPG replies awaiting collection.
+    for handle,body in loc.iss.signers['kms'].receive():
+        pipeline._take(loc.iss,'kms',loc.iss.signers['kms'],body)
+        loc.iss.signers['kms'].ack(handle)
+    loc.iss.requests.cursor_put({'drain_turn':0})
+    for signer in loc.iss.signers.values():
+        signer.responses.client._client._delay=60
+    return loc,rid
+
+def test_short_budget_empty_first_queue(monkeypatch):
+    loc,rid=setup(monkeypatch)
+    for i in range(12):
+        out=pipeline.poll(loc.iss,budget_s=190)
+        print('SHORT',i,out,loc.iss.requests.cursor_get())
+    print('RESULT',get(loc,rid)['stage'],[(k,bool(v['sig_sha256'])) for k,v in att(get(loc,rid))['jobs'].items()],len(loc.workers['gpg'].responses))
+    assert get(loc,rid)['stage']=='signing'
+    assert all(not v['sig_sha256'] for k,v in att(get(loc,rid))['jobs'].items() if 'gpg' in k)
+    # Control: starting with GPG at the same budget consumes the valid responses.
+    loc.iss.requests.cursor_put({'drain_turn':1})
+    for _ in range(6):
+        loc.iss.requests.cursor_put({'drain_turn':1})
+        pipeline.poll(loc.iss,budget_s=190)
+    print('CONTROL',get(loc,rid)['stage'])
+    assert all(v['sig_sha256'] for k,v in att(get(loc,rid))['jobs'].items() if 'gpg' in k)
+import sys,json,uuid
+sys.path.insert(0,'/home/tony/projects/tessera/service/issuer/tests')
+from conftest import loc,key
+from tessera_issue import pipeline
+from test_lifecycle import att,get,poll,to_evidence,bury,declared
+from test_lifecycle_confirm import aws_wire,SLOW
+from helpers import submit
+from tessera_issue.util import HOUR
+
+def test_cold_starts_starve_second_signer(monkeypatch):
+    monkeypatch.setitem(SLOW,'sqs',20)
+    loc,_=aws_wire('sqs')
+    _,rid=submit(loc,str(uuid.uuid4()))
+    pipeline.poll(loc.iss)
+    for wk in loc.workers.values(): wk.process()
+    junk=json.dumps({'request_id':'req-'+'0'*40,'status':'SIGNED','sig_b64':'AAAA'})
+    for n in range(8):
+        for _ in range(100): loc.workers['kms'].responses.send(junk)
+        loc.iss.drain_turn=0 # fresh Lambda issuer object; persistent stores and queues retained
+        pipeline.poll(loc.iss)
+    rec=get(loc,rid)
+    print('COLD',rec['stage'],[(k,v['sig_sha256'] is not None) for k,v in att(rec)['jobs'].items()],len(loc.workers['gpg'].responses))
+    assert rec['stage']=='signing'
+    assert all(not v['sig_sha256'] for k,v in att(rec)['jobs'].items() if 'gpg' in k)
+    assert len(loc.workers['gpg'].responses)>0
+    pipeline.poll(loc.iss) # a warm continuation starts with GPG
+    print('WARM',get(loc,rid)['stage'])
+    assert get(loc,rid)['stage']=='stamp'
+
+def test_no_snapshot_timely_capture_allowed(loc,key):
+    good=loc.iss.dns.capture
+    loc.iss.dns.capture=lambda now:b'bad'
+    _,rid=submit(loc,key)
+    a=att(to_evidence(loc,rid))
+    bury(loc,declared(a)+HOUR)
+    poll(loc)
+    assert get(loc,rid)['stage']=='snapshot'
+    loc.iss.dns.capture=good
+    poll(loc)
+    assert get(loc,rid)['stage']=='finalize'
+    assert att(get(loc,rid))['state']=='latched'
+
+def test_drain_share_is_cooperative_not_a_cap(monkeypatch):
+    monkeypatch.setitem(SLOW,'sqs',60)
+    loc,_=aws_wire('sqs')
+    q=loc.workers['kms'].responses
+    junk=json.dumps({'request_id':'req-'+'0'*40,'status':'SIGNED','sig_b64':'AAAA'})
+    for _ in range(30): q.send(junk)
+    from tessera_issue import deadline
+    start=loc.clock()
+    with deadline.Installed(deadline.Deadline(loc.iss.elapsed_clock,290,10)):
+        pipeline.drain(loc.iss,share_s=290/3)
+    span=loc.clock()-start
+    print('DRAIN_SHARE',span,290/3)
+    assert span>290/3
+
+exec
+/bin/bash -lc "rg --files -g AGENTS.md /home/tony/projects /home/tony 2>/dev/null | head -40; rg -n 'def drain|def poll|_drain_start|share|scheduled' service/issuer/tessera_issue/pipeline.py service/issuer/tessera_issue/lambda_app.py service/issuer/DESIGN.md; sed -n '1,260p' service/issuer/tessera_issue/pipeline.py" in /home/tony/projects/tessera
+ succeeded in 0ms:
+/home/tony/projects/eidolon/AGENTS.md
+/home/tony/projects/teaching/2025/CPSC436C-2025W-T2/AGENTS.md
+/home/tony/projects/promptguard2/AGENTS.md
+/home/tony/projects/promptguard2/openspec/AGENTS.md
+/home/tony/projects/tupay/AGENTS.md
+/home/tony/projects/eidolon/AGENTS.md
+/home/tony/git-backup/wam-threadripper/promptguard.untracked/promptguard2/AGENTS.md
+/home/tony/projects/promptguard/AGENTS.md
+/home/tony/projects/promptguard/openspec/AGENTS.md
+/home/tony/projects/tupay/AGENTS.md
+/home/tony/projects/teaching/2025/CPSC436C-2025W-T1/capstone_clones/u444982/AGENTS.md
+/home/tony/projects/teaching/2025/CPSC436C-2025W-T1/capstone_clones/u466685/AGENTS.md
+/home/tony/projects/teaching/2025/CPSC436C-2025W-T1/capstone_clones/u411995/AGENTS.md
+/home/tony/projects/promptguard/openspec/AGENTS.md
+/home/tony/projects/promptguard/AGENTS.md
+/home/tony/projects/teaching/2025/CPSC436C-2025W-T1/capstone_clones/u410266/frontend/AGENTS.md
+/home/tony/projects/teaching/2025/CPSC436C-2025W-T1/capstone_clones/u421168/frontend/AGENTS.md
+/home/tony/projects/promptguard2/AGENTS.md
+/home/tony/projects/promptguard2/openspec/AGENTS.md
+/home/tony/projects/teaching/2025/CPSC416-2025W-T2/AGENTS.md
+/home/tony/projects/mallku/AGENTS.md
+/home/tony/projects/teaching/2025/CPSC436C-2025W-T1/capstone_clones/u466684/AGENTS.md
+/home/tony/projects/teaching/2025/CPSC436C-2025W-T2/AGENTS.md
+/home/tony/projects/mallku/AGENTS.md
+/home/tony/projects/teaching/2025/CPSC436C-2025W-T1/AGENTS.md
+/home/tony/projects/teaching/2025/CPSC436C-2025W-T1/tmp/capstone_code_repos/CPSC436C-2025W-T1_capstone_deho/AGENTS.md
+/home/tony/projects/teaching/2025/CPSC436C-2025W-T1/AGENTS.md
+/home/tony/projects/teaching/2025/CPSC436C-2025W-T1/tmp/capstone_code_repos/CPSC436C-2025W-T1_capstone-final-project/frontend/AGENTS.md
+/home/tony/projects/teaching/2025/CPSC436C-2025W-T1/tmp/capstone_code_repos/CPSC436C-2025W-T1_capstone-final-project/frontend/AGENTS.md
+/home/tony/projects/teaching/2025/CPSC436C-2025W-T1/capstone_clones/u444982/AGENTS.md
+/home/tony/projects/teaching/2025/CPSC436C-2025W-T1/tmp/capstone_code_repos/CPSC436C-2025W-T1_capstone_deho/AGENTS.md
+/home/tony/projects/teaching/2025/CPSC436C-2025W-T1/capstone_clones/u410266/frontend/AGENTS.md
+/home/tony/projects/teaching/2025/CPSC436C-2025W-T1/capstone_clones/u466685/AGENTS.md
+/home/tony/projects/teaching/2025/CPSC436C-2025W-T1/capstone_clones/u466684/AGENTS.md
+/home/tony/projects/teaching/2025/CPSC436C-2025W-T1/capstone_clones/u411995/AGENTS.md
+/home/tony/projects/teaching/2025/CPSC416-2025W-T2/AGENTS.md
+/home/tony/projects/teaching/2025/CPSC436C-2025W-T1/capstone_clones/u421168/frontend/AGENTS.md
+service/issuer/DESIGN.md:18:| Pipeline | Sign → `A_sig` → stamp → confirm → snapshot → headers → pre-ship checks → assemble | Lambda steps, driven by a scheduled poller (every 10 min) that advances each request one stage |
+service/issuer/DESIGN.md:225:  between the signer slots: EVERY slot gets its own share in EVERY poll, served in order, and a slot's unused share
+service/issuer/DESIGN.md:226:  passes to the next (ILC-I5, owner decision: fairness by construction, so no ordering can starve a slot). The shares
+service/issuer/DESIGN.md:228:  remaining cost, so one slow unit can overrun its share; it is not a total-time claim. Which slot goes first is only
+service/issuer/tessera_issue/lambda_app.py:112:def _scheduled_time(event):
+service/issuer/tessera_issue/lambda_app.py:113:    """ILC-I5: the EventBridge scheduled event's 'time' (exact 10-minute steps), the drain's ordering input; None when
+service/issuer/tessera_issue/lambda_app.py:122:def poller_handler(event, context):
+service/issuer/tessera_issue/lambda_app.py:130:    out = pipeline.poll(iss, budget_s=budget, schedule_time=_scheduled_time(event))
+service/issuer/tessera_issue/pipeline.py:1:"""The stage pipeline and the scheduled poller (DESIGN.md "Pipeline"), implementing the registered issuance lifecycle
+service/issuer/tessera_issue/pipeline.py:136:DRAIN_SHARE = 1 / 3              # ILC-I2-04: at most this share of an invocation drains signer responses
+service/issuer/tessera_issue/pipeline.py:169:def poll(iss, budget_s=None, schedule_time=None):
+service/issuer/tessera_issue/pipeline.py:170:    """One scheduled tick under one deadline (ILC-I-02; its clock is monotonic, ILC-I2-01). Work classes share the
+service/issuer/tessera_issue/pipeline.py:175:    # ILC-I5: the drain's ordering input is the scheduled event time (exact 10-minute steps) when the schedule supplied
+service/issuer/tessera_issue/pipeline.py:183:            out["drained"] = drain(iss, share_s=DRAIN_SHARE * d.limit, order_time=order_time)
+service/issuer/tessera_issue/pipeline.py:364:def _drain_start_slot(iss, order_time, n):
+service/issuer/tessera_issue/pipeline.py:367:    when there is none). Order only; fairness does not depend on it, because every slot has its own share."""
+service/issuer/tessera_issue/pipeline.py:371:def drain(iss, max_batches=50, share_s=float("inf"), order_time=None):
+service/issuer/tessera_issue/pipeline.py:375:    ILC-I2-04, ILC-I5 (fairness by construction): the drain allocation `share_s` is split equally between the signer
+service/issuer/tessera_issue/pipeline.py:376:    slots, and EVERY slot gets its own share in EVERY poll, served in order (the first slot from _drain_start_slot);
+service/issuer/tessera_issue/pipeline.py:377:    a slot's unused share passes to the next. The shares are cooperative: checked between response-processing units
+service/issuer/tessera_issue/pipeline.py:378:    (a receive, a response's handling), so one slow unit can overrun a share; what is left stays queued and is
+service/issuer/tessera_issue/pipeline.py:383:    turn = _drain_start_slot(iss, iss.clock() if order_time is None else order_time, len(slots))
+service/issuer/tessera_issue/pipeline.py:384:    per_slot = share_s / max(1, len(slots))
+service/issuer/tessera_issue/pipeline.py:400:                        break                      # whose receive used its share still progresses; the rest stay
+service/issuer/tessera_issue/pipeline.py:416:        carry = max(0.0, allowance - (d.clock() - start))  # unused share passes to the next slot
+"""The stage pipeline and the scheduled poller (DESIGN.md "Pipeline"), implementing the registered issuance lifecycle
+(A2.1-A2.3, A9.2, A9.5; docs/decisions/2026-10-29-issuance-lifecycle.md revision 5.3.1, "What the issuer does" and
+"Implementation boundary until the author decides"). The checked protocol is
+formal/tla/issuer-lifecycle/IssuerLifecycleR53.tla; code paths are named after its actions where natural.
+
+ONE LIFECYCLE WRITER (step 1). Only this poller (reserved concurrency 1) starts, latches, discards, expires, ships or
+refuses. The API is read-only for the lifecycle. Every lifecycle write is guarded on (request state, current attempt
+id, current attempt state) and the record version (stores.lifecycle_guard), so a write meant for an ended attempt, or
+decided on a version it did not read, fails its guard (the model's GuardOK).
+
+Each poll first drains every signer response queue (E-02), then advances each ACCEPTED request by at most one stage,
+then works off cleanup obligations. Stages of the current attempt (attempt material lives under work/<rid>/<attempt>/):
+
+  upload    the API owns the record before it stores the content (IS-05); an upload never finished within
+            UPLOAD_GRACE_S is FAILED (CONTENT_UNAVAILABLE) - no attempt exists yet
+  frames    Start (attempt 1 only; later attempts are allocated by the write that ends their predecessor): the
+            attempt's declared issue time is its allocation time. Build both frames, enqueue the four signing jobs
+            with request ids derived from (request, attempt, frame)
+  signing   wait for all four; re-send unanswered jobs with the same id; then verify each on its exact bytes, freeze
+            them, build A_sig and check it with the verifier's decoders                (profile 4 steps 2-6; A9.5)
+  stamp     after the git assertion's proof has k = 6: one fresh stamp of SHA-256(A_sig) for this attempt; capture,
+            validate and stamp the DNSSEC snapshot envelope
+  evidence  the attempt is OPEN. Fence, Fetch, Send (below): latch on eligibility; discard (at or before B) or expire
+            (after B) only on COMPLETE negative evidence; anything else leaves it open
+  finalize  the attempt is LATCHED. Fence; complete the snapshot's confirmation and the headers; assemble with the
+            PRESERVED presentation; pre-ship checks (verifier library); ship, or recapture the snapshot, or retry, or
+            discard only for a failure the frozen attempt cannot cure (step 7: classify_preship, by the failing
+            verifier row's dependency; or SNAPSHOT_IMPOSSIBLE, proven from the chain's median time past)
+  snapshot  latched, re-capturing the DNSSEC snapshot after a snapshot-rule pre-ship failure
+
+DEADLINE (ILI-05, ILC-I-02). One poll runs under one deadline (deadline.py): every client request (DynamoDB, S3, SQS,
+SNS, calendars, explorers, DNS) and the pre-ship check is admitted only if its worst case fits the time left, with its
+timeout capped to that. Units of work (a header height, a tip) are pre-checked against the clients' computed worst
+cases; fetched headers and calendar answers are checkpointed; requests are served round-robin from a durable cursor;
+running out of time never ends an attempt.
+
+EVIDENCE (steps 3-5). Fence: a guarded write that bumps the version, committed before anything is fetched; a write
+left pending by a killed earlier invocation then fails its guard (R5-F3). Fetch: the wall reading is taken before the
+fetch starts (R5-F1); the attempt's proof is upgraded from its calendars and the full pinned, linked h..h+5 segment is
+fetched for every Bitcoin attestation; the verifier's own `select` picks the lowest qualifying height. Eligible: that
+presentation satisfies the three A2.2 conjuncts (declared - eps <= T, T <= declared + delta, confirmed_at <= declared +
+delta). Complete: every calendar the attempt was stamped to has attested, and every attestation's segment was
+obtained. Send: eligible -> latch (any time while open, however late); complete and failing -> discard / expire;
+otherwise no lifecycle transition: stale, pending, partial or failed evidence never ends an attempt.
+
+GATED (design step 5, until a signed amendment decides it): an attempt whose evidence never completes stays open.
+Nothing here commits EVIDENCE_UNAVAILABLE, ends or allocates because of unavailability, or derives a refusal, cleanup
+or terminal status from it, and no timeout or age rule ends an attempt indirectly. `unavailable_since` and
+`failed_intervals` are recorded for diagnosis only; no decision reads them.
+
+END AND ALLOCATE (step 8): ending attempt i and allocating i + 1 (fresh declared time; its frames, signatures and
+stamp follow) is one guarded write; ending attempt N records REFUSED ATTEMPTS_EXHAUSTED in the same write, listing each
+attempt's reason. If the next attempt would need signing after the signing stop, the request is REFUSED SIGNING_CLOSED
+instead. A closed signing window never ends a latched or signed-and-stamped attempt; it ends only an attempt that still
+needs signing.
+
+Cleanup (IS-07, revision 5.3.1): ending a request first records a cleanup obligation, then commits the end, then
+deletes. Each poll retries outstanding obligations: content, work files and frames once the request has ended; the
+receipt (and anything left) 30 days after the end. Before deleting, the obligation tags the objects cleanup-due (the
+S3 lifecycle backstop expires only tagged objects). An obligation is dropped only when the listing shows nothing
+left, and not before the late writers' lease (WRITE_LEASE_S, CF-02) has run out."""
+import json
+import re
+from dataclasses import dataclass, field
+from types import SimpleNamespace
+
+from tessera_verify.anchors import parse_ots, select
+from tessera_verify.codec import Fault, read_anchor, read_frame, registered_codecs
+from tessera_verify.dnssec import parse_snapshot, txt_value, validate_snapshot
+from tessera_verify.verify import ROWS
+
+from . import deadline, ots
+from .api import content_name
+from .deadline import OutOfBudget
+from .chain import check_links, pin_of
+from .encode import common_metadata, encode_anchor, encode_attest, encode_manifest, encode_snapshot_envelope
+from .lifecycle import DISCARDED, ENDED, EXPIRED, LATCHED, OPEN, OUTCOME, SHIPPED, B_of, current, new_attempt
+from .preship import PreShipUnavailable, check_config
+from .service import N_ATTEMPTS, POLL_INTERVAL_S, POLL_RESERVE_S, RETENTION_S, WRITE_LEASE_S
+from .signers import request_id
+from .stores import lifecycle_guard
+from .util import (ALG, DELTA, EPS, K, POLICY_VERSION, PROFILE, b64d, b64e, jcs, rfc3339, sha256, sha256hex, ts)
+
+JOBS = (("s_kms", "kms", "f_kms"), ("p_kms", "kms", "manifest"), ("s_gpg", "gpg", "f_gpg"), ("p_gpg", "gpg", "manifest"))
+UPLOAD_GRACE_S = 15 * 60          # IS-05: an API call lasts at most 29 s; an upload not finished by then was abandoned
+MERGE_ATTEMPTS = 5                # IS-08: compare-and-set retries when recording a verified signature
+FAILED_INTERVAL_RUNS = 256        # diagnostic failure history: at most this many runs of consecutive intervals kept
+# ILI-01: post-latch pre-ship failures are classified by what the failing verifier check depends on (rows of the
+# service verifier's ledger, tessera_verify.verify.ROWS), not by a reason-code list alone:
+#   FROZEN      the attempt's committed bytes (frames, frozen signatures, A_sig, manifest, the window's keys), the
+#               PRESERVED receipt presentation (pruned proof and its segment), or the window's frozen git material.
+#               Recovering evidence cannot change them: an INVALID result here discards the attempt (step 7).
+#   SNAPSHOT    the DNSSEC snapshot (rows 13.x) and what is read from it (15.x): replaceable by recapture, unless no
+#               lawful snapshot can be obtained for this frozen attempt any more (ILI-02, proven from evidence).
+#   anything else (pins and headers 10.x, container 1.x-2.x, catalog/config 7.1, 8.1, 8.3, 8.4, 17.x, the trust
+#               configuration's repository-key intervals 14.7, every UNVERIFIABLE result): the issuer's or the
+#               operator's to repair; retried, never a reason to discard.
+FROZEN_ROWS = {"3.1", "4.1", "4.2", "5.1", "5.2", "6.1", "6.2", "6.3", "8.2", "8.5", "9.1", "9.2", "9.3", "9.4", "9.5",
+               "11.1", "11.2", "11.3", "11.4", "11.5", "12.1", "12.2", "12.3",
+               "14.1", "14.2", "14.3", "14.4", "14.5", "14.6", "14.8", "16.1"}
+SNAPSHOT_ROWS = {"13.1", "13.2", "13.3", "13.4", "13.5", "13.6", "13.7", "15.1", "15.2"}
+# ILC-I-01: snapshot checks whose INVALID result depends only on the snapshot's own bytes (body, proof, and the chain
+# position its complete proof fixes) and frozen material - never on the trust configuration. Enumerated from the
+# verifier (tessera_verify/verify.py, rows 13.x and 15.x):
+#   13.1 LENGTH_CAP, 13.2 parse_snapshot, 13.3 DNS_WILDCARD, 13.6 owner and TXT grammar   - snapshot body
+#   13.4 SNAPSHOT_STAMP_MISMATCH / OTS_FORMAT                 - snapshot body against its proof
+#   13.7 SNAPSHOT_TIME                                        - the complete proof's anchor against declared time
+#   15.1 DNS_KEY_MISMATCH, 15.2 CHANNEL_VALUE_MISMATCH        - snapshot TXT value against frozen keys / git blob
+#   13.5 RRSIG_NOT_VALID_AT_EVAL_TIME, RRSIG_INTERVAL_REVERSED, RRSIG_TIME_AMBIGUOUS
+#                                                             - ILC-I2-02: the snapshot's own RRSIG times against
+#        its ANCHORED evaluation time (dnssec.rrsig_time; in the root group it runs only after a configured key has
+#        verified the signature). Waiting cannot repair that interval; a new snapshot can.
+# Configuration-dependent, so never a ground to recapture or discard (retried until the configuration or evidence is
+# repaired): every other 13.5 outcome (validate_snapshot against the configured root KSKs, their reliance periods and
+# the trust horizon - KSK_OUTSIDE_RELIANCE_PERIOD, NO_TRUSTED_KSK_USABLE, TRUSTED_KSK_SIGNATURE_INVALID,
+# TRUST_HORIZON - and, conservatively, the chain of trust built on them: signature, key, DS and metadata outcomes),
+# and 13.4's other outcomes (OTS_MERKLE_MISMATCH, SNAPSHOT_NOT_ANCHORED: the pinned headers).
+SNAPSHOT_BYTES_ROWS = {"13.1", "13.2", "13.3", "13.6", "13.7", "15.1", "15.2"}
+SNAPSHOT_BYTES_13_4 = {"SNAPSHOT_STAMP_MISMATCH", "OTS_FORMAT"}
+SNAPSHOT_BYTES_13_5 = {"RRSIG_NOT_VALID_AT_EVAL_TIME", "RRSIG_INTERVAL_REVERSED", "RRSIG_TIME_AMBIGUOUS"}
+
+
+def snapshot_bytes_only(check):
+    return check.status == "invalid" and (check.row in SNAPSHOT_BYTES_ROWS
+                                          or (check.row == "13.4" and check.reason in SNAPSHOT_BYTES_13_4)
+                                          or (check.row == "13.5" and check.reason in SNAPSHOT_BYTES_13_5))
+ROW_RANK = {r: i for i, r in enumerate(ROWS)}
+REASON_RE = re.compile(r"[A-Z][A-Z0-9_]{0,63}\Z")             # ILI-07: a bounded reason code from outside
+REQUEST_ID_RE = re.compile(r"req-[0-9a-f]{40}\Z")
+DIAG_MAX = 1 << 20
+
+# ILC-I-02: units of remote work are pre-checked against the clients' computed worst cases (defaults when a client
+# does not say); the safety mechanism is deadline.py's per-request guard, these only avoid starting a unit that cannot
+# finish. MIN_REQUEST_S: another request is started only with at least this much left.
+MIN_REQUEST_S = 60
+DRAIN_SHARE = 1 / 3              # ILC-I2-04: at most this share of an invocation drains signer responses
+ENUM_PAGE = 10                   # ILC-I2-04: active requests read per page
+MTP_SPAN = 11                                # median-time-past window (Bitcoin consensus)
+
+
+class StageError(Exception):
+    pass
+
+
+class Superseded(StageError):
+    """A guarded write failed: the record changed since this invocation read it (or fenced it)."""
+
+
+def _deadline(iss):
+    return deadline.CURRENT.get() or deadline.Deadline(iss.clock, float("inf"), 0)
+
+
+def _tip_worst(iss):
+    f = getattr(iss.headers, "tip_worst_s", None)
+    return f() if f else 2 * deadline.HTTP_WORST_S
+
+
+def _height_worst(iss):
+    f = getattr(iss.headers, "height_worst_s", None)
+    return f() if f else 4 * deadline.HTTP_WORST_S
+
+
+def _tip(iss):
+    deadline.ensure(_tip_worst(iss), "tip")
+    return iss.headers.tip()
+
+
+# ------------------------------------------------------------------------------------------------ the poller
+def poll(iss, budget_s=None, schedule_time=None):
+    """One scheduled tick under one deadline (ILC-I-02; its clock is monotonic, ILC-I2-01). Work classes share the
+    invocation (ILC-I2-04): draining signer responses may use at most DRAIN_SHARE of it; requests then get the rest.
+    Requests are enumerated in bounded pages from a DURABLE continuation position (RequestStore.active_page and the
+    poller cursor), and the position is moved past a request BEFORE it is worked on, so neither a long active list
+    nor a request that exhausts (or kills) an invocation takes the others' turns. -> summary dict."""
+    # ILC-I5: the drain's ordering input is the scheduled event time (exact 10-minute steps) when the schedule supplied
+    # one, else the invocation's wall-clock start reading
+    order_time = schedule_time if schedule_time is not None else iss.clock()
+    d = deadline.Deadline(getattr(iss, "elapsed_clock", None) or iss.clock,          # ILC-I2-01: monotonic
+                          iss.budget_s if budget_s is None else budget_s, POLL_RESERVE_S)
+    out = {"drained": 0, "advanced": {}, "cleaned": 0}
+    with deadline.Installed(d):
+        try:
+            out["drained"] = drain(iss, share_s=DRAIN_SHARE * d.limit, order_time=order_time)
+            _serve_requests(iss, d, out)
+            if d.available() >= MIN_REQUEST_S:
+                out["cleaned"] = cleanup(iss)
+        except OutOfBudget as e:                       # out of time outside a request's turn: resumed next poll
+            iss.note("poll out of time:", e)
+            out["out_of_time"] = True
+    return out
+
+
+def _serve_requests(iss, d, out):
+    store = iss.requests
+    position = _position(iss)
+    keep = {k: v for k, v in position.items() if k not in ("token", "skip", "drain_turn")}
+
+    def put(pos):
+        store.cursor_put(dict(keep, **pos))
+    cur = {"token": position.get("token"), "skip": position.get("skip", 0)}
+    seen, served, wrapped = set(), 0, False
+    while True:
+        rids, nxt = store.active_page(cur["token"], ENUM_PAGE)
+        if not rids and cur["token"] is not None and not wrapped:
+            cur, wrapped = {"token": None, "skip": 0}, True            # end of the list: start again from the top
+            continue
+        for i in range(cur["skip"], len(rids)):
+            rid = rids[i]
+            if rid in seen:
+                return                                 # a full lap in this invocation
+            if served and d.available() < MIN_REQUEST_S:
+                out["deferred"] = True
+                return
+            put({"token": cur["token"], "skip": i + 1})  # moved BEFORE the request is worked on
+            seen.add(rid)
+            served += 1
+            rec = store.get(rid)
+            if rec is None or rec["state"] != "ACCEPTED":
+                continue                               # the index is eventually consistent
+            before = rec["stage"]
+            try:
+                advance(iss, rec)
+            except OutOfBudget as e:
+                iss.note("out of time, request kept:", rid[:12], e)
+            except PreShipUnavailable as e:
+                iss.note("pre-ship unavailable, request kept:", rid[:12], e)
+            except Exception as e:  # noqa: BLE001  one request's fault never stops the others; retried next tick
+                iss.note("stage", before, "error, request kept:", rid[:12], type(e).__name__, e)
+            out["advanced"][rid] = (before, rec["stage"] or rec["state"])
+        if nxt is None:
+            if wrapped or cur["token"] is None and not rids:
+                put({"token": None, "skip": 0})
+                return
+            cur, wrapped = {"token": None, "skip": 0}, True
+        else:
+            cur = {"token": nxt, "skip": 0}
+        put(cur)
+
+
+def advance(iss, rec):
+    now = iss.clock()
+    try:
+        STAGES[rec["stage"]](iss, rec, now)
+    except StageError as e:
+        iss.note("stage", rec["stage"], "deferred:", e)
+
+
+def _commit(iss, rec, expect):
+    """Commit: a write guarded on `expect` (the lifecycle guard as read) and the record version."""
+    if not iss.requests.save(rec, expect):
+        raise Superseded("record changed since it was read; re-read next tick")
+
+
+def _event(rec, now, *what):
+    rec["events"] = (rec.get("events") or [])[-40:] + [[now, *what]]
+
+
+def _fence(iss, rec, now):
+    """Fence (R5-F3): a guarded write that bumps the version, committed before this invocation fetches anything for
+    the attempt. Any write a killed earlier invocation left pending carries an older version and now fails its guard.
+
+codex
+I’m using the verification-before-completion skill for the verdict. Each slot now gets a fresh allowance when its turn starts, so an earlier overrun does not consume that allowance. I’ll check whether the invocation-wide deadline can still prevent service.
+exec
+/bin/bash -lc "sed -n '360,425p' service/issuer/tessera_issue/pipeline.py; cat service/issuer/tessera_issue/deadline.py; sed -n '105,138p' service/issuer/tessera_issue/lambda_app.py; sed -n '215,242p' service/issuer/DESIGN.md; rg -n 'share|scheduled|first_response|every_slot' service/issuer/tests/test*; sed -n '1,130p' service/issuer/tests/test_lifecycle_confirm.py" in /home/tony/projects/tessera
+ succeeded in 0ms:
+    cur = iss.requests.cursor_get()
+    return cur if isinstance(cur, dict) else {}
+
+
+def _drain_start_slot(iss, order_time, n):
+    """ILC-I4-01, ILC-I5 (owner decisions): which signer slot is served first: floor(ordering input / poll interval)
+    mod the number of slots, where the ordering input is the schedule's event time (or the invocation's start reading
+    when there is none). Order only; fairness does not depend on it, because every slot has its own share."""
+    return (int(order_time) // POLL_INTERVAL_S) % max(1, n)
+
+
+def drain(iss, max_batches=50, share_s=float("inf"), order_time=None):
+    """Read every slot's response queue. Every response is logged (request id, slot, status, frame hash when the
+    id is known, signature hash) whether or not it is used, and then deleted from the queue.
+
+    ILC-I2-04, ILC-I5 (fairness by construction): the drain allocation `share_s` is split equally between the signer
+    slots, and EVERY slot gets its own share in EVERY poll, served in order (the first slot from _drain_start_slot);
+    a slot's unused share passes to the next. The shares are cooperative: checked between response-processing units
+    (a receive, a response's handling), so one slow unit can overrun a share; what is left stays queued and is
+    delivered again. So neither a continuously replenished queue nor any ordering can starve the other slot or the
+    request work."""
+    n, d = 0, _deadline(iss)
+    slots = list(iss.signers.items())
+    turn = _drain_start_slot(iss, iss.clock() if order_time is None else order_time, len(slots))
+    per_slot = share_s / max(1, len(slots))
+    carry = 0.0
+    for slot, signer in slots[turn:] + slots[:turn]:
+        allowance, start = per_slot + carry, d.clock()
+
+        def over():
+            return d.clock() - start >= allowance or d.available() < MIN_REQUEST_S
+        try:
+            for _ in range(max_batches):
+                if over():
+                    break
+                batch = signer.receive(10)
+                if not batch:
+                    break
+                for k, (handle, body) in enumerate(batch):
+                    if k and over():               # the first response of a batch is always handled, so a slot
+                        break                      # whose receive used its share still progresses; the rest stay
+                                                   # queued and are delivered again after the visibility timeout
+                    try:
+                        _take(iss, slot, signer, body)
+                    except OutOfBudget:
+                        raise
+                    except Exception as e:  # noqa: BLE001  not acknowledged: the queue delivers it again
+                        iss.note("response", slot, "not taken:", type(e).__name__, e)
+                        continue
+                    signer.ack(handle)
+                    n += 1
+                else:
+                    continue
+                break
+        except OutOfBudget as e:
+            iss.note("drain out of time:", slot, e)
+        carry = max(0.0, allowance - (d.clock() - start))  # unused share passes to the next slot
+    return n
+
+
+def _bounded(raw):
+    """ILI-07: a signer-supplied reason as a bounded code. -> (code, diagnostic bytes or None)."""
+    if raw is None:
+        return None, None
+    if isinstance(raw, str) and REASON_RE.match(raw):
+        return raw, None
+"""ONE deadline guard for every remote and store request the poller makes (ILC-I-02; docs/reviews/issuer-lifecycle-impl
+/CODEX-CONFIRM.md). The poller installs a Deadline for the duration of one poll (pipeline.poll). Every client request
+then goes through `call`, which
+
+  (a) refuses to START the request unless its worst-case duration fits the time remaining minus the reserve
+      (raising OutOfBudget: the work resumes in the next invocation; nothing is decided on a refused request), and
+  (b) passes the request a timeout no larger than what remains: CALL_TIMEOUT holds that value while the request runs,
+      and the HTTP and DNS transports cap their total time to it. AWS SDK clients cannot take a per-request timeout;
+      their configured worst case (AWS_WORST_S, from the client configuration: attempts x (connect + read) plus the
+      retry back-off) is what (a) admits, so it never exceeds what remains either.
+
+The guard sits at the lowest layer, around each single request, so no adapter loop (pagination, deletion rounds,
+explorer agreement) can multiply time unchecked:
+
+  DynamoDB, S3, SQS (signer sends and receives), SNS   GuardedClient around each boto3-style client (aws.py, queues.py)
+  calendars, explorers                                 guarded_transport in ots.HttpCalendar, chain.ExplorerHeaders
+  DNS resolver                                         guarded_transport in dns.LiveDns
+  the pre-ship check (local CPU, no timeout knob)      pipeline, with PRESHIP_WORST_S
+
+Per-unit cost figures elsewhere (a header height, a tip) are computed from these worst cases and the configured
+explorer count, and are used only to avoid starting a unit that cannot finish; the safety mechanism is this guard.
+Outside a poll (the API, tests calling a function directly) no deadline is installed and calls run unguarded."""
+import contextvars
+
+from .service import AWS_CLIENT_CONFIG, HTTP_TIMEOUT_S
+
+CURRENT = contextvars.ContextVar("tessera_deadline", default=None)
+CALL_TIMEOUT = contextvars.ContextVar("tessera_call_timeout", default=None)
+
+
+def aws_worst_s(config=AWS_CLIENT_CONFIG):
+    """Worst case of one SDK request under the client configuration: every attempt waits its full connect and read
+    timeouts, and every retry waits the standard mode's maximum back-off (20 s)."""
+    attempts = config["retries"]["total_max_attempts"]
+    return attempts * (config["connect_timeout"] + config["read_timeout"]) + (attempts - 1) * 20
+
+
+AWS_WORST_S = aws_worst_s()
+HTTP_WORST_S = HTTP_TIMEOUT_S              # one calendar or explorer request (total, capped by the transport)
+DNS_WORST_S = 2 * 10                       # one resolver query: UDP, then TCP if truncated (total, capped)
+PRESHIP_WORST_S = 30                       # the verifier library on one bundle; local CPU, measured well below
+
+
+class OutOfBudget(Exception):
+    """The next request does not fit the invocation's remaining time; resumed next poll."""
+
+
+class Deadline:
+    def __init__(self, clock, limit_s, reserve_s):
+        self.clock, self.start, self.limit, self.reserve = clock, clock(), limit_s, reserve_s
+
+    def remaining(self):
+        return self.limit - (self.clock() - self.start)
+
+    def available(self):
+        return self.remaining() - self.reserve
+
+    def ensure(self, worst_s, what=""):
+        """Refuse unless `worst_s` fits; used for whole units (a header height) before their first request."""
+        if worst_s > self.available():
+            raise OutOfBudget(f"{what}: worst case {worst_s:.0f} s, {self.available():.0f} s available; "
+                              "resumed next poll")
+
+    def call(self, worst_s, fn, *args, what="", **kwargs):
+        self.ensure(worst_s, what)
+        token = CALL_TIMEOUT.set(min(worst_s, self.available()))
+        try:
+            return fn(*args, **kwargs)
+        finally:
+            CALL_TIMEOUT.reset(token)
+
+
+def guarded(worst_s, fn, *args, what="", **kwargs):
+    """Run one request under the current deadline (if any)."""
+    d = CURRENT.get()
+    if d is None:
+        return fn(*args, **kwargs)
+    return d.call(worst_s, fn, *args, what=what, **kwargs)
+
+
+def ensure(worst_s, what=""):
+    d = CURRENT.get()
+    if d is not None:
+        d.ensure(worst_s, what)
+
+
+def call_timeout(default):
+    """The timeout a transport must use for the request now running: its own, capped by what remains."""
+    t = CALL_TIMEOUT.get()
+    return default if t is None else max(0.001, min(default, t))
+
+
+class GuardedClient:
+    """A boto3-style client whose every method call is one guarded request of worst case AWS_WORST_S (or `worst_s`).
+    Non-callable attributes pass through. Methods the adapters use to build URLs locally (generate_presigned_url)
+    make no request and are not guarded."""
+    LOCAL = {"generate_presigned_url"}
+
+    def __init__(self, client, kind, worst_s=None):
+        object.__setattr__(self, "_client", client)
+        object.__setattr__(self, "_kind", kind)
+        object.__setattr__(self, "_worst", AWS_WORST_S if worst_s is None else worst_s)
+
+    def __setattr__(self, name, value):            # test hooks patch the wrapped client, not the guard
+        setattr(self._client, name, value)
+
+    def __getattr__(self, name):
+        attr = getattr(self._client, name)
+        if not callable(attr) or name in self.LOCAL:
+            return attr
+
+        def call(*args, **kwargs):
+            return guarded(self._worst, attr, *args, what=f"{self._kind}.{name}", **kwargs)
+        return call
+
+
+def guarded_transport(transport, kind, worst_s):
+    """A transport (method, url, body) or (query) whose every request is guarded."""
+    if getattr(transport, "_tessera_guarded", False):
+        return transport
+
+    def t(*args):
+        return guarded(worst_s, transport, *args, what=kind)
+    t._tessera_guarded = True
+    return t
+
+
+class Installed:
+    """Context manager: install a Deadline for one poll."""
+
+    def __init__(self, deadline):
+        self.deadline, self.token = deadline, None
+
+    def __enter__(self):
+        self.token = CURRENT.set(self.deadline)
+        return self.deadline
+
+    def __exit__(self, *exc):
+        CURRENT.reset(self.token)
+        return False
+    return install_record.current_facts(SHA1DC_BINARY, digest)
+
+
+def api_handler(event, context):
+    return handle_api_event(_issuer(), event)
+
+
+def _scheduled_time(event):
+    """ILC-I5: the EventBridge scheduled event's 'time' (exact 10-minute steps), the drain's ordering input; None when
+    absent or malformed (the poller then uses its start reading)."""
+    from .util import ts
+    try:
+        return ts(event["time"]) if isinstance(event, dict) and isinstance(event.get("time"), str) else None
+    except ValueError:
+        return None
+
+
+def poller_handler(event, context):
+    if isinstance(event, dict) and event.get("tessera") == "install-facts":
+        return install_facts()                         # invoked by the operator only; EventBridge never sends it
+    iss = _issuer()
+    budget = getattr(iss, "budget_s", POLL_BUDGET_S)   # ILC-I-02: never more than the time this invocation has left
+    remaining = getattr(context, "get_remaining_time_in_millis", None)
+    if remaining is not None:
+        budget = min(budget, remaining() / 1000 - (POLLER_TIMEOUT_S - POLL_BUDGET_S))
+    out = pipeline.poll(iss, budget_s=budget, schedule_time=_scheduled_time(event))
+    return json.loads(json.dumps(out, default=str))
+  admits every request the poller makes: DynamoDB, S3 (including the body read of `get_object`, inside the same guarded
+  request) and SQS and SNS through `GuardedClient` around each SDK client; calendars, explorers and the resolver through
+  `guarded_transport`; the pre-ship check directly. A request starts only if its configured worst case fits the time
+  left minus a 10 s reserve, and the HTTP and DNS transports are given a timeout capped to what remains. Worst cases
+  count the configured explorers and the SDK's retry attempts (`attempts x (connect + read) + back-off` = 73 s). Its
+  purpose is that every invocation leaves durable progress: headers are checkpointed per height and as linked
+  segments, a stale stored set is invalidated durably (ILC-I-03), the evidence already held is evaluated before any
+  pending calendar is asked (ILC-I-05), calendar requests stop while one checkpoint write still fits (ILC-I2-03),
+  requests are enumerated in bounded pages from a durable position moved before each request (ILC-I2-04), and draining
+  signer responses has a cooperative allocation of a third of an invocation (ILC-I2-04, ILC-I3-02), split equally
+  between the signer slots: EVERY slot gets its own share in EVERY poll, served in order, and a slot's unused share
+  passes to the next (ILC-I5, owner decision: fairness by construction, so no ordering can starve a slot). The shares
+  are checked between response-processing units (a receive, a response's handling), without reserving a unit's
+  remaining cost, so one slow unit can overrun its share; it is not a total-time claim. Which slot goes first is only
+  an ordering: floor(ordering input / 600 s) mod the number of slots, where the ordering input is the EventBridge
+  schedule event's `time` (exact 10-minute steps), or the invocation's wall-clock start reading when the event has
+  none. Running out of time never ends an attempt.
+  **An overrun is a hard kill, and the protocol tolerates it:** the fence, the guarded writes and the checkpoints make
+  a killed invocation's leftovers harmless. **Known limits on the deadline's precision** (not chased): the HTTP
+  transport's socket timeout applies per blocking operation, so a server dripping bytes can exceed the request's
+  total; a DNS query is a composite of UDP and TCP operations, each with its own allowance, and hostname resolution is
+  not covered; an SDK request's connect and read timeouts are not a total-operation deadline (streamed bodies); the
+  pre-ship check is local CPU with a 30 s admission estimate and no interruption. Measured progress envelope (tests):
+  with any one client slow, every invocation stays within its deadline in the tests' fakes, and a request still
+  completes with every DynamoDB request taking 20 s, every S3 request 10 s, every SQS or SNS request 60 s, every
+  calendar, explorer or resolver request 15 s, or a 25 s pre-ship check; at DynamoDB 30 s or S3 20 s per request a
+  stage can need more requests than one invocation admits and the request stalls (listed above).
+- **Snapshot capture does not gate the receipt** (ILC-I2-05). Stamping moves the attempt to evidence whether or not
+service/issuer/tests/test_clients.py:27:    proofs = [ots.stamp(d, [http], bytes(16)) for d in digests]     # five stamps share one block
+service/issuer/tests/test_lifecycle_round3.py:152:    """Fairness between work classes: draining signer responses has a share of each invocation, so a queue that is
+service/issuer/tests/test_lifecycle_round3.py:222:    signers rebuilt KMS first) before every poll. Every signer slot has its own share of the drain allocation in
+service/issuer/tests/test_lifecycle_round3.py:246:    scheduled time (no write to spend budget on), so it alternates across schedule windows and GPG is served."""
+service/issuer/tests/test_lifecycle_round3.py:284:def test_ILCI5_every_slot_is_served_whatever_the_ordering_input(monkeypatch):
+service/issuer/tests/test_lifecycle_round3.py:287:    Each slot has its own share of the drain allocation, so GPG is served anyway."""
+service/issuer/tests/test_lifecycle_round3.py:307:def test_ILCI5_the_ordering_input_is_the_scheduled_event_time(monkeypatch):
+service/issuer/tests/test_lifecycle_round3.py:320:def test_ILCI5_scheduled_times_alternate_the_starting_slot(loc):
+service/issuer/tests/test_lifecycle_repairs.py:320:def test_ILI05_requests_are_scheduled_fairly_across_invocations(loc, monkeypatch):
+service/issuer/tests/test_e2e.py:54:def test_several_requests_in_flight_share_blocks_and_all_verify(tmp_path):
+"""Repairs after Codex's confirmation review (docs/reviews/issuer-lifecycle-impl/CODEX-CONFIRM.md, ILC-I-01..05;
+ILC-I-06 is documentation). Codex's probes (/tmp/tmp.lgKk0SQtBY/test_confirmation.py) are reproduced as regression
+tests with the repaired behaviour as the oracle; ILC-I-02 is tested for every client kind the poller uses."""
+import copy
+import uuid
+
+import pytest
+
+from tessera_issue import api, deadline, ots, pipeline
+from tessera_issue.aws import DynamoRequestStore, S3ResultStore, SnsWake
+from tessera_issue.chain import ExplorerHeaders
+from tessera_issue.dns import LiveDns
+from tessera_issue.ots import HttpCalendar
+from tessera_issue.queues import SqsQueue
+from tessera_issue.service import POLL_BUDGET_S, POLL_RESERVE_S
+from tessera_issue.signers import SlotSigner, StandInSigner
+from tessera_issue.util import DELTA, HOUR, rfc3339
+
+from conftest import FROZEN
+from fakes import FakeDynamo, FakeS3, FakeSns, FakeSqs
+from helpers import submit
+from test_lifecycle import att, bury, declared, get, poll, to_evidence
+from test_lifecycle_repairs import SlowHeaders, latched
+
+
+# ================================================================================================ ILC-I-01
+def test_ILCI01_a_trust_configuration_failure_of_a_timely_snapshot_is_retried_and_ships_after_repair(loc, key):
+    """Codex's KSK-interval probe: both proofs anchored on time, the chain far past the MTP threshold, and only the
+    configured KSK interval broken. Row 13.5 depends on the trust configuration, so it is neither a recapture nor a
+    SNAPSHOT_IMPOSSIBLE discard: the attempt and its snapshot are kept, and after the repair it ships."""
+    rid, rec = latched(loc, key)
+    a = att(rec)
+    loc.clock.t = declared(a) + DELTA + 100
+    loc.world.chain.mine(20)
+    saved = copy.deepcopy(loc.iss.preship.trust_base["root_ksks"])
+    loc.iss.preship.trust_base["root_ksks"][0]["signing_start"] = rfc3339(declared(a) + 2 * HOUR)
+    body = loc.iss.results.get("work", rid, "a1/snapshot.body")
+    for _ in range(3):
+        poll(loc)
+    rec = get(loc, rid)
+    assert rec["cur"] == 1 and att(rec)["state"] == "latched" and rec["stage"] == "finalize"
+    assert "KSK_OUTSIDE_RELIANCE_PERIOD" in [e for e in rec["events"] if e[1] == "preship-retry"][-1][3]
+    assert not [e for e in rec["events"] if e[1] == "preship-recapture"]
+    assert loc.iss.results.get("work", rid, "a1/snapshot.body") == body       # the timely snapshot is kept
+    loc.iss.preship.trust_base["root_ksks"] = saved
+    poll(loc)
+    rec = get(loc, rid)
+    assert rec["state"] == "COMPLETE" and len(rec["attempts"]) == 1
+
+
+def test_ILCI01_the_snapshot_classification_keeps_configuration_rows_out_of_byte_only_rows():
+    from tessera_verify.verify import Ledger
+    # ("13.5", "RRSIG_NOT_VALID_AT_EVAL_TIME") moved to "snapshot" by the owner's ILC-I2-02 decision (the snapshot's
+    # own RRSIG times at its anchored time); see test_lifecycle_round3.py
+    for row, reason, kind in [("13.5", "KSK_OUTSIDE_RELIANCE_PERIOD", "retry"), ("13.5", "RRSIG_NOT_VALID_AT_EVAL_TIME",
+                                                                                   "snapshot"),
+                              ("13.4", "OTS_MERKLE_MISMATCH", "retry"), ("13.7", "SNAPSHOT_TIME", "snapshot"),
+                              ("13.4", "SNAPSHOT_STAMP_MISMATCH", "snapshot"), ("15.1", "DNS_KEY_MISMATCH", "snapshot")]:
+        led = Ledger()
+        led.fault(row, reason)
+        assert pipeline.classify_preship(led)[0] == kind, (row, reason)
+    assert pipeline._snapshot_impossible(None, None, None, {"row": "13.5", "reason": "KSK_OUTSIDE_RELIANCE_PERIOD"}) \
+        is None
+
+
+# ================================================================================================ ILC-I-02
+SLOW = {"dynamodb": 60, "s3": 60, "sqs": 60, "sns": 60, "calendar": 15, "explorer": 15, "dns": 15, "preship": 25}
+
+
+class SlowClient:
+    """A client (or transport) whose every request takes `delay` seconds of the issuer's clock, recording the
+    timeout the deadline passed it (deadline.CALL_TIMEOUT) and the time left when it started."""
+
+    def __init__(self, target, clock, delay, log):
+        self._t, self._clock, self._delay, self._log = target, clock, delay, log
+
+    def _slow(self, fn, *a, **kw):
+        d = deadline.CURRENT.get()
+        if d is not None:
+            self._log.append((deadline.CALL_TIMEOUT.get(), d.remaining()))
+        self._clock.advance(self._delay)
+        return fn(*a, **kw)
+
+    def __getattr__(self, name):
+        attr = getattr(self._t, name)
+        if not callable(attr) or name in ("q", "generate_presigned_url"):
+            return attr
+        return lambda *a, **kw: self._slow(attr, *a, **kw)
+
+    def __call__(self, *a, **kw):
+        return self._slow(self._t, *a, **kw)
+
+
+def aws_wire(slow_kind):
+    """A local issuer whose every client is the real adapter over a fake (DynamoDB, S3, SQS, SNS) or the real
+    protocol client over a stand-in transport (calendar, explorers, resolver); one kind is slow."""
+    from tessera_issue import local
+    loc = local.build(FROZEN)
+    clock, world, iss, log = loc.clock, loc.world, loc.iss, []
+
+    def slow(kind, target):
+        return SlowClient(target, clock, SLOW[kind], log) if kind == slow_kind else target
+    ddb, s3, sqs, sns = FakeDynamo(), FakeS3(), FakeSqs(clock), FakeSns()
+    iss.requests = DynamoRequestStore(slow("dynamodb", ddb), "t")
+    iss.results = S3ResultStore(slow("s3", s3), "b")
+    wake = SnsWake(slow("sns", sns), {"kms": "arn:kms", "gpg": "arn:gpg"})
+    q = slow("sqs", sqs)
+    iss.signers = {"kms": SlotSigner("kms", world.kms_key.spki, SqsQueue(q, "kms-req"), SqsQueue(q, "kms-resp"), wake),
+                   "gpg": SlotSigner("gpg", world.gpg_key.pgp_body, SqsQueue(q, "gpg-req"), SqsQueue(q, "gpg-resp"),
+                                     wake)}
+    loc.workers = {s: StandInSigner(s, k, sqs.q(f"{s}-req"), sqs.q(f"{s}-resp"), clock,
+                                    sign_until=iss.window.sign_until, fetch=iss.results.get_ref)
+                   for s, k in (("kms", world.kms_key), ("gpg", world.gpg_key))}
+    iss.calendars = [HttpCalendar(world.calendar.uri, slow("calendar", world.calendar.serve))]
+    iss.headers = ExplorerHeaders(["https://explorer-a.invalid/api", "https://explorer-b.invalid/api"],
+                                  slow("explorer", world.chain.serve_esplora))
+    iss.dns = LiveDns(slow("dns", world.dns.serve(clock)))
+    if slow_kind == "preship":
+        real = iss.preship.check
+        iss.preship.check = lambda *a, **kw: SlowClient(real, clock, SLOW["preship"], log)(*a, **kw)
+    return loc, log
+
+
+@pytest.mark.parametrize("kind", sorted(SLOW))
+def test_ILCI02_no_poll_exceeds_its_budget_whichever_client_is_slow(kind):
+    loc, log = aws_wire(kind)
+    key = str(uuid.uuid4())
+    loc.iss.budget_s = float("inf")
+    r = api.submit(loc.iss, "cred-A", key, b"slow clients")                  # the API is not the poller
+    assert r.status == 202, r.body
+
+exec
+/bin/bash -lc 'mktemp -d' in /home/tony/projects/tessera
+ succeeded in 0ms:
+/tmp/tmp.CnfcXg4OuN
+
+exec
+/bin/bash -lc 'PYTHONDONTWRITEBYTECODE=1 TMPDIR=/tmp/tmp.CnfcXg4OuN .venv/bin/python -m pytest -q -p no:cacheprovider --basetemp=/tmp/tmp.CnfcXg4OuN/suite > /tmp/tmp.CnfcXg4OuN/suite.log 2>&1' in /home/tony/projects/tessera/service/issuer
+exec
+/bin/bash -lc 'cp /tmp/tmp.vRDSdlYGSl/test_lock.py /tmp/tmp.6rbTsKov9q/test_rotation.py /tmp/tmp.pyt6bZDeCk/test_third.py /tmp/tmp.CnfcXg4OuN/; PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=tests TMPDIR=/tmp/tmp.CnfcXg4OuN .venv/bin/python -m pytest -q -s -p no:cacheprovider --basetemp=/tmp/tmp.CnfcXg4OuN/probes /tmp/tmp.CnfcXg4OuN/test_lock.py /tmp/tmp.CnfcXg4OuN/test_rotation.py /tmp/tmp.CnfcXg4OuN/test_third.py > /tmp/tmp.CnfcXg4OuN/probes.log 2>&1' in /home/tony/projects/tessera/service/issuer
+ exited 1 in 266ms:
+exec
+/bin/bash -lc "cat /tmp/tmp.CnfcXg4OuN/probes.log; sed -n '425,505p' service/issuer/tessera_issue/pipeline.py; sed -n '280,340p' service/issuer/tests/test_lifecycle_round3.py; cat service/issuer/tessera_issue/queues.py; rg -n 'POLL_BUDGET|POLL_RESERVE|def ts' service/issuer/tessera_issue/{service,util}.py" in /home/tony/projects/tessera
+ succeeded in 0ms:
+LOCK evidence [('p_gpg', True), ('p_kms', True), ('s_gpg', True), ('s_kms', True)] 0
+FSHORT 0 {'drained': 0, 'advanced': {}, 'cleaned': 0, 'out_of_time': True} {'drain_turn': 0}
+SHORT 1 {'drained': 0, 'advanced': {}, 'cleaned': 0, 'out_of_time': True} {'drain_turn': 0}
+SHORT 2 {'drained': 0, 'advanced': {}, 'cleaned': 0, 'out_of_time': True} {'drain_turn': 0}
+SHORT 3 {'drained': 0, 'advanced': {}, 'cleaned': 0, 'out_of_time': True} {'drain_turn': 0}
+SHORT 4 {'drained': 0, 'advanced': {}, 'cleaned': 0, 'out_of_time': True} {'drain_turn': 0}
+SHORT 5 {'drained': 0, 'advanced': {}, 'cleaned': 0, 'out_of_time': True} {'drain_turn': 0}
+SHORT 6 {'drained': 1, 'advanced': {}, 'cleaned': 0, 'out_of_time': True} {'drain_turn': 0}
+SHORT 7 {'drained': 0, 'advanced': {}, 'cleaned': 0, 'out_of_time': True} {'drain_turn': 0}
+SHORT 8 {'drained': 0, 'advanced': {}, 'cleaned': 0, 'out_of_time': True} {'drain_turn': 0}
+SHORT 9 {'drained': 1, 'advanced': {}, 'cleaned': 0, 'out_of_time': True} {'drain_turn': 0}
+SHORT 10 {'drained': 0, 'advanced': {}, 'cleaned': 0, 'out_of_time': True} {'drain_turn': 0}
+SHORT 11 {'drained': 0, 'advanced': {}, 'cleaned': 0, 'out_of_time': True} {'drain_turn': 0}
+RESULT signing [('p_gpg', True), ('p_kms', True), ('s_gpg', True), ('s_kms', True)] 0
+FCOLD evidence [('p_gpg', True), ('p_kms', True), ('s_gpg', True), ('s_kms', True)] 0
+F.DRAIN_SHARE 180 96.66666666666667
+.
+=================================== FAILURES ===================================
+_______________________________ test_parity_lock _______________________________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x715691760b00>
+
+    def test_parity_lock(monkeypatch):
+        monkeypatch.setitem(SLOW,'sqs',20)
+        loc,_=aws_wire('sqs')
+        _,rid=submit(loc,str(uuid.uuid4()))
+        pipeline.poll(loc.iss)
+        for wk in loc.workers.values(): wk.process()
+        base=((int(loc.clock())//1200)+1)*1200
+        junk=json.dumps({'request_id':'req-'+'0'*40,'status':'SIGNED','sig_b64':'AAAA'})
+        for i in range(12):
+            # Schedule phase 599 s; alternate delivery delays of 0 and 2 seconds.
+            loc.clock.t=base+599+600*i+(0 if i%2==0 else 2)
+            for _ in range(100): loc.workers['kms'].responses.send(junk)
+            assert pipeline._drain_start_slot(loc.iss,loc.clock(),2)==0
+            pipeline.poll(loc.iss)
+        rec=get(loc,rid)
+        print('LOCK',rec['stage'],[(k,bool(v['sig_sha256'])) for k,v in att(rec)['jobs'].items()],len(loc.workers['gpg'].responses))
+>       assert all(not v['sig_sha256'] for k,v in att(rec)['jobs'].items() if 'gpg' in k)
+E       assert False
+E        +  where False = all(<generator object test_parity_lock.<locals>.<genexpr> at 0x71569171bae0>)
+
+/tmp/tmp.CnfcXg4OuN/test_lock.py:24: AssertionError
+_____________________ test_short_budget_empty_first_queue ______________________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7156917602b0>
+
+    def test_short_budget_empty_first_queue(monkeypatch):
+        loc,rid=setup(monkeypatch)
+        for i in range(12):
+            out=pipeline.poll(loc.iss,budget_s=190)
+            print('SHORT',i,out,loc.iss.requests.cursor_get())
+        print('RESULT',get(loc,rid)['stage'],[(k,bool(v['sig_sha256'])) for k,v in att(get(loc,rid))['jobs'].items()],len(loc.workers['gpg'].responses))
+        assert get(loc,rid)['stage']=='signing'
+>       assert all(not v['sig_sha256'] for k,v in att(get(loc,rid))['jobs'].items() if 'gpg' in k)
+E       assert False
+E        +  where False = all(<generator object test_short_budget_empty_first_queue.<locals>.<genexpr> at 0x715691777140>)
+
+/tmp/tmp.CnfcXg4OuN/test_rotation.py:30: AssertionError
+____________________ test_cold_starts_starve_second_signer _____________________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7156917f6570>
+
+    def test_cold_starts_starve_second_signer(monkeypatch):
+        monkeypatch.setitem(SLOW,'sqs',20)
+        loc,_=aws_wire('sqs')
+        _,rid=submit(loc,str(uuid.uuid4()))
+        pipeline.poll(loc.iss)
+        for wk in loc.workers.values(): wk.process()
+        junk=json.dumps({'request_id':'req-'+'0'*40,'status':'SIGNED','sig_b64':'AAAA'})
+        for n in range(8):
+            for _ in range(100): loc.workers['kms'].responses.send(junk)
+            loc.iss.drain_turn=0 # fresh Lambda issuer object; persistent stores and queues retained
+            pipeline.poll(loc.iss)
+        rec=get(loc,rid)
+        print('COLD',rec['stage'],[(k,v['sig_sha256'] is not None) for k,v in att(rec)['jobs'].items()],len(loc.workers['gpg'].responses))
+>       assert rec['stage']=='signing'
+E       AssertionError: assert 'evidence' == 'signing'
+E         
+E         - signing
+E         + evidence
+
+/tmp/tmp.CnfcXg4OuN/test_third.py:23: AssertionError
+=========================== short test summary info ============================
+FAILED ../../../../../../tmp/tmp.CnfcXg4OuN/test_lock.py::test_parity_lock - ...
+FAILED ../../../../../../tmp/tmp.CnfcXg4OuN/test_rotation.py::test_short_budget_empty_first_queue
+FAILED ../../../../../../tmp/tmp.CnfcXg4OuN/test_third.py::test_cold_starts_starve_second_signer
+3 failed, 2 passed in 0.20s
+        return raw, None
+    data = raw.encode("utf-8", "replace") if isinstance(raw, str) else json.dumps(raw, sort_keys=True).encode()
+    return "UNRECOGNIZED_REASON", data[:DIAG_MAX]
+
+
+def _keep_diagnostic(iss, rid, aid, data):
+    """Store an oversized or malformed external diagnostic by reference (deleted with the request's work files)."""
+    digest = sha256hex(data)
+    name = f"{aid}/diag-{digest}"
+    iss.results.put("work", rid, name, data)
+    return {"ref": name, "sha256": digest, "length": len(data)}
+
+
+def _take(iss, slot, signer, body):
+    """Route one signer response by (request, ATTEMPT, job). A response for an attempt that is not the request's
+    current one is logged ("other-attempt") and ignored: it can never fill another attempt (step 2). Every field taken
+    from the response is bounded before it is stored (ILI-07)."""
+    now = iss.clock()
+    raw_id = body.get("request_id")
+    srid = raw_id if isinstance(raw_id, str) and REQUEST_ID_RE.match(raw_id) else None
+    idx = iss.requests.sigreq_get(srid) if srid else None
+    status = body.get("status") if body.get("status") in ("SIGNED", "REFUSED") else "OTHER"
+    reason, diag = _bounded(body.get("reason"))
+    sig = None
+    if status == "SIGNED":
+        try:
+            sig = b64d(body.get("sig_b64", ""))
+        except (ValueError, TypeError):
+            sig = None
+    entry = {"at": rfc3339(now), "slot": slot,
+             "request_id": srid or "invalid:" + sha256hex(json.dumps(raw_id).encode())[:32], "status": status,
+             "reason": reason, "frame_sha256": idx["frame_sha256"] if idx else None,
+             "signature_sha256": sha256hex(sig) if sig is not None else None, "disposition": None,
+             "attempt": idx.get("attempt") if idx else None}
+    if diag is not None:
+        entry.update(reason_sha256=sha256hex(diag), reason_length=len(diag))
+    if idx is None or idx.get("slot") != slot:
+        entry["disposition"] = "unrequested"
+    else:
+        rec = iss.requests.get(idx["rid"])
+        a = current(rec) if rec else None
+        job = a["jobs"].get(idx["job"]) if a else None
+        if rec is None or rec["state"] != "ACCEPTED":
+            entry["disposition"] = "not-waiting"
+        elif a is None or a["id"] != idx.get("attempt"):
+            entry["disposition"] = "other-attempt"
+        elif rec["stage"] != "signing" or a["state"] != OPEN or job is None:
+            entry["disposition"] = "not-waiting"
+        elif job.get("sig_sha256"):
+            entry["disposition"] = "duplicate"
+        elif status == "REFUSED":
+            entry["disposition"] = "refused"
+            extra = {"diagnostic": _keep_diagnostic(iss, rec["rid"], a["id"], diag)} if diag is not None else None
+            iss.requests.siglog_add(entry)
+            return _end_attempt(iss, rec, DISCARDED, "SIGNER_REFUSED:" + str(reason or "NO_REASON"), now, extra)
+        elif sig is None:
+            entry["disposition"] = "malformed"
+        else:
+            frame = iss.results.get("work", rec["rid"], f"{a['id']}/{job['frame']}")
+            if frame is None or sha256hex(frame) != job["frame_sha256"] or not signer.verify(frame, sig):
+                entry["disposition"] = "bad-signature"
+            else:
+                entry["disposition"] = "used"
+                iss.requests.siglog_add(entry)         # IS-01: durable in the log before it can be used
+                iss.results.put("work", rec["rid"], f"{a['id']}/" + sig_name(idx["job"], entry["signature_sha256"]),
+                                sig)
+                outcome = _record_signature(iss, idx["rid"], a["id"], idx["job"], entry["signature_sha256"], srid,
+                                            now)
+                if outcome != "used":                  # IS-08: say what became of it
+                    iss.requests.siglog_add(dict(entry, disposition="superseded:" + outcome))
+                return
+    iss.requests.siglog_add(entry)
+
+
+def sig_name(job, sig_sha256):
+    """Each verified signature has its own object, so concurrent consumers never overwrite one another (IS-08)."""
+    return f"sig-{job}-{sig_sha256}"
+
+
+def _record_signature(iss, rid, aid, job, sig_sha256, srid, now):
+    """IS-08: merge one verified signature into its attempt, re-reading on a guarded-write conflict."""
+
+
+
+# ================================================================================================ ILC-I5 (fairness by construction)
+def test_ILCI5_every_slot_is_served_whatever_the_ordering_input(monkeypatch):
+    """Codex's parity lock-in probe (docs/reviews/issuer-lifecycle-impl/CODEX-CONFIRM-5.md): start readings 599 s
+    into alternate 10-minute windows (+0 / +2 s) all pick slot 0, and KMS traffic is replenished before every poll.
+    Each slot has its own share of the drain allocation, so GPG is served anyway."""
+    monkeypatch.setitem(SLOW, "sqs", 20)
+    loc, _ = aws_wire("sqs")
+    _, rid = submit(loc, str(uuid.uuid4()))
+    pipeline.poll(loc.iss)
+    for wk in loc.workers.values():
+        wk.process()
+    base = ((int(loc.clock()) // 1200) + 1) * 1200
+    junk = json.dumps({"request_id": "req-" + "0" * 40, "status": "SIGNED", "sig_b64": "AAAA"})
+    for i in range(12):
+        loc.clock.t = base + 599 + 600 * i + (0 if i % 2 == 0 else 2)
+        for _ in range(100):
+            loc.workers["kms"].responses.send(junk)
+        assert pipeline._drain_start_slot(loc.iss, loc.clock(), 2) == 0
+        pipeline.poll(loc.iss)
+        if all(v["sig_sha256"] for k, v in att(get(loc, rid))["jobs"].items() if "gpg" in k):
+            break
+    assert all(v["sig_sha256"] for k, v in att(get(loc, rid))["jobs"].items() if "gpg" in k)
+
+
+def test_ILCI5_the_ordering_input_is_the_scheduled_event_time(monkeypatch):
+    from tessera_issue import lambda_app
+    from tessera_issue.util import ts
+    seen = []
+    monkeypatch.setattr(lambda_app, "_issuer", lambda: type("I", (), {"budget_s": POLL_BUDGET_S})())
+    monkeypatch.setattr(lambda_app.pipeline, "poll",
+                        lambda iss, budget_s=None, schedule_time=None: seen.append(schedule_time) or {})
+    lambda_app.poller_handler({"source": "aws.events", "time": "2026-11-02T10:10:00Z"}, None)
+    lambda_app.poller_handler({"source": "aws.events", "time": "not a time"}, None)
+    lambda_app.poller_handler({}, None)
+    assert seen == [ts("2026-11-02T10:10:00Z"), None, None]
+
+
+def test_ILCI5_scheduled_times_alternate_the_starting_slot(loc):
+    starts, real = [], pipeline._drain_start_slot
+
+    def record(iss, order_time, n):
+        starts.append(real(iss, order_time, n))
+        return starts[-1]
+    pipeline._drain_start_slot = record
+    try:
+        t = (loc.clock() // 600) * 600
+        for i in range(4):
+            loc.clock.t = t + 600 * i + 599                 # late delivery: the start reading is near the boundary
+            pipeline.poll(loc.iss, schedule_time=t + 600 * i)
+    finally:
+        pipeline._drain_start_slot = real
+    assert starts == [starts[0], 1 - starts[0], starts[0], 1 - starts[0]]
+"""Message queues behind one interface: in memory (tests, local runs) and SQS (AWS). The in-memory queue enforces
+SQS's message size limit."""
+import itertools
+from dataclasses import dataclass
+
+
+@dataclass
+class Message:
+    id: str
+    body: str
+    handle: str
+
+
+SQS_MAX_BYTES = 1048576              # SendMessage maximum message size
+
+
+class Queue:
+    def send(self, body):
+        raise NotImplementedError
+
+    def receive(self, max_messages=10, wait_s=0):
+        raise NotImplementedError
+
+    def delete(self, handle):
+        raise NotImplementedError
+
+
+class InMemoryQueue(Queue):
+    """At-least-once queue with a visibility timeout, like SQS: a received message is hidden until it is deleted or
+    its visibility timeout passes (measured on the given clock)."""
+
+    def __init__(self, clock, visibility_s=300, max_bytes=SQS_MAX_BYTES):
+        self.clock, self.visibility_s, self.max_bytes = clock, visibility_s, max_bytes
+        self.msgs = {}                       # id -> {"body", "visible_at", "handle"}
+        self._ids = itertools.count(1)
+
+    def send(self, body):
+        if len(body.encode()) > self.max_bytes:          # as SQS does (IS-09): the stand-in must not hide it
+            raise ValueError(f"message of {len(body.encode())} bytes exceeds {self.max_bytes}")
+        mid = f"m{next(self._ids)}"
+        self.msgs[mid] = {"body": body, "visible_at": 0, "handle": None}
+        return mid
+
+    def receive(self, max_messages=10, wait_s=0):
+        now, out = self.clock(), []
+        for mid, m in self.msgs.items():
+            if len(out) >= max_messages:
+                break
+            if m["visible_at"] <= now:
+                m["visible_at"] = now + self.visibility_s
+                m["handle"] = f"{mid}:{next(self._ids)}"
+                out.append(Message(mid, m["body"], m["handle"]))
+        return out
+
+    def delete(self, handle):
+        mid = handle.split(":")[0]
+        m = self.msgs.get(mid)
+        if m is not None and m["handle"] == handle:
+            del self.msgs[mid]
+
+    def __len__(self):
+        return len(self.msgs)
+
+
+class SqsQueue(Queue):
+    """SQS through an injected boto3-style client (`boto3.client("sqs")`)."""
+
+    def __init__(self, client, url):
+        from .deadline import GuardedClient
+        self.client, self.url = GuardedClient(client, "sqs"), url       # ILC-I-02: signer sends and receives
+
+    def send(self, body):
+        return self.client.send_message(QueueUrl=self.url, MessageBody=body)["MessageId"]
+
+    def receive(self, max_messages=10, wait_s=0):
+        r = self.client.receive_message(QueueUrl=self.url, MaxNumberOfMessages=max(1, min(10, max_messages)),
+                                        WaitTimeSeconds=wait_s)
+        return [Message(m["MessageId"], m["Body"], m["ReceiptHandle"]) for m in r.get("Messages", [])]
+
+    def delete(self, handle):
+        self.client.delete_message(QueueUrl=self.url, ReceiptHandle=handle)
+service/issuer/tessera_issue/util.py:61:def ts(s):
+service/issuer/tessera_issue/service.py:18:POLL_BUDGET_S = 290                 # the invocation's usable time (lambda_app lowers it to the time actually left)
+service/issuer/tessera_issue/service.py:19:POLL_RESERVE_S = 10                 # kept free after the last request: returning the poll's summary
+service/issuer/tessera_issue/service.py:47:    budget_s: float = POLL_BUDGET_S  # ILI-05: one poll's work budget (lambda_app lowers it to the time remaining)
+
+exec
+/bin/bash -lc "rg -n 'class DynamoRequestStore|def __init__' service/issuer/tessera_issue/aws.py | head; sed -n '60,75p' service/issuer/tessera_issue/util.py; tail -3 /tmp/tmp.CnfcXg4OuN/suite.log; sed -n '1,60p' service/issuer/tessera_issue/signers.py" in /home/tony/projects/tessera
+ succeeded in 0ms:
+43:class DynamoRequestStore(RequestStore):
+47:    def __init__(self, client, table):
+221:    def __init__(self, client, bucket):
+305:    def __init__(self, client, topics):
+
+def ts(s):
+    """'YYYY-MM-DDTHH:MM:SSZ' -> integer seconds (no leap seconds)."""
+    if len(s) != 20 or s[4] != "-" or s[7] != "-" or s[10] != "T" or s[13] != ":" or s[16] != ":" or s[19] != "Z":
+        raise ValueError("not an RFC 3339 UTC second: " + repr(s))
+    y, mo, d = int(s[0:4]), int(s[5:7]), int(s[8:10])
+    return _days_from_civil(y, mo, d) * 86400 + int(s[11:13]) * 3600 + int(s[14:16]) * 60 + int(s[17:19])
+
+
+def rfc3339(t):
+    t = int(t)
+    days, rem = divmod(t, 86400)
+    z = days + 719468
+    era = (z if z >= 0 else z - 146096) // 146097
+    doe = z - era * 146097
+    yoe = (doe - doe // 1460 + doe // 36524 - doe // 146096) // 365
+................................."""The two policy signers behind one interface (DESIGN.md "Signers"): the issuer enqueues a frame on the slot's
+request queue and reads signed responses from the slot's response queue. The issuer holds no signing credential.
+
+Wire protocol (the deployed slot-2 policy signer's): request {"request_id", "frame_b64"}; response {"request_id",
+"status": "SIGNED" | "REFUSED", "sig_b64"?, "reason"?, "detail"?, "signer": {...}?}.
+Additions after review (DESIGN.md "Changes after review"):
+  IS-03  the request carries "sign_by" (RFC 3339): the signer refuses (SIGNING_STOPPED) when its clock is past it, or
+         past its own configured signing stop, immediately before signing.
+  IS-09  a frame whose inline message would exceed INLINE_MAX is sent as {"request_id", "frame_ref", "frame_sha256",
+         "sign_by"}: the signer reads the object at frame_ref and refuses (FRAME_DIGEST_MISMATCH) unless its SHA-256 is
+         frame_sha256, so it signs exactly the bytes the issuer named.
+
+E-01: `wake()` starts a signer on demand (optional hook per slot, called once per enqueued batch).
+E-02: request ids are derived from (request, frame hash), so a retry reuses the id and a late answer to the first
+attempt satisfies it; the caller records every response with frame and signature hashes (pipeline.drain).
+
+StandInSigner is the local signer process: it reads the same queues and signs with TEST keys."""
+import json
+
+from tessera_verify.codec import (Fault, parse_signature, public_key, registered_codecs, sig_policy,
+                                  signature_verifies, read_frame)
+
+from .encode import fp_gpg, fp_kms
+from .util import ALG, EPS, b64d, b64e, rfc3339, sha256hex, ts
+
+SLOTS = ("kms", "gpg")
+INLINE_MAX = 256 * 1024          # bytes of one inline request message; SQS allows at most 1 MiB (IS-09)
+REGISTRY = registered_codecs(ALG)
+
+
+def request_id(request_id_scope, slot, frame):
+    """E-02: one id per (request, slot, frame); a retry of the same frame for the same request reuses it. The slot is
+    in the derivation because the manifest frame goes to both slots."""
+    return "req-" + sha256hex(f"{request_id_scope}\n{slot}\n{sha256hex(frame)}".encode())[:40]
+
+
+def verify_slot_signature(slot, key_bytes, frame, sig):
+    """Rule R (kms) or rule O (gpg) codec and policy, then the signature over the exact frame bytes, with the
+    service verifier's own functions."""
+    try:
+        parsed = parse_signature(sig, ALG, slot, REGISTRY)
+        sig_policy(parsed)
+        return signature_verifies(frame, parsed, public_key(key_bytes, slot, ALG))
+    except Fault:
+        return False
+
+
+class SlotSigner:
+    """Issuer side of one slot: its public key and its two queues."""
+
+    def __init__(self, slot, key_bytes, requests, responses, wake=None):
+        if slot not in SLOTS:
+            raise ValueError(slot)
+        public_key(key_bytes, slot, ALG)                 # KEY_FORMAT gate
+        self.slot, self.key_bytes = slot, key_bytes
+        self.fp = fp_kms(key_bytes) if slot == "kms" else fp_gpg(key_bytes)
+        self.requests, self.responses, self._wake = requests, responses, wake
+
+    def send(self, rid, frame, sign_by=None, stash=None):
+        """stash(frame) -> object reference, used when the inline message would be too large (IS-09)."""
+
+exec
+/bin/bash -lc "sed -n '43,55p' service/issuer/tessera_issue/aws.py; sed -n '505,533p' service/issuer/tessera_issue/pipeline.py" in /home/tony/projects/tessera
+ succeeded in 0ms:
+class DynamoRequestStore(RequestStore):
+    request_worst_s = AWS_WORST_S
+    INDEX = "pending-index"
+
+    def __init__(self, client, table):
+        self.c, self.t = GuardedClient(client, "dynamodb"), table      # ILC-I-02: every request guarded
+
+    def _get(self, pk):
+        it = self.c.get_item(TableName=self.t, Key={"pk": {"S": pk}}, ConsistentRead=True).get("Item")
+        return it
+
+    GUARD_ATTRS = (("state", "lstate"), ("attempt", "latt"), ("astate", "lastate"))
+
+    """IS-08: merge one verified signature into its attempt, re-reading on a guarded-write conflict."""
+    for _ in range(MERGE_ATTEMPTS):
+        rec = iss.requests.get(rid)
+        a = current(rec) if rec else None
+        if (rec is None or rec["state"] != "ACCEPTED" or a is None or a["id"] != aid or a["state"] != OPEN
+                or rec["stage"] != "signing" or job not in a["jobs"]):
+            return "not-waiting"
+        if a["jobs"][job]["sig_sha256"]:
+            return "duplicate"
+        g = lifecycle_guard(rec)
+        a["jobs"][job]["sig_sha256"] = sig_sha256
+        _event(rec, now, "signed", aid, job, srid)
+        if iss.requests.save(rec, g):
+            return "used"
+    return "save-conflict"                             # left in storage and the log; reconciled before any resend
+
+
+def _reconcile(iss, rec, a):
+    """IS-08: adopt a stored signature that verifies on the job's frame and has its "used" log record, instead of
+    asking the signer again. -> True if a job was satisfied."""
+    names, found, aid = iss.results.names("work", rec["rid"]), False, a["id"]
+    for job, j in a["jobs"].items():
+        if j["sig_sha256"]:
+            continue
+        frame = iss.results.get("work", rec["rid"], f"{aid}/{j['frame']}")
+        for name in names:
+            if not name.startswith(f"{aid}/sig-{job}-"):
+                continue
+            sig = iss.results.get("work", rec["rid"], name)
+
+exec
+/bin/bash -lc "cat > /tmp/tmp.CnfcXg4OuN/test_overrun.py <<'PY'
+import uuid,json
+from conftest import loc,key
+from test_lifecycle_confirm import aws_wire,SLOW,SlowClient
+from test_lifecycle import get,att
+from helpers import submit
+from tessera_issue import pipeline
+
+def test_first_overrun(monkeypatch):
+    monkeypatch.setitem(SLOW,'sqs',0)
+    loc,_=aws_wire('sqs')
+    _,rid=submit(loc,str(uuid.uuid4()))
+    pipeline.poll(loc.iss)
+    for wk in loc.workers.values(): wk.process()
+    # Replenished unrequested replies: 60 receive + 60 lookup + 60 log + 60 ack.
+    # All individual operations fit their configured 73-second admission bound.
+    loc.iss.requests.client._client=SlowClient(loc.iss.requests.client._client,loc.clock,60,[])
+    for signer in loc.iss.signers.values(): signer.responses.client._client._delay=60
+    # Put junk ahead of KMS replies; retain obtainable, valid GPG responses.
+    loc.workers['kms'].responses.msgs.clear()
+    junk=json.dumps({'request_id':'req-'+'0'*40,'status':'SIGNED','sig_b64':'AAAA'})
+    for i in range(12):
+        loc.workers['kms'].responses.send(junk)
+        start=loc.clock()
+        out=pipeline.poll(loc.iss,schedule_time=0)
+        print('OVERRUN',i,loc.clock()-start,out,len(loc.workers['gpg'].responses))
+    rec=get(loc,rid)
+    assert all(not v['sig_sha256'] for k,v in att(rec)['jobs'].items() if 'gpg' in k)
+    assert len(loc.workers['gpg'].responses)==2
+PY
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=tests TMPDIR=/tmp/tmp.CnfcXg4OuN .venv/bin/python -m pytest -q -s -p no:cacheprovider /tmp/tmp.CnfcXg4OuN/test_overrun.py > /tmp/tmp.CnfcXg4OuN/overrun.log 2>&1" in /home/tony/projects/tessera/service/issuer
+ exited 1 in 127ms:
+exec
+/bin/bash -lc "sed -i 's/requests.client/requests.c/g' /tmp/tmp.CnfcXg4OuN/test_overrun.py; PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=tests TMPDIR=/tmp/tmp.CnfcXg4OuN .venv/bin/python -m pytest -q -s -p no:cacheprovider /tmp/tmp.CnfcXg4OuN/test_overrun.py > /tmp/tmp.CnfcXg4OuN/overrun.log 2>&1; cat /tmp/tmp.CnfcXg4OuN/overrun.log" in /home/tony/projects/tessera/service/issuer
+ succeeded in 133ms:
+OVERRUN 0 240 {'drained': 2, 'advanced': {}, 'cleaned': 0, 'out_of_time': True} 1
+OVERRUN 1 180 {'drained': 1, 'advanced': {'91083ea75cdb00046559dec3f4c2e03c19a2a42262ee358e04e4408dae613c6a': ('signing', 'signing')}, 'cleaned': 0} 1
+OVERRUN 2 240 {'drained': 2, 'advanced': {}, 'cleaned': 0, 'out_of_time': True} 0
+OVERRUN 3 180 {'drained': 1, 'advanced': {'91083ea75cdb00046559dec3f4c2e03c19a2a42262ee358e04e4408dae613c6a': ('signing', 'signing')}, 'cleaned': 0} 0
+OVERRUN 4 180 {'drained': 1, 'advanced': {'91083ea75cdb00046559dec3f4c2e03c19a2a42262ee358e04e4408dae613c6a': ('signing', 'signing')}, 'cleaned': 0} 0
+OVERRUN 5 180 {'drained': 1, 'advanced': {'91083ea75cdb00046559dec3f4c2e03c19a2a42262ee358e04e4408dae613c6a': ('signing', 'signing')}, 'cleaned': 0} 0
+OVERRUN 6 180 {'drained': 1, 'advanced': {'91083ea75cdb00046559dec3f4c2e03c19a2a42262ee358e04e4408dae613c6a': ('signing', 'signing')}, 'cleaned': 0} 0
+OVERRUN 7 180 {'drained': 1, 'advanced': {'91083ea75cdb00046559dec3f4c2e03c19a2a42262ee358e04e4408dae613c6a': ('signing', 'signing')}, 'cleaned': 0} 0
+OVERRUN 8 180 {'drained': 1, 'advanced': {'91083ea75cdb00046559dec3f4c2e03c19a2a42262ee358e04e4408dae613c6a': ('signing', 'signing')}, 'cleaned': 0} 0
+OVERRUN 9 240 {'drained': 1, 'advanced': {'91083ea75cdb00046559dec3f4c2e03c19a2a42262ee358e04e4408dae613c6a': ('signing', 'signing')}, 'cleaned': 0, 'out_of_time': True} 0
+OVERRUN 10 180 {'drained': 1, 'advanced': {'91083ea75cdb00046559dec3f4c2e03c19a2a42262ee358e04e4408dae613c6a': ('signing', 'signing')}, 'cleaned': 0} 0
+OVERRUN 11 180 {'drained': 1, 'advanced': {'91083ea75cdb00046559dec3f4c2e03c19a2a42262ee358e04e4408dae613c6a': ('signing', 'signing')}, 'cleaned': 0} 0
+F
+=================================== FAILURES ===================================
+______________________________ test_first_overrun ______________________________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x73c4e295c640>
+
+    def test_first_overrun(monkeypatch):
+        monkeypatch.setitem(SLOW,'sqs',0)
+        loc,_=aws_wire('sqs')
+        _,rid=submit(loc,str(uuid.uuid4()))
+        pipeline.poll(loc.iss)
+        for wk in loc.workers.values(): wk.process()
+        # Replenished unrequested replies: 60 receive + 60 lookup + 60 log + 60 ack.
+        # All individual operations fit their configured 73-second admission bound.
+        loc.iss.requests.c._client=SlowClient(loc.iss.requests.c._client,loc.clock,60,[])
+        for signer in loc.iss.signers.values(): signer.responses.client._client._delay=60
+        # Put junk ahead of KMS replies; retain obtainable, valid GPG responses.
+        loc.workers['kms'].responses.msgs.clear()
+        junk=json.dumps({'request_id':'req-'+'0'*40,'status':'SIGNED','sig_b64':'AAAA'})
+        for i in range(12):
+            loc.workers['kms'].responses.send(junk)
+            start=loc.clock()
+            out=pipeline.poll(loc.iss,schedule_time=0)
+            print('OVERRUN',i,loc.clock()-start,out,len(loc.workers['gpg'].responses))
+        rec=get(loc,rid)
+>       assert all(not v['sig_sha256'] for k,v in att(rec)['jobs'].items() if 'gpg' in k)
+E       assert False
+E        +  where False = all(<generator object test_first_overrun.<locals>.<genexpr> at 0x73c4e2971460>)
+
+/tmp/tmp.CnfcXg4OuN/test_overrun.py:27: AssertionError
+=========================== short test summary info ============================
+FAILED ../../../../../../tmp/tmp.CnfcXg4OuN/test_overrun.py::test_first_overrun
+1 failed in 0.08s
+
+exec
+/bin/bash -lc "sed -i \"s/loc.iss.requests.c._client=SlowClient(loc.iss.requests.c._client,loc.clock,60,\\[\\])/object.__setattr__(loc.iss.requests.c,'_client',SlowClient(loc.iss.requests.c._client,loc.clock,60,[]))/\" /tmp/tmp.CnfcXg4OuN/test_overrun.py; PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=tests TMPDIR=/tmp/tmp.CnfcXg4OuN .venv/bin/python -m pytest -q -s -p no:cacheprovider /tmp/tmp.CnfcXg4OuN/test_overrun.py > /tmp/tmp.CnfcXg4OuN/overrun.log 2>&1; cat /tmp/tmp.CnfcXg4OuN/overrun.log" in /home/tony/projects/tessera/service/issuer
+ succeeded in 126ms:
+OVERRUN 0 240 {'drained': 1, 'advanced': {}, 'cleaned': 0, 'out_of_time': True} 2
+OVERRUN 1 240 {'drained': 1, 'advanced': {}, 'cleaned': 0, 'out_of_time': True} 2
+OVERRUN 2 240 {'drained': 1, 'advanced': {}, 'cleaned': 0, 'out_of_time': True} 2
+OVERRUN 3 240 {'drained': 1, 'advanced': {}, 'cleaned': 0, 'out_of_time': True} 2
+OVERRUN 4 240 {'drained': 1, 'advanced': {}, 'cleaned': 0, 'out_of_time': True} 2
+OVERRUN 5 240 {'drained': 1, 'advanced': {}, 'cleaned': 0, 'out_of_time': True} 2
+OVERRUN 6 240 {'drained': 1, 'advanced': {}, 'cleaned': 0, 'out_of_time': True} 2
+OVERRUN 7 240 {'drained': 1, 'advanced': {}, 'cleaned': 0, 'out_of_time': True} 2
+OVERRUN 8 240 {'drained': 1, 'advanced': {}, 'cleaned': 0, 'out_of_time': True} 2
+OVERRUN 9 240 {'drained': 1, 'advanced': {}, 'cleaned': 0, 'out_of_time': True} 2
+OVERRUN 10 240 {'drained': 1, 'advanced': {}, 'cleaned': 0, 'out_of_time': True} 2
+OVERRUN 11 240 {'drained': 1, 'advanced': {}, 'cleaned': 0, 'out_of_time': True} 2
+.
+1 passed in 0.07s
+
+codex
+The three original starvation assertions now fail because GPG replies are collected; lock-in and cold-start runs reach `evidence`. I also found a broader residual: with SQS and DynamoDB operations each taking 60 seconds, handling one first-slot reply consumes 240 seconds and blocks the second slot’s receive. The 290-second budget could fit two receives alone, so I’m checking this against the narrower slow-dependency limit you specified.
+exec
+/bin/bash -lc "python - <<'PY'
+p='/tmp/tmp.CnfcXg4OuN/test_overrun.py'
+s=open(p).read();s=s.replace(\"    # Put junk ahead\", \"    for slot, signer in loc.iss.signers.items():\\n        real = signer.receive\\n        def receive(n=10, slot=slot, real=real):\\n            loc.iss.requests.c._client._delay = 60 if slot == 'kms' else 0\\n            return real(n)\\n        signer.receive = receive\\n    # Put junk ahead\")
+s += \"\\n    for _ in range(4): pipeline.poll(loc.iss,schedule_time=600)\\n    assert all(v['sig_sha256'] for k,v in att(get(loc,rid))['jobs'].items() if 'gpg' in k)\\n    print('CONTROL GPG collected')\\n\"
+open(p,'w').write(s)
+PY
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=tests TMPDIR=/tmp/tmp.CnfcXg4OuN .venv/bin/python -m pytest -q -s -p no:cacheprovider /tmp/tmp.CnfcXg4OuN/test_overrun.py > /tmp/tmp.CnfcXg4OuN/overrun.log 2>&1; tail -5 /tmp/tmp.CnfcXg4OuN/overrun.log; tail -4 /tmp/tmp.CnfcXg4OuN/suite.log" in /home/tony/projects/tessera/service/issuer
+ succeeded in 127ms:
+OVERRUN 10 240 {'drained': 1, 'advanced': {}, 'cleaned': 0, 'out_of_time': True} 2
+OVERRUN 11 240 {'drained': 1, 'advanced': {}, 'cleaned': 0, 'out_of_time': True} 2
+CONTROL GPG collected
+.
+1 passed in 0.07s
+........................................................................ [ 32%]
+...................................................
+exec
+/bin/bash -lc "nl -ba service/issuer/tessera_issue/pipeline.py | sed -n '382,418p'; tail -3 /tmp/tmp.CnfcXg4OuN/suite.log" in /home/tony/projects/tessera
+ succeeded in 0ms:
+   382	    slots = list(iss.signers.items())
+   383	    turn = _drain_start_slot(iss, iss.clock() if order_time is None else order_time, len(slots))
+   384	    per_slot = share_s / max(1, len(slots))
+   385	    carry = 0.0
+   386	    for slot, signer in slots[turn:] + slots[:turn]:
+   387	        allowance, start = per_slot + carry, d.clock()
+   388	
+   389	        def over():
+   390	            return d.clock() - start >= allowance or d.available() < MIN_REQUEST_S
+   391	        try:
+   392	            for _ in range(max_batches):
+   393	                if over():
+   394	                    break
+   395	                batch = signer.receive(10)
+   396	                if not batch:
+   397	                    break
+   398	                for k, (handle, body) in enumerate(batch):
+   399	                    if k and over():               # the first response of a batch is always handled, so a slot
+   400	                        break                      # whose receive used its share still progresses; the rest stay
+   401	                                                   # queued and are delivered again after the visibility timeout
+   402	                    try:
+   403	                        _take(iss, slot, signer, body)
+   404	                    except OutOfBudget:
+   405	                        raise
+   406	                    except Exception as e:  # noqa: BLE001  not acknowledged: the queue delivers it again
+   407	                        iss.note("response", slot, "not taken:", type(e).__name__, e)
+   408	                        continue
+   409	                    signer.ack(handle)
+   410	                    n += 1
+   411	                else:
+   412	                    continue
+   413	                break
+   414	        except OutOfBudget as e:
+   415	            iss.note("drain out of time:", slot, e)
+   416	        carry = max(0.0, allowance - (d.clock() - start))  # unused share passes to the next slot
+   417	    return n
+   418	
+........................................................................ [ 32%]
+........................................................................ [ 64%]
+...
+exec
+/bin/bash -lc 'tail -3 /tmp/tmp.CnfcXg4OuN/suite.log; cat /tmp/tmp.CnfcXg4OuN/test_overrun.py' in /home/tony/projects/tessera
+ succeeded in 0ms:
+........................................................................ [ 32%]
+........................................................................ [ 64%]
+......................................import uuid,json
+from conftest import loc,key
+from test_lifecycle_confirm import aws_wire,SLOW,SlowClient
+from test_lifecycle import get,att
+from helpers import submit
+from tessera_issue import pipeline
+
+def test_first_overrun(monkeypatch):
+    monkeypatch.setitem(SLOW,'sqs',0)
+    loc,_=aws_wire('sqs')
+    _,rid=submit(loc,str(uuid.uuid4()))
+    pipeline.poll(loc.iss)
+    for wk in loc.workers.values(): wk.process()
+    # Replenished unrequested replies: 60 receive + 60 lookup + 60 log + 60 ack.
+    # All individual operations fit their configured 73-second admission bound.
+    object.__setattr__(loc.iss.requests.c,'_client',SlowClient(loc.iss.requests.c._client,loc.clock,60,[]))
+    for signer in loc.iss.signers.values(): signer.responses.client._client._delay=60
+    for slot, signer in loc.iss.signers.items():
+        real = signer.receive
+        def receive(n=10, slot=slot, real=real):
+            loc.iss.requests.c._client._delay = 60 if slot == 'kms' else 0
+            return real(n)
+        signer.receive = receive
+    # Put junk ahead of KMS replies; retain obtainable, valid GPG responses.
+    loc.workers['kms'].responses.msgs.clear()
+    junk=json.dumps({'request_id':'req-'+'0'*40,'status':'SIGNED','sig_b64':'AAAA'})
+    for i in range(12):
+        loc.workers['kms'].responses.send(junk)
+        start=loc.clock()
+        out=pipeline.poll(loc.iss,schedule_time=0)
+        print('OVERRUN',i,loc.clock()-start,out,len(loc.workers['gpg'].responses))
+    rec=get(loc,rid)
+    assert all(not v['sig_sha256'] for k,v in att(rec)['jobs'].items() if 'gpg' in k)
+    assert len(loc.workers['gpg'].responses)==2
+
+    for _ in range(4): pipeline.poll(loc.iss,schedule_time=600)
+    assert all(v['sig_sha256'] for k,v in att(get(loc,rid))['jobs'].items() if 'gpg' in k)
+    print('CONTROL GPG collected')
+
+exec
+/bin/bash -lc "sed -i 's/schedule_time=0)/schedule_time=1200*i)/' /tmp/tmp.CnfcXg4OuN/test_overrun.py; PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=tests TMPDIR=/tmp/tmp.CnfcXg4OuN .venv/bin/python -m pytest -q -s -p no:cacheprovider /tmp/tmp.CnfcXg4OuN/test_overrun.py > /tmp/tmp.CnfcXg4OuN/overrun.log 2>&1" in /home/tony/projects/tessera/service/issuer
+ succeeded in 124ms:
+codex
+The counterexample is confirmed across 12 polls starting KMS first: each leaves both valid GPG replies queued. With the same timing setup but GPG first, the replies are collected. This requires combined or variable dependency latency and repeated same-slot starts; consecutive scheduled events would alternate starts. The full suite is still running.
+ succeeded in 131626ms:
+exec
+/bin/bash -lc 'tail -4 /tmp/tmp.CnfcXg4OuN/suite.log; tail -4 /tmp/tmp.CnfcXg4OuN/overrun.log' in /home/tony/projects/tessera
+ succeeded in 0ms:
+........................................................................ [ 64%]
+........................................................................ [ 97%]
+......                                                                   [100%]
+222 passed in 131.54s (0:02:11)
+OVERRUN 11 240 {'drained': 1, 'advanced': {}, 'cleaned': 0, 'out_of_time': True} 2
+CONTROL GPG collected
+.
+1 passed in 0.07s
+
+codex
+**Verdict: not ready for deployment work with the step-5 gate closed; an obtainable-response starvation residual remains beyond the stated “cannot fit one receive per slot” limit.**
+
+- **Suite:** 222 passed in 131.54 seconds.
+- **Original probes:** all three collected every signature. Lock-in and cold-start reached `evidence`; reduced-budget remained `signing`. Their old starvation assertions failed as expected. The two ancillary checks passed.
+- **Remaining defect:** the first-response exception can consume enough invocation budget to block the next slot despite its separate allowance. In an independent probe, one unrequested KMS response cost **240 seconds**: receive, index lookup, log write and acknowledgement, each taking 60 seconds and fitting its individual admission bound. Only **40 usable seconds** remained, so GPG never received.
+
+Across **12 KMS-first polls**, both valid GPG replies stayed queued. A GPG-first control collected them. The probe uses combined/variable dependency latency and scheduled times 1,200 seconds apart; consecutive 600-second events alternate correctly.
+
+This is **not limited to a budget unable to fit two receives**: the 290-second budget fits both 60-second receives, including their admission bounds. Earlier response handling consumes the capacity needed by the second slot. Independent allowances therefore do not guarantee service independently of ordering.
+
+No other new defect identified in this narrow pass. No repository edits or git writes; scratch stayed under [/tmp/tmp.CnfcXg4OuN](/tmp/tmp.CnfcXg4OuN). Evidence: [original probes](/tmp/tmp.CnfcXg4OuN/probes.log), [counterexample](/tmp/tmp.CnfcXg4OuN/test_overrun.py), [counterexample results](/tmp/tmp.CnfcXg4OuN/overrun.log), [suite](/tmp/tmp.CnfcXg4OuN/suite.log).
+hook: Stop
+hook: Stop Completed
+tokens used
+75,684
+**Verdict: not ready for deployment work with the step-5 gate closed; an obtainable-response starvation residual remains beyond the stated “cannot fit one receive per slot” limit.**
+
+- **Suite:** 222 passed in 131.54 seconds.
+- **Original probes:** all three collected every signature. Lock-in and cold-start reached `evidence`; reduced-budget remained `signing`. Their old starvation assertions failed as expected. The two ancillary checks passed.
+- **Remaining defect:** the first-response exception can consume enough invocation budget to block the next slot despite its separate allowance. In an independent probe, one unrequested KMS response cost **240 seconds**: receive, index lookup, log write and acknowledgement, each taking 60 seconds and fitting its individual admission bound. Only **40 usable seconds** remained, so GPG never received.
+
+Across **12 KMS-first polls**, both valid GPG replies stayed queued. A GPG-first control collected them. The probe uses combined/variable dependency latency and scheduled times 1,200 seconds apart; consecutive 600-second events alternate correctly.
+
+This is **not limited to a budget unable to fit two receives**: the 290-second budget fits both 60-second receives, including their admission bounds. Earlier response handling consumes the capacity needed by the second slot. Independent allowances therefore do not guarantee service independently of ordering.
+
+No other new defect identified in this narrow pass. No repository edits or git writes; scratch stayed under [/tmp/tmp.CnfcXg4OuN](/tmp/tmp.CnfcXg4OuN). Evidence: [original probes](/tmp/tmp.CnfcXg4OuN/probes.log), [counterexample](/tmp/tmp.CnfcXg4OuN/test_overrun.py), [counterexample results](/tmp/tmp.CnfcXg4OuN/overrun.log), [suite](/tmp/tmp.CnfcXg4OuN/suite.log).

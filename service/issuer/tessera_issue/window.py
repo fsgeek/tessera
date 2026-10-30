@@ -5,7 +5,11 @@ window.json: {"format": "tessera-v1-window/1", "not_before", "not_after", "keys"
 "assertion" (the 255-byte value), "git": {"commit", "trees": [root, sub], "blob", "ots"} (base64),
 "trust_base": {"root_ksks": [...], "repository_keys": [...]} (profile 15.5 entries the pre-ship check uses)}.
 
-Margins (V1-SERVICE-RESOLUTIONS L1): acceptance stops 120 h before not-after; signing stops 96 h before."""
+Margins (V1-SERVICE-RESOLUTIONS L1, revised 2026-10-29): signing stops 96 h before not-after; acceptance stops
+delta + S + 24 h before signing stops (216 h before not-after). This is an operating allowance, not a processing
+guarantee: it leaves a first attempt started promptly room for its nominal delta + S before signing stops, but
+allocation can be delayed (polling, outages, a slow upload), and a later attempt that would need signing after the
+stop is refused SIGNING_CLOSED (A2.3 budgets are nominal, not wall-clock bounds)."""
 import json
 from dataclasses import dataclass
 
@@ -14,10 +18,11 @@ from tessera_verify.codec import Fault
 
 from . import ots
 from .encode import assertion_value, fp_gpg, fp_kms
-from .util import HOUR, b64d, b64e, sha256, ts
+from .service import SLACK_S
+from .util import DELTA, HOUR, b64d, b64e, sha256, ts
 
-ACCEPT_MARGIN = 120 * HOUR
 SIGN_MARGIN = 96 * HOUR
+ACCEPT_MARGIN = SIGN_MARGIN + DELTA + SLACK_S + 24 * HOUR          # L1: 216 h
 
 
 class WindowError(Exception):

@@ -1,0 +1,329 @@
+TLC2 Version 2026.07.31.184830 (rev: 30cc360)
+Warning: Please run the Java VM, which executes TLC with a throughput optimized garbage collector, by passing the "-XX:+UseParallelGC" property.
+(Use the -nowarning option to disable this warning.)
+Running breadth-first search Model-Checking with fp 84 and seed -2404694625969878494 with 12 workers on 12 cores with 7952MB heap and 64MB offheap memory [pid: 2563971] (Linux 6.8.0-139-generic amd64, Ubuntu 21.0.12.1 64bit, MSBDiskFPSet, DiskStateQueue).
+Parsing file /home/tony/projects/tessera/formal/tla/issuer-lifecycle/IssuerLifecycleR5.tla
+Parsing file /tmp/tlc-10682701117945254486/Integers.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Integers.tla)
+Parsing file /tmp/tlc-10682701117945254486/FiniteSets.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/FiniteSets.tla)
+Parsing file /tmp/tlc-10682701117945254486/Naturals.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Naturals.tla)
+Parsing file /tmp/tlc-10682701117945254486/Sequences.tla (jar:file:/home/tony/.local/lib/tla2tools.jar!/tla2sany/StandardModules/Sequences.tla)
+Semantic processing of module Naturals
+Semantic processing of module Integers
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module IssuerLifecycleR5
+Linting of module IssuerLifecycleR5
+Starting... (2026-10-29 19:52:04)
+Computing initial states...
+Finished computing initial states: 1 distinct state generated at 2026-10-29 19:52:04.
+Error: Invariant P5_UnavailablePeriod is violated.
+Error: The behavior up to this point is:
+State 1: <Initial predicate>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 0
+/\ e1 = <<0, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = FALSE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ ver = <<0, 0>>
+/\ st = <<"open", "none">>
+/\ lastSucc = <<-1, -1>>
+/\ bur = <<-1, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        rus |-> -1,
+        rver |-> 0,
+        cls |-> "-",
+        started |-> 0,
+        fat |-> 0 ] ]
+/\ pass = <<FALSE, FALSE>>
+/\ us = <<-1, -1>>
+/\ firstFail = <<-1, -1>>
+/\ succInWin = <<FALSE, FALSE>>
+/\ lostLive = <<FALSE, FALSE>>
+/\ p5ok = <<TRUE, TRUE>>
+
+State 2: <Tick line 140, col 3 to line 146, col 77 of module IssuerLifecycleR5>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 1
+/\ e1 = <<0, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = FALSE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ ver = <<0, 0>>
+/\ st = <<"open", "none">>
+/\ lastSucc = <<-1, -1>>
+/\ bur = <<-1, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        rus |-> -1,
+        rver |-> 0,
+        cls |-> "-",
+        started |-> 0,
+        fat |-> 0 ] ]
+/\ pass = <<FALSE, FALSE>>
+/\ us = <<-1, -1>>
+/\ firstFail = <<-1, -1>>
+/\ succInWin = <<FALSE, FALSE>>
+/\ lostLive = <<FALSE, FALSE>>
+/\ p5ok = <<TRUE, TRUE>>
+
+State 3: <Tick line 140, col 3 to line 146, col 77 of module IssuerLifecycleR5>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 2
+/\ e1 = <<0, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = FALSE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ ver = <<0, 0>>
+/\ st = <<"open", "none">>
+/\ lastSucc = <<-1, -1>>
+/\ bur = <<-1, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        rus |-> -1,
+        rver |-> 0,
+        cls |-> "-",
+        started |-> 0,
+        fat |-> 0 ] ]
+/\ pass = <<FALSE, FALSE>>
+/\ us = <<-1, -1>>
+/\ firstFail = <<-1, -1>>
+/\ succInWin = <<FALSE, FALSE>>
+/\ lostLive = <<FALSE, FALSE>>
+/\ p5ok = <<TRUE, TRUE>>
+
+State 4: <Tick line 140, col 3 to line 146, col 77 of module IssuerLifecycleR5>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 3
+/\ e1 = <<0, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = FALSE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ ver = <<0, 0>>
+/\ st = <<"open", "none">>
+/\ lastSucc = <<-1, -1>>
+/\ bur = <<-1, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        rus |-> -1,
+        rver |-> 0,
+        cls |-> "-",
+        started |-> 0,
+        fat |-> 0 ] ]
+/\ pass = <<FALSE, FALSE>>
+/\ us = <<-1, -1>>
+/\ firstFail = <<-1, -1>>
+/\ succInWin = <<FALSE, FALSE>>
+/\ lostLive = <<FALSE, FALSE>>
+/\ p5ok = <<TRUE, TRUE>>
+
+State 5: <Tick line 140, col 3 to line 146, col 77 of module IssuerLifecycleR5>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 4
+/\ e1 = <<0, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = FALSE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ ver = <<0, 0>>
+/\ st = <<"open", "none">>
+/\ lastSucc = <<-1, -1>>
+/\ bur = <<-1, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        rus |-> -1,
+        rver |-> 0,
+        cls |-> "-",
+        started |-> 0,
+        fat |-> 0 ] ]
+/\ pass = <<FALSE, FALSE>>
+/\ us = <<-1, -1>>
+/\ firstFail = <<-1, -1>>
+/\ succInWin = <<FALSE, FALSE>>
+/\ lostLive = <<FALSE, FALSE>>
+/\ p5ok = <<TRUE, TRUE>>
+
+State 6: <Start("poller") line 195, col 3 to line 200, col 77 of module IssuerLifecycleR5>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 4
+/\ e1 = <<0, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = TRUE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ ver = <<0, 0>>
+/\ st = <<"open", "none">>
+/\ lastSucc = <<-1, -1>>
+/\ bur = <<-1, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "read",
+        att |-> 1,
+        rst |-> "open",
+        rus |-> -1,
+        rver |-> 0,
+        cls |-> "-",
+        started |-> 4,
+        fat |-> 0 ] ]
+/\ pass = <<FALSE, FALSE>>
+/\ us = <<-1, -1>>
+/\ firstFail = <<-1, -1>>
+/\ succInWin = <<FALSE, FALSE>>
+/\ lostLive = <<FALSE, FALSE>>
+/\ p5ok = <<TRUE, TRUE>>
+
+State 7: <Fetch("poller") line 203, col 3 to line 217, col 49 of module IssuerLifecycleR5>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 4
+/\ e1 = <<0, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = TRUE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ ver = <<0, 0>>
+/\ st = <<"open", "none">>
+/\ lastSucc = <<-1, -1>>
+/\ bur = <<-1, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "fetched",
+        att |-> 1,
+        rst |-> "open",
+        rus |-> -1,
+        rver |-> 0,
+        cls |-> "err",
+        started |-> 4,
+        fat |-> 4 ] ]
+/\ pass = <<FALSE, FALSE>>
+/\ us = <<-1, -1>>
+/\ firstFail = <<4, -1>>
+/\ succInWin = <<FALSE, FALSE>>
+/\ lostLive = <<FALSE, FALSE>>
+/\ p5ok = <<TRUE, TRUE>>
+
+State 8: <Send("poller") line 228, col 3 to line 274, col 38 of module IssuerLifecycleR5>
+/\ decl = <<0, -1>>
+/\ cur = 1
+/\ obsAt = <<"no", "no">>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 4
+/\ e1 = <<0, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = TRUE
+/\ pending = { [ att |-> 1,
+    p |-> "poller",
+    sent |-> 4,
+    from |-> "open",
+    to |-> "unavail",
+    val |-> 0,
+    gver |-> 0,
+    dec |-> 4,
+    orphan |-> FALSE,
+    dup |-> FALSE ] }
+/\ rreason = "-"
+/\ req = "active"
+/\ ver = <<0, 0>>
+/\ st = <<"open", "none">>
+/\ lastSucc = <<-1, -1>>
+/\ bur = <<-1, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "await",
+        att |-> 1,
+        rst |-> "open",
+        rus |-> -1,
+        rver |-> 0,
+        cls |-> "err",
+        started |-> 4,
+        fat |-> 4 ] ]
+/\ pass = <<FALSE, FALSE>>
+/\ us = <<-1, -1>>
+/\ firstFail = <<4, -1>>
+/\ succInWin = <<FALSE, FALSE>>
+/\ lostLive = <<FALSE, FALSE>>
+/\ p5ok = <<TRUE, TRUE>>
+
+State 9: <Store line 349, col 11 to line 349, col 49 of module IssuerLifecycleR5>
+/\ decl = <<0, 4>>
+/\ cur = 2
+/\ obsAt = <<"no", "no">>
+/\ obsKilled = <<FALSE, FALSE>>
+/\ now = 4
+/\ e1 = <<0, 0>>
+/\ e2 = <<0, 0>>
+/\ faults = 0
+/\ polled = TRUE
+/\ pending = {}
+/\ rreason = "-"
+/\ req = "active"
+/\ ver = <<1, 0>>
+/\ st = <<"unavail", "open">>
+/\ lastSucc = <<-1, -1>>
+/\ bur = <<-1, -1>>
+/\ inv = [ poller |->
+      [ pc |-> "idle",
+        att |-> 0,
+        rst |-> "none",
+        rus |-> -1,
+        rver |-> 0,
+        cls |-> "-",
+        started |-> 0,
+        fat |-> 0 ] ]
+/\ pass = <<FALSE, FALSE>>
+/\ us = <<-1, -1>>
+/\ firstFail = <<4, -1>>
+/\ succInWin = <<FALSE, FALSE>>
+/\ lostLive = <<FALSE, FALSE>>
+/\ p5ok = <<FALSE, TRUE>>
+
+5010 states generated, 2069 distinct states found, 1218 states left on queue.
+The depth of the complete state graph search is 11.
+Finished in 00s at (2026-10-29 19:52:04)

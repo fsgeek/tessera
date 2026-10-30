@@ -18,13 +18,14 @@ reported as failed may still have succeeded.
 
 - **Its own time per AWS call.** Connection 5 s, response 20 s, 4 attempts in standard retry mode: about 3 minutes
   at most (`tessera_issue/lambda_app.py`, `AWS_CLIENT_CONFIG`; a test keeps it under a third of the lease).
-- **Completion.** COMPLETE is confirmed only when at least the 15-minute writer lease remains before the 24-hour
-  deadline (CF2-01). Inside the last lease a finished request stays ACCEPTED, and at the deadline it is FAILED.
+- **Completion.** *(Superseded 2026-10-29: the 24-hour completion deadline is withdrawn; see
+  `docs/decisions/2026-10-29-issuance-lifecycle.md`. COMPLETE now follows a latch, and the latch is not raced, so the
+  CF2-01 lease margin no longer applies to completion. The earlier text read: "COMPLETE is confirmed only when at least the 15-minute writer lease remains before the 24-hour deadline (CF2-01). Inside the last lease a finished request stays ACCEPTED, and at the deadline it is FAILED.")*
 - **Late writers.** Cleanup keeps deleting until 15 minutes after an end (CF-02).
 
 ## The stated tolerance
 
-Each service-level transition (FAILED at 24 hours, COMPLETE, the 30-day retention and deletion, the acceptance
+Each service-level transition (COMPLETE, an attempt's expiry or discard, REFUSED, the 30-day retention and deletion, the acceptance
 stop, and the 5-minute receipt links) may become visible up to **15 minutes** after the time it records. This
 assumes AWS commits or rejects every request within 15 minutes of its being sent.
 

@@ -1,0 +1,2249 @@
+Reading additional input from stdin...
+OpenAI Codex v0.165.0
+--------
+workdir: /home/tony/projects/tessera
+model: gpt-6.1-sol
+provider: openai
+approval: never
+sandbox: danger-full-access
+reasoning effort: none
+reasoning summaries: none
+session id: 01a18b3a-ac60-7b82-9501-69837561d149
+--------
+user
+Narrow confirmation for Project Tessera at /home/tony/projects/tessera (our own repository; read-only, no repo edits, no git writes; scratch only under a fresh mktemp -d). Your last pass: docs/reviews/issuer-lifecycle-impl/CODEX-CONFIRM-3.md (ILC-I3-01 drain rotation lost on cold start; ILC-I3-02 drain-share wording). The implementer's fix: service/issuer/tessera_issue/pipeline.py (rotation persisted in the poller's durable position record, written once per poll when a non-empty batch arrives), DESIGN.md, tests/test_lifecycle_round3.py. Run: cd service/issuer && .venv/bin/python -m pytest -q (217 expected). (1) Re-run your cold-start probe (/tmp/tmp.pyt6bZDeCk/test_third.py) against the fix: does GPG get served? (2) Is the rotation write guarded like the other poller-position writes, and can a lost or stale rotation write starve a slot (e.g. an empty batch never advancing the rotation, or the write being skipped under budget pressure)? (3) Is the DESIGN.md drain wording now accurate? (4) Any new defect. Number findings ILC-I4-01.... One-line verdict: ready for deployment work with the step-5 gate closed (remaining items being stated limits awaiting the author's termination decision), or not.
+codex
+I’ll check the fix against the prior findings, rerun the cold-start probe and issuer suite, and inspect rotation persistence and drain wording. I’ll keep the repo read-only and use a fresh scratch directory.
+exec
+/bin/bash -lc "cat /home/tony/.codex/plugins/cache/openai-curated-remote/superpowers/7.0.1/skills/using-superpowers/SKILL.md; rg -n 'issuer|lifecycle' /home/tony/.codex/memories/MEMORY.md; rg --files -g AGENTS.md -g DESIGN.md -g CODEX-CONFIRM-3.md -g test_lifecycle_round3.py -g pipeline.py" in /home/tony/projects/tessera
+ succeeded in 0ms:
+---
+name: using-superpowers
+description: Use when starting any conversation - establishes how to find and use skills, requiring skill invocation before ANY response including clarifying questions
+---
+
+<SUBAGENT-STOP>
+If you were dispatched as a subagent to execute a specific task, ignore this skill.
+</SUBAGENT-STOP>
+
+<EXTREMELY-IMPORTANT>
+If you think there is even a 1% chance a skill might apply to what you are doing, you ABSOLUTELY MUST invoke the skill.
+
+IF A SKILL APPLIES TO YOUR TASK, YOU DO NOT HAVE A CHOICE. YOU MUST USE IT.
+
+This is not negotiable. You cannot rationalize your way out of this.
+</EXTREMELY-IMPORTANT>
+
+## The Rule
+
+**Invoke relevant or requested skills BEFORE any response or action** — including clarifying questions, exploring the codebase, or checking files. If it turns out wrong for the situation, you don't have to use it.
+
+**Before entering plan mode:** if you haven't already brainstormed, invoke the brainstorming skill first.
+
+Then announce "Using [skill] to [purpose]" and follow the skill exactly. If it has a checklist, create a todo per item.
+
+## Skill Priority
+
+When multiple skills apply, process skills come first — they set the approach, then implementation skills (frontend-design, etc.) carry it out. Brainstorming and systematic-debugging are Superpowers' most common process skills, but the rule holds for any of them.
+
+- "Let's build X" → superpowers:brainstorming first, then implementation skills.
+- "Fix this bug" → superpowers:systematic-debugging first, then domain skills.
+
+## Red Flags
+
+These thoughts mean STOP—you're rationalizing:
+
+| Thought | Reality |
+|---------|---------|
+| "This is just a simple question" | Questions are tasks. Check for skills. |
+| "I need more context first" | Skill check comes BEFORE clarifying questions. |
+| "Let me explore the codebase first" | Skills tell you HOW to explore. Check first. |
+| "I can check git/files quickly" | Files lack conversation context. Check for skills. |
+| "Let me gather information first" | Skills tell you HOW to gather information. |
+| "This doesn't need a formal skill" | If a skill exists, use it. |
+| "I remember this skill" | Skills evolve. Read current version. |
+| "This doesn't count as a task" | Action = task. Check for skills. |
+| "The skill is overkill" | Simple things become complex. Use it. |
+| "I'll just do this one thing first" | Check BEFORE doing anything. |
+| "This feels productive" | Undisciplined action wastes time. Skills prevent this. |
+| "I know what that means" | Knowing the concept ≠ using the skill. Invoke it. |
+
+## Platform Adaptation
+
+If your harness appears here, read its reference file for special instructions:
+
+- Claude Code: `references/claude-code-tools.md`
+- Codex: `references/codex-tools.md`
+- Pi: `references/pi-tools.md`
+- Antigravity: `references/antigravity-tools.md`
+- Hermes Agent: `references/hermes-tools.md`
+- Muse: `references/muse-tools.md`
+
+## User Instructions
+
+User instructions (CLAUDE.md, AGENTS.md, GEMINI.md, etc, direct requests) take precedence over skills, which in turn override default behavior. Only skip skill workflows or instructions when your human partner has explicitly told you to.
+34:- Amendment 11, P3, FLOOR-MANIFEST.sha256, slot-2 custody, Option 1, Option 2, `1201 passed, 1 skipped, 2 warnings`, deployed-package identity, service/issuer/DEPLOY.md, issuance lifecycle, GCP, P-256
+53:- Before signing, add an explicit pending-ruling gate to `service/issuer/DEPLOY.md:55-60` and reconcile Amendment 11 `:270-271`'s lease-based expiry description with `docs/decisions/2026-10-29-issuance-lifecycle.md:57-76`, which uses complete negative evidence and no lease timing. The lifecycle retains a residual where timely eligibility may be observed but lost before persistence if evidence becomes permanently unavailable. [Task 3]
+60:- Symptom: Amendment 11 is described as ready for signature or deployment. Cause: the author has not ruled Option 1 or Option 2, deployment instructions assume slot-2 deployment, or consistency is treated as package/implementation/formal discharge. Fix: require the author's own ruling, align dependent instructions and lifecycle wording, then obtain deployment/package identity and other required evidence. [Task 3]
+255:- Do not describe Q2 as issuer-key theft, chain takeover, rotation, or succession resistance, and do not claim fingerprints “multiply” cryptographic difficulty. State the extra equality constraint and its concrete assumptions. [Task 1]
+docs/reviews/issuer-lifecycle-impl/CODEX-CONFIRM-3.md
+docs/reviews/issuance-lifecycle/CODEX-CONFIRM-3.md
+docs/reviews/issuer/CODEX-CONFIRM-3.md
+service/issuer/DESIGN.md
+service/issuer/tests/test_lifecycle_round3.py
+service/issuer/tessera_issue/pipeline.py
+prototype/policy-signer/DESIGN.md
+
+exec
+/bin/bash -lc 'pwd; find .. -name AGENTS.md -print; cat docs/reviews/issuer-lifecycle-impl/CODEX-CONFIRM-3.md; cat /tmp/tmp.pyt6bZDeCk/test_third.py; cat /home/tony/.codex/plugins/cache/openai-curated-remote/superpowers/7.0.1/skills/verification-before-completion/SKILL.md' in /home/tony/projects/tessera
+ succeeded in 1010ms:
+/home/tony/projects/tessera
+../tupay/AGENTS.md
+../promptguard/openspec/AGENTS.md
+../promptguard/AGENTS.md
+../promptguard2/openspec/AGENTS.md
+../promptguard2/AGENTS.md
+../teaching/2025/CPSC416-2025W-T2/AGENTS.md
+../teaching/2025/CPSC436C-2025W-T1/capstone_clones/u410266/frontend/AGENTS.md
+../teaching/2025/CPSC436C-2025W-T1/capstone_clones/u466684/AGENTS.md
+../teaching/2025/CPSC436C-2025W-T1/capstone_clones/u421168/frontend/AGENTS.md
+../teaching/2025/CPSC436C-2025W-T1/capstone_clones/u411995/AGENTS.md
+../teaching/2025/CPSC436C-2025W-T1/capstone_clones/u466685/AGENTS.md
+../teaching/2025/CPSC436C-2025W-T1/capstone_clones/u444982/AGENTS.md
+../teaching/2025/CPSC436C-2025W-T1/AGENTS.md
+../teaching/2025/CPSC436C-2025W-T1/tmp/capstone_code_repos/CPSC436C-2025W-T1_capstone_deho/AGENTS.md
+../teaching/2025/CPSC436C-2025W-T1/tmp/capstone_code_repos/CPSC436C-2025W-T1_capstone-final-project/frontend/AGENTS.md
+../teaching/2025/CPSC436C-2025W-T2/AGENTS.md
+../teaching/2025/CPSC436C-2025W-T2/tmp/capstone/jh51/AGENTS.md
+../mallku/AGENTS.md
+../eidolon/.worktrees/nines-rc-reviewer-pass/AGENTS.md
+../eidolon/AGENTS.md
+**Verdict: not ready for deployment work, even with the gate closed.** One scheduling defect remains with obtainable signer responses; it is separate from permanent-dependency limits awaiting the author.
+
+Validation: **216 passed in 131.49 seconds**. All eight targeted mutations were detected, including `GATE`. Three independent probes passed, reproducing the cold-start defect, checking timely snapshot capture, and measuring drain-share overshoot. No repository edits or git writes; scratch is in [/tmp/tmp.pyt6bZDeCk](/tmp/tmp.pyt6bZDeCk).
+
+| Previous finding | Status | Assessment |
+|---|---|---|
+| ILC-I2-01 | **CLOSED under the owner decision** | S3 body consumption is inside the guard; elapsed timing is monotonic. HTTP/DNS/SDK total-time bounds remain stated limits, not established guarantees. |
+| ILC-I2-02 | **CLOSED** | Expired anchored RRSIG intervals now cause recapture or reach the impossibility proof. Configuration-dependent failures remain retryable. |
+| ILC-I2-03 | **CLOSED** | Calendar work reserves a checkpoint write. The guarded-adapter regression reaches every calendar. |
+| ILC-I2-04 | **PARTIAL** | Paged enumeration and request-work allocation repair the original probes. Signer-slot fairness fails across cold starts. |
+| ILC-I2-05 | **CLOSED for the reproduced defect** | Rejected captures no longer trap receipt processing in `stamp`; a latch without a snapshot enters capture processing. |
+
+The original seven round-2 probes produced **five failed defect-reproduction assertions and two passes**: the five repaired behaviors changed; the accepted HTTP/DNS limits remain reproducible.
+
+**ILC-I3-01 — Medium, DEFECT: signer-slot fairness depends on container reuse.**
+
+[pipeline.py:364](/home/tony/projects/tessera/service/issuer/tessera_issue/pipeline.py:364) stores `drain_turn` only on the issuer object. A cold start reconstructs the signers in KMS-first order at [lambda_app.py:46](/home/tony/projects/tessera/service/issuer/tessera_issue/lambda_app.py:46).
+
+With continuously replenished KMS responses and SQS calls taking 20 seconds, I reset only that volatile rotation between polls, retaining stores and queues. After **eight cold-start-equivalent polls**:
+
+- Both KMS signatures were recorded.
+- Both valid GPG responses remained queued.
+- The request remained in `signing`.
+
+One warm continuation immediately serviced GPG and advanced the request to `stamp`. This distinguishes scheduling starvation from dependency failure.
+
+The one-third allocation protects request work from continuous draining, but does not ensure fairness **between signer queues** across cold starts. Persist the starting slot or give each slot an independent opportunity before allowing one queue to consume the drain allocation.
+
+Evidence: [probe](/tmp/tmp.pyt6bZDeCk/test_third.py), [output](/tmp/tmp.pyt6bZDeCk/third.log).
+
+**ILC-I3-02 — Low, documentation: “at most a third” overstates the drain allocation.**
+
+[DESIGN.md:224](/home/tony/projects/tessera/service/issuer/DESIGN.md:224) says draining may use “at most a third.” The checks at [pipeline.py:375](/home/tony/projects/tessera/service/issuer/tessera_issue/pipeline.py:375) occur between response-processing units, without reserving their remaining cost.
+
+A probe using 60-second SQS calls spent **120 seconds draining against a 96.67-second share**. Describe this as a cooperative allocation checked between units. This is a precision correction, not a reinstatement of the withdrawn total-time guarantee.
+
+The other mechanisms and gate:
+
+- **No-snapshot impossibility:** sound under the existing header/chain assumptions. [pipeline.py:1043](/home/tony/projects/tessera/service/issuer/tessera_issue/pipeline.py:1043) requires neither a stored snapshot proof nor a committed snapshot reference before using `NO_SNAPSHOT`; the MTP test then excludes future timely anchors. With MTP still permitting a timely anchor, my independent probe captured a snapshot and advanced to `finalize`. I found no premature discard in this path.
+- **Paged enumeration:** the DynamoDB continuation token and durable request position repair the original enumeration starvation. Position advances before request work.
+- **Gate:** **still closed**. Diagnostic failure history authorizes no sampled-unavailability ending. The `GATE` mutation failed the never-completes test and four other lifecycle tests.
+- **Remaining endings:** I found no additional wrongful-ending defect in the examined paths. The cold-start starvation is the remaining demonstrated implementation defect; permanent dependency failures remain unresolved author-policy cases.
+
+**DESIGN’s termination disclosure is honest**, at [DESIGN.md:187](/home/tony/projects/tessera/service/issuer/DESIGN.md:187): the limits explicitly leave A2.3 unmet, disclosure discharges nothing, and [DESIGN.md:247](/home/tony/projects/tessera/service/issuer/DESIGN.md:247) keeps the ending policy gated. It needs the drain wording correction above and disclosure or repair of ILC-I3-01.
+
+| Owner precheck | Result | Evidence |
+|---|---|---|
+| Capture row | **PASS** | The reviewed lifecycle changes add no attacker-key rejection or capture-visibility claim. Dual-channel capture still permits attacker-key receipts: [V1-CONTRACT.md:37](/home/tony/projects/tessera/docs/V1-CONTRACT.md:37), [72](/home/tony/projects/tessera/docs/V1-CONTRACT.md:72). |
+| Trigger clause | **PASS** | Snapshot discard requires the byte-dependent/completeness conditions or actual absence of a snapshot, plus the MTP exclusion: [pipeline.py:1040](/home/tony/projects/tessera/service/issuer/tessera_issue/pipeline.py:1040). |
+| Requester | **PASS** | The design identifies the issuer as the signing-work requester: [DESIGN.md:19](/home/tony/projects/tessera/service/issuer/DESIGN.md:19); IAM grants queue submission at [main.tf:255](/home/tony/projects/tessera/service/issuer/infra/main.tf:255). Live signer authorization remains unverified. |
+| Binding text | **FAIL** | Volatile queue rotation can prevent progress despite obtainable responses: [pipeline.py:364](/home/tony/projects/tessera/service/issuer/tessera_issue/pipeline.py:364). The permanent-dependency decision supplies no waiver for this scheduling defect against [A2.3:288](/home/tony/projects/tessera/docs/phase-0-prereg-amendment-2.md:288). |
+
+Logs: [suite](/tmp/tmp.pyt6bZDeCk/suite.log), [prior probes](/tmp/tmp.pyt6bZDeCk/old-probes.log), [mutations](/tmp/tmp.pyt6bZDeCk/mutations.log). No deployed AWS or TLC validation was performed.
+
+import sys,json,uuid
+sys.path.insert(0,'/home/tony/projects/tessera/service/issuer/tests')
+from conftest import loc,key
+from tessera_issue import pipeline
+from test_lifecycle import att,get,poll,to_evidence,bury,declared
+from test_lifecycle_confirm import aws_wire,SLOW
+from helpers import submit
+from tessera_issue.util import HOUR
+
+def test_cold_starts_starve_second_signer(monkeypatch):
+    monkeypatch.setitem(SLOW,'sqs',20)
+    loc,_=aws_wire('sqs')
+    _,rid=submit(loc,str(uuid.uuid4()))
+    pipeline.poll(loc.iss)
+    for wk in loc.workers.values(): wk.process()
+    junk=json.dumps({'request_id':'req-'+'0'*40,'status':'SIGNED','sig_b64':'AAAA'})
+    for n in range(8):
+        for _ in range(100): loc.workers['kms'].responses.send(junk)
+        loc.iss.drain_turn=0 # fresh Lambda issuer object; persistent stores and queues retained
+        pipeline.poll(loc.iss)
+    rec=get(loc,rid)
+    print('COLD',rec['stage'],[(k,v['sig_sha256'] is not None) for k,v in att(rec)['jobs'].items()],len(loc.workers['gpg'].responses))
+    assert rec['stage']=='signing'
+    assert all(not v['sig_sha256'] for k,v in att(rec)['jobs'].items() if 'gpg' in k)
+    assert len(loc.workers['gpg'].responses)>0
+    pipeline.poll(loc.iss) # a warm continuation starts with GPG
+    print('WARM',get(loc,rid)['stage'])
+    assert get(loc,rid)['stage']=='stamp'
+
+def test_no_snapshot_timely_capture_allowed(loc,key):
+    good=loc.iss.dns.capture
+    loc.iss.dns.capture=lambda now:b'bad'
+    _,rid=submit(loc,key)
+    a=att(to_evidence(loc,rid))
+    bury(loc,declared(a)+HOUR)
+    poll(loc)
+    assert get(loc,rid)['stage']=='snapshot'
+    loc.iss.dns.capture=good
+    poll(loc)
+    assert get(loc,rid)['stage']=='finalize'
+    assert att(get(loc,rid))['state']=='latched'
+
+def test_drain_share_is_cooperative_not_a_cap(monkeypatch):
+    monkeypatch.setitem(SLOW,'sqs',60)
+    loc,_=aws_wire('sqs')
+    q=loc.workers['kms'].responses
+    junk=json.dumps({'request_id':'req-'+'0'*40,'status':'SIGNED','sig_b64':'AAAA'})
+    for _ in range(30): q.send(junk)
+    from tessera_issue import deadline
+    start=loc.clock()
+    with deadline.Installed(deadline.Deadline(loc.iss.elapsed_clock,290,10)):
+        pipeline.drain(loc.iss,share_s=290/3)
+    span=loc.clock()-start
+    print('DRAIN_SHARE',span,290/3)
+    assert span>290/3
+---
+name: verification-before-completion
+description: Use when about to claim work is complete, fixed, or passing, before committing or creating PRs - requires running verification commands and confirming output before making any success claims; evidence before assertions always
+---
+
+# Verification Before Completion
+
+## Overview
+
+**Core principle:** Evidence before claims, always.
+
+**Violating the letter of this rule is violating the spirit of this rule.**
+
+## The Iron Law
+
+```
+NO COMPLETION CLAIMS WITHOUT FRESH VERIFICATION EVIDENCE
+```
+
+If you haven't run the verification command in this message, you cannot claim it passes.
+
+## The Gate Function
+
+```
+BEFORE claiming any status or expressing satisfaction:
+
+1. IDENTIFY: What command proves this claim?
+2. RUN: Execute the FULL command (fresh, complete)
+3. READ: Full output, check exit code, count failures
+4. VERIFY: Does output confirm the claim?
+   - If NO: State actual status with evidence
+   - If YES: State claim WITH evidence
+5. ONLY THEN: Make the claim
+
+Skip any step = lying, not verifying
+```
+
+## Common Failures
+
+| Claim | Requires | Not Sufficient |
+|-------|----------|----------------|
+| Tests pass | Test command output: 0 failures | Previous run, "should pass" |
+| Linter clean | Linter output: 0 errors | Partial check, extrapolation |
+| Build succeeds | Build command: exit 0 | Linter passing, logs look good |
+| Bug fixed | Test original symptom: passes | Code changed, assumed fixed |
+| Regression test works | Red-green cycle verified | Test passes once |
+| Agent completed | VCS diff shows changes | Agent reports "success" |
+| Requirements met | Line-by-line checklist | Tests passing |
+
+## Red Flags - STOP
+
+- Using "should", "probably", "seems to"
+- Expressing satisfaction before verification ("Great!", "Perfect!", "Done!", etc.)
+- About to commit/push/PR without verification
+- Trusting agent success reports
+- Relying on partial verification
+- Thinking "just this once"
+- Tired and wanting work over
+- **ANY wording implying success without having run verification**
+
+## Rationalization Prevention
+
+| Excuse | Reality |
+|--------|---------|
+| "Should work now" | RUN the verification |
+| "I'm confident" | Confidence ≠ evidence |
+| "Just this once" | No exceptions |
+| "Linter passed" | Linter ≠ compiler |
+| "Agent said success" | Verify independently |
+| "I'm tired" | Exhaustion ≠ excuse |
+| "Partial check is enough" | Partial proves nothing |
+| "Different words so rule doesn't apply" | Spirit over letter |
+
+## Key Patterns
+
+**Tests:**
+```
+✅ [Run test command] [See: 34/34 pass] "All tests pass"
+❌ "Should pass now" / "Looks correct"
+```
+
+**Regression tests (TDD Red-Green):**
+```
+✅ Write → Run (pass) → Revert fix → Run (MUST FAIL) → Restore → Run (pass)
+❌ "I've written a regression test" (without red-green verification)
+```
+
+**Build:**
+```
+✅ [Run build] [See: exit 0] "Build passes"
+❌ "Linter passed" (linter doesn't check compilation)
+```
+
+**Requirements:**
+```
+✅ Re-read plan → Create checklist → Verify each → Report gaps or completion
+❌ "Tests pass, phase complete"
+```
+
+**Agent delegation:**
+```
+✅ Agent reports success → Check VCS diff → Verify changes → Report actual state
+❌ Trust agent report
+```
+
+## When To Apply
+
+**ALWAYS before:**
+- ANY variation of success/completion claims
+- ANY expression of satisfaction
+- ANY positive statement about work state
+- Committing, PR creation, task completion
+- Moving to next task
+- Delegating to agents
+
+**Rule applies to:**
+- Exact phrases
+- Paraphrases and synonyms
+- Implications of success
+- ANY communication suggesting completion/correctness
+
+codex
+I’m using the verification-before-completion skill to check the repair against fresh results. The prior probe asserts that starvation occurs, so a repaired run should fail that assertion; I’ll also check the resulting stage and GPG signatures.
+exec
+/bin/bash -lc "mktemp -d; sed -n '280,480p' service/issuer/tessera_issue/pipeline.py; cat service/issuer/tests/test_lifecycle_round3.py; sed -n '175,265p' service/issuer/DESIGN.md; rg -n 'position|drain_turn|def poll|def drain' service/issuer/tessera_issue/pipeline.py" in /home/tony/projects/tessera
+ succeeded in 0ms:
+/tmp/tmp.6rbTsKov9q
+        iss.note("cleanup deferred:", rec["rid"][:12], type(e).__name__, e)
+
+
+def _end_attempt(iss, rec, outcome, reason, now, extra=None, no_successor=None):
+    """End the current attempt (EXPIRED or DISCARDED, with its reason) and, in the SAME guarded write, allocate the
+    next attempt, or refuse the request: ATTEMPTS_EXHAUSTED after attempt N, SIGNING_CLOSED when the next attempt
+    would need signing after the stop (design step 8; the model's Commit of an ending write). no_successor names a
+    reason no next attempt can be built at all (ILI-08: the content is lost); the request is then refused with it.
+    extra: further fields of the attempt's end record (evidence, a diagnostic reference)."""
+    assert outcome in ENDED
+    expect = lifecycle_guard(rec)
+    a, i = current(rec), rec["cur"]
+    a.update(state=outcome, end={"outcome": OUTCOME[outcome], "reason": reason, "at": now, **(extra or {})},
+             unavailable_since=None, failed_intervals=[])
+    _event(rec, now, OUTCOME[outcome], a["id"], reason)
+    if no_successor:
+        return _end_request(iss, rec, expect, "REFUSED", no_successor, now)
+    if i < N_ATTEMPTS and now <= iss.window.sign_until:
+        rec["attempts"].append(new_attempt(i + 1, now))
+        rec.update(cur=i + 1, stage="frames")
+        _event(rec, now, "allocated", rec["attempts"][-1]["id"])
+        return _commit(iss, rec, expect)
+    _end_request(iss, rec, expect, "REFUSED", "ATTEMPTS_EXHAUSTED" if i >= N_ATTEMPTS else "SIGNING_CLOSED", now)
+
+
+# ------------------------------------------------------------------------------------------------ cleanup (IS-07)
+END_NS = ("content", "work", "frames")
+
+
+def _cleanup_one(iss, rid, doc, now=None):
+    """-> True when the obligation is discharged. Content, work files and frames go when the request has ended;
+    the receipt goes 30 days after the end (or at once if the request did not complete). Deletion is keyed to the
+    persisted end, never to an object's age; objects are tagged cleanup-due just before they are deleted (5.3.1).
+
+    CF-02: a writer that read the request while it was ACCEPTED (an upload retry, a response consumer, a stale
+    poller) may still store an object after the end. Each such writer runs inside one Lambda invocation, so it is
+    gone WRITE_LEASE_S after the end was first seen here. Until then the obligation is kept and every poll deletes
+    again; only a listing taken after the lease discharges it."""
+    rec = iss.requests.get(rid)
+    if rec is not None and rec["state"] == "ACCEPTED":
+        return False                                   # not ended (an obligation written before a lost commit)
+    seen = iss.clock()                                 # read after the record: no earlier than the end's commit
+    expired = rec is None or seen >= rec["ended_at"] + RETENTION_S
+    namespaces = END_NS + ("result",) if (expired or rec["state"] != "COMPLETE") else END_NS
+    if doc.get("end_done") and not expired:
+        return False
+    if doc.get("fence_until") is None:                 # CF-02: start the writers' lease, durably
+        doc = dict(doc, rid=rid, fence_until=seen + WRITE_LEASE_S)
+        iss.requests.cleanup_put(rid, doc)
+    for ns in namespaces:
+        iss.results.mark_due(ns, rid)                  # due now: the lifecycle backstop may expire them from here on
+        iss.results.delete(ns, rid)
+    left = [ns for ns in namespaces if iss.results.names(ns, rid)]
+    if left:
+        raise StageError("objects left after deletion: " + ",".join(left))
+    if seen < doc["fence_until"]:
+        return False                                   # CF-02: a late writer may still store; delete again later
+    if expired or "result" in namespaces:
+        iss.requests.cleanup_done(rid)
+        return True
+    iss.requests.cleanup_put(rid, dict(doc, end_done=True))
+    return False
+
+
+def cleanup(iss):
+    now, n = iss.clock(), 0
+    for rid, doc in iss.requests.cleanup_list():
+        try:
+            n += bool(_cleanup_one(iss, rid, doc, now))
+        except OutOfBudget:
+            raise
+        except Exception as e:  # noqa: BLE001
+            iss.note("cleanup", rid[:12], "error, kept:", type(e).__name__, e)
+    return n
+
+
+# ------------------------------------------------------------------------------------------------ E-02 drain
+def _position(iss):
+    cur = iss.requests.cursor_get()
+    return cur if isinstance(cur, dict) else {}
+
+
+def _drain_turn(iss, position):
+    """ILC-I3-01: the signer slot the drain starts with, kept in the poller's durable position record (not in the
+    process: a cold-started Lambda rebuilds its signers in a fixed order)."""
+    return int(position.get("drain_turn", 0))
+
+
+def _drain_turn_put(iss, position, n):
+    position["drain_turn"] = n                         # the request position writes that follow keep it too
+    iss.requests.cursor_put(dict(position))
+
+
+def drain(iss, max_batches=50, share_s=float("inf"), position=None):
+    """Read every slot's response queue. Every response is logged (request id, slot, status, frame hash when the
+    id is known, signature hash) whether or not it is used, and then deleted from the queue. ILC-I2-04: draining
+    stops once it has used `share_s` of the invocation (or the deadline refuses a request); what is left stays queued
+    and is delivered again, so a continuously replenished queue cannot starve request work."""
+    n, d = 0, _deadline(iss)
+    start = d.clock()
+
+    def over():
+        return d.clock() - start >= share_s or d.available() < MIN_REQUEST_S
+    slots = list(iss.signers.items())
+    position = _position(iss) if position is None else position
+    turn = _drain_turn(iss, position) % max(1, len(slots))
+    rotated = False
+    try:
+        for slot, signer in slots[turn:] + slots[:turn]:
+            for _ in range(max_batches):
+                if over():
+                    return n
+                batch = signer.receive(10)
+                if not batch:
+                    break
+                if not rotated:                    # ILC-I3-01: durable before any response is worked on, so a
+                    _drain_turn_put(iss, position, turn + 1)   # cold start continues the rotation; only written
+                    rotated = True                 # when there is something to drain
+                for handle, body in batch:
+                    if over():
+                        return n                   # not acknowledged: delivered again after the visibility timeout
+                    try:
+                        _take(iss, slot, signer, body)
+                    except OutOfBudget:
+                        raise
+                    except Exception as e:  # noqa: BLE001  not acknowledged: the queue delivers it again
+                        iss.note("response", slot, "not taken:", type(e).__name__, e)
+                        continue
+                    signer.ack(handle)
+                    n += 1
+    except OutOfBudget as e:
+        iss.note("drain out of time:", e)
+    return n
+
+
+def _bounded(raw):
+    """ILI-07: a signer-supplied reason as a bounded code. -> (code, diagnostic bytes or None)."""
+    if raw is None:
+        return None, None
+    if isinstance(raw, str) and REASON_RE.match(raw):
+        return raw, None
+    data = raw.encode("utf-8", "replace") if isinstance(raw, str) else json.dumps(raw, sort_keys=True).encode()
+    return "UNRECOGNIZED_REASON", data[:DIAG_MAX]
+
+
+def _keep_diagnostic(iss, rid, aid, data):
+    """Store an oversized or malformed external diagnostic by reference (deleted with the request's work files)."""
+    digest = sha256hex(data)
+    name = f"{aid}/diag-{digest}"
+    iss.results.put("work", rid, name, data)
+    return {"ref": name, "sha256": digest, "length": len(data)}
+
+
+def _take(iss, slot, signer, body):
+    """Route one signer response by (request, ATTEMPT, job). A response for an attempt that is not the request's
+    current one is logged ("other-attempt") and ignored: it can never fill another attempt (step 2). Every field taken
+    from the response is bounded before it is stored (ILI-07)."""
+    now = iss.clock()
+    raw_id = body.get("request_id")
+    srid = raw_id if isinstance(raw_id, str) and REQUEST_ID_RE.match(raw_id) else None
+    idx = iss.requests.sigreq_get(srid) if srid else None
+    status = body.get("status") if body.get("status") in ("SIGNED", "REFUSED") else "OTHER"
+    reason, diag = _bounded(body.get("reason"))
+    sig = None
+    if status == "SIGNED":
+        try:
+            sig = b64d(body.get("sig_b64", ""))
+        except (ValueError, TypeError):
+            sig = None
+    entry = {"at": rfc3339(now), "slot": slot,
+             "request_id": srid or "invalid:" + sha256hex(json.dumps(raw_id).encode())[:32], "status": status,
+             "reason": reason, "frame_sha256": idx["frame_sha256"] if idx else None,
+             "signature_sha256": sha256hex(sig) if sig is not None else None, "disposition": None,
+             "attempt": idx.get("attempt") if idx else None}
+    if diag is not None:
+        entry.update(reason_sha256=sha256hex(diag), reason_length=len(diag))
+    if idx is None or idx.get("slot") != slot:
+        entry["disposition"] = "unrequested"
+    else:
+        rec = iss.requests.get(idx["rid"])
+        a = current(rec) if rec else None
+        job = a["jobs"].get(idx["job"]) if a else None
+        if rec is None or rec["state"] != "ACCEPTED":
+            entry["disposition"] = "not-waiting"
+        elif a is None or a["id"] != idx.get("attempt"):
+            entry["disposition"] = "other-attempt"
+        elif rec["stage"] != "signing" or a["state"] != OPEN or job is None:
+            entry["disposition"] = "not-waiting"
+        elif job.get("sig_sha256"):
+            entry["disposition"] = "duplicate"
+        elif status == "REFUSED":
+            entry["disposition"] = "refused"
+            extra = {"diagnostic": _keep_diagnostic(iss, rec["rid"], a["id"], diag)} if diag is not None else None
+            iss.requests.siglog_add(entry)
+            return _end_attempt(iss, rec, DISCARDED, "SIGNER_REFUSED:" + str(reason or "NO_REASON"), now, extra)
+        elif sig is None:
+            entry["disposition"] = "malformed"
+        else:
+            frame = iss.results.get("work", rec["rid"], f"{a['id']}/{job['frame']}")
+            if frame is None or sha256hex(frame) != job["frame_sha256"] or not signer.verify(frame, sig):
+                entry["disposition"] = "bad-signature"
+"""Repairs after Codex's second confirmation (docs/reviews/issuer-lifecycle-impl/CODEX-CONFIRM-2.md, ILC-I2-01..05)
+under the owner's round-3 decisions. Codex's probes (/tmp/tmp.iALl276cQE/test_round2.py) are reproduced as
+regression tests with the repaired behaviour as the oracle."""
+import json
+import uuid
+
+import pytest
+
+from tessera_issue import api, deadline, ots, pipeline
+from tessera_issue.aws import S3ResultStore
+from tessera_issue.service import POLL_BUDGET_S
+from tessera_issue.util import DELTA, HOUR
+
+from helpers import submit
+from test_lifecycle import att, bury, declared, get, poll, sign, to_evidence
+from test_lifecycle_confirm import SLOW, aws_wire
+from test_lifecycle_repairs import latched
+
+
+# ================================================================================================ ILC-I2-01
+def test_ILCI2_01_an_S3_body_is_read_inside_the_guarded_request():
+    """Codex's probe: get_object returned before Body.read(), so the body read ran outside the guard."""
+    seen = []
+
+    class Body:
+        def read(self):
+            seen.append(deadline.CALL_TIMEOUT.get())
+            return b"body"
+
+    class Client:
+        def get_object(self, **kw):
+            return {"Body": Body()}
+    store = S3ResultStore(Client(), "b")
+    clock = [0]
+    with deadline.Installed(deadline.Deadline(lambda: clock[0], 290, 10)):
+        assert store.get("work", "rid", "x") == b"body"
+    assert seen and seen[0] is not None
+
+
+def test_ILCI2_01_the_invocation_deadline_runs_on_a_monotonic_clock_not_the_wall_clock(loc, key):
+    """A wall-clock step during a poll (NTP, a skewed host) does not consume or extend the invocation's time: the
+    deadline is measured on the issuer's elapsed (monotonic) clock."""
+    _, rid = submit(loc, key)
+    _, rid2 = submit(loc, str(uuid.uuid4()), b"second")
+    wall = loc.iss.clock
+    steps = [0]
+
+    def stepping_wall():
+        steps[0] += 1
+        return wall() + 10_000 * steps[0]                 # the wall clock jumps forward on every reading
+    loc.iss.clock = stepping_wall
+    out = pipeline.poll(loc.iss)
+    loc.iss.clock = wall
+    assert not out.get("out_of_time") and not out.get("deferred")
+    assert get(loc, rid)["stage"] == get(loc, rid2)["stage"] == "signing"
+
+
+# ================================================================================================ ILC-I2-02
+@pytest.fixture
+def short_rrsigs(monkeypatch):
+    """Snapshots whose RRSIGs are valid when captured but expire 100 s later (Codex's probe)."""
+    from tessera_issue import stand_in
+    real = stand_in.rrsig
+
+    def short(*args):
+        return real(*args[:-1], args[-2] + 5 * 24 * HOUR + 100)
+    monkeypatch.setattr(stand_in, "rrsig", short)
+
+
+def test_ILCI2_02_an_RRSIG_expired_at_the_snapshot_anchor_is_recaptured(loc, key, short_rrsigs):
+    rid, rec = latched(loc, key)
+    captures = loc.world.dns.captures
+    poll(loc)
+    rec = get(loc, rid)
+    last = [e for e in rec["events"] if e[1] == "preship-recapture"][-1]
+    assert last[3] == "RRSIG_NOT_VALID_AT_EVAL_TIME" and last[4] == "13.5"
+    assert rec["stage"] == "snapshot" and att(rec)["state"] == "latched"
+    poll(loc)
+    assert loc.world.dns.captures > captures                 # recaptured, not retried on the same snapshot
+
+
+def test_ILCI2_02_an_expired_RRSIG_reaches_the_impossibility_proof(loc, key, short_rrsigs):
+    rid, rec = latched(loc, key)
+    loc.clock.t = declared(att(rec)) + DELTA + 100
+    loc.world.chain.mine(20)                                 # the chain's median time past is past declared + delta
+    poll(loc)
+    rec = get(loc, rid)
+    end = rec["attempts"][0]["end"]
+    assert end["reason"] == "SNAPSHOT_IMPOSSIBLE" and end["evidence"]["snapshot_reason"] == "RRSIG_NOT_VALID_AT_EVAL_TIME"
+
+
+def test_ILCI2_02_row_13_5_is_classified_by_reason():
+    from tessera_verify.verify import Ledger
+    for reason, kind in [("RRSIG_NOT_VALID_AT_EVAL_TIME", "snapshot"), ("RRSIG_INTERVAL_REVERSED", "snapshot"),
+                         ("RRSIG_TIME_AMBIGUOUS", "snapshot"), ("KSK_OUTSIDE_RELIANCE_PERIOD", "retry"),
+                         ("TRUST_HORIZON", "retry"), ("NO_TRUSTED_KSK_USABLE", "retry"),
+                         ("TRUSTED_KSK_SIGNATURE_INVALID", "retry"), ("DNSSEC_SIGNATURE_INVALID", "retry")]:
+        led = Ledger()
+        led.fault("13.5", reason)
+        assert pipeline.classify_preship(led)[0] == kind, reason
+
+
+# ================================================================================================ ILC-I2-03
+def test_ILCI2_03_calendar_progress_is_checkpointed_on_the_guarded_adapters():
+    """Codex's probe: 20 pending calendars at 20 s each on the real guarded S3 adapter. The checkpoint writes are
+    reserved before calendar requests are spent, so the cursor is saved and every calendar is reached across polls."""
+    loc, _ = aws_wire("calendar")
+    _, rid = submit(loc, str(uuid.uuid4()))
+    to_evidence(loc, rid)
+    raw = loc.iss.results.get("work", rid, "a1/receipt.ots")
+    digest, root = ots.parse_file(raw)
+    asked = []
+    for i in range(20):
+        uri = f"https://pending-{i}.invalid"
+
+        def transport(method, url, body, i=i):
+            asked.append(i)
+            loc.clock.advance(20)
+            return 404, b""
+        loc.iss.calendars.append(ots.HttpCalendar(uri, transport))
+        root.att(ots.PENDING, ots.pending_payload(uri))
+    loc.iss.results.put("work", rid, "a1/receipt.upgraded.ots", ots.serialize_file(digest, root))
+    for _ in range(8):
+        poll(loc)
+        if set(range(20)) <= set(asked):
+            break
+    assert set(range(20)) <= set(asked), sorted(set(asked))
+    assert loc.iss.results.get("work", rid, "a1/receipt.upgrade-cursor") is not None
+
+
+# ================================================================================================ ILC-I2-04
+def test_ILCI2_04_every_request_advances_when_enumeration_is_slow(monkeypatch):
+    """Codex's probe: 15 requests, every DynamoDB request taking 20 s. Enumeration is paged and resumable from a
+    durable continuation position, so every request gets turns and advances."""
+    monkeypatch.setitem(SLOW, "dynamodb", 20)
+    loc, _ = aws_wire("dynamodb")
+    loc.iss.budget_s = float("inf")
+    rids = []
+    for _ in range(15):
+        k = str(uuid.uuid4())
+        api.submit(loc.iss, "cred-A", k, b"x")
+        rids.append(api.record_id("cred-A", k))
+    loc.iss.budget_s = POLL_BUDGET_S
+    for _ in range(30):
+        pipeline.poll(loc.iss)
+        if all(loc.iss.requests.get(r)["cur"] >= 1 for r in rids):
+            break
+    assert all(loc.iss.requests.get(r)["cur"] >= 1 for r in rids)
+
+
+def test_ILCI2_04_a_flood_of_signer_responses_does_not_starve_request_work(monkeypatch):
+    """Fairness between work classes: draining signer responses has a share of each invocation, so a queue that is
+    continuously replenished cannot take every invocation from the requests."""
+    monkeypatch.setitem(SLOW, "sqs", 20)
+    loc, _ = aws_wire("sqs")
+    _, rid = submit(loc, str(uuid.uuid4()))
+    junk = json.dumps({"request_id": "req-" + "0" * 40, "status": "SIGNED", "sig_b64": "AAAA"})
+    q = loc.workers["kms"].responses                        # the fake SQS queue behind the issuer's adapter
+    for _ in range(3):
+        for _ in range(300):                                 # replenished before every poll
+            q.send(junk)
+        pipeline.poll(loc.iss)
+    assert get(loc, rid)["cur"] >= 1
+
+
+# ================================================================================================ ILC-I2-05
+def test_ILCI2_05_receipt_evidence_is_classified_while_snapshot_capture_keeps_failing(loc, key):
+    """Codex's probe: the DNS capture keeps being rejected and the chain moves past the attempt's temporal limit. The
+    receipt is still classified: its complete negative ends the attempt."""
+    _, rid = submit(loc, key)
+    poll(loc)
+    sign(loc)
+    poll(loc)
+    loc.iss.dns.capture = lambda now: b"bad"
+    for _ in range(3):
+        poll(loc)
+    rec = get(loc, rid)
+    assert rec["stage"] == "evidence"
+    bury(loc, declared(att(rec)) + DELTA + 20 * HOUR)
+    poll(loc)
+    rec = get(loc, rid)
+    assert rec["attempts"][0]["state"] in ("discarded", "expired")
+    assert rec["attempts"][0]["end"]["reason"] == "TIME_AFTER_DECLARED_DELTA"
+
+
+def test_ILCI2_05_a_latch_without_any_snapshot_captures_one_before_finalizing(loc, key):
+    _, rid = submit(loc, key)
+    good = loc.iss.dns.capture
+    loc.iss.dns.capture = lambda now: b"bad"
+    a = att(to_evidence(loc, rid))
+    bury(loc, declared(a) + HOUR)
+    poll(loc)
+    rec = get(loc, rid)
+    assert att(rec)["state"] == "latched" and rec["stage"] == "snapshot"
+    loc.iss.dns.capture = good
+    loc.clock.t = declared(a) + 2 * HOUR
+    poll(loc)
+    loc.world.chain.mine(6)
+    for _ in range(3):
+        poll(loc)
+    assert get(loc, rid)["state"] == "COMPLETE"
+
+
+def test_ILCI2_05_no_snapshot_ever_captured_and_no_timely_anchor_possible_is_impossible(loc, key):
+    _, rid = submit(loc, key)
+    loc.iss.dns.capture = lambda now: b"bad"
+    a = att(to_evidence(loc, rid))
+    bury(loc, declared(a) + HOUR)
+    poll(loc)
+    assert get(loc, rid)["stage"] == "snapshot"
+    loc.clock.t = declared(a) + DELTA + 100
+    loc.world.chain.mine(20)
+    poll(loc)
+    end = get(loc, rid)["attempts"][0]["end"]
+    assert end["reason"] == "SNAPSHOT_IMPOSSIBLE" and end["evidence"]["snapshot_reason"] == "NO_SNAPSHOT"
+
+
+# ================================================================================================ ILC-I3-01
+def test_ILCI3_01_the_drain_rotation_survives_cold_starts(monkeypatch):
+    """Codex's eight-cold-start probe (docs/reviews/issuer-lifecycle-impl/CODEX-CONFIRM-3.md): 20 s SQS calls, the
+    KMS response queue refilled before every poll, and a cold start (a fresh issuer object: in-memory state lost,
+    signers rebuilt KMS first) before every poll. The starting slot is persisted with the poller's position, so the
+    GPG queue gets its turns and the request reaches stamp."""
+    monkeypatch.setitem(SLOW, "sqs", 20)
+    loc, _ = aws_wire("sqs")
+    _, rid = submit(loc, str(uuid.uuid4()))
+    pipeline.poll(loc.iss)
+    for wk in loc.workers.values():
+        wk.process()
+    junk = json.dumps({"request_id": "req-" + "0" * 40, "status": "SIGNED", "sig_b64": "AAAA"})
+    for _ in range(8):
+        for _ in range(100):
+            loc.workers["kms"].responses.send(junk)
+        for attr in ("drain_turn",):                      # a cold start: nothing kept in memory
+            loc.iss.__dict__.pop(attr, None)
+        pipeline.poll(loc.iss)
+        if get(loc, rid)["stage"] != "signing":
+            break
+    assert get(loc, rid)["stage"] in ("stamp", "evidence")
+     configuration (14.7), every configuration-dependent snapshot result (13.5 except its RRSIG-time reasons, which
+     are in rule 2 - `validate_snapshot` against the configured root KSKs, reliance periods and trust horizon - and
+     13.4's header outcomes), and every UNVERIFIABLE result outside rule 2.
+  T > not-after discards (`T_AFTER_NOT_AFTER`).
+- **SNAPSHOT_IMPOSSIBLE** (ILI-02, ILC-I-01, ILC-I-04). Discards only when both are proven from evidence: the snapshot
+  being replaced failed a byte-only check (rule 2) and its proof is complete, so it can never pass; and the median
+  time past of the eleven authenticated, linked headers ending five below the tip is later than declared + delta, so
+  every new anchor fails row 13.7 (Bitcoin consensus: a block's time exceeds the median of its eleven predecessors,
+  which never decreases). It is evaluated where the failure is found (finalization) and again before every recapture
+  (the snapshot stage), so captures that keep being rejected cannot hold the attempt once it is proven. Elapsed time
+  never discards. Assumption, as in the V1 contract: **no reorganisation of 6 or more blocks** (A1.6); it also
+  underlies the header checkpoints.
+- **Limits awaiting the author's termination decision (outside the step-5 gate).** These are disclosed limits, NOT
+  satisfied obligations: each can keep a request open indefinitely, which leaves A2.3's termination obligation
+  (`phase-0-prereg-amendment-2.md:288`) unmet in that case. Disclosure discharges nothing; an author decision (or an
+  owner rule within registered text) is needed if they must end. From Codex's round-2 table E
+  (`docs/reviews/issuer-lifecycle-impl/CODEX-CONFIRM-2.md`):
+
+  | Path | Kind |
+  |---|---|
+  | A stage repeatedly needs more requests than one invocation admits before its durable completion (a very slow store or dependency; the measured envelope is below) | stated slow-store limit (a progress limitation; overrun is a tolerated hard kill, below) |
+  | Snapshot recapture where impossibility cannot be proved: pending snapshot proof, unobtainable median-time-past headers, or insufficient chain progress | stated limit (absence of an impossibility proof never authorizes a discard) |
+  | A latched attempt's snapshot proof never becomes usable; a preserved presentation or assembly object permanently missing | stated external-evidence / storage limit |
+  | Unrepaired catalog or trust configuration (including configuration-dependent 13.5 outcomes), verifier unavailability, or persistent header / presentation disagreement | stated operator / dependency limit (no age-based ending is authorized) |
+  | Persistent store or queue failures, failed guarded commits, or stage exceptions before a terminal write | operational limitation (no general termination guarantee; signing closure cannot complete a transition whose reads or writes stay unavailable) |
+  | The chain never reaches the git pre-commitment depth, or no calendar ever accepts a stamp | dependency limit before evidence processing |
+
+- **Presentation** (ILI-01, ILI-06). The latched presentation keeps only branches at the selected height whose
+  attested message is that block's merkle root; contradicted branches there are dropped (counted in the latch as
+  `contradicted_pruned`) and the pruned presentation is re-checked contradiction-free. Complete evidence in which every
+  attestation is contradicted ends the attempt `EVIDENCE_CONTRADICTED` (discarded at or before B, expired after);
+  incomplete or non-qualifying evidence stays open (ILI-03).
+- **Signing closure** (ILI-04). Durable signatures (stored and logged "used") are reconciled before closure is
+  decided; a complete recovered set is sealed whatever the window.
+- **Content** (ILI-08). Content is checked before attempt 1 is allocated (`FAILED CONTENT_UNAVAILABLE`, no attempt).
+  After allocation, lost content is recovered from an earlier attempt's attestation frame (it carries the bytes);
+  if none decodes to the content digest, no attempt can ever be built, and the ending write discards the attempt and
+  refuses the request `REFUSED CONTENT_UNAVAILABLE` (end-and-refuse, like `SIGNING_CLOSED`).
+- **Invocation budget: a PROGRESS mechanism, not a bound** (ILI-05, ILC-I-02, ILC-I2-01; owner decision: the earlier
+  "never overrun" claim is withdrawn). One deadline (`tessera_issue/deadline.py`), measured on a monotonic clock,
+  admits every request the poller makes: DynamoDB, S3 (including the body read of `get_object`, inside the same guarded
+  request) and SQS and SNS through `GuardedClient` around each SDK client; calendars, explorers and the resolver through
+  `guarded_transport`; the pre-ship check directly. A request starts only if its configured worst case fits the time
+  left minus a 10 s reserve, and the HTTP and DNS transports are given a timeout capped to what remains. Worst cases
+  count the configured explorers and the SDK's retry attempts (`attempts x (connect + read) + back-off` = 73 s). Its
+  purpose is that every invocation leaves durable progress: headers are checkpointed per height and as linked
+  segments, a stale stored set is invalidated durably (ILC-I-03), the evidence already held is evaluated before any
+  pending calendar is asked (ILC-I-05), calendar requests stop while one checkpoint write still fits (ILC-I2-03),
+  requests are enumerated in bounded pages from a durable position moved before each request (ILC-I2-04), and draining
+  signer responses has a cooperative allocation of a third of an invocation (ILC-I2-04, ILC-I3-02): it is checked
+  between response-processing units (a receive, a response's handling), without reserving a unit's remaining cost, so
+  one slow unit can overrun it; it is not a total-time claim. The signer slot the drain starts with rotates, and the
+  rotation is kept in the poller's durable position record, so cold starts continue it (ILC-I3-01). Running out of time never ends an attempt.
+  **An overrun is a hard kill, and the protocol tolerates it:** the fence, the guarded writes and the checkpoints make
+  a killed invocation's leftovers harmless. **Known limits on the deadline's precision** (not chased): the HTTP
+  transport's socket timeout applies per blocking operation, so a server dripping bytes can exceed the request's
+  total; a DNS query is a composite of UDP and TCP operations, each with its own allowance, and hostname resolution is
+  not covered; an SDK request's connect and read timeouts are not a total-operation deadline (streamed bodies); the
+  pre-ship check is local CPU with a 30 s admission estimate and no interruption. Measured progress envelope (tests):
+  with any one client slow, every invocation stays within its deadline in the tests' fakes, and a request still
+  completes with every DynamoDB request taking 20 s, every S3 request 10 s, every SQS or SNS request 60 s, every
+  calendar, explorer or resolver request 15 s, or a 25 s pre-ship check; at DynamoDB 30 s or S3 20 s per request a
+  stage can need more requests than one invocation admits and the request stalls (listed above).
+- **Snapshot capture does not gate the receipt** (ILC-I2-05). Stamping moves the attempt to evidence whether or not
+  the DNSSEC snapshot capture succeeded; capture is retried in each evidence poll (early, since its anchor must be
+  timely) and, if the attempt latches without one, before finalization (stage `snapshot`). A receipt's latch or
+  conclusive negative is never held up by the snapshot. If no snapshot was ever captured and the median-time-past
+  bound excludes every timely anchor, the attempt is discarded `SNAPSHOT_IMPOSSIBLE` (`NO_SNAPSHOT`).
+- **13.5 by reason** (ILC-I2-02). `RRSIG_NOT_VALID_AT_EVAL_TIME`, `RRSIG_INTERVAL_REVERSED` and
+  `RRSIG_TIME_AMBIGUOUS` depend on the snapshot's own RRSIG times against its anchored time: a recapture can repair
+  them (and they count for the impossibility proof). Every other 13.5 outcome (configured KSK intervals, reliance
+  periods, trust horizon, and conservatively the chain of trust built on them) is configuration-dependent and retried.
+- **Bounded external fields** (ILI-07). Signer request ids, statuses and reasons are validated; an unrecognised or
+  oversized reason becomes `UNRECOGNIZED_REASON` and the original is stored by reference (`diag-<sha256>`, with its
+  digest and length). The DynamoDB fake rejects items over 400 KiB.
+- **GATED.** `EVIDENCE_UNAVAILABLE` is not implemented in any form. An attempt whose evidence never completes stays
+  open. `unavailable_since` and `failed_intervals` (runs of `fetch_start // 600`) are written for diagnosis only.
+  Nothing here claims termination.
+- **Storage.** No age rule applies to live objects: the S3 lifecycle rule expires only objects tagged `cleanup-due`,
+  which the cleanup obligation sets just before deleting (content, work and frames at the end; the receipt 30 days
+  after `ended_at`).
+- **Public view.** ACCEPTED shows `attempt` {number, of, state} and, for an open attempt, `expiry_boundary` (B) with a
+  note that the twelve-day budget is nominal; REFUSED lists each attempt's outcome and reason.
+103:# position its complete proof fixes) and frozen material - never on the trust configuration. Enumerated from the
+169:def poll(iss, budget_s=None):
+172:    Requests are enumerated in bounded pages from a DURABLE continuation position (RequestStore.active_page and the
+173:    poller cursor), and the position is moved past a request BEFORE it is worked on, so neither a long active list
+180:            pos = _position(iss)                       # read once per poll
+181:            out["drained"] = drain(iss, share_s=DRAIN_SHARE * d.limit, position=pos)
+191:def _serve_requests(iss, d, out, position=None):
+193:    position = _position(iss) if position is None else position
+194:    keep = {k: v for k, v in position.items() if k not in ("token", "skip")}   # e.g. the drain rotation
+198:    cur = {"token": position.get("token"), "skip": position.get("skip", 0)}
+357:def _position(iss):
+362:def _drain_turn(iss, position):
+363:    """ILC-I3-01: the signer slot the drain starts with, kept in the poller's durable position record (not in the
+365:    return int(position.get("drain_turn", 0))
+368:def _drain_turn_put(iss, position, n):
+369:    position["drain_turn"] = n                         # the request position writes that follow keep it too
+370:    iss.requests.cursor_put(dict(position))
+373:def drain(iss, max_batches=50, share_s=float("inf"), position=None):
+384:    position = _position(iss) if position is None else position
+385:    turn = _drain_turn(iss, position) % max(1, len(slots))
+396:                    _drain_turn_put(iss, position, turn + 1)   # cold start continues the rotation; only written
+452:             "signature_sha256": sha256hex(sig) if sig is not None else None, "disposition": None,
+457:        entry["disposition"] = "unrequested"
+463:            entry["disposition"] = "not-waiting"
+465:            entry["disposition"] = "other-attempt"
+467:            entry["disposition"] = "not-waiting"
+469:            entry["disposition"] = "duplicate"
+471:            entry["disposition"] = "refused"
+476:            entry["disposition"] = "malformed"
+480:                entry["disposition"] = "bad-signature"
+482:                entry["disposition"] = "used"
+489:                    iss.requests.siglog_add(dict(entry, disposition="superseded:" + outcome))
+1029:                  its position: it can never pass, so the attempt is discarded with it;
+
+exec
+/bin/bash -lc "sed -n '150,255p' service/issuer/tessera_issue/pipeline.py; rg -n 'cursor_put|cursor_get|class Guarded|def aws_wire|SLOW|receive' service/issuer/tessera_issue/aws.py service/issuer/tessera_issue/deadline.py service/issuer/tests/test_lifecycle_confirm.py; cat service/issuer/tests/conftest.py" in /home/tony/projects/tessera
+ succeeded in 0ms:
+    return deadline.CURRENT.get() or deadline.Deadline(iss.clock, float("inf"), 0)
+
+
+def _tip_worst(iss):
+    f = getattr(iss.headers, "tip_worst_s", None)
+    return f() if f else 2 * deadline.HTTP_WORST_S
+
+
+def _height_worst(iss):
+    f = getattr(iss.headers, "height_worst_s", None)
+    return f() if f else 4 * deadline.HTTP_WORST_S
+
+
+def _tip(iss):
+    deadline.ensure(_tip_worst(iss), "tip")
+    return iss.headers.tip()
+
+
+# ------------------------------------------------------------------------------------------------ the poller
+def poll(iss, budget_s=None):
+    """One scheduled tick under one deadline (ILC-I-02; its clock is monotonic, ILC-I2-01). Work classes share the
+    invocation (ILC-I2-04): draining signer responses may use at most DRAIN_SHARE of it; requests then get the rest.
+    Requests are enumerated in bounded pages from a DURABLE continuation position (RequestStore.active_page and the
+    poller cursor), and the position is moved past a request BEFORE it is worked on, so neither a long active list
+    nor a request that exhausts (or kills) an invocation takes the others' turns. -> summary dict."""
+    d = deadline.Deadline(getattr(iss, "elapsed_clock", None) or iss.clock,          # ILC-I2-01: monotonic
+                          iss.budget_s if budget_s is None else budget_s, POLL_RESERVE_S)
+    out = {"drained": 0, "advanced": {}, "cleaned": 0}
+    with deadline.Installed(d):
+        try:
+            pos = _position(iss)                       # read once per poll
+            out["drained"] = drain(iss, share_s=DRAIN_SHARE * d.limit, position=pos)
+            _serve_requests(iss, d, out, pos)
+            if d.available() >= MIN_REQUEST_S:
+                out["cleaned"] = cleanup(iss)
+        except OutOfBudget as e:                       # out of time outside a request's turn: resumed next poll
+            iss.note("poll out of time:", e)
+            out["out_of_time"] = True
+    return out
+
+
+def _serve_requests(iss, d, out, position=None):
+    store = iss.requests
+    position = _position(iss) if position is None else position
+    keep = {k: v for k, v in position.items() if k not in ("token", "skip")}   # e.g. the drain rotation
+
+    def put(pos):
+        store.cursor_put(dict(keep, **pos))
+    cur = {"token": position.get("token"), "skip": position.get("skip", 0)}
+    seen, served, wrapped = set(), 0, False
+    while True:
+        rids, nxt = store.active_page(cur["token"], ENUM_PAGE)
+        if not rids and cur["token"] is not None and not wrapped:
+            cur, wrapped = {"token": None, "skip": 0}, True            # end of the list: start again from the top
+            continue
+        for i in range(cur["skip"], len(rids)):
+            rid = rids[i]
+            if rid in seen:
+                return                                 # a full lap in this invocation
+            if served and d.available() < MIN_REQUEST_S:
+                out["deferred"] = True
+                return
+            put({"token": cur["token"], "skip": i + 1})  # moved BEFORE the request is worked on
+            seen.add(rid)
+            served += 1
+            rec = store.get(rid)
+            if rec is None or rec["state"] != "ACCEPTED":
+                continue                               # the index is eventually consistent
+            before = rec["stage"]
+            try:
+                advance(iss, rec)
+            except OutOfBudget as e:
+                iss.note("out of time, request kept:", rid[:12], e)
+            except PreShipUnavailable as e:
+                iss.note("pre-ship unavailable, request kept:", rid[:12], e)
+            except Exception as e:  # noqa: BLE001  one request's fault never stops the others; retried next tick
+                iss.note("stage", before, "error, request kept:", rid[:12], type(e).__name__, e)
+            out["advanced"][rid] = (before, rec["stage"] or rec["state"])
+        if nxt is None:
+            if wrapped or cur["token"] is None and not rids:
+                put({"token": None, "skip": 0})
+                return
+            cur, wrapped = {"token": None, "skip": 0}, True
+        else:
+            cur = {"token": nxt, "skip": 0}
+        put(cur)
+
+
+def advance(iss, rec):
+    now = iss.clock()
+    try:
+        STAGES[rec["stage"]](iss, rec, now)
+    except StageError as e:
+        iss.note("stage", rec["stage"], "deferred:", e)
+
+
+def _commit(iss, rec, expect):
+    """Commit: a write guarded on `expect` (the lifecycle guard as read) and the record version."""
+    if not iss.requests.save(rec, expect):
+        raise Superseded("record changed since it was read; re-read next tick")
+
+
+def _event(rec, now, *what):
+    rec["events"] = (rec.get("events") or [])[-40:] + [[now, *what]]
+
+
+service/issuer/tests/test_lifecycle_confirm.py:67:SLOW = {"dynamodb": 60, "s3": 60, "sqs": 60, "sns": 60, "calendar": 15, "explorer": 15, "dns": 15, "preship": 25}
+service/issuer/tests/test_lifecycle_confirm.py:94:def aws_wire(slow_kind):
+service/issuer/tests/test_lifecycle_confirm.py:102:        return SlowClient(target, clock, SLOW[kind], log) if kind == slow_kind else target
+service/issuer/tests/test_lifecycle_confirm.py:120:        iss.preship.check = lambda *a, **kw: SlowClient(real, clock, SLOW["preship"], log)(*a, **kw)
+service/issuer/tests/test_lifecycle_confirm.py:124:@pytest.mark.parametrize("kind", sorted(SLOW))
+service/issuer/tests/test_lifecycle_confirm.py:253:    monkeypatch.setitem(SLOW, kind, delay)
+service/issuer/tessera_issue/deadline.py:15:  DynamoDB, S3, SQS (signer sends and receives), SNS   GuardedClient around each boto3-style client (aws.py, queues.py)
+service/issuer/tessera_issue/deadline.py:93:class GuardedClient:
+service/issuer/tessera_issue/aws.py:195:    def cursor_get(self):
+service/issuer/tessera_issue/aws.py:199:    def cursor_put(self, position):
+import uuid
+from pathlib import Path
+
+import pytest
+
+ROOT = Path(__file__).resolve().parents[1]                 # service/issuer
+REPO = ROOT.parents[1]
+FROZEN = REPO / "formal" / "freeze-v1" / "objects"        # read as data: the objects the receipts bind
+VERIFIER_CLI = REPO / "service" / "verifier" / ".venv" / "bin" / "tessera-verify"
+
+
+@pytest.fixture
+def loc():
+    from tessera_issue import local
+    return local.build(FROZEN)
+
+
+@pytest.fixture
+def key():
+    return str(uuid.uuid4())
+
+exec
+/bin/bash -lc 'PYTHONDONTWRITEBYTECODE=1 TMPDIR=/tmp/tmp.6rbTsKov9q .venv/bin/python -m pytest -q -p no:cacheprovider --basetemp=/tmp/tmp.6rbTsKov9q/suite-tmp > /tmp/tmp.6rbTsKov9q/suite.log 2>&1' in /home/tony/projects/tessera/service/issuer
+exec
+/bin/bash -lc "sed -n '60,125p' service/issuer/tests/test_lifecycle_confirm.py; sed -n '175,210p' service/issuer/tessera_issue/aws.py; cat service/issuer/tessera_issue/deadline.py; cat service/issuer/tessera_issue/queues.py | head -130" in /home/tony/projects/tessera
+ succeeded in 0ms:
+        led.fault(row, reason)
+        assert pipeline.classify_preship(led)[0] == kind, (row, reason)
+    assert pipeline._snapshot_impossible(None, None, None, {"row": "13.5", "reason": "KSK_OUTSIDE_RELIANCE_PERIOD"}) \
+        is None
+
+
+# ================================================================================================ ILC-I-02
+SLOW = {"dynamodb": 60, "s3": 60, "sqs": 60, "sns": 60, "calendar": 15, "explorer": 15, "dns": 15, "preship": 25}
+
+
+class SlowClient:
+    """A client (or transport) whose every request takes `delay` seconds of the issuer's clock, recording the
+    timeout the deadline passed it (deadline.CALL_TIMEOUT) and the time left when it started."""
+
+    def __init__(self, target, clock, delay, log):
+        self._t, self._clock, self._delay, self._log = target, clock, delay, log
+
+    def _slow(self, fn, *a, **kw):
+        d = deadline.CURRENT.get()
+        if d is not None:
+            self._log.append((deadline.CALL_TIMEOUT.get(), d.remaining()))
+        self._clock.advance(self._delay)
+        return fn(*a, **kw)
+
+    def __getattr__(self, name):
+        attr = getattr(self._t, name)
+        if not callable(attr) or name in ("q", "generate_presigned_url"):
+            return attr
+        return lambda *a, **kw: self._slow(attr, *a, **kw)
+
+    def __call__(self, *a, **kw):
+        return self._slow(self._t, *a, **kw)
+
+
+def aws_wire(slow_kind):
+    """A local issuer whose every client is the real adapter over a fake (DynamoDB, S3, SQS, SNS) or the real
+    protocol client over a stand-in transport (calendar, explorers, resolver); one kind is slow."""
+    from tessera_issue import local
+    loc = local.build(FROZEN)
+    clock, world, iss, log = loc.clock, loc.world, loc.iss, []
+
+    def slow(kind, target):
+        return SlowClient(target, clock, SLOW[kind], log) if kind == slow_kind else target
+    ddb, s3, sqs, sns = FakeDynamo(), FakeS3(), FakeSqs(clock), FakeSns()
+    iss.requests = DynamoRequestStore(slow("dynamodb", ddb), "t")
+    iss.results = S3ResultStore(slow("s3", s3), "b")
+    wake = SnsWake(slow("sns", sns), {"kms": "arn:kms", "gpg": "arn:gpg"})
+    q = slow("sqs", sqs)
+    iss.signers = {"kms": SlotSigner("kms", world.kms_key.spki, SqsQueue(q, "kms-req"), SqsQueue(q, "kms-resp"), wake),
+                   "gpg": SlotSigner("gpg", world.gpg_key.pgp_body, SqsQueue(q, "gpg-req"), SqsQueue(q, "gpg-resp"),
+                                     wake)}
+    loc.workers = {s: StandInSigner(s, k, sqs.q(f"{s}-req"), sqs.q(f"{s}-resp"), clock,
+                                    sign_until=iss.window.sign_until, fetch=iss.results.get_ref)
+                   for s, k in (("kms", world.kms_key), ("gpg", world.gpg_key))}
+    iss.calendars = [HttpCalendar(world.calendar.uri, slow("calendar", world.calendar.serve))]
+    iss.headers = ExplorerHeaders(["https://explorer-a.invalid/api", "https://explorer-b.invalid/api"],
+                                  slow("explorer", world.chain.serve_esplora))
+    iss.dns = LiveDns(slow("dns", world.dns.serve(clock)))
+    if slow_kind == "preship":
+        real = iss.preship.check
+        iss.preship.check = lambda *a, **kw: SlowClient(real, clock, SLOW["preship"], log)(*a, **kw)
+    return loc, log
+
+
+@pytest.mark.parametrize("kind", sorted(SLOW))
+def test_ILCI02_no_poll_exceeds_its_budget_whichever_client_is_slow(kind):
+        out = []
+        for pk in self._index_keys("2"):
+            it = self._get(pk)
+            if it is not None:
+                out.append((pk[len("CLEAN#"):], json.loads(it["doc"]["S"])))
+        return out
+
+    def cleanup_done(self, rid):
+        self.c.delete_item(TableName=self.t, Key={"pk": {"S": "CLEAN#" + rid}})
+
+    def active_page(self, token, limit):
+        """ILC-I2-04: one page of the sparse pending index; the token is DynamoDB's LastEvaluatedKey."""
+        kw = {"TableName": self.t, "IndexName": self.INDEX, "KeyConditionExpression": "#s = :one",
+              "ExpressionAttributeNames": {"#s": "pending_shard"}, "ExpressionAttributeValues": {":one": {"S": "1"}},
+              "Limit": limit}
+        if token:
+            kw["ExclusiveStartKey"] = token
+        r = self.c.query(**kw)
+        return [it["pk"]["S"][4:] for it in r.get("Items", [])], r.get("LastEvaluatedKey")
+
+    def cursor_get(self):
+        it = self._get("POLLER#cursor")
+        return json.loads(it["doc"]["S"]) if it else None
+
+    def cursor_put(self, position):
+        self.c.put_item(TableName=self.t, Item={"pk": {"S": "POLLER#cursor"},
+                                                "doc": {"S": json.dumps(position, sort_keys=True)}})
+
+    def siglog(self):
+        out, start = [], None
+        while True:
+            kw = {"TableName": self.t, "FilterExpression": "begins_with(pk, :p)",
+                  "ExpressionAttributeValues": {":p": {"S": "SIGLOG#"}}}
+            if start:
+                kw["ExclusiveStartKey"] = start
+            r = self.c.scan(**kw)
+"""ONE deadline guard for every remote and store request the poller makes (ILC-I-02; docs/reviews/issuer-lifecycle-impl
+/CODEX-CONFIRM.md). The poller installs a Deadline for the duration of one poll (pipeline.poll). Every client request
+then goes through `call`, which
+
+  (a) refuses to START the request unless its worst-case duration fits the time remaining minus the reserve
+      (raising OutOfBudget: the work resumes in the next invocation; nothing is decided on a refused request), and
+  (b) passes the request a timeout no larger than what remains: CALL_TIMEOUT holds that value while the request runs,
+      and the HTTP and DNS transports cap their total time to it. AWS SDK clients cannot take a per-request timeout;
+      their configured worst case (AWS_WORST_S, from the client configuration: attempts x (connect + read) plus the
+      retry back-off) is what (a) admits, so it never exceeds what remains either.
+
+The guard sits at the lowest layer, around each single request, so no adapter loop (pagination, deletion rounds,
+explorer agreement) can multiply time unchecked:
+
+  DynamoDB, S3, SQS (signer sends and receives), SNS   GuardedClient around each boto3-style client (aws.py, queues.py)
+  calendars, explorers                                 guarded_transport in ots.HttpCalendar, chain.ExplorerHeaders
+  DNS resolver                                         guarded_transport in dns.LiveDns
+  the pre-ship check (local CPU, no timeout knob)      pipeline, with PRESHIP_WORST_S
+
+Per-unit cost figures elsewhere (a header height, a tip) are computed from these worst cases and the configured
+explorer count, and are used only to avoid starting a unit that cannot finish; the safety mechanism is this guard.
+Outside a poll (the API, tests calling a function directly) no deadline is installed and calls run unguarded."""
+import contextvars
+
+from .service import AWS_CLIENT_CONFIG, HTTP_TIMEOUT_S
+
+CURRENT = contextvars.ContextVar("tessera_deadline", default=None)
+CALL_TIMEOUT = contextvars.ContextVar("tessera_call_timeout", default=None)
+
+
+def aws_worst_s(config=AWS_CLIENT_CONFIG):
+    """Worst case of one SDK request under the client configuration: every attempt waits its full connect and read
+    timeouts, and every retry waits the standard mode's maximum back-off (20 s)."""
+    attempts = config["retries"]["total_max_attempts"]
+    return attempts * (config["connect_timeout"] + config["read_timeout"]) + (attempts - 1) * 20
+
+
+AWS_WORST_S = aws_worst_s()
+HTTP_WORST_S = HTTP_TIMEOUT_S              # one calendar or explorer request (total, capped by the transport)
+DNS_WORST_S = 2 * 10                       # one resolver query: UDP, then TCP if truncated (total, capped)
+PRESHIP_WORST_S = 30                       # the verifier library on one bundle; local CPU, measured well below
+
+
+class OutOfBudget(Exception):
+    """The next request does not fit the invocation's remaining time; resumed next poll."""
+
+
+class Deadline:
+    def __init__(self, clock, limit_s, reserve_s):
+        self.clock, self.start, self.limit, self.reserve = clock, clock(), limit_s, reserve_s
+
+    def remaining(self):
+        return self.limit - (self.clock() - self.start)
+
+    def available(self):
+        return self.remaining() - self.reserve
+
+    def ensure(self, worst_s, what=""):
+        """Refuse unless `worst_s` fits; used for whole units (a header height) before their first request."""
+        if worst_s > self.available():
+            raise OutOfBudget(f"{what}: worst case {worst_s:.0f} s, {self.available():.0f} s available; "
+                              "resumed next poll")
+
+    def call(self, worst_s, fn, *args, what="", **kwargs):
+        self.ensure(worst_s, what)
+        token = CALL_TIMEOUT.set(min(worst_s, self.available()))
+        try:
+            return fn(*args, **kwargs)
+        finally:
+            CALL_TIMEOUT.reset(token)
+
+
+def guarded(worst_s, fn, *args, what="", **kwargs):
+    """Run one request under the current deadline (if any)."""
+    d = CURRENT.get()
+    if d is None:
+        return fn(*args, **kwargs)
+    return d.call(worst_s, fn, *args, what=what, **kwargs)
+
+
+def ensure(worst_s, what=""):
+    d = CURRENT.get()
+    if d is not None:
+        d.ensure(worst_s, what)
+
+
+def call_timeout(default):
+    """The timeout a transport must use for the request now running: its own, capped by what remains."""
+    t = CALL_TIMEOUT.get()
+    return default if t is None else max(0.001, min(default, t))
+
+
+class GuardedClient:
+    """A boto3-style client whose every method call is one guarded request of worst case AWS_WORST_S (or `worst_s`).
+    Non-callable attributes pass through. Methods the adapters use to build URLs locally (generate_presigned_url)
+    make no request and are not guarded."""
+    LOCAL = {"generate_presigned_url"}
+
+    def __init__(self, client, kind, worst_s=None):
+        object.__setattr__(self, "_client", client)
+        object.__setattr__(self, "_kind", kind)
+        object.__setattr__(self, "_worst", AWS_WORST_S if worst_s is None else worst_s)
+
+    def __setattr__(self, name, value):            # test hooks patch the wrapped client, not the guard
+        setattr(self._client, name, value)
+
+    def __getattr__(self, name):
+        attr = getattr(self._client, name)
+        if not callable(attr) or name in self.LOCAL:
+            return attr
+
+        def call(*args, **kwargs):
+            return guarded(self._worst, attr, *args, what=f"{self._kind}.{name}", **kwargs)
+        return call
+
+
+def guarded_transport(transport, kind, worst_s):
+    """A transport (method, url, body) or (query) whose every request is guarded."""
+    if getattr(transport, "_tessera_guarded", False):
+        return transport
+
+    def t(*args):
+        return guarded(worst_s, transport, *args, what=kind)
+    t._tessera_guarded = True
+    return t
+
+
+class Installed:
+    """Context manager: install a Deadline for one poll."""
+
+    def __init__(self, deadline):
+        self.deadline, self.token = deadline, None
+
+    def __enter__(self):
+        self.token = CURRENT.set(self.deadline)
+        return self.deadline
+
+    def __exit__(self, *exc):
+        CURRENT.reset(self.token)
+        return False
+"""Message queues behind one interface: in memory (tests, local runs) and SQS (AWS). The in-memory queue enforces
+SQS's message size limit."""
+import itertools
+from dataclasses import dataclass
+
+
+@dataclass
+class Message:
+    id: str
+    body: str
+    handle: str
+
+
+SQS_MAX_BYTES = 1048576              # SendMessage maximum message size
+
+
+class Queue:
+    def send(self, body):
+        raise NotImplementedError
+
+    def receive(self, max_messages=10, wait_s=0):
+        raise NotImplementedError
+
+    def delete(self, handle):
+        raise NotImplementedError
+
+
+class InMemoryQueue(Queue):
+    """At-least-once queue with a visibility timeout, like SQS: a received message is hidden until it is deleted or
+    its visibility timeout passes (measured on the given clock)."""
+
+    def __init__(self, clock, visibility_s=300, max_bytes=SQS_MAX_BYTES):
+        self.clock, self.visibility_s, self.max_bytes = clock, visibility_s, max_bytes
+        self.msgs = {}                       # id -> {"body", "visible_at", "handle"}
+        self._ids = itertools.count(1)
+
+    def send(self, body):
+        if len(body.encode()) > self.max_bytes:          # as SQS does (IS-09): the stand-in must not hide it
+            raise ValueError(f"message of {len(body.encode())} bytes exceeds {self.max_bytes}")
+        mid = f"m{next(self._ids)}"
+        self.msgs[mid] = {"body": body, "visible_at": 0, "handle": None}
+        return mid
+
+    def receive(self, max_messages=10, wait_s=0):
+        now, out = self.clock(), []
+        for mid, m in self.msgs.items():
+            if len(out) >= max_messages:
+                break
+            if m["visible_at"] <= now:
+                m["visible_at"] = now + self.visibility_s
+                m["handle"] = f"{mid}:{next(self._ids)}"
+                out.append(Message(mid, m["body"], m["handle"]))
+        return out
+
+    def delete(self, handle):
+        mid = handle.split(":")[0]
+        m = self.msgs.get(mid)
+        if m is not None and m["handle"] == handle:
+            del self.msgs[mid]
+
+    def __len__(self):
+        return len(self.msgs)
+
+
+class SqsQueue(Queue):
+    """SQS through an injected boto3-style client (`boto3.client("sqs")`)."""
+
+    def __init__(self, client, url):
+        from .deadline import GuardedClient
+        self.client, self.url = GuardedClient(client, "sqs"), url       # ILC-I-02: signer sends and receives
+
+    def send(self, body):
+        return self.client.send_message(QueueUrl=self.url, MessageBody=body)["MessageId"]
+
+    def receive(self, max_messages=10, wait_s=0):
+        r = self.client.receive_message(QueueUrl=self.url, MaxNumberOfMessages=max(1, min(10, max_messages)),
+                                        WaitTimeSeconds=wait_s)
+        return [Message(m["MessageId"], m["Body"], m["ReceiptHandle"]) for m in r.get("Messages", [])]
+
+    def delete(self, handle):
+        self.client.delete_message(QueueUrl=self.url, ReceiptHandle=handle)
+
+exec
+/bin/bash -lc 'cp /tmp/tmp.pyt6bZDeCk/test_third.py /tmp/tmp.6rbTsKov9q/test_third.py
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=/home/tony/projects/tessera/service/issuer:/home/tony/projects/tessera/service/issuer/tests TMPDIR=/tmp/tmp.6rbTsKov9q .venv/bin/python -m pytest -q -s -p no:cacheprovider --basetemp=/tmp/tmp.6rbTsKov9q/probe-tmp /tmp/tmp.6rbTsKov9q/test_third.py > /tmp/tmp.6rbTsKov9q/third.log 2>&1' in /home/tony/projects/tessera/service/issuer
+ exited 1 in 176ms:
+exec
+/bin/bash -lc "sed -n '1,48p' service/issuer/tessera_issue/aws.py; rg -n 'MIN_REQUEST|POLL_BUDGET|reserved_concurrent|ConsistentRead' service/issuer/tessera_issue/{pipeline,service,aws}.py service/issuer/infra/main.tf; cat /home/tony/.codex/plugins/cache/openai-curated-remote/superpowers/7.0.1/skills/systematic-debugging/SKILL.md" in /home/tony/projects/tessera
+ succeeded in 0ms:
+"""AWS implementations of the store, queue and wake interfaces, over injected boto3-style clients (boto3 is
+imported only by lambda_app.from_env). Nothing here calls KMS: the issuer holds no signing credential.
+
+DynamoDB table (one table, partition key "pk"):
+  REQ#<rid>      request record: "doc" (JSON), "version" (N), "pending_shard" = "1" while ACCEPTED (sparse GSI
+                 "pending-index"), "expires_at" (N, the table's TTL attribute) = ended_at + 30 days (absent while the
+                 request is live), and the lifecycle guard fields "lstate", "latt", "lastate" (request state, current
+                 attempt id, current attempt state) that a guarded save conditions on with the version
+  KEY#<rid>      content-free key tombstone, expires_at = after issuance closes
+  SIGREQ#<id>    signer request id -> request, job, slot, frame hash; expires_at = 30 days after sending
+  SIGLOG#<uuid>  one signer response as logged (E-02); no expiry. A "used" response is logged under the
+                 deterministic key SIGLOG#USED#<signer request id>#<signature sha256> so sealing can require it (IS-01)
+  CLEAN#<rid>    a cleanup obligation (IS-07), pending_shard = "2" in the same sparse index; no expiry
+  POLLER#cursor  the poller's scheduling cursor (ILI-05): the request id it last started on
+S3 bucket: content/<rid>/..., work/<rid>/..., frames/<rid>/<sha256> (large frames, read by the signers by reference),
+result/<rid>/receipt.json, config/window.json. The poller deletes each request's objects itself (IS-07), first
+tagging them cleanup-due; the bucket's lifecycle rule expires only tagged objects, as a backstop (5.3.1)."""
+import json
+import uuid
+
+from .deadline import AWS_WORST_S, GuardedClient, guarded
+from .stores import CLEANUP_TAG, NAMESPACES, RequestStore, ResultStore, lifecycle_guard
+
+
+def _conditional_failed(exc):
+    code = getattr(exc, "response", {}).get("Error", {}).get("Code")
+    return code == "ConditionalCheckFailedException" or type(exc).__name__ == "ConditionalCheckFailedException"
+
+
+def _transaction_conflict(exc):
+    code = getattr(exc, "response", {}).get("Error", {}).get("Code")
+    if code != "TransactionCanceledException" and type(exc).__name__ != "TransactionCanceledException":
+        return False
+    reasons = getattr(exc, "response", {}).get("CancellationReasons") or []
+    return any(r.get("Code") == "ConditionalCheckFailed" for r in reasons)
+
+
+def _not_found(exc):
+    code = getattr(exc, "response", {}).get("Error", {}).get("Code")
+    return code in ("NoSuchKey", "404", "NotFound") or type(exc).__name__ == "NoSuchKey"
+
+
+class DynamoRequestStore(RequestStore):
+    request_worst_s = AWS_WORST_S
+    INDEX = "pending-index"
+
+    def __init__(self, client, table):
+        self.c, self.t = GuardedClient(client, "dynamodb"), table      # ILC-I-02: every request guarded
+service/issuer/infra/main.tf:365:  reserved_concurrent_executions = 1 # one poller at a time; records are also compare-and-set
+service/issuer/tessera_issue/pipeline.py:134:# finish. MIN_REQUEST_S: another request is started only with at least this much left.
+service/issuer/tessera_issue/pipeline.py:135:MIN_REQUEST_S = 60
+service/issuer/tessera_issue/pipeline.py:183:            if d.available() >= MIN_REQUEST_S:
+service/issuer/tessera_issue/pipeline.py:209:            if served and d.available() < MIN_REQUEST_S:
+service/issuer/tessera_issue/pipeline.py:382:        return d.clock() - start >= share_s or d.available() < MIN_REQUEST_S
+service/issuer/tessera_issue/aws.py:51:        it = self.c.get_item(TableName=self.t, Key={"pk": {"S": pk}}, ConsistentRead=True).get("Item")
+service/issuer/tessera_issue/service.py:18:POLL_BUDGET_S = 290                 # the invocation's usable time (lambda_app lowers it to the time actually left)
+service/issuer/tessera_issue/service.py:47:    budget_s: float = POLL_BUDGET_S  # ILI-05: one poll's work budget (lambda_app lowers it to the time remaining)
+---
+name: systematic-debugging
+description: Use when encountering any bug, test failure, or unexpected behavior, before proposing fixes
+---
+
+# Systematic Debugging
+
+## Overview
+
+**Core principle:** ALWAYS find root cause before attempting fixes. Symptom fixes are failure.
+
+**Violating the letter of this process is violating the spirit of debugging.**
+
+## The Iron Law
+
+```
+NO FIXES WITHOUT ROOT CAUSE INVESTIGATION FIRST
+```
+
+If you haven't completed Phase 1, you cannot propose fixes.
+
+## When to Use
+
+Use for ANY technical issue:
+- Test failures
+- Bugs in production
+- Unexpected behavior
+- Performance problems
+- Build failures
+- Integration issues
+
+**Use this ESPECIALLY when:**
+- Under time pressure (emergencies make guessing tempting)
+- "Just one quick fix" seems obvious
+- You've already tried multiple fixes
+- Previous fix didn't work
+- You don't fully understand the issue
+
+**Don't skip when:**
+- Issue seems simple (simple bugs have root causes too)
+- You're in a hurry (rushing guarantees rework)
+- Manager wants it fixed NOW (systematic is faster than thrashing)
+
+## The Four Phases
+
+You MUST complete each phase before proceeding to the next.
+
+### Phase 1: Root Cause Investigation
+
+**BEFORE attempting ANY fix:**
+
+1. **Read Error Messages Carefully**
+   - Don't skip past errors or warnings
+   - They often contain the exact solution
+   - Read stack traces completely
+   - Note line numbers, file paths, error codes
+
+2. **Reproduce Consistently**
+   - Can you trigger it reliably?
+   - What are the exact steps?
+   - Does it happen every time?
+   - If not reproducible → gather more data, don't guess
+
+3. **Check Recent Changes**
+   - What changed that could cause this?
+   - Git diff, recent commits
+   - New dependencies, config changes
+   - Environmental differences
+
+4. **Gather Evidence in Multi-Component Systems**
+
+   **WHEN system has multiple components (CI → build → signing, API → service → database):**
+
+   **BEFORE proposing fixes, add diagnostic instrumentation:**
+   ```
+   For EACH component boundary:
+     - Log what data enters component
+     - Log what data exits component
+     - Verify environment/config propagation
+     - Check state at each layer
+
+   Run once to gather evidence showing WHERE it breaks
+   THEN analyze evidence to identify failing component
+   THEN investigate that specific component
+   ```
+
+   **Example (multi-layer system):**
+   ```bash
+   # Layer 1: Workflow
+   echo "=== Secrets available in workflow: ==="
+   echo "IDENTITY: $([ -n "${IDENTITY:-}" ] && echo SET || echo UNSET)"
+
+   # Layer 2: Build script
+   echo "=== Env vars in build script: ==="
+   printenv IDENTITY >/dev/null 2>&1 && echo "IDENTITY in environment" || echo "IDENTITY not in environment"
+
+   # Layer 3: Signing script
+   echo "=== Keychain state: ==="
+   security list-keychains
+   security find-identity -v
+
+   # Layer 4: Actual signing
+   codesign --sign "$IDENTITY" --verbose=4 "$APP"
+   ```
+
+   **This reveals:** Which layer fails (secrets → workflow ✓, workflow → build ✗)
+
+5. **Trace Data Flow**
+
+   **WHEN error is deep in call stack:**
+
+   See `root-cause-tracing.md` in this directory for the complete backward tracing technique.
+
+   **Quick version:**
+   - Where does bad value originate?
+   - What called this with bad value?
+   - Keep tracing up until you find the source
+   - Fix at source, not at symptom
+
+### Phase 2: Pattern Analysis
+
+**Find the pattern before fixing:**
+
+1. **Find Working Examples**
+   - Locate similar working code in same codebase
+   - What works that's similar to what's broken?
+
+2. **Compare Against References**
+   - If implementing pattern, read reference implementation COMPLETELY
+   - Don't skim - read every line
+   - Understand the pattern fully before applying
+
+3. **Identify Differences**
+   - What's different between working and broken?
+   - List every difference, however small
+   - Don't assume "that can't matter"
+
+4. **Understand Dependencies**
+   - What other components does this need?
+   - What settings, config, environment?
+   - What assumptions does it make?
+
+### Phase 3: Hypothesis and Testing
+
+**Scientific method:**
+
+1. **Form Single Hypothesis**
+   - State clearly: "I think X is the root cause because Y"
+   - Write it down
+   - Be specific, not vague
+
+2. **Test Minimally**
+   - Make the SMALLEST possible change to test hypothesis
+   - One variable at a time
+   - Don't fix multiple things at once
+
+3. **Verify Before Continuing**
+   - Did it work? Yes → Phase 4
+   - Didn't work? Form NEW hypothesis
+   - DON'T add more fixes on top
+
+4. **When You Don't Know**
+   - Say "I don't understand X"
+   - Don't pretend to know
+   - Ask for help
+   - Research more
+
+### Phase 4: Implementation
+
+**Fix the root cause, not the symptom:**
+
+1. **Create Failing Test Case**
+   - Simplest possible reproduction
+   - Automated test if possible
+   - One-off test script if no framework
+   - MUST have before fixing
+   - Use the `superpowers:test-driven-development` skill for writing proper failing tests
+
+2. **Implement Single Fix**
+   - Address the root cause identified
+   - ONE change at a time
+   - No "while I'm here" improvements
+   - No bundled refactoring
+
+3. **Verify Fix**
+   - Test passes now?
+   - No other tests broken?
+   - Issue actually resolved?
+   - Use the `superpowers:verification-before-completion` skill before claiming success
+
+4. **If Fix Doesn't Work**
+   - STOP
+   - Count: How many fixes have you tried?
+   - If < 3: Return to Phase 1, re-analyze with new information
+   - **If ≥ 3: STOP and question the architecture (step 5 below)**
+   - DON'T attempt Fix #4 without architectural discussion
+
+5. **If 3+ Fixes Failed: Question Architecture**
+
+   **Pattern indicating architectural problem:**
+   - Each fix reveals new shared state/coupling/problem in different place
+   - Fixes require "massive refactoring" to implement
+   - Each fix creates new symptoms elsewhere
+
+   **STOP and question fundamentals:**
+   - Is this pattern fundamentally sound?
+   - Are we "sticking with it through sheer inertia"?
+   - Should we refactor architecture vs. continue fixing symptoms?
+
+   **Discuss with your human partner before attempting more fixes**
+
+   This is NOT a failed hypothesis - this is a wrong architecture.
+
+## Red Flags - STOP and Follow Process
+
+If you catch yourself thinking:
+- "Quick fix for now, investigate later"
+- "Just try changing X and see if it works"
+- "Add multiple changes, run tests"
+- "Skip the test, I'll manually verify"
+- "It's probably X, let me fix that"
+- "I don't fully understand but this might work"
+- "Pattern says X but I'll adapt it differently"
+- "Here are the main problems: [lists fixes without investigation]"
+- Proposing solutions before tracing data flow
+- **"One more fix attempt" (when already tried 2+)**
+- **Each fix reveals new problem in different place**
+
+**ALL of these mean: STOP. Return to Phase 1.**
+
+**If 3+ fixes failed:** Question the architecture (see Phase 4.5)
+
+## your human partner's Signals You're Doing It Wrong
+
+**Watch for these redirections:**
+- "Is that not happening?" - You assumed without verifying
+- "Will it show us...?" - You should have added evidence gathering
+- "Stop guessing" - You're proposing fixes without understanding
+- "Ultra-think this" - Question fundamentals, not just symptoms
+- "We're stuck?" (frustrated) - Your approach isn't working
+
+**When you see these:** STOP. Return to Phase 1.
+
+## Common Rationalizations
+
+| Excuse | Reality |
+|--------|---------|
+| "Issue is simple, don't need process" | Simple issues have root causes too. Process is fast for simple bugs. |
+| "Emergency, no time for process" | Systematic debugging is FASTER than guess-and-check thrashing. |
+| "Just try this first, then investigate" | First fix sets the pattern. Do it right from the start. |
+| "I'll write test after confirming fix works" | Untested fixes don't stick. Test first proves it. |
+| "Multiple fixes at once saves time" | Can't isolate what worked. Causes new bugs. |
+| "Reference too long, I'll adapt the pattern" | Partial understanding guarantees bugs. Read it completely. |
+| "I see the problem, let me fix it" | Seeing symptoms ≠ understanding root cause. |
+| "One more fix attempt" (after 2+ failures) | 3+ failures = architectural problem. Question pattern, don't fix again. |
+
+## Quick Reference
+
+| Phase | Key Activities | Success Criteria |
+|-------|---------------|------------------|
+| **1. Root Cause** | Read errors, reproduce, check changes, gather evidence | Understand WHAT and WHY |
+| **2. Pattern** | Find working examples, compare | Identify differences |
+| **3. Hypothesis** | Form theory, test minimally | Confirmed or new hypothesis |
+| **4. Implementation** | Create test, fix, verify | Bug resolved, tests pass |
+
+## When Process Reveals "No Root Cause"
+
+If systematic investigation reveals issue is truly environmental, timing-dependent, or external:
+
+1. You've completed the process
+2. Document what you investigated
+3. Implement appropriate handling (retry, timeout, error message)
+4. Add monitoring/logging for future investigation
+
+**But:** 95% of "no root cause" cases are incomplete investigation.
+
+## Supporting Techniques
+
+These techniques are part of systematic debugging and available in this directory:
+
+- **`root-cause-tracing.md`** - Trace bugs backward through call stack to find original trigger
+- **`defense-in-depth.md`** - Add validation at multiple layers after finding root cause
+- **`condition-based-waiting.md`** - Replace arbitrary timeouts with condition polling
+
+exec
+/bin/bash -lc "cat /tmp/tmp.6rbTsKov9q/third.log; tail -4 /tmp/tmp.6rbTsKov9q/suite.log; sed -n '1,50p' service/issuer/tests/test_lifecycle_confirm.py; sed -n '1,100p' service/issuer/tessera_issue/signers.py" in /home/tony/projects/tessera
+ succeeded in 0ms:
+COLD evidence [('p_gpg', True), ('p_kms', True), ('s_gpg', True), ('s_kms', True)] 0
+F.DRAIN_SHARE 120 96.66666666666667
+.
+=================================== FAILURES ===================================
+____________________ test_cold_starts_starve_second_signer _____________________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x71713d7588a0>
+
+    def test_cold_starts_starve_second_signer(monkeypatch):
+        monkeypatch.setitem(SLOW,'sqs',20)
+        loc,_=aws_wire('sqs')
+        _,rid=submit(loc,str(uuid.uuid4()))
+        pipeline.poll(loc.iss)
+        for wk in loc.workers.values(): wk.process()
+        junk=json.dumps({'request_id':'req-'+'0'*40,'status':'SIGNED','sig_b64':'AAAA'})
+        for n in range(8):
+            for _ in range(100): loc.workers['kms'].responses.send(junk)
+            loc.iss.drain_turn=0 # fresh Lambda issuer object; persistent stores and queues retained
+            pipeline.poll(loc.iss)
+        rec=get(loc,rid)
+        print('COLD',rec['stage'],[(k,v['sig_sha256'] is not None) for k,v in att(rec)['jobs'].items()],len(loc.workers['gpg'].responses))
+>       assert rec['stage']=='signing'
+E       AssertionError: assert 'evidence' == 'signing'
+E         
+E         - signing
+E         + evidence
+
+/tmp/tmp.6rbTsKov9q/test_third.py:23: AssertionError
+=========================== short test summary info ============================
+FAILED ../../../../../../tmp/tmp.6rbTsKov9q/test_third.py::test_cold_starts_starve_second_signer
+1 failed, 2 passed in 0.13s
+......................................."""Repairs after Codex's confirmation review (docs/reviews/issuer-lifecycle-impl/CODEX-CONFIRM.md, ILC-I-01..05;
+ILC-I-06 is documentation). Codex's probes (/tmp/tmp.lgKk0SQtBY/test_confirmation.py) are reproduced as regression
+tests with the repaired behaviour as the oracle; ILC-I-02 is tested for every client kind the poller uses."""
+import copy
+import uuid
+
+import pytest
+
+from tessera_issue import api, deadline, ots, pipeline
+from tessera_issue.aws import DynamoRequestStore, S3ResultStore, SnsWake
+from tessera_issue.chain import ExplorerHeaders
+from tessera_issue.dns import LiveDns
+from tessera_issue.ots import HttpCalendar
+from tessera_issue.queues import SqsQueue
+from tessera_issue.service import POLL_BUDGET_S, POLL_RESERVE_S
+from tessera_issue.signers import SlotSigner, StandInSigner
+from tessera_issue.util import DELTA, HOUR, rfc3339
+
+from conftest import FROZEN
+from fakes import FakeDynamo, FakeS3, FakeSns, FakeSqs
+from helpers import submit
+from test_lifecycle import att, bury, declared, get, poll, to_evidence
+from test_lifecycle_repairs import SlowHeaders, latched
+
+
+# ================================================================================================ ILC-I-01
+def test_ILCI01_a_trust_configuration_failure_of_a_timely_snapshot_is_retried_and_ships_after_repair(loc, key):
+    """Codex's KSK-interval probe: both proofs anchored on time, the chain far past the MTP threshold, and only the
+    configured KSK interval broken. Row 13.5 depends on the trust configuration, so it is neither a recapture nor a
+    SNAPSHOT_IMPOSSIBLE discard: the attempt and its snapshot are kept, and after the repair it ships."""
+    rid, rec = latched(loc, key)
+    a = att(rec)
+    loc.clock.t = declared(a) + DELTA + 100
+    loc.world.chain.mine(20)
+    saved = copy.deepcopy(loc.iss.preship.trust_base["root_ksks"])
+    loc.iss.preship.trust_base["root_ksks"][0]["signing_start"] = rfc3339(declared(a) + 2 * HOUR)
+    body = loc.iss.results.get("work", rid, "a1/snapshot.body")
+    for _ in range(3):
+        poll(loc)
+    rec = get(loc, rid)
+    assert rec["cur"] == 1 and att(rec)["state"] == "latched" and rec["stage"] == "finalize"
+    assert "KSK_OUTSIDE_RELIANCE_PERIOD" in [e for e in rec["events"] if e[1] == "preship-retry"][-1][3]
+    assert not [e for e in rec["events"] if e[1] == "preship-recapture"]
+    assert loc.iss.results.get("work", rid, "a1/snapshot.body") == body       # the timely snapshot is kept
+    loc.iss.preship.trust_base["root_ksks"] = saved
+    poll(loc)
+    rec = get(loc, rid)
+    assert rec["state"] == "COMPLETE" and len(rec["attempts"]) == 1
+
+
+"""The two policy signers behind one interface (DESIGN.md "Signers"): the issuer enqueues a frame on the slot's
+request queue and reads signed responses from the slot's response queue. The issuer holds no signing credential.
+
+Wire protocol (the deployed slot-2 policy signer's): request {"request_id", "frame_b64"}; response {"request_id",
+"status": "SIGNED" | "REFUSED", "sig_b64"?, "reason"?, "detail"?, "signer": {...}?}.
+Additions after review (DESIGN.md "Changes after review"):
+  IS-03  the request carries "sign_by" (RFC 3339): the signer refuses (SIGNING_STOPPED) when its clock is past it, or
+         past its own configured signing stop, immediately before signing.
+  IS-09  a frame whose inline message would exceed INLINE_MAX is sent as {"request_id", "frame_ref", "frame_sha256",
+         "sign_by"}: the signer reads the object at frame_ref and refuses (FRAME_DIGEST_MISMATCH) unless its SHA-256 is
+         frame_sha256, so it signs exactly the bytes the issuer named.
+
+E-01: `wake()` starts a signer on demand (optional hook per slot, called once per enqueued batch).
+E-02: request ids are derived from (request, frame hash), so a retry reuses the id and a late answer to the first
+attempt satisfies it; the caller records every response with frame and signature hashes (pipeline.drain).
+
+StandInSigner is the local signer process: it reads the same queues and signs with TEST keys."""
+import json
+
+from tessera_verify.codec import (Fault, parse_signature, public_key, registered_codecs, sig_policy,
+                                  signature_verifies, read_frame)
+
+from .encode import fp_gpg, fp_kms
+from .util import ALG, EPS, b64d, b64e, rfc3339, sha256hex, ts
+
+SLOTS = ("kms", "gpg")
+INLINE_MAX = 256 * 1024          # bytes of one inline request message; SQS allows at most 1 MiB (IS-09)
+REGISTRY = registered_codecs(ALG)
+
+
+def request_id(request_id_scope, slot, frame):
+    """E-02: one id per (request, slot, frame); a retry of the same frame for the same request reuses it. The slot is
+    in the derivation because the manifest frame goes to both slots."""
+    return "req-" + sha256hex(f"{request_id_scope}\n{slot}\n{sha256hex(frame)}".encode())[:40]
+
+
+def verify_slot_signature(slot, key_bytes, frame, sig):
+    """Rule R (kms) or rule O (gpg) codec and policy, then the signature over the exact frame bytes, with the
+    service verifier's own functions."""
+    try:
+        parsed = parse_signature(sig, ALG, slot, REGISTRY)
+        sig_policy(parsed)
+        return signature_verifies(frame, parsed, public_key(key_bytes, slot, ALG))
+    except Fault:
+        return False
+
+
+class SlotSigner:
+    """Issuer side of one slot: its public key and its two queues."""
+
+    def __init__(self, slot, key_bytes, requests, responses, wake=None):
+        if slot not in SLOTS:
+            raise ValueError(slot)
+        public_key(key_bytes, slot, ALG)                 # KEY_FORMAT gate
+        self.slot, self.key_bytes = slot, key_bytes
+        self.fp = fp_kms(key_bytes) if slot == "kms" else fp_gpg(key_bytes)
+        self.requests, self.responses, self._wake = requests, responses, wake
+
+    def send(self, rid, frame, sign_by=None, stash=None):
+        """stash(frame) -> object reference, used when the inline message would be too large (IS-09)."""
+        msg = {"request_id": rid, "frame_b64": b64e(frame)}
+        if sign_by is not None:
+            msg["sign_by"] = rfc3339(sign_by)
+        body = json.dumps(msg, sort_keys=True)
+        if len(body.encode()) > INLINE_MAX:
+            if stash is None:
+                raise ValueError("frame too large for an inline signer request")
+            del msg["frame_b64"]
+            msg.update(frame_ref=stash(frame), frame_sha256=sha256hex(frame))
+            body = json.dumps(msg, sort_keys=True)
+        self.requests.send(body)
+
+    def wake(self):
+        if self._wake is not None:
+            self._wake(self.slot)
+
+    def receive(self, max_messages=10):
+        out = []
+        for m in self.responses.receive(max_messages):
+            try:
+                body = json.loads(m.body)
+                if not isinstance(body, dict):
+                    raise ValueError
+            except ValueError:
+                body = {"_unparseable": m.body[:200]}
+            out.append((m.handle, body))
+        return out
+
+    def ack(self, handle):
+        self.responses.delete(handle)
+
+    def verify(self, frame, sig):
+        return verify_slot_signature(self.slot, self.key_bytes, frame, sig)
+
+
+class StandInSigner:
+    """A local policy signer with a TEST key. Policy as the deployed slot-2 signer: tag must be attest or manifest;
+    an attestation must name this slot's key; the gpg slot refuses a declared_issue_time more than epsilon from
+    its clock (A9:401-405). `process()` handles what is queued now; tests call it (or not) to model a signer that
+    is slow, down or late."""
+
+codex
+The original cold-start probe now serves GPG: all four signatures were recorded and the request reached `evidence`. DESIGN’s drain wording also matches the cooperative allocation. I’m using the systematic-debugging skill to check one remaining case: whether an empty first queue can consume enough budget to prevent the rotation write after receiving from the second queue.
+exec
+/bin/bash -lc "cat > /tmp/tmp.6rbTsKov9q/test_rotation.py <<'PY'
+import uuid
+from conftest import loc,key
+from test_lifecycle_confirm import aws_wire,SLOW,SlowClient
+from test_lifecycle import get,att
+from helpers import submit
+from tessera_issue import pipeline
+
+def setup(monkeypatch):
+    monkeypatch.setitem(SLOW,'sqs',60)
+    loc,_=aws_wire('sqs')
+    _,rid=submit(loc,str(uuid.uuid4()))
+    pipeline.poll(loc.iss)
+    for wk in loc.workers.values(): wk.process()
+    # Deliver KMS first, leave only the valid GPG replies awaiting collection.
+    for handle,body in loc.iss.signers['kms'].receive():
+        pipeline._take(loc.iss,'kms',loc.iss.signers['kms'],body)
+        loc.iss.signers['kms'].ack(handle)
+    loc.iss.requests.cursor_put({'drain_turn':0})
+    return loc,rid
+
+def test_short_budget_empty_first_queue(monkeypatch):
+    loc,rid=setup(monkeypatch)
+    for i in range(12):
+        out=pipeline.poll(loc.iss,budget_s=190)
+        print('SHORT',i,out,loc.iss.requests.cursor_get())
+    print('RESULT',get(loc,rid)['stage'],[(k,bool(v['sig_sha256'])) for k,v in att(get(loc,rid))['jobs'].items()],len(loc.workers['gpg'].responses))
+    assert get(loc,rid)['stage']=='signing'
+    assert all(not v['sig_sha256'] for k,v in att(get(loc,rid))['jobs'].items() if 'gpg' in k)
+    # Control: starting with GPG at the same budget consumes the valid responses.
+    loc.iss.requests.cursor_put({'drain_turn':1})
+    for _ in range(6): pipeline.poll(loc.iss,budget_s=190)
+    print('CONTROL',get(loc,rid)['stage'])
+    assert all(v['sig_sha256'] for k,v in att(get(loc,rid))['jobs'].items() if 'gpg' in k)
+PY
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=/home/tony/projects/tessera/service/issuer:/home/tony/projects/tessera/service/issuer/tests TMPDIR=/tmp/tmp.6rbTsKov9q .venv/bin/python -m pytest -q -s -p no:cacheprovider --basetemp=/tmp/tmp.6rbTsKov9q/rotation-tmp /tmp/tmp.6rbTsKov9q/test_rotation.py > /tmp/tmp.6rbTsKov9q/rotation.log 2>&1" in /home/tony/projects/tessera/service/issuer
+ exited 1 in 134ms:
+exec
+/bin/bash -lc "cat /tmp/tmp.6rbTsKov9q/rotation.log; tail -3 /tmp/tmp.6rbTsKov9q/suite.log; sed -n '65,100p' service/issuer/tessera_issue/lambda_app.py" in /home/tony/projects/tessera
+ succeeded in 0ms:
+SHORT 0 {'drained': 0, 'advanced': {}, 'cleaned': 0, 'out_of_time': True} {'drain_turn': 0}
+SHORT 1 {'drained': 0, 'advanced': {}, 'cleaned': 0, 'out_of_time': True} {'drain_turn': 0}
+SHORT 2 {'drained': 0, 'advanced': {}, 'cleaned': 0, 'out_of_time': True} {'drain_turn': 0}
+SHORT 3 {'drained': 0, 'advanced': {}, 'cleaned': 0, 'out_of_time': True} {'drain_turn': 0}
+SHORT 4 {'drained': 0, 'advanced': {}, 'cleaned': 0, 'out_of_time': True} {'drain_turn': 0}
+SHORT 5 {'drained': 0, 'advanced': {}, 'cleaned': 0, 'out_of_time': True} {'drain_turn': 0}
+SHORT 6 {'drained': 0, 'advanced': {}, 'cleaned': 0, 'out_of_time': True} {'drain_turn': 0}
+SHORT 7 {'drained': 0, 'advanced': {}, 'cleaned': 0, 'out_of_time': True} {'drain_turn': 0}
+SHORT 8 {'drained': 0, 'advanced': {}, 'cleaned': 0, 'out_of_time': True} {'drain_turn': 0}
+SHORT 9 {'drained': 0, 'advanced': {}, 'cleaned': 0, 'out_of_time': True} {'drain_turn': 0}
+SHORT 10 {'drained': 0, 'advanced': {}, 'cleaned': 0, 'out_of_time': True} {'drain_turn': 0}
+SHORT 11 {'drained': 0, 'advanced': {}, 'cleaned': 0, 'out_of_time': True} {'drain_turn': 0}
+RESULT signing [('p_gpg', False), ('p_kms', True), ('s_gpg', False), ('s_kms', True)] 0
+CONTROL signing
+F
+=================================== FAILURES ===================================
+_____________________ test_short_budget_empty_first_queue ______________________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7de29be64640>
+
+    def test_short_budget_empty_first_queue(monkeypatch):
+        loc,rid=setup(monkeypatch)
+        for i in range(12):
+            out=pipeline.poll(loc.iss,budget_s=190)
+            print('SHORT',i,out,loc.iss.requests.cursor_get())
+        print('RESULT',get(loc,rid)['stage'],[(k,bool(v['sig_sha256'])) for k,v in att(get(loc,rid))['jobs'].items()],len(loc.workers['gpg'].responses))
+        assert get(loc,rid)['stage']=='signing'
+        assert all(not v['sig_sha256'] for k,v in att(get(loc,rid))['jobs'].items() if 'gpg' in k)
+        # Control: starting with GPG at the same budget consumes the valid responses.
+        loc.iss.requests.cursor_put({'drain_turn':1})
+        for _ in range(6): pipeline.poll(loc.iss,budget_s=190)
+        print('CONTROL',get(loc,rid)['stage'])
+>       assert all(v['sig_sha256'] for k,v in att(get(loc,rid))['jobs'].items() if 'gpg' in k)
+E       assert False
+E        +  where False = all(<generator object test_short_budget_empty_first_queue.<locals>.<genexpr> at 0x7de29be792a0>)
+
+/tmp/tmp.6rbTsKov9q/test_rotation.py:33: AssertionError
+=========================== short test summary info ============================
+FAILED ../../../../../../tmp/tmp.6rbTsKov9q/test_rotation.py::test_short_budget_empty_first_queue
+1 failed in 0.08s
+........................................................................ [ 33%]
+...................................    return _ISSUER
+
+
+def handle_api_event(iss, event):
+    """API Gateway REST proxy event -> proxy response. Plain function; api_handler binds the issuer."""
+    method = event.get("httpMethod")
+    resource = event.get("resource") or ""
+    headers = {k.lower(): v for k, v in (event.get("headers") or {}).items()}
+    cred = ((event.get("requestContext") or {}).get("identity") or {}).get("apiKeyId")
+    key = (event.get("pathParameters") or {}).get("key")
+    if method == "POST" and resource == "/v1/requests":
+        raw = event.get("body") or ""
+        try:
+            body = base64.b64decode(raw, validate=True) if event.get("isBase64Encoded") else raw.encode("utf-8")
+        except ValueError:
+            body = None
+        if body is None:
+            resp = api.Response(400, {"state": "REFUSED", "reason": "BAD_REQUEST"})
+        else:
+            resp = api.submit(iss, cred, headers.get("tessera-request-key"), body)
+    elif method == "GET" and resource == "/v1/requests/{key}":
+        resp = api.status(iss, cred, key)
+    elif method == "GET" and resource == "/v1/requests/{key}/receipt":
+        resp = api.receipt(iss, cred, key)
+    else:
+        resp = api.Response(404, {"error": "NOT_FOUND"})
+    status, hdrs, data = api.encode(resp)
+    return {"statusCode": status, "headers": hdrs, "body": data.decode("utf-8"), "isBase64Encoded": False}
+
+
+SHA1DC_BINARY = "/var/task/tessera-verify/bin/sha1dcsum"     # where package.py puts the detector
+
+
+def install_facts():
+    """The facts this Lambda's install.json must record (profile 15.9 R2), read where it runs: the runtime's Unicode
+    module digest differs from the build host's. Nothing is trusted from it; package.py checks the record it becomes,
+
+exec
+/bin/bash -lc "python - <<'PY'
+p='/tmp/tmp.6rbTsKov9q/test_rotation.py'
+s=open(p).read().replace(\"monkeypatch.setitem(SLOW,'sqs',60)\",\"monkeypatch.setitem(SLOW,'sqs',0)\")
+s=s.replace(\"loc.iss.requests.cursor_put({'drain_turn':0})\",\"loc.iss.requests.cursor_put({'drain_turn':0})\\n    for signer in loc.iss.signers.values():\\n        signer.responses.client._client._delay=60\")
+open(p,'w').write(s)
+PY
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=/home/tony/projects/tessera/service/issuer:/home/tony/projects/tessera/service/issuer/tests TMPDIR=/tmp/tmp.6rbTsKov9q .venv/bin/python -m pytest -q -s -p no:cacheprovider --basetemp=/tmp/tmp.6rbTsKov9q/rotation-tmp /tmp/tmp.6rbTsKov9q/test_rotation.py > /tmp/tmp.6rbTsKov9q/rotation.log 2>&1" in /home/tony/projects/tessera/service/issuer
+ exited 1 in 164ms:
+exec
+/bin/bash -lc 'cat /tmp/tmp.6rbTsKov9q/rotation.log; tail -3 /tmp/tmp.6rbTsKov9q/suite.log' in /home/tony/projects/tessera
+ succeeded in 0ms:
+SHORT 0 {'drained': 0, 'advanced': {}, 'cleaned': 0, 'out_of_time': True} {'drain_turn': 0}
+SHORT 1 {'drained': 0, 'advanced': {}, 'cleaned': 0, 'out_of_time': True} {'drain_turn': 0}
+SHORT 2 {'drained': 0, 'advanced': {}, 'cleaned': 0, 'out_of_time': True} {'drain_turn': 0}
+SHORT 3 {'drained': 0, 'advanced': {}, 'cleaned': 0, 'out_of_time': True} {'drain_turn': 0}
+SHORT 4 {'drained': 0, 'advanced': {}, 'cleaned': 0, 'out_of_time': True} {'drain_turn': 0}
+SHORT 5 {'drained': 0, 'advanced': {}, 'cleaned': 0, 'out_of_time': True} {'drain_turn': 0}
+SHORT 6 {'drained': 0, 'advanced': {}, 'cleaned': 0, 'out_of_time': True} {'drain_turn': 0}
+SHORT 7 {'drained': 0, 'advanced': {}, 'cleaned': 0, 'out_of_time': True} {'drain_turn': 0}
+SHORT 8 {'drained': 0, 'advanced': {}, 'cleaned': 0, 'out_of_time': True} {'drain_turn': 0}
+SHORT 9 {'drained': 0, 'advanced': {}, 'cleaned': 0, 'out_of_time': True} {'drain_turn': 0}
+SHORT 10 {'drained': 0, 'advanced': {}, 'cleaned': 0, 'out_of_time': True} {'drain_turn': 0}
+SHORT 11 {'drained': 0, 'advanced': {}, 'cleaned': 0, 'out_of_time': True} {'drain_turn': 0}
+RESULT signing [('p_gpg', False), ('p_kms', True), ('s_gpg', False), ('s_kms', True)] 2
+CONTROL signing
+F
+=================================== FAILURES ===================================
+_____________________ test_short_budget_empty_first_queue ______________________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x711e56860640>
+
+    def test_short_budget_empty_first_queue(monkeypatch):
+        loc,rid=setup(monkeypatch)
+        for i in range(12):
+            out=pipeline.poll(loc.iss,budget_s=190)
+            print('SHORT',i,out,loc.iss.requests.cursor_get())
+        print('RESULT',get(loc,rid)['stage'],[(k,bool(v['sig_sha256'])) for k,v in att(get(loc,rid))['jobs'].items()],len(loc.workers['gpg'].responses))
+        assert get(loc,rid)['stage']=='signing'
+        assert all(not v['sig_sha256'] for k,v in att(get(loc,rid))['jobs'].items() if 'gpg' in k)
+        # Control: starting with GPG at the same budget consumes the valid responses.
+        loc.iss.requests.cursor_put({'drain_turn':1})
+        for _ in range(6): pipeline.poll(loc.iss,budget_s=190)
+        print('CONTROL',get(loc,rid)['stage'])
+>       assert all(v['sig_sha256'] for k,v in att(get(loc,rid))['jobs'].items() if 'gpg' in k)
+E       assert False
+E        +  where False = all(<generator object test_short_budget_empty_first_queue.<locals>.<genexpr> at 0x711e56879620>)
+
+/tmp/tmp.6rbTsKov9q/test_rotation.py:35: AssertionError
+=========================== short test summary info ============================
+FAILED ../../../../../../tmp/tmp.6rbTsKov9q/test_rotation.py::test_short_budget_empty_first_queue
+1 failed in 0.08s
+........................................................................ [ 33%]
+....................................................
+exec
+/bin/bash -lc "python - <<'PY'
+p='/tmp/tmp.6rbTsKov9q/test_rotation.py'
+s=open(p).read().replace(\"for _ in range(6): pipeline.poll(loc.iss,budget_s=190)\",\"for _ in range(6):\\n        loc.iss.requests.cursor_put({'drain_turn':1})\\n        pipeline.poll(loc.iss,budget_s=190)\")
+open(p,'w').write(s)
+PY
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=/home/tony/projects/tessera/service/issuer:/home/tony/projects/tessera/service/issuer/tests TMPDIR=/tmp/tmp.6rbTsKov9q .venv/bin/python -m pytest -q -s -p no:cacheprovider --basetemp=/tmp/tmp.6rbTsKov9q/rotation-tmp /tmp/tmp.6rbTsKov9q/test_rotation.py > /tmp/tmp.6rbTsKov9q/rotation.log 2>&1" in /home/tony/projects/tessera/service/issuer
+ succeeded in 131ms:
+exec
+/bin/bash -lc "tail -5 /tmp/tmp.6rbTsKov9q/rotation.log; tail -4 /tmp/tmp.6rbTsKov9q/suite.log; nl -ba service/issuer/tessera_issue/pipeline.py | sed -n '375,410p'; rg -n 'budget_s|remaining_time' service/issuer/tessera_issue/lambda_app.py" in /home/tony/projects/tessera
+ succeeded in 0ms:
+SHORT 11 {'drained': 0, 'advanced': {}, 'cleaned': 0, 'out_of_time': True} {'drain_turn': 0}
+RESULT signing [('p_gpg', False), ('p_kms', True), ('s_gpg', False), ('s_kms', True)] 2
+CONTROL signing
+.
+1 passed in 0.07s
+........................................................................ [ 33%]
+........................................................................ [ 66%]
+...............................   375	    id is known, signature hash) whether or not it is used, and then deleted from the queue. ILC-I2-04: draining
+   376	    stops once it has used `share_s` of the invocation (or the deadline refuses a request); what is left stays queued
+   377	    and is delivered again, so a continuously replenished queue cannot starve request work."""
+   378	    n, d = 0, _deadline(iss)
+   379	    start = d.clock()
+   380	
+   381	    def over():
+   382	        return d.clock() - start >= share_s or d.available() < MIN_REQUEST_S
+   383	    slots = list(iss.signers.items())
+   384	    position = _position(iss) if position is None else position
+   385	    turn = _drain_turn(iss, position) % max(1, len(slots))
+   386	    rotated = False
+   387	    try:
+   388	        for slot, signer in slots[turn:] + slots[:turn]:
+   389	            for _ in range(max_batches):
+   390	                if over():
+   391	                    return n
+   392	                batch = signer.receive(10)
+   393	                if not batch:
+   394	                    break
+   395	                if not rotated:                    # ILC-I3-01: durable before any response is worked on, so a
+   396	                    _drain_turn_put(iss, position, turn + 1)   # cold start continues the rotation; only written
+   397	                    rotated = True                 # when there is something to drain
+   398	                for handle, body in batch:
+   399	                    if over():
+   400	                        return n                   # not acknowledged: delivered again after the visibility timeout
+   401	                    try:
+   402	                        _take(iss, slot, signer, body)
+   403	                    except OutOfBudget:
+   404	                        raise
+   405	                    except Exception as e:  # noqa: BLE001  not acknowledged: the queue delivers it again
+   406	                        iss.note("response", slot, "not taken:", type(e).__name__, e)
+   407	                        continue
+   408	                    signer.ack(handle)
+   409	                    n += 1
+   410	    except OutOfBudget as e:
+116:    budget = getattr(iss, "budget_s", POLL_BUDGET_S)   # ILC-I-02: never more than the time this invocation has left
+117:    remaining = getattr(context, "get_remaining_time_in_millis", None)
+120:    out = pipeline.poll(iss, budget_s=budget)
+
+codex
+The added probe reproduces starvation with a 190-second poll budget and 60-second SQS calls. After 12 polls, rotation was still zero and both valid GPG replies remained unconsumed. Starting with GPG under the same budget allowed both signatures to be recorded. This is a reduced-budget case; the original 290-second probe is repaired. The full suite is still running.
+exec
+/bin/bash -lc "sed -n '110,123p' service/issuer/tessera_issue/lambda_app.py; tail -3 /tmp/tmp.6rbTsKov9q/suite.log; nl -ba service/issuer/DESIGN.md | sed -n '222,232p'" in /home/tony/projects/tessera
+ succeeded in 0ms:
+
+
+def poller_handler(event, context):
+    if isinstance(event, dict) and event.get("tessera") == "install-facts":
+        return install_facts()                         # invoked by the operator only; EventBridge never sends it
+    iss = _issuer()
+    budget = getattr(iss, "budget_s", POLL_BUDGET_S)   # ILC-I-02: never more than the time this invocation has left
+    remaining = getattr(context, "get_remaining_time_in_millis", None)
+    if remaining is not None:
+        budget = min(budget, remaining() / 1000 - (POLLER_TIMEOUT_S - POLL_BUDGET_S))
+    out = pipeline.poll(iss, budget_s=budget)
+    return json.loads(json.dumps(out, default=str))
+........................................................................ [ 33%]
+........................................................................ [ 66%]
+.............................................................   222	  pending calendar is asked (ILC-I-05), calendar requests stop while one checkpoint write still fits (ILC-I2-03),
+   223	  requests are enumerated in bounded pages from a durable position moved before each request (ILC-I2-04), and draining
+   224	  signer responses has a cooperative allocation of a third of an invocation (ILC-I2-04, ILC-I3-02): it is checked
+   225	  between response-processing units (a receive, a response's handling), without reserving a unit's remaining cost, so
+   226	  one slow unit can overrun it; it is not a total-time claim. The signer slot the drain starts with rotates, and the
+   227	  rotation is kept in the poller's durable position record, so cold starts continue it (ILC-I3-01). Running out of time never ends an attempt.
+   228	  **An overrun is a hard kill, and the protocol tolerates it:** the fence, the guarded writes and the checkpoints make
+   229	  a killed invocation's leftovers harmless. **Known limits on the deadline's precision** (not chased): the HTTP
+   230	  transport's socket timeout applies per blocking operation, so a server dripping bytes can exceed the request's
+   231	  total; a DNS query is a composite of UDP and TCP operations, each with its own allowance, and hostname resolution is
+   232	  not covered; an SDK request's connect and read timeouts are not a total-operation deadline (streamed bodies); the
+
+ succeeded in 130754ms:
+exec
+/bin/bash -lc "tail -4 /tmp/tmp.6rbTsKov9q/suite.log; rg -n 'step.5|EVIDENCE_UNAVAILABLE|failed_intervals' service/issuer/tessera_issue/pipeline.py | tail -12" in /home/tony/projects/tessera
+ succeeded in 0ms:
+........................................................................ [ 66%]
+........................................................................ [ 99%]
+.                                                                        [100%]
+217 passed in 130.67s (0:02:10)
+46:GATED (design step 5, until a signed amendment decides it): an attempt whose evidence never completes stays open.
+47:Nothing here commits EVIDENCE_UNAVAILABLE, ends or allocates because of unavailability, or derives a refusal, cleanup
+49:`failed_intervals` are recorded for diagnosis only; no decision reads them.
+293:             unavailable_since=None, failed_intervals=[])
+956:    """Diagnostic failure history (gated step 5: behind no behaviour). failed_intervals holds runs [first, last] of
+958:    runs = [list(r) for r in a.get("failed_intervals") or []]
+970:        a["failed_intervals_dropped"] = a.get("failed_intervals_dropped", 0) + len(merged) - FAILED_INTERVAL_RUNS
+972:    a["failed_intervals"] = merged
+996:            _commit(iss, rec, g)                      # diagnostic only; no decision reads it while step 5 is gated
+1008:    a.update(state=LATCHED, unavailable_since=None, failed_intervals=[],
+
+codex
+**Verdict: not ready for deployment work with the step-5 gate closed; a reduced-budget scheduling defect remains.**
+
+Validation: **217 passed in 130.67 seconds**. No repository edits or git writes; scratch: [/tmp/tmp.6rbTsKov9q](/tmp/tmp.6rbTsKov9q).
+
+**ILC-I4-01 — Medium: rotation can remain stuck when an empty first queue consumes the checkpoint budget.**
+
+At [pipeline.py:392](/home/tony/projects/tessera/service/issuer/tessera_issue/pipeline.py:392), an empty batch leaves rotation unchanged. A later non-empty batch triggers the rotation write without reserving its cost.
+
+Independent reproduction, using the real guarded adapters:
+
+- Poll budget **190 seconds**, SQS calls **60 seconds**, KMS empty, two valid GPG responses queued.
+- Two receives consume 120 seconds, leaving **60 seconds** after the reserve. The rotation write requires **73 seconds** admission and is refused. Request-position writes cannot rescue it under that budget.
+- After **12 polls**, durable rotation remained zero, both GPG signatures were absent, and both replies remained queued.
+- Forcing GPG to start under the **same budget** allowed both signatures to be recorded.
+
+This demonstrates avoidable scheduling starvation with obtainable responses. The reproduction uses a reduced budget; the original 290-second scenario is repaired. Evidence: [probe](/tmp/tmp.6rbTsKov9q/test_rotation.py), [log](/tmp/tmp.6rbTsKov9q/rotation.log). Reserve the rotation checkpoint before spending receives, and ensure empty-queue turns advance fairly.
+
+The other requested confirmations:
+
+1. **Original cold-start probe: repaired.** GPG was served, all four signatures were recorded, and the request reached `evidence`. Its old starvation assertion failed as expected. [Log](/tmp/tmp.6rbTsKov9q/third.log).
+2. **Write guarding: yes.** Rotation uses the same deadline-guarded `cursor_put` as other poller-position writes. Reads are strongly consistent; writes are unconditional, with infrastructure limiting the poller to one concurrent invocation. Budget refusal can nevertheless cause ILC-I4-01.
+3. **DESIGN drain wording: accurate.** [Lines 224–226](/home/tony/projects/tessera/service/issuer/DESIGN.md:224) correctly describe cooperative allocation and possible overshoot. The rotation statement needs qualification or the repair above.
+4. **No other new defect identified in this narrow pass.** Step 5 remains closed; diagnostic unavailability history authorizes no ending.
+hook: Stop
+hook: Stop Completed
+tokens used
+44,577
+**Verdict: not ready for deployment work with the step-5 gate closed; a reduced-budget scheduling defect remains.**
+
+Validation: **217 passed in 130.67 seconds**. No repository edits or git writes; scratch: [/tmp/tmp.6rbTsKov9q](/tmp/tmp.6rbTsKov9q).
+
+**ILC-I4-01 — Medium: rotation can remain stuck when an empty first queue consumes the checkpoint budget.**
+
+At [pipeline.py:392](/home/tony/projects/tessera/service/issuer/tessera_issue/pipeline.py:392), an empty batch leaves rotation unchanged. A later non-empty batch triggers the rotation write without reserving its cost.
+
+Independent reproduction, using the real guarded adapters:
+
+- Poll budget **190 seconds**, SQS calls **60 seconds**, KMS empty, two valid GPG responses queued.
+- Two receives consume 120 seconds, leaving **60 seconds** after the reserve. The rotation write requires **73 seconds** admission and is refused. Request-position writes cannot rescue it under that budget.
+- After **12 polls**, durable rotation remained zero, both GPG signatures were absent, and both replies remained queued.
+- Forcing GPG to start under the **same budget** allowed both signatures to be recorded.
+
+This demonstrates avoidable scheduling starvation with obtainable responses. The reproduction uses a reduced budget; the original 290-second scenario is repaired. Evidence: [probe](/tmp/tmp.6rbTsKov9q/test_rotation.py), [log](/tmp/tmp.6rbTsKov9q/rotation.log). Reserve the rotation checkpoint before spending receives, and ensure empty-queue turns advance fairly.
+
+The other requested confirmations:
+
+1. **Original cold-start probe: repaired.** GPG was served, all four signatures were recorded, and the request reached `evidence`. Its old starvation assertion failed as expected. [Log](/tmp/tmp.6rbTsKov9q/third.log).
+2. **Write guarding: yes.** Rotation uses the same deadline-guarded `cursor_put` as other poller-position writes. Reads are strongly consistent; writes are unconditional, with infrastructure limiting the poller to one concurrent invocation. Budget refusal can nevertheless cause ILC-I4-01.
+3. **DESIGN drain wording: accurate.** [Lines 224–226](/home/tony/projects/tessera/service/issuer/DESIGN.md:224) correctly describe cooperative allocation and possible overshoot. The rotation statement needs qualification or the repair above.
+4. **No other new defect identified in this narrow pass.** Step 5 remains closed; diagnostic unavailability history authorizes no ending.

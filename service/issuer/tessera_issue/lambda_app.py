@@ -11,24 +11,23 @@ import base64
 import json
 import os
 
-from . import api, freeze, pipeline, window as window_mod
+from . import api, freeze, pipeline, service, window as window_mod
 from .aws import DynamoRequestStore, S3ResultStore, SnsWake
 from .chain import ExplorerHeaders
 from .dns import LiveDns, udp_tcp_transport
 from .ots import HttpCalendar, urllib_transport
 from .preship import PreShip
 from .queues import SqsQueue
-from .service import Issuer
+from .service import POLL_BUDGET_S, POLLER_TIMEOUT_S, Issuer
 from .signers import SlotSigner
 
 _ISSUER = None
 
 # CF3-01: bound the client's own time per AWS call (connection, response wait, retries and backoff) well inside the
 # writer lease (service.WRITE_LEASE_S). It does not bound when AWS commits a request already sent; that residual is
-# the stated service clock tolerance (docs/decisions/2026-10-27-service-clock-tolerance.md). Passed to
-# botocore.config.Config.
-AWS_CLIENT_CONFIG = {"connect_timeout": 5, "read_timeout": 20,
-                     "retries": {"mode": "standard", "total_max_attempts": 4}}
+# the stated service clock tolerance (docs/decisions/2026-10-27-service-clock-tolerance.md). ILC-I-02: the poller's
+# deadline guard admits an AWS request only if this configuration's worst case fits the time left.
+AWS_CLIENT_CONFIG = service.AWS_CLIENT_CONFIG
 
 
 def from_env(env=None, session=None):
@@ -113,5 +112,10 @@ def api_handler(event, context):
 def poller_handler(event, context):
     if isinstance(event, dict) and event.get("tessera") == "install-facts":
         return install_facts()                         # invoked by the operator only; EventBridge never sends it
-    out = pipeline.poll(_issuer())
+    iss = _issuer()
+    budget = getattr(iss, "budget_s", POLL_BUDGET_S)   # ILC-I-02: never more than the time this invocation has left
+    remaining = getattr(context, "get_remaining_time_in_millis", None)
+    if remaining is not None:
+        budget = min(budget, remaining() / 1000 - (POLLER_TIMEOUT_S - POLL_BUDGET_S))
+    out = pipeline.poll(iss, budget_s=budget)
     return json.loads(json.dumps(out, default=str))

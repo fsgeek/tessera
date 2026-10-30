@@ -5,11 +5,17 @@
   GET  /v1/requests/{key}/receipt   receipt(iss, credential, key)   -> 303 + pre-signed URL
 
 Requests are scoped to the submitting credential: the record id is SHA-256(credential digest, request key), so
-another credential's lookup of the same key finds nothing (404). Behaviour: docs/V1-SERVICE-RESOLUTIONS.md."""
+another credential's lookup of the same key finds nothing (404). Behaviour: docs/V1-SERVICE-RESOLUTIONS.md.
+
+The API is read-only for the issuance lifecycle (docs/decisions/2026-10-29-issuance-lifecycle.md step 1): it never
+starts, latches, expires, discards, ends or allocates an attempt; the poller alone does (pipeline.py). Its only writes
+are the record's creation at submission and the upload bookkeeping before any attempt exists (IS-05). status and
+receipt write nothing."""
 import re
 from dataclasses import dataclass, field
 
-from .service import DEADLINE_S, RETENTION_S, WRITE_LEASE_S
+from .lifecycle import attempt_reasons, public_attempt
+from .service import RETENTION_S
 from .util import MIB, dumps, rfc3339, sha256hex
 
 UUID_RE = re.compile(r"[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\Z")
@@ -44,56 +50,19 @@ def _expired(rec, now):
     return rec["ended_at"] is not None and now >= rec["ended_at"] + RETENTION_S
 
 
-def confirmed(rec):
-    """CF-01: a COMPLETE record counts only once it is known to have been committed before the deadline."""
-    return rec["state"] != "COMPLETE" or rec.get("confirmed_at") is not None
-
-
-def settle(iss, rec, attempts=5):
-    """CF-01: decide an unconfirmed COMPLETE, in place. The clock is read after the record was read, so the COMPLETE
-    commit happened no later than that reading. The confirmation is itself a write, and status reports COMPLETE only
-    once it is durable (S4: the end is the status becoming COMPLETE), so it must also commit before the deadline.
-    A clock check cannot bound when a write commits; the writer lease can (CF2-01): every write runs inside one
-    Lambda invocation, so it commits within WRITE_LEASE_S of the decision. Hence: decided at least WRITE_LEASE_S
-    before the deadline, it is confirmed (ended_at = that reading, never earlier than the commit); inside the last
-    lease it is left unconfirmed (it reads as ACCEPTED, with its fail_after); at or after the deadline it is FAILED
-    (NOT_COMPLETE_WITHIN_24H). Both writes are compare-and-set, so a confirmation and a failure never both win.
-    -> rec."""
-    for _ in range(attempts):
-        if rec is None or confirmed(rec):
-            return rec
-        now = iss.clock()
-        deadline = rec["created_at"] + DEADLINE_S
-        if deadline - WRITE_LEASE_S <= now < deadline:
-            return rec                                   # CF2-01: too late to confirm, too early to fail
-        if now < deadline:
-            rec.update(confirmed_at=now, ended_at=now, expires_at=now + RETENTION_S)
-            rec["events"] = rec["events"][-40:] + [[now, "confirmed"]]
-        else:
-            rec.update(state="FAILED", reason="NOT_COMPLETE_WITHIN_24H", ended_at=now, expires_at=now + RETENTION_S,
-                       receipt_sha256=None)
-            rec["events"] = rec["events"][-40:] + [[now, "FAILED", "NOT_COMPLETE_WITHIN_24H", "unconfirmed"]]
-        if iss.requests.save(rec):
-            return rec
-        cur = iss.requests.get(rec["rid"])               # someone else settled (or changed) it: decide again
-        rec.clear()
-        if cur is not None:
-            rec.update(cur)
-        else:
-            return None
-    raise RuntimeError("completion could not be settled; retried later")
-
-
 def view(rec, now):
-    if not confirmed(rec):                               # CF-01: not COMPLETE until confirmed
-        rec = dict(rec, state="ACCEPTED", ended_at=None, reason=None, receipt_sha256=None)
+    """The public status. Design step 9: `fail_after` is withdrawn (there is no request deadline); an ACCEPTED request
+    shows its current attempt i of N and, while that attempt is open and unlatched, its boundary B with the note
+    that the twelve-day budget is nominal. A refusal lists each attempt's ending."""
     if _expired(rec, now):
         return {"request_key": rec["key"], "state": "EXPIRED"}
     v = {"request_key": rec["key"], "state": rec["state"], "accepted_at": rfc3339(rec["created_at"])}
     if rec["state"] == "ACCEPTED":
-        v["fail_after"] = rfc3339(rec["created_at"] + DEADLINE_S)
+        v["attempt"] = public_attempt(rec)
     if rec["reason"]:
         v["reason"] = rec["reason"]
+    if rec["state"] == "REFUSED" and rec.get("attempts"):
+        v["attempts"] = attempt_reasons(rec)
     if rec["ended_at"] is not None:
         v["ended_at"] = rfc3339(rec["ended_at"])
         v["available_until"] = rfc3339(rec["ended_at"] + RETENTION_S)
@@ -109,7 +78,7 @@ def _original_status(rec):
 def _new_record(rid, credential, key, digest, length, now):
     return {"rid": rid, "cred": cred_digest(credential), "key": key, "state": None, "reason": None, "stage": None,
             "content_sha256": digest, "content_len": length, "created_at": now, "ended_at": None,
-            "expires_at": None, "jobs": {}, "proofs": {}, "receipt_sha256": None, "events": []}
+            "expires_at": None, "cur": 0, "attempts": [], "receipt_sha256": None, "events": []}
 
 
 def _existing(iss, rec, digest, body=None):
@@ -190,10 +159,7 @@ def status(iss, credential, key):
         if iss.requests.tombstone_get(rid) is not None:
             return Response(200, {"request_key": key.lower(), "state": "EXPIRED"})
         return Response(404, {"error": "NOT_FOUND"})
-    if not confirmed(rec):
-        settle(iss, rec)                                 # CF-01
-        now = iss.clock()
-    return Response(200, view(rec, now))
+    return Response(200, view(rec, now))                 # read-only: no lifecycle write (design step 1)
 
 
 def receipt(iss, credential, key):

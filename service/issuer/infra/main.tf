@@ -1,6 +1,5 @@
 locals {
-  slots     = ["kms", "gpg"]
-  retention = 30
+  slots = ["kms", "gpg"]
   lambda_env = {
     REQUEST_TABLE               = aws_dynamodb_table.requests.name
     RESULT_BUCKET               = aws_s3_bucket.results.bucket
@@ -94,27 +93,38 @@ resource "aws_s3_bucket_versioning" "results" {
   }
 }
 
-# S6: the poller deletes content, work files and frames when a request ends, and the receipt 30 days after the end,
-# from persisted cleanup obligations it retries until the objects are gone (IS-07). These lifecycle rules are only a
-# backstop: S3 expires objects asynchronously, from the next midnight after eligibility, so they cannot implement
-# deletion at exactly 30 days. The 31-day backstop never removes a receipt the service still promises.
+# Storage lifetime (docs/decisions/2026-10-29-issuance-lifecycle.md, revision 5.3.1; ILC3-04, ILC4-01). No age rule
+# applies to a live request's objects: an attempt may stay open far longer than any fixed age, and its frozen material
+# and preserved presentation must survive. Deletion is keyed to the request's persisted end (S6): the poller's cleanup
+# obligation (IS-07) deletes content, work files and frames at the end and the receipt 30 days after ended_at, and
+# just before deleting it tags the objects cleanup-due. This rule is only the backstop for deletions that keep
+# failing: it expires TAGGED objects only, so an object's creation age never makes it deletable early.
 resource "aws_s3_bucket_lifecycle_configuration" "results" {
   bucket = aws_s3_bucket.results.id
 
-  dynamic "rule" {
-    for_each = ["content/", "work/", "frames/", "result/"]
-    content {
-      id     = "expire-${trimsuffix(rule.value, "/")}"
-      status = "Enabled"
-      filter {
-        prefix = rule.value
+  rule {
+    id     = "expire-cleanup-due"
+    status = "Enabled"
+    filter {
+      tag {
+        key   = "cleanup-due"
+        value = "true"
       }
-      expiration {
-        days = local.retention + 1
-      }
-      abort_incomplete_multipart_upload {
-        days_after_initiation = 1
-      }
+    }
+    expiration {
+      days = 1
+    }
+  }
+
+  # Incomplete multipart uploads are never live objects (AWS does not allow this action with a tag filter).
+  rule {
+    id     = "abort-incomplete-multipart-uploads"
+    status = "Enabled"
+    filter {
+      prefix = ""
+    }
+    abort_incomplete_multipart_upload {
+      days_after_initiation = 1
     }
   }
 }
@@ -224,10 +234,11 @@ data "aws_iam_policy_document" "poller" {
     actions   = ["dynamodb:GetItem", "dynamodb:PutItem", "dynamodb:DeleteItem", "dynamodb:Query", "dynamodb:Scan"]
     resources = [aws_dynamodb_table.requests.arn, "${aws_dynamodb_table.requests.arn}/index/pending-index"]
   }
-  # IS-10: mutation only in the operational namespaces; configuration is read-only.
+  # IS-10: mutation only in the operational namespaces; configuration is read-only. PutObjectTagging: the cleanup
+  # obligation tags objects cleanup-due once their deletion is due (5.3.1).
   statement {
     sid       = "Objects"
-    actions   = ["s3:PutObject", "s3:GetObject", "s3:DeleteObject"]
+    actions   = ["s3:PutObject", "s3:GetObject", "s3:DeleteObject", "s3:PutObjectTagging"]
     resources = ["${aws_s3_bucket.results.arn}/content/*", "${aws_s3_bucket.results.arn}/work/*", "${aws_s3_bucket.results.arn}/frames/*", "${aws_s3_bucket.results.arn}/result/*"]
   }
   statement {

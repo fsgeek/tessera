@@ -10,7 +10,8 @@ import pytest
 
 from tessera_issue import api, dns, local, pipeline
 from tessera_issue.aws import DynamoRequestStore, S3ResultStore
-from tessera_issue.service import DEADLINE_S, RETENTION_S
+from tessera_issue.lifecycle import current
+from tessera_issue.service import RETENTION_S
 from tessera_issue.util import MIB, sha256hex
 
 from conftest import FROZEN
@@ -62,13 +63,13 @@ def test_IS01_signature_is_not_eligible_before_its_log_record_is_durable(loc, ke
     store.siglog_add = real_add
     logged = {e["signature_sha256"] for e in store.siglog() if e["disposition"] == "used"}
     rec = store.get(rid)
-    for j in rec["jobs"].values():                       # every signature the record relies on is logged
+    for j in current(rec)["jobs"].values():              # every signature the record relies on is logged
         assert j["sig_sha256"] is None or j["sig_sha256"] in logged
     loc.workers["gpg"].responses.msgs.clear()            # the unacknowledged response is never seen again
     rec = loc.run_until_done(rid)
     assert rec["state"] == "COMPLETE"
     used = {(e["request_id"], e["signature_sha256"]) for e in store.siglog() if e["disposition"] == "used"}
-    for j in rec["jobs"].values():
+    for j in current(rec)["jobs"].values():
         assert (j["request_id"], j["sig_sha256"]) in used
 
 
@@ -79,20 +80,23 @@ def test_IS01_seal_requires_the_log_record(loc, key):
         w.process()
     pipeline.drain(loc.iss)
     rec = loc.iss.requests.get(rid)
-    assert all(j["sig_sha256"] for j in rec["jobs"].values())
-    gone = rec["jobs"]["s_gpg"]["sig_sha256"]
+    assert all(j["sig_sha256"] for j in current(rec)["jobs"].values())
+    gone = current(rec)["jobs"]["s_gpg"]["sig_sha256"]
     loc.iss.requests.log = [e for e in loc.iss.requests.log if e["signature_sha256"] != gone]
     pipeline.poll(loc.iss)
     rec = loc.iss.requests.get(rid)
-    assert rec["stage"] == "signing" and rec["jobs"]["s_gpg"]["sig_sha256"] is None
+    assert rec["stage"] == "signing" and current(rec)["jobs"]["s_gpg"]["sig_sha256"] is None
 
 
 # ------------------------------------------------------------------------------------------------ IS-02
-def test_IS02_completion_cannot_cross_the_24h_deadline(loc, key):
+def test_IS02_a_slow_pre_ship_check_completes_with_the_actual_transition_time(loc, key):
+    """Rewritten against the registered lifecycle (formerly test_IS02_completion_cannot_cross_the_24h_deadline): there
+    is no request deadline, so a completion that takes long is still a completion; ended_at is still the actual
+    transition time, read after the pre-ship checks and the cleanup obligation (IS-02)."""
     _, rid = submit(loc, key)
-    rec = until_stage(loc, rid, "assemble")
-    created = rec["created_at"]
-    loc.clock.t = created + DEADLINE_S - 1
+    rec = until_stage(loc, rid, "finalize")
+    loc.clock.t = rec["created_at"] + 5 * 24 * 3600      # far beyond the withdrawn 24 h
+    started = loc.clock()
     real = loc.iss.preship.check
 
     def slow(*a, **kw):
@@ -102,9 +106,9 @@ def test_IS02_completion_cannot_cross_the_24h_deadline(loc, key):
     loc.iss.preship.check = slow
     pipeline.poll(loc.iss)
     rec = loc.iss.requests.get(rid)
-    assert rec["state"] == "FAILED" and rec["reason"] == "NOT_COMPLETE_WITHIN_24H"
-    assert rec["ended_at"] == created + DEADLINE_S + 1   # the actual transition time
-    assert not blobs(loc, rid, "result")
+    assert rec["state"] == "COMPLETE" and rec["reason"] is None
+    assert rec["ended_at"] == started + 2                # the actual transition time
+    assert blobs(loc, rid, "result")
 
 
 # ------------------------------------------------------------------------------------------------ IS-03
@@ -115,7 +119,9 @@ def test_IS03_signers_refuse_queued_work_after_the_signing_stop(loc, key):
     real = {s: held(wk) for s, wk in loc.workers.items()}
     while loc.clock() <= w.sign_until:
         loc.tick()
-    assert loc.iss.requests.get(rid)["state"] == "FAILED"
+    pipeline.poll(loc.iss)                               # the first poll after the stop
+    rec = loc.iss.requests.get(rid)                       # registered lifecycle: REFUSED SIGNING_CLOSED, not FAILED
+    assert rec["state"] == "REFUSED" and rec["reason"] == "SIGNING_CLOSED"
     for s, wk in loc.workers.items():
         wk.process = real[s]
         n = len(wk.requests)
@@ -306,7 +312,7 @@ def test_IS08_concurrent_metadata_update_does_not_lose_a_verified_signature(loc,
 
     def concurrent(ns, r, name, data):
         real(ns, r, name, data)
-        if name.startswith("sig-s_kms") and not done:   # another consumer saves the record meanwhile
+        if name.split("/")[-1].startswith("sig-s_kms") and not done:   # another consumer saves the record meanwhile
             done.append(1)
             other = loc.iss.requests.get(r)
             other["events"].append([loc.clock(), "other consumer"])
@@ -327,7 +333,7 @@ def test_IS08_stored_verified_signatures_are_reconciled_before_resending(loc, ke
         w.process()
     pipeline.drain(loc.iss)
     store.save = real_save
-    assert not any(j["sig_sha256"] for j in store.get(rid)["jobs"].values())
+    assert not any(j["sig_sha256"] for j in current(store.get(rid))["jobs"].values())
     loc.clock.advance(loc.iss.signer_retry_s)
     rec = loc.run_until_done(rid)
     assert rec["state"] == "COMPLETE"
@@ -415,6 +421,7 @@ def test_IS11_truncated_udp_answer_falls_back_to_tcp(monkeypatch):
 
     class Tcp:
         def __init__(self): self.buf = struct.pack(">H", len(full)) + full
+        def settimeout(self, t): pass                    # ILC-I-02: the transport bounds every blocking operation
         def __enter__(self): return self
         def __exit__(self, *a): return False
         def sendall(self, data): pass

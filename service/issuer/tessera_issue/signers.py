@@ -75,6 +75,8 @@ class SlotSigner:
             self._wake(self.slot)
 
     def receive(self, max_messages=10):
+        """-> [(handle, body, age key)]; the age key (sent time, then the queue's own order) lets the poller handle
+        the oldest messages first across slots (ILC-I6)."""
         out = []
         for m in self.responses.receive(max_messages):
             try:
@@ -83,7 +85,7 @@ class SlotSigner:
                     raise ValueError
             except ValueError:
                 body = {"_unparseable": m.body[:200]}
-            out.append((m.handle, body))
+            out.append((m.handle, body, (m.sent if m.sent is not None else float("inf"), m.seq, m.receives)))
         return out
 
     def ack(self, handle):

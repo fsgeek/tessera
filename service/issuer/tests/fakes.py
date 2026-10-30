@@ -12,10 +12,30 @@ class ClientError(Exception):
         self.response = {"Error": {"Code": code}}
 
 
+DYNAMO_ITEM_LIMIT = 400 * 1024                        # DynamoDB's item size limit, attribute names included
+
+
+def dynamo_item_size(item):
+    """Item size as DynamoDB counts it for these attribute types: UTF-8 name bytes plus value bytes (S: UTF-8
+    length; N: an upper bound of its digits)."""
+    total = 0
+    for name, value in item.items():
+        (kind, v), = value.items()
+        total += len(name.encode()) + len(str(v).encode())
+    return total
+
+
 class FakeDynamo:
     def __init__(self):
         self.tables = {}
         self.calls = []
+        self.max_item = 0
+
+    def _check_size(self, item):
+        size = dynamo_item_size(item)
+        if size > DYNAMO_ITEM_LIMIT:
+            raise ClientError("ValidationException")       # "Item size has exceeded the maximum allowed size"
+        self.max_item = max(self.max_item, size)
 
     def _t(self, name):
         return self.tables.setdefault(name, {})
@@ -28,15 +48,20 @@ class FakeDynamo:
     def put_item(self, TableName, Item, ConditionExpression=None, ExpressionAttributeNames=None,
                  ExpressionAttributeValues=None):
         self.calls.append("put_item")
+        self._check_size(Item)
         t, pk = self._t(TableName), Item["pk"]["S"]
         cur = t.get(pk)
         if ConditionExpression == "attribute_not_exists(pk)":
             if cur is not None:
                 raise ClientError("ConditionalCheckFailedException")
-        elif ConditionExpression == "#v = :v":
-            assert ExpressionAttributeNames == {"#v": "version"}
-            if cur is None or cur.get("version") != ExpressionAttributeValues[":v"]:
-                raise ClientError("ConditionalCheckFailedException")
+        elif ConditionExpression is not None and ConditionExpression.startswith("#v = :v"):
+            # the version compare-and-set, optionally AND-ed with the lifecycle guard ("#x = :x" terms only)
+            assert ExpressionAttributeNames["#v"] == "version"
+            for term in ConditionExpression.split(" AND "):
+                n, eq, v = term.split(" ")
+                assert eq == "=" and n.startswith("#") and v.startswith(":"), term
+                if cur is None or cur.get(ExpressionAttributeNames[n]) != ExpressionAttributeValues[v]:
+                    raise ClientError("ConditionalCheckFailedException")
         elif ConditionExpression is not None:
             raise AssertionError("unexpected condition " + ConditionExpression)
         t[pk] = copy.deepcopy(Item)
@@ -45,6 +70,8 @@ class FakeDynamo:
     def transact_write_items(self, TransactItems):
         """All-or-nothing: every condition is checked before anything is written."""
         self.calls.append("transact_write_items")
+        for op in TransactItems:
+            self._check_size(op["Put"]["Item"])
         reasons, ok = [], True
         for op in TransactItems:
             put = op["Put"]
@@ -71,7 +98,7 @@ class FakeDynamo:
         return {}
 
     def query(self, TableName, IndexName, KeyConditionExpression, ExpressionAttributeNames,
-              ExpressionAttributeValues, ExclusiveStartKey=None):
+              ExpressionAttributeValues, ExclusiveStartKey=None, Limit=None):
         assert IndexName == "pending-index" and ExpressionAttributeNames == {"#s": "pending_shard"}
         items = [{"pk": it["pk"], "pending_shard": it["pending_shard"]} for it in self._t(TableName).values()
                  if it.get("pending_shard") == ExpressionAttributeValues[":one"]]
@@ -96,11 +123,18 @@ class FakeDynamo:
 class FakeS3:
     def __init__(self):
         self.objects = {}
+        self.tags = {}
         self.put_args = []
 
     def put_object(self, Bucket, Key, Body, ServerSideEncryption=None):
         self.put_args.append(ServerSideEncryption)
         self.objects[(Bucket, Key)] = bytes(Body)
+        self.tags.pop((Bucket, Key), None)            # a new object version has no tags
+
+    def put_object_tagging(self, Bucket, Key, Tagging):
+        if (Bucket, Key) not in self.objects:
+            raise ClientError("NoSuchKey")
+        self.tags[(Bucket, Key)] = {t["Key"]: t["Value"] for t in Tagging["TagSet"]}
 
     def generate_presigned_url(self, op, Params, ExpiresIn):
         assert op == "get_object"
@@ -140,6 +174,7 @@ class FakeS3:
                 errors.append({"Key": o["Key"], "Code": code, "Message": "injected"})
             else:
                 self.objects.pop((Bucket, o["Key"]), None)
+                self.tags.pop((Bucket, o["Key"]), None)
         return {"Errors": errors} if errors else {}
 
 
@@ -154,9 +189,19 @@ class FakeSqs:
     def send_message(self, QueueUrl, MessageBody):
         return {"MessageId": self.q(QueueUrl).send(MessageBody)}
 
-    def receive_message(self, QueueUrl, MaxNumberOfMessages, WaitTimeSeconds):
-        return {"Messages": [{"MessageId": m.id, "Body": m.body, "ReceiptHandle": m.handle}
-                             for m in self.q(QueueUrl).receive(MaxNumberOfMessages)]}
+    def receive_message(self, QueueUrl, MaxNumberOfMessages, WaitTimeSeconds, AttributeNames=()):
+        out = []
+        for m in self.q(QueueUrl).receive(MaxNumberOfMessages):
+            msg = {"MessageId": m.id, "Body": m.body, "ReceiptHandle": m.handle}
+            attrs = {}
+            if "SentTimestamp" in AttributeNames or "All" in AttributeNames:     # as SQS: epoch milliseconds
+                attrs["SentTimestamp"] = str(int(m.sent * 1000))
+            if "ApproximateReceiveCount" in AttributeNames or "All" in AttributeNames:
+                attrs["ApproximateReceiveCount"] = str(m.receives)
+            if attrs:
+                msg["Attributes"] = attrs
+            out.append(msg)
+        return {"Messages": out}
 
     def delete_message(self, QueueUrl, ReceiptHandle):
         self.q(QueueUrl).delete(ReceiptHandle)

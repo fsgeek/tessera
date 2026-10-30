@@ -42,12 +42,14 @@ class PreShip:
                 raise PreShipUnavailable(e.code) from None
             self._ready = True
 
-    def check(self, bundle, headers, now):
-        """-> (stable six, utc_assessment). headers: {height: 80 bytes} the issuer fetched and checked."""
+    def check(self, bundle, headers, now, diagnostics=False):
+        """-> (stable six, utc_assessment), or with diagnostics (stable six, utc_assessment, ledger): the verifier's
+        per-row checks, which the poller classifies by evidence dependency (ILI-01). headers: {height: 80 bytes} the
+        issuer fetched and checked."""
         self._setup()
         latest = max(int.from_bytes(h[68:72], "little") for h in headers.values())
         config = check_config(self.trust_base, {h: pin_of(v) for h, v in headers.items()}, rfc3339(max(now, latest)))
         try:
-            return verify_bundle(bundle, config, self.frozen.parsed_catalog, utc=True)
+            return verify_bundle(bundle, config, self.frozen.parsed_catalog, utc=True, diagnostics=diagnostics)
         except Fault as e:                      # e.g. SHA1DC_UNAVAILABLE raised by the engine itself
             raise PreShipUnavailable(e.code) from None

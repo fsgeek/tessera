@@ -32,7 +32,7 @@ def test_install_facts_event_answers_without_building_the_issuer(monkeypatch, tm
 def test_any_other_event_still_polls(monkeypatch):
     seen = []
     monkeypatch.setattr(lambda_app, "_issuer", lambda: seen.append(1) or object())
-    monkeypatch.setattr(lambda_app.pipeline, "poll", lambda iss: {"advanced": {}})
+    monkeypatch.setattr(lambda_app.pipeline, "poll", lambda iss, budget_s=None: {"advanced": {}})  # ILI-05 budget
     assert lambda_app.poller_handler({"source": "aws.events"}, None) == {"advanced": {}}
     assert seen == [1]
 
