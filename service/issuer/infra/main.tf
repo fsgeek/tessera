@@ -469,6 +469,44 @@ resource "aws_api_gateway_stage" "v1" {
   rest_api_id   = aws_api_gateway_rest_api.issuer.id
   deployment_id = aws_api_gateway_deployment.issuer.id
   stage_name    = "v1"
+  # Every call, including those API Gateway rejects before the Lambda (missing or bad key, throttled), leaves one
+  # line. Without this a flood or a key-guessing run is invisible (owner, 2026-10-30). Detection on these lines is
+  # a gate before the second client (DEPLOY.md).
+  access_log_settings {
+    destination_arn = aws_cloudwatch_log_group.access.arn
+    format = jsonencode({
+      requestId = "$context.requestId", time = "$context.requestTimeEpoch", ip = "$context.identity.sourceIp",
+      apiKeyId  = "$context.identity.apiKeyId", method = "$context.httpMethod", route = "$context.resourcePath",
+      status    = "$context.status", error = "$context.error.responseType", latencyMs = "$context.responseLatency",
+      userAgent = "$context.identity.userAgent"
+    })
+  }
+  depends_on = [aws_api_gateway_account.this]
+}
+
+resource "aws_cloudwatch_log_group" "access" {
+  name              = "/aws/apigateway/${var.name}-access"
+  retention_in_days = 30
+}
+
+# Account-wide (one per region): the role API Gateway uses to write access logs. This account is dedicated to
+# Tessera, so no other API's setting is overridden.
+resource "aws_iam_role" "apigw_logs" {
+  name = "${var.name}-apigw-logs"
+  assume_role_policy = jsonencode({
+    Version   = "2012-10-17"
+    Statement = [{ Effect = "Allow", Action = "sts:AssumeRole", Principal = { Service = "apigateway.amazonaws.com" } }]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "apigw_logs" {
+  role       = aws_iam_role.apigw_logs.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs"
+}
+
+resource "aws_api_gateway_account" "this" {
+  cloudwatch_role_arn = aws_iam_role.apigw_logs.arn
+  depends_on          = [aws_iam_role_policy_attachment.apigw_logs]
 }
 
 resource "aws_api_gateway_usage_plan" "clients" {

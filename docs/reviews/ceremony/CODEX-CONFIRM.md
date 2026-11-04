@@ -1,0 +1,77 @@
+# Ceremony revision 2 — Codex confirmation
+
+Reviewed 2026-11-02 against `BRIEF-CONFIRM.md`, including all four appended prechecks. **Revision 2 does not yet resolve C01–C07 completely. Revise before production key generation.** The isolation, acceptance and requester-boundary text is substantially improved. Remaining blockers concern fixed-touch readback and preservation of an untested last usable copy; fresh-boot instructions and bootstrap details also need completion.
+
+Snapshot: HEAD `54b382cd308291cf92457ff640584fba51ffc02c`; working-tree `docs/ceremony/CEREMONY.md` SHA-256 `2bdb7dc0b7dd3223f4c37baa47fab568d066df6df71da05c7e6486d704c8ae9a`. Line references below are to that file unless another path is named. Review was read-only except this report. Pre-existing deployment changes and untracked ceremony material were preserved. No production card, key, PIN, backup or secret was accessed. This is document/source confirmation, not a hardware rehearsal or independence certification.
+
+## C01–C07 dispositions
+
+| Finding | Revision 2 resolves it? | Evidence and residual |
+|---|---|---|
+| C01 — expert curve selection | **YES** | Lines 89–97 use `--expert --card-edit`, choose the displayed NIST P-256 entry, preserve other slots and require attribute readback. Empty algorithm input preserves the current attribute in the inspected upstream versions. |
+| C02 — version and fixed touch | **PARTLY** | Lines 64,71 record GnuPG; lines 149–150 stop on unsupported/unconfirmed touch. This safely refuses 2.2.40 but does not make it compatible. New F01 below prevents the specified permanence readback on inspected 2.4 versions too. scdaemon/card firmware identification remains absent from the record at 197–200. The inference at 215–216 is plausible, not a measured version. |
+| C03 — isolation | **PARTLY** | Lines 29,52–72 explicitly prohibit unlocking persistence, require independent image verification, identify the System76 and credential check, create a temporary RAM home, and check mounts/swap/network. Lines 168–174 reuse S0 on every test boot. No NUC script/configuration and no autorun conditions from custody draft §5 are still not stated explicitly. An overlay filesystem name alone does not establish that its writable layer is RAM. See command notes below. |
+| C04 — backup/failure safety | **PARTLY** | Lines 119–121 now check export/copy exits and nonempty files; 135 and 176–177 gate transfer/acceptance; 186 protects PIN retries. But export success is not demonstrated recovery: F02 remains a last-copy failure path. The destination check is weak (F04), and fresh-boot recovery instructions remain incomplete (F03). |
+| C05 — policy and primary tests | **YES at the procedural-design level**, subject to F01/F03 | Lines 145–150 read before toggling `forcesig`; 152–161 add no-touch and fresh-PIN tests, and count successful signatures; 172–177 require a fresh card-only test and reject unexpected outcomes. These are appropriate proposed tests. They have not been executed here; positive signing alone still proves neither fixed touch nor requester independence. |
+| C06 — custody/bootstrap record | **PARTLY** | Lines 11–13 and 196–205 correctly distinguish secrets from public choices, record hardware/credential checks and results, independently compute the fingerprint and link the later bootstrap record to the freeze. Missing: a concrete authenticated initial-acquisition route, explicit retention of the approved public key outside the NUC, checks of actual published material, card firmware/scdaemon versions and protected export settings. See F05. |
+| C07 — requester independence | **YES for this ceremony's bounded claim** | Lines 8–10 expressly defer production use until independent review, exact-hash approval and controlled input media are implemented and rehearsed; line 219 disclaims requester independence. The author supplies ceremony signing requests, while an operational channel captor could supply a malicious future release candidate. Storage/touch alone does not authorize those bytes. This resolves the overclaim by scope and handoff; it does not establish A10.4.2 independence. |
+
+## New defects and remaining concrete failure paths
+
+### F01 — HIGH, new: the required fixed-touch readback cannot distinguish fixed from ordinary on
+
+**Lines 145–150,176.** In upstream GnuPG 2.4.4 and 2.4.8, human-readable card status prints `Sign=on` for both UIF value 1 (on) and value 2 (permanent). The command at 145 cannot produce the required permanent/fixed confirmation. The numeric colon output preserves the distinction.
+
+Failing scenario: `uif 1 permanent` succeeds on a supported card, but the operator follows the readback literally and must stop despite correct configuration. If the operator instead accepts `Sign=on`, an ordinary on policy can pass this check; a no-touch timeout also cannot distinguish on from fixed. Preserve the stop condition and specify a rehearsed readback such as `gpg --with-colons --card-status`, requiring signature UIF value 2 (`uif:2:...`), together with successful policy setting. Do not attempt to disable touch as a negative test on the production card.
+
+Evidence: upstream [2.4.4 card-util.c](https://github.com/gpg/gnupg/blob/gnupg-2.4.4/g10/card-util.c) and [2.4.8 card-util.c](https://github.com/gpg/gnupg/blob/gnupg-2.4.8/g10/card-util.c), status rendering and `uif`. This is source evidence, not a card observation.
+
+### F02 — HIGH, residual C04: failed transfer permits destroying the only demonstrated usable secret
+
+**Lines 119–121,164,185,189–190.** The failed-transfer row says to shut down after one retry because the backups survive. They have only passed export/nonempty checks at that point; both recovery tests occur after shutdown. The successful path likewise shuts down before any backup has been restored, although a tested card can then supply a usable primary.
+
+Failing scenario: both exports are present but cannot be decrypted with the retained passphrase, or their secret data cannot be restored; card transfer fails twice. Row 185 authorizes shutdown of the sole usable RAM key. The later discovery that both backups fail cannot recover that key. This is a conditional failure path, not an observation that GnuPG normally makes corrupt exports.
+
+Before relinquishing the last demonstrated usable copy, validate recovery using isolated temporary keyrings/agents and only the candidate backup, while preserving the original key. Retain the separate fresh-boot tests for final acceptance. Do not justify shutdown after transfer failure by file existence alone. Distinguish “not yet tested” from “good” in row 189. If both backups fail but the card works, row 190 should explicitly preserve that card pending recovery or a deliberate abandonment decision; unusable backups do not imply the primary is unusable. No existing production key should be reset on this table's authority.
+
+### F03 — MEDIUM, new fresh-boot instructions lose their variables
+
+**Lines 107,117,168–173.** S0 recreates `GNUPGHOME` but neither `B` nor `FPR`. Each Session 2 boot starts a new shell. Consequently the printed import operand expands to `/secret.asc`, and the signing selector is empty. This was reproduced with a clean Bash shell without running any import or accessing any key. The path at 117 also remains ROOT-BK1 even when the operator is processing ROOT-BK2 or either REL backup.
+
+Failing scenario: an operator follows the fresh-boot backup test literally, unlocks BK2 and runs the printed command; it imports from `/secret.asc` and fails. Explicitly assign the actual mounted backup path and expected paper fingerprint in every test boot, check them before import, compare the imported fingerprint, and give the complete sign/verify commands. Use only a public key for the card-only boot. A backup `public.asc` fallback is safe only if no secret is imported from it and the input medium's role remains controlled.
+
+### F04 — MEDIUM, residual C04: LUKS check is not an exact destination check
+
+**Lines 115–125.** `grep -B1 "$B" | grep -q crypt` checks matching output text and one preceding line; it does not establish the exact mount's backing device, identity or encryption format. A mount named ROOT-BK1-extra can match ROOT-BK1. If an ordinary RAM directory exists at the intended path, the check can announce LUKS-OK from the other mount and the following exports succeed into RAM.
+
+Failing scenario: that naming/mount error affects a backup, the operator sees every required OK and removes an empty stick. Final restore acceptance should catch it, but row 185 already relies on those backups to permit shutdown. Resolve the exact mount with `findmnt`, trace that device to the intended encrypted mapper/label and physical stick, and stop before writes unless all agree. Record and check actual LUKS2 rather than assuming the GUI selected it. `luksDump` must target the partition actually identified, not an unverified sdX substitution.
+
+### F05 — MEDIUM, residual C06: publishing a fingerprint is not authenticated bootstrap
+
+**Lines 201–205.** The independent computation is valuable, but “channels the author names” still does not specify authenticated first acquisition, retention outside the NUC or verification after publication.
+
+Failing scenario: the author chooses repository and DNS publications; an attacker controlling both substitutes its B key and matching fingerprint for a new relying party. Two matching publications do not authenticate that initial key. State the concrete authenticated delivery method (or the explicit first-acquisition assumption and method), retain the approved key outside the operational environment and check each actual publication. These are unfinished custody-draft §8 steps (`docs/V1-RELEASE-KEY-CUSTODY-DRAFT.md:234–243`), not a finding that the first-production-release trigger has occurred.
+
+## S0–S9 and GNUPGHOME audit
+
+- **S0:** The temporary export is inherited by all later GnuPG commands in that terminal. `keytocard` at 137–140, revocation copy at 121, and Session 2 GnuPG commands therefore use it consistently if S0 is repeated as instructed. No hard-coded default revocation path remains. For a second terminal, give `export GNUPGHOME="<existing RAM path>"` explicitly; rerunning `mktemp` creates another home. Check command success and verify the actual writable storage, rather than accepting every overlay. The filesystem-type filter is not exhaustive evidence that no internal disk is mounted; review backing devices/mounts. Observe that no network link is usable, not merely no default route. These are isolation checks, not GnuPG version differences.
+- **S1–S2:** Card status, administration and PIN-change menu are consistent with the inspected sources. Upstream 2.2.40 lacks the required UIF status line, so the literal S1 acceptance cannot hold there. Stop before generation on an unsupported setup. Record the actual firmware/scdaemon versions before choosing a supported path.
+- **S3–S4:** Expert P-256 selection and ECC sign-only option 10 agree with upstream 2.2.40 and 2.4.8 key-generation source. Read actual menus. The printed `FPR=<...>` is a substitution instruction, not executable shell syntax; replace it with the actual quoted value. `--list-keys` checks existence, not a comparison with the paper or a guarantee of the expected packet format.
+- **S5–S7:** Quoted exports, revocation path and inherited home are appropriate; transfer uses the generated primary and `save`. The backup destination and recovery gaps are F02/F04. No production transfer was run to establish device behavior.
+- **S8:** `forcesig` handling is corrected. Upstream 2.2.40 has no `uif`; 2.4.4/2.4.8 accept `uif 1 permanent` but have F01's readback limitation. Recording a version and stopping is safe refusal, not cross-version completion. Pin and rehearse the actual supported stack or supply a separately validated offline alternative.
+- **S9:** SHA-256 detached signing and verification syntax is supported. For the negative and repeat tests, print complete commands with `--output ~/nt.asc` and `--output ~/p2.asc`, retain the same input and selector, and verify the second positive signature. Do not simply rerun the first command against its existing output: an overwrite prompt/cancellation is not a no-touch result. Require a touch timeout rather than any arbitrary failure. Current acceptance already rejects unexpected test outcomes.
+
+Source checks used upstream [2.2.40 card-util.c](https://github.com/gpg/gnupg/blob/gnupg-2.2.40/g10/card-util.c), [2.2.40 keygen.c](https://github.com/gpg/gnupg/blob/gnupg-2.2.40/g10/keygen.c) and [2.4.8 keygen.c](https://github.com/gpg/gnupg/blob/gnupg-2.4.8/g10/keygen.c). The local executable reports GnuPG 2.4.4; it was not used against a card. Inspection of specific tags does not certify every 2.4.x package or downstream patch set.
+
+## Appended owner prechecks
+
+Each result concerns this revision and its bounded claims, not certification of the service.
+
+| Check | Result | File:line evidence |
+|---|---|---|
+| 1. Capture row | **PASS** | `docs/ceremony/CEREMONY.md:17–23,203–205` assigns authority roles and describes B-authenticated trust; it promises neither rejection of fresh attacker-key receipts nor capture visibility. Ground truth: `docs/V1-CONTRACT.md:34–37,50–53,72–74`: honest receipts protected under the stated assumptions, fresh attacker-key receipts pass after dual-channel capture, no detection guarantee. F05 concerns initial release authentication, not restoration of the cut listing. |
+| 2. Trigger clause | **PASS** | `docs/ceremony/CEREMONY.md:8–10,20,204–205` cites A10.4.2's existing independence prerequisite and later bootstrap obligation. `docs/phase-0-prereg-amendment-10.md:616,624–643,668–673` applies the prerequisite under every option and places establishment before the first public production release. Revision 2 does not assert that release occurred, trigger fallback, or claim its rehearsal obligations discharged. |
+| 3. Requester | **PASS for the expressly limited claim** | `docs/ceremony/CEREMONY.md:8–10,52–60,152–160,219` identifies the author-led ceremony and expressly defers candidate review, exact-byte approval and media controls for B's production use. Operational actors may propose future bytes; the author must authorize the exact release through the deferred procedure (`docs/V1-RELEASE-KEY-CUSTODY-DRAFT.md:253–278`). Storage separation is not treated here as a completed release-authorization argument. A broader claim that this ceremony establishes requester independence would fail. |
+| 4. Binding text | **PASS** | `docs/ceremony/CEREMONY.md:3–10,37–48` labels the document OWNER DRAFT and distinguishes owner choices from registered A10.4.2 independence. That requirement is registered at `docs/phase-0-prereg-amendment-10.md:624–643`; the profile's key-format rule is implemented at `docs/ceremony/CEREMONY.md:6,99–104` (`docs/V1-PROFILE.md` §15.4). Exact ceremony commands and draft checks are proposed operating requirements, not silently attributed to signed registration. No ruling budget, fixed 24-hour FAILED rule or conflicting registered custody mandate is imported. This report treats operational defects as defects in that proposal, not violations of invented registered rituals. |
+
+Generation is not a verifier release. No registration, freeze compliance, TEST-rejection rehearsal, deployed-package identity, production acquisition or full release-independence gate is discharged by this confirmation.

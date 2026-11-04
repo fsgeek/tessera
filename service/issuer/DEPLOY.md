@@ -1,9 +1,12 @@
 # Deploying the V1 issuer and its signers (owner, 2026-10-27)
 
 > **Status: OWNER DRAFT, revised after the signer review** (`docs/reviews/signers/CODEX-REVIEW.md`, SG-01 to SG-05).
-> These are the steps for the first deployment. No agent runs any of them: `terraform apply` and every AWS write
-> run in the author's login session, from commands written out here in full. GCP steps can run on the NUC, where
-> `gcloud` is logged in.
+> These are the steps for the first deployment. They run in the author's login session (`aws login --profile
+> tessera`; Terraform takes it via `eval "$(aws configure export-credentials --profile tessera --format env)"`).
+> The owner runs them: the author, 2026-10-30, "I have a bucket and a trowel, and they bless your actions." (An
+> earlier version said no agent runs any of them; that was a prior owner's rule.) The irreversible choices are
+> still the author's: the trail retention in step 5, which Object Lock COMPLIANCE can never shorten. GCP steps run
+> on the NUC, where `gcloud` is logged in. The run record is `DEPLOY-RUN.md`.
 
 ## Before the session (owner, no credentials)
 
@@ -79,6 +82,22 @@ produces a real receipt over honest smoke-test content.
     `TESSERA_LAMBDA_ZIP=../issuer/dist/issuer.zip TESSERA_LAMBDA_CODESHA256=<api>,<poller> .venv/bin/python -m pytest -q
     ../../formal/p3-verification-profile`. Keep the output, the two values and the zip's SHA-256 together in the run
     record. `CodeSha256` is base64 of the raw digest; `package.py` prints hex, and the test converts.
+
+## Gate before any client beyond `smoke-test` (owner, 2026-10-30)
+
+Detection, not only logging. API access logs exist from the first apply (`aws_api_gateway_stage.v1`); nothing watches
+them yet, and no alarm exists. Before a second API key is issued:
+
+1. **Detection contract** (owner): each attack or fault, what it must leave in which log, which alarm fires, how fast,
+   and who is told. At least: flood and throttling; missing or guessed keys; oversized or malformed requests;
+   per-key volume; signer refusals only an attacker or a fault produces (KEY_FP_MISMATCH, unsolicited responses,
+   E-06); `kms:Sign` count against issued receipts; CloudTrail `PutKeyPolicy`, IAM changes and `StopLogging`.
+2. **Alarms** with notification to the author.
+3. **Detection tests built by another model family** (Gemini via `agy`, or grok), from the contract and threat
+   model, not from the owner's alarm code: each attack is performed against the deployment and each alarm is seen
+   to fire. Codex reviews the tests and results. A detection that has never been seen to fire is a claim, not a
+   control.
+4. A per-key daily quota on the usage plan.
 
 ## Not deployment gates, but release gates (still open; `formal/freeze-v1/FREEZE-RECORD.md:84-91`)
 

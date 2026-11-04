@@ -1,0 +1,1944 @@
+Reading additional input from stdin...
+OpenAI Codex v0.165.0
+--------
+workdir: /home/tony/projects/tessera
+model: gpt-6.1-sol
+provider: openai
+approval: never
+sandbox: danger-full-access
+reasoning effort: none
+reasoning summaries: none
+session id: 01a199ca-4aa0-7563-b33b-b0717816f43d
+--------
+user
+Read docs/reviews/ceremony/BRIEF-CONFIRM.md and carry out the confirmation it describes, including the appended prechecks. Write the report where the brief says.
+codex
+I’ll read the brief and repository guidance, run the required confirmation and appended prechecks, and write the report at the specified path. I’m applying the using-superpowers skill to check the required workflow first.
+exec
+/bin/bash -lc "cat /home/tony/.codex/plugins/cache/openai-curated-remote/superpowers/7.0.1/skills/using-superpowers/SKILL.md; rg -n 'ceremony|formal-review' /home/tony/.codex/memories/MEMORY.md; pwd; rg --files -g AGENTS.md -g BRIEF-CONFIRM.md" in /home/tony/projects/tessera
+ succeeded in 0ms:
+---
+name: using-superpowers
+description: Use when starting any conversation - establishes how to find and use skills, requiring skill invocation before ANY response including clarifying questions
+---
+
+<SUBAGENT-STOP>
+If you were dispatched as a subagent to execute a specific task, ignore this skill.
+</SUBAGENT-STOP>
+
+<EXTREMELY-IMPORTANT>
+If you think there is even a 1% chance a skill might apply to what you are doing, you ABSOLUTELY MUST invoke the skill.
+
+IF A SKILL APPLIES TO YOUR TASK, YOU DO NOT HAVE A CHOICE. YOU MUST USE IT.
+
+This is not negotiable. You cannot rationalize your way out of this.
+</EXTREMELY-IMPORTANT>
+
+## The Rule
+
+**Invoke relevant or requested skills BEFORE any response or action** — including clarifying questions, exploring the codebase, or checking files. If it turns out wrong for the situation, you don't have to use it.
+
+**Before entering plan mode:** if you haven't already brainstormed, invoke the brainstorming skill first.
+
+Then announce "Using [skill] to [purpose]" and follow the skill exactly. If it has a checklist, create a todo per item.
+
+## Skill Priority
+
+When multiple skills apply, process skills come first — they set the approach, then implementation skills (frontend-design, etc.) carry it out. Brainstorming and systematic-debugging are Superpowers' most common process skills, but the rule holds for any of them.
+
+- "Let's build X" → superpowers:brainstorming first, then implementation skills.
+- "Fix this bug" → superpowers:systematic-debugging first, then domain skills.
+
+## Red Flags
+
+These thoughts mean STOP—you're rationalizing:
+
+| Thought | Reality |
+|---------|---------|
+| "This is just a simple question" | Questions are tasks. Check for skills. |
+| "I need more context first" | Skill check comes BEFORE clarifying questions. |
+| "Let me explore the codebase first" | Skills tell you HOW to explore. Check first. |
+| "I can check git/files quickly" | Files lack conversation context. Check for skills. |
+| "Let me gather information first" | Skills tell you HOW to gather information. |
+| "This doesn't need a formal skill" | If a skill exists, use it. |
+| "I remember this skill" | Skills evolve. Read current version. |
+| "This doesn't count as a task" | Action = task. Check for skills. |
+| "The skill is overkill" | Simple things become complex. Use it. |
+| "I'll just do this one thing first" | Check BEFORE doing anything. |
+| "This feels productive" | Undisciplined action wastes time. Skills prevent this. |
+| "I know what that means" | Knowing the concept ≠ using the skill. Invoke it. |
+
+## Platform Adaptation
+
+If your harness appears here, read its reference file for special instructions:
+
+- Claude Code: `references/claude-code-tools.md`
+- Codex: `references/codex-tools.md`
+- Pi: `references/pi-tools.md`
+- Antigravity: `references/antigravity-tools.md`
+- Hermes Agent: `references/hermes-tools.md`
+- Muse: `references/muse-tools.md`
+
+## User Instructions
+
+User instructions (CLAUDE.md, AGENTS.md, GEMINI.md, etc, direct requests) take precedence over skills, which in turn override default behavior. Only skip skill workflows or instructions when your human partner has explicitly told you to.
+201:- Related skill: skills/tessera-formal-review/SKILL.md. [Task 1]
+251:- Related skill: skills/tessera-formal-review/SKILL.md. [Task 1][Task 2]
+/home/tony/projects/tessera
+docs/reviews/ceremony/BRIEF-CONFIRM.md
+
+exec
+/bin/bash -lc 'cat docs/reviews/ceremony/BRIEF-CONFIRM.md; cat /home/tony/.codex/memories/skills/tessera-formal-review/SKILL.md; cat /home/tony/.codex/plugins/cache/openai-curated-remote/superpowers/7.0.1/skills/using-superpowers/references/codex-tools.md; git status --short; ls -la' in /home/tony/projects/tessera
+ succeeded in 0ms:
+# Confirmation brief: key ceremony revision 2 (owner, 2026-11-02)
+
+Your review `docs/reviews/ceremony/CODEX-REVIEW.md` (C01–C07) covered revision 1. `docs/ceremony/CEREMONY.md` is now
+revision 2. Read-only except your report. For each of C01–C07, say whether revision 2 resolves it (cite lines), and
+report any new defect revision 2 introduces, with severity and a concrete failing scenario. Pay particular attention
+to: whether every S0–S9 command is correct for GnuPG 2.2.40 *and* 2.4.x (the author's Tails accepted `uif` and
+enforced touch in the rehearsal, so it is probably a newer GnuPG; the procedure now records the version at S0 and
+stops if fixed touch cannot be confirmed); whether `GNUPGHOME` is used consistently, including `keytocard`, the
+revocation path and Session 2; and whether the failure table ever leads to losing the last usable copy.
+Write to docs/reviews/ceremony/CODEX-CONFIRM.md.
+
+# Owner prechecks, run by the reviewer
+
+> **Status: OWNER PROCESS, 2026-10-27.** Every owner instance has written these down as lessons and then repeated
+> the mistakes (the 2026-10-19 stone, and its 2026-10-27 postscript "Naming it did not stop it"). The author's
+> answer to "what do new owners get wrong in their first week": *"that they will behave differently from the prior
+> instances."* So these checks are not left to the owner's self-review. The owner appends this file verbatim to
+> every review brief (Codex or another family), and the reviewer reports each check as PASS or FAIL with file:line.
+
+## Checks
+
+1. **Capture row.** For every plain-language statement of what holds, what happens when an attacker controls both
+   authority channels (DNS and git)? If the text implies that the attacker's own keys are rejected, or that a
+   capture is detected or made visible, that is FAIL. Ground truth: `docs/V1-CONTRACT.md` §2 (after G10) and §4.
+2. **Trigger clause.** For every registered rule cited as authority (an amendment section, a table row, a ruling),
+   did the rule's trigger condition actually occur? Citing a consequence whose trigger has not happened is FAIL.
+3. **Requester.** For every security claim about keys or signing, who can cause a signature to be made? A claim
+   that reasons only about where a key is stored, and not about who can submit work to the signer, is FAIL.
+4. **Binding text.** For every sentence the document treats as a requirement, is it registered (a signed amendment,
+   the freeze, or a recorded author ruling), or is it something an instance wrote? An unregistered sentence used as a
+   requirement is FAIL. Since 2026-10-27, `docs/V1-SCHEDULE.md`'s ruling budget is a known instance of this. Also FAIL: an owner
+   requirement (a resolution, a design document, a code constant) that contradicts a registered sentence. Since
+   2026-10-29, S4's 24-hour FAILED against A2.3's per-attempt `declared + δ + S` expiry is the known instance.
+---
+name: tessera-formal-review
+description: Review a Tessera formal model or capstone-ledger claim with bounded conclusions, producer/consumer evidence, and direct artifact checks.
+argument-hint: "[artifact or review question]"
+user-invocable: false
+allowed-tools: Read, Grep, Glob, Bash
+---
+
+# Tessera formal review
+
+## When to use
+
+Use for a read-only review of Tessera ProVerif/TLA+ artifacts, S-P3, or `LEDGER.md` capstone claims. Do not use it to silently amend adopted artifacts, decide unresolved policy questions, or convert a scratch probe, companion, or viability run into discharge.
+
+## Inputs and context
+
+1. Establish the exact artifact, registered property/amendment, current adoption/status record, and requested decision.
+2. Read the relevant model and its header, predictions/results, theory library, and any routed review record. Amendments outrank trackers.
+3. Recheck live branch/status and preserve unrelated pre-existing work as user-owned.
+
+## Procedure
+
+1. Explain local terms before testing conclusions. Translate the review as: claim -> adversary -> load-bearing check -> assumptions -> non-claims -> validation evidence.
+2. State the model boundary precisely: which keys/channels are compromised, which signed bytes or frames are reused, and which attacks are outside scope.
+3. Run the registered command when practical, preserving tool version and exact result polarity. For S-P3 Q2 use:
+   ```sh
+   proverif -lib formal/suite/lib/tessera_theory.pvl formal/suite/s-p3/proverif/sp3_q2_degraded_compromised.pv
+   ```
+4. For `LEDGER.md`, read the full relevant contract and combined-consequences table, not a single section. Translate each producer/consumer relation into which component supplies information and which relies on it.
+5. For every claimed cross-model join, identify the registered producer query and a broken companion whose mutation makes the consuming query fail. If severing the producer does not affect the consumer's registered query, call the relation complementary or capstone-internal rather than cross-model.
+6. Check relation scope structurally. A key/signature transplant query cannot establish exact signing-to-presented-bytes binding: C-Q8 must inspect accepted `(key, signature, presented bytes)` triples. Require C-Q9 separately for possession over the accepted manifest, and an acceptance/execution identifier for C-Q1 completeness.
+7. For composition, ask whether all checks run on one acceptance path. A wrapper can attest that it saw a bundle, but cannot repair an original attestation that was already forgeable; separate envelope validity, standing, authorship, and adjudicator judgment.
+8. Separate registered evidence, scratch-probe evidence, header fidelity, property coverage, symbolic proof, concrete cryptographic/security claims, cross-formalism claims, and implementation conformance in the conclusion.
+
+## Efficiency plan
+
+- Start with the requested artifact plus its adjacent predictions/results and governing amendment; for a capstone review, also read the complete ledger contract and combined-consequences table.
+- Cache the claim/adversary/boundary table while comparing the model, header, and review record.
+- Stop and ask for a decision when an apparent inconsistency is a policy choice or the adoption state is unclear.
+
+## Pitfalls and fixes
+
+- Symptom: a bounded Q2 result is described as stolen-key or chain-takeover resistance. Cause: attacker scope expanded in prose. Fix: say it tests reattribution of existing honest signed bytes under explicitly modeled DSKS substitution; rotation/succession remains separate.
+- Symptom: a green companion/probe, bounded TLC run, or family-local query is treated as capstone discharge. Fix: preserve the distinction between scratch/negative-control evidence, registered coverage, cross-formalism proof, and final discharge.
+- Symptom: a ledger says “all findings accepted” or “exactly one red query.” Cause: scope/polarity was not checked. Fix: inspect the producer and consumer directly; record expected failed, retained, and witness sets when a mutation affects several queries.
+- Symptom: a copied check is called cross-model. Fix: sever the producer and require the registered consumer query to fail; otherwise label it complementary/capstone-internal.
+- Symptom: an accepted key/signature relation is used to claim exact presented-byte binding. Fix: inspect the complete accepted triple structurally and retain C-Q9's separate manifest-possession obligation.
+
+## Verification checklist
+
+- Confirm the command, model/library paths, and reported query results.
+- For capstone claims, confirm the producer query, consumer query, severing companion polarity, and whether evidence is registered rather than scratch-only.
+- Name explicit assumptions and non-claims, including concrete encoding/framing obligations when symbolic `fp` or `h` is used.
+- Confirm C-Q1 has an acceptance identifier, per-slot reports, same-acceptance completeness, strict/degraded distinction, evidence binding, possession, byte binding, type, and innermost-scope links.
+- Confirm conclusions do not move tracker/discharge status without recorded prerequisites, frozen predictions, joins, and agreement gates.
+## Subagent dispatch requires multi-agent support
+
+Add to your Codex config (`~/.codex/config.toml`):
+
+```toml
+[features]
+multi_agent = true
+```
+
+This enables the multi-agent tools that skills like
+`dispatching-parallel-agents` and `subagent-driven-development` use.
+Which tools you get depends on the multi-agent version your model
+preset selects (current presets run V2; older ones run V1). Trust your
+actual tool list over any table — including this one — when they
+disagree.
+
+- **Spawning:** give children a clean context with
+  `spawn_agent {fork_turns: "none"}`; the default `"all"` copies your
+  entire transcript into the child. On Codex 0.145+, role files under
+  `~/.codex/agents/` attach to isolated forks via `agent_type`.
+  Full-history forks accept `model` and `reasoning_effort` overrides
+  (only `agent_type` is refused there) — isolated forks are the SDD
+  default for context hygiene, not because overrides require them.
+- **Fix rounds:** resume the implementer with `followup_task` — it
+  delivers your message, triggers a turn, and transparently reloads a
+  child the harness evicted. Never dispatch a fresh implementer on the
+  theory that a spawned agent cannot be messaged again; on V2 it
+  always can.
+- **Lifecycle:** V2 has no `close_agent`. Finished children are
+  evicted automatically when slots are needed; leaving them unclosed
+  costs nothing. Only V1 sessions have `close_agent` — there, close
+  reviewers when their review returns, and close each implementer
+  after its task's review passes.
+- **Model names:** never copy a model name from a skill, table, or old
+  session into `spawn_agent` without checking it against your current
+  spawn allowlist — V2 accepts only V2-capable presets and hard-errors
+  on the rest.
+
+## Waiting on children
+
+`wait_agent` is an event subscription, not a poll: a long wait wakes
+the moment a child produces mailbox activity, with the same latency as
+a short one. Short-timeout polling buys nothing and costs a tool call —
+and a context rebill — per poll. In measured sessions, roughly
+two-thirds of all wait calls were short polls that timed out.
+
+- While you still have local work, do not wait at all. A completed
+  child's final answer is pushed into your mailbox and arrives with
+  your next turn.
+- When you are genuinely idle with children outstanding, wait in
+  bounded stretches: `wait_agent` with `timeout_ms` 300000-600000
+  (5-10 minutes). After each stretch — wake or timeout — post one
+  status line, run `list_agents`, and chase any child that finished
+  without reporting. Never stack polls shorter than five minutes; the
+  event subscription wakes a bounded stretch just as fast as a short
+  one.
+- Completion mail cannot wake an idle controller (it is delivered
+  without triggering a turn); covering that idle window is
+  `wait_agent`'s only job. A stretch that times out with no activity
+  is your cue to reconcile, not to shorten the next stretch.
+
+## Model routing on spawns
+
+Every `spawn_agent` you issue — including when you are yourself a
+spawned child running a fan-out — sets `model` AND `reasoning_effort`
+explicitly, per the Model Selection rules of the skill you are
+executing. Setting `model` alone is a trap: the child's effort
+silently resets to that model's default, not to yours.
+
+Ask your human partner to add a machine-level backstop to
+`~/.codex/config.toml` so any spawn that slips through still routes to
+a deliberate tier instead of silently inheriting the session's most
+expensive model:
+
+```toml
+[agents]
+default_subagent_model = "<a mid-tier model from your spawn allowlist>"
+default_subagent_reasoning_effort = "medium"
+```
+
+## Environment Detection
+
+Skills that create worktrees or finish branches should detect their
+environment with read-only git commands before proceeding:
+
+```bash
+GIT_DIR=$(cd "$(git rev-parse --git-dir)" 2>/dev/null && pwd -P)
+GIT_COMMON=$(cd "$(git rev-parse --git-common-dir)" 2>/dev/null && pwd -P)
+BRANCH=$(git branch --show-current)
+```
+
+- `GIT_DIR != GIT_COMMON` → already in a linked worktree (skip creation)
+- `BRANCH` empty → detached HEAD (cannot branch/push/PR from sandbox)
+
+See `using-git-worktrees` Step 0 and `finishing-a-development-branch`
+Step 1 for how each skill uses these signals.
+
+## Codex App Finishing
+
+When the sandbox blocks branch/push operations (detached HEAD in an
+externally managed worktree), the agent commits all work and informs
+the user to use the App's native controls:
+
+- **"Create branch"** — names the branch, then commit/push/PR via App UI
+- **"Hand off to local"** — transfers work to the user's local checkout
+
+The agent can still run tests, stage files, and output suggested branch
+names, commit messages, and PR descriptions for the user to copy.
+ M service/issuer/.gitignore
+ M service/issuer/DEPLOY-RUN.md
+ M service/issuer/DEPLOY.md
+ M service/issuer/infra/main.tf
+ M service/issuer/infra/versions.tf
+ M service/signer-kms/infra/versions.tf
+?? docs/ceremony/
+?? docs/reviews/ceremony/
+?? service/issuer/install-facts.json
+?? service/signer-kms/.gitignore
+total 152
+drwxrwxr-x 16 tony tony  4096 Oct 30 19:12 .
+drwxrwxr-x 34 tony tony  4096 Oct 27 05:24 ..
+drwxrwxr-x  2 tony tony  4096 Nov  2 00:55 .claude
+drwxrwxr-x  2 tony tony  4096 Oct  9 02:30 .codex
+drwxrwxr-x  8 tony tony  4096 Nov  2 01:05 .git
+-rw-rw-r--  1 tony tony   646 Jul 23 21:32 .gitattributes
+-rw-rw-r--  1 tony tony  1310 Oct  9 00:29 .gitignore
+drwxrwxr-x  3 tony tony  4096 Oct 26 17:12 .pytest_cache
+-rw-r--r--  1 tony tony 28672 Jul 28 15:26 .qhaway.db
+-rw-rw-r--  1 tony tony   109 Jul 28 15:26 .qhaway.json
+drwxrwxr-x  4 tony tony  4096 Jul 27 16:48 .venv
+-r--r--r--  1 tony tony   508 Jul 28 15:26 MEMORY.md
+-rw-rw-r--  1 tony tony  8978 Oct 30 19:12 README.md
+drwxrwxr-x  2 tony tony  4096 Jul 27 16:48 dist
+drwxrwxr-x  9 tony tony  4096 Nov  2 00:45 docs
+drwxrwxr-x 11 tony tony  4096 Oct 27 20:46 formal
+-rw-rw-r--  1 tony tony    85 Jul 23 21:32 main.py
+drwxrwxr-x 18 tony tony  4096 Oct 19 20:44 prototype
+-rw-rw-r--  1 tony tony   190 Jul 23 21:32 pyproject.toml
+drwxrwxr-x  3 tony tony  4096 Aug  9 02:09 scripts
+drwxrwxr-x  7 tony tony  4096 Oct 27 20:31 service
+drwxrwxr-x  2 tony tony  4096 Aug  9 02:09 tests
+drwxrwxr-x  3 tony tony 16384 Oct 30 19:14 timestamps
+drwxrwxr-x  4 tony tony  4096 Nov  2 00:27 tmp
+-rw-rw-r--  1 tony tony 10204 Jul 23 21:32 uv.lock
+
+exec
+/bin/bash -lc 'cat README.md; cat docs/reviews/ceremony/CODEX-REVIEW.md; nl -ba docs/ceremony/CEREMONY.md' in /home/tony/projects/tessera
+ succeeded in 0ms:
+# Project Tessera
+
+An AWS-native attestation service, built as a public demonstration of
+principled engineering with AI as collaborator rather than substitute.
+
+The primary objective is not the product alone. It is evidence that a
+senior engineer can close a real knowledge gap quickly—using AI for
+mechanics while owning architecture, judgment, and every decision that
+must be defended cold. The secondary objective is commercial viability
+as attestation-as-a-service; that upside is measured separately and is
+not allowed to expand the demonstration’s scope.
+
+**Credibility line** (as registered, `docs/phase-0-prereg.md` §1):
+every architecture decision here is the human author (Tony) in
+collaboration with AI agents. The purpose of the AI agents is to
+accelerate the typing, push back on my decisions, clarify them, but not
+to _make_ those decisions without consultation.
+
+Since 17 September 2026 an AI instance owns the project day to day, by
+the author's delegation; decisions it makes are labelled OWNER DECISION
+in the record, and the author's are labelled as his. An earlier wording
+of this paragraph, which was not the registered text, was read as
+requiring the author to reconstruct every decision unaided. The author
+never intended that requirement, and it is not one.
+
+Tony Mason  
+Initiated 10 June 2026  
+This README's status was refreshed on 27 October 2026 by the owner instance; the credibility line and reading order are the author's.
+
+---
+
+## What this repository is
+
+Tessera provides a neutral third party’s cryptographic binding to a
+package of information at a fixed point in time. Attestation here means:
+*this is what was presented in a bundle*, tied to a temporal anchor that
+cannot be trivially regenerated. It does not by itself vouch for the
+authenticity or truth of the contents; those guarantees, if any, ride in
+the package.
+
+The service is a cousin of [Willay](https://github.com/fsgeek/willay):
+shared cryptographic and modeling ethos, forked edges for cloud-native
+operation (KMS, S3 Object Lock, queues, observability, IaC).
+
+The method is as load-bearing as the artifact:
+
+1. **Pre-registration** — objectives, hypotheses, properties, and success
+   criteria are written, signed, and OpenTimestamps-anchored *before*
+   outcomes are known. The journal is measured against that record,
+   including honest divergence.
+2. **Formal foundation first (Band 0 / H0)** — machine-checked models of
+   the core guarantees gate later code. No Phase 1 until the foundation
+   holds or is amended on the record.
+3. **Public, falsifiable process** — multi-round adversarial review,
+   broken companions that must go red, named residuals, and a living
+   property tracker. Theater is a failure mode, not a feature.
+
+---
+
+## Current status (27 October 2026)
+
+| Layer | Status |
+|-------|--------|
+| Pre-registration | Signed, Amendments 1–11 in force. A9 sets the V1 scope; A10 covers time, authority capture and release custody (author rulings 2026-10-18); A11 (P3 profile, dependency sweeps, K-R enforcement by the signer role, slot-2 custody) was **signed 2026-10-29 at `f01e086`**. Its header still reads "DRAFT … Not signed" because signed text is never edited; the signing commit is its signing act (A11 preamble). A reviewer reading only the file will think it unsigned (Codex did, 2026-10-30, ISI-02). |
+| V1 contract | `docs/V1-CONTRACT.md` says what a receipt establishes and what it does not. `docs/V1-SERVICE-CONTRACT.md` is the outside view, and `docs/V1-SERVICE-RESOLUTIONS.md` holds Tessera's answers to the open items. |
+| V1 freeze | Signed 2026-10-24 (`formal/freeze-v1/FREEZE-RECORD.md`, commit `52ee179`), six days before the 30 Oct ceiling. Phase 1a (service code) is open. |
+| Real receipts | Two TEST-pipeline receipts verified `VALID_STRICT`, using real AWS KMS (ML-DSA-65), a GCP HSM (P-256), live DNSSEC and Bitcoin anchoring (`prototype/e2e/`). |
+| Service verifier | `service/verifier/`: agrees on 352/352 conformance cases and 69/69 E10 fixtures. |
+| Issuer | `service/issuer/`: built and reviewed locally, VALID_STRICT end to end on stand-in signers. Not yet deployed to AWS. |
+| Schedule | `docs/V1-SCHEDULE.md`: V1 issuing on AWS by 20 Nov; relying-party and dead-service tests, then ship or stop, by 4 Dec. |
+
+Day-to-day ownership: an AI owner instance, by the author's delegation (see above). The latest handoff is in `docs/handoff-*.md`.
+
+-------|--------|
+| Phase 0 pre-registration | Signed and amended (Amendments 1–6 in force; A3 adopted 2026-08-08/09 after a four-model cold panel; A4 signed 2026-09-06 at `5188e7a`, precision repairs and discharge paths; A5 signed 2026-09-12 at `504e662`, the probe and cross-family findings: three verifier obligations, the waived-evidence reading, the §A4.6 boundary; A6 adopted 2026-09-12, P7's discharge path, signed at the commit carrying it; the 2026-08-29 author clarification records that "before any code" means code intended for the service) |
+| Band 0 formal models | Active — TLA+ (P4, P5/P6, P5c issuance, bridge, floor-structure probe; non-discharging P9/P10 probes); ProVerif first-link spike complete, mechanism **decided** 2026-08-13 (`formal/spike/first-link/DECISION.md`); symbolic suite **built and run**: S-P3, S-P1, S-P2, S-P7, S-STANDING (`formal/suite/`), each cross-family reviewed by a non-author model, headers read by the author 2026-09-12; tracker: P1–P7 and P10 `checked` (P7 on Amendment 6), P8 and P9 open, standing row added `open` (Band 0 exit gated on it); capstone composition and P8 not begun |
+| Named residual | The author has recorded (2026-08-29) that the first-link decision rests on symbolic results he cannot yet defend cold; accepted, not waived, with closing conditions |
+| Cloud-independent crypto core | Not yet frozen (gated on Band 0) |
+| LocalStack / AWS vertical slice | Not started |
+| Application code | Minimal scaffolding only; one non-production design probe under `formal/spike/standing-probe/probe/` |
+
+---
+
+## How to read this repository
+
+Recommended order for a new reader (human or collaborator instance):
+
+1. **This file** — orientation and credibility line.
+2. [`docs/phase-0-prereg.md`](docs/phase-0-prereg.md) — the signed intent
+   and ranked objectives.
+3. [`docs/phase-0-prereg-amendment-1.md`](docs/phase-0-prereg-amendment-1.md)
+   — property list, adversary model, temporal-anchor semantics, agreement
+   gate as falsification task.
+4. [`docs/phase-0-prereg-amendment-2.md`](docs/phase-0-prereg-amendment-2.md)
+   — refinement of confirmation, refusal, anchor standing, and the
+   clock-roles ruling (adopted 2026-07-21, three review rounds).
+5. [`docs/phase-0-prereg-amendment-3.md`](docs/phase-0-prereg-amendment-3.md)
+   — identity boundary, linked evidence floors, the symbolic suite and
+   capstone gate, survivability, standing as an orthogonal dimension
+   (adopted 2026-08-08/09 after a four-model cold panel).
+6. [`formal/spike/first-link/DECISION.md`](formal/spike/first-link/DECISION.md)
+   — the first mechanism decision made under the method: criteria
+   before evidence, provenance labels, the author's residual.
+7. [`docs/tessera-cloud-demo-spec.md`](docs/tessera-cloud-demo-spec.md) —
+   demonstration architecture and capability map.
+8. [`docs/travelog.md`](docs/travelog.md) — contemporaneous journal of
+   reality against the pre-registration.
+9. [`formal/PROPERTIES.md`](formal/PROPERTIES.md) and `formal/tla/` —
+   discharge status and the models themselves.
+10. [`docs/reviews/`](docs/reviews/) — adversarial review artifacts and
+    dispositions.
+
+If the tracker and an amendment disagree, the **amendment wins**.
+
+---
+
+## Disciplines this repository enforces
+
+- **GPG-signed commits** (author identity — *who*).
+- **OpenTimestamps anchors** on commits (existence in time — *when*).
+  These are two mechanisms; both are required for the public record.
+- **Amend, do not silently rewrite** historical pre-registration
+  documents.
+- **AI as collaborator for mechanics and pushback; author owns all
+  decisions** (division of labor is explicit in the pre-registration).
+- **Falsification-style review** before load-bearing text is signed
+  (see Amendment 1 §A1.7 and the review archive).
+
+Setup for local hooks and OTS tooling lives under `scripts/` (see
+`scripts/install-hooks.sh`).
+
+---
+
+## What this is not
+
+- Not a highlight reel. Pre-registration exists so success and failure
+  are both legible.
+- Not formal-methods theater. Models state what they prove, what they
+  assume, and what remains unclaimed (especially liveness vs. safety).
+- Not an unbounded product fantasy. Commercial upside is secondary and
+  deliberately constrained.
+
+---
+
+## License and contact
+
+See repository metadata and commit history for authorship. The public
+record of the work is the git history: signed, timestamped, and open to
+scrutiny.
+
+For the living narrative of how the work actually felt and where it
+diverged from plan, start with the travelog.
+# Ceremony revision 1 — Codex review
+
+Reviewed 2026-11-02 against `docs/reviews/ceremony/BRIEF.md`, including all four owner prechecks. Recommendation: revise and rehearse the corrected procedure before generating production keys. Two command compatibility defects block the stated Tails 6 / Debian 12 / GnuPG 2.2 target. The isolation and acceptance conditions also need completion.
+
+Snapshot: HEAD `54b382cd308291cf92457ff640584fba51ffc02c`; reviewed working-tree `docs/ceremony/CEREMONY.md` SHA-256 `1957f82babb5ad45d48b3b0ff3265bad5690eaf5c4f686affc5ab5101f98e8fc` (untracked at review time). Only this report was written in the repository. No production card, PIN, secret or backup was accessed. This is a source/document review, not a hardware rehearsal or independence certification.
+
+## Findings
+
+### C01 — HIGH: P-256 card attribute selection needs expert mode
+
+**Location:** `docs/ceremony/CEREMONY.md:69–73`.
+
+On GnuPG 2.2.40, `key-attr` calls `ask_curve`; NIST P-256 is marked expert-only. `admin` enables card administration, not GnuPG expert mode. With the printed `gpg --card-edit`, selection `3` is unavailable; the operator cannot complete this step as written. Use `gpg --expert --card-edit`, select the displayed P-256 entry, read the attributes back, and rehearse the complete prompt sequence. For encryption/authentication, an empty algorithm response leaves the existing attribute unchanged; spell out those responses rather than “leave ... as they are.”
+
+Evidence: upstream [2.2.40 card-util.c](https://github.com/gpg/gnupg/blob/gnupg-2.2.40/g10/card-util.c), `ask_card_keyattr`; [keygen.c](https://github.com/gpg/gnupg/blob/gnupg-2.2.40/g10/keygen.c), `ask_curve`. The Debian bookworm patch set inspected below does not alter this selection.
+
+### C02 — HIGH: `uif` is unavailable in the stated GnuPG 2.2 target
+
+**Location:** `docs/ceremony/CEREMONY.md:116–138`, also `:45` and `:56`.
+
+Upstream 2.2.40's card-edit command table has no `uif` command; its status renderer also lacks the expected UIF display. I inspected Debian `2.2.40-1.1+deb12u2`'s patch set and found no UIF backport. Thus the printed command cannot establish fixed touch on this target. A reader who treats continuation of the interactive session as success can leave touch disabled; alternatively the required status check blocks completion. This is not evidence that the recorded rehearsal failed: that record names neither the Tails nor GnuPG version, so its successful command cannot establish 2.2 compatibility.
+
+Pin and record the actual Tails, GnuPG, scdaemon and card firmware versions. Either use an offline-available, pinned YubiKey Manager with `ykman openpgp keys set-touch sig fixed`, or select and rehearse a GnuPG version supporting the printed command. Check fixed/permanent explicitly: ordinary `on` is weaker than the promised non-disableable policy and must not be accepted as equivalent at line 137. No online installation during the secret session.
+
+Evidence: [2.2.40 card-util.c](https://github.com/gpg/gnupg/blob/gnupg-2.2.40/g10/card-util.c), command table/status renderer; [Debian patch archive](https://deb.debian.org/debian/pool/main/g/gnupg2/gnupg2_2.2.40-1.1+deb12u2.debian.tar.xz); [Yubico OpenPGP commands](https://docs.yubico.com/software/yubikey/tools/ykman/OpenPGP_Commands.html). Rehearsal evidence: `docs/ceremony/2026-11-01-rehearsal-1.md:3–5,29–33`.
+
+### C03 — HIGH: the RAM-only and independent-session assumptions are asserted, not enforced
+
+**Location:** `docs/ceremony/CEREMONY.md:24`, `:49–50`, `:75–77`, `:141`, `:147`.
+
+The boot stick is shared and not new, yet there is no prohibition on unlocking Persistent Storage, no explicit temporary RAM GnuPG home, and no check of the actual home/mounts. Tails can persist GnuPG keys. An operator using an existing persistent GnuPG setup generates/imports secrets onto the boot medium; shutdown does not remove those copies. At-rest key protection does not make this RAM-only or preserve the “only copies” inventory. Do not claim that a plaintext persistent write has been observed: the defect is that the procedure does not establish its absence.
+
+Add an explicit no-persistence boot condition, an empty GnuPG home in verified RAM used consistently by every command (including the revocation path), no internal mounts/swap/hibernation, no autorun, no NUC scripts/configuration, and authenticated image verification independent of the NUC. Name the signing hardware and complete the laptop credential/inbound-access check. Specify these conditions for restore boots too. No secrets, photos or transcripts may go to chat/repository/NUC. Stop if any isolation check fails.
+
+These are gaps against the **draft procedure**, `docs/V1-RELEASE-KEY-CUSTODY-DRAFT.md:99–106,121–133,173–177,210,229–230`; the registered requirement is the independent boundary and controlled crossing, not a registered mandate for these exact commands (`docs/phase-0-prereg-amendment-10.md:624–643`). Tails documents [GnuPG persistence](https://tails.net/doc/persistent_storage/configure/index.en.html#gnupg).
+
+### C04 — HIGH: failure paths can destroy the last usable copy or silently continue with failed backups
+
+**Location:** `docs/ceremony/CEREMONY.md:87–100`, `:109–114`, `:141`, `:145–158`.
+
+The export/copy commands run independently; `sync && ls` can succeed after `gpg` failed and left an empty `secret.asc`. Restore failure is only recorded, with no rejection condition. Scenario: both exports fail, keytocard fails, and the operator reaches shutdown. The sole usable secret vanishes. Another scenario leaves a working card but no recoverable backup and still proceeds to publication.
+
+Require successful exits and nonempty expected outputs for each export/copy, check the mounted destination is the intended LUKS mapper before writing, and require both isolated restore tests plus primary test before accepting custody. Quote paths and substitute the actual label for every backup, including the hard-coded `ROOT-BK1` in the restore example. A directory or filename existing is insufficient evidence of a backup.
+
+Add a short recovery table: on transfer failure preserve the original RAM key and encrypted backups, inspect actual card fingerprint/state, and do not reset/overwrite a production card blindly; do not shut down the last usable secret until a recoverable copy is established. On failed restore stop acceptance/publication, recover from the surviving good copy and replace/retest the failed backup offline. If no good copy remains, generate a new key and discard the abandoned fingerprint from proposed production records. On a wrong PIN stop and inspect remaining retries; do not guess repeatedly or intentionally exhaust counters. On touch timeout retry only after checking state and policy; “timeout means no touch” at line 132 is too categorical for all device/transport failures. Record non-secret outcomes. The draft's general incident section is not a substitute for these immediate ceremony decisions.
+
+### C05 — MEDIUM: positive signing alone does not test the promised PIN/touch behavior or the isolated primary
+
+**Location:** `docs/ceremony/CEREMONY.md:116–139`, `:143–158`.
+
+`forcesig` toggles the current policy; rerunning step 8 after a partial failure can turn forcing off. A single successful signature after a PIN/touch does not prove that signing without touch fails, that a second request requires a fresh PIN, or that agent caching does not supply it. The only card proof uses the generation session; no fresh-session primary test excludes residual software state.
+
+Read the current policy, toggle only if needed, and require the desired readback. Add a controlled no-touch timeout test, a second signing request with observed PIN behavior, and a fresh-session card-only test importing only the public key. Record actual caching behavior and fixed touch. Account for test signatures in the counter: counter 1 ceases to be the acceptance value after additional tests. Do not use incorrect PIN attempts as a negative test. Draft basis: `docs/V1-RELEASE-KEY-CUSTODY-DRAFT.md:186–204,218–221`; these are draft operational checks, not separately registered rituals.
+
+### C06 — MEDIUM: custody/bootstrap record is incomplete and public author choices are hidden unnecessarily
+
+**Location:** `docs/ceremony/CEREMONY.md:8`, `:164–172`.
+
+The listed custody record lacks the signing setup, laptop credential-check date/result, holder/access boundary, pinned software/firmware/encryption settings, reset-code choice (none is acceptable), and test outcomes. “AUTHOR ... never in the repository” also sweeps public selections such as image version, verification device and publication channels into paper-only choices. A future reviewer then cannot reconstruct the boundary from the dated record. Keep secrets and locations private; record the non-secret choices/results required to identify the procedure and setup.
+
+Bootstrap also needs an independently computed fingerprint, not merely a fingerprint string read from potentially substituted material; an approved public key retained outside the NUC; and a concrete authenticated first-acquisition route plus publication checks. Specify the dated first-production-release bootstrap record's link to the original freeze baseline and actual B fingerprint. Do not copy the custody draft's stale demand to put a post-freeze production fingerprint in the original freeze record. Basis: draft `:234–247`; registered A10.4.2 `:628–633,668–673`; runbook `:121–124`. No first public production release is established by this review, so these are unclosed prerequisites, not a declaration that its deadline has already been breached.
+
+### C07 — MEDIUM: separate keys/sessions do not establish requester independence
+
+**Location:** `docs/ceremony/CEREMONY.md:14–18`, `:35–42`, `:162–172`.
+
+A and B having different secrets/backups is sound, but an attacker controlling DNS/git/AWS can still supply a malicious candidate through the operational environment and solicit the author's touch/signature. Touch does not bind approval to bytes. The ceremony expressly defers per-release authorization to the draft's §9, so it does not itself close A10.4.2. Add an explicit handoff: no production use until independent review/build, baseline, exact archive-hash approval, controlled input media and author-only authorization are implemented and rehearsed. Holding B decides trust only through releases a relying party authenticates and installs; stealing it does not change an already retained verifier.
+
+The theft statement at line 18 is also conditional: knowing a passphrase alone does not produce any key, and paper sheets/tokens must have compatible separation if location compromise is meant to expose at most one key. Separate boots on shared hardware do not withstand compromised shared hardware/boot firmware; retain the draft's peripheral assumption (`:146–149`). Registered basis: A10.4.2 `:624–643`; requester-specific draft basis `:92–98,203–204,260–289`.
+
+## Command and section disposition
+
+| Section / operation | Assessment |
+|---|---|
+| Two key roles, separate backups and boots | Sound design choices for limiting shared custody exposure, subject to C03/C07; not separation of human control. |
+| Card status, changing default admin/user PINs | Correct basic sequence. Record no reset code or configure one; enforce retry handling. |
+| `key-attr` before import | Correct order; C01 fixes the command. Do not reconfigure a populated production slot casually. |
+| Expert key generation: 10, curve 3, expiry 0 | Correct for upstream 2.2.40: sign-only ECC, NIST P-256, no expiry. UID and fingerprint listing are sound. |
+| Export secret/public and revocation path | `~/.gnupg/openpgp-revocs.d/FPR.rev` is correct for the default home and uppercase full fingerprint. If a RAM home is selected, use its path. The auto-generated certificate is deliberately guarded with a leading colon before the armor header; retain the complete file and document authorized-use handling separately. It is not to go to the out stick. C04 covers unchecked failures. |
+| `keytocard` then `save` | Correct, but add the preceding “Really move the primary key? (y/N)” → yes prompt. Card import occurs before save; save asks the agent to replace the local secret with a card stub. Quitting is not a rollback of the card write. This is not proven erasure or removal of backups/cache. Require readback and fresh-session signing. |
+| PIN force, permanent touch | Order after key import is sensible. `forcesig` is a toggle; `uif` is incompatible with the stated 2.2 target (C02/C05). |
+| SHA-256 detached proof and verification | Commands are sound; default signer is unambiguous only with an empty one-key home. Explicit `--local-user "$FPR"` improves recovery safety. Replace angle-bracket placeholders before running; they are not literal shell commands. |
+| Separate restore boots without card | Sound and valuable: prevents the card or prior agent standing in for the backup. Requires C03/C04 acceptance conditions. |
+| Out-only stick and read-only NUC use | Sound; never return it after NUC contact. Public signatures/key/proof text are appropriate; unpublished revocation material is not. |
+| Timing | Honestly labelled estimate; no finding. |
+
+For save behavior see [GnuPG key management](https://gnupg.org/documentation/manuals/gnupg/OpenPGP-Key-Management.html) and [2.2.40 keyedit.c](https://github.com/gpg/gnupg/blob/gnupg-2.2.40/g10/keyedit.c), `cmdKEYTOCARD`/`cmdSAVE`. No hardware behavior was inferred solely from a successful signature in the rehearsal.
+
+## Owner choices
+
+- **Hardware mode:** acceptable under A10.4.2, which also permits offline software custody. Backups deliberately remain exportable signing authority; PIN/touch do not protect their use. Every backup and its decryption secret belongs to the access-boundary analysis.
+- **LUKS2 with Disks defaults:** reasonable design but not a pinned setting as required by custody draft `:165`. Record exact tool/version, observed LUKS format, cipher/KDF parameters and protected secret-export format without secrets. The GUI description alone does not establish them. Do not treat this draft pinning rule as a registered demand for a particular cipher or two independent passwords.
+- **Same password for both layers of one key:** gives no independent second password barrier. For the stated thief-with-stick threat, compromising that password unlocks both layers; this does not contradict a registered two-password requirement (none found). A/B passwords must remain independent and generated offline. Seven-word physical-dice generation is a reasonable recommendation, not an adopted registered word count.
+- **Card KDF off:** removes PIN protection against passive USB observation. Defensible only under a trusted host/USB-path assumption; offline alone does not prevent a USB logger. KDF would not stop a malicious signing host that sees entered PINs or asks for unintended signatures. State the accepted boundary rather than “buys nothing.” No registered requirement for KDF-on was found.
+- **No expiry:** no contradiction found. Repository validity is evaluated through the configured signing interval; release authentication follows its separately authenticated lineage. Neither establishes automatic compromise detection/recovery. OpenPGP revocation is not evaluated by receipt verification (`docs/V1-CONTRACT.md:45`); retaining a certificate does not add that property.
+
+## Appended owner prechecks
+
+Each result concerns the reviewed document, not a general certification of the system.
+
+| Check | Result | Evidence and disposition |
+|---|---|---|
+| 1. Capture row | **PASS** | `CEREMONY.md:12–18,171–172` describes authority roles and required B independence; it never promises attacker-key rejection or visibility after DNS+git capture. Ground truth remains `docs/V1-CONTRACT.md:37–39,52–53,72`: honest material protected; fresh attacker-key receipts pass; no detection guarantee. B independence does not restore the cut listing. |
+| 2. Trigger clause | **PASS** | `CEREMONY.md:15–16` invokes A10.4.2's unconditional independence prerequisite, which applies under every option (`amendment-10.md:616,624–634`). It does not invoke fallback, claim deadline breach, or use the ceremony/rehearsal to declare the first-public-release gate closed. Required production release rehearsal and TEST rejection remain pending obligations (`:642–657`), not consequences demonstrated here. |
+| 3. Requester | **FAIL** | `CEREMONY.md:14–18,35–42` supports independence primarily with storage/session separation and does not identify who may submit work or how author approval binds to bytes. C07 supplies the concrete channel-captor/requester scenario. Deferral to §9 is legitimate scope separation, but prevents treating this ceremony as an independence argument. |
+| 4. Binding text | **PASS** | `CEREMONY.md:3–8,33–45` labels owner draft/choices; `:15–16` correctly attributes independence to adopted A10.4.2/row 34 (`amendment-10.md:624–643,770`). No schedule ruling budget or 24-hour FAILED rule is imported. Draft procedural omissions above are labelled draft gaps, not promoted to registered mandates. Owner choices remain proposals for author confirmation; no conflicting registered command/cipher/expiry mandate was found in the cited registration. |
+
+A production key-generation ceremony is not itself a verifier release. This review neither invokes the NARROW-MODEL fallback nor declares registration, release-format freeze compliance, TEST-rejection rehearsal, deployment identity, or the full release gate discharged.
+     1	# Key ceremony: repository root (YubiKey A) and release key (YubiKey B)
+     2	
+     3	> **Status: OWNER DRAFT, revision 2, 2026-11-02.** Revision 1 was reviewed by Codex
+     4	> (`docs/reviews/ceremony/CODEX-REVIEW.md`, C01–C07); this revision answers every finding (see the end).
+     5	> Basis: `docs/V1-RELEASE-KEY-CUSTODY-DRAFT.md` §5–§8 and the first rehearsal (`2026-11-01-rehearsal-1.md`). Key
+     6	> type from `docs/V1-PROFILE.md` §15.4: v4 ECDSA P-256. The rehearsal showed a key made this way, on the author's
+     7	> Tails stick and a YubiKey 5, signs in a form the verifier's git path accepts, and that touch was enforced.
+     8	> It generates the keys only. Using B for a production release needs the custody draft's §9 (independent review,
+     9	> exact-hash approval, controlled input media) implemented and rehearsed first; generating B does not close
+    10	> A10.4.2's independence requirement (C07).
+    11	> **Secret** values (PINs, passphrases, secret keys, backup locations) never go on paper you photograph, into chat,
+    12	> the repository or the NUC. **Non-secret** choices and results (versions, serials, fingerprints, pass/fail) go into
+    13	> the custody record in the repository.
+    14	
+    15	## Why two keys, two sessions, separate backups
+    16	
+    17	- **Repository root (A)** signs key-assertion commits and the end-of-issuance statement: the git channel's authority.
+    18	- **Release key (B)** signs verifier releases, which carry the trust file naming A. A relying party that installs a
+    19	  release authenticated by B trusts the repository keys it lists. So B must not be capturable together with A, the
+    20	  DNS credential or the AWS account (A10.4.2, registered).
+    21	- So each key gets its own session, passphrase, PINs and backup sticks, and A's and B's backups, papers and tokens are
+    22	  kept apart. Then finding one place yields at most one key's material. This does not defend shared hardware or boot
+    23	  firmware that is itself compromised (custody draft's peripheral assumption).
+    24	
+    25	## What you need (per key)
+    26	
+    27	| Item | Count | Notes |
+    28	|---|---|---|
+    29	| Tails boot stick | 1 (shared) | **Persistent Storage must not be unlocked** in these sessions. Boot only. |
+    30	| YubiKey | 1 | A or B, labelled. C and D stay spares. |
+    31	| Backup sticks | 2 | New, never in the NUC. `ROOT-BK1`/`ROOT-BK2` or `REL-BK1`/`REL-BK2`. |
+    32	| Out stick | 1 | New. Public files only. Goes to the NUC afterwards and never returns. |
+    33	| Paper | 2 sheets | Public sheet (versions, serial, fingerprint, hashes, pass/fail). Secret sheet (passphrase, PINs), kept apart from the backups. |
+    34	
+    35	Total new sticks for both keys: **6**.
+    36	
+    37	## Owner decisions (2026-11-02; recorded, not secret)
+    38	
+    39	- **Hardware mode**: the key lives on the YubiKey; the two backups are the only other copies, and they are
+    40	  exportable signing authority, protected only by their passphrase and where they are kept.
+    41	- **Backups**: the passphrase-protected secret-key export on a LUKS2 volume made by Tails' *Disks*. One passphrase
+    42	  per key serves both layers; this is one barrier, not two, and is accepted. A's and B's passphrases are independent.
+    43	  The actual LUKS parameters are read back and recorded (step S5.4).
+    44	- **Card KDF off.** It would keep the PIN off the USB wire. Accepted boundary: the host and its USB path are trusted
+    45	  for the session. KDF would not help against a hostile host, which sees the PIN anyway.
+    46	- **No expiry** on either key. Validity comes from the trust configuration's signing interval and release lineage.
+    47	- **Touch fixed (`uif … permanent`) and signature PIN forced.** If either cannot be confirmed, stop (step S8).
+    48	- **No reset code** on the card (retry counter shows 0 for it).
+    49	
+    50	## Before the first session (author)
+    51	
+    52	1. Note the Tails version and where its image signature was verified (a device that is not the NUC). The author
+    53	   names the signing hardware (the System76) and checks it for stored credentials and inbound access (custody draft
+    54	   §5): git/gh tokens, cloud CLIs, logged-in browsers, SSH server or `authorized_keys`. Record date and result.
+    55	2. Six new sticks, labelled.
+    56	
+    57	## Session 1: generate, back up, load the card (once per key, on separate boots)
+    58	
+    59	Network cable out, Wi-Fi off. At the Tails Welcome Screen: **do not unlock Persistent Storage**; set an
+    60	administration password (needed by *Disks*). Start Tails, open a terminal.
+    61	
+    62	**S0. Check the session.** Every check must hold, or stop.
+    63	```
+    64	cat /etc/os-release | grep -E 'PRETTY|VERSION'; gpg --version | head -2
+    65	ip -brief link | grep -v '^lo' ; ip route            # no route; ideally links DOWN
+    66	swapon --show                                        # prints nothing
+    67	findmnt -t ext4,vfat,ntfs,exfat,btrfs,xfs            # no internal disk mounted
+    68	export GNUPGHOME="$(mktemp -d /tmp/gnupg.XXXXXX)"; chmod 700 "$GNUPGHOME"
+    69	findmnt -T "$GNUPGHOME" -o TARGET,FSTYPE             # tmpfs or overlay in RAM, not a disk
+    70	```
+    71	Write the Tails and GnuPG versions on the public sheet. **Every later command runs in this same terminal**
+    72	(it carries `GNUPGHOME`). If you open another terminal, repeat the `export` line with the same path.
+    73	
+    74	**S1. Check the card.** Insert only the labelled YubiKey.
+    75	```
+    76	gpg --card-status
+    77	```
+    78	Yubico, no keys, PIN retries `3 0 3`, a `UIF setting` line. Write the serial on the label and the public sheet.
+    79	
+    80	**S2. New PINs** (never used elsewhere; on the secret sheet):
+    81	```
+    82	gpg --card-edit
+    83	admin
+    84	passwd
+    85	```
+    86	`3` admin PIN (default `12345678`), `1` user PIN (default `123456`), `q`, `q`.
+    87	If a PIN is refused: stop, run `gpg --card-status`, read the retry counter. Do not guess.
+    88	
+    89	**S3. Signature slot to P-256** (expert mode is required for P-256 on some GnuPG versions):
+    90	```
+    91	gpg --expert --card-edit
+    92	admin
+    93	key-attr
+    94	```
+    95	Signature key: `2` (ECC), then the **NIST P-256** entry (its number may differ; read the list). For the encryption
+    96	and authentication keys, choose the option that keeps the current attribute (or press Enter if offered). Admin
+    97	PIN. `q`. Then `gpg --card-status`: Key attributes must begin `nistp256`.
+    98	
+    99	**S4. Generate in memory:**
+   100	```
+   101	gpg --expert --full-generate-key
+   102	```
+   103	`10` (ECC, sign only), NIST P-256 entry, expiry `0`. Name `Tessera repository root` (A) or `Tessera release key`
+   104	(B); email `tessera@wamason.com`. Passphrase. Then:
+   105	```
+   106	gpg --list-secret-keys --with-fingerprint
+   107	FPR=<the 40 hex digits, no spaces>
+   108	gpg --list-keys "$FPR" >/dev/null && echo FPR-OK
+   109	```
+   110	Write the fingerprint on the public sheet; read it back.
+   111	
+   112	**S5. Two backups, one stick at a time.**
+   113	1. *Disks* → the stick → *Format Disk* (GPT) → `+` → *Internal disk for use with Linux systems only (Ext4)*,
+   114	   **Password protect volume (LUKS)**, passphrase, name `ROOT-BK1` (etc.). Unlock and mount it in *Files*.
+   115	2. Confirm it is the encrypted volume, then write and check each file (any `FAIL` → stop, see Failures):
+   116	```
+   117	B="/media/amnesia/ROOT-BK1"
+   118	lsblk -o NAME,TYPE,MOUNTPOINT | grep -B1 "$B" | grep -q crypt && echo LUKS-OK || echo FAIL-NOT-LUKS
+   119	gpg --export-secret-keys --armor "$FPR" > "$B/secret.asc" && test -s "$B/secret.asc" && echo SECRET-OK || echo FAIL
+   120	gpg --export --armor "$FPR" > "$B/public.asc" && test -s "$B/public.asc" && echo PUBLIC-OK || echo FAIL
+   121	cp "$GNUPGHOME/openpgp-revocs.d/$FPR.rev" "$B/revocation.rev" && test -s "$B/revocation.rev" && echo REV-OK || echo FAIL
+   122	sync; ls -l "$B"
+   123	```
+   124	3. Record the LUKS parameters (not secret): `sudo cryptsetup luksDump /dev/sdX1 | grep -E 'Version|Cipher|PBKDF'`
+   125	   (the partition shown by `lsblk`). Eject in *Files*; remove.
+   126	
+   127	**S6. Public key to the out stick:**
+   128	```
+   129	O="/media/amnesia/<OUT label>"
+   130	gpg --export --armor "$FPR" > "$O/root.pub.asc" && test -s "$O/root.pub.asc" && sha256sum "$O/root.pub.asc"
+   131	```
+   132	(`release.pub.asc` for B.) SHA-256 on the public sheet. Eject; remove. Nothing secret, and not the revocation
+   133	certificate, ever goes on this stick.
+   134	
+   135	**S7. Move the key to the card** (only after S5 printed every `-OK` for both sticks):
+   136	```
+   137	gpg --edit-key "$FPR"
+   138	keytocard
+   139	```
+   140	Answer **y** to "Really move the primary key?", choose `1` (signature key), passphrase, admin PIN, then `save`.
+   141	Then `gpg --card-status`: the signature key line shows your fingerprint. If not, see Failures (do not reset the card).
+   142	
+   143	**S8. Card policy, set and confirmed:**
+   144	```
+   145	gpg --card-status | grep -E 'Signature PIN|UIF'
+   146	```
+   147	- If it says `Signature PIN ....: not forced`: `gpg --card-edit`, `admin`, `forcesig`, `q`. Re-read: must say
+   148	  `forced`. (`forcesig` toggles; never run it when it already says forced.)
+   149	- `gpg --card-edit`, `admin`, `uif 1 permanent`, `q`. Re-read the UIF line: Sign must be on and permanent/fixed.
+   150	  If `uif` is an unknown command or the line does not confirm it: **stop**. Do not proceed without fixed touch.
+   151	
+   152	**S9. Prove the policy, not just a signature:**
+   153	1. Positive: sign, enter the user PIN, **touch when it blinks** (GnuPG does not prompt):
+   154	```
+   155	echo "tessera <root|release> ceremony $(date -u +%FT%TZ)" > ~/proof.txt
+   156	gpg --local-user "$FPR" --digest-algo SHA256 --armor --detach-sign ~/proof.txt && gpg --verify ~/proof.txt.asc ~/proof.txt
+   157	```
+   158	2. No touch: run the signing command again (output `~/nt.asc`), enter the PIN, **do not touch**. It must fail
+   159	   (timeout) and produce no signature.
+   160	3. Fresh PIN: sign once more (`~/p2.asc`). It must ask for the PIN again. Note whether it did.
+   161	4. `gpg --card-status`: record the signature counter (1 per successful signature).
+   162	Copy `proof.txt` and `proof.txt.asc` to the out stick for the owner's verifier check.
+   163	
+   164	**S10. Shut down.** Remove the YubiKey.
+   165	
+   166	## Session 2: tests in fresh boots (no secret key in memory at start)
+   167	
+   168	Each in its own boot, same S0 checks, YubiKey **not** inserted unless stated.
+   169	1. **Each backup** (twice: BK1, then BK2): unlock only that stick, then
+   170	   `gpg --import "$B/secret.asc"`; the fingerprint must equal the paper; sign and verify a test file with
+   171	   `--local-user "$FPR"`. Record pass/fail.
+   172	2. **The card alone**: insert only the YubiKey; `gpg --import` the public key from the out stick's hash-checked copy
+   173	   (or a backup's `public.asc`); `gpg --card-status` to link the card; sign and verify a test file (PIN, touch).
+   174	   This proves the card works without any residue of the generation session.
+   175	
+   176	**Acceptance:** S5 all `-OK`, S7 fingerprint on the card, S8 both policies confirmed, S9 steps 1–3 as expected,
+   177	Session 2 all three pass. Anything else: the key is not accepted (see Failures).
+   178	
+   179	## Failures (do the safe thing first)
+   180	
+   181	| What happened | Do this |
+   182	|---|---|
+   183	| Any S0 check fails | Stop. Shut down. Nothing secret exists yet. |
+   184	| A backup step prints FAIL | The key is still in memory. Do not continue to S7. Reformat that stick (or use a new one) and redo S5 for it. |
+   185	| `keytocard` fails or the card shows no key after S7 | Do not shut down: the RAM key and the backups remain. Read `gpg --card-status`. Retry S3/S7 once. If it still fails, shut down; the key survives on the backups; restore it in a new session onto another YubiKey later. Do not reset the card blindly. |
+   186	| A PIN is refused | Stop; read the retry counter. Never guess down to zero. |
+   187	| S8 cannot confirm forced PIN or fixed touch | Stop before S9. The card holds the key without its policy; record it; decide with the owner. |
+   188	| S9 no-touch test signs anyway | Policy failed: the key is not accepted. |
+   189	| A restore test fails | Not accepted until fixed: from the other good backup, in a new session, make a replacement backup on a new stick and retest it. |
+   190	| Both backups unusable | Generate a new key; the old fingerprint is discarded and never published. |
+   191	
+   192	## After both keys
+   193	
+   194	- **Storage (author):** each key's two backups in two different places; A's and B's material not together; secret
+   195	  sheets apart from backups. Tell the owner only "done".
+   196	- **Owner, on the NUC:** mount the out stick read-only; check each public key with the verifier's code (82-byte v4
+   197	  P-256 body) and the proof signatures; write the dated custody record: Tails and GnuPG versions, image verification
+   198	  device, signing hardware and its credential check, YubiKey serials, fingerprints, LUKS parameters, card policies
+   199	  read back, test results, this revision's hash, the rehearsal link, "backups in two places: yes". No secrets, no
+   200	  locations.
+   201	- **Independent fingerprint (author):** on a device that is not the NUC, compute the fingerprint from the public key
+   202	  file itself (not from a printed string) and compare with the paper.
+   203	- A's public key then enters the trust configuration's `repository_keys`. B's fingerprint is published through the
+   204	  channels the author names, and the dated first-production-release bootstrap record links it to the freeze
+   205	  baseline (A10.4.2).
+   206	
+   207	## Time
+   208	
+   209	Estimate per key: 45–60 minutes for Session 1, about 10 minutes per test boot in Session 2 (three per key).
+   210	The first real session will measure it.
+   211	
+   212	## Revision 2 changes (Codex C01–C07)
+   213	
+   214	C01 `--expert --card-edit` and read the curve list. C02 versions recorded at S0; touch confirmed by readback and the
+   215	no-touch test, stop if unconfirmed (the rehearsal's `uif` was accepted and touch was enforced, so the author's Tails
+   216	evidently has a GnuPG newer than 2.2.40). C03 no Persistent Storage, RAM `GNUPGHOME`, session checks, credential
+   217	check on the hardware. C04 checked exports, LUKS confirmation, acceptance conditions, failure table. C05 `forcesig`
+   218	read before toggling; no-touch and fresh-PIN tests; card-only test in a fresh boot. C06 non-secret choices recorded.
+   219	C07 B's production use waits for §9; independence of requesters is not claimed here.
+
+exec
+/bin/bash -lc "nl -ba docs/V1-CONTRACT.md | head -100; nl -ba docs/phase-0-prereg-amendment-10.md | sed -n '610,680p'; nl -ba docs/V1-RELEASE-KEY-CUSTODY-DRAFT.md | sed -n '90,280p'; ls tmp; gpg --version | head -3; rg --files tmp /tmp | rg 'card-util|keygen.c|gnupg' | head -35; nl -ba /home/tony/.codex/memories/MEMORY.md | sed -n '195,203p'" in /home/tony/projects/tessera
+ succeeded in 0ms:
+     1	# V1 service contract and failure model
+     2	
+     3	> **Status: OWNER DRAFT, 2026-10-19** (Claude Opus 5.5, owner instance). It restates what A9.1 and A10 already
+     4	> registered. It changes no registered sentence; if it disagrees with A9 or A10, they win and this page is wrong.
+     5	> Revised the same day after a full Codex review (`docs/reviews/v1-contract/CODEX-REVIEW.md`, VC-01 to VC-25, all
+     6	> applied; `DISPOSITION.md`). Purpose: one page that the formal models, the conformance cases, the service and the
+     7	> testers are all checked against, so that when two of them disagree we can see whether the contract, the model or
+     8	> the code is at fault (the author's method, travelog 2026-10-19).
+     9	
+    10	## 1. What a client gets
+    11	
+    12	The client sends bytes. Tessera returns a **receipt**: a bundle that anyone can check later, without Tessera
+    13	running and without our help.
+    14	
+    15	## 2. Guarantees
+    16	
+    17	**Conditions.** Every guarantee assumes the registered cryptographic, key-use, authority, chain-history and
+    18	distribution assumptions (A9:32–52, A9:128–136). In particular: nobody misused the service's signing capability,
+    19	SHA-256 and OpenTimestamps hold, and the checker's verifier release is authentic.
+    20	
+    21	When those hold, a checker who has the receipt, the published verifier and its trust configuration can establish:
+    22	
+    23	| # | Guarantee | Source |
+    24	|---|---|---|
+    25	| G1 | **Exact bytes.** The receipt binds these exact bytes. Change one bit and the check fails. | C1 |
+    26	| G2 | **Presented to Tessera.** The bytes were presented to the Tessera V1 service at some issuance. | C2 |
+    27	| G3 | **Both signatures.** Both of the service's keys signed. A missing, stripped or swapped signature fails. | C3 |
+    28	| G4 | **The keys were Tessera's.** DNSSEC (`_tessera-v1.wamason.com`, at the snapshot's own anchored time) and a signed git commit (at its own evidence time) named the keys for the service's domain. The git commit was in the Bitcoin chain at least 6 blocks before the receipt. | C4, A10.6 |
+    29	| G5 | **Existed by a block.** The signed bytes and both signatures existed before a specific Bitcoin block: the lowest-height qualifying block in the presented proof, confirmed 6 deep. | C5, A10.1, A10.5 |
+    30	| G6 | **A real-time bound, under an unchecked assumption.** A-UTC says at least one of that block and its 5 successors has a time stamp at most 2 hours behind when it was made. If A-UTC holds, the bytes existed before U (the latest of those 6 times, plus 2 hours). U is reported separately and never changes the verdict. | A10.1.1 |
+    31	| G7 | **Window, two checks only.** The declared issue time is not before the keys' window opened, and the chain time T is not after it closed. This does not prove the signing happened inside the window. | C4, A10.2 |
+    32	| G8 | **No Tessera needed.** The verdict depends only on the inputs above. | C6 |
+    33	| G9 | **A typed verdict.** Once the trust configuration is authenticated, the verifier returns `VALID_STRICT`, `INVALID` or `UNVERIFIABLE`, with a reason code and `revocation: NOT_EVALUATED`, `historical_security: NOT_EVALUATED`, `standing: ABSENT/NOT_ISSUED_IN_PROFILE`. Missing required evidence prevents acceptance. A valid receipt still leaves everything in §3 unestablished. If the trust configuration is not authenticated, there is no receipt verdict. | C7; A9.5 trust-configuration authority; V1-PROFILE §5 (`TRUST_CONFIG_UNAUTHENTICATED`) |
+    34	| G10 | **Honest receipts cannot be moved.** If an attacker takes over the DNS and git authority records while the service's own keys stay secret and unmisused, it cannot move honestly signed frames to other keys or bytes, or change their signer sets, whether they were signed before or after the takeover. | A10.4 |
+    35	**No G11.** The service-key listing (A10.4.1) is not in V1, by the author's ruling of 2026-10-23 (E9 row 2,
+    36	`docs/reviews/e9-packet/AUTHOR-RULINGS.md`; `docs/decisions/2026-10-19-listing-cut.md`). G10 holds while the independent release boundary of A9.5 holds.
+    37	**New receipts under an attacker's own keys pass when both authority channels are captured.**
+    38	
+    39	## 3. Not guaranteed
+    40	
+    41	Each of these is a deliberate limit, not a missing feature.
+    42	
+    43	- **Who submitted the bytes**, or that a replayed receipt suits the current transaction (case f).
+    44	- **What the bytes mean**, or that they are true. A contract inside the bytes is the checker's to verify (cases i, i′).
+    45	- **That a key was not revoked** (cases e, e′).
+    46	- **That an algorithm or a key was still safe** when it signed.
+    47	- **Any lower time bound or priority.** "Existed by" is never "existed after" or "came first".
+    48	- **Real time without A-UTC.** Without it, only chain order is claimed.
+    49	- **Standing** of any kind.
+    50	- **Separate control of the two keys.** One controller holds both. Capturing the issuing AWS account means both
+    51	  slots can sign.
+    52	- **Visibility.** Publishing the authority records is the issuer's duty; the verifier does not check it. V1
+    53	  guarantees no detection or public exposure of a capture, of new receipts, or of a release given to one party.
+    54	- **That DNSSEC shows publication before issue.**
+    55	- **Anything after a Bitcoin reorganization of 6 or more blocks.**
+    56	- **Renewal, degraded modes, or wrappers.** These are refused (`UNVERIFIABLE`), including honest ones (cases d2, h:
+    57	  the two registered false rejects).
+    58	- **One receipt per presentation.** A receipt id (SHA-256 of `A_sig`) names a receipt, not a presentation. Signing
+    59	  is randomized, so the same honest frames can carry more than one valid signature set and therefore more than one
+    60	  valid receipt, each with its own T. Each still meets G1–G10. (Owner, 2026-10-19, from finding E-02 of the first
+    61	  real run.)
+    62	- **Stability of T and U across different proofs.** A different proof or pin set can select a different block.
+    63	- **Protection for a checker who skips authenticating the verifier release** or runs a substituted one.
+    64	
+    65	## 4. Failure model
+    66	
+    67	| Failure or attacker | What still holds |
+    68	|---|---|
+    69	| Tessera disappears | Everything in §2, if the holder kept the receipt and the verifier release. Reconstruction after the project dies is not demonstrated. |
+    70	| Attacker alters a receipt or moves its signatures | Rejected (G1, G3, G10). |
+    71	| Attacker uses its own keys, authority records not captured | Rejected: the required authority evidence does not name them (G4). |
+    72	| Attacker captures both DNS and git authority records | Honest receipts protected (G10). New receipts under its own keys **pass** (the listing was cut). |
+    73	| Attacker captures the issuing AWS account | **Not protected.** It can issue receipts that verify. |
+    74	| Attacker steals the release key | Not protected: it can publish releases with a trust configuration of its choosing. This is distribution compromise, which A9 excludes (A9:47–52). A checker who installs no later release is unaffected. |
+    75	| Bitcoin miners lie about time | G5 holds (chain order). G6 holds only under A-UTC. |
+    76	| Bitcoin reorganizes fewer than 6 blocks | G5 holds. |
+    77	
+    78	## 5. Pairing: where each guarantee is checked
+    79	
+    80	The method needs every guarantee checked twice: once by a formal model or inspection, once by tests against the
+    81	implementation. When the two disagree, we fix the contract, the model or the code. This is a first mapping, not
+    82	yet checked case by case.
+    83	
+    84	**These are mappings, not pairs.** A pair, in the method's sense, runs the same scenario on both sides, so that a
+    85	disagreement means something. Here the model side and the test side were written separately, for different
+    86	scenarios, and none of the rows below runs one scenario through both. The tupay project's M1 found the same gap in
+    87	its own workflow ("the pairs were not pairs", `../tupay/experiments/M1-result.md`). Making real pairs (shared
+    88	scenarios, and a `derives: G…` tag on each case and model element) is post-freeze work. (Owner, 2026-10-21.)
+    89	
+    90	| # | Model side | Test side (`prototype/conformance/cases-index.json` groups) |
+    91	|---|---|---|
+    92	| G1 | P1, P8 (prose proof and vectors) | container, codec, field grammar, numbers, spec binding, receipt consistency, OTS |
+    93	| G2 | P1 | A9.1 mapping |
+    94	| G3 | P2, P3 | signature profile, possession, hybrid semantics, hybrid routing, hybrid positive, keys, receipt consistency |
+    95	| G4 | P10, S-P3: abstract authority and key binding only | DNSSEC, DNS record, git, chain order, authority isolation, pinned D |
+    96	| G5 | P5, P5c: temporal and confirmation rules. Existence before the block is an assumption, not modelled. | OTS, proofs, time |
+    97	| G6 | none | UTC assessment (UTC-01..UTC-10: honest, nonmonotone ×2, 2106 boundary, lowest-height segment, reported with INVALID and UNVERIFIABLE, null with T null ×3); `prototype/indep-verifier/tests/test_utc_assessment.py` (11 tests, including the real-1 receipt's headers 972187..972192); `prototype/e2e/tests/test_driver_dry.py::test_dry_run_utc_assessment`. Built 2026-10-19 (profile §7.4). A-UTC itself is unchecked by design |
+    98	| G7 | none (P5/P5c model related rules, not these endpoints) | time |
+    99	| G8 | P9: contract and code inspection; no discharging model is required | offline reproducibility vectors not built (`release checker` tests configuration updates) |
+   100	| G9 | P4 | dispatch, aggregation, A9.1 mapping, container (d2), trust config |
+   610	changed sentences are rows 25–33 and 37–39 of A10.7.
+   611	
+   612	### A10.4.2 Release-key custody — AUTHOR ADOPTED 2026-10-18 (recommended by the owner and Codex; gate timing by owner proposal, 2026-10-17), GATE
+   613	
+   614	Source: the decision memo, Part 2 ("Release independence"); its Codex review, F05; `docs/V1-PROFILE.md` §5 and
+   615	§14.2 items 1–2; the custody review `docs/reviews/custody/CODEX-REVIEW.md` (C01 and C02, HIGH); the owner's timing
+   616	proposal of 2026-10-17, recorded here. This section applies under every option of A10.4.
+   617	
+   618	**Author ruling, 2026-10-18** (`docs/reviews/amendment-10-r4/AUTHOR-RULINGS.md`): *"That's it.  The other three
+   619	items, while dense, seem rational are accepted."* And, confirming the owner's reading that this adopts A10.1.1,
+   620	A10.4 option (e) with A10.4.1 and A10.4.2: *"Yes. That's my understanding.  I focused on reading those sections of
+   621	the document.  A 10.4.2 stood out because you disagreed, but even for those where you were in agreement, I read what
+   622	was proposed and accepted the recommendation as being "rationally based.""*
+   623	
+   624	- **Prerequisite.** Independence of the release key from the DNS credential, the repository key and the issuing AWS
+   625	  account is an existing prerequisite of A9.5's trust-configuration authority (A9:326-332). It already protects
+   626	  V1's KSKs, repository trust and header pins against the channel captor, with or without the listing. It is still
+   627	  OPEN (profile §14.2 item 1; YubiKey 2 is not in hand).
+   628	- **Custody form.** Hardware or offline-software custody of the release key is acceptable **only** with a written
+   629	  custody and release-authorization procedure. The procedure states who authorizes releases, where signing occurs,
+   630	  and how backups stay outside the operational environment of the service. After the custody review it must also
+   631	  state (C01) the independent review-and-build environment that checks each candidate release against an approved
+   632	  baseline kept outside the operational environment and binds approval to the exact archive hash, and (C02) the
+   633	  controlled media crossing into and out of the signing session. The dated custody record names the procedure.
+   634	- **Hardware is not independence.** Buying hardware alone does not establish independence.
+   635	- **When: the first public verifier release, not the freeze.** The custody review found that real independence
+   636	  needs an independent review-and-sign environment and a controlled media crossing (C01, C02), which cannot be ready
+   637	  by 30 Oct. The *first public verifier release* is the first verifier release signed by the production release key
+   638	  and offered to relying parties.
+   639	  - **Frozen at the 30 Oct freeze:** this requirement; the release format (the release archive, the release-signature
+   640	    format, and how the trust-file hash binds to the release; profile §14.2 item 2), which must be frozen by 30 Oct;
+   641	    and the custody procedure's required contents (the bullet above).
+   642	  - **After the freeze, before the first public verifier release** (target: before the 20 Nov issuance milestone):
+   643	    the environment is built and rehearsed, the written procedure is reviewed, and independence is established.
+   644	- **Test releases.** Every verifier release made before that gate is signed with a separate TEST release key. Its
+   645	  public key is never published as the release key, never named in the freeze record or relying-party text, and
+   646	  never introduced by a production release. A pre-gate TEST signature cannot authenticate a production release.
+   647	  Production authentication must use the independently authenticated production release key and must reject TEST
+   648	  authority, including TEST provisioning overrides. This does not protect a user who skips authentication or
+   649	  acquires a substituted initial key.
+   650	  - *Offering restriction.* No pre-gate artifact is offered for production reliance: pre-gate releases are offered
+   651	    only as TEST releases, never as releases on which relying parties may rely.
+   652	  - *Required rehearsal.* Before the first public verifier release, a rehearsal must show that an otherwise correct
+   653	    archive with only a TEST signature is refused by the production acquisition and verification procedure,
+   654	    including when the TEST key is supplied through the test interface (profile §3.5's provisioning override).
+   655	    Missing or substituted bootstrap authority is not accepted as production merely because a signature verifies.
+   656	  - Profile §3.5 binds no production release; it supplies no evidence that the production path excludes TEST
+   657	    provisioning. The rehearsal is that evidence.
+   658	- **Risks and mitigations** (owner's proposal):
+   659	  1. *Schedule.* The schedule risk moves later. Mitigation: start preparing the environment and procedure early.
+   660	  2. *Post-freeze specification change.* Avoided: the release format is frozen by 30 Oct.
+   661	  3. *Convenience release* (a release signed outside the procedure because the environment is not ready). Closed for
+   662	     production authentication by the test-release rule and its rehearsal above.
+   663	  4. *The author's time in November.* Accepted by the author, 2026-10-17: *"(4) is acceptable to me"*. This
+   664	     accepted that risk only; his ruling on A10.4.2 is the 2026-10-18 ruling above.
+   665	  5. *Relying parties.* No pre-gate artifact is offered for production reliance (the offering restriction above),
+   666	     and production authentication rejects TEST authority. A user who skips authentication or acquires a substituted
+   667	     initial key is not protected; that is the existing distribution boundary (A9.5).
+   668	- **Bootstrap record.** Profile §5 and runbook §6 put the release public key's fingerprint in the freeze record.
+   669	  Under this timing the production release key need not exist at the freeze. Its fingerprint is therefore recorded
+   670	  in a dated first-production-release bootstrap record that identifies the original freeze baseline and the actual
+   671	  production key. The original freeze record is preserved; it is not amended to claim that the fingerprint was
+   672	  present on 30 Oct. Profile §5, §14.2 items 1–2 and runbook §6 are reconciled with this split between registration
+   673	  at the freeze and execution before the first public verifier release, after this amendment's signing commit.
+   674	- **Fallback.** If independence cannot be established before the first public verifier release, the author receives
+   675	  a NARROW-MODEL of the channel-capture claim (A9:41-42, as amended by rows 15 and 25) before that release. Cutting
+   676	  the listing does not cure it. A custody failure is never an automatic, invisible reversion of the threat model.
+   677	
+   678	The changed sentences are rows 34–36 of A10.7.
+   679	
+   680	## A10.5 Attestation selection, in stages — OWNER DECISION, CLARIFY (review A05)
+    90	4. No disk that contains recoverable release secrets can ever start a computer that has a network connection.
+    91	5. The laptop and the signing session must hold no credential for DNS, AWS, Google Cloud or the repository.
+    92	6. The NUC must have no access path to the laptop. The author keeps it so.
+    93	7. No medium that the NUC wrote can enter a signing session.
+    94	8. Only the author can authorize a release. The owner instance prepares releases.
+    95	
+    96	## 5. Machines and media
+    97	
+    98	### The laptop
+    99	
+   100	1. Before the rehearsal, the author must check the laptop for these items:
+   101	   - git credential helpers and stored git credentials;
+   102	   - GitHub CLI (`gh`) tokens;
+   103	   - cloud command-line tools with logins (AWS, Google Cloud);
+   104	   - browser sessions that are logged in to DNS, AWS, Google Cloud or the repository host;
+   105	   - inbound access: an SSH server, and entries in `~/.ssh/authorized_keys`.
+   106	2. The author must remove each credential and inbound path that the check finds.
+   107	3. The custody record must state the check date and the result, with no credential value.
+   108	
+   109	The laptop's `~/.ssh/config` shows no outbound credentials. The other items are not yet checked.
+   110	
+   111	### The review VM
+   112	
+   113	- Review and build work must run in a clean VM on the laptop. A VM on the NUC is not acceptable.
+   114	- The VM holds no secret. The author keeps a snapshot at each step for later audit.
+   115	- Snapshots help an audit. They do not make the VM independent of the NUC.
+   116	- The candidate reaches the VM by *(Author: say how, for example a fetch of a public repository commit)*.
+   117	  The VM treats the candidate as untrusted data.
+   118	
+   119	### The signing session
+   120	
+   121	The release key is used only in a fresh live-boot session. Each session must meet these conditions:
+   122	
+   123	1. The live image is *(Author: name the distribution and version)*.
+   124	2. The author must verify the image checksum and the distribution signature on a device independent of the NUC.
+   125	   *(Author: name that device.)*
+   126	3. The session must start from its own boot medium. It must not start from a transfer medium.
+   127	4. The session must not mount an internal disk. It must have no swap, no hibernation and no network.
+   128	5. Autorun of removable media must be off.
+   129	6. The session must not run or install any content of the candidate release.
+   130	7. The session must load no script or configuration from the NUC.
+   131	8. A new session must start after review or build work. Each signing operation uses a new session.
+   132	
+   133	*(Author: say which hardware runs the signing session, for example the laptop with its internal disk not mounted.)*
+   134	
+   135	### Transfer rules
+   136	
+   137	1. Each medium must have one role: boot, YubiKey backup, encrypted primary, input transfer or output transfer.
+   138	2. The NUC must never write an input transfer medium. The review VM writes it.
+   139	3. The input medium must contain only the approved archive and the public release key. Each is an inert file.
+   140	4. The session must copy the input files to memory and check their hashes against the paper record.
+   141	5. The author must disconnect the input medium before the release key is unlocked.
+   142	6. The output medium must receive only the signature and the allowlisted public record.
+   143	7. The author must shut down the session before the output medium goes to the NUC.
+   144	8. An output medium that the NUC touched must never return to a signing session.
+   145	
+   146	Peripheral assumption: read-only mounting does not authenticate a USB controller. A hostile USB device can act as a
+   147	keyboard or a boot device. This procedure keeps NUC-written devices out of the signing session. It does not resist
+   148	hostile firmware in a new USB device or in the signing hardware. *(Author: choose the transfer medium, for example
+   149	new USB drives used for one role, or write-once optical discs with a trusted reader.)*
+   150	
+   151	If the chosen setup cannot meet these rules, independence stays OPEN. The author-visible NARROW-MODEL route then
+   152	applies.
+   153	
+   154	## 6. Custody
+   155	
+   156	- **Primary:** a YubiKey 5 with the OpenPGP function. The YubiKeys arrive on 20 October 2026.
+   157	- **Fallback:** an encrypted key file on a separate encrypted primary medium. In this mode the key is exportable
+   158	  software. Only this offline procedure protects it. The YubiKey PIN and touch rules do not apply.
+   159	- **Backups:** two encrypted copies, each on its own medium, in two different places. Neither place is with the NUC.
+   160	  *(Author: confirm that two places exist. Do not tell the owner instance where.)*
+   161	- The custody record must state which primary is in use.
+   162	
+   163	Encryption and passphrase:
+   164	
+   165	1. The backup and primary encryption must use a pinned tool, format and setting. *(Author: name them.)*
+   166	2. The passphrase must be strong and unique. The author must generate it inside the offline boundary.
+   167	   *(Author: state the method, not the result.)*
+   168	3. The paper copy of the passphrase must be stored apart from the encrypted media.
+   169	4. The YubiKey PINs and reset code must be new values, not operational passwords.
+   170	
+   171	Secret handling:
+   172	
+   173	- Never put a passphrase, PIN, reset code, secret-key export or unpublished revocation certificate into the
+   174	  repository, an AI chat, the NUC password store or a command transcript. Never put a screenshot of one there.
+   175	- Type each secret only into a local protected prompt, never as a command argument.
+   176	- Records contain settings and pass or fail results only.
+   177	- Keep the revocation certificate offline until its authorized use. It is not part of the public ceremony record.
+   178	
+   179	## 7. YubiKey configuration
+   180	
+   181	Do these steps offline in a signing session, after the author chooses the model, firmware and `ykman` version.
+   182	
+   183	1. Label the release YubiKey apart from the repository YubiKey and the second-key hardware.
+   184	2. Put no operational credential on the release YubiKey.
+   185	3. Change the default user PIN and admin PIN.
+   186	4. Set an independent reset code under the same secret rules, or record that no reset code exists.
+   187	   *(Author: choose.)*
+   188	5. Set the signature PIN policy to `always`. Set touch for the signing slot to `fixed`. `fixed` stops anyone
+   189	   from turning touch off without deleting the private key.
+   190	
+   191	```text
+   192	ykman openpgp access set-signature-policy always
+   193	ykman openpgp keys set-touch sig fixed
+   194	```
+   195	
+   196	6. Read back the settings from the actual YubiKey.
+   197	7. Test that signing fails without touch. Test that a second signing request needs a new PIN.
+   198	8. Record the caching behavior of the GnuPG agent. The YubiKey setting alone does not show a fresh prompt.
+   199	9. Never use up the retry counters of the production YubiKey on purpose.
+   200	10. Record the model, firmware, settings and results. Never record a PIN value.
+   201	11. Disconnect the YubiKey immediately after each approved operation.
+   202	
+   203	Touch confirms that a person is present. Touch does not confirm which archive the YubiKey signs. The approval steps
+   204	remain necessary.
+   205	
+   206	## 8. Key ceremony (once)
+   207	
+   208	Rehearse the whole ceremony with a throwaway key first (see "Rehearsal").
+   209	
+   210	1. Start a signing session. Set the GnuPG home to a temporary folder in memory.
+   211	2. Generate the release key (OpenPGP, ECDSA P-256). Write its full fingerprint on paper.
+   212	3. Make the two encrypted backups. In file mode, also make the encrypted primary medium.
+   213	4. List each intended persistent copy by a non-secret label.
+   214	5. In hardware mode, load the key into the YubiKey and configure it (see "YubiKey configuration").
+   215	6. Export the public key to the output medium. Never export a secret key to a transfer medium.
+   216	7. Delete the temporary exports and keyring. Stop the GnuPG agent. Detach every protected medium.
+   217	8. Shut down the session.
+   218	9. For each backup, start a new session with a new temporary keyring. Restore that backup only.
+   219	10. Compare the full fingerprint with the paper. Make a test signature and verify it.
+   220	11. In a separate session, test the selected primary in the same way.
+   221	12. A cached key or unlocked agent must never stand in for the copy under test.
+   222	
+   223	Persistent copies after the ceremony:
+   224	
+   225	- Hardware mode: the YubiKey and the two encrypted backups only.
+   226	- File mode: the encrypted primary medium and the two encrypted backups only.
+   227	- None of these media can be used for transfer, boot or operational storage. None can touch the NUC.
+   228	
+   229	The session runs in memory, so it creates no plaintext secret on a disk. Do not describe ordinary file deletion as
+   230	proven erasure. *(Author: if any persistent residue cannot be avoided, state the selected method.)*
+   231	
+   232	Public-key bootstrap:
+   233	
+   234	1. On a device independent of the NUC, compute the full fingerprint of the exported public key.
+   235	2. Compare it with the paper.
+   236	3. After publication, check the actual key and fingerprint in each place: the freeze record, the verifier
+   237	   documentation and the user documentation.
+   238	4. Keep the approved public key and fingerprint outside the NUC.
+   239	5. Give users one authenticated way to get the fingerprint that does not pass through the NUC, the repository or
+   240	   DNS. *(Author: name it, or state authenticated first acquisition as an assumption with a concrete delivery
+   241	   method.)*
+   242	
+   243	Two matching web publications alone do not authenticate the release key.
+   244	
+   245	Custody record: write a dated record with the fingerprint, the custody mode, the procedure revision and hash, the
+   246	signing setup, the laptop credential check, and confirmation that the backups are in two places. Do not record
+   247	where they are. Link the rehearsal record.
+   248	
+   249	## 9. Each release
+   250	
+   251	Preparation on the NUC:
+   252	
+   253	1. The owner instance must prepare the verifier release and its trust file.
+   254	2. It must write a release summary that lists every change from the last approved release.
+   255	3. It must include the SHA-256 hash of the release archive.
+   256	4. The author must check the actual release through the independent approval steps below.
+   257	
+   258	The summary does not replace those steps.
+   259	
+   260	Independent approval in the review VM:
+   261	
+   262	1. The author must keep the approved baseline outside the NUC.
+   263	2. For the first release, the author must create the baseline independently. The first NUC summary is not the
+   264	   baseline. *(Author: say how you create it.)*
+   265	3. Check the actual candidate source and trust file against the baseline.
+   266	4. Use a trusted, version-pinned release checker. *(Author: name the checker and its pinned hash.)*
+   267	5. The checker must check the existing release invariants: unchanged entries and pins, nondecreasing `as_of`,
+   268	   version plus one, the `previous_sha256` chain, and no retroactive close of an open end.
+   269	6. If the service-key list is adopted, the checker must also check the complete initial schedule, non-overlap of
+   270	   windows, and `not_before` later than the previous `as_of`.
+   271	7. Reject every unexplained change, including deletions and changes to verifier code.
+   272	8. Check each new service-key fingerprint and window against the authorization record.
+   273	9. A match with the two authority records must never authorize an entry.
+   274	10. For other new trust entries, record their non-secret source.
+   275	11. Build the reviewed source in the review VM.
+   276	12. Check that the built verifier contains the approved trust-file hash and the frozen catalog binding.
+   277	13. Record the approved hashes: the archive, the trust file and the catalog.
+   278	14. Record the author's decision. Write the approved archive and the public key to a new input medium.
+   279	
+   280	*(Author: say how you obtain each service-key fingerprint without the NUC and the two authority records.)*
+2026-10-21-to-tessera-evidence-reply.md
+2026-10-26-from-tupay-T1-families.md
+2026-11-01 16.58.26.jpg
+2603.01092v2.pdf
+2603.01092v2.txt
+claude-resume.sh
+codex-resume.sh
+draft-ietf-scitt-architecture
+first-link-decision-incorporation-plan.md
+scitt-ccf-ledger
+gpg (GnuPG) 2.4.4
+libgcrypt 1.10.3
+Copyright (C) 2024 g10 Code GmbH
+rg: /tmp/arangod_tvNa3U: Permission denied (os error 13)
+rg: /tmp/systemd-private-7f414f000e8e4e43aa01cb4ec8910e76-systemd-timesyncd.service-31tzoe: Permission denied (os error 13)
+rg: /tmp/systemd-private-7f414f000e8e4e43aa01cb4ec8910e76-systemd-resolved.service-Yx9iYT: Permission denied (os error 13)
+rg: /tmp/snap-private-tmp: Permission denied (os error 13)
+rg: /tmp/systemd-private-7f414f000e8e4e43aa01cb4ec8910e76-systemd-logind.service-eRvPYH: Permission denied (os error 13)
+rg: /tmp/systemd-private-7f414f000e8e4e43aa01cb4ec8910e76-polkit.service-8z6YW1: Permission denied (os error 13)
+/tmp/ceremony-card-util.c
+/tmp/ceremony-keygen.c
+/tmp/ceremony-debian/debian/gnupg-l10n.install
+/tmp/ceremony-debian/debian/gnupg-l10n.lintian-overrides
+/tmp/ceremony-debian/debian/gnupg.docs
+/tmp/ceremony-debian/debian/org.gnupg.scdaemon.metainfo.xml
+/tmp/ceremony-debian/debian/gnupg.manpages
+/tmp/ceremony-debian/debian/patches/from-master/common-Use-gnupg_spawn_process_fd-to-invoke-gpg-agent-dir.patch
+/tmp/ceremony-debian/debian/gnupg2.links
+/tmp/ceremony-debian/debian/gnupg.info
+/tmp/ceremony-debian/debian/gnupg-utils.install
+/tmp/ceremony-debian/debian/gnupg-utils.manpages
+/tmp/ceremony-debian/debian/gnupg.README.Debian
+/tmp/claude-1000/-home-tony-projects-tessera/5fc8528b-3eee-4332-8b2b-f28be30c1f20/scratchpad/rehearsal/gnupg/pubring.kbx
+/tmp/claude-1000/-home-tony-projects-tessera/5fc8528b-3eee-4332-8b2b-f28be30c1f20/scratchpad/rehearsal/gnupg/trustdb.gpg
+/tmp/claude-1000/-home-tony-projects-tessera/5fc8528b-3eee-4332-8b2b-f28be30c1f20/scratchpad/rehearsal/gnupg/pubring.kbx~
+/tmp/claude-1000/-home-tony-projects-tessera/16483c92-5631-49da-bf51-d0bf4b3f570d/scratchpad/tmp.EwUSp3Doxi/gnupg/private-keys-v1.d/6C761403C79B26440B1CB1C7897621CF7CD92A9E.key
+/tmp/claude-1000/-home-tony-projects-tessera/16483c92-5631-49da-bf51-d0bf4b3f570d/scratchpad/tmp.EwUSp3Doxi/gnupg/openpgp-revocs.d/EA7B4FAF7EE6DA96917D6334AB985CC668D0AF5F.rev
+/tmp/claude-1000/-home-tony-projects-tessera/16483c92-5631-49da-bf51-d0bf4b3f570d/scratchpad/tmp.EwUSp3Doxi/gnupg/pubring.kbx
+/tmp/claude-1000/-home-tony-projects-tessera/16483c92-5631-49da-bf51-d0bf4b3f570d/scratchpad/tmp.EwUSp3Doxi/gnupg/trustdb.gpg
+/tmp/claude-1000/-home-tony-projects-tessera/16483c92-5631-49da-bf51-d0bf4b3f570d/scratchpad/tmp.EwUSp3Doxi/gnupg/pubring.kbx~
+/tmp/claude-1000/-home-tony-projects-tessera/a1b70626-5b1f-4d0a-a2c0-4c3f34488ac6/scratchpad/wt-o0KtPd/run-dry/repo-key/gnupghome-iy8jyvua/gpg.conf
+/tmp/claude-1000/-home-tony-projects-tessera/a1b70626-5b1f-4d0a-a2c0-4c3f34488ac6/scratchpad/wt-o0KtPd/run-dry/repo-key/gnupghome-iy8jyvua/private-keys-v1.d/D5895D8587A2A76310404EBFED819DB05DDEDAA2.key
+/tmp/claude-1000/-home-tony-projects-tessera/a1b70626-5b1f-4d0a-a2c0-4c3f34488ac6/scratchpad/wt-o0KtPd/run-dry/repo-key/gnupghome-iy8jyvua/openpgp-revocs.d/BB1E832E22BAD49C334A1706126C4C6788B4C4F9.rev
+/tmp/claude-1000/-home-tony-projects-tessera/a1b70626-5b1f-4d0a-a2c0-4c3f34488ac6/scratchpad/wt-o0KtPd/run-dry/repo-key/gnupghome-iy8jyvua/pubring.kbx
+/tmp/claude-1000/-home-tony-projects-tessera/a1b70626-5b1f-4d0a-a2c0-4c3f34488ac6/scratchpad/wt-o0KtPd/run-dry/repo-key/gnupghome-iy8jyvua/trustdb.gpg
+/tmp/claude-1000/-home-tony-projects-tessera/a1b70626-5b1f-4d0a-a2c0-4c3f34488ac6/scratchpad/wt-o0KtPd/run-dry/repo-key/gnupghome-iy8jyvua/pubring.kbx~
+/tmp/claude-1000/-home-tony-projects-tessera/a1b70626-5b1f-4d0a-a2c0-4c3f34488ac6/scratchpad/dl/gnupg/gnupg-2.4.4.tar.bz2.sig
+/tmp/claude-1000/-home-tony-projects-tessera/a1b70626-5b1f-4d0a-a2c0-4c3f34488ac6/scratchpad/dl/gnupg/gnupg-2.4.4.tar.bz2
+/tmp/claude-1000/-home-tony-projects-tessera/a1b70626-5b1f-4d0a-a2c0-4c3f34488ac6/scratchpad/dl/gnupg/gnupg-2.4.4.tar.bz2.time
+   195	
+   196	- The revised handoff reconciled six choices as two settled construction choices plus four contestable choices; it puts the capstone claim, adversary, and limits first, calls enrollment a measurement limitation, and requires author decisions before revision/review/freeze. [Task 1]
+   197	- The freeze is the author's commit containing `PREDICTIONS.md`: no capstone model may be written or run before it; afterward builders do not edit predictions, results go to `RESULTS.md`, property changes require dated amendments, and a non-author cross-family falsification review follows. [Task 1]
+   198	- The routed `REFUSAL` fork is to exercise an honest refusal-tagged signer and add query/companion by amendment, or leave REFUSAL declared-but-unexercised with the composed tag property inert. [Task 1]
+   199	- Verification workflow: compare every handoff claim against registration; inspect exact ranges and counts; validate staging pathspecs and changed-path coverage; state explicitly when document review ran no models. The recorded review found 17 records, 99 `cap*.pv` of 130 total models, existing staging paths, and `changed paths outside package: []`. [Task 1]
+   200	- Capstone scope is finite (two authority channels, signer sets <=2, wrapper depth <=2, two attempts). Symbolic outcomes do not establish concrete encoding, implementation fidelity, real cryptographic strength, historical trust-anchor correctness, chain availability, or TLA+ correspondence. [Task 1]
+   201	- Related skill: skills/tessera-formal-review/SKILL.md. [Task 1]
+   202	
+   203	## Failures and how to do differently
+
+web search: 
+web search: https://raw.githubusercontent.com/gpg/gnupg/gnupg-2.4.8/g10/card-util.c
+codex
+Revision 2 adds the RAM GnuPG home, checked exports, policy tests and a clear deferral of release authorization. I’m checking the command details against upstream GnuPG source and tracing failure recovery. Session 2 repeats the isolation checks, but its new boots do not yet have explicit instructions to reassign the backup path and fingerprint variables.
+exec
+/bin/bash -lc "curl -fsSL https://raw.githubusercontent.com/gpg/gnupg/gnupg-2.4.8/g10/card-util.c -o /tmp/confirm-card248.c
+curl -fsSL https://raw.githubusercontent.com/gpg/gnupg/gnupg-2.4.4/g10/card-util.c -o /tmp/confirm-card244.c
+rg -n 'uif|UIF|permanent|forced|ask_card_keyattr' /tmp/confirm-card248.c /tmp/confirm-card244.c /tmp/ceremony-card-util.c
+sed -n '1700,1830p' /tmp/confirm-card248.c
+nl -ba docs/V1-RELEASE-KEY-CUSTODY-DRAFT.md | sed -n '175,247p'
+git rev-parse HEAD
+sha256sum docs/ceremony/CEREMONY.md
+cat /home/tony/.codex/plugins/cache/openai-curated-remote/superpowers/7.0.1/skills/verification-before-completion/SKILL.md" in /home/tony/projects/tessera
+ succeeded in 364ms:
+/tmp/ceremony-card-util.c:582:                   info.chv1_cached? _("not forced"): _("forced"));
+/tmp/ceremony-card-util.c:1273:check_pin_for_key_operation (struct agent_card_info_s *info, int *forced_chv1)
+/tmp/ceremony-card-util.c:1277:  *forced_chv1 = !info->chv1_cached;
+/tmp/ceremony-card-util.c:1278:  if (*forced_chv1)
+/tmp/ceremony-card-util.c:1279:    { /* Switch off the forced mode so that during key generation we
+/tmp/ceremony-card-util.c:1285:          log_error ("error clearing forced signature PIN flag: %s\n",
+/tmp/ceremony-card-util.c:1287:          *forced_chv1 = 0;
+/tmp/ceremony-card-util.c:1307:restore_forced_chv1 (int *forced_chv1)
+/tmp/ceremony-card-util.c:1311:  if (*forced_chv1)
+/tmp/ceremony-card-util.c:1312:    { /* Switch back to forced state. */
+/tmp/ceremony-card-util.c:1316:          log_error ("error setting forced signature PIN flag: %s\n",
+/tmp/ceremony-card-util.c:1421:ask_card_keyattr (int keyno, const struct key_attr *current)
+/tmp/ceremony-card-util.c:1593:      if ((key_attr = ask_card_keyattr (keyno, &info.key_attr[keyno])))
+/tmp/ceremony-card-util.c:1618:  int forced_chv1;
+/tmp/ceremony-card-util.c:1668:  if (check_pin_for_key_operation (&info, &forced_chv1))
+/tmp/ceremony-card-util.c:1675:  restore_forced_chv1 (&forced_chv1);
+/tmp/ceremony-card-util.c:1686:  int forced_chv1 = 0;
+/tmp/ceremony-card-util.c:1725:  err = check_pin_for_key_operation (&info, &forced_chv1);
+/tmp/ceremony-card-util.c:1733:  restore_forced_chv1 (&forced_chv1);
+/tmp/confirm-card244.c:544:          es_fprintf (fp, "uif:%d:%d:%d:\n",
+/tmp/confirm-card244.c:545:                      info.uif[0], info.uif[1], info.uif[2]);
+/tmp/confirm-card244.c:626:                   info.chv1_cached? _("not forced"): _("forced"));
+/tmp/confirm-card244.c:671:          tty_fprintf (fp, "UIF setting ......: Sign=%s Decrypt=%s Auth=%s\n",
+/tmp/confirm-card244.c:672:                       info.uif[0] ? "on" : "off", info.uif[1] ? "on" : "off",
+/tmp/confirm-card244.c:673:                       info.uif[2] ? "on" : "off");
+/tmp/confirm-card244.c:1333:check_pin_for_key_operation (struct agent_card_info_s *info, int *forced_chv1)
+/tmp/confirm-card244.c:1337:  *forced_chv1 = !info->chv1_cached;
+/tmp/confirm-card244.c:1338:  if (*forced_chv1)
+/tmp/confirm-card244.c:1339:    { /* Switch off the forced mode so that during key generation we
+/tmp/confirm-card244.c:1345:          log_error ("error clearing forced signature PIN flag: %s\n",
+/tmp/confirm-card244.c:1347:          *forced_chv1 = 0;
+/tmp/confirm-card244.c:1367:restore_forced_chv1 (int *forced_chv1)
+/tmp/confirm-card244.c:1371:  if (*forced_chv1)
+/tmp/confirm-card244.c:1372:    { /* Switch back to forced state. */
+/tmp/confirm-card244.c:1376:          log_error ("error setting forced signature PIN flag: %s\n",
+/tmp/confirm-card244.c:1480:ask_card_keyattr (int keyno, const struct key_attr *current)
+/tmp/confirm-card244.c:1655:      if ((key_attr = ask_card_keyattr (keyno, &info.key_attr[keyno])))
+/tmp/confirm-card244.c:1680:  int forced_chv1;
+/tmp/confirm-card244.c:1730:  if (check_pin_for_key_operation (&info, &forced_chv1))
+/tmp/confirm-card244.c:1737:  restore_forced_chv1 (&forced_chv1);
+/tmp/confirm-card244.c:1748:  int forced_chv1 = 0;
+/tmp/confirm-card244.c:1787:  err = check_pin_for_key_operation (&info, &forced_chv1);
+/tmp/confirm-card244.c:1795:  restore_forced_chv1 (&forced_chv1);
+/tmp/confirm-card244.c:2223:uif (int arg_number, const char *arg_rest)
+/tmp/confirm-card244.c:2250:  snprintf (name, sizeof name, "UIF-%d", arg_number);
+/tmp/confirm-card244.c:2255:  else if ( !strcmp (arg_rest, "permanent") )
+/tmp/confirm-card244.c:2262:    log_error (_("error for setup UIF: %s\n"), gpg_strerror (err));
+/tmp/confirm-card244.c:2274:    cmdKEYATTR, cmdUIF, cmdOPENPGP,
+/tmp/confirm-card244.c:2311:    { "uif", cmdUIF, 1, N_("change the User Interaction Flag")},
+/tmp/confirm-card244.c:2604:        case cmdUIF:
+/tmp/confirm-card244.c:2606:            tty_printf ("usage: uif N [on|off|permanent]\n"
+/tmp/confirm-card244.c:2609:            uif (arg_number, arg_rest);
+/tmp/confirm-card248.c:544:          es_fprintf (fp, "uif:%d:%d:%d:\n",
+/tmp/confirm-card248.c:545:                      info.uif[0], info.uif[1], info.uif[2]);
+/tmp/confirm-card248.c:626:                   info.chv1_cached? _("not forced"): _("forced"));
+/tmp/confirm-card248.c:671:          tty_fprintf (fp, "UIF setting ......: Sign=%s Decrypt=%s Auth=%s\n",
+/tmp/confirm-card248.c:672:                       info.uif[0] ? "on" : "off", info.uif[1] ? "on" : "off",
+/tmp/confirm-card248.c:673:                       info.uif[2] ? "on" : "off");
+/tmp/confirm-card248.c:1333:check_pin_for_key_operation (struct agent_card_info_s *info, int *forced_chv1)
+/tmp/confirm-card248.c:1337:  *forced_chv1 = !info->chv1_cached;
+/tmp/confirm-card248.c:1338:  if (*forced_chv1)
+/tmp/confirm-card248.c:1339:    { /* Switch off the forced mode so that during key generation we
+/tmp/confirm-card248.c:1345:          log_error ("error clearing forced signature PIN flag: %s\n",
+/tmp/confirm-card248.c:1347:          *forced_chv1 = 0;
+/tmp/confirm-card248.c:1367:restore_forced_chv1 (int *forced_chv1)
+/tmp/confirm-card248.c:1371:  if (*forced_chv1)
+/tmp/confirm-card248.c:1372:    { /* Switch back to forced state. */
+/tmp/confirm-card248.c:1376:          log_error ("error setting forced signature PIN flag: %s\n",
+/tmp/confirm-card248.c:1480:ask_card_keyattr (int keyno, const struct key_attr *current)
+/tmp/confirm-card248.c:1655:      if ((key_attr = ask_card_keyattr (keyno, &info.key_attr[keyno])))
+/tmp/confirm-card248.c:1680:  int forced_chv1;
+/tmp/confirm-card248.c:1730:  if (check_pin_for_key_operation (&info, &forced_chv1))
+/tmp/confirm-card248.c:1737:  restore_forced_chv1 (&forced_chv1);
+/tmp/confirm-card248.c:1748:  int forced_chv1 = 0;
+/tmp/confirm-card248.c:1787:  err = check_pin_for_key_operation (&info, &forced_chv1);
+/tmp/confirm-card248.c:1795:  restore_forced_chv1 (&forced_chv1);
+/tmp/confirm-card248.c:2223:uif (int arg_number, const char *arg_rest)
+/tmp/confirm-card248.c:2250:  snprintf (name, sizeof name, "UIF-%d", arg_number);
+/tmp/confirm-card248.c:2255:  else if ( !strcmp (arg_rest, "permanent") )
+/tmp/confirm-card248.c:2262:    log_error (_("error for setup UIF: %s\n"), gpg_strerror (err));
+/tmp/confirm-card248.c:2274:    cmdKEYATTR, cmdUIF, cmdOPENPGP,
+/tmp/confirm-card248.c:2311:    { "uif", cmdUIF, 1, N_("change the User Interaction Flag")},
+/tmp/confirm-card248.c:2604:        case cmdUIF:
+/tmp/confirm-card248.c:2606:            tty_printf ("usage: uif N [on|off|permanent]\n"
+/tmp/confirm-card248.c:2609:            uif (arg_number, arg_rest);
+    want_backup = 0;
+
+  if ( (info.fpr1len && !fpr_is_zero (info.fpr1, info.fpr1len))
+       || (info.fpr2len && !fpr_is_zero (info.fpr2, info.fpr2len))
+       || (info.fpr3len && !fpr_is_zero (info.fpr3, info.fpr3len)))
+    {
+      tty_printf ("\n");
+      log_info (_("Note: keys are already stored on the card!\n"));
+      tty_printf ("\n");
+      if ( !cpr_get_answer_is_yes ("cardedit.genkeys.replace_keys",
+                                   _("Replace existing keys? (y/N) ")))
+        {
+          agent_release_card_info (&info);
+          return;
+        }
+    }
+
+  /* If no displayed name has been set, we assume that this is a fresh
+     card and print a hint about the default PINs.  */
+  if (!info.disp_name || !*info.disp_name)
+    {
+      tty_printf ("\n");
+      tty_printf (_("Please note that the factory settings of the PINs are\n"
+                    "   PIN = '%s'     Admin PIN = '%s'\n"
+                    "You should change them using the command --change-pin\n"),
+                  "123456", "12345678");
+      tty_printf ("\n");
+    }
+
+
+  if (check_pin_for_key_operation (&info, &forced_chv1))
+    goto leave;
+
+  generate_keypair (ctrl, 1, NULL, info.serialno, want_backup);
+
+ leave:
+  agent_release_card_info (&info);
+  restore_forced_chv1 (&forced_chv1);
+}
+
+
+/* This function is used by the key edit menu to generate an arbitrary
+   subkey. */
+gpg_error_t
+card_generate_subkey (ctrl_t ctrl, kbnode_t pub_keyblock)
+{
+  gpg_error_t err;
+  struct agent_card_info_s info;
+  int forced_chv1 = 0;
+  int keyno;
+
+  err = get_info_for_key_operation (&info);
+  if (err)
+    return err;
+
+  show_card_key_info (&info);
+
+  tty_printf (_("Please select the type of key to generate:\n"));
+
+  tty_printf (_("   (1) Signature key\n"));
+  tty_printf (_("   (2) Encryption key\n"));
+  tty_printf (_("   (3) Authentication key\n"));
+
+  for (;;)
+    {
+      char *answer = cpr_get ("cardedit.genkeys.subkeytype",
+                              _("Your selection? "));
+      cpr_kill_prompt();
+      if (*answer == CONTROL_D)
+        {
+          xfree (answer);
+          err = gpg_error (GPG_ERR_CANCELED);
+          goto leave;
+        }
+      keyno = *answer? atoi(answer): 0;
+      xfree(answer);
+      if (keyno >= 1 && keyno <= 3)
+        break; /* Okay. */
+      tty_printf(_("Invalid selection.\n"));
+    }
+
+  if (replace_existing_key_p (&info, keyno) < 0)
+    {
+      err = gpg_error (GPG_ERR_CANCELED);
+      goto leave;
+    }
+
+  err = check_pin_for_key_operation (&info, &forced_chv1);
+  if (err)
+    goto leave;
+
+  err = generate_card_subkeypair (ctrl, pub_keyblock, keyno, info.serialno);
+
+ leave:
+  agent_release_card_info (&info);
+  restore_forced_chv1 (&forced_chv1);
+  return err;
+}
+
+
+/* Store the key at NODE into the smartcard and modify NODE to carry
+   the serialno stuff instead of the actual secret key parameters.
+   USE is the usage for that key; 0 means any usage.  If
+   PROCESSED_KEYS is not NULL it is a poiter to an strlist which will
+   be filled with the keygrips of successfully stored keys.  */
+int
+card_store_subkey (KBNODE node, int use, strlist_t *processed_keys)
+{
+  struct agent_card_info_s info;
+  int okay = 0;
+  unsigned int nbits;
+  int allow_keyno[3];
+  int  keyno;
+  PKT_public_key *pk;
+  gpg_error_t err;
+  char *hexgrip = NULL;
+  int rc;
+  char *ecdh_param_str = NULL;
+  gnupg_isotime_t timebuf;
+
+  log_assert (node->pkt->pkttype == PKT_PUBLIC_KEY
+              || node->pkt->pkttype == PKT_PUBLIC_SUBKEY);
+
+  pk = node->pkt->pkt.public_key;
+
+  if (get_info_for_key_operation (&info))
+    return 0;
+
+  if (!info.extcap.ki)
+    {
+      tty_printf ("The card does not support the import of keys\n");
+   175	- Type each secret only into a local protected prompt, never as a command argument.
+   176	- Records contain settings and pass or fail results only.
+   177	- Keep the revocation certificate offline until its authorized use. It is not part of the public ceremony record.
+   178	
+   179	## 7. YubiKey configuration
+   180	
+   181	Do these steps offline in a signing session, after the author chooses the model, firmware and `ykman` version.
+   182	
+   183	1. Label the release YubiKey apart from the repository YubiKey and the second-key hardware.
+   184	2. Put no operational credential on the release YubiKey.
+   185	3. Change the default user PIN and admin PIN.
+   186	4. Set an independent reset code under the same secret rules, or record that no reset code exists.
+   187	   *(Author: choose.)*
+   188	5. Set the signature PIN policy to `always`. Set touch for the signing slot to `fixed`. `fixed` stops anyone
+   189	   from turning touch off without deleting the private key.
+   190	
+   191	```text
+   192	ykman openpgp access set-signature-policy always
+   193	ykman openpgp keys set-touch sig fixed
+   194	```
+   195	
+   196	6. Read back the settings from the actual YubiKey.
+   197	7. Test that signing fails without touch. Test that a second signing request needs a new PIN.
+   198	8. Record the caching behavior of the GnuPG agent. The YubiKey setting alone does not show a fresh prompt.
+   199	9. Never use up the retry counters of the production YubiKey on purpose.
+   200	10. Record the model, firmware, settings and results. Never record a PIN value.
+   201	11. Disconnect the YubiKey immediately after each approved operation.
+   202	
+   203	Touch confirms that a person is present. Touch does not confirm which archive the YubiKey signs. The approval steps
+   204	remain necessary.
+   205	
+   206	## 8. Key ceremony (once)
+   207	
+   208	Rehearse the whole ceremony with a throwaway key first (see "Rehearsal").
+   209	
+   210	1. Start a signing session. Set the GnuPG home to a temporary folder in memory.
+   211	2. Generate the release key (OpenPGP, ECDSA P-256). Write its full fingerprint on paper.
+   212	3. Make the two encrypted backups. In file mode, also make the encrypted primary medium.
+   213	4. List each intended persistent copy by a non-secret label.
+   214	5. In hardware mode, load the key into the YubiKey and configure it (see "YubiKey configuration").
+   215	6. Export the public key to the output medium. Never export a secret key to a transfer medium.
+   216	7. Delete the temporary exports and keyring. Stop the GnuPG agent. Detach every protected medium.
+   217	8. Shut down the session.
+   218	9. For each backup, start a new session with a new temporary keyring. Restore that backup only.
+   219	10. Compare the full fingerprint with the paper. Make a test signature and verify it.
+   220	11. In a separate session, test the selected primary in the same way.
+   221	12. A cached key or unlocked agent must never stand in for the copy under test.
+   222	
+   223	Persistent copies after the ceremony:
+   224	
+   225	- Hardware mode: the YubiKey and the two encrypted backups only.
+   226	- File mode: the encrypted primary medium and the two encrypted backups only.
+   227	- None of these media can be used for transfer, boot or operational storage. None can touch the NUC.
+   228	
+   229	The session runs in memory, so it creates no plaintext secret on a disk. Do not describe ordinary file deletion as
+   230	proven erasure. *(Author: if any persistent residue cannot be avoided, state the selected method.)*
+   231	
+   232	Public-key bootstrap:
+   233	
+   234	1. On a device independent of the NUC, compute the full fingerprint of the exported public key.
+   235	2. Compare it with the paper.
+   236	3. After publication, check the actual key and fingerprint in each place: the freeze record, the verifier
+   237	   documentation and the user documentation.
+   238	4. Keep the approved public key and fingerprint outside the NUC.
+   239	5. Give users one authenticated way to get the fingerprint that does not pass through the NUC, the repository or
+   240	   DNS. *(Author: name it, or state authenticated first acquisition as an assumption with a concrete delivery
+   241	   method.)*
+   242	
+   243	Two matching web publications alone do not authenticate the release key.
+   244	
+   245	Custody record: write a dated record with the fingerprint, the custody mode, the procedure revision and hash, the
+   246	signing setup, the laptop credential check, and confirmation that the backups are in two places. Do not record
+   247	where they are. Link the rehearsal record.
+54b382cd308291cf92457ff640584fba51ffc02c
+2bdb7dc0b7dd3223f4c37baa47fab568d066df6df71da05c7e6486d704c8ae9a  docs/ceremony/CEREMONY.md
+---
+name: verification-before-completion
+description: Use when about to claim work is complete, fixed, or passing, before committing or creating PRs - requires running verification commands and confirming output before making any success claims; evidence before assertions always
+---
+
+# Verification Before Completion
+
+## Overview
+
+**Core principle:** Evidence before claims, always.
+
+**Violating the letter of this rule is violating the spirit of this rule.**
+
+## The Iron Law
+
+```
+NO COMPLETION CLAIMS WITHOUT FRESH VERIFICATION EVIDENCE
+```
+
+If you haven't run the verification command in this message, you cannot claim it passes.
+
+## The Gate Function
+
+```
+BEFORE claiming any status or expressing satisfaction:
+
+1. IDENTIFY: What command proves this claim?
+2. RUN: Execute the FULL command (fresh, complete)
+3. READ: Full output, check exit code, count failures
+4. VERIFY: Does output confirm the claim?
+   - If NO: State actual status with evidence
+   - If YES: State claim WITH evidence
+5. ONLY THEN: Make the claim
+
+Skip any step = lying, not verifying
+```
+
+## Common Failures
+
+| Claim | Requires | Not Sufficient |
+|-------|----------|----------------|
+| Tests pass | Test command output: 0 failures | Previous run, "should pass" |
+| Linter clean | Linter output: 0 errors | Partial check, extrapolation |
+| Build succeeds | Build command: exit 0 | Linter passing, logs look good |
+| Bug fixed | Test original symptom: passes | Code changed, assumed fixed |
+| Regression test works | Red-green cycle verified | Test passes once |
+| Agent completed | VCS diff shows changes | Agent reports "success" |
+| Requirements met | Line-by-line checklist | Tests passing |
+
+## Red Flags - STOP
+
+- Using "should", "probably", "seems to"
+- Expressing satisfaction before verification ("Great!", "Perfect!", "Done!", etc.)
+- About to commit/push/PR without verification
+- Trusting agent success reports
+- Relying on partial verification
+- Thinking "just this once"
+- Tired and wanting work over
+- **ANY wording implying success without having run verification**
+
+## Rationalization Prevention
+
+| Excuse | Reality |
+|--------|---------|
+| "Should work now" | RUN the verification |
+| "I'm confident" | Confidence ≠ evidence |
+| "Just this once" | No exceptions |
+| "Linter passed" | Linter ≠ compiler |
+| "Agent said success" | Verify independently |
+| "I'm tired" | Exhaustion ≠ excuse |
+| "Partial check is enough" | Partial proves nothing |
+| "Different words so rule doesn't apply" | Spirit over letter |
+
+## Key Patterns
+
+**Tests:**
+```
+✅ [Run test command] [See: 34/34 pass] "All tests pass"
+❌ "Should pass now" / "Looks correct"
+```
+
+**Regression tests (TDD Red-Green):**
+```
+✅ Write → Run (pass) → Revert fix → Run (MUST FAIL) → Restore → Run (pass)
+❌ "I've written a regression test" (without red-green verification)
+```
+
+**Build:**
+```
+✅ [Run build] [See: exit 0] "Build passes"
+❌ "Linter passed" (linter doesn't check compilation)
+```
+
+**Requirements:**
+```
+✅ Re-read plan → Create checklist → Verify each → Report gaps or completion
+❌ "Tests pass, phase complete"
+```
+
+**Agent delegation:**
+```
+✅ Agent reports success → Check VCS diff → Verify changes → Report actual state
+❌ Trust agent report
+```
+
+## When To Apply
+
+**ALWAYS before:**
+- ANY variation of success/completion claims
+- ANY expression of satisfaction
+- ANY positive statement about work state
+- Committing, PR creation, task completion
+- Moving to next task
+- Delegating to agents
+
+**Rule applies to:**
+- Exact phrases
+- Paraphrases and synonyms
+- Implications of success
+- ANY communication suggesting completion/correctness
+
+exec
+/bin/bash -lc "curl -fsSL https://raw.githubusercontent.com/gpg/gnupg/gnupg-2.2.40/g10/card-util.c -o /tmp/confirm-card2240.c
+curl -fsSL https://raw.githubusercontent.com/gpg/gnupg/gnupg-2.4.8/g10/keygen.c -o /tmp/confirm-keygen248.c
+sed -n '1480,1535p' /tmp/confirm-card248.c
+sed -n '2220,2265p' /tmp/confirm-card248.c
+rg -n 'ECC and ECC|ECC \\(sign only\\)|NIST P-256|openpgp-revocs|case 10:' /tmp/confirm-keygen248.c /tmp/ceremony-keygen.c
+bash --noprofile --norc -c 'printf \"fresh boot import operand: <%s>\\nfingerprint selector: <%s>\\n\" \""'$B/secret.asc" "$FPR"'"'
+lsblk -o NAME,TYPE,MOUNTPOINT | head -15" in /home/tony/projects/tessera
+ succeeded in 278ms:
+ask_card_keyattr (int keyno, const struct key_attr *current)
+{
+  struct key_attr *key_attr = NULL;
+  char *answer = NULL;
+  int algo;
+
+  tty_printf (_("Changing card key attribute for: "));
+  if (keyno == 0)
+    tty_printf (_("Signature key\n"));
+  else if (keyno == 1)
+    tty_printf (_("Encryption key\n"));
+  else
+    tty_printf (_("Authentication key\n"));
+
+  tty_printf (_("Please select what kind of key you want:\n"));
+  tty_printf (_("   (%d) RSA\n"), 1 );
+  tty_printf (_("   (%d) ECC\n"), 2 );
+
+  for (;;)
+    {
+      xfree (answer);
+      answer = cpr_get ("cardedit.genkeys.algo", _("Your selection? "));
+      cpr_kill_prompt ();
+      algo = *answer? atoi (answer) : 0;
+
+      if (!*answer || algo == 1 || algo == 2)
+        {
+          xfree (answer);
+          break;
+        }
+      else
+        tty_printf (_("Invalid selection.\n"));
+    }
+
+  if (algo == 0)
+    goto leave;
+
+  key_attr = xmalloc (sizeof (struct key_attr));
+
+  if (algo == 1)
+    {
+      unsigned int nbits, result_nbits;
+
+      if (current->algo == PUBKEY_ALGO_RSA)
+        nbits = current->nbits;
+      else
+        nbits = 2048;
+
+      result_nbits = ask_card_rsa_keysize (nbits);
+      if (result_nbits == 0)
+        {
+          if (current->algo == PUBKEY_ALGO_RSA)
+            {
+              xfree (key_attr);
+              key_attr = NULL;
+            }
+}
+
+static void
+uif (int arg_number, const char *arg_rest)
+{
+  struct agent_card_info_s info;
+  int feature_available;
+  gpg_error_t err;
+  char name[100];
+  unsigned char data[2];
+
+  memset (&info, 0, sizeof info);
+
+  err = agent_scd_getattr ("EXTCAP", &info);
+  if (err)
+    {
+      log_error (_("error getting card info: %s\n"), gpg_strerror (err));
+      return;
+    }
+
+  feature_available = info.extcap.bt;
+  agent_release_card_info (&info);
+
+  if (!feature_available)
+    {
+      log_error (_("This command is not supported by this card\n"));
+      tty_printf ("\n");
+      return;
+    }
+
+  snprintf (name, sizeof name, "UIF-%d", arg_number);
+  if ( !strcmp (arg_rest, "off") )
+    data[0] = 0x00;
+  else if ( !strcmp (arg_rest, "on") )
+    data[0] = 0x01;
+  else if ( !strcmp (arg_rest, "permanent") )
+    data[0] = 0x02;
+
+  data[1] = 0x20;
+
+  err = agent_scd_setattr (name, data, 2);
+  if (err)
+    log_error (_("error for setup UIF: %s\n"), gpg_strerror (err));
+}
+
+/* Data used by the command parser.  This needs to be outside of the
+/tmp/ceremony-keygen.c:1961:    tty_printf (_("   (%d) ECC and ECC\n"), 9 );
+/tmp/ceremony-keygen.c:1963:    tty_printf (_("  (%d) ECC (sign only)\n"), 10 );
+/tmp/ceremony-keygen.c:2409:    { "NIST P-256",      NULL, NULL,               MY_USE_ECDSADH,  0, 1, 0 },
+/tmp/ceremony-keygen.c:3396: *   nistp256:= ECDSA or ECDH using curve NIST P-256
+/tmp/confirm-keygen248.c:2344:  tty_printf (_("  (%d) ECC (sign only)\n"), 10 );
+/tmp/confirm-keygen248.c:2814:    { "NIST P-256",      NULL, NULL,               MY_USE_ECDSADH,  0, 1, 0 },
+/tmp/confirm-keygen248.c:3879: *   nistp256:= ECDSA or ECDH using curve NIST P-256
+fresh boot import operand: </secret.asc>
+fingerprint selector: <>
+NAME                      TYPE MOUNTPOINT
+loop0                     loop /snap/powershell/430
+loop1                     loop /snap/canonical-livepatch/414
+loop2                     loop /snap/core/17247
+loop3                     loop /snap/core/17292
+loop4                     loop /snap/core20/2866
+loop5                     loop /snap/core20/2922
+loop6                     loop /snap/core22/2437
+loop7                     loop /snap/core22/2955
+loop8                     loop /snap/snapd/28254
+loop10                    loop /snap/core24/2124
+loop11                    loop /snap/cups/1272
+loop12                    loop /snap/cups/1277
+loop13                    loop /snap/snapd/27738
+loop14                    loop /snap/lxd/40911
+
+codex
+I found a new readback blocker: GnuPG 2.4.4 and 2.4.8 display both ordinary and permanent touch as `Sign=on`. S8 therefore cannot confirm fixed touch using the printed command. The stop condition prevents acceptance, but the procedure needs a readback that distinguishes the two.
+
+The failure table also still permits shutdown after a failed card transfer based on exports that have not yet been restore-tested. I’ll report that separately from Session 2’s missing variable assignments and the remaining bootstrap details.
+exec
+/bin/bash -lc "cat > docs/reviews/ceremony/CODEX-CONFIRM.md <<'EOF'
+# Ceremony revision 2 — Codex confirmation
+
+Reviewed 2026-11-02 against "'`BRIEF-CONFIRM.md`, including all four appended prechecks. **Revision 2 does not yet resolve C01–C07 completely. Revise before production key generation.** The isolation, acceptance and requester-boundary text is substantially improved. Remaining blockers concern fixed-touch readback and preservation of an untested last usable copy; fresh-boot instructions and bootstrap details also need completion.
+
+Snapshot: HEAD `54b382cd308291cf92457ff640584fba51ffc02c`; working-tree `docs/ceremony/CEREMONY.md` SHA-256 `2bdb7dc0b7dd3223f4c37baa47fab568d066df6df71da05c7e6486d704c8ae9a`. Line references below are to that file unless another path is named. Review was read-only except this report. Pre-existing deployment changes and untracked ceremony material were preserved. No production card, key, PIN, backup or secret was accessed. This is document/source confirmation, not a hardware rehearsal or independence certification.
+
+## C01–C07 dispositions
+
+| Finding | Revision 2 resolves it? | Evidence and residual |
+|---|---|---|
+| C01 — expert curve selection | **YES** | Lines 89–97 use `--expert --card-edit`, choose the displayed NIST P-256 entry, preserve other slots and require attribute readback. Empty algorithm input preserves the current attribute in the inspected upstream versions. |
+| C02 — version and fixed touch | **PARTLY** | Lines 64,71 record GnuPG; lines 149–150 stop on unsupported/unconfirmed touch. This safely refuses 2.2.40 but does not make it compatible. New F01 below prevents the specified permanence readback on inspected 2.4 versions too. scdaemon/card firmware identification remains absent from the record at 197–200. The inference at 215–216 is plausible, not a measured version. |
+| C03 — isolation | **PARTLY** | Lines 29,52–72 explicitly prohibit unlocking persistence, require independent image verification, identify the System76 and credential check, create a temporary RAM home, and check mounts/swap/network. Lines 168–174 reuse S0 on every test boot. No NUC script/configuration and no autorun conditions from custody draft §5 are still not stated explicitly. An overlay filesystem name alone does not establish that its writable layer is RAM. See command notes below. |
+| C04 — backup/failure safety | **PARTLY** | Lines 119–121 now check export/copy exits and nonempty files; 135 and 176–177 gate transfer/acceptance; 186 protects PIN retries. But export success is not demonstrated recovery: F02 remains a last-copy failure path. The destination check is weak (F04), and fresh-boot recovery instructions remain incomplete (F03). |
+| C05 — policy and primary tests | **YES at the procedural-design level**, subject to F01/F03 | Lines 145–150 read before toggling `forcesig`; 152–161 add no-touch and fresh-PIN tests, and count successful signatures; 172–177 require a fresh card-only test and reject unexpected outcomes. These are appropriate proposed tests. They have not been executed here; positive signing alone still proves neither fixed touch nor requester independence. |
+| C06 — custody/bootstrap record | **PARTLY** | Lines 11–13 and 196–205 correctly distinguish secrets from public choices, record hardware/credential checks and results, independently compute the fingerprint and link the later bootstrap record to the freeze. Missing: a concrete authenticated initial-acquisition route, explicit retention of the approved public key outside the NUC, checks of actual published material, card firmware/scdaemon versions and protected export settings. See F05. |
+| C07 — requester independence | **YES for this ceremony'"'s bounded claim** | Lines 8–10 expressly defer production use until independent review, exact-hash approval and controlled input media are implemented and rehearsed; line 219 disclaims requester independence. The author supplies ceremony signing requests, while an operational channel captor could supply a malicious future release candidate. Storage/touch alone does not authorize those bytes. This resolves the overclaim by scope and handoff; it does not establish A10.4.2 independence. |
+
+## New defects and remaining concrete failure paths
+
+### F01 — HIGH, new: the required fixed-touch readback cannot distinguish fixed from ordinary on
+
+**Lines 145–150,176.** In upstream GnuPG 2.4.4 and 2.4.8, human-readable card status prints "'`Sign=on` for both UIF value 1 (on) and value 2 (permanent). The command at 145 cannot produce the required permanent/fixed confirmation. The numeric colon output preserves the distinction.
+
+Failing scenario: `uif 1 permanent` succeeds on a supported card, but the operator follows the readback literally and must stop despite correct configuration. If the operator instead accepts `Sign=on`, an ordinary on policy can pass this check; a no-touch timeout also cannot distinguish on from fixed. Preserve the stop condition and specify a rehearsed readback such as `gpg --with-colons --card-status`, requiring signature UIF value 2 (`uif:2:...`), together with successful policy setting. Do not attempt to disable touch as a negative test on the production card.
+
+Evidence: upstream [2.4.4 card-util.c](https://github.com/gpg/gnupg/blob/gnupg-2.4.4/g10/card-util.c) and [2.4.8 card-util.c](https://github.com/gpg/gnupg/blob/gnupg-2.4.8/g10/card-util.c), status rendering and `uif`. This is source evidence, not a card observation.
+
+### F02 — HIGH, residual C04: failed transfer permits destroying the only demonstrated usable secret
+
+**Lines 119–121,164,185,189–190.** The failed-transfer row says to shut down after one retry because the backups survive. They have only passed export/nonempty checks at that point; both recovery tests occur after shutdown. The successful path likewise shuts down before any backup has been restored, although a tested card can then supply a usable primary.
+
+Failing scenario: both exports are present but cannot be decrypted with the retained passphrase, or their secret data cannot be restored; card transfer fails twice. Row 185 authorizes shutdown of the sole usable RAM key. The later discovery that both backups fail cannot recover that key. This is a conditional failure path, not an observation that GnuPG normally makes corrupt exports.
+
+Before relinquishing the last demonstrated usable copy, validate recovery using isolated temporary keyrings/agents and only the candidate backup, while preserving the original key. Retain the separate fresh-boot tests for final acceptance. Do not justify shutdown after transfer failure by file existence alone. Distinguish “not yet tested” from “good” in row 189. If both backups fail but the card works, row 190 should explicitly preserve that card pending recovery or a deliberate abandonment decision; unusable backups do not imply the primary is unusable. No existing production key should be reset on this table'"'s authority.
+
+### F03 — MEDIUM, new fresh-boot instructions lose their variables
+
+**Lines 107,117,168–173.** S0 recreates "'`GNUPGHOME` but neither `B` nor `FPR`. Each Session 2 boot starts a new shell. Consequently the printed import operand expands to `/secret.asc`, and the signing selector is empty. This was reproduced with a clean Bash shell without running any import or accessing any key. The path at 117 also remains ROOT-BK1 even when the operator is processing ROOT-BK2 or either REL backup.
+
+Failing scenario: an operator follows the fresh-boot backup test literally, unlocks BK2 and runs the printed command; it imports from `/secret.asc` and fails. Explicitly assign the actual mounted backup path and expected paper fingerprint in every test boot, check them before import, compare the imported fingerprint, and give the complete sign/verify commands. Use only a public key for the card-only boot. A backup `public.asc` fallback is safe only if no secret is imported from it and the input medium'"'s role remains controlled.
+
+### F04 — MEDIUM, residual C04: LUKS check is not an exact destination check
+
+**Lines 115–125.** "'`grep -B1 "$B" | grep -q crypt` checks matching output text and one preceding line; it does not establish the exact mount'"'s backing device, identity or encryption format. A mount named ROOT-BK1-extra can match ROOT-BK1. If an ordinary RAM directory exists at the intended path, the check can announce LUKS-OK from the other mount and the following exports succeed into RAM.
+
+Failing scenario: that naming/mount error affects a backup, the operator sees every required OK and removes an empty stick. Final restore acceptance should catch it, but row 185 already relies on those backups to permit shutdown. Resolve the exact mount with "'`findmnt`, trace that device to the intended encrypted mapper/label and physical stick, and stop before writes unless all agree. Record and check actual LUKS2 rather than assuming the GUI selected it. `luksDump` must target the partition actually identified, not an unverified sdX substitution.
+
+### F05 — MEDIUM, residual C06: publishing a fingerprint is not authenticated bootstrap
+
+**Lines 201–205.** The independent computation is valuable, but “channels the author names” still does not specify authenticated first acquisition, retention outside the NUC or verification after publication.
+
+Failing scenario: the author chooses repository and DNS publications; an attacker controlling both substitutes its B key and matching fingerprint for a new relying party. Two matching publications do not authenticate that initial key. State the concrete authenticated delivery method (or the explicit first-acquisition assumption and method), retain the approved key outside the operational environment and check each actual publication. These are unfinished custody-draft §8 steps (`docs/V1-RELEASE-KEY-CUSTODY-DRAFT.md:234–243`), not a finding that the first-production-release trigger has occurred.
+
+## S0–S9 and GNUPGHOME audit
+
+- **S0:** The temporary export is inherited by all later GnuPG commands in that terminal. `keytocard` at 137–140, revocation copy at 121, and Session 2 GnuPG commands therefore use it consistently if S0 is repeated as instructed. No hard-coded default revocation path remains. For a second terminal, give `export GNUPGHOME="<existing RAM path>"` explicitly; rerunning `mktemp` creates another home. Check command success and verify the actual writable storage, rather than accepting every overlay. The filesystem-type filter is not exhaustive evidence that no internal disk is mounted; review backing devices/mounts. Observe that no network link is usable, not merely no default route. These are isolation checks, not GnuPG version differences.
+- **S1–S2:** Card status, administration and PIN-change menu are consistent with the inspected sources. Upstream 2.2.40 lacks the required UIF status line, so the literal S1 acceptance cannot hold there. Stop before generation on an unsupported setup. Record the actual firmware/scdaemon versions before choosing a supported path.
+- **S3–S4:** Expert P-256 selection and ECC sign-only option 10 agree with upstream 2.2.40 and 2.4.8 key-generation source. Read actual menus. The printed `FPR=<...>` is a substitution instruction, not executable shell syntax; replace it with the actual quoted value. `--list-keys` checks existence, not a comparison with the paper or a guarantee of the expected packet format.
+- **S5–S7:** Quoted exports, revocation path and inherited home are appropriate; transfer uses the generated primary and `save`. The backup destination and recovery gaps are F02/F04. No production transfer was run to establish device behavior.
+- **S8:** `forcesig` handling is corrected. Upstream 2.2.40 has no `uif`; 2.4.4/2.4.8 accept `uif 1 permanent` but have F01'"'s readback limitation. Recording a version and stopping is safe refusal, not cross-version completion. Pin and rehearse the actual supported stack or supply a separately validated offline alternative.
+- **S9:** SHA-256 detached signing and verification syntax is supported. For the negative and repeat tests, print complete commands with "'`--output ~/nt.asc` and `--output ~/p2.asc`, retain the same input and selector, and verify the second positive signature. Do not simply rerun the first command against its existing output: an overwrite prompt/cancellation is not a no-touch result. Require a touch timeout rather than any arbitrary failure. Current acceptance already rejects unexpected test outcomes.
+
+Source checks used upstream [2.2.40 card-util.c](https://github.com/gpg/gnupg/blob/gnupg-2.2.40/g10/card-util.c), [2.2.40 keygen.c](https://github.com/gpg/gnupg/blob/gnupg-2.2.40/g10/keygen.c) and [2.4.8 keygen.c](https://github.com/gpg/gnupg/blob/gnupg-2.4.8/g10/keygen.c). The local executable reports GnuPG 2.4.4; it was not used against a card. Inspection of specific tags does not certify every 2.4.x package or downstream patch set.
+
+## Appended owner prechecks
+
+Each result concerns this revision and its bounded claims, not certification of the service.
+
+| Check | Result | File:line evidence |
+|---|---|---|
+| 1. Capture row | **PASS** | `docs/ceremony/CEREMONY.md:17–23,203–205` assigns authority roles and describes B-authenticated trust; it promises neither rejection of fresh attacker-key receipts nor capture visibility. Ground truth: `docs/V1-CONTRACT.md:34–37,50–53,72–74`: honest receipts protected under the stated assumptions, fresh attacker-key receipts pass after dual-channel capture, no detection guarantee. F05 concerns initial release authentication, not restoration of the cut listing. |
+| 2. Trigger clause | **PASS** | `docs/ceremony/CEREMONY.md:8–10,20,204–205` cites A10.4.2'"'s existing independence prerequisite and later bootstrap obligation. "'`docs/phase-0-prereg-amendment-10.md:616,624–643,668–673` applies the prerequisite under every option and places establishment before the first public production release. Revision 2 does not assert that release occurred, trigger fallback, or claim its rehearsal obligations discharged. |
+| 3. Requester | **PASS for the expressly limited claim** | `docs/ceremony/CEREMONY.md:8–10,52–60,152–160,219` identifies the author-led ceremony and expressly defers candidate review, exact-byte approval and media controls for B'"'s production use. Operational actors may propose future bytes; the author must authorize the exact release through the deferred procedure ("'`docs/V1-RELEASE-KEY-CUSTODY-DRAFT.md:253–278`). Storage separation is not treated here as a completed release-authorization argument. A broader claim that this ceremony establishes requester independence would fail. |
+| 4. Binding text | **PASS** | `docs/ceremony/CEREMONY.md:3–10,37–48` labels the document OWNER DRAFT and distinguishes owner choices from registered A10.4.2 independence. That requirement is registered at `docs/phase-0-prereg-amendment-10.md:624–643`; the profile'"'s key-format rule is implemented at "'`docs/ceremony/CEREMONY.md:6,99–104` (`docs/V1-PROFILE.md` §15.4). Exact ceremony commands and draft checks are proposed operating requirements, not silently attributed to signed registration. No ruling budget, fixed 24-hour FAILED rule or conflicting registered custody mandate is imported. This report treats operational defects as defects in that proposal, not violations of invented registered rituals. |
+
+Generation is not a verifier release. No registration, freeze compliance, TEST-rejection rehearsal, deployed-package identity, production acquisition or full release-independence gate is discharged by this confirmation.
+EOF
+wc -l docs/reviews/ceremony/CODEX-CONFIRM.md
+sha256sum docs/ceremony/CEREMONY.md
+git status --short' in /home/tony/projects/tessera
+ succeeded in 0ms:
+77 docs/reviews/ceremony/CODEX-CONFIRM.md
+2bdb7dc0b7dd3223f4c37baa47fab568d066df6df71da05c7e6486d704c8ae9a  docs/ceremony/CEREMONY.md
+ M service/issuer/.gitignore
+ M service/issuer/DEPLOY-RUN.md
+ M service/issuer/DEPLOY.md
+ M service/issuer/infra/main.tf
+ M service/issuer/infra/versions.tf
+ M service/signer-kms/infra/versions.tf
+?? docs/ceremony/
+?? docs/reviews/ceremony/
+?? service/issuer/install-facts.json
+?? service/signer-gcp/.image-digest
+?? service/signer-kms/.gitignore
+
+exec
+/bin/bash -lc "rg -n '15.4|82|P-256' docs/V1-PROFILE.md | tail -12; sed -n '668,675p' docs/phase-0-prereg-amendment-10.md; python - <<'PY'
+from pathlib import Path
+p=Path('docs/reviews/ceremony/CODEX-CONFIRM.md')
+s=p.read_text()
+for x in ['C01','C02','C03','C04','C05','C06','C07','1. Capture row','2. Trigger clause','3. Requester','4. Binding text','F01','F02','F03','F04','F05']:
+    assert x in s, x
+assert s.count('"'```'"') % 2 == 0
+print('Report coverage check passed; bytes:', p.stat().st_size)
+PY" in /home/tony/projects/tessera
+ succeeded in 0ms:
+1160:  RFC 4648; RFC 1035, 1982, 2181, 3110, 4034, 4035, 4509, 5011, 5702, 6605, 9718, and RFC 9102 (informative); RFC
+1285:   §5 cover frames and exact signatures. DD:61 is already correct. DD:64 (P-256 signers only) and DD:218 (parameters
+1433:   ("Slot-2 custody record"): GCP Cloud KMS HSM P-256 through the policy signer, chosen 2026-10-13, evidence complete
+1437:6. **Repository-root algorithm** (G25). Confirm that the deployed repository root (YubiKey 2) is P-256; otherwise
+1488:    hash-prefix choice, git armor aliases and possession/git code mapping. Text now in sections 6.3, 8 and 15.4;
+1495:    (section 15.4). Offline verification after installation is the claim; offline reconstruction from the three
+1648:### 15.4 Git evidence [OWNER 2026-10-14, G25]
+1679:- **Repository key.** v4 ECDSA P-256 public-key body, rule O (signer outcomes in section 6.3).
+1709:| `repository_keys` | array of `{"domain","key","signing_end","signing_start","sources"}` | `domain` = D; `key` base64 v4 P-256 body; `signing_end` nullable; start ≤ end; unique `key` |
+1939:  `<archive>.sig`, ECDSA P-256 with SHA-256, satisfying rule O's grammar and policy (section 8). The signing session
+1941:- The release key is **one v4 ECDSA P-256 primary key with no subkeys**, identified by its full v4 fingerprint. A
+1965:  name, signed by a TEST release key in the R3 format. TEST keys are throwaway v4 P-256 keys and may live on the
+- **Bootstrap record.** Profile §5 and runbook §6 put the release public key's fingerprint in the freeze record.
+  Under this timing the production release key need not exist at the freeze. Its fingerprint is therefore recorded
+  in a dated first-production-release bootstrap record that identifies the original freeze baseline and the actual
+  production key. The original freeze record is preserved; it is not amended to claim that the fingerprint was
+  present on 30 Oct. Profile §5, §14.2 items 1–2 and runbook §6 are reconciled with this split between registration
+  at the freeze and execution before the first public verifier release, after this amendment's signing commit.
+- **Fallback.** If independence cannot be established before the first public verifier release, the author receives
+  a NARROW-MODEL of the channel-capture claim (A9:41-42, as amended by rows 15 and 25) before that release. Cutting
+Report coverage check passed; bytes: 15615
+
+codex
+Wrote [CODEX-CONFIRM.md](/home/tony/projects/tessera/docs/reviews/ceremony/CODEX-CONFIRM.md).
+
+It covers C01–C07 and all four prechecks. Revision 2 still needs changes, chiefly fixed-touch readback and preserving the last usable secret after transfer failure. Only the report was changed.
+
+
+hook: Stop
+hook: Stop Completed
+tokens used
+55,673
+Wrote [CODEX-CONFIRM.md](/home/tony/projects/tessera/docs/reviews/ceremony/CODEX-CONFIRM.md).
+
+It covers C01–C07 and all four prechecks. Revision 2 still needs changes, chiefly fixed-touch readback and preserving the last usable secret after transfer failure. Only the report was changed.
+
+
