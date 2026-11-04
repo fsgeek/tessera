@@ -23,9 +23,9 @@ AWS session: `aws sts get-caller-identity --profile tessera` → account 4771396
 
 Next: step 1 (`terraform plan` for the issuer bootstrap), read together with the author.
 
-## 2026-10-30 — in the session (owner ran the commands, under the author's login and with his blessing)
+## 2026-10-30 — in the session (owner ran the commands, under the author's login and with the author's blessing)
 
-The author, on the owner waiting for him to run `apply`: "Not sure why a steward needs gardener approval... I have a
+The author, on the owner waiting for the author to run `apply`: "Not sure why a steward needs gardener approval... I have a
 bucket and a trowel, and they bless your actions." The runbook's "no agent runs any of them" line was a prior
 owner's rule, now corrected in DEPLOY.md.
 
