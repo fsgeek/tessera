@@ -10,16 +10,17 @@ before running. Every command you type is on its own line: type one, press Enter
 | 3 release | `REL` | B | `REL-PRIV` | `REL-PUB` |
 
 Stick labels are yours (what each holds). The short names are only the **volume names** typed into *Disks*.
-The script reaches you on the **INPUT** stick: a new stick that has **never** been in the NUC, written on your
-laptop (below). The NUC is not in the path.
+The script reaches you on the **INPUT** stick: a new stick that has **never** been in the NUC, written by the
+Pangolin in a separate, networked Tails session (below). The NUC is not in the path.
 
 **If a step prints FAIL**, nothing has been deleted: fix what it says and run the same step again. Never reboot
 between `generate` and `tests` unless the owner says so: the key is in memory until it is on the card and backed up.
 Never photograph or type into chat a PIN or passphrase. 📷 = photograph the screen. ✎ = write on the public sheet.
 
-## Before the session (on your laptop, not the NUC)
+## Before the session: write the INPUT stick (a separate Tails boot, network ON)
 
-The owner names the reviewed commit and the script's SHA-256. On the laptop:
+On the Pangolin, boot Tails **with** networking (it connects through Tor). No YubiKey, no other stick inserted.
+When Tor is connected, open a terminal:
 ```
 git clone https://github.com/fsgeek/tessera.git
 ```
@@ -27,13 +28,20 @@ git clone https://github.com/fsgeek/tessera.git
 cd tessera
 ```
 ```
-git checkout <the reviewed commit>
+git checkout <the commit the owner names>
 ```
 ```
 sha256sum docs/ceremony/tessera-ceremony.sh
 ```
-It must equal the owner's hash. ✎ it, in groups of 8. Copy `docs/ceremony/tessera-ceremony.sh` to the INPUT
-stick (plain FAT, volume name `INPUT`). Eject it. That stick goes only between the laptop and the signing machine.
+It must equal the owner's hash. ✎ it, in groups of 8. Insert the new INPUT stick; in *Disks*, format it (FAT,
+volume name `INPUT`); open it in *Files*; then:
+```
+cp docs/ceremony/tessera-ceremony.sh /media/amnesia/INPUT/
+```
+```
+sha256sum /media/amnesia/INPUT/tessera-ceremony.sh
+```
+Same hash. Eject; shut down. This session is amnesic: nothing from it persists except the INPUT stick.
 
 ## Part 1 (one boot)
 
