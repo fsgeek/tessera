@@ -99,6 +99,23 @@ them yet, and no alarm exists. Before a second API key is issued:
    control.
 4. A per-key daily quota on the usage plan.
 
+## Gate before Tessera is relied on: operational posture (owner, 2026-11-06)
+
+The author: "this is theater for this first phase. When Tessera is being used, it will become a target, and we will
+need a better posture." The weakest point today is not the key ceremony but the NUC, which holds the author's AWS
+administrator session, the GCP project owner's `gcloud`, the repository signing key, and AI agents running with
+permission checks bypassed. Tolerable while nothing relies on Tessera; not after. Before the first client beyond
+`smoke-test`:
+
+1. No standing administrator credentials on a machine where an agent runs: deployment through short-lived, scoped
+   roles; the administrator logins (AWS management account, GCP owner) only on a separate machine.
+2. The two signers' control planes on separate machines and credentials, so one machine's capture does not give
+   both slots (the direction of V2's disjoint authorities).
+3. The repository signing key off the NUC, on a token.
+4. Detection seen to fire (the gate above).
+5. The V1 contract states the actual operational posture, including today's single administration machine
+   (registered text: in A12).
+
 ## Not deployment gates, but release gates (still open; `formal/freeze-v1/FREEZE-RECORD.md:84-91`)
 
 Before the first **public verifier release**: the custody procedure and its rehearsal; the production release key;
