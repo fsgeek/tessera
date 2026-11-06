@@ -130,9 +130,10 @@ gpg --export --armor "$FPR" > "$B/public.asc" && test -s "$B/public.asc" && echo
 cp "$GNUPGHOME/openpgp-revocs.d/$FPR.rev" "$B/revocation.rev" && test -s "$B/revocation.rev" && echo REV-OK || echo FAIL
 sync; ls -l "$B"
 ```
-3. Record the LUKS parameters (not secret), from the partition under that exact mapper:
-   `sudo cryptsetup luksDump "/dev/$(lsblk -no PKNAME "$DEV")" | grep -E 'Version|cipher|PBKDF'` must show
-   `Version: 2`. Write it on the public sheet.
+3. Record the LUKS parameters (not secret). `luksDump` does not work on the `/dev/mapper/...` name (that is the
+   unlocked view; the header is on the raw partition), so use `status`, which takes the mapper name:
+   `sudo cryptsetup status "$DEV"` must show `type: LUKS2`. Write the `type`, `cipher` and `device` lines on the
+   public sheet. *(Changed 2026-11-06 after the author's run: the earlier `luksDump` form failed.)*
 4. **Prove this backup restores, while the original key is still in memory** (a second, separate keyring):
 ```
 T="$(mktemp -d /tmp/restore.XXXXXX)"; chmod 700 "$T"
