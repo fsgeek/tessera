@@ -119,5 +119,14 @@ permission checks bypassed. Tolerable while nothing relies on Tessera; not after
 ## Not deployment gates, but release gates (still open; `formal/freeze-v1/FREEZE-RECORD.md:84-91`)
 
 Before the first **public verifier release**: the custody procedure and its rehearsal; the production release key;
+
+**Root (repository key) rotation protocol** (owner, 2026-11-06, on the author's question "why don't we have a rotation
+protocol for it"). The verifier bounds a repository key only through the trust configuration (an open entry is
+usable to the release's `as_of`; profile "Open endpoints"), and the release invariants allow adding a successor and
+closing the old interval. What is missing, and is a gate before the first public verifier release: a cryptoperiod
+(at most two years), triggers (schedule, custody event, suspected compromise), the procedure (ceremony on a spare
+YubiKey, a commit signed by the outgoing root naming its successor, a release adding the new entry and closing the
+old), and how relying parties learn of it. Service-key rotation for V1 remains as the runbook says: a registered
+mechanism or an end-of-issuance statement before the window's stop.
 the fingerprint channels the author names; the release-format vectors; the **GCP VPC Service Controls perimeter**;
 and a **policy for responses the signer was not asked for** (E-06). Deployment does not cancel any of them.
