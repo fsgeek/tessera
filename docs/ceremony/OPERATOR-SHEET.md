@@ -33,7 +33,10 @@ git checkout <the commit the owner names>
 ```
 sha256sum docs/ceremony/tessera-ceremony.sh
 ```
-It must equal the owner's hash. ✎ it, in groups of 8. Insert the new INPUT stick; in *Disks*, format it (FAT,
+It must equal the owner's hash. ✎ it, in groups of 8. *(If `git` is not found: in Tor Browser open
+`https://raw.githubusercontent.com/fsgeek/tessera/<commit>/docs/ceremony/tessera-ceremony.sh`, save it to the
+Tor Browser folder, and run `sha256sum` on the saved file instead; then copy that file in the step below.)*
+Insert the new INPUT stick; in *Disks*, format it (FAT,
 volume name `INPUT`); open it in *Files*; then:
 ```
 cp docs/ceremony/tessera-ceremony.sh /media/amnesia/INPUT/
