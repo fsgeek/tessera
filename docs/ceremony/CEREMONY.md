@@ -13,6 +13,14 @@
 > the repository or the NUC. **Non-secret** choices and results (versions, serials, fingerprints, pass/fail) go into
 > the custody record in the repository.
 
+> **Operator form (2026-11-06):** the author runs `docs/ceremony/OPERATOR-SHEET.md`, one linear process used three
+> times (rehearsal on C, root on A, release on B), each with its own two sticks: an encrypted backup (`L-PRIV`) and
+> a public stick (`L-PUB`). The structure is the author's suggestion. **Owner decision, same date: one backup per key,
+> not two.** Each key then exists as two copies in two places (the YubiKey and the backup stick, stored apart),
+> which is adequate for V1: losing both is recoverable (root: a new verifier release; release key: a new release
+> lineage), and the second backup's extra stick and steps cost more operator error than they buy. The rehearsal
+> uses its own sticks. Where this document and the operator sheet differ in a command, the operator sheet is current.
+
 ## Why two keys, two sessions, separate backups
 
 - **Repository root (A)** signs key-assertion commits and the end-of-issuance statement: the git channel's authority.
