@@ -15,7 +15,7 @@ Pangolin in a separate, networked Tails session (below). The NUC is not in the p
 
 **If a step prints FAIL**, nothing has been deleted: fix what it says and run the same step again. Never reboot
 between `generate` and `tests` unless the owner says so: the key is in memory until it is on the card and backed up.
-Never photograph or type into chat a PIN or passphrase. 📷 = photograph the screen. ✎ = write on the public sheet.
+Never photograph or type into chat a PIN or passphrase. **[PHOTO]** = photograph the screen. **[WRITE]** = write on the public sheet.
 
 ## Before the session: write the INPUT stick (a separate Tails boot, network ON)
 
@@ -33,7 +33,7 @@ git checkout <the commit the owner names>
 ```
 sha256sum docs/ceremony/tessera-ceremony.sh
 ```
-It must equal the owner's hash. ✎ it, in groups of 8. *(If `git` is not found: in Tor Browser open
+It must equal the owner's hash. **[WRITE]** it, in groups of 8. *(If `git` is not found: in Tor Browser open
 `https://raw.githubusercontent.com/fsgeek/tessera/<commit>/docs/ceremony/tessera-ceremony.sh`, save it to the
 Tor Browser folder, and run `sha256sum` on the saved file instead; then copy that file in the step below.)*
 Insert the new INPUT stick; in *Disks*, format it (FAT,
@@ -68,13 +68,13 @@ sha256sum /tmp/c.sh
 ```
 Same hash again. Eject INPUT and remove it. From here on, every step is `bash /tmp/c.sh <step>`.
 
-**1. Start** 📷 ✎ GnuPG version
+**1. Start** **[PHOTO]** **[WRITE]** GnuPG version
 ```
 bash /tmp/c.sh start ROOT
 ```
 (`REH`, `ROOT` or `REL`.)
 
-**2. Card** — insert the run's YubiKey only. ✎ serial.
+**2. Card** — insert the run's YubiKey only. **[WRITE]** serial.
 ```
 bash /tmp/c.sh card
 ```
@@ -89,21 +89,21 @@ bash /tmp/c.sh pins
 bash /tmp/c.sh slot
 ```
 
-**5. Generate** — enter the passphrase twice when asked. ✎ the fingerprint, then read it back.
+**5. Generate** — enter the passphrase twice when asked. **[WRITE]** the fingerprint, then read it back.
 ```
 bash /tmp/c.sh generate
 ```
 
 **6. Backup** — first, in *Disks*: the `L-PRIV` stick → ⋮ *Format Disk* (GPT) → `+` → *Internal disk for use with
 Linux systems only (Ext4)*, volume name `ROOT-PRIV` (etc.), *Password protect volume (LUKS)*, the key's passphrase.
-Open it in *Files*. Then: ✎ LUKS type and cipher.
+Open it in *Files*. Then: **[WRITE]** LUKS type and cipher.
 ```
 bash /tmp/c.sh backup
 ```
 It asks for the passphrase once more (the restore test). On PASS, eject `L-PRIV` and remove it.
 
 **7. Public stick** — in *Disks*: the `L-PUB` stick → *Format Disk* (GPT) → `+` → *For use with all systems (FAT)*,
-volume name `ROOT-PUB` (etc.), no password. Open it in *Files*. Then: ✎ the hash.
+volume name `ROOT-PUB` (etc.), no password. Open it in *Files*. Then: **[WRITE]** the hash.
 ```
 bash /tmp/c.sh public
 ```
@@ -114,17 +114,17 @@ Leave it in.
 bash /tmp/c.sh tocard
 ```
 
-**9. Policy** 📷 (the `S UIF-1` line)
+**9. Policy** **[PHOTO]** (the `S UIF-1` line)
 ```
 bash /tmp/c.sh policy
 ```
 
-**10. Tests** 📷 — the first signature needs a touch; the second must not be touched. ✎ the error text.
+**10. Tests** **[PHOTO]** — the first signature needs a touch; the second must not be touched. **[WRITE]** the error text.
 ```
 bash /tmp/c.sh tests
 ```
 
-**11. Check the public stick yourself** (typed by hand, not by the script). 📷
+**11. Check the public stick yourself** (typed by hand, not by the script). **[PHOTO]**
 ```
 ls -la /media/amnesia/ROOT-PUB
 ```
