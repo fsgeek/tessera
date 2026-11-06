@@ -120,9 +120,11 @@ gpg --expert --card-edit
 admin
 key-attr
 ```
-Signature key: `2` (ECC), then the **NIST P-256** entry (its number may differ; read the list). For the encryption
-and authentication keys, choose the option that keeps the current attribute (or press Enter if offered). Admin
-PIN. `q`. Then `gpg --card-status`: Key attributes must begin `nistp256`.
+For **each** of the three keys gpg asks about (signature, encryption, authentication): `2` (ECC), then the
+**NIST P-256** entry (its number may differ; read the list). Admin PIN. `q`. Then `gpg --card-status`: Key
+attributes must read `nistp256 nistp256 nistp256`. *(Changed 2026-11-06 on the author's reading: "keep the current
+attribute" followed by "must begin nistp256" was ambiguous. Only the signature slot is used; setting all three makes
+the step and its check unambiguous.)*
 
 **S4. Generate in memory:**
 ```

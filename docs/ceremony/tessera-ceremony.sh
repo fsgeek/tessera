@@ -61,12 +61,12 @@ step_pins() {
 step_slot() {
   load
   say "Type, in order:  admin   key-attr"
-  say "  signature key: 2 (ECC), then the number shown for NIST P-256"
-  say "  encryption and authentication keys: choose the option that keeps the current one"
-  say "  admin PIN, then q"
+  say "  gpg asks three times (signature, encryption, authentication key)."
+  say "  Each time: 2 (ECC), then the number shown for NIST P-256. The admin PIN when asked. Then q"
   gpg --expert --card-edit
-  gpg --card-status | awk -F': ' '/^Key attributes/{split($2,a," "); print a[1]}' | grep -qx nistp256 || fail "the SIGNATURE slot (first attribute) is not nistp256"
-  pass "signature slot is NIST P-256"
+  attrs=$(gpg --card-status | awk -F': ' '/^Key attributes/{print $2}'); echo "Key attributes: $attrs"
+  [ "$attrs" = "nistp256 nistp256 nistp256" ] || fail "all three key attributes must be nistp256 (run 'slot' again)"
+  pass "all three slots are NIST P-256"
 }
 
 step_generate() {
