@@ -1,7 +1,7 @@
 # Key ceremony: repository root (YubiKey A) and release key (YubiKey B)
 
-> **Status: OWNER DRAFT, revision 4, 2026-11-04.** Reviewed by Codex three times (`docs/reviews/ceremony/`:
-> `CODEX-REVIEW.md` C01–C07, `CODEX-CONFIRM.md` F01–F05, `CODEX-CONFIRM-2.md`). **Not ready for the real
+> **Status: OWNER DRAFT, revision 5, 2026-11-06.** Reviewed by Codex three times (`docs/reviews/ceremony/`:
+> `CODEX-REVIEW.md` C01–C07, `CODEX-CONFIRM.md` F01–F05, `CODEX-CONFIRM-2.md`, `CODEX-CONFIRM-3.md`). **Not ready for the real
 > ceremony until rehearsal 2 validates the raw touch readback in S8** (see "Rehearsal 2" at the end).
 > Basis: `docs/V1-RELEASE-KEY-CUSTODY-DRAFT.md` §5–§8 and the first rehearsal (`2026-11-01-rehearsal-1.md`). Key
 > type from `docs/V1-PROFILE.md` §15.4: v4 ECDSA P-256. The rehearsal showed a key made this way, on the author's
@@ -144,9 +144,12 @@ gpgconf --homedir "$T" --kill gpg-agent; rm -rf "$T"
    not good: redo S5 for it on a new stick.
 5. Eject in *Files*; remove.
 
-**S6. Public key to the out stick:**
+**S6. Public key to the out stick.** A new out stick needs a plain (unencrypted) volume first: in *Disks*, select
+it → *Format Disk* (GPT) → `+` → *For use with all systems (FAT)*, no password, name `ROOT-OUT` (or `REL-OUT`).
+Mount it in *Files*, then check it is that exact mount before writing:
 ```
-O="/media/amnesia/<OUT label>"
+O="/media/amnesia/ROOT-OUT"
+[ "$(findmnt -n -o TARGET --target "$O")" = "$O" ] && echo OUT-MOUNT-OK || echo FAIL-NOT-MOUNTED
 gpg --export --armor "$FPR" > "$O/root.pub.asc" && test -s "$O/root.pub.asc" && sha256sum "$O/root.pub.asc"
 ```
 (`release.pub.asc` for B.) SHA-256 on the public sheet. Eject; remove. Nothing secret, and not the revocation
@@ -171,8 +174,14 @@ gpg --card-status | grep -E 'Signature PIN|UIF'
 ```
 gpg-connect-agent 'SCD GETATTR UIF-1' /bye
 ```
-  Expected: a line `S UIF-1 %02%20` (first byte `02` = permanent; `01` = ordinary on; `00` = off), then `OK`.
-  If `uif` is an unknown command, or the first byte is not `02`: **stop**. Do not proceed without fixed touch.
+  Expected, exactly:
+```
+S UIF-1 %02+
+OK
+```
+  (`%02` is the policy byte, permanent; `+` is the second byte, 0x20, as the status line encodes it.) `%01+` is
+  ordinary on and `%00+` is off: **stop**. An `ERR` line, no `S UIF-1` line, or anything else: **stop**.
+  If `uif` was an unknown command: **stop**. Do not proceed without fixed touch.
   *(This readback is validated in rehearsal 2 before the real ceremony.)*
 
 **S9. Prove the policy, not just a signature:**
@@ -181,11 +190,22 @@ gpg-connect-agent 'SCD GETATTR UIF-1' /bye
 echo "tessera <root|release> ceremony $(date -u +%FT%TZ)" > ~/proof.txt
 gpg --local-user "$FPR" --digest-algo SHA256 --armor --detach-sign ~/proof.txt && gpg --verify ~/proof.txt.asc ~/proof.txt
 ```
-2. No touch: run the signing command again (output `~/nt.asc`), enter the PIN, **do not touch**. It must fail
-   (timeout) and produce no signature.
-3. Fresh PIN: sign once more (`~/p2.asc`). It must ask for the PIN again. Note whether it did.
+2. No touch: enter the PIN, then **do not touch**; wait for it to fail.
+```
+rm -f ~/nt.asc; gpg --local-user "$FPR" --digest-algo SHA256 --armor --output ~/nt.asc --detach-sign ~/proof.txt; echo "exit=$?"; test -s ~/nt.asc && echo "FAIL-SIGNED-WITHOUT-TOUCH" || echo NO-SIGNATURE-OK
+```
+   Pass: a timeout error, a nonzero exit and `NO-SIGNATURE-OK`.
+3. Fresh PIN: sign again, touching this time. It must ask for the PIN again.
+```
+rm -f ~/p2.asc; gpg --local-user "$FPR" --digest-algo SHA256 --armor --output ~/p2.asc --detach-sign ~/proof.txt && gpg --verify ~/p2.asc ~/proof.txt && echo P2-OK
+```
+   Note whether the PIN was asked for again.
 4. `gpg --card-status`: record the signature counter (1 per successful signature).
-Copy `proof.txt` and `proof.txt.asc` to the out stick for the owner's verifier check.
+Copy the proof to the out stick (the same one as S6, reinserted and rechecked; it has not left the session):
+```
+[ "$(findmnt -n -o TARGET --target "$O")" = "$O" ] && cp ~/proof.txt ~/proof.txt.asc "$O/" && sync && ls -l "$O" && echo PROOF-COPIED
+```
+Eject it.
 
 **S10. Shut down.** Remove the YubiKey.
 
@@ -265,7 +285,7 @@ C07 B's production use waits for §9; independence of requesters is not claimed 
 
 ## Revision 3 changes (Codex F01–F05)
 
-F01 touch is read back with `--with-colons` and must be value 2 (permanent). F02 each backup is restored and used in
+F01 *(superseded by revision 4: the colon output cannot show permanent)* touch read back with `--with-colons`. F02 each backup is restored and used in
 a separate keyring while the original key is still in memory (S5 step 4); the card transfer and every shutdown in
 the failure table depend on two proven backups; a working card is never reset because backups failed. F03 Session 2
 sets `B` and `FPR` by hand and gives complete commands. F04 the destination is checked by its exact mount and
@@ -280,12 +300,15 @@ Session 1 (S0–S10) and Session 2, exactly as written, with these substitutions
 - Name the key `Tessera REHEARSAL 2`; YubiKey **C**; throwaway PINs and passphrase (still never photographed).
 - Backups: the two sticks that will be **A's** backups (one Kingston, one Lexar). The real ceremony reformats them in
   S5, which destroys the throwaway backup.
-- Out stick: the rehearsal-1 stick (already "out only"), not one of the new ones.
+- Out stick: the new **`ROOT-OUT`** (Kingston), **used offline only**: it never goes to the NUC during or after
+  the rehearsal, and the real ceremony reformats it in S6. **Never the rehearsal-1 stick**: it touched the NUC and
+  must not enter a signing session (the error in revision 4, Codex H01).
 - At S8, record the output of `gpg-connect-agent 'SCD GETATTR UIF-1' /bye` (a photo is fine). **This is the check
   rehearsal 2 exists for:** the first byte must be `02`. If not, stop and bring the output to the owner.
 - After Session 2: factory-reset C (`gpg --card-edit`, `admin`, `factory-reset`) and shut down.
-Bring the out stick to the owner, who checks the proof signature with the verifier's code and records the run,
-including step times and anything that did not go as written.
+Nothing goes to the NUC. Photograph (public outputs only): the S0 versions, the S8 `SCD GETATTR UIF-1` output,
+the S9 results (`NO-SIGNATURE-OK`, `P2-OK`) and the Session 2 results. Note step times and anything that did not go
+as written. The verifier's acceptance of this kind of signature was already shown in rehearsal 1.
 
 ## Sticks (author, 2026-11-06): 3 Kingston, 3 Lexar
 
@@ -298,10 +321,19 @@ including step times and anything that did not go as written.
 | Out stick, root session | Kingston |
 | Out stick, release session | Lexar |
 
-Each key's two backups are from different vendors, so one bad batch cannot take both copies. Label them now.
+Each key's two backups are from different vendors, which reduces the chance that one bad batch takes both copies
+(it does not rule out a shared component). Label them now.
 
 ## Revision 4 changes (Codex confirmation 2)
 
 F01: Codex withdrew its own revision-2 advice; GnuPG's status parser reduces UIF to on/off, so S8 now reads the raw
 value from the card via `SCD GETATTR UIF-1`, to be validated in rehearsal 2. F03: the card-only boot sets `B` and
 `FPR`. C03: no-autorun stated. C02/C06: OpenPGP version recorded; firmware needs `ykman`, not available offline.
+
+## Revision 5 changes (Codex confirmation 3)
+
+H01: rehearsal 2 no longer uses the NUC-exposed rehearsal-1 stick; it uses the new `ROOT-OUT` offline only, and
+nothing from the rehearsal goes to the NUC. F01: expected output corrected to `S UIF-1 %02+`, with explicit stop
+conditions. Out stick: formatted, labelled and checked by exact mount at S6; S9 copies to it with a printed command.
+S9: full commands for the no-touch and fresh-PIN tests. Vendor wording bounded. Revision 3's colon-readback summary
+marked superseded.

@@ -1,0 +1,2664 @@
+Reading additional input from stdin...
+OpenAI Codex v0.165.0
+--------
+workdir: /home/tony/projects/tessera
+model: gpt-6.1-sol
+provider: openai
+approval: never
+sandbox: danger-full-access
+reasoning effort: none
+reasoning summaries: none
+session id: 01a1b148-e720-7b81-8ca1-0f376533f2c5
+--------
+user
+Read docs/reviews/ceremony/BRIEF-CONFIRM-3.md and carry out the confirmation it describes, including the appended prechecks. Write the report where the brief says.
+2026-11-06T14:35:08.189173Z ERROR codex_memories_write::phase2: Phase 2 no changes
+codex
+I’ll read the brief and repository guidance, run the confirmation and appended prechecks, then write the report at the specified path.
+exec
+/bin/bash -lc "pwd; rg --files -g AGENTS.md -g 'BRIEF-CONFIRM-3.md'; rg -n 'ceremony|confirmation' /home/tony/.codex/memories/MEMORY.md" in /home/tony/projects/tessera
+ succeeded in 0ms:
+/home/tony/projects/tessera
+docs/reviews/ceremony/BRIEF-CONFIRM-3.md
+141:- Symptom: “confirmation clean,” passing vectors, or differential agreement is treated as readiness. Fix: state the exact coverage; textual confirmation did not discharge implementation, publication, cryptographic, or human-test obligations. [Task 1]
+
+exec
+/bin/bash -lc 'cat docs/reviews/ceremony/BRIEF-CONFIRM-3.md; git status --short; for p in /AGENTS.md /home/AGENTS.md /home/tony/AGENTS.md /home/tony/projects/AGENTS.md /home/tony/projects/tessera/AGENTS.md; do if [ -f "$p" ]; then cat "$p"; fi; done' in /home/tony/projects/tessera
+ succeeded in 0ms:
+# Confirmation brief 3: key ceremony revision 4 (owner, 2026-11-06)
+
+`docs/ceremony/CEREMONY.md` is now revision 4, after your `CODEX-CONFIRM-2.md`. Read-only except your report. Check:
+(1) F01: S8 now reads the raw UIF value with `gpg-connect-agent 'SCD GETATTR UIF-1' /bye`, expecting `S UIF-1 %02%20`.
+From the GnuPG 2.4 scdaemon source (app-openpgp.c getattr for UIF-1/2/3, and how assuan percent-escapes status
+data), will this return the card's raw DO D6 bytes unaltered, so that 02 means permanent? Cite source lines. The
+author's rehearsal 2 will test it on the real stack; tell us what output to expect and what would falsify it.
+(2) F03: the card-only boot now sets B and FPR. (3) The new "Rehearsal 2" and "Sticks" sections: any step that
+would leave the real ceremony's backup sticks or out stick in a bad state, or any way the dress rehearsal fails to
+exercise a step the real ceremony depends on. (4) Any remaining HIGH finding. Write docs/reviews/ceremony/CODEX-CONFIRM-3.md.
+
+# Owner prechecks, run by the reviewer
+
+> **Status: OWNER PROCESS, 2026-10-27.** Every owner instance has written these down as lessons and then repeated
+> the mistakes (the 2026-10-19 stone, and its 2026-10-27 postscript "Naming it did not stop it"). The author's
+> answer to "what do new owners get wrong in their first week": *"that they will behave differently from the prior
+> instances."* So these checks are not left to the owner's self-review. The owner appends this file verbatim to
+> every review brief (Codex or another family), and the reviewer reports each check as PASS or FAIL with file:line.
+
+## Checks
+
+1. **Capture row.** For every plain-language statement of what holds, what happens when an attacker controls both
+   authority channels (DNS and git)? If the text implies that the attacker's own keys are rejected, or that a
+   capture is detected or made visible, that is FAIL. Ground truth: `docs/V1-CONTRACT.md` §2 (after G10) and §4.
+2. **Trigger clause.** For every registered rule cited as authority (an amendment section, a table row, a ruling),
+   did the rule's trigger condition actually occur? Citing a consequence whose trigger has not happened is FAIL.
+3. **Requester.** For every security claim about keys or signing, who can cause a signature to be made? A claim
+   that reasons only about where a key is stored, and not about who can submit work to the signer, is FAIL.
+4. **Binding text.** For every sentence the document treats as a requirement, is it registered (a signed amendment,
+   the freeze, or a recorded author ruling), or is it something an instance wrote? An unregistered sentence used as a
+   requirement is FAIL. Since 2026-10-27, `docs/V1-SCHEDULE.md`'s ruling budget is a known instance of this. Also FAIL: an owner
+   requirement (a resolution, a design document, a code constant) that contradicts a registered sentence. Since
+   2026-10-29, S4's 24-hour FAILED against A2.3's per-attempt `declared + δ + S` expiry is the known instance.
+?? docs/reviews/ceremony/BRIEF-CONFIRM-3.md
+?? docs/reviews/ceremony/codex-confirm-3.log
+
+exec
+/bin/bash -lc 'cat docs/ceremony/CEREMONY.md; cat docs/reviews/ceremony/CODEX-CONFIRM-2.md; cat docs/V1-CONTRACT.md' in /home/tony/projects/tessera
+ succeeded in 0ms:
+# Key ceremony: repository root (YubiKey A) and release key (YubiKey B)
+
+> **Status: OWNER DRAFT, revision 4, 2026-11-04.** Reviewed by Codex three times (`docs/reviews/ceremony/`:
+> `CODEX-REVIEW.md` C01–C07, `CODEX-CONFIRM.md` F01–F05, `CODEX-CONFIRM-2.md`). **Not ready for the real
+> ceremony until rehearsal 2 validates the raw touch readback in S8** (see "Rehearsal 2" at the end).
+> Basis: `docs/V1-RELEASE-KEY-CUSTODY-DRAFT.md` §5–§8 and the first rehearsal (`2026-11-01-rehearsal-1.md`). Key
+> type from `docs/V1-PROFILE.md` §15.4: v4 ECDSA P-256. The rehearsal showed a key made this way, on the author's
+> Tails stick and a YubiKey 5, signs in a form the verifier's git path accepts, and that touch was enforced.
+> It generates the keys only. Using B for a production release needs the custody draft's §9 (independent review,
+> exact-hash approval, controlled input media) implemented and rehearsed first; generating B does not close
+> A10.4.2's independence requirement (C07).
+> **Secret** values (PINs, passphrases, secret keys, backup locations) never go on paper you photograph, into chat,
+> the repository or the NUC. **Non-secret** choices and results (versions, serials, fingerprints, pass/fail) go into
+> the custody record in the repository.
+
+## Why two keys, two sessions, separate backups
+
+- **Repository root (A)** signs key-assertion commits and the end-of-issuance statement: the git channel's authority.
+- **Release key (B)** signs verifier releases, which carry the trust file naming A. A relying party that installs a
+  release authenticated by B trusts the repository keys it lists. So B must not be capturable together with A, the
+  DNS credential or the AWS account (A10.4.2, registered).
+- So each key gets its own session, passphrase, PINs and backup sticks, and A's and B's backups, papers and tokens are
+  kept apart. Then finding one place yields at most one key's material. This does not defend shared hardware or boot
+  firmware that is itself compromised (custody draft's peripheral assumption).
+
+## What you need (per key)
+
+| Item | Count | Notes |
+|---|---|---|
+| Tails boot stick | 1 (shared) | **Persistent Storage must not be unlocked** in these sessions. Boot only. |
+| YubiKey | 1 | A or B, labelled. C and D stay spares. |
+| Backup sticks | 2 | New, never in the NUC. `ROOT-BK1`/`ROOT-BK2` or `REL-BK1`/`REL-BK2`. |
+| Out stick | 1 | New. Public files only. Goes to the NUC afterwards and never returns. |
+| Paper | 2 sheets | Public sheet (versions, serial, fingerprint, hashes, pass/fail). Secret sheet (passphrase, PINs), kept apart from the backups. |
+
+Total new sticks for both keys: **6**.
+
+## Owner decisions (2026-11-02; recorded, not secret)
+
+- **Hardware mode**: the key lives on the YubiKey; the two backups are the only other copies, and they are
+  exportable signing authority, protected only by their passphrase and where they are kept.
+- **Backups**: the passphrase-protected secret-key export on a LUKS2 volume made by Tails' *Disks*. One passphrase
+  per key serves both layers; this is one barrier, not two, and is accepted. A's and B's passphrases are independent.
+  The actual LUKS parameters are read back and recorded (step S5.4).
+- **Card KDF off.** It would keep the PIN off the USB wire. Accepted boundary: the host and its USB path are trusted
+  for the session. KDF would not help against a hostile host, which sees the PIN anyway.
+- **No expiry** on either key. Validity comes from the trust configuration's signing interval and release lineage.
+- **Touch fixed (`uif … permanent`) and signature PIN forced.** If either cannot be confirmed, stop (step S8).
+- **No reset code** on the card (retry counter shows 0 for it).
+
+## Before the first session (author)
+
+1. Note the Tails version and where its image signature was verified (a device that is not the NUC). The author
+   names the signing hardware (the System76) and checks it for stored credentials and inbound access (custody draft
+   §5): git/gh tokens, cloud CLIs, logged-in browsers, SSH server or `authorized_keys`. Record date and result.
+2. Six new sticks, labelled.
+
+## Session 1: generate, back up, load the card (once per key, on separate boots)
+
+Network cable out, Wi-Fi off. At the Tails Welcome Screen: **do not unlock Persistent Storage**; set an
+administration password (needed by *Disks*). Start Tails, open a terminal.
+
+**S0. Check the session.** Every check must hold, or stop.
+```
+cat /etc/os-release | grep -E 'PRETTY|VERSION'; gpg --version | head -2; /usr/lib/gnupg/scdaemon --version | head -1
+ip -brief link                                       # every link except lo is DOWN or absent
+swapon --show                                        # prints nothing
+lsblk -o NAME,TYPE,MOUNTPOINT                        # no internal disk partition has a mountpoint
+export GNUPGHOME="$(mktemp -d /tmp/gnupg.XXXXXX)"; chmod 700 "$GNUPGHOME"; echo "$GNUPGHOME"
+findmnt -n -o FSTYPE --target "$GNUPGHOME"           # must print: tmpfs
+```
+If the last line prints anything but `tmpfs`, stop: the procedure has not been checked on this Tails, and the owner
+must look before any key exists. (Run S0 alone once beforehand to find out; it creates nothing.)
+Tails does not run anything from inserted media; insert nothing but the sticks this procedure names, and open
+nothing on them except the files it names. Write the Tails, GnuPG and scdaemon versions and the `GNUPGHOME` path
+on the public sheet. Run nothing from the NUC:
+no script, no configuration file, no copied command file. **Every later command runs in this same terminal.** If you
+open another, type `export GNUPGHOME=<the path on the sheet>` (do not run `mktemp` again).
+
+**S1. Check the card.** Insert only the labelled YubiKey.
+```
+gpg --card-status
+```
+Yubico, no keys, PIN retries `3 0 3`, a `UIF setting` line. Write the serial and the OpenPGP version (the
+`Version` line) on the label and the public sheet. (The YubiKey firmware number itself needs `ykman`, which this
+session does not have; OpenPGP 3.4 implies firmware 5.2.3 or later.)
+
+**S2. New PINs** (never used elsewhere; on the secret sheet):
+```
+gpg --card-edit
+admin
+passwd
+```
+`3` admin PIN (default `12345678`), `1` user PIN (default `123456`), `q`, `q`.
+If a PIN is refused: stop, run `gpg --card-status`, read the retry counter. Do not guess.
+
+**S3. Signature slot to P-256** (expert mode is required for P-256 on some GnuPG versions):
+```
+gpg --expert --card-edit
+admin
+key-attr
+```
+Signature key: `2` (ECC), then the **NIST P-256** entry (its number may differ; read the list). For the encryption
+and authentication keys, choose the option that keeps the current attribute (or press Enter if offered). Admin
+PIN. `q`. Then `gpg --card-status`: Key attributes must begin `nistp256`.
+
+**S4. Generate in memory:**
+```
+gpg --expert --full-generate-key
+```
+`10` (ECC, sign only), NIST P-256 entry, expiry `0`. Name `Tessera repository root` (A) or `Tessera release key`
+(B); email `tessera@wamason.com`. Passphrase. Then:
+```
+gpg --list-secret-keys --with-fingerprint
+FPR=<the 40 hex digits, no spaces>
+gpg --list-keys "$FPR" >/dev/null && echo FPR-OK
+```
+Write the fingerprint on the public sheet; read it back.
+
+**S5. Two backups, one stick at a time.**
+1. *Disks* → the stick → *Format Disk* (GPT) → `+` → *Internal disk for use with Linux systems only (Ext4)*,
+   **Password protect volume (LUKS)**, passphrase, name `ROOT-BK1` (etc.). Unlock and mount it in *Files*.
+2. Confirm it is the encrypted volume, then write and check each file (any `FAIL` → stop, see Failures):
+```
+B="/media/amnesia/ROOT-BK1"                         # exactly the name shown in Files
+DEV="$(findmnt -n -o SOURCE --target "$B")"; MNT="$(findmnt -n -o TARGET --target "$B")"
+[ "$MNT" = "$B" ] && [ "$(lsblk -no TYPE "$DEV")" = crypt ] && echo "LUKS-OK $DEV" || echo FAIL-NOT-LUKS
+gpg --export-secret-keys --armor "$FPR" > "$B/secret.asc" && test -s "$B/secret.asc" && echo SECRET-OK || echo FAIL
+gpg --export --armor "$FPR" > "$B/public.asc" && test -s "$B/public.asc" && echo PUBLIC-OK || echo FAIL
+cp "$GNUPGHOME/openpgp-revocs.d/$FPR.rev" "$B/revocation.rev" && test -s "$B/revocation.rev" && echo REV-OK || echo FAIL
+sync; ls -l "$B"
+```
+3. Record the LUKS parameters (not secret), from the partition under that exact mapper:
+   `sudo cryptsetup luksDump "/dev/$(lsblk -no PKNAME "$DEV")" | grep -E 'Version|cipher|PBKDF'` must show
+   `Version: 2`. Write it on the public sheet.
+4. **Prove this backup restores, while the original key is still in memory** (a second, separate keyring):
+```
+T="$(mktemp -d /tmp/restore.XXXXXX)"; chmod 700 "$T"
+GNUPGHOME="$T" gpg --batch --import "$B/secret.asc" && GNUPGHOME="$T" gpg --list-secret-keys --with-colons | grep "^fpr:::::::::$FPR:" >/dev/null && echo FPR-MATCH || echo FAIL
+echo restore > "$T/r.txt"; GNUPGHOME="$T" gpg --local-user "$FPR" --digest-algo SHA256 --armor --detach-sign "$T/r.txt" && GNUPGHOME="$T" gpg --verify "$T/r.txt.asc" "$T/r.txt" && echo RESTORE-OK || echo FAIL
+gpgconf --homedir "$T" --kill gpg-agent; rm -rf "$T"
+```
+   It asks for the passphrase (the backup's key passphrase). `FPR-MATCH` and `RESTORE-OK` both, or this backup is
+   not good: redo S5 for it on a new stick.
+5. Eject in *Files*; remove.
+
+**S6. Public key to the out stick:**
+```
+O="/media/amnesia/<OUT label>"
+gpg --export --armor "$FPR" > "$O/root.pub.asc" && test -s "$O/root.pub.asc" && sha256sum "$O/root.pub.asc"
+```
+(`release.pub.asc` for B.) SHA-256 on the public sheet. Eject; remove. Nothing secret, and not the revocation
+certificate, ever goes on this stick.
+
+**S7. Move the key to the card** (only after S5 printed every `-OK`, including `RESTORE-OK`, for both sticks):
+```
+gpg --edit-key "$FPR"
+keytocard
+```
+Answer **y** to "Really move the primary key?", choose `1` (signature key), passphrase, admin PIN, then `save`.
+Then `gpg --card-status`: the signature key line shows your fingerprint. If not, see Failures (do not reset the card).
+
+**S8. Card policy, set and confirmed:**
+```
+gpg --card-status | grep -E 'Signature PIN|UIF'
+```
+- If it says `Signature PIN ....: not forced`: `gpg --card-edit`, `admin`, `forcesig`, `q`. Re-read: must say
+  `forced`. (`forcesig` toggles; never run it when it already says forced.)
+- `gpg --card-edit`, `admin`, `uif 1 permanent`, `q`. Then read the card's raw value. GnuPG's own status output
+  (human or `--with-colons`) reduces it to on/off and cannot show "permanent", so ask the card through the agent:
+```
+gpg-connect-agent 'SCD GETATTR UIF-1' /bye
+```
+  Expected: a line `S UIF-1 %02%20` (first byte `02` = permanent; `01` = ordinary on; `00` = off), then `OK`.
+  If `uif` is an unknown command, or the first byte is not `02`: **stop**. Do not proceed without fixed touch.
+  *(This readback is validated in rehearsal 2 before the real ceremony.)*
+
+**S9. Prove the policy, not just a signature:**
+1. Positive: sign, enter the user PIN, **touch when it blinks** (GnuPG does not prompt):
+```
+echo "tessera <root|release> ceremony $(date -u +%FT%TZ)" > ~/proof.txt
+gpg --local-user "$FPR" --digest-algo SHA256 --armor --detach-sign ~/proof.txt && gpg --verify ~/proof.txt.asc ~/proof.txt
+```
+2. No touch: run the signing command again (output `~/nt.asc`), enter the PIN, **do not touch**. It must fail
+   (timeout) and produce no signature.
+3. Fresh PIN: sign once more (`~/p2.asc`). It must ask for the PIN again. Note whether it did.
+4. `gpg --card-status`: record the signature counter (1 per successful signature).
+Copy `proof.txt` and `proof.txt.asc` to the out stick for the owner's verifier check.
+
+**S10. Shut down.** Remove the YubiKey.
+
+## Session 2: tests in fresh boots (no secret key in memory at start)
+
+Each in its own boot, same S0 checks (a new `GNUPGHOME`), YubiKey **not** inserted unless stated. A new boot has
+no variables: set them by hand each time.
+1. **Each backup** (twice: BK1, then BK2). Unlock only that stick in *Files*, then:
+```
+B="/media/amnesia/ROOT-BK2"                         # the stick actually inserted
+FPR=<the fingerprint from the public sheet, no spaces>
+gpg --batch --import "$B/secret.asc" && gpg --list-secret-keys --with-colons | grep "^fpr:::::::::$FPR:" >/dev/null && echo FPR-MATCH || echo FAIL
+echo restore-test > ~/r.txt && gpg --local-user "$FPR" --digest-algo SHA256 --armor --detach-sign ~/r.txt && gpg --verify ~/r.txt.asc ~/r.txt && echo RESTORE-OK || echo FAIL
+```
+   Record pass/fail on the public sheet.
+2. **The card alone**: insert only the YubiKey and one backup stick (for its `public.asc` only; import nothing
+   secret). Set the variables again: this is a new boot.
+```
+B="/media/amnesia/ROOT-BK1"                         # the stick actually inserted
+FPR=<the fingerprint from the public sheet, no spaces>
+gpg --import "$B/public.asc" && gpg --card-status >/dev/null
+echo card-test > ~/c.txt && gpg --local-user "$FPR" --digest-algo SHA256 --armor --detach-sign ~/c.txt && gpg --verify ~/c.txt.asc ~/c.txt && echo CARD-OK || echo FAIL
+```
+   PIN, then touch when it blinks. This proves the card works without any residue of the generation session.
+
+**Acceptance:** S5 all `-OK`, S7 fingerprint on the card, S8 both policies confirmed, S9 steps 1–3 as expected,
+Session 2 all three pass. Anything else: the key is not accepted (see Failures).
+
+## Failures (do the safe thing first)
+
+| What happened | Do this |
+|---|---|
+| Any S0 check fails | Stop. Shut down. Nothing secret exists yet. |
+| A backup step prints FAIL | The key is still in memory. Do not continue to S7. Reformat that stick (or use a new one) and redo S5 for it. |
+| `keytocard` fails or the card shows no key after S7 | Read `gpg --card-status`. Retry S3/S7 once. Shut down only if both backups printed `RESTORE-OK` in S5 step 4: then the key survives on proven copies, and goes onto another YubiKey in a later session. If fewer than two did, do not shut down: redo S5 on new sticks first. Do not reset the card blindly. |
+| A PIN is refused | Stop; read the retry counter. Never guess down to zero. |
+| S8 cannot confirm forced PIN or fixed touch | Stop before S9. The card holds the key without its policy; record it; decide with the owner. |
+| S9 no-touch test signs anyway | Policy failed: the key is not accepted. |
+| A Session 2 restore fails | That backup is not good. From the other backup or the card, nothing is lost: in a new session, restore the good backup and make a replacement on a new stick (S5), then retest. |
+| Both backups fail in Session 2 but the card works | Keep the card; do not reset it. Stop and decide with the owner: accept a card-only key without backup (loss means a new key and a new release), or generate a new key. Nothing is published until decided. |
+| Both backups and the card unusable | Generate a new key; the old fingerprint is discarded and never published. |
+
+## After both keys
+
+- **Storage (author):** each key's two backups in two different places; A's and B's material not together; secret
+  sheets apart from backups. Tell the owner only "done".
+- **Owner, on the NUC:** mount the out stick read-only; check each public key with the verifier's code (82-byte v4
+  P-256 body) and the proof signatures; write the dated custody record: Tails and GnuPG versions, image verification
+  device, signing hardware and its credential check, YubiKey serials, fingerprints, LUKS parameters, card policies
+  read back, test results, this revision's hash, the rehearsal link, "backups in two places: yes". No secrets, no
+  locations.
+- **Independent fingerprint (author):** on a device that is not the NUC, compute the fingerprint from the public key
+  file itself (not from a printed string) and compare with the paper.
+- **Retained outside the NUC:** each backup stick holds `public.asc`, so the approved public keys exist away from
+  the operational environment.
+- A's public key then enters the trust configuration's `repository_keys`.
+- **B's first acquisition (needed before B's first production use, not for this ceremony):** two matching web
+  publications do not authenticate a key; an attacker holding the repository and DNS could substitute both. The
+  author names one channel that passes through neither the NUC, the repository nor DNS (for example a fingerprint
+  the author publishes on a university page, or prints in a signed paper), and after publication checks the actual
+  published fingerprint in each place against the paper. The dated first-production-release bootstrap record links
+  B's fingerprint to the freeze baseline (A10.4.2).
+
+## Time
+
+Estimate per key: 45–60 minutes for Session 1, about 10 minutes per test boot in Session 2 (three per key).
+The first real session will measure it.
+
+## Revision 2 changes (Codex C01–C07)
+
+C01 `--expert --card-edit` and read the curve list. C02 versions recorded at S0; touch confirmed by readback and the
+no-touch test, stop if unconfirmed (the rehearsal's `uif` was accepted and touch was enforced, so the author's Tails
+evidently has a GnuPG newer than 2.2.40). C03 no Persistent Storage, RAM `GNUPGHOME`, session checks, credential
+check on the hardware. C04 checked exports, LUKS confirmation, acceptance conditions, failure table. C05 `forcesig`
+read before toggling; no-touch and fresh-PIN tests; card-only test in a fresh boot. C06 non-secret choices recorded.
+C07 B's production use waits for §9; independence of requesters is not claimed here.
+
+## Revision 3 changes (Codex F01–F05)
+
+F01 touch is read back with `--with-colons` and must be value 2 (permanent). F02 each backup is restored and used in
+a separate keyring while the original key is still in memory (S5 step 4); the card transfer and every shutdown in
+the failure table depend on two proven backups; a working card is never reset because backups failed. F03 Session 2
+sets `B` and `FPR` by hand and gives complete commands. F04 the destination is checked by its exact mount and
+mapper, and LUKS2 is read from the partition under that mapper. F05 B's first acquisition needs a channel outside the
+NUC, repository and DNS, chosen by the author before B's first production use; public keys are retained on the
+backup sticks. C02/C03 residuals: scdaemon version recorded; GNUPGHOME must be on tmpfs or stop; no NUC scripts.
+
+## Rehearsal 2 (before the real ceremony): a dress rehearsal of this revision on YubiKey C
+
+YubiKey C was factory-reset after rehearsal 1, so rehearsal 2 runs the whole procedure with a throwaway key:
+Session 1 (S0–S10) and Session 2, exactly as written, with these substitutions:
+- Name the key `Tessera REHEARSAL 2`; YubiKey **C**; throwaway PINs and passphrase (still never photographed).
+- Backups: the two sticks that will be **A's** backups (one Kingston, one Lexar). The real ceremony reformats them in
+  S5, which destroys the throwaway backup.
+- Out stick: the rehearsal-1 stick (already "out only"), not one of the new ones.
+- At S8, record the output of `gpg-connect-agent 'SCD GETATTR UIF-1' /bye` (a photo is fine). **This is the check
+  rehearsal 2 exists for:** the first byte must be `02`. If not, stop and bring the output to the owner.
+- After Session 2: factory-reset C (`gpg --card-edit`, `admin`, `factory-reset`) and shut down.
+Bring the out stick to the owner, who checks the proof signature with the verifier's code and records the run,
+including step times and anything that did not go as written.
+
+## Sticks (author, 2026-11-06): 3 Kingston, 3 Lexar
+
+| Role | Vendor |
+|---|---|
+| `ROOT-BK1` | Kingston |
+| `ROOT-BK2` | Lexar |
+| `REL-BK1` | Lexar |
+| `REL-BK2` | Kingston |
+| Out stick, root session | Kingston |
+| Out stick, release session | Lexar |
+
+Each key's two backups are from different vendors, so one bad batch cannot take both copies. Label them now.
+
+## Revision 4 changes (Codex confirmation 2)
+
+F01: Codex withdrew its own revision-2 advice; GnuPG's status parser reduces UIF to on/off, so S8 now reads the raw
+value from the card via `SCD GETATTR UIF-1`, to be validated in rehearsal 2. F03: the card-only boot sets `B` and
+`FPR`. C03: no-autorun stated. C02/C06: OpenPGP version recorded; firmware needs `ykman`, not available offline.
+# Ceremony revision 3 — Codex confirmation 2
+
+Reviewed 2026-11-04 against `BRIEF-CONFIRM-2.md`, including all four appended owner prechecks. **Revision 3 is not yet ready for production key generation: F01 remains HIGH and F03 remains partly unresolved.** The in-session backup restoration fixes the previous last-copy shutdown defect under the stated trusted-session assumptions.
+
+Snapshot: HEAD `a10bd19a18e3f0c395c9d38b2809a17e107a9097`; working-tree `docs/ceremony/CEREMONY.md` SHA-256 `5a7d17887f1c901c7646cf1566e7f9ccf44bada1c8da795e9f290f394878d832`. References below are to that file unless qualified. Repository review was read-only except this report; pre-existing ceremony, deployment and log changes were preserved. No production key, card, PIN, backup or secret was accessed. Synthetic software-key probes ran in temporary directories and were cleaned up. This is document/source confirmation, not a Tails/YubiKey rehearsal or release-independence certification.
+
+## Requested dispositions
+
+| Finding/residual | Resolved by revision 3? | Evidence and limit |
+|---|---|---|
+| F01 — fixed-touch readback | **NO, HIGH** | Lines 165–171 require colon value 2. The inspected upstream parser destroys that distinction before formatting. See correction below. |
+| F02 — last-copy shutdown | **YES at the procedural level** | Lines 132–140 restore and sign with each export before transfer; 151 gates S7 on both tests; 216 gates failed-transfer shutdown on both proven backups. Lines 221–222 preserve a working card and distinguish total loss. This does not prove later media durability. |
+| F03 — fresh-boot variables | **PARTLY, MEDIUM remains** | Lines 193–196 supply variables and complete backup commands, with the actual-stick substitution stated. Lines 199–204 still omit both assignments in the separate card-only boot. |
+| F04 — destination/LUKS check | **YES for the reported mount-confusion defect** | Lines 121–123 require the exact target and backing-device type `crypt`; 129–131 inspect the partition under that mapper and require LUKS version 2. An ordinary directory or similarly named mount no longer passes. Identity of the physical stick still depends on the operator's Disks/Files selection at 117–121 and the one-stick rule, not cryptographic device authentication. |
+| F05 — bootstrap | **YES as an explicitly deferred gate** | Lines 233–243 require independent fingerprint computation, retained public keys, actual-publication comparison and a channel outside NUC/repository/DNS, selected by the author before production use. No particular channel has yet been selected or tested; this resolves the ceremony's omission, not authenticated acquisition itself. |
+| C02 residual — versions/fixed touch | **PARTLY** | scdaemon is now printed/recorded at 65,74; GnuPG/Tails likewise. Card firmware is still not explicitly collected or included in the custody record (80–82,228–232). F01 prevents permanence confirmation on inspected upstream versions. The version inference at 253–254 remains an inference. |
+| C03 residual — isolation | **PARTLY** | Lines 30,53–55,60–76 prohibit unlocked persistence, require tmpfs, check links/swap/internal mounts, identify hardware and explicitly ban NUC scripts/configuration. The prior explicit no-autorun condition remains absent; custody draft §5, line 128, supplies it as a proposed session condition. State/check it here or cite its application. No claim of live-session isolation is established by this review. |
+| C04 residual — backup/failure safety | **PARTLY overall** | F02 and F04 are repaired; F03 still prevents literal completion of final card acceptance. S5 export, fingerprint and signing checks are materially stronger (119–140). |
+| C06 residual — custody record | **PARTLY** | Lines 228–243 add/retain public records, independent computation, outside retention and bootstrap obligations; 129–131 record selected LUKS fields. Firmware and protected secret-export settings are still unspecified. The filter records Version/cipher/PBKDF, not the full KDF/cost settings, tool versions or export-protection format requested in the earlier review. These are custody-draft completeness gaps, not a registered mandate for a particular cipher. |
+
+## F01 retained HIGH — correction to my revision-2 recommendation
+
+**Lines 165–171,261.** My earlier report incorrectly said numeric colon output preserves the permanent/on distinction. That recommendation was wrong; revision 3 follows it faithfully. The error arose from inspecting the formatter without following the incoming status parser.
+
+In both upstream tags inspected, `g10/call-agent.c:754–764` handles `UIF-1/2/3`, indexes the first slot with `keyword[4] - '1'`, and assigns `parm->uif[no] = (data[0] != 0xff)`. This produces only 0 or 1. Consequently ordinary raw values 0, 1 and 2 all become 1. Sources: [2.4.4 parser](https://github.com/gpg/gnupg/blob/gnupg-2.4.4/g10/call-agent.c#L754-L764), [2.4.8 parser](https://github.com/gpg/gnupg/blob/gnupg-2.4.8/g10/call-agent.c#L754-L764).
+
+The formatter at `g10/card-util.c:544–545` prints those already-converted values in slot order. The first field does refer to the signature slot, but cannot be 2 on this path. Separately, the setter at 2250–2258 maps `permanent` to raw byte `0x02`; thus **2 means permanent when setting the policy, but the inspected readback does not preserve it**. Sources: [2.4.4 card utility](https://github.com/gpg/gnupg/blob/gnupg-2.4.4/g10/card-util.c#L544-L545), [2.4.8 card utility](https://github.com/gpg/gnupg/blob/gnupg-2.4.8/g10/card-util.c#L2250-L2258).
+
+Concrete failure: a correctly fixed signing slot on an unpatched inspected stack still prints first value 1, requiring the operator to stop at 171. Accepting 1 instead would not establish fixed touch, or even raw UIF-on from this parser alone. Keep the stop; replace the readback with a separately validated raw/card-policy inspection or a pinned implementation demonstrated to preserve the raw value. Rehearse it on the actual stack. This report supplies no untested replacement command and does not recommend trying to disable touch on a production key. Specific upstream tags do not certify all 2.4.x releases or downstream patches.
+
+## F03 retained MEDIUM — card-only boot still lacks variables
+
+**Lines 189–190,199–204,264.** The prose says to set variables each boot, but the supposedly complete card-only block never sets `B` or `FPR`. Those assignments appear only in the preceding backup-test boot. A clean-shell expansion probe produced import operand `/public.asc` and an empty signing selector. No import was run in that probe.
+
+Concrete failure: the operator starts the required third boot, runs S0, inserts the card and unlocks a backup, then follows 202–203. The public import fails because `/public.asc` does not exist, so the primary test cannot complete. Repeat explicit assignments for the actual mounted backup and paper fingerprint immediately before 202. Keep this boot public-import-only. The revision summary at 264 currently overstates completion.
+
+## S5 restoration, agents and shutdown audit
+
+The per-command `GNUPGHOME="$T"` assignments at 135–136 do not overwrite the shell's original exported home. The import, listing, signing and verification all target the restore home. At 137, `gpgconf --homedir "$T" --kill gpg-agent` targets that home's agent, and deletion targets the restore directory, not the generation keyring. Separate homes also separate agent sockets; see [GnuPG homedir option](https://www.gnupg.org/documentation/manuals/gnupg/Agent-Options.html).
+
+A local GnuPG 2.4.4 probe used a newly generated, passphrase-protected synthetic P-256 primary and two temporary homes. The restore home used a synthetic pinentry responder solely to exercise the protected prompt path without a GUI. The literal `gpg --batch --import` and subsequent sign/verify sequence all exited 0; one GETPIN request occurred. Agent socket paths differed. Killing the restore agent exited 0; the original agent still answered with `--no-autostart`, and the original secret key remained listed. All probe agents/directories were removed. Production commands/configuration were not changed.
+
+A passphrase can be requested during import and cached for the following signature; a second prompt at signing is not required for backup recovery. This probe confirms software-home separation and successful decryption/use, not the actual Tails pinentry GUI, LUKS readback, card behavior or secret erasure. A failed cleanup command should be handled before proceeding; the semicolon at 137 does not itself prove agent termination. No ordinary successful execution here disturbs the original key.
+
+Shutdown paths:
+
+- Line 214 is safe before generation in Session 1. When S0 is reused in Session 2, its “nothing secret exists yet” means no session RAM key; persistent copies already exist. Reword that explanation for accuracy.
+- Lines 215 and 217 stop/retry without authorizing loss of the RAM key. Failed backups block S7.
+- Line 216 now permits transfer-failure shutdown only with two in-session proven backups. This repairs the original HIGH loss scenario.
+- Lines 218–219 reject policy failures after the backup gate; stopping then leaves the proven backups. Normal shutdown at 185 likewise follows S5/S7/S9.
+- Lines 220–221 preserve remaining copies and explicitly protect a usable card. A card cannot recreate an exportable secret backup; replacement at 220 needs a usable secret backup as its next clause says. Card-only recovery is the separate owner decision at 221.
+- Line 222 describes total unusability and deliberate replacement; it cannot preserve a proven copy because its premise is that none remains usable. The absolute summary at 262–263 should retain this exception and the pre-generation exception.
+
+Thus no remaining instruction authorizes destroying the last demonstrated usable copy on the original F02 scenario. S5 tests do not guarantee that media cannot later fail or the retained passphrase cannot later be lost.
+
+S9's earlier command-completeness note also remains: lines 179–181 name alternate outputs but do not print complete `--output` commands. Print them and verify the second positive signature. An overwrite cancellation or unrelated failure is not a no-touch timeout; the existing acceptance wording requires the expected outcomes.
+
+## Appended owner prechecks
+
+| Check | Result | File:line evidence |
+|---|---|---|
+| 1. Capture row | **PASS** | `CEREMONY.md:18–24,238–243,257` assigns authority roles, preserves the shared-hardware assumption and explicitly recognizes dual-channel bootstrap substitution. It promises no rejection of fresh attacker-key receipts and no capture visibility. Ground truth: `docs/V1-CONTRACT.md:34–37,50–53,72–74`: fresh attacker-key receipts pass under dual capture; honest-material protection and authentic distribution remain conditional. |
+| 2. Trigger clause | **PASS** | `CEREMONY.md:9–11,20–21,238–243` invokes an existing independence prerequisite and a future first-production-use gate, without asserting that release occurred or triggering fallback. Registered basis: `docs/phase-0-prereg-amendment-10.md:616,624–643,668–676`. Key generation is not that release trigger. |
+| 3. Requester | **PASS for the bounded ceremony claim** | `CEREMONY.md:9–11,38–49,53–55,173–183,257` places ceremony requests with the author and explicitly defers production candidate review, exact-hash approval and media controls. Exportable backups are acknowledged at 40–43; storage/touch are not claimed to establish requester independence. The operational owner can propose release bytes; the author must independently approve the exact archive under `docs/V1-RELEASE-KEY-CUSTODY-DRAFT.md:253–278`. That future procedure remains unestablished here. |
+| 4. Binding text | **PASS** | `CEREMONY.md:3–11,38–49` distinguishes OWNER DRAFT operating choices from registered A10.4.2 (`docs/phase-0-prereg-amendment-10.md:624–643`). Key generation matches the profile's P-256 primary-key direction (`docs/V1-PROFILE.md:1679,1941–1942`). No ruling budget or fixed 24-hour FAILED rule is imported. Firmware/autorun/settings gaps above are deficiencies against the proposed custody procedure (`docs/V1-RELEASE-KEY-CUSTODY-DRAFT.md:128,165–167,198–200`), not invented signed requirements. Ceremony proof signatures at 176–177 are not production archive signatures governed by profile R3. No contradiction with a registered requirement was found in this bounded review. |
+
+No amendment adoption, freeze compliance, full custody conformance, TEST-authority rejection rehearsal, deployed-package identity, production acquisition or release-independence gate is discharged by this confirmation.
+# V1 service contract and failure model
+
+> **Status: OWNER DRAFT, 2026-10-19** (Claude Opus 5.5, owner instance). It restates what A9.1 and A10 already
+> registered. It changes no registered sentence; if it disagrees with A9 or A10, they win and this page is wrong.
+> Revised the same day after a full Codex review (`docs/reviews/v1-contract/CODEX-REVIEW.md`, VC-01 to VC-25, all
+> applied; `DISPOSITION.md`). Purpose: one page that the formal models, the conformance cases, the service and the
+> testers are all checked against, so that when two of them disagree we can see whether the contract, the model or
+> the code is at fault (the author's method, travelog 2026-10-19).
+
+## 1. What a client gets
+
+The client sends bytes. Tessera returns a **receipt**: a bundle that anyone can check later, without Tessera
+running and without our help.
+
+## 2. Guarantees
+
+**Conditions.** Every guarantee assumes the registered cryptographic, key-use, authority, chain-history and
+distribution assumptions (A9:32–52, A9:128–136). In particular: nobody misused the service's signing capability,
+SHA-256 and OpenTimestamps hold, and the checker's verifier release is authentic.
+
+When those hold, a checker who has the receipt, the published verifier and its trust configuration can establish:
+
+| # | Guarantee | Source |
+|---|---|---|
+| G1 | **Exact bytes.** The receipt binds these exact bytes. Change one bit and the check fails. | C1 |
+| G2 | **Presented to Tessera.** The bytes were presented to the Tessera V1 service at some issuance. | C2 |
+| G3 | **Both signatures.** Both of the service's keys signed. A missing, stripped or swapped signature fails. | C3 |
+| G4 | **The keys were Tessera's.** DNSSEC (`_tessera-v1.wamason.com`, at the snapshot's own anchored time) and a signed git commit (at its own evidence time) named the keys for the service's domain. The git commit was in the Bitcoin chain at least 6 blocks before the receipt. | C4, A10.6 |
+| G5 | **Existed by a block.** The signed bytes and both signatures existed before a specific Bitcoin block: the lowest-height qualifying block in the presented proof, confirmed 6 deep. | C5, A10.1, A10.5 |
+| G6 | **A real-time bound, under an unchecked assumption.** A-UTC says at least one of that block and its 5 successors has a time stamp at most 2 hours behind when it was made. If A-UTC holds, the bytes existed before U (the latest of those 6 times, plus 2 hours). U is reported separately and never changes the verdict. | A10.1.1 |
+| G7 | **Window, two checks only.** The declared issue time is not before the keys' window opened, and the chain time T is not after it closed. This does not prove the signing happened inside the window. | C4, A10.2 |
+| G8 | **No Tessera needed.** The verdict depends only on the inputs above. | C6 |
+| G9 | **A typed verdict.** Once the trust configuration is authenticated, the verifier returns `VALID_STRICT`, `INVALID` or `UNVERIFIABLE`, with a reason code and `revocation: NOT_EVALUATED`, `historical_security: NOT_EVALUATED`, `standing: ABSENT/NOT_ISSUED_IN_PROFILE`. Missing required evidence prevents acceptance. A valid receipt still leaves everything in §3 unestablished. If the trust configuration is not authenticated, there is no receipt verdict. | C7; A9.5 trust-configuration authority; V1-PROFILE §5 (`TRUST_CONFIG_UNAUTHENTICATED`) |
+| G10 | **Honest receipts cannot be moved.** If an attacker takes over the DNS and git authority records while the service's own keys stay secret and unmisused, it cannot move honestly signed frames to other keys or bytes, or change their signer sets, whether they were signed before or after the takeover. | A10.4 |
+**No G11.** The service-key listing (A10.4.1) is not in V1, by the author's ruling of 2026-10-23 (E9 row 2,
+`docs/reviews/e9-packet/AUTHOR-RULINGS.md`; `docs/decisions/2026-10-19-listing-cut.md`). G10 holds while the independent release boundary of A9.5 holds.
+**New receipts under an attacker's own keys pass when both authority channels are captured.**
+
+## 3. Not guaranteed
+
+Each of these is a deliberate limit, not a missing feature.
+
+- **Who submitted the bytes**, or that a replayed receipt suits the current transaction (case f).
+- **What the bytes mean**, or that they are true. A contract inside the bytes is the checker's to verify (cases i, i′).
+- **That a key was not revoked** (cases e, e′).
+- **That an algorithm or a key was still safe** when it signed.
+- **Any lower time bound or priority.** "Existed by" is never "existed after" or "came first".
+- **Real time without A-UTC.** Without it, only chain order is claimed.
+- **Standing** of any kind.
+- **Separate control of the two keys.** One controller holds both. Capturing the issuing AWS account means both
+  slots can sign.
+- **Visibility.** Publishing the authority records is the issuer's duty; the verifier does not check it. V1
+  guarantees no detection or public exposure of a capture, of new receipts, or of a release given to one party.
+- **That DNSSEC shows publication before issue.**
+- **Anything after a Bitcoin reorganization of 6 or more blocks.**
+- **Renewal, degraded modes, or wrappers.** These are refused (`UNVERIFIABLE`), including honest ones (cases d2, h:
+  the two registered false rejects).
+- **One receipt per presentation.** A receipt id (SHA-256 of `A_sig`) names a receipt, not a presentation. Signing
+  is randomized, so the same honest frames can carry more than one valid signature set and therefore more than one
+  valid receipt, each with its own T. Each still meets G1–G10. (Owner, 2026-10-19, from finding E-02 of the first
+  real run.)
+- **Stability of T and U across different proofs.** A different proof or pin set can select a different block.
+- **Protection for a checker who skips authenticating the verifier release** or runs a substituted one.
+
+## 4. Failure model
+
+| Failure or attacker | What still holds |
+|---|---|
+| Tessera disappears | Everything in §2, if the holder kept the receipt and the verifier release. Reconstruction after the project dies is not demonstrated. |
+| Attacker alters a receipt or moves its signatures | Rejected (G1, G3, G10). |
+| Attacker uses its own keys, authority records not captured | Rejected: the required authority evidence does not name them (G4). |
+| Attacker captures both DNS and git authority records | Honest receipts protected (G10). New receipts under its own keys **pass** (the listing was cut). |
+| Attacker captures the issuing AWS account | **Not protected.** It can issue receipts that verify. |
+| Attacker steals the release key | Not protected: it can publish releases with a trust configuration of its choosing. This is distribution compromise, which A9 excludes (A9:47–52). A checker who installs no later release is unaffected. |
+| Bitcoin miners lie about time | G5 holds (chain order). G6 holds only under A-UTC. |
+| Bitcoin reorganizes fewer than 6 blocks | G5 holds. |
+
+## 5. Pairing: where each guarantee is checked
+
+The method needs every guarantee checked twice: once by a formal model or inspection, once by tests against the
+implementation. When the two disagree, we fix the contract, the model or the code. This is a first mapping, not
+yet checked case by case.
+
+**These are mappings, not pairs.** A pair, in the method's sense, runs the same scenario on both sides, so that a
+disagreement means something. Here the model side and the test side were written separately, for different
+scenarios, and none of the rows below runs one scenario through both. The tupay project's M1 found the same gap in
+its own workflow ("the pairs were not pairs", `../tupay/experiments/M1-result.md`). Making real pairs (shared
+scenarios, and a `derives: G…` tag on each case and model element) is post-freeze work. (Owner, 2026-10-21.)
+
+| # | Model side | Test side (`prototype/conformance/cases-index.json` groups) |
+|---|---|---|
+| G1 | P1, P8 (prose proof and vectors) | container, codec, field grammar, numbers, spec binding, receipt consistency, OTS |
+| G2 | P1 | A9.1 mapping |
+| G3 | P2, P3 | signature profile, possession, hybrid semantics, hybrid routing, hybrid positive, keys, receipt consistency |
+| G4 | P10, S-P3: abstract authority and key binding only | DNSSEC, DNS record, git, chain order, authority isolation, pinned D |
+| G5 | P5, P5c: temporal and confirmation rules. Existence before the block is an assumption, not modelled. | OTS, proofs, time |
+| G6 | none | UTC assessment (UTC-01..UTC-10: honest, nonmonotone ×2, 2106 boundary, lowest-height segment, reported with INVALID and UNVERIFIABLE, null with T null ×3); `prototype/indep-verifier/tests/test_utc_assessment.py` (11 tests, including the real-1 receipt's headers 972187..972192); `prototype/e2e/tests/test_driver_dry.py::test_dry_run_utc_assessment`. Built 2026-10-19 (profile §7.4). A-UTC itself is unchecked by design |
+| G7 | none (P5/P5c model related rules, not these endpoints) | time |
+| G8 | P9: contract and code inspection; no discharging model is required | offline reproducibility vectors not built (`release checker` tests configuration updates) |
+| G9 | P4 | dispatch, aggregation, A9.1 mapping, container (d2), trust config |
+| G10 | S-P3 (honest-material key binding) | none named; honest-material transplant tests to be identified or built |
+
+**Gaps this table shows.**
+- Model missing: G6 (tests added 2026-10-19; A-UTC is an assumption, not a modelled property), G7's endpoints, and
+  concrete authority (G4 beyond the abstract model).
+- Tests missing: G8's offline reproducibility vectors, G10's honest-material transplant cases.
+
+## 6. What the tester does (4 December)
+
+One independent tester, who meets the criteria in `docs/V1-TESTER-BRIEF.md`, takes a receipt bundle and the
+verifier release and runs the verifier. For each case in A9.1's scenario mapping, the tester decides from the
+documentation alone whether to rely on the receipt, with no help from the project. **Pass:** no unsafe accepts,
+and false rejects only on d2 and h. The result is that one tester's result.
+
+exec
+/bin/bash -lc "nl -ba docs/ceremony/CEREMONY.md | tail -80; cat docs/reviews/ceremony/CODEX-CONFIRM-2.md; nl -ba docs/phase-0-prereg-amendment-10.md | sed -n '610,680p'; nl -ba docs/V1-RELEASE-KEY-CUSTODY-DRAFT.md | sed -n '245,285p'" in /home/tony/projects/tessera
+ succeeded in 0ms:
+   228	| Both backups fail in Session 2 but the card works | Keep the card; do not reset it. Stop and decide with the owner: accept a card-only key without backup (loss means a new key and a new release), or generate a new key. Nothing is published until decided. |
+   229	| Both backups and the card unusable | Generate a new key; the old fingerprint is discarded and never published. |
+   230	
+   231	## After both keys
+   232	
+   233	- **Storage (author):** each key's two backups in two different places; A's and B's material not together; secret
+   234	  sheets apart from backups. Tell the owner only "done".
+   235	- **Owner, on the NUC:** mount the out stick read-only; check each public key with the verifier's code (82-byte v4
+   236	  P-256 body) and the proof signatures; write the dated custody record: Tails and GnuPG versions, image verification
+   237	  device, signing hardware and its credential check, YubiKey serials, fingerprints, LUKS parameters, card policies
+   238	  read back, test results, this revision's hash, the rehearsal link, "backups in two places: yes". No secrets, no
+   239	  locations.
+   240	- **Independent fingerprint (author):** on a device that is not the NUC, compute the fingerprint from the public key
+   241	  file itself (not from a printed string) and compare with the paper.
+   242	- **Retained outside the NUC:** each backup stick holds `public.asc`, so the approved public keys exist away from
+   243	  the operational environment.
+   244	- A's public key then enters the trust configuration's `repository_keys`.
+   245	- **B's first acquisition (needed before B's first production use, not for this ceremony):** two matching web
+   246	  publications do not authenticate a key; an attacker holding the repository and DNS could substitute both. The
+   247	  author names one channel that passes through neither the NUC, the repository nor DNS (for example a fingerprint
+   248	  the author publishes on a university page, or prints in a signed paper), and after publication checks the actual
+   249	  published fingerprint in each place against the paper. The dated first-production-release bootstrap record links
+   250	  B's fingerprint to the freeze baseline (A10.4.2).
+   251	
+   252	## Time
+   253	
+   254	Estimate per key: 45–60 minutes for Session 1, about 10 minutes per test boot in Session 2 (three per key).
+   255	The first real session will measure it.
+   256	
+   257	## Revision 2 changes (Codex C01–C07)
+   258	
+   259	C01 `--expert --card-edit` and read the curve list. C02 versions recorded at S0; touch confirmed by readback and the
+   260	no-touch test, stop if unconfirmed (the rehearsal's `uif` was accepted and touch was enforced, so the author's Tails
+   261	evidently has a GnuPG newer than 2.2.40). C03 no Persistent Storage, RAM `GNUPGHOME`, session checks, credential
+   262	check on the hardware. C04 checked exports, LUKS confirmation, acceptance conditions, failure table. C05 `forcesig`
+   263	read before toggling; no-touch and fresh-PIN tests; card-only test in a fresh boot. C06 non-secret choices recorded.
+   264	C07 B's production use waits for §9; independence of requesters is not claimed here.
+   265	
+   266	## Revision 3 changes (Codex F01–F05)
+   267	
+   268	F01 touch is read back with `--with-colons` and must be value 2 (permanent). F02 each backup is restored and used in
+   269	a separate keyring while the original key is still in memory (S5 step 4); the card transfer and every shutdown in
+   270	the failure table depend on two proven backups; a working card is never reset because backups failed. F03 Session 2
+   271	sets `B` and `FPR` by hand and gives complete commands. F04 the destination is checked by its exact mount and
+   272	mapper, and LUKS2 is read from the partition under that mapper. F05 B's first acquisition needs a channel outside the
+   273	NUC, repository and DNS, chosen by the author before B's first production use; public keys are retained on the
+   274	backup sticks. C02/C03 residuals: scdaemon version recorded; GNUPGHOME must be on tmpfs or stop; no NUC scripts.
+   275	
+   276	## Rehearsal 2 (before the real ceremony): a dress rehearsal of this revision on YubiKey C
+   277	
+   278	YubiKey C was factory-reset after rehearsal 1, so rehearsal 2 runs the whole procedure with a throwaway key:
+   279	Session 1 (S0–S10) and Session 2, exactly as written, with these substitutions:
+   280	- Name the key `Tessera REHEARSAL 2`; YubiKey **C**; throwaway PINs and passphrase (still never photographed).
+   281	- Backups: the two sticks that will be **A's** backups (one Kingston, one Lexar). The real ceremony reformats them in
+   282	  S5, which destroys the throwaway backup.
+   283	- Out stick: the rehearsal-1 stick (already "out only"), not one of the new ones.
+   284	- At S8, record the output of `gpg-connect-agent 'SCD GETATTR UIF-1' /bye` (a photo is fine). **This is the check
+   285	  rehearsal 2 exists for:** the first byte must be `02`. If not, stop and bring the output to the owner.
+   286	- After Session 2: factory-reset C (`gpg --card-edit`, `admin`, `factory-reset`) and shut down.
+   287	Bring the out stick to the owner, who checks the proof signature with the verifier's code and records the run,
+   288	including step times and anything that did not go as written.
+   289	
+   290	## Sticks (author, 2026-11-06): 3 Kingston, 3 Lexar
+   291	
+   292	| Role | Vendor |
+   293	|---|---|
+   294	| `ROOT-BK1` | Kingston |
+   295	| `ROOT-BK2` | Lexar |
+   296	| `REL-BK1` | Lexar |
+   297	| `REL-BK2` | Kingston |
+   298	| Out stick, root session | Kingston |
+   299	| Out stick, release session | Lexar |
+   300	
+   301	Each key's two backups are from different vendors, so one bad batch cannot take both copies. Label them now.
+   302	
+   303	## Revision 4 changes (Codex confirmation 2)
+   304	
+   305	F01: Codex withdrew its own revision-2 advice; GnuPG's status parser reduces UIF to on/off, so S8 now reads the raw
+   306	value from the card via `SCD GETATTR UIF-1`, to be validated in rehearsal 2. F03: the card-only boot sets `B` and
+   307	`FPR`. C03: no-autorun stated. C02/C06: OpenPGP version recorded; firmware needs `ykman`, not available offline.
+# Ceremony revision 3 — Codex confirmation 2
+
+Reviewed 2026-11-04 against `BRIEF-CONFIRM-2.md`, including all four appended owner prechecks. **Revision 3 is not yet ready for production key generation: F01 remains HIGH and F03 remains partly unresolved.** The in-session backup restoration fixes the previous last-copy shutdown defect under the stated trusted-session assumptions.
+
+Snapshot: HEAD `a10bd19a18e3f0c395c9d38b2809a17e107a9097`; working-tree `docs/ceremony/CEREMONY.md` SHA-256 `5a7d17887f1c901c7646cf1566e7f9ccf44bada1c8da795e9f290f394878d832`. References below are to that file unless qualified. Repository review was read-only except this report; pre-existing ceremony, deployment and log changes were preserved. No production key, card, PIN, backup or secret was accessed. Synthetic software-key probes ran in temporary directories and were cleaned up. This is document/source confirmation, not a Tails/YubiKey rehearsal or release-independence certification.
+
+## Requested dispositions
+
+| Finding/residual | Resolved by revision 3? | Evidence and limit |
+|---|---|---|
+| F01 — fixed-touch readback | **NO, HIGH** | Lines 165–171 require colon value 2. The inspected upstream parser destroys that distinction before formatting. See correction below. |
+| F02 — last-copy shutdown | **YES at the procedural level** | Lines 132–140 restore and sign with each export before transfer; 151 gates S7 on both tests; 216 gates failed-transfer shutdown on both proven backups. Lines 221–222 preserve a working card and distinguish total loss. This does not prove later media durability. |
+| F03 — fresh-boot variables | **PARTLY, MEDIUM remains** | Lines 193–196 supply variables and complete backup commands, with the actual-stick substitution stated. Lines 199–204 still omit both assignments in the separate card-only boot. |
+| F04 — destination/LUKS check | **YES for the reported mount-confusion defect** | Lines 121–123 require the exact target and backing-device type `crypt`; 129–131 inspect the partition under that mapper and require LUKS version 2. An ordinary directory or similarly named mount no longer passes. Identity of the physical stick still depends on the operator's Disks/Files selection at 117–121 and the one-stick rule, not cryptographic device authentication. |
+| F05 — bootstrap | **YES as an explicitly deferred gate** | Lines 233–243 require independent fingerprint computation, retained public keys, actual-publication comparison and a channel outside NUC/repository/DNS, selected by the author before production use. No particular channel has yet been selected or tested; this resolves the ceremony's omission, not authenticated acquisition itself. |
+| C02 residual — versions/fixed touch | **PARTLY** | scdaemon is now printed/recorded at 65,74; GnuPG/Tails likewise. Card firmware is still not explicitly collected or included in the custody record (80–82,228–232). F01 prevents permanence confirmation on inspected upstream versions. The version inference at 253–254 remains an inference. |
+| C03 residual — isolation | **PARTLY** | Lines 30,53–55,60–76 prohibit unlocked persistence, require tmpfs, check links/swap/internal mounts, identify hardware and explicitly ban NUC scripts/configuration. The prior explicit no-autorun condition remains absent; custody draft §5, line 128, supplies it as a proposed session condition. State/check it here or cite its application. No claim of live-session isolation is established by this review. |
+| C04 residual — backup/failure safety | **PARTLY overall** | F02 and F04 are repaired; F03 still prevents literal completion of final card acceptance. S5 export, fingerprint and signing checks are materially stronger (119–140). |
+| C06 residual — custody record | **PARTLY** | Lines 228–243 add/retain public records, independent computation, outside retention and bootstrap obligations; 129–131 record selected LUKS fields. Firmware and protected secret-export settings are still unspecified. The filter records Version/cipher/PBKDF, not the full KDF/cost settings, tool versions or export-protection format requested in the earlier review. These are custody-draft completeness gaps, not a registered mandate for a particular cipher. |
+
+## F01 retained HIGH — correction to my revision-2 recommendation
+
+**Lines 165–171,261.** My earlier report incorrectly said numeric colon output preserves the permanent/on distinction. That recommendation was wrong; revision 3 follows it faithfully. The error arose from inspecting the formatter without following the incoming status parser.
+
+In both upstream tags inspected, `g10/call-agent.c:754–764` handles `UIF-1/2/3`, indexes the first slot with `keyword[4] - '1'`, and assigns `parm->uif[no] = (data[0] != 0xff)`. This produces only 0 or 1. Consequently ordinary raw values 0, 1 and 2 all become 1. Sources: [2.4.4 parser](https://github.com/gpg/gnupg/blob/gnupg-2.4.4/g10/call-agent.c#L754-L764), [2.4.8 parser](https://github.com/gpg/gnupg/blob/gnupg-2.4.8/g10/call-agent.c#L754-L764).
+
+The formatter at `g10/card-util.c:544–545` prints those already-converted values in slot order. The first field does refer to the signature slot, but cannot be 2 on this path. Separately, the setter at 2250–2258 maps `permanent` to raw byte `0x02`; thus **2 means permanent when setting the policy, but the inspected readback does not preserve it**. Sources: [2.4.4 card utility](https://github.com/gpg/gnupg/blob/gnupg-2.4.4/g10/card-util.c#L544-L545), [2.4.8 card utility](https://github.com/gpg/gnupg/blob/gnupg-2.4.8/g10/card-util.c#L2250-L2258).
+
+Concrete failure: a correctly fixed signing slot on an unpatched inspected stack still prints first value 1, requiring the operator to stop at 171. Accepting 1 instead would not establish fixed touch, or even raw UIF-on from this parser alone. Keep the stop; replace the readback with a separately validated raw/card-policy inspection or a pinned implementation demonstrated to preserve the raw value. Rehearse it on the actual stack. This report supplies no untested replacement command and does not recommend trying to disable touch on a production key. Specific upstream tags do not certify all 2.4.x releases or downstream patches.
+
+## F03 retained MEDIUM — card-only boot still lacks variables
+
+**Lines 189–190,199–204,264.** The prose says to set variables each boot, but the supposedly complete card-only block never sets `B` or `FPR`. Those assignments appear only in the preceding backup-test boot. A clean-shell expansion probe produced import operand `/public.asc` and an empty signing selector. No import was run in that probe.
+
+Concrete failure: the operator starts the required third boot, runs S0, inserts the card and unlocks a backup, then follows 202–203. The public import fails because `/public.asc` does not exist, so the primary test cannot complete. Repeat explicit assignments for the actual mounted backup and paper fingerprint immediately before 202. Keep this boot public-import-only. The revision summary at 264 currently overstates completion.
+
+## S5 restoration, agents and shutdown audit
+
+The per-command `GNUPGHOME="$T"` assignments at 135–136 do not overwrite the shell's original exported home. The import, listing, signing and verification all target the restore home. At 137, `gpgconf --homedir "$T" --kill gpg-agent` targets that home's agent, and deletion targets the restore directory, not the generation keyring. Separate homes also separate agent sockets; see [GnuPG homedir option](https://www.gnupg.org/documentation/manuals/gnupg/Agent-Options.html).
+
+A local GnuPG 2.4.4 probe used a newly generated, passphrase-protected synthetic P-256 primary and two temporary homes. The restore home used a synthetic pinentry responder solely to exercise the protected prompt path without a GUI. The literal `gpg --batch --import` and subsequent sign/verify sequence all exited 0; one GETPIN request occurred. Agent socket paths differed. Killing the restore agent exited 0; the original agent still answered with `--no-autostart`, and the original secret key remained listed. All probe agents/directories were removed. Production commands/configuration were not changed.
+
+A passphrase can be requested during import and cached for the following signature; a second prompt at signing is not required for backup recovery. This probe confirms software-home separation and successful decryption/use, not the actual Tails pinentry GUI, LUKS readback, card behavior or secret erasure. A failed cleanup command should be handled before proceeding; the semicolon at 137 does not itself prove agent termination. No ordinary successful execution here disturbs the original key.
+
+Shutdown paths:
+
+- Line 214 is safe before generation in Session 1. When S0 is reused in Session 2, its “nothing secret exists yet” means no session RAM key; persistent copies already exist. Reword that explanation for accuracy.
+- Lines 215 and 217 stop/retry without authorizing loss of the RAM key. Failed backups block S7.
+- Line 216 now permits transfer-failure shutdown only with two in-session proven backups. This repairs the original HIGH loss scenario.
+- Lines 218–219 reject policy failures after the backup gate; stopping then leaves the proven backups. Normal shutdown at 185 likewise follows S5/S7/S9.
+- Lines 220–221 preserve remaining copies and explicitly protect a usable card. A card cannot recreate an exportable secret backup; replacement at 220 needs a usable secret backup as its next clause says. Card-only recovery is the separate owner decision at 221.
+- Line 222 describes total unusability and deliberate replacement; it cannot preserve a proven copy because its premise is that none remains usable. The absolute summary at 262–263 should retain this exception and the pre-generation exception.
+
+Thus no remaining instruction authorizes destroying the last demonstrated usable copy on the original F02 scenario. S5 tests do not guarantee that media cannot later fail or the retained passphrase cannot later be lost.
+
+S9's earlier command-completeness note also remains: lines 179–181 name alternate outputs but do not print complete `--output` commands. Print them and verify the second positive signature. An overwrite cancellation or unrelated failure is not a no-touch timeout; the existing acceptance wording requires the expected outcomes.
+
+## Appended owner prechecks
+
+| Check | Result | File:line evidence |
+|---|---|---|
+| 1. Capture row | **PASS** | `CEREMONY.md:18–24,238–243,257` assigns authority roles, preserves the shared-hardware assumption and explicitly recognizes dual-channel bootstrap substitution. It promises no rejection of fresh attacker-key receipts and no capture visibility. Ground truth: `docs/V1-CONTRACT.md:34–37,50–53,72–74`: fresh attacker-key receipts pass under dual capture; honest-material protection and authentic distribution remain conditional. |
+| 2. Trigger clause | **PASS** | `CEREMONY.md:9–11,20–21,238–243` invokes an existing independence prerequisite and a future first-production-use gate, without asserting that release occurred or triggering fallback. Registered basis: `docs/phase-0-prereg-amendment-10.md:616,624–643,668–676`. Key generation is not that release trigger. |
+| 3. Requester | **PASS for the bounded ceremony claim** | `CEREMONY.md:9–11,38–49,53–55,173–183,257` places ceremony requests with the author and explicitly defers production candidate review, exact-hash approval and media controls. Exportable backups are acknowledged at 40–43; storage/touch are not claimed to establish requester independence. The operational owner can propose release bytes; the author must independently approve the exact archive under `docs/V1-RELEASE-KEY-CUSTODY-DRAFT.md:253–278`. That future procedure remains unestablished here. |
+| 4. Binding text | **PASS** | `CEREMONY.md:3–11,38–49` distinguishes OWNER DRAFT operating choices from registered A10.4.2 (`docs/phase-0-prereg-amendment-10.md:624–643`). Key generation matches the profile's P-256 primary-key direction (`docs/V1-PROFILE.md:1679,1941–1942`). No ruling budget or fixed 24-hour FAILED rule is imported. Firmware/autorun/settings gaps above are deficiencies against the proposed custody procedure (`docs/V1-RELEASE-KEY-CUSTODY-DRAFT.md:128,165–167,198–200`), not invented signed requirements. Ceremony proof signatures at 176–177 are not production archive signatures governed by profile R3. No contradiction with a registered requirement was found in this bounded review. |
+
+No amendment adoption, freeze compliance, full custody conformance, TEST-authority rejection rehearsal, deployed-package identity, production acquisition or release-independence gate is discharged by this confirmation.
+   610	changed sentences are rows 25–33 and 37–39 of A10.7.
+   611	
+   612	### A10.4.2 Release-key custody — AUTHOR ADOPTED 2026-10-18 (recommended by the owner and Codex; gate timing by owner proposal, 2026-10-17), GATE
+   613	
+   614	Source: the decision memo, Part 2 ("Release independence"); its Codex review, F05; `docs/V1-PROFILE.md` §5 and
+   615	§14.2 items 1–2; the custody review `docs/reviews/custody/CODEX-REVIEW.md` (C01 and C02, HIGH); the owner's timing
+   616	proposal of 2026-10-17, recorded here. This section applies under every option of A10.4.
+   617	
+   618	**Author ruling, 2026-10-18** (`docs/reviews/amendment-10-r4/AUTHOR-RULINGS.md`): *"That's it.  The other three
+   619	items, while dense, seem rational are accepted."* And, confirming the owner's reading that this adopts A10.1.1,
+   620	A10.4 option (e) with A10.4.1 and A10.4.2: *"Yes. That's my understanding.  I focused on reading those sections of
+   621	the document.  A 10.4.2 stood out because you disagreed, but even for those where you were in agreement, I read what
+   622	was proposed and accepted the recommendation as being "rationally based.""*
+   623	
+   624	- **Prerequisite.** Independence of the release key from the DNS credential, the repository key and the issuing AWS
+   625	  account is an existing prerequisite of A9.5's trust-configuration authority (A9:326-332). It already protects
+   626	  V1's KSKs, repository trust and header pins against the channel captor, with or without the listing. It is still
+   627	  OPEN (profile §14.2 item 1; YubiKey 2 is not in hand).
+   628	- **Custody form.** Hardware or offline-software custody of the release key is acceptable **only** with a written
+   629	  custody and release-authorization procedure. The procedure states who authorizes releases, where signing occurs,
+   630	  and how backups stay outside the operational environment of the service. After the custody review it must also
+   631	  state (C01) the independent review-and-build environment that checks each candidate release against an approved
+   632	  baseline kept outside the operational environment and binds approval to the exact archive hash, and (C02) the
+   633	  controlled media crossing into and out of the signing session. The dated custody record names the procedure.
+   634	- **Hardware is not independence.** Buying hardware alone does not establish independence.
+   635	- **When: the first public verifier release, not the freeze.** The custody review found that real independence
+   636	  needs an independent review-and-sign environment and a controlled media crossing (C01, C02), which cannot be ready
+   637	  by 30 Oct. The *first public verifier release* is the first verifier release signed by the production release key
+   638	  and offered to relying parties.
+   639	  - **Frozen at the 30 Oct freeze:** this requirement; the release format (the release archive, the release-signature
+   640	    format, and how the trust-file hash binds to the release; profile §14.2 item 2), which must be frozen by 30 Oct;
+   641	    and the custody procedure's required contents (the bullet above).
+   642	  - **After the freeze, before the first public verifier release** (target: before the 20 Nov issuance milestone):
+   643	    the environment is built and rehearsed, the written procedure is reviewed, and independence is established.
+   644	- **Test releases.** Every verifier release made before that gate is signed with a separate TEST release key. Its
+   645	  public key is never published as the release key, never named in the freeze record or relying-party text, and
+   646	  never introduced by a production release. A pre-gate TEST signature cannot authenticate a production release.
+   647	  Production authentication must use the independently authenticated production release key and must reject TEST
+   648	  authority, including TEST provisioning overrides. This does not protect a user who skips authentication or
+   649	  acquires a substituted initial key.
+   650	  - *Offering restriction.* No pre-gate artifact is offered for production reliance: pre-gate releases are offered
+   651	    only as TEST releases, never as releases on which relying parties may rely.
+   652	  - *Required rehearsal.* Before the first public verifier release, a rehearsal must show that an otherwise correct
+   653	    archive with only a TEST signature is refused by the production acquisition and verification procedure,
+   654	    including when the TEST key is supplied through the test interface (profile §3.5's provisioning override).
+   655	    Missing or substituted bootstrap authority is not accepted as production merely because a signature verifies.
+   656	  - Profile §3.5 binds no production release; it supplies no evidence that the production path excludes TEST
+   657	    provisioning. The rehearsal is that evidence.
+   658	- **Risks and mitigations** (owner's proposal):
+   659	  1. *Schedule.* The schedule risk moves later. Mitigation: start preparing the environment and procedure early.
+   660	  2. *Post-freeze specification change.* Avoided: the release format is frozen by 30 Oct.
+   661	  3. *Convenience release* (a release signed outside the procedure because the environment is not ready). Closed for
+   662	     production authentication by the test-release rule and its rehearsal above.
+   663	  4. *The author's time in November.* Accepted by the author, 2026-10-17: *"(4) is acceptable to me"*. This
+   664	     accepted that risk only; his ruling on A10.4.2 is the 2026-10-18 ruling above.
+   665	  5. *Relying parties.* No pre-gate artifact is offered for production reliance (the offering restriction above),
+   666	     and production authentication rejects TEST authority. A user who skips authentication or acquires a substituted
+   667	     initial key is not protected; that is the existing distribution boundary (A9.5).
+   668	- **Bootstrap record.** Profile §5 and runbook §6 put the release public key's fingerprint in the freeze record.
+   669	  Under this timing the production release key need not exist at the freeze. Its fingerprint is therefore recorded
+   670	  in a dated first-production-release bootstrap record that identifies the original freeze baseline and the actual
+   671	  production key. The original freeze record is preserved; it is not amended to claim that the fingerprint was
+   672	  present on 30 Oct. Profile §5, §14.2 items 1–2 and runbook §6 are reconciled with this split between registration
+   673	  at the freeze and execution before the first public verifier release, after this amendment's signing commit.
+   674	- **Fallback.** If independence cannot be established before the first public verifier release, the author receives
+   675	  a NARROW-MODEL of the channel-capture claim (A9:41-42, as amended by rows 15 and 25) before that release. Cutting
+   676	  the listing does not cure it. A custody failure is never an automatic, invisible reversion of the threat model.
+   677	
+   678	The changed sentences are rows 34–36 of A10.7.
+   679	
+   680	## A10.5 Attestation selection, in stages — OWNER DECISION, CLARIFY (review A05)
+   245	Custody record: write a dated record with the fingerprint, the custody mode, the procedure revision and hash, the
+   246	signing setup, the laptop credential check, and confirmation that the backups are in two places. Do not record
+   247	where they are. Link the rehearsal record.
+   248	
+   249	## 9. Each release
+   250	
+   251	Preparation on the NUC:
+   252	
+   253	1. The owner instance must prepare the verifier release and its trust file.
+   254	2. It must write a release summary that lists every change from the last approved release.
+   255	3. It must include the SHA-256 hash of the release archive.
+   256	4. The author must check the actual release through the independent approval steps below.
+   257	
+   258	The summary does not replace those steps.
+   259	
+   260	Independent approval in the review VM:
+   261	
+   262	1. The author must keep the approved baseline outside the NUC.
+   263	2. For the first release, the author must create the baseline independently. The first NUC summary is not the
+   264	   baseline. *(Author: say how you create it.)*
+   265	3. Check the actual candidate source and trust file against the baseline.
+   266	4. Use a trusted, version-pinned release checker. *(Author: name the checker and its pinned hash.)*
+   267	5. The checker must check the existing release invariants: unchanged entries and pins, nondecreasing `as_of`,
+   268	   version plus one, the `previous_sha256` chain, and no retroactive close of an open end.
+   269	6. If the service-key list is adopted, the checker must also check the complete initial schedule, non-overlap of
+   270	   windows, and `not_before` later than the previous `as_of`.
+   271	7. Reject every unexplained change, including deletions and changes to verifier code.
+   272	8. Check each new service-key fingerprint and window against the authorization record.
+   273	9. A match with the two authority records must never authorize an entry.
+   274	10. For other new trust entries, record their non-secret source.
+   275	11. Build the reviewed source in the review VM.
+   276	12. Check that the built verifier contains the approved trust-file hash and the frozen catalog binding.
+   277	13. Record the approved hashes: the archive, the trust file and the catalog.
+   278	14. Record the author's decision. Write the approved archive and the public key to a new input medium.
+   279	
+   280	*(Author: say how you obtain each service-key fingerprint without the NUC and the two authority records.)*
+   281	
+   282	Signing:
+   283	
+   284	1. Start a new signing session. Copy the input files to memory and disconnect the input medium.
+   285	2. Compare the archive hash with the approved hash. If they differ, stop.
+
+web search: 
+web search: https://raw.githubusercontent.com/gpg/gnupg/gnupg-2.4.4/scd/app-openpgp.c
+exec
+/bin/bash -lc "python - <<'PY'
+import urllib.request
+for tag in ['gnupg-2.4.4','gnupg-2.4.8']:
+ for f,terms in [('scd/app-openpgp.c',['UIF-1','case 17:','case 18:','case 19:']),('scd/command.c',['send_status_info (','%02X','c <=','c <']),('agent/call-scd.c',['assuan_write_status','status_cb']),('tools/gpg-connect-agent.c',['case ASSUAN_RESPONSE_STATUS','ASSUAN_RESPONSE_STATUS'])]:
+  s=urllib.request.urlopen(f'https://raw.githubusercontent.com/gpg/gnupg/{tag}/{f}').read().decode().splitlines()
+  print(tag,f)
+  hits=[i for i,l in enumerate(s) if any(t in l for t in terms)]
+  for i in hits:
+   for j in range(max(0,i-5),min(len(s),i+18)):print(f'{j+1}: {s[j]}')
+PY" in /home/tony/projects/tessera
+ succeeded in 3152ms:
+gnupg-2.4.4 scd/app-openpgp.c
+1118:     { "PRIVATE-DO-4", 0x0104 },
+1119:     { "$AUTHKEYID",   0x0000, -3 },
+1120:     { "$ENCRKEYID",   0x0000, -6 },
+1121:     { "$SIGNKEYID",   0x0000, -7 },
+1122:     { "$DISPSERIALNO",0x0000, -4 },
+1123:     { "UIF-1",        0x00D6, 0 },
+1124:     { "UIF-2",        0x00D7, 0 },
+1125:     { "UIF-3",        0x00D8, 0 },
+1126:     { "KDF",          0x00F9, 5 },
+1127:     { "MANUFACTURER", 0x0000, -8 },
+1128:     { "UIF",          0x0000, -9 },  /* Shortcut for all UIF */
+1129:     { "KEY-STATUS",   0x00DE,  6 },
+1130:     { "KEY-ATTR-INFO", 0x00FA,  7 },
+1131:     { NULL, 0 }
+1132:   };
+1133:   int idx, i, rc;
+1134:   void *relptr;
+1135:   unsigned char *value;
+1136:   size_t valuelen;
+1137: 
+1138:   for (idx=0; table[idx].name && strcmp (table[idx].name, name); idx++)
+1139:     ;
+1140:   if (!table[idx].name)
+1225:          app->app_local->manufacturer,
+1226:          get_manufacturer (app->app_local->manufacturer));
+1227:     }
+1228:   if (table[idx].special == -9)
+1229:     {
+1230:       rc = do_getattr (app, ctrl, "UIF-1");
+1231:       if (!rc)
+1232:         rc = do_getattr (app, ctrl, "UIF-2");
+1233:       if (!rc)
+1234:         rc = do_getattr (app, ctrl, "UIF-3");
+1235:       return rc;
+1236:     }
+1237: 
+1238:   relptr = get_one_do (app, table[idx].tag, &value, &valuelen, &rc);
+1239:   if (relptr)
+1240:     {
+1241:       if (table[idx].special == 1)
+1242:         {
+1243:           char numbuf[7*23];
+1244: 
+1245:           for (i=0,*numbuf=0; i < valuelen && i < 7; i++)
+1246:             sprintf (numbuf+strlen (numbuf), " %d", value[i]);
+1247:           send_status_info (ctrl, table[idx].name,
+3021:     { "CERT-3",       0x7F21, 0,      3, 0, 1 },
+3022:     { "SM-KEY-ENC",   0x00D1, 0,      3, 0, 1 },
+3023:     { "SM-KEY-MAC",   0x00D2, 0,      3, 0, 1 },
+3024:     { "KEY-ATTR",     0,      0,      0, 3, 1 },
+3025:     { "AESKEY",       0x00D5, 0,      3, 0, 1 },
+3026:     { "UIF-1",        0x00D6, 0,      3, 5, 1 },
+3027:     { "UIF-2",        0x00D7, 0,      3, 5, 1 },
+3028:     { "UIF-3",        0x00D8, 0,      3, 5, 1 },
+3029:     { "KDF",          0x00F9, 0,      0, 4, 1 },
+3030:     { NULL, 0 }
+3031:   };
+3032:   int exmode;
+3033: 
+3034:   for (idx=0; table[idx].name && strcmp (table[idx].name, name); idx++)
+3035:     ;
+3036:   if (!table[idx].name)
+3037:     return gpg_error (GPG_ERR_INV_NAME);
+3038:   if (table[idx].need_v2 && !app->app_local->extcap.is_v2)
+3039:     return gpg_error (GPG_ERR_NOT_SUPPORTED);
+3040:   if (table[idx].need_v3 && !app->app_local->extcap.is_v3)
+3041:     return gpg_error (GPG_ERR_NOT_SUPPORTED);
+3042: 
+3043:   if (table[idx].special == 5 && app->app_local->extcap.has_button == 0)
+gnupg-2.4.4 scd/command.c
+582:           card_put (card);
+583:           return gpg_error (GPG_ERR_INV_VALUE);
+584:         }
+585: 
+586:       rc = assuan_write_status (ctx, "SERIALNO", serial);
+587:       if (rc < 0)
+588:         {
+589:           xfree (serial);
+590:           card_put (card);
+591:           return out_of_core ();
+592:         }
+593: 
+594:       if (!opt_force)
+595:         {
+596:           char *command;
+597: 
+598:           rc = gpgrt_asprintf (&command, "KNOWNCARDP %s", serial);
+599:           if (rc < 0)
+600:             {
+601:               xfree (serial);
+602:               card_put (card);
+603:               return out_of_core ();
+604:             }
+594:       if (!opt_force)
+595:         {
+596:           char *command;
+597: 
+598:           rc = gpgrt_asprintf (&command, "KNOWNCARDP %s", serial);
+599:           if (rc < 0)
+600:             {
+601:               xfree (serial);
+602:               card_put (card);
+603:               return out_of_core ();
+604:             }
+605:           rc = assuan_inquire (ctx, command, NULL, NULL, 0);
+606:           xfree (command);
+607:           if (rc)
+608:             {
+609:               if (gpg_err_code (rc) != GPG_ERR_ASS_CANCELED)
+610:                 log_error ("inquire KNOWNCARDP failed: %s\n",
+611:                            gpg_strerror (rc));
+612:               xfree (serial);
+613:               card_put (card);
+614:               return rc;
+615:             }
+616:           /* Not canceled, so we have to proceed.  */
+739:           return rc;
+740:         }
+741: 
+742:       /* FIXME: Using LINE is not correct because it might be an
+743:        * OID and has not been canonicalized (i.e. uppercased).  */
+744:       send_status_info (ctrl, "KEYPAIRINFO",
+745:                         keygripstr, strlen (keygripstr),
+746:                         line, strlen (line),
+747:                         "-", (size_t)1,
+748:                         "-", (size_t)1,
+749:                         algostr, strlen (algostr),
+750:                         NULL, (size_t)0);
+751:       xfree (algostr);
+752:     }
+753: 
+754:   return rc;
+755: }
+756: 
+757: static const char hlp_readkey[] =
+758:   "READKEY [--format=advanced|ssh] [--info[-only]] <keyid>|<oid>|<keygrip>\n"
+759:   "\n"
+760:   "Return the public key for the given cert or key ID as a standard\n"
+761:   "S-expression.  With --format option, it may be returned in advanced\n"
+963:          We ignore any value returned.  */
+964:       if (info)
+965:         {
+966:           log_debug ("prompting for pinpad entry '%s'\n", info);
+967:           rc = gpgrt_asprintf (&command, "POPUPPINPADPROMPT %s", info);
+968:           if (rc < 0)
+969:             return gpg_error (gpg_err_code_from_errno (errno));
+970:           rc = assuan_inquire (ctx, command, &value, &valuelen, MAXLEN_PIN);
+971:           xfree (command);
+972:         }
+973:       else
+974:         {
+975:           log_debug ("dismiss pinpad entry prompt\n");
+976:           rc = assuan_inquire (ctx, "DISMISSPINPADPROMPT",
+977:                                &value, &valuelen, MAXLEN_PIN);
+978:         }
+979:       if (!rc)
+980:         xfree (value);
+981:       return rc;
+982:     }
+983: 
+984:   *retstr = NULL;
+985:   log_debug ("asking for PIN '%s'\n", info);
+983: 
+984:   *retstr = NULL;
+985:   log_debug ("asking for PIN '%s'\n", info);
+986: 
+987:   rc = gpgrt_asprintf (&command, "NEEDPIN %s", info);
+988:   if (rc < 0)
+989:     return gpg_error (gpg_err_code_from_errno (errno));
+990: 
+991:   /* Fixme: Write an inquire function which returns the result in
+992:      secure memory and check all further handling of the PIN. */
+993:   assuan_begin_confidential (ctx);
+994:   rc = assuan_inquire (ctx, command, &value, &valuelen, MAXLEN_PIN);
+995:   assuan_end_confidential (ctx);
+996:   xfree (command);
+997:   if (rc)
+998:     return rc;
+999: 
+1000:   if (!valuelen || value[valuelen-1])
+1001:     {
+1002:       /* We require that the returned value is an UTF-8 string */
+1003:       xfree (value);
+1004:       return gpg_error (GPG_ERR_INV_RESPONSE);
+1005:     }
+2184:             }
+2185:         }
+2186:       else
+2187:         {
+2188:           bin2hex (atr, atrlen, hexbuf);
+2189:           send_status_info (ctrl, "CARD-ATR", hexbuf, strlen (hexbuf), NULL, 0);
+2190:         }
+2191:       xfree (atr);
+2192:     }
+2193: 
+2194:   apdu = hex_to_buffer (line, &apdulen);
+2195:   if (!apdu)
+2196:     {
+2197:       rc = gpg_error_from_syserror ();
+2198:       goto leave;
+2199:     }
+2200:   if (apdulen)
+2201:     {
+2202:       unsigned char *result = NULL;
+2203:       size_t resultlen;
+2204: 
+2205:       card->maybe_check_aid = 1;
+2206:       rc = apdu_send_direct (card->slot, exlen,
+2589: 
+2590: /* Send a line with status information via assuan and escape all given
+2591:    buffers. The variable elements are pairs of (char *, size_t),
+2592:    terminated with a (NULL, 0). */
+2593: void
+2594: send_status_info (ctrl_t ctrl, const char *keyword, ...)
+2595: {
+2596:   va_list arg_ptr;
+2597:   const unsigned char *value;
+2598:   size_t valuelen;
+2599:   char buf[950], *p;
+2600:   size_t n;
+2601:   assuan_context_t ctx = ctrl->server_local->assuan_ctx;
+2602: 
+2603:   va_start (arg_ptr, keyword);
+2604: 
+2605:   p = buf;
+2606:   n = 0;
+2607:   while ( (value = va_arg (arg_ptr, const unsigned char *))
+2608:            && n < DIM (buf)-2 )
+2609:     {
+2610:       valuelen = va_arg (arg_ptr, size_t);
+2611:       if (!valuelen)
+2618:       for ( ; valuelen && n < DIM (buf)-2; n++, valuelen--, value++)
+2619:         {
+2620:           if (*value == '+' || *value == '\"' || *value == '%'
+2621:               || *value < ' ')
+2622:             {
+2623:               sprintf (p, "%%%02X", *value);
+2624:               p += 3;
+2625:               n += 2;
+2626:             }
+2627:           else if (*value == ' ')
+2628:             *p++ = '+';
+2629:           else
+2630:             *p++ = *value;
+2631:         }
+2632:     }
+2633:   *p = 0;
+2634:   assuan_write_status (ctx, keyword, buf);
+2635: 
+2636:   va_end (arg_ptr);
+2637: }
+2638: 
+2639: 
+2640: /* Send a ready formatted status line via assuan.  */
+gnupg-2.4.4 agent/call-scd.c
+226: 
+227: 
+228: 
+229: 
+230: static gpg_error_t
+231: learn_status_cb (void *opaque, const char *line)
+232: {
+233:   struct learn_parm_s *parm = opaque;
+234:   gpg_error_t err = 0;
+235:   const char *keyword = line;
+236:   int keywordlen;
+237: 
+238:   for (keywordlen=0; *line && !spacep (line); line++, keywordlen++)
+239:     ;
+240:   while (spacep (line))
+241:     line++;
+242:   if (keywordlen == 8 && !memcmp (keyword, "CERTINFO", keywordlen))
+243:     {
+244:       parm->certinfo_cb (parm->certinfo_cb_arg, line);
+245:     }
+246:   else if (keywordlen == 11 && !memcmp (keyword, "KEYPAIRINFO", keywordlen))
+247:     {
+248:       parm->kpinfo_cb (parm->kpinfo_cb_arg, line);
+282:   parm.certinfo_cb_arg = certinfo_cb_arg;
+283:   parm.sinfo_cb = sinfo_cb;
+284:   parm.sinfo_cb_arg = sinfo_cb_arg;
+285:   rc = assuan_transact (daemon_ctx (ctrl), "LEARN --force",
+286:                         NULL, NULL, NULL, NULL,
+287:                         learn_status_cb, &parm);
+288:   if (rc)
+289:     return unlock_scd (ctrl, rc);
+290: 
+291:   return unlock_scd (ctrl, 0);
+292: }
+293: 
+294: 
+295: 
+296: 
+297: static gpg_error_t
+298: get_serialno_cb (void *opaque, const char *line)
+299: {
+300:   gpg_error_t err = 0;
+301:   char **serialno = opaque;
+302:   const char *keyword = line;
+303:   const char *s;
+304:   int keywordlen, n;
+677: {
+678:   char *keyref;
+679: };
+680: 
+681: static gpg_error_t
+682: readkey_status_cb (void *opaque, const char *line)
+683: {
+684:   struct readkey_status_parm_s *parm = opaque;
+685:   gpg_error_t err = 0;
+686:   char *line_buffer = NULL;
+687:   const char *s;
+688: 
+689:   if ((s = has_leading_keyword (line, "KEYPAIRINFO"))
+690:       && !parm->keyref)
+691:     {
+692:       /* The format of such a line is:
+693:        *   KEYPAIRINFO <hexgrip> <keyref> [usage] [keytime] [algostr]
+694:        *
+695:        * Here we only need the keyref.  We use only the first received
+696:        * KEYPAIRINFO; it is possible to receive several if there are
+697:        * two or more active cards with the same key.  */
+698:       const char *fields[2];
+699:       int nfields;
+748:   snprintf (line, DIM(line), "READKEY%s -- %s",
+749:             r_keyref? " --info":"", id);
+750:   rc = assuan_transact (daemon_ctx (ctrl), line,
+751:                         put_membuf_cb, &data,
+752:                         NULL, NULL,
+753:                         readkey_status_cb, &parm);
+754:   if (rc)
+755:     {
+756:       xfree (get_membuf (&data, &len));
+757:       xfree (parm.keyref);
+758:       return unlock_scd (ctrl, rc);
+759:     }
+760:   *r_buf = get_membuf (&data, &buflen);
+761:   if (!*r_buf)
+762:     {
+763:       xfree (parm.keyref);
+764:       return unlock_scd (ctrl, gpg_error (GPG_ERR_ENOMEM));
+765:     }
+766: 
+767:   if (!gcry_sexp_canon_len (*r_buf, buflen, NULL, NULL))
+768:     {
+769:       xfree (parm.keyref);
+770:       xfree (*r_buf); *r_buf = NULL;
+1142: 
+1143:       /* We do not want to pass PINCACHE_PUT through.  */
+1144:       if (!strcmp (keyword, "PINCACHE_PUT"))
+1145:         err = handle_pincache_put (line);
+1146:       else
+1147:         assuan_write_status (ctx, keyword, line);
+1148:     }
+1149:   return err;
+1150: }
+1151: 
+1152: static gpg_error_t
+1153: pass_data_thru (void *opaque, const void *buffer, size_t length)
+1154: {
+1155:   assuan_context_t ctx = opaque;
+1156: 
+1157:   assuan_send_data (ctx, buffer, length);
+1158:   return 0;
+1159: }
+1160: 
+1161: 
+1162: /* Send the line CMDLINE with command for the SCDdaemon to it and send
+1163:    all status messages back.  This command is used as a general quoting
+1164:    mechanism to pass everything verbatim to SCDAEMON.  The PIN
+gnupg-2.4.4 tools/gpg-connect-agent.c
+gnupg-2.4.8 scd/app-openpgp.c
+1170:     { "PRIVATE-DO-4", 0x0104 },
+1171:     { "$AUTHKEYID",   0x0000, -3 },
+1172:     { "$ENCRKEYID",   0x0000, -6 },
+1173:     { "$SIGNKEYID",   0x0000, -7 },
+1174:     { "$DISPSERIALNO",0x0000, -4 },
+1175:     { "UIF-1",        0x00D6, 0 },
+1176:     { "UIF-2",        0x00D7, 0 },
+1177:     { "UIF-3",        0x00D8, 0 },
+1178:     { "KDF",          0x00F9, 5 },
+1179:     { "MANUFACTURER", 0x0000, -8 },
+1180:     { "UIF",          0x0000, -9 },  /* Shortcut for all UIF */
+1181:     { "KEY-STATUS",   0x00DE,  6 },
+1182:     { "KEY-ATTR-INFO", 0x00FA,  7 },
+1183:     { NULL, 0 }
+1184:   };
+1185:   int idx, i, rc;
+1186:   void *relptr;
+1187:   unsigned char *value;
+1188:   size_t valuelen;
+1189: 
+1190:   for (idx=0; table[idx].name && strcmp (table[idx].name, name); idx++)
+1191:     ;
+1192:   if (!table[idx].name)
+1277:          app->app_local->manufacturer,
+1278:          app_openpgp_manufacturer (app->app_local->manufacturer));
+1279:     }
+1280:   if (table[idx].special == -9)
+1281:     {
+1282:       rc = do_getattr (app, ctrl, "UIF-1");
+1283:       if (!rc)
+1284:         rc = do_getattr (app, ctrl, "UIF-2");
+1285:       if (!rc)
+1286:         rc = do_getattr (app, ctrl, "UIF-3");
+1287:       return rc;
+1288:     }
+1289: 
+1290:   relptr = get_one_do (app, table[idx].tag, &value, &valuelen, &rc);
+1291:   if (relptr)
+1292:     {
+1293:       if (table[idx].special == 1)
+1294:         {
+1295:           char numbuf[7*23];
+1296: 
+1297:           for (i=0,*numbuf=0; i < valuelen && i < 7; i++)
+1298:             sprintf (numbuf+strlen (numbuf), " %d", value[i]);
+1299:           send_status_info (ctrl, table[idx].name,
+3073:     { "CERT-3",       0x7F21, 0,      3, 0, 1 },
+3074:     { "SM-KEY-ENC",   0x00D1, 0,      3, 0, 1 },
+3075:     { "SM-KEY-MAC",   0x00D2, 0,      3, 0, 1 },
+3076:     { "KEY-ATTR",     0,      0,      0, 3, 1 },
+3077:     { "AESKEY",       0x00D5, 0,      3, 0, 1 },
+3078:     { "UIF-1",        0x00D6, 0,      3, 5, 1 },
+3079:     { "UIF-2",        0x00D7, 0,      3, 5, 1 },
+3080:     { "UIF-3",        0x00D8, 0,      3, 5, 1 },
+3081:     { "KDF",          0x00F9, 0,      0, 4, 1 },
+3082:     { NULL, 0 }
+3083:   };
+3084:   int exmode;
+3085: 
+3086:   for (idx=0; table[idx].name && strcmp (table[idx].name, name); idx++)
+3087:     ;
+3088:   if (!table[idx].name)
+3089:     return gpg_error (GPG_ERR_INV_NAME);
+3090:   if (table[idx].need_v2 && !app->app_local->extcap.is_v2)
+3091:     return gpg_error (GPG_ERR_NOT_SUPPORTED);
+3092:   if (table[idx].need_v3 && !app->app_local->extcap.is_v3)
+3093:     return gpg_error (GPG_ERR_NOT_SUPPORTED);
+3094: 
+3095:   if (table[idx].special == 5 && app->app_local->extcap.has_button == 0)
+gnupg-2.4.8 scd/command.c
+582:           card_put (card);
+583:           return gpg_error (GPG_ERR_INV_VALUE);
+584:         }
+585: 
+586:       rc = assuan_write_status (ctx, "SERIALNO", serial);
+587:       if (rc < 0)
+588:         {
+589:           xfree (serial);
+590:           card_put (card);
+591:           return out_of_core ();
+592:         }
+593: 
+594:       if (!opt_force)
+595:         {
+596:           char *command;
+597: 
+598:           rc = gpgrt_asprintf (&command, "KNOWNCARDP %s", serial);
+599:           if (rc < 0)
+600:             {
+601:               xfree (serial);
+602:               card_put (card);
+603:               return out_of_core ();
+604:             }
+594:       if (!opt_force)
+595:         {
+596:           char *command;
+597: 
+598:           rc = gpgrt_asprintf (&command, "KNOWNCARDP %s", serial);
+599:           if (rc < 0)
+600:             {
+601:               xfree (serial);
+602:               card_put (card);
+603:               return out_of_core ();
+604:             }
+605:           rc = assuan_inquire (ctx, command, NULL, NULL, 0);
+606:           xfree (command);
+607:           if (rc)
+608:             {
+609:               if (gpg_err_code (rc) != GPG_ERR_ASS_CANCELED)
+610:                 log_error ("inquire KNOWNCARDP failed: %s\n",
+611:                            gpg_strerror (rc));
+612:               xfree (serial);
+613:               card_put (card);
+614:               return rc;
+615:             }
+616:           /* Not canceled, so we have to proceed.  */
+739:           return rc;
+740:         }
+741: 
+742:       /* FIXME: Using LINE is not correct because it might be an
+743:        * OID and has not been canonicalized (i.e. uppercased).  */
+744:       send_status_info (ctrl, "KEYPAIRINFO",
+745:                         keygripstr, strlen (keygripstr),
+746:                         line, strlen (line),
+747:                         "-", (size_t)1,
+748:                         "-", (size_t)1,
+749:                         algostr, strlen (algostr),
+750:                         NULL, (size_t)0);
+751:       xfree (algostr);
+752:     }
+753: 
+754:   return rc;
+755: }
+756: 
+757: static const char hlp_readkey[] =
+758:   "READKEY [--format=advanced|ssh] [--info[-only]] <keyid>|<oid>|<keygrip>\n"
+759:   "\n"
+760:   "Return the public key for the given cert or key ID as a standard\n"
+761:   "S-expression.  With --format option, it may be returned in advanced\n"
+963:          We ignore any value returned.  */
+964:       if (info)
+965:         {
+966:           log_debug ("prompting for pinpad entry '%s'\n", info);
+967:           rc = gpgrt_asprintf (&command, "POPUPPINPADPROMPT %s", info);
+968:           if (rc < 0)
+969:             return gpg_error (gpg_err_code_from_errno (errno));
+970:           rc = assuan_inquire (ctx, command, &value, &valuelen, MAXLEN_PIN);
+971:           xfree (command);
+972:         }
+973:       else
+974:         {
+975:           log_debug ("dismiss pinpad entry prompt\n");
+976:           rc = assuan_inquire (ctx, "DISMISSPINPADPROMPT",
+977:                                &value, &valuelen, MAXLEN_PIN);
+978:         }
+979:       if (!rc)
+980:         xfree (value);
+981:       return rc;
+982:     }
+983: 
+984:   *retstr = NULL;
+985:   log_debug ("asking for PIN '%s'\n", info);
+983: 
+984:   *retstr = NULL;
+985:   log_debug ("asking for PIN '%s'\n", info);
+986: 
+987:   rc = gpgrt_asprintf (&command, "NEEDPIN %s", info);
+988:   if (rc < 0)
+989:     return gpg_error (gpg_err_code_from_errno (errno));
+990: 
+991:   /* Fixme: Write an inquire function which returns the result in
+992:      secure memory and check all further handling of the PIN. */
+993:   assuan_begin_confidential (ctx);
+994:   rc = assuan_inquire (ctx, command, &value, &valuelen, MAXLEN_PIN);
+995:   assuan_end_confidential (ctx);
+996:   xfree (command);
+997:   if (rc)
+998:     return rc;
+999: 
+1000:   if (!valuelen || value[valuelen-1])
+1001:     {
+1002:       /* We require that the returned value is an UTF-8 string */
+1003:       xfree (value);
+1004:       return gpg_error (GPG_ERR_INV_RESPONSE);
+1005:     }
+2195:             }
+2196:         }
+2197:       else
+2198:         {
+2199:           bin2hex (atr, atrlen, hexbuf);
+2200:           send_status_info (ctrl, "CARD-ATR", hexbuf, strlen (hexbuf), NULL, 0);
+2201:         }
+2202:       xfree (atr);
+2203:     }
+2204: 
+2205:   apdu = hex_to_buffer (line, &apdulen);
+2206:   if (!apdu)
+2207:     {
+2208:       rc = gpg_error_from_syserror ();
+2209:       goto leave;
+2210:     }
+2211:   if (apdulen)
+2212:     {
+2213:       unsigned char *result = NULL;
+2214:       size_t resultlen;
+2215: 
+2216:       card->maybe_check_aid = 1;
+2217:       rc = apdu_send_direct (card->slot, exlen,
+2596: 
+2597: /* Send a line with status information via assuan and escape all given
+2598:    buffers. The variable elements are pairs of (char *, size_t),
+2599:    terminated with a (NULL, 0). */
+2600: void
+2601: send_status_info (ctrl_t ctrl, const char *keyword, ...)
+2602: {
+2603:   va_list arg_ptr;
+2604:   const unsigned char *value;
+2605:   size_t valuelen;
+2606:   char buf[950], *p;
+2607:   size_t n;
+2608:   assuan_context_t ctx = ctrl->server_local->assuan_ctx;
+2609: 
+2610:   va_start (arg_ptr, keyword);
+2611: 
+2612:   p = buf;
+2613:   n = 0;
+2614:   while ( (value = va_arg (arg_ptr, const unsigned char *))
+2615:            && n < DIM (buf)-2 )
+2616:     {
+2617:       valuelen = va_arg (arg_ptr, size_t);
+2618:       if (!valuelen)
+2625:       for ( ; valuelen && n < DIM (buf)-2; n++, valuelen--, value++)
+2626:         {
+2627:           if (*value == '+' || *value == '\"' || *value == '%'
+2628:               || *value < ' ')
+2629:             {
+2630:               sprintf (p, "%%%02X", *value);
+2631:               p += 3;
+2632:               n += 2;
+2633:             }
+2634:           else if (*value == ' ')
+2635:             *p++ = '+';
+2636:           else
+2637:             *p++ = *value;
+2638:         }
+2639:     }
+2640:   *p = 0;
+2641:   assuan_write_status (ctx, keyword, buf);
+2642: 
+2643:   va_end (arg_ptr);
+2644: }
+2645: 
+2646: 
+2647: /* Send a ready formatted status line via assuan.  */
+gnupg-2.4.8 agent/call-scd.c
+232: 
+233: 
+234: 
+235: 
+236: static gpg_error_t
+237: learn_status_cb (void *opaque, const char *line)
+238: {
+239:   struct learn_parm_s *parm = opaque;
+240:   gpg_error_t err = 0;
+241:   const char *keyword = line;
+242:   int keywordlen;
+243: 
+244:   for (keywordlen=0; *line && !spacep (line); line++, keywordlen++)
+245:     ;
+246:   while (spacep (line))
+247:     line++;
+248:   if (keywordlen == 8 && !memcmp (keyword, "CERTINFO", keywordlen))
+249:     {
+250:       parm->certinfo_cb (parm->certinfo_cb_arg, line);
+251:     }
+252:   else if (keywordlen == 11 && !memcmp (keyword, "KEYPAIRINFO", keywordlen))
+253:     {
+254:       parm->kpinfo_cb (parm->kpinfo_cb_arg, line);
+288:   parm.certinfo_cb_arg = certinfo_cb_arg;
+289:   parm.sinfo_cb = sinfo_cb;
+290:   parm.sinfo_cb_arg = sinfo_cb_arg;
+291:   rc = assuan_transact (daemon_ctx (ctrl), "LEARN --force",
+292:                         NULL, NULL, NULL, NULL,
+293:                         learn_status_cb, &parm);
+294:   if (rc)
+295:     return unlock_scd (ctrl, rc);
+296: 
+297:   return unlock_scd (ctrl, 0);
+298: }
+299: 
+300: 
+301: 
+302: 
+303: static gpg_error_t
+304: get_serialno_cb (void *opaque, const char *line)
+305: {
+306:   gpg_error_t err = 0;
+307:   char **serialno = opaque;
+308:   const char *keyword = line;
+309:   const char *s;
+310:   int keywordlen, n;
+683: {
+684:   char *keyref;
+685: };
+686: 
+687: static gpg_error_t
+688: readkey_status_cb (void *opaque, const char *line)
+689: {
+690:   struct readkey_status_parm_s *parm = opaque;
+691:   gpg_error_t err = 0;
+692:   char *line_buffer = NULL;
+693:   const char *s;
+694: 
+695:   if ((s = has_leading_keyword (line, "KEYPAIRINFO"))
+696:       && !parm->keyref)
+697:     {
+698:       /* The format of such a line is:
+699:        *   KEYPAIRINFO <hexgrip> <keyref> [usage] [keytime] [algostr]
+700:        *
+701:        * Here we only need the keyref.  We use only the first received
+702:        * KEYPAIRINFO; it is possible to receive several if there are
+703:        * two or more active cards with the same key.  */
+704:       const char *fields[2];
+705:       int nfields;
+754:   snprintf (line, DIM(line), "READKEY%s -- %s",
+755:             r_keyref? " --info":"", id);
+756:   rc = assuan_transact (daemon_ctx (ctrl), line,
+757:                         put_membuf_cb, &data,
+758:                         NULL, NULL,
+759:                         readkey_status_cb, &parm);
+760:   if (rc)
+761:     {
+762:       xfree (get_membuf (&data, &len));
+763:       xfree (parm.keyref);
+764:       return unlock_scd (ctrl, rc);
+765:     }
+766:   *r_buf = get_membuf (&data, &buflen);
+767:   if (!*r_buf)
+768:     {
+769:       xfree (parm.keyref);
+770:       return unlock_scd (ctrl, gpg_error (GPG_ERR_ENOMEM));
+771:     }
+772: 
+773:   if (!gcry_sexp_canon_len (*r_buf, buflen, NULL, NULL))
+774:     {
+775:       xfree (parm.keyref);
+776:       xfree (*r_buf); *r_buf = NULL;
+1148: 
+1149:       /* We do not want to pass PINCACHE_PUT through.  */
+1150:       if (!strcmp (keyword, "PINCACHE_PUT"))
+1151:         err = handle_pincache_put (line);
+1152:       else
+1153:         assuan_write_status (ctx, keyword, line);
+1154:     }
+1155:   return err;
+1156: }
+1157: 
+1158: static gpg_error_t
+1159: pass_data_thru (void *opaque, const void *buffer, size_t length)
+1160: {
+1161:   assuan_context_t ctx = opaque;
+1162: 
+1163:   assuan_send_data (ctx, buffer, length);
+1164:   return 0;
+1165: }
+1166: 
+1167: #define DEVINFO_WATCH_COMMAND "DEVINFO --watch"
+1168: 
+1169: struct devinfo_watch_thread {
+1170:   ctrl_t ctrl;
+gnupg-2.4.8 tools/gpg-connect-agent.c
+
+codex
+The raw readback preserves the policy byte, but the expected output is wrong: the inspected GnuPG 2.4 sources encode the second byte as `+`, so expect `S UIF-1 %02+`. The card-only boot now sets both variables. I’m checking the rehearsal’s media reuse and acceptance steps next.
+exec
+/bin/bash -lc "python - <<'PY'
+import urllib.request
+for f,a,b in [('scd/app-openpgp.c',1238,1335),('scd/app-openpgp.c',650,760),('agent/call-scd.c',1110,1215),('tools/gpg-connect-agent.c',2100,2200),('g10/card-util.c',2235,2275)]:
+ s=urllib.request.urlopen('https://raw.githubusercontent.com/gpg/gnupg/gnupg-2.4.4/'+f).read().decode().splitlines();print(f)
+ for j in range(a-1,min(b,len(s))):print(f'{j+1}: {s[j]}')
+PY
+rg -n 'NUC|out|stick|verif' docs/ceremony/2026-11-01-rehearsal-1.md; git rev-parse HEAD; sha256sum docs/ceremony/CEREMONY.md; nl -ba docs/ceremony/CEREMONY.md | sed -n '155,217p'; rg -n 'P-256|primary' docs/V1-PROFILE.md | tail -8; nl -ba /home/tony/.codex/memories/MEMORY.md | sed -n '136,143p'" in /home/tony/projects/tessera
+ succeeded in 192ms:
+scd/app-openpgp.c
+1238:   relptr = get_one_do (app, table[idx].tag, &value, &valuelen, &rc);
+1239:   if (relptr)
+1240:     {
+1241:       if (table[idx].special == 1)
+1242:         {
+1243:           char numbuf[7*23];
+1244: 
+1245:           for (i=0,*numbuf=0; i < valuelen && i < 7; i++)
+1246:             sprintf (numbuf+strlen (numbuf), " %d", value[i]);
+1247:           send_status_info (ctrl, table[idx].name,
+1248:                             numbuf, strlen (numbuf), NULL, 0);
+1249:         }
+1250:       else if (table[idx].special == 2)
+1251:         {
+1252:           char numbuf[50];
+1253: 
+1254:           sprintf (numbuf, "%lu", convert_sig_counter_value (value, valuelen));
+1255:           send_status_info (ctrl, table[idx].name,
+1256:                             numbuf, strlen (numbuf), NULL, 0);
+1257:         }
+1258:       else if (table[idx].special == 3)
+1259:         {
+1260:           if (valuelen >= 60)
+1261:             for (i=0; i < 3; i++)
+1262:               send_fpr_if_not_null (ctrl, table[idx].name, i+1, value+i*20);
+1263:         }
+1264:       else if (table[idx].special == 4)
+1265:         {
+1266:           if (valuelen >= 12)
+1267:             for (i=0; i < 3; i++)
+1268:               send_fprtime_if_not_null (ctrl, table[idx].name, i+1, value+i*4);
+1269:         }
+1270:       else if (table[idx].special == 5)
+1271:         {
+1272:           if ((valuelen == KDF_DATA_LENGTH_MIN
+1273:                || valuelen == KDF_DATA_LENGTH_MAX)
+1274:               && (value[2] == 0x03))
+1275:             app->app_local->pinpad.disabled = 1;
+1276:           else
+1277:             app->app_local->pinpad.disabled = 0;
+1278: 
+1279:           send_status_info (ctrl, table[idx].name, value, valuelen, NULL, 0);
+1280:         }
+1281:       else if (table[idx].special == 6)
+1282:         {
+1283:           for (i=0,rc=0; !rc && i+1 < valuelen; i += 2)
+1284:             rc = send_status_printf (ctrl, table[idx].name, "OPENPGP.%u %u",
+1285:                                      value[i], value[i+1]);
+1286:           if (gpg_err_code (rc) == GPG_ERR_NO_OBJ)
+1287:             rc = gpg_error (GPG_ERR_NOT_SUPPORTED);
+1288:         }
+1289:       else if (table[idx].special == 7)
+1290:         {
+1291:           const unsigned char *p = value;
+1292:           int tag;
+1293:           size_t len;
+1294: 
+1295:           if (valuelen < 2)
+1296:             return gpg_error (GPG_ERR_INV_OBJ);
+1297: 
+1298:           tag = p[0];
+1299:           len = p[1];
+1300: 
+1301:           /* Does it comes tag+len at the head?  */
+1302:           if (tag == 0x00FA)
+1303:             {
+1304:               p += 2;
+1305: 
+1306:               if (len == 0x81)
+1307:                 {
+1308:                   if (valuelen < 3)
+1309:                     return gpg_error (GPG_ERR_INV_OBJ);
+1310:                   len = *p++;
+1311:                 }
+1312:               else if (len == 0x82)
+1313:                 {
+1314:                   if (valuelen < 4)
+1315:                     return gpg_error (GPG_ERR_INV_OBJ);
+1316:                   len = *p++;
+1317:                   len = (len << 8) | *p++;
+1318:                 }
+1319: 
+1320:               valuelen -= (p - value);
+1321:               value = (unsigned char *)p;
+1322: 
+1323:               if (valuelen != len)
+1324:                 {
+1325:                   if (opt.verbose)
+1326:                     log_info ("Yubikey bug: length %zu != %zu", valuelen, len);
+1327: 
+1328:                   if (APP_CARD(app)->cardtype != CARDTYPE_YUBIKEY)
+1329:                     return gpg_error (GPG_ERR_INV_OBJ);
+1330:                 }
+1331:             }
+1332: 
+1333:           for (; p < value + valuelen; p += len)
+1334:             {
+1335:               const char *key_algo_str;
+scd/app-openpgp.c
+650:   unsigned char *buffer;
+651:   size_t buflen;
+652: 
+653:   for (i=0; data_objects[i].tag; i++)
+654:     {
+655:       if (data_objects[i].get_from)
+656:         continue;
+657: 
+658:       /* We don't try extended length APDU because such large DO would
+659:          be pretty useless in a log file.  */
+660:       rc = iso7816_get_data (slot, 0, data_objects[i].tag, &buffer, &buflen);
+661:       if (gpg_err_code (rc) == GPG_ERR_NO_OBJ)
+662:         ;
+663:       else if (rc)
+664:         log_info ("DO '%s' not available: %s\n",
+665:                   data_objects[i].desc, gpg_strerror (rc));
+666:       else
+667:         {
+668:           if (data_objects[i].binary)
+669:             {
+670:               log_info ("DO '%s': ", data_objects[i].desc);
+671:               log_printhex (buffer, buflen, "");
+672:             }
+673:           else
+674:             log_info ("DO '%s': '%.*s'\n",
+675:                       data_objects[i].desc,
+676:                       (int)buflen, buffer); /* FIXME: sanitize */
+677: 
+678:           if (data_objects[i].constructed)
+679:             {
+680:               for (j=0; data_objects[j].tag; j++)
+681:                 {
+682:                   const unsigned char *value;
+683:                   size_t valuelen;
+684: 
+685:                   if (j==i || data_objects[i].tag != data_objects[j].get_from)
+686:                     continue;
+687:                   value = find_tlv_unchecked (buffer, buflen,
+688:                                               data_objects[j].tag, &valuelen);
+689:                   if (!value)
+690:                     ; /* not found */
+691:                   else if (valuelen > buflen - (value - buffer))
+692:                     log_error ("warning: constructed DO too short\n");
+693:                   else
+694:                     {
+695:                       if (data_objects[j].binary)
+696:                         {
+697:                           log_info ("DO '%s': ", data_objects[j].desc);
+698:                           if (valuelen > 200)
+699:                             log_info ("[%u]\n", (unsigned int)valuelen);
+700:                           else
+701:                             log_printhex (value, valuelen, "");
+702:                         }
+703:                       else
+704:                         log_info ("DO '%s': '%.*s'\n",
+705:                                   data_objects[j].desc,
+706:                                   (int)valuelen, value); /* FIXME: sanitize */
+707:                     }
+708:                 }
+709:             }
+710:         }
+711:       xfree (buffer); buffer = NULL;
+712:     }
+713: }
+714: 
+715: 
+716: /* Count the number of bits, assuming the A represents an unsigned big
+717:    integer of length LEN bytes. */
+718: static unsigned int
+719: count_bits (const unsigned char *a, size_t len)
+720: {
+721:   unsigned int n = len * 8;
+722:   int i;
+723: 
+724:   for (; len && !*a; len--, a++, n -=8)
+725:     ;
+726:   if (len)
+727:     {
+728:       for (i=7; i && !(*a & (1<<i)); i--)
+729:         n--;
+730:     }
+731:   return n;
+732: }
+733: 
+734: static unsigned int
+735: count_sos_bits (const unsigned char *a, size_t len)
+736: {
+737:   unsigned int n = len * 8;
+738:   int i;
+739: 
+740:   if (len == 0 || *a == 0)
+741:     return n;
+742: 
+743:   for (i=7; i && !(*a & (1<<i)); i--)
+744:     n--;
+745: 
+746:   return n;
+747: }
+748: 
+749: /* GnuPG makes special use of the login-data DO, this function parses
+750:    the login data to store the flags for later use.  It may be called
+751:    at any time and should be called after changing the login-data DO.
+752: 
+753:    Everything up to a LF is considered a mailbox or account name.  If
+754:    the first LF is followed by DC4 (0x14) control sequence are
+755:    expected up to the next LF.  Control sequences are separated by FS
+756:    (0x18) and consist of key=value pairs.  There are two keys defined:
+757: 
+758:     F=<flags>
+759: 
+760:     Where FLAGS is a plain hexadecimal number representing flag values.
+agent/call-scd.c
+1110: 
+1111:   return unlock_scd (ctrl, err);
+1112: }
+1113: 
+1114: 
+1115: static gpg_error_t
+1116: pass_status_thru (void *opaque, const char *line)
+1117: {
+1118:   gpg_error_t err = 0;
+1119:   assuan_context_t ctx = opaque;
+1120:   char keyword[200];
+1121:   int i;
+1122: 
+1123:   if (line[0] == '#' && (!line[1] || spacep (line+1)))
+1124:     {
+1125:       /* We are called in convey comments mode.  Now, if we see a
+1126:          comment marker as keyword we forward the line verbatim to the
+1127:          the caller.  This way the comment lines from scdaemon won't
+1128:          appear as status lines with keyword '#'.  */
+1129:       assuan_write_line (ctx, line);
+1130:     }
+1131:   else
+1132:     {
+1133:       for (i=0; *line && !spacep (line) && i < DIM(keyword)-1; line++, i++)
+1134:         keyword[i] = *line;
+1135:       keyword[i] = 0;
+1136: 
+1137:       /* Truncate any remaining keyword stuff.  */
+1138:       for (; *line && !spacep (line); line++)
+1139:         ;
+1140:       while (spacep (line))
+1141:         line++;
+1142: 
+1143:       /* We do not want to pass PINCACHE_PUT through.  */
+1144:       if (!strcmp (keyword, "PINCACHE_PUT"))
+1145:         err = handle_pincache_put (line);
+1146:       else
+1147:         assuan_write_status (ctx, keyword, line);
+1148:     }
+1149:   return err;
+1150: }
+1151: 
+1152: static gpg_error_t
+1153: pass_data_thru (void *opaque, const void *buffer, size_t length)
+1154: {
+1155:   assuan_context_t ctx = opaque;
+1156: 
+1157:   assuan_send_data (ctx, buffer, length);
+1158:   return 0;
+1159: }
+1160: 
+1161: 
+1162: /* Send the line CMDLINE with command for the SCDdaemon to it and send
+1163:    all status messages back.  This command is used as a general quoting
+1164:    mechanism to pass everything verbatim to SCDAEMON.  The PIN
+1165:    inquiry is handled inside gpg-agent.  */
+1166: int
+1167: agent_card_scd (ctrl_t ctrl, const char *cmdline,
+1168:                 int (*getpin_cb)(void *, const char *,
+1169:                                  const char *, char*, size_t),
+1170:                 void *getpin_cb_arg, void *assuan_context)
+1171: {
+1172:   int rc;
+1173:   struct inq_needpin_parm_s inqparm;
+1174:   int saveflag;
+1175: 
+1176:   rc = start_scd (ctrl);
+1177:   if (rc)
+1178:     return rc;
+1179: 
+1180:   inqparm.ctx = daemon_ctx (ctrl);
+1181:   inqparm.getpin_cb = getpin_cb;
+1182:   inqparm.getpin_cb_arg = getpin_cb_arg;
+1183:   inqparm.getpin_cb_desc = NULL;
+1184:   inqparm.passthru = assuan_context;
+1185:   inqparm.keydata = NULL;
+1186:   inqparm.keydatalen = 0;
+1187: 
+1188:   saveflag = assuan_get_flag (daemon_ctx (ctrl), ASSUAN_CONVEY_COMMENTS);
+1189:   assuan_set_flag (daemon_ctx (ctrl), ASSUAN_CONVEY_COMMENTS, 1);
+1190:   rc = assuan_transact (daemon_ctx (ctrl), cmdline,
+1191:                         pass_data_thru, assuan_context,
+1192:                         inq_needpin, &inqparm,
+1193:                         pass_status_thru, assuan_context);
+1194: 
+1195:   assuan_set_flag (daemon_ctx (ctrl), ASSUAN_CONVEY_COMMENTS, saveflag);
+1196:   if (rc)
+1197:     {
+1198:       return unlock_scd (ctrl, rc);
+1199:     }
+1200: 
+1201:   return unlock_scd (ctrl, 0);
+1202: }
+tools/gpg-connect-agent.c
+2100:   *r_goterr = 0;
+2101:   for (;;)
+2102:     {
+2103:       do
+2104:         {
+2105:           rc = assuan_read_line (ctx, &line, &linelen);
+2106:           if (rc)
+2107:             return rc;
+2108: 
+2109:           if ((withhash || opt.verbose > 1) && *line == '#')
+2110:             {
+2111:               fwrite (line, linelen, 1, stdout);
+2112:               putchar ('\n');
+2113:             }
+2114:         }
+2115:       while (*line == '#' || !linelen);
+2116: 
+2117:       if (linelen >= 1
+2118:           && line[0] == 'D' && line[1] == ' ')
+2119:         {
+2120:           if (current_datasink)
+2121:             {
+2122:               const unsigned char *s;
+2123:               int c = 0;
+2124: 
+2125:               for (j=2, s=(unsigned char*)line+2; j < linelen; j++, s++ )
+2126:                 {
+2127:                   if (*s == '%' && j+2 < linelen)
+2128:                     {
+2129:                       s++; j++;
+2130:                       c = xtoi_2 ( s );
+2131:                       s++; j++;
+2132:                     }
+2133:                   else
+2134:                     c = *s;
+2135:                   es_putc (c, current_datasink);
+2136:                 }
+2137:             }
+2138:           else if (opt.hex)
+2139:             {
+2140:               for (i=2; i < linelen; )
+2141:                 {
+2142:                   int save_i = i;
+2143: 
+2144:                   printf ("D[%04X] ", i-2);
+2145:                   for (j=0; j < 16 ; j++, i++)
+2146:                     {
+2147:                       if (j == 8)
+2148:                         putchar (' ');
+2149:                       if (i < linelen)
+2150:                         printf (" %02X", ((unsigned char*)line)[i]);
+2151:                       else
+2152:                         fputs ("   ", stdout);
+2153:                     }
+2154:                   fputs ("   ", stdout);
+2155:                   i= save_i;
+2156:                   for (j=0; j < 16; j++, i++)
+2157:                     {
+2158:                       unsigned int c = ((unsigned char*)line)[i];
+2159:                       if ( i >= linelen )
+2160:                         putchar (' ');
+2161:                       else if (isascii (c) && isprint (c) && !iscntrl (c))
+2162:                         putchar (c);
+2163:                       else
+2164:                         putchar ('.');
+2165:                     }
+2166:                   putchar ('\n');
+2167:                 }
+2168:             }
+2169:           else if (opt.decode)
+2170:             {
+2171:               const unsigned char *s;
+2172:               int need_d = 1;
+2173:               int c = 0;
+2174: 
+2175:               for (j=2, s=(unsigned char*)line+2; j < linelen; j++, s++ )
+2176:                 {
+2177:                   if (need_d)
+2178:                     {
+2179:                       fputs ("D ", stdout);
+2180:                       need_d = 0;
+2181:                     }
+2182:                   if (*s == '%' && j+2 < linelen)
+2183:                     {
+2184:                       s++; j++;
+2185:                       c = xtoi_2 ( s );
+2186:                       s++; j++;
+2187:                     }
+2188:                   else
+2189:                     c = *s;
+2190:                   if (c == '\n')
+2191:                     need_d = 1;
+2192:                   putchar (c);
+2193:                 }
+2194:               need_lf = (c != '\n');
+2195:             }
+2196:           else
+2197:             {
+2198:               fwrite (line, linelen, 1, stdout);
+2199:               putchar ('\n');
+2200:             }
+g10/card-util.c
+2235:     {
+2236:       log_error (_("error getting card info: %s\n"), gpg_strerror (err));
+2237:       return;
+2238:     }
+2239: 
+2240:   feature_available = info.extcap.bt;
+2241:   agent_release_card_info (&info);
+2242: 
+2243:   if (!feature_available)
+2244:     {
+2245:       log_error (_("This command is not supported by this card\n"));
+2246:       tty_printf ("\n");
+2247:       return;
+2248:     }
+2249: 
+2250:   snprintf (name, sizeof name, "UIF-%d", arg_number);
+2251:   if ( !strcmp (arg_rest, "off") )
+2252:     data[0] = 0x00;
+2253:   else if ( !strcmp (arg_rest, "on") )
+2254:     data[0] = 0x01;
+2255:   else if ( !strcmp (arg_rest, "permanent") )
+2256:     data[0] = 0x02;
+2257: 
+2258:   data[1] = 0x20;
+2259: 
+2260:   err = agent_scd_setattr (name, data, 2);
+2261:   if (err)
+2262:     log_error (_("error for setup UIF: %s\n"), gpg_strerror (err));
+2263: }
+2264: 
+2265: 
+2266: /* Data used by the command parser.  This needs to be outside of the
+2267:    function scope to allow readline based command completion.  */
+2268: enum cmdids
+2269:   {
+2270:     cmdNOP = 0,
+2271:     cmdQUIT, cmdADMIN, cmdHELP, cmdLIST, cmdDEBUG, cmdVERIFY,
+2272:     cmdNAME, cmdURL, cmdFETCH, cmdLOGIN, cmdLANG, cmdSEX, cmdCAFPR,
+2273:     cmdFORCESIG, cmdGENERATE, cmdPASSWD, cmdPRIVATEDO, cmdWRITECERT,
+2274:     cmdREADCERT, cmdUNBLOCK, cmdFACTORYRESET, cmdKDFSETUP,
+2275:     cmdKEYATTR, cmdUIF, cmdOPENPGP,
+4:P-256 key generated on Tails and used from a YubiKey produces signatures the V1 verifier accepts on the git path,
+17:## Result (owner, on the NUC, from the transfer stick mounted read-only, noexec)
+19:  2 creation time}, unhashed {16 issuer key id} — the layout profile §8 expects.
+20:- Verifier code (`tessera_verify.git_channel.dearmor`, `codec.sig_policy`, `codec.public_key(·, 'gpg')`,
+21:  `codec.signature_verifies`): armor, rule O and policy PASS; the 82-byte v4 key body accepted; signature over
+22:  `t.txt` verifies; one byte changed: does not verify.
+28:- The transfer stick touched the NUC; it is "out only" from now on and never returns to a signing session.
+30:  **user** PIN. The first attempt failed with a **timeout**: GnuPG does not say "touch the key", the YubiKey only
+32:  YubiKey blinks, touch it within about 15 seconds". Each step took a few seconds.
+2262a118a8fa16d06161d75a5bfa75b0b0a607ce
+10c3f915c902b6ba1dfd48b70810e0562455bacab26a5644419269ba8bb1d876  docs/ceremony/CEREMONY.md
+   155	**S7. Move the key to the card** (only after S5 printed every `-OK`, including `RESTORE-OK`, for both sticks):
+   156	```
+   157	gpg --edit-key "$FPR"
+   158	keytocard
+   159	```
+   160	Answer **y** to "Really move the primary key?", choose `1` (signature key), passphrase, admin PIN, then `save`.
+   161	Then `gpg --card-status`: the signature key line shows your fingerprint. If not, see Failures (do not reset the card).
+   162	
+   163	**S8. Card policy, set and confirmed:**
+   164	```
+   165	gpg --card-status | grep -E 'Signature PIN|UIF'
+   166	```
+   167	- If it says `Signature PIN ....: not forced`: `gpg --card-edit`, `admin`, `forcesig`, `q`. Re-read: must say
+   168	  `forced`. (`forcesig` toggles; never run it when it already says forced.)
+   169	- `gpg --card-edit`, `admin`, `uif 1 permanent`, `q`. Then read the card's raw value. GnuPG's own status output
+   170	  (human or `--with-colons`) reduces it to on/off and cannot show "permanent", so ask the card through the agent:
+   171	```
+   172	gpg-connect-agent 'SCD GETATTR UIF-1' /bye
+   173	```
+   174	  Expected: a line `S UIF-1 %02%20` (first byte `02` = permanent; `01` = ordinary on; `00` = off), then `OK`.
+   175	  If `uif` is an unknown command, or the first byte is not `02`: **stop**. Do not proceed without fixed touch.
+   176	  *(This readback is validated in rehearsal 2 before the real ceremony.)*
+   177	
+   178	**S9. Prove the policy, not just a signature:**
+   179	1. Positive: sign, enter the user PIN, **touch when it blinks** (GnuPG does not prompt):
+   180	```
+   181	echo "tessera <root|release> ceremony $(date -u +%FT%TZ)" > ~/proof.txt
+   182	gpg --local-user "$FPR" --digest-algo SHA256 --armor --detach-sign ~/proof.txt && gpg --verify ~/proof.txt.asc ~/proof.txt
+   183	```
+   184	2. No touch: run the signing command again (output `~/nt.asc`), enter the PIN, **do not touch**. It must fail
+   185	   (timeout) and produce no signature.
+   186	3. Fresh PIN: sign once more (`~/p2.asc`). It must ask for the PIN again. Note whether it did.
+   187	4. `gpg --card-status`: record the signature counter (1 per successful signature).
+   188	Copy `proof.txt` and `proof.txt.asc` to the out stick for the owner's verifier check.
+   189	
+   190	**S10. Shut down.** Remove the YubiKey.
+   191	
+   192	## Session 2: tests in fresh boots (no secret key in memory at start)
+   193	
+   194	Each in its own boot, same S0 checks (a new `GNUPGHOME`), YubiKey **not** inserted unless stated. A new boot has
+   195	no variables: set them by hand each time.
+   196	1. **Each backup** (twice: BK1, then BK2). Unlock only that stick in *Files*, then:
+   197	```
+   198	B="/media/amnesia/ROOT-BK2"                         # the stick actually inserted
+   199	FPR=<the fingerprint from the public sheet, no spaces>
+   200	gpg --batch --import "$B/secret.asc" && gpg --list-secret-keys --with-colons | grep "^fpr:::::::::$FPR:" >/dev/null && echo FPR-MATCH || echo FAIL
+   201	echo restore-test > ~/r.txt && gpg --local-user "$FPR" --digest-algo SHA256 --armor --detach-sign ~/r.txt && gpg --verify ~/r.txt.asc ~/r.txt && echo RESTORE-OK || echo FAIL
+   202	```
+   203	   Record pass/fail on the public sheet.
+   204	2. **The card alone**: insert only the YubiKey and one backup stick (for its `public.asc` only; import nothing
+   205	   secret). Set the variables again: this is a new boot.
+   206	```
+   207	B="/media/amnesia/ROOT-BK1"                         # the stick actually inserted
+   208	FPR=<the fingerprint from the public sheet, no spaces>
+   209	gpg --import "$B/public.asc" && gpg --card-status >/dev/null
+   210	echo card-test > ~/c.txt && gpg --local-user "$FPR" --digest-algo SHA256 --armor --detach-sign ~/c.txt && gpg --verify ~/c.txt.asc ~/c.txt && echo CARD-OK || echo FAIL
+   211	```
+   212	   PIN, then touch when it blinks. This proves the card works without any residue of the generation session.
+   213	
+   214	**Acceptance:** S5 all `-OK`, S7 fingerprint on the card, S8 both policies confirmed, S9 steps 1–3 as expected,
+   215	Session 2 all three pass. Anything else: the key is not accepted (see Failures).
+   216	
+   217	## Failures (do the safe thing first)
+1437:6. **Repository-root algorithm** (G25). Confirm that the deployed repository root (YubiKey 2) is P-256; otherwise
+1461:   `DNS_WILDCARD`), both serialization orders of a primary-key tie, duplicate RRSIG (F07); three different anchor
+1679:- **Repository key.** v4 ECDSA P-256 public-key body, rule O (signer outcomes in section 6.3).
+1709:| `repository_keys` | array of `{"domain","key","signing_end","signing_start","sources"}` | `domain` = D; `key` base64 v4 P-256 body; `signing_end` nullable; start ≤ end; unique `key` |
+1939:  `<archive>.sig`, ECDSA P-256 with SHA-256, satisfying rule O's grammar and policy (section 8). The signing session
+1941:- The release key is **one v4 ECDSA P-256 primary key with no subkeys**, identified by its full v4 fingerprint. A
+1945:  signature against rule O's grammar and section 8 policy, confirms the authenticated primary-key identity (the
+1965:  name, signed by a TEST release key in the R3 format. TEST keys are throwaway v4 P-256 keys and may live on the
+   136	
+   137	## Failures and how to do differently
+   138	
+   139	- Symptom: a local mechanism such as a service-key listing sounds complete. Cause: its future relying-party/bootstrap dependencies were not traced. Fix: follow every trust dependency through what a future adjudicator receives and how it is historically authenticated. [Task 1]
+   140	- Symptom: a listing cut is treated as free of a security tradeoff or as though later work repairs old receipts. Fix: state that CUT permits fresh attacker-key receipts after dual authority capture, and that later listing applies only to future receipts. [Task 2]
+   141	- Symptom: “confirmation clean,” passing vectors, or differential agreement is treated as readiness. Fix: state the exact coverage; textual confirmation did not discharge implementation, publication, cryptographic, or human-test obligations. [Task 1]
+   142	- Use construction, independent implementation, differential testing, mutation testing, and plain-language rendering early; the plain-language pilot exposed overclaims faster than repeated document reviews. [Task 1]
+   143	
+
+exec
+/bin/bash -lc "python - <<'PY'
+import urllib.request
+for f,ranges in [('scd/app-openpgp.c',[(108,120),(450,480),(550,638),(1340,1375)]),('tools/gpg-connect-agent.c',[(2200,2245)])]:
+ s=urllib.request.urlopen('https://raw.githubusercontent.com/gpg/gnupg/gnupg-2.4.4/'+f).read().decode().splitlines();print(f)
+ for a,b in ranges:
+  print('\\n'.join(f'{j+1}: {s[j]}' for j in range(a-1,b)))
+PY
+nl -ba docs/V1-CONTRACT.md | sed -n '32,76p'; nl -ba docs/phase-0-prereg-amendment-10.md | sed -n '618,635p'; nl -ba docs/ceremony/2026-11-01-rehearsal-1.md | head -35" in /home/tony/projects/tessera
+ succeeded in 0ms:
+scd/app-openpgp.c
+108:   { 0x00CD, 0, 0x6E, 1, 0, 0, 0, 0, "Generation time" },
+109:   { 0x007A, 1,    0, 1, 0, 0, 0, 0, "Security Support Template" },
+110:   { 0x0093, 0, 0x7A, 1, 1, 0, 0, 0, "Digital Signature Counter" },
+111:   { 0x0101, 0,    0, 0, 0, 0, 0, 2, "Private DO 1"},
+112:   { 0x0102, 0,    0, 0, 0, 0, 0, 2, "Private DO 2"},
+113:   { 0x0103, 0,    0, 0, 0, 0, 0, 2, "Private DO 3"},
+114:   { 0x0104, 0,    0, 0, 0, 0, 0, 2, "Private DO 4"},
+115:   { 0x7F21, 1,    0, 1, 0, 0, 0, 1, "Cardholder certificate"},
+116:   /* V3.0 */
+117:   { 0x7F74, 0, 0x6E, 1, 0, 0, 0, 0, "General Feature Management"},
+118:   { 0x00D5, 0,    0, 1, 0, 0, 0, 0, "AES key data"},
+119:   { 0x00D6, 0, 0x6E, 1, 0, 0, 0, 0, "UIF for Signature"},
+120:   { 0x00D7, 0, 0x6E, 1, 0, 0, 0, 0, "UIF for Decryption"},
+450:   else
+451:     exmode = 0;
+452: 
+453:   err = iso7816_get_data (app_get_slot (app), exmode, tag, &p, &len);
+454:   if (err)
+455:     return err;
+456:   if (len)
+457:     *result = p;
+458:   *resultlen = len;
+459: 
+460:   /* Check whether we should cache this object. */
+461:   if (get_immediate)
+462:     return 0;
+463: 
+464:   for (i=0; data_objects[i].tag; i++)
+465:     if (data_objects[i].tag == tag)
+466:       {
+467:         if (data_objects[i].dont_cache)
+468:           return 0;
+469:         break;
+470:       }
+471: 
+472:   /* Okay, cache it. */
+473:   for (c=app->app_local->cache; c; c = c->next)
+474:     log_assert (c->tag != tag);
+475: 
+476:   c = xtrymalloc (sizeof *c + len);
+477:   if (c)
+478:     {
+479:       if (len)
+480:         memcpy (c->data, p, len);
+550:         }
+551:       app->app_local->cache = NULL;
+552:     }
+553: }
+554: 
+555: 
+556: /* Get the DO identified by TAG from the card in SLOT and return a
+557:    buffer with its content in RESULT and NBYTES.  The return value is
+558:    NULL if not found or a pointer which must be used to release the
+559:    buffer holding value. */
+560: static void *
+561: get_one_do (app_t app, int tag, unsigned char **result, size_t *nbytes,
+562:             int *r_rc)
+563: {
+564:   int rc, i;
+565:   unsigned char *buffer;
+566:   size_t buflen;
+567:   unsigned char *value;
+568:   size_t valuelen;
+569:   int dummyrc;
+570:   int exmode;
+571: 
+572:   if (!r_rc)
+573:     r_rc = &dummyrc;
+574: 
+575:   *result = NULL;
+576:   *nbytes = 0;
+577:   *r_rc = 0;
+578:   for (i=0; data_objects[i].tag && data_objects[i].tag != tag; i++)
+579:     ;
+580: 
+581:   if (app->appversion > 0x0100 && data_objects[i].get_immediate_in_v11)
+582:     {
+583:       exmode = 0;
+584:       rc = iso7816_get_data (app_get_slot (app), exmode, tag, &buffer, &buflen);
+585:       if (rc)
+586:         {
+587:           *r_rc = rc;
+588:           return NULL;
+589:         }
+590:       *result = buffer;
+591:       *nbytes = buflen;
+592:       return buffer;
+593:     }
+594: 
+595:   value = NULL;
+596:   rc = -1;
+597:   if (data_objects[i].tag && data_objects[i].get_from)
+598:     {
+599:       rc = get_cached_data (app, data_objects[i].get_from,
+600:                             &buffer, &buflen,
+601:                             (data_objects[i].dont_cache
+602:                              || data_objects[i].get_immediate_in_v11),
+603:                             data_objects[i].try_extlen);
+604:       if (!rc)
+605:         {
+606:           const unsigned char *s;
+607: 
+608:           s = find_tlv_unchecked (buffer, buflen, tag, &valuelen);
+609:           if (!s)
+610:             value = NULL; /* not found */
+611:           else if (valuelen > buflen - (s - buffer))
+612:             {
+613:               log_error ("warning: constructed DO too short\n");
+614:               value = NULL;
+615:               xfree (buffer); buffer = NULL;
+616:             }
+617:           else
+618:             value = buffer + (s - buffer);
+619:         }
+620:     }
+621: 
+622:   if (!value) /* Not in a constructed DO, try simple. */
+623:     {
+624:       rc = get_cached_data (app, tag, &buffer, &buflen,
+625:                             (data_objects[i].dont_cache
+626:                              || data_objects[i].get_immediate_in_v11),
+627:                             data_objects[i].try_extlen);
+628:       if (!rc)
+629:         {
+630:           value = buffer;
+631:           valuelen = buflen;
+632:         }
+633:     }
+634: 
+635:   if (!rc)
+636:     {
+637:       *nbytes = valuelen;
+638:       *result = value;
+1340: 
+1341:               tag = *p++;
+1342:               len = *p++;
+1343: 
+1344:               if (tag < 0xc1)
+1345:                 continue;
+1346: 
+1347:               if (tag == 0xda)
+1348:                 keyrefno = 0x81;
+1349:               else
+1350:                 keyrefno = tag - 0xc1 + 1;
+1351: 
+1352:               if (p + len > value + valuelen)
+1353:                 break;
+1354: 
+1355:               key_algo_str = get_algorithm_attribute_string (p, len);
+1356: 
+1357:               send_status_printf (ctrl, table[idx].name, "OPENPGP.%u %s",
+1358:                                   keyrefno, key_algo_str);
+1359:             }
+1360:         }
+1361:       else
+1362:         send_status_info (ctrl, table[idx].name, value, valuelen, NULL, 0);
+1363: 
+1364:       xfree (relptr);
+1365:     }
+1366:   else
+1367:     {
+1368:       if (table[idx].special == 5)
+1369:         app->app_local->pinpad.disabled = 0;
+1370:     }
+1371:   return rc;
+1372: }
+1373: 
+1374: 
+1375: /* Return the DISP-NAME without any padding characters.  Caller must
+tools/gpg-connect-agent.c
+2200:             }
+2201:         }
+2202:       else
+2203:         {
+2204:           if (need_lf)
+2205:             {
+2206:               if (!current_datasink || current_datasink != es_stdout)
+2207:                 putchar ('\n');
+2208:               need_lf = 0;
+2209:             }
+2210: 
+2211:           if (linelen >= 1
+2212:               && line[0] == 'S'
+2213:               && (line[1] == '\0' || line[1] == ' '))
+2214:             {
+2215:               if (!current_datasink || current_datasink != es_stdout)
+2216:                 {
+2217:                   fwrite (line, linelen, 1, stdout);
+2218:                   putchar ('\n');
+2219:                 }
+2220:             }
+2221:           else if (linelen >= 2
+2222:                    && line[0] == 'O' && line[1] == 'K'
+2223:                    && (line[2] == '\0' || line[2] == ' '))
+2224:             {
+2225:               if (!current_datasink || current_datasink != es_stdout)
+2226:                 {
+2227:                   fwrite (line, linelen, 1, stdout);
+2228:                   putchar ('\n');
+2229:                 }
+2230:               set_int_var ("?", 0);
+2231:               return 0;
+2232:             }
+2233:           else if (linelen >= 3
+2234:                    && line[0] == 'E' && line[1] == 'R' && line[2] == 'R'
+2235:                    && (line[3] == '\0' || line[3] == ' '))
+2236:             {
+2237:               int errval;
+2238: 
+2239:               errval = strtol (line+3, NULL, 10);
+2240:               if (!errval)
+2241:                 errval = -1;
+2242:               set_int_var ("?", errval);
+2243:               if (!current_datasink || current_datasink != es_stdout)
+2244:                 {
+2245:                   fwrite (line, linelen, 1, stdout);
+    32	| G8 | **No Tessera needed.** The verdict depends only on the inputs above. | C6 |
+    33	| G9 | **A typed verdict.** Once the trust configuration is authenticated, the verifier returns `VALID_STRICT`, `INVALID` or `UNVERIFIABLE`, with a reason code and `revocation: NOT_EVALUATED`, `historical_security: NOT_EVALUATED`, `standing: ABSENT/NOT_ISSUED_IN_PROFILE`. Missing required evidence prevents acceptance. A valid receipt still leaves everything in §3 unestablished. If the trust configuration is not authenticated, there is no receipt verdict. | C7; A9.5 trust-configuration authority; V1-PROFILE §5 (`TRUST_CONFIG_UNAUTHENTICATED`) |
+    34	| G10 | **Honest receipts cannot be moved.** If an attacker takes over the DNS and git authority records while the service's own keys stay secret and unmisused, it cannot move honestly signed frames to other keys or bytes, or change their signer sets, whether they were signed before or after the takeover. | A10.4 |
+    35	**No G11.** The service-key listing (A10.4.1) is not in V1, by the author's ruling of 2026-10-23 (E9 row 2,
+    36	`docs/reviews/e9-packet/AUTHOR-RULINGS.md`; `docs/decisions/2026-10-19-listing-cut.md`). G10 holds while the independent release boundary of A9.5 holds.
+    37	**New receipts under an attacker's own keys pass when both authority channels are captured.**
+    38	
+    39	## 3. Not guaranteed
+    40	
+    41	Each of these is a deliberate limit, not a missing feature.
+    42	
+    43	- **Who submitted the bytes**, or that a replayed receipt suits the current transaction (case f).
+    44	- **What the bytes mean**, or that they are true. A contract inside the bytes is the checker's to verify (cases i, i′).
+    45	- **That a key was not revoked** (cases e, e′).
+    46	- **That an algorithm or a key was still safe** when it signed.
+    47	- **Any lower time bound or priority.** "Existed by" is never "existed after" or "came first".
+    48	- **Real time without A-UTC.** Without it, only chain order is claimed.
+    49	- **Standing** of any kind.
+    50	- **Separate control of the two keys.** One controller holds both. Capturing the issuing AWS account means both
+    51	  slots can sign.
+    52	- **Visibility.** Publishing the authority records is the issuer's duty; the verifier does not check it. V1
+    53	  guarantees no detection or public exposure of a capture, of new receipts, or of a release given to one party.
+    54	- **That DNSSEC shows publication before issue.**
+    55	- **Anything after a Bitcoin reorganization of 6 or more blocks.**
+    56	- **Renewal, degraded modes, or wrappers.** These are refused (`UNVERIFIABLE`), including honest ones (cases d2, h:
+    57	  the two registered false rejects).
+    58	- **One receipt per presentation.** A receipt id (SHA-256 of `A_sig`) names a receipt, not a presentation. Signing
+    59	  is randomized, so the same honest frames can carry more than one valid signature set and therefore more than one
+    60	  valid receipt, each with its own T. Each still meets G1–G10. (Owner, 2026-10-19, from finding E-02 of the first
+    61	  real run.)
+    62	- **Stability of T and U across different proofs.** A different proof or pin set can select a different block.
+    63	- **Protection for a checker who skips authenticating the verifier release** or runs a substituted one.
+    64	
+    65	## 4. Failure model
+    66	
+    67	| Failure or attacker | What still holds |
+    68	|---|---|
+    69	| Tessera disappears | Everything in §2, if the holder kept the receipt and the verifier release. Reconstruction after the project dies is not demonstrated. |
+    70	| Attacker alters a receipt or moves its signatures | Rejected (G1, G3, G10). |
+    71	| Attacker uses its own keys, authority records not captured | Rejected: the required authority evidence does not name them (G4). |
+    72	| Attacker captures both DNS and git authority records | Honest receipts protected (G10). New receipts under its own keys **pass** (the listing was cut). |
+    73	| Attacker captures the issuing AWS account | **Not protected.** It can issue receipts that verify. |
+    74	| Attacker steals the release key | Not protected: it can publish releases with a trust configuration of its choosing. This is distribution compromise, which A9 excludes (A9:47–52). A checker who installs no later release is unaffected. |
+    75	| Bitcoin miners lie about time | G5 holds (chain order). G6 holds only under A-UTC. |
+    76	| Bitcoin reorganizes fewer than 6 blocks | G5 holds. |
+   618	**Author ruling, 2026-10-18** (`docs/reviews/amendment-10-r4/AUTHOR-RULINGS.md`): *"That's it.  The other three
+   619	items, while dense, seem rational are accepted."* And, confirming the owner's reading that this adopts A10.1.1,
+   620	A10.4 option (e) with A10.4.1 and A10.4.2: *"Yes. That's my understanding.  I focused on reading those sections of
+   621	the document.  A 10.4.2 stood out because you disagreed, but even for those where you were in agreement, I read what
+   622	was proposed and accepted the recommendation as being "rationally based.""*
+   623	
+   624	- **Prerequisite.** Independence of the release key from the DNS credential, the repository key and the issuing AWS
+   625	  account is an existing prerequisite of A9.5's trust-configuration authority (A9:326-332). It already protects
+   626	  V1's KSKs, repository trust and header pins against the channel captor, with or without the listing. It is still
+   627	  OPEN (profile §14.2 item 1; YubiKey 2 is not in hand).
+   628	- **Custody form.** Hardware or offline-software custody of the release key is acceptable **only** with a written
+   629	  custody and release-authorization procedure. The procedure states who authorizes releases, where signing occurs,
+   630	  and how backups stay outside the operational environment of the service. After the custody review it must also
+   631	  state (C01) the independent review-and-build environment that checks each candidate release against an approved
+   632	  baseline kept outside the operational environment and binds approval to the exact archive hash, and (C02) the
+   633	  controlled media crossing into and out of the signing session. The dated custody record names the procedure.
+   634	- **Hardware is not independence.** Buying hardware alone does not establish independence.
+   635	- **When: the first public verifier release, not the freeze.** The custody review found that real independence
+     1	# Key ceremony rehearsal 1 — repository root, throwaway key (2026-11-01/02)
+     2	
+     3	Performed by the author on a Tails live session, network off; directed by the owner. Purpose: learn whether a
+     4	P-256 key generated on Tails and used from a YubiKey produces signatures the V1 verifier accepts on the git path,
+     5	and time the steps, before the real ceremony (YubiKey A, repository root; YubiKey B, release key).
+     6	Procedure basis: `docs/V1-RELEASE-KEY-CUSTODY-DRAFT.md` §6–§8; key type from `docs/V1-PROFILE.md` §15.4.
+     7	
+     8	## Hardware
+     9	- YubiKey C (spare; rehearsal only), serial 39975816. Reader `1050:0407` (YubiKey 5, OTP+FIDO+CCID); OpenPGP
+    10	  application 3.4 (firmware ≥ 5.2.3, so P-256 capable). Factory state on arrival: no keys, PIN retries 3/0/3,
+    11	  signature counter 0, KDF off, UIF off, key attributes rsa2048 ×3. (Photo: author, public fields only.)
+    12	
+    13	## Throwaway key
+    14	- `6F3D071A8761DF5187C578DABB89158A63C8EA8F`, nistp256 (algo 19), created 2026-11-02 (epoch 1793577872),
+    15	  uid "Tessera repository root REHEARSAL <tessera@wamason.com>", capabilities scSC. Discarded with the session.
+    16	
+    17	## Result (owner, on the NUC, from the transfer stick mounted read-only, noexec)
+    18	- GnuPG (isolated keyring): good signature. Packet: v4, sigclass 0x00, digest SHA-256 (8), hashed {33 issuer fpr,
+    19	  2 creation time}, unhashed {16 issuer key id} — the layout profile §8 expects.
+    20	- Verifier code (`tessera_verify.git_channel.dearmor`, `codec.sig_policy`, `codec.public_key(·, 'gpg')`,
+    21	  `codec.signature_verifies`): armor, rule O and policy PASS; the 82-byte v4 key body accepted; signature over
+    22	  `t.txt` verifies; one byte changed: does not verify.
+    23	
+    24	## Lessons for the real procedure
+    25	- Add `key-attr` (signature slot → ECC, NIST P-256) before `keytocard`; factory slots are RSA 2048.
+    26	- The exported public key starts with an old-format packet header with a one-byte length (`0x98`).
+    27	- The author declined to photograph the secret key even in rehearsal: keep that rule explicit for the real one.
+    28	- The transfer stick touched the NUC; it is "out only" from now on and never returns to a signing session.
+    29	- Author's notes: `forcesig` and `uif 1 permanent` both returned silently (accepted). Signing asked for the
+    30	  **user** PIN. The first attempt failed with a **timeout**: GnuPG does not say "touch the key", the YubiKey only
+    31	  blinks. The second attempt, with a touch, succeeded. So touch is enforced; the procedure must say "when the
+    32	  YubiKey blinks, touch it within about 15 seconds". Each step took a few seconds.
+    33	- YubiKey C: factory-reset by the author after rehearsal 1 (the owner's 2026-11-04 entry saying it was not reset was wrong: the author had done it as asked). Rehearsal 2 re-creates a throwaway key on C.
+    34	- The author on not photographing the secret key: "the walk-through is when I want to instill the discipline,
+    35	  so I don't screw it up when the real thing is ready." The rehearsal is practice of the habits, not only a test of
+
+exec
+/bin/bash -lc "python - <<'PY'
+import urllib.request
+for f in ['scd/app-openpgp.c','scd/command.c','agent/call-scd.c','tools/gpg-connect-agent.c','g10/card-util.c']:
+ s=urllib.request.urlopen('https://raw.githubusercontent.com/gpg/gnupg/gnupg-2.4.8/'+f).read().decode().splitlines()
+ print(f)
+ for i,l in enumerate(s):
+  if any(t in l for t in ['\"UIF-1\",','relptr = get_one_do (app, table','send_status_info (ctrl, table[idx].name, value','flush_cache_item (app, table','iso7816_put_data (','data[0] = 0x02','data[1] = 0x20','assuan_write_status (ctx, keyword','line[0] == \\'S\\'','get_one_do (app_t','find_tlv_unchecked (buffer, buflen, tag','flush_cache_after_error','flush_cache_item (app, 0x006E']): print(i+1,l)
+ if f=='scd/app-openpgp.c':
+  for i,l in enumerate(s):
+   if 'flush_cache' in l and i>3000 and i<3350:print(i+1,l)
+PY" in /home/tony/projects/tessera
+ succeeded in 520ms:
+scd/app-openpgp.c
+580 flush_cache_after_error (app_t app)
+613 get_one_do (app_t app, int tag, unsigned char **result, size_t *nbytes,
+660           s = find_tlv_unchecked (buffer, buflen, tag, &valuelen);
+1004   rc = iso7816_put_data (app_get_slot (app), 0, tag, fpr, 20);
+1017       rc = iso7816_put_data (app_get_slot (app), 0, tag2, buf, 4);
+1175     { "UIF-1",        0x00D6, 0 },
+1290   relptr = get_one_do (app, table[idx].tag, &value, &valuelen, &rc);
+1331           send_status_info (ctrl, table[idx].name, value, valuelen, NULL, 0);
+1414         send_status_info (ctrl, table[idx].name, value, valuelen, NULL, 0);
+2832       flush_cache_after_error (app);
+2872               flush_cache_after_error (app);
+3029           flush_cache_after_error (app);
+3078     { "UIF-1",        0x00D6, 0,      3, 5, 1 },
+3120   flush_cache_item (app, table[idx].flush_tag? table[idx].flush_tag
+3208             rc = iso7816_put_data (app_get_slot (app), 0, 0xD3, NULL, 0);
+3226           rc = iso7816_put_data (app_get_slot (app),
+3233     rc = iso7816_put_data (app_get_slot (app),
+3633         rc = iso7816_put_data (app_get_slot (app),
+3716     flush_cache_after_error (app);
+4073   err = iso7816_put_data (app_get_slot (app), 0, 0xC1+keyno, buf, buflen);
+4619       err = iso7816_put_data (app_get_slot (app), 0,
+5509               flush_cache_after_error (app);
+3029           flush_cache_after_error (app);
+3120   flush_cache_item (app, table[idx].flush_tag? table[idx].flush_tag
+3215       flush_cache_item (app, 0x00F9);
+scd/command.c
+2641   assuan_write_status (ctx, keyword, buf);
+2658   return assuan_write_status (ctx, keyword, args);
+agent/call-scd.c
+1153         assuan_write_status (ctx, keyword, line);
+tools/gpg-connect-agent.c
+2218               && line[0] == 'S'
+g10/card-util.c
+2256     data[0] = 0x02;
+2258   data[1] = 0x20;
+
+codex
+The rehearsal reuses an out stick that the rehearsal-1 record says has touched the NUC and must never return to a signing session. Because rehearsal 2 also uses A’s future backup sticks, I’m flagging that as a HIGH media-boundary defect. Reformatting later clears the throwaway backups; it does not restore the session’s trust boundary.
+exec
+/bin/bash -lc "python - <<'PY'
+import urllib.request
+s=urllib.request.urlopen('https://raw.githubusercontent.com/gpg/gnupg/gnupg-2.4.8/scd/app-openpgp.c').read().decode().splitlines()
+for a,b in [(535,570),(3115,3128)]:print('\\n'.join(f'{i+1}: {s[i]}' for i in range(a-1,b)))
+PY" in /home/tony/projects/tessera
+ succeeded in 0ms:
+535:       c->length = len;
+536:       c->tag = tag;
+537:       c->next = app->app_local->cache;
+538:       app->app_local->cache = c;
+539:     }
+540: 
+541:   return 0;
+542: }
+543: 
+544: /* Remove DO at TAG from the cache. */
+545: static void
+546: flush_cache_item (app_t app, int tag)
+547: {
+548:   struct cache_s *c, *cprev;
+549:   int i;
+550: 
+551:   if (!app->app_local)
+552:     return;
+553: 
+554:   for (c=app->app_local->cache, cprev=NULL; c ; cprev=c, c = c->next)
+555:     if (c->tag == tag)
+556:       {
+557:         if (cprev)
+558:           cprev->next = c->next;
+559:         else
+560:           app->app_local->cache = c->next;
+561:         xfree (c);
+562: 
+563:         for (c=app->app_local->cache; c ; c = c->next)
+564:           {
+565:             log_assert (c->tag != tag); /* Oops: duplicated entry. */
+566:           }
+567:         return;
+568:       }
+569: 
+570:   /* Try again if we have an outer tag. */
+3115:     return rc;
+3116: 
+3117:   /* Flush the cache before writing it, so that the next get operation
+3118:      will reread the data from the card and thus get synced in case of
+3119:      errors (e.g. data truncated by the card). */
+3120:   flush_cache_item (app, table[idx].flush_tag? table[idx].flush_tag
+3121:                     /* */                    : table[idx].tag);
+3122: 
+3123:   if (app->app_local->cardcap.ext_lc_le && valuelen > 254)
+3124:     exmode = 1;    /* Use extended length w/o a limit.  */
+3125:   else if (app->app_local->cardcap.cmd_chaining && valuelen > 254)
+3126:     exmode = -254; /* Command chaining with max. 254 bytes.  */
+3127:   else
+3128:     exmode = 0;
+
+exec
+/bin/bash -lc "cat > docs/reviews/ceremony/CODEX-CONFIRM-3.md <<'EOF'
+# Ceremony revision 4 — Codex confirmation 3
+
+Reviewed 2026-11-06 against "'`BRIEF-CONFIRM-3.md`, including its four owner prechecks. **Do not run rehearsal 2 as written: it returns NUC-exposed media to the signing environment (HIGH).** F01'"'s replacement command preserves the policy byte on the inspected upstream sources, but its printed expected output needs correction. F03's fresh-boot assignments are fixed. Real key generation remains gated on the corrected rehearsal and its actual-stack results.
+
+Snapshot: HEAD "'`2262a118a8fa16d06161d75a5bfa75b0b0a607ce`; `docs/ceremony/CEREMONY.md` SHA-256 `10c3f915c902b6ba1dfd48b70810e0562455bacab26a5644419269ba8bb1d876`. Unqualified line references below mean that file. Repository access was read-only except this report. The pre-existing untracked brief and log were preserved. No keys, cards, backup devices, PINs or secrets were accessed. Validation consists of document tracing and upstream source inspection, not a hardware rehearsal or production authorization.
+
+## F01 — raw policy survives; expected spelling is wrong (MEDIUM)
+
+**Lines 169–176,284–285.** Yes: `SCD GETATTR UIF-1` bypasses the lossy `gpg --card-status` parser and conveys the DO D6 value without collapsing 0/1/2. No: for bytes `02 20`, the inspected status serializer prints **`S UIF-1 %02+`**, not `%02%20`. This is reversible status encoding, not literal unescaped bytes.
+
+The source chain, using upstream GnuPG tag `gnupg-2.4.8` (also inspected the corresponding 2.4.4 path):
+
+- [`scd/app-openpgp.c:1175–1177`](https://github.com/gpg/gnupg/blob/gnupg-2.4.8/scd/app-openpgp.c#L1175-L1177) maps UIF-1/2/3 to D6/D7/D8 with special handling zero. At [1290](https://github.com/gpg/gnupg/blob/gnupg-2.4.8/scd/app-openpgp.c#L1290), `get_one_do` obtains the value; the default branch at [1413–1416](https://github.com/gpg/gnupg/blob/gnupg-2.4.8/scd/app-openpgp.c#L1413-L1416) passes `value,valuelen` to `send_status_info`. No boolean conversion occurs.
+- [`get_one_do`, lines 613–692](https://github.com/gpg/gnupg/blob/gnupg-2.4.8/scd/app-openpgp.c#L613-L692), extracts the DO content from its enclosing object or retrieves the individual object; it preserves content and length. This can use the scdaemon cache, so “raw” does not mean a mandatory direct APDU on every call. The setter invalidates its cache before writing at [3117–3121](https://github.com/gpg/gnupg/blob/gnupg-2.4.8/scd/app-openpgp.c#L3117-L3121); cache removal also follows the enclosing tag at [570–576](https://github.com/gpg/gnupg/blob/gnupg-2.4.8/scd/app-openpgp.c#L570-L576). The ordinary set-then-get sequence is intended to reread card state.
+- [`scd/command.c:2625–2641`](https://github.com/gpg/gnupg/blob/gnupg-2.4.8/scd/command.c#L2625-L2641) percent-escapes control bytes and literal plus/quote/percent, but encodes a space byte as `+`. Thus `02` becomes `%02`, and `20` becomes `+`.
+- [`agent/call-scd.c:1139–1155`](https://github.com/gpg/gnupg/blob/gnupg-2.4.8/agent/call-scd.c#L1139-L1155) forwards this status without policy interpretation. [`tools/gpg-connect-agent.c:2217–2235`](https://github.com/gpg/gnupg/blob/gnupg-2.4.8/tools/gpg-connect-agent.c#L2217-L2235) prints status and OK lines. It does not turn the plus into `%20`.
+- [`g10/card-util.c:2250–2260`](https://github.com/gpg/gnupg/blob/gnupg-2.4.8/g10/card-util.c#L2250-L2260) sets `permanent` to first byte `0x02`, `on` to `0x01`, `off` to zero, and the second byte to `0x20`.
+
+Expected relevant successful output after setting permanent:
+
+```
+S UIF-1 %02+
+OK
+```
+
+Rehearsal 2 should record the complete command output, Tails/GnuPG/scdaemon versions, setter errors if any, and the identity of C. A successful raw result decodes to `02 20`; `%01+` or `%00+` fails the required policy. ERR, missing/empty UIF status, malformed/unexpected length or bytes also leave confirmation unestablished: stop and investigate. If the actual stack prints `%02%20`, that contradicts this inspected serializer'"'s spelling prediction, although a correctly decoded value would still be "'`02 20`; identify the actual version/patch before changing the documented expectation. A no-touch signature succeeding falsifies enforcement even with a nominal `02` readback. A correct readback alone does not establish PIN policy, trusted firmware or host integrity.
+
+Disposition: **the previous HIGH loss-of-distinction defect is resolved at source level; actual-stack confirmation remains pending.** Correct line 174 before rehearsal. Because line 175 tests the first byte, the spelling error does not by itself authorize accepting ordinary touch as permanent; it can confuse or stop a correct run. These two inspected tags do not establish behavior of every 2.4 release or downstream build.
+
+## F03 — resolved for the reported omission
+
+**Lines 194–210.** Both fresh backup boots and the separate card-only boot now explicitly assign `B` and `FPR`. The card-only block imports only `public.asc`. Under the stated fresh home and absent secret import, a successful signature exercises the card rather than a leftover generation key. Substitute the mounted label for B, including the release labels for key B. This is a procedural repair; no card-only test was executed here.
+
+## H01 — rehearsal returns a NUC-exposed stick to a signing session (HIGH)
+
+**Lines 281–283 versus 31–33, and `docs/ceremony/2026-11-01-rehearsal-1.md:17,28`.** The latter record explicitly says the rehearsal-1 transfer stick touched the NUC and must never return to a signing session. Rehearsal 2 nevertheless names that exact stick as its out stick. This is an actual recorded crossing, not speculation that it might have visited the NUC.
+
+The dress rehearsal connects that medium to the same trusted signing hardware and session that handles the two future ROOT backup sticks. A throwaway key limits the value of that key; it does not make parsing a returned device/filesystem safe for the host or attached media. No-autorun is useful but does not remove this exposure. A later Tails reboot or formatting A'"'s backup files is not proof that compromised firmware or devices have become trusted again. This is a boundary violation, not evidence that compromise has occurred.
+
+Use a separate, new rehearsal out stick that has never touched the NUC. It may be ejected and reinserted within the offline rehearsal to collect S9 files, then goes out once and never returns after NUC contact. Reserve both new real out sticks for their real sessions. This requires another clean stick beyond the six assigned at 292–299, unless a distinct never-NUC spare is already available. If rehearsal 2 has already used the old stick, record the deviation and obtain an explicit disposition of affected hardware/media before real key generation; this review cannot certify them clean.
+
+The HIGH classification is against the ceremony's own trusted-session/media boundary, not a newly invented registered ban on a particular USB vendor. The registered production procedure must control media crossings (A10.4.2); this rehearsal does not discharge that production gate.
+
+## Other dress-rehearsal and media findings
+
+- **A's backup sticks: conditionally suitable.** Lines 281–282 explicitly require reformatting them at real S5. Under the trusted-session assumption, creating throwaway LUKS backups does not consume them or prevent later use; fresh formatting, new real passphrase, exports and both restore tests are required. Formatting destroys usable rehearsal volumes, not necessarily every physical trace; the surviving key would be throwaway. Do not reuse the rehearsal passphrase or mistake its files/fingerprint for A's. H01 must be repaired first. B's different sticks and A/B cards are not tested by C's run; their own real-session S0–S9/Session 2 checks remain mandatory.
+- **Output destination preparation gap (MEDIUM): lines 33,145–153,188,283,298–299.** The real out sticks are new, while the rehearsal uses an already prepared one. No step formats/mounts/checks the out volume or checks that O is its actual mount. A new stick may be unformatted or have a different label. If the directory exists without the expected mount, export could go to the wrong filesystem. Add preparation for a public output volume and an exact mount check before export/copy; rehearse it on the new rehearsal out stick. At S9 explicitly reinsert/mount the same offline out stick, check O again, copy both proof files, sync and eject. It must not visit the NUC between S6 and S9. Existing S6 checks test the exported file, not the identity of the mounted device; S9 has no printed copy/check commands.
+- **S9 command gap persists (MEDIUM): lines 184–186.** “Run the signing command again” still relies on the operator inserting the alternate "'`--output` paths. Print the full commands for `nt.asc` and `p2.asc`, require a fresh/nonexistent no-touch output and confirm no usable signature after an actual timeout, then verify `p2.asc`. Cancelling an overwrite prompt or an unrelated failure is not an enforcement test. Acceptance at 214–215 already requires expected behavior, so this is a reproducibility/false-observation risk, not permission to count any error as success.
+- **Scope and cleanup: lines 278–288.** Running all S0–S10 and three fresh test boots exercises the main generation, recovery and card paths, provided the above gaps are repaired and deviations recorded. Reset C only after those tests and recording their outcomes; never extend that reset instruction to A/B. C is disposable, so this reset does not authorize destroying a real remaining copy. The rehearsal has one key/session cycle; it does not exercise two-key physical segregation, actual final storage, every failure branch, production release signing/acquisition or TEST-authority rejection. Those omissions do not invalidate a bounded key-generation rehearsal, but must not be reported as exercised.
+- **Vendor wording (LOW): line 301.** Mixed vendors reduce some common-batch exposure; they do not establish that one defect cannot affect both (shared components/controllers remain possible). Replace the absolute “cannot” with a bounded risk-reduction statement.
+- **Historical summaries:** line 268 still describes the rejected colon-value advice. Label it superseded by revision 4 so it cannot be used as the current S8 instruction. The blanket shutdown summary at 269–270 still has pre-generation and total-loss exceptions in the failure table. Neither overrides the operative steps.
+
+No further HIGH finding was identified in this bounded revision-4 review. Earlier custody-record completeness residuals (actual firmware and full export/KDF settings) are not discharged merely by this confirmation; the draft still needs its own conformance review.
+
+## Appended owner prechecks
+
+| Check | Result | File:line evidence and reasoning |
+|---|---|---|
+| 1. Capture row | **PASS** | `docs/ceremony/CEREMONY.md:18–24,245–250,264` assigns authority roles and expressly recognizes that DNS+repository capture can substitute both bootstrap publications; it promises neither rejection of fresh attacker-key receipts nor capture visibility. Ground truth `docs/V1-CONTRACT.md:34–37,50–53,72–74`: attacker-key receipts pass under dual capture, honest-material protection is conditional, release compromise is a separate distribution failure. H01 does not change those receipt claims. |
+| 2. Trigger clause | **PASS** | `docs/ceremony/CEREMONY.md:9–11,20–21,245–250` cites independence as a prerequisite and defers production use. `docs/phase-0-prereg-amendment-10.md:624–643,668–676` registers that prerequisite, the before-first-public-release gate and later bootstrap record. Generating keys or rehearsing C does not assert that the release trigger occurred, invoke fallback or discharge independence. H01 is a violation of the proposed procedure'"'s boundary, not proof the registered fallback trigger occurred. |
+| 3. Requester | **PASS (bounded key-generation claim)** | "'`docs/ceremony/CEREMONY.md:9–11,40–43,53–55,178–188,264` gives ceremony operations to the author, recognizes exportable backup authority and expressly defers independent production request approval. A trusted session/host can submit signing requests; PIN/touch do not authenticate the meaning of those bytes. An unlocked secret backup permits software signing without the token. Production requests originate with the owner on the NUC and require the author'"'s independent exact-hash approval under "'`docs/V1-RELEASE-KEY-CUSTODY-DRAFT.md:251–278`. Storage separation is not claimed to establish that requester independence. |
+| 4. Binding text | **PASS** | `docs/ceremony/CEREMONY.md:3–11,38–49,276–299` identifies an OWNER DRAFT and recorded operating choices, not a signed amendment. The registered independence/media requirements are `docs/phase-0-prereg-amendment-10.md:624–643`; key format basis is `docs/V1-PROFILE.md:1679,1941–1942`. This report treats new sticks, S8 checks and rehearsal substitutions as proposed procedural acceptance conditions, not independently registered law. H01 contradicts that procedure and rehearsal-1 record; it is not a claim that key generation alone violated the production release gate. No ruling-budget or fixed 24-hour FAILED rule is imported, and no contradiction with a registered sentence was found in this bounded review. |
+
+These PASS results concern the four specified authority/claim checks, not overall procedural acceptance. H01 and the corrected actual-stack rehearsal remain outstanding. This report adopts no amendment, chooses no author ruling, and certifies no deployed package, production custody independence or authenticated production acquisition.
+EOF
+wc -l docs/reviews/ceremony/CODEX-CONFIRM-3.md
+ git diff --check
+ git status --short' in /home/tony/projects/tessera
+ succeeded in 0ms:
+64 docs/reviews/ceremony/CODEX-CONFIRM-3.md
+?? docs/reviews/ceremony/BRIEF-CONFIRM-3.md
+?? docs/reviews/ceremony/CODEX-CONFIRM-3.md
+?? docs/reviews/ceremony/codex-confirm-3.log
+
+codex
+Wrote [CODEX-CONFIRM-3.md](/home/tony/projects/tessera/docs/reviews/ceremony/CODEX-CONFIRM-3.md).
+
+- **HIGH:** rehearsal 2 returns a NUC-exposed out stick to the signing environment.
+- Raw UIF readback preserves permanence; expected output is `%02+`.
+- F03 is fixed.
+- All four appended prechecks PASS within the stated scope.
+
+Only the report was added. Actual-stack rehearsal remains pending.
+
+
+hook: Stop
+hook: Stop Completed
+tokens used
+57,941
+Wrote [CODEX-CONFIRM-3.md](/home/tony/projects/tessera/docs/reviews/ceremony/CODEX-CONFIRM-3.md).
+
+- **HIGH:** rehearsal 2 returns a NUC-exposed out stick to the signing environment.
+- Raw UIF readback preserves permanence; expected output is `%02+`.
+- F03 is fixed.
+- All four appended prechecks PASS within the stated scope.
+
+Only the report was added. Actual-stack rehearsal remains pending.
+
+
