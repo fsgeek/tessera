@@ -14,7 +14,13 @@ the stick by that name (`/media/amnesia/ROOT-PRIV`).
 
 Rules: one run per sitting. Network cable out, Wi-Fi off. Only the sticks this sheet names, one at a time. Never
 photograph or type into chat a PIN, passphrase or secret key. Each key's passphrase and PINs are its own (run 1:
-throwaway). **If anything goes wrong in Part 1, shut down and start Part 1 again; step 2 resets the card.**
+throwaway). **If something goes wrong, what to do depends on where you are:**
+- **Before step 5** (no key exists yet): shut down and start Part 1 again. Runs 2–3: at step 2, reset the card
+  first (it holds no key, so nothing is lost; a reset also restores the default PINs).
+- **Steps 5–7** (the key exists only in memory): **do not shut down.** Fix the failing step in this same session
+  (for step 6, format the stick again and redo step 6).
+- **From step 8 on** (the key is on the card): **never reset the card and never restart.** Keep the card and the
+  backup stick, finish what you can, take photos, and bring them to the owner.
 Photograph (public output only) the lines marked 📷. Write values marked ✎ on the public sheet.
 
 ## Part 1 (one boot)
@@ -97,12 +103,18 @@ your fingerprint.
 ```
 gpg --card-edit
 ```
-`admin` → `forcesig` → `uif 1 permanent` → `q`. (Run `forcesig` only once: it toggles.)
+`admin` → `uif 1 permanent` → `q`. Then check the PIN policy:
+```
+gpg --card-status | grep 'Signature PIN'
+```
+Only if it says `not forced`: `gpg --card-edit` → `admin` → `forcesig` → `q`, and check again. (`forcesig`
+toggles: never run it when it already says `forced`.) Then:
 ```
 gpg --card-status | grep 'Signature PIN'
 gpg-connect-agent 'SCD GETATTR UIF-1' /bye
 ```
-Want: `Signature PIN ....: forced`, then exactly `S UIF-1 %02+` and `OK`. Anything else: stop.
+Want: `Signature PIN ....: forced`, then exactly `S UIF-1 %02+` and `OK`. Anything else: stop (the key is on the
+card: see the rules at the top).
 
 **10. Signing tests** 📷
 ```
@@ -111,9 +123,12 @@ gpg --local-user "$FPR" --armor --detach-sign ~/proof.txt && gpg --verify ~/proo
 ```
 User PIN, then **touch when the key blinks** (no prompt says so). Want `PROOF-OK`.
 ```
-rm -f ~/nt.asc; gpg --local-user "$FPR" --armor --output ~/nt.asc --detach-sign ~/proof.txt; test -s ~/nt.asc && echo SIGNED-WITHOUT-TOUCH || echo NO-SIGNATURE-OK
+rm -f ~/nt.asc; gpg --local-user "$FPR" --armor --output ~/nt.asc --detach-sign ~/proof.txt; echo "exit=$?"; test -s ~/nt.asc && echo SIGNED-WITHOUT-TOUCH || echo NO-SIGNATURE
 ```
-User PIN, **do not touch**, wait for the error. Want `NO-SIGNATURE-OK`.
+Enter the **correct** user PIN, keep the card in, **do not touch**, wait. Want all three: an error that mentions a
+timeout, `exit=` followed by a number other than 0, and `NO-SIGNATURE`. If the error is anything else (a wrong or
+cancelled PIN, a card error), the test did not run: run this block again. ✎ the exact error text (run 1 records
+what this Tails prints).
 ```
 cp ~/proof.txt ~/proof.txt.asc "$O/" && sync && echo PROOF-COPIED
 ```
@@ -149,5 +164,6 @@ Passphrase. Want `BACKUP-OK`. Eject; shut down.
 - **Runs 2–3:** the YubiKey and its `L-PRIV` stick go to **different places**; the passphrase paper to a third.
   A's and B's things are not stored together. Tell the owner only "done". The `L-PUB` stick goes to the owner, who
   checks the key and proof with the verifier and writes the custody record. It never returns to a signing session.
-- If step 6's restore, step 9's readback or step 10's no-touch test fails: the key is **not** used. Bring the
-  photos to the owner. If step 12 fails but 13 passes (or the reverse): keep everything, reset nothing, and ask.
+- If step 9's readback or step 10's no-touch test fails: the key is **not** used. Keep the card and the backup,
+  reset nothing (except C in run 1), and bring the photos to the owner. If step 12 fails but 13 passes (or the
+  reverse): keep everything, reset nothing, and ask.
