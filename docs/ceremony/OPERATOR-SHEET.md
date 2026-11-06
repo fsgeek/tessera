@@ -10,15 +10,30 @@ before running. Every command you type is on its own line: type one, press Enter
 | 3 release | `REL` | B | `REL-PRIV` | `REL-PUB` |
 
 Stick labels are yours (what each holds). The short names are only the **volume names** typed into *Disks*.
-The script reaches you on the **INPUT** stick (the old rehearsal-1 stick: written by the NUC, only ever read here).
+The script reaches you on the **INPUT** stick: a new stick that has **never** been in the NUC, written on your
+laptop (below). The NUC is not in the path.
 
 **If a step prints FAIL**, nothing has been deleted: fix what it says and run the same step again. Never reboot
 between `generate` and `tests` unless the owner says so: the key is in memory until it is on the card and backed up.
 Never photograph or type into chat a PIN or passphrase. 📷 = photograph the screen. ✎ = write on the public sheet.
 
-## Before the session (on paper)
+## Before the session (on your laptop, not the NUC)
 
-✎ the script's SHA-256 from the owner's message or the commit, in groups of 8.
+The owner names the reviewed commit and the script's SHA-256. On the laptop:
+```
+git clone https://github.com/fsgeek/tessera.git
+```
+```
+cd tessera
+```
+```
+git checkout <the reviewed commit>
+```
+```
+sha256sum docs/ceremony/tessera-ceremony.sh
+```
+It must equal the owner's hash. ✎ it, in groups of 8. Copy `docs/ceremony/tessera-ceremony.sh` to the INPUT
+stick (plain FAT, volume name `INPUT`). Eject it. That stick goes only between the laptop and the signing machine.
 
 ## Part 1 (one boot)
 

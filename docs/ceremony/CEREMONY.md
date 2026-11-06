@@ -27,8 +27,11 @@
 > the file is the reviewed version; it does not protect against a compromised NUC, which produces both the script
 > and its hash. Neither does hand typing, since the printed commands also come from the NUC. The defence in both
 > cases is that the author reads what runs. The one risk a script adds, copying the secret onto the public stick, is
-> checked by two hand-typed commands at the end of each run (step 11). The INPUT stick is NUC-written and read-only
-> in the session; hostile USB firmware is an accepted residual for V1.
+> checked by two hand-typed commands at the end of each run (step 11).
+> **Transfer path (author, 2026-11-06): the NUC is not in it.** "Keep them elsewhere": after review, the author's
+> laptop fetches the reviewed commit from GitHub, checks the script's SHA-256 against the owner's stated value, and
+> writes it to an INPUT stick that has never been in the NUC. A NUC compromise after review cannot change what runs
+> in the session; a compromise while the script was written is defended by the review and by the author reading it.
 
 ## Why two keys, two sessions, separate backups
 
