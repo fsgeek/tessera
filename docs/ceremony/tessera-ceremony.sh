@@ -5,9 +5,10 @@
 # Part 2 (new boot):  verify REH|ROOT|REL
 # Every step ends with PASS or FAIL. A FAIL never deletes anything: fix the cause and run the same step again.
 # State (run name, keyring path, fingerprint) is kept in /tmp/tessera-ceremony.env, in RAM.
-# This script never writes a secret anywhere except the LUKS backup volume, and writes only public files to the
-# public stick. Read it before running it: that, not the checksum, is what protects against a bad script.
+# Secret key material exists only in RAM keyrings under /tmp (tmpfs) and on the LUKS backup volume; the public
+# stick receives only key.pub.asc, proof.txt and proof.txt.asc. Read it before running it: that, not the checksum, is what protects against a bad script.
 set -u
+export LC_ALL=C LANG=C
 STATE=/tmp/tessera-ceremony.env
 EMAIL=tessera@wamason.com
 
@@ -15,7 +16,7 @@ pass() { printf '\n==> PASS: %s\n\n' "$*"; exit 0; }
 fail() { printf '\n==> FAIL: %s\n    Nothing was deleted. Fix the cause and run this step again.\n\n' "$*"; exit 1; }
 say()  { printf '\n%s\n' "$*"; }
 load() { [ -f "$STATE" ] || fail "no state: run 'start' first (Part 1) or 'verify' (Part 2)"; . "$STATE"; export GNUPGHOME; }
-save() { printf 'L=%q\nGNUPGHOME=%q\nFPR=%q\nRESTORE_OK=%q\n' "$L" "$GNUPGHOME" "${FPR:-}" "${RESTORE_OK:-0}" > "$STATE"; }
+save() { printf 'L=%q\nGNUPGHOME=%q\nFPR=%q\nRESTORE_OK=%q\n' "$L" "$GNUPGHOME" "${FPR:-}" "${RESTORE_OK:-0}" > "$STATE" || fail "could not save state to $STATE"; }
 keyname() { case "$1" in REH) echo "Tessera REHEARSAL";; ROOT) echo "Tessera repository root";; REL) echo "Tessera release key";; esac; }
 mounted_at() { [ "$(findmnt -n -o TARGET --target "$1" 2>/dev/null)" = "$1" ]; }
 card_fpr() { gpg --with-colons --card-status 2>/dev/null | awk -F: '$1=="fpr"{print toupper($2)}'; }
@@ -39,6 +40,7 @@ step_card() {
   say "Card status:"; gpg --card-status || fail "no card found: insert the run's YubiKey"
   say "Write the serial number on the public sheet."
   if [ -n "$(card_fpr)" ]; then
+    [ -n "$FPR" ] && [ "$(card_fpr)" = "$FPR" ] && fail "the card holds THIS run's key. Do not reset it. Continue with the next step, or ask the owner"
     if [ "$L" = REH ]; then
       say "The rehearsal card (C) holds a key. Reset it: gpg --card-edit, then: admin, factory-reset, y, yes, q"
       say "Then run this step again."; exit 1
@@ -63,13 +65,14 @@ step_slot() {
   say "  encryption and authentication keys: choose the option that keeps the current one"
   say "  admin PIN, then q"
   gpg --expert --card-edit
-  gpg --card-status | grep -i 'Key attributes' | grep -q nistp256 || fail "signature slot is not nistp256"
+  gpg --card-status | awk -F': ' '/^Key attributes/{split($2,a," "); print a[1]}' | grep -qx nistp256 || fail "the SIGNATURE slot (first attribute) is not nistp256"
   pass "signature slot is NIST P-256"
 }
 
 step_generate() {
   load
   [ -z "$FPR" ] || fail "a key was already generated in this run ($FPR)"
+  [ -z "$(gpg --with-colons --list-secret-keys 2>/dev/null)" ] || fail "the keyring already holds a key (a failed earlier attempt?). Ask the owner; do not generate another"
   name="$(keyname "$L")"
   say "Generating '$name <$EMAIL>': NIST P-256, sign only, no expiry. Enter the passphrase when asked."
   gpg --quick-generate-key "$name <$EMAIL>" nistp256 sign never || fail "key generation failed"
@@ -84,19 +87,22 @@ step_generate() {
 step_backup() {
   load
   [ -n "$FPR" ] || fail "no key yet: run 'generate'"
+  [ "$(card_fpr)" = "$FPR" ] && fail "the key is already on the card: a backup can no longer be made (it would be a card stub)"
+  [ "$RESTORE_OK" = 1 ] && fail "the backup already passed its restore test; it is not rewritten"
   B="/media/amnesia/$L-PRIV"
   mounted_at "$B" || fail "$B is not mounted. Format the stick in Disks (Ext4, LUKS, volume name $L-PRIV), then open it in Files"
   DEV=$(findmnt -n -o SOURCE --target "$B")
   [ "$(lsblk -no TYPE "$DEV")" = crypt ] || fail "$B is not an encrypted (LUKS) volume"
   say "LUKS (write type and cipher on the public sheet):"; sudo cryptsetup status "$DEV" | grep -E 'type|cipher|device'
   sudo cryptsetup status "$DEV" | grep -q 'type: *LUKS2' || fail "volume is not LUKS2"
+  [ -e "$B/secret.asc" ] && fail "$B/secret.asc already exists. If it came from a failed attempt in THIS session, format the stick again in Disks and rerun"
   gpg --export-secret-keys --armor "$FPR" > "$B/secret.asc" || fail "secret export failed"
   [ -s "$B/secret.asc" ] || fail "secret.asc is empty"
   gpg --export --armor "$FPR" > "$B/public.asc" || fail "public export failed"
   cp "$GNUPGHOME/openpgp-revocs.d/$FPR.rev" "$B/revocation.rev" || fail "revocation certificate copy failed"
-  sync
+  sync || fail "sync failed"
   say "Restore test, in a separate keyring (enter the passphrase when asked):"
-  T=$(mktemp -d /tmp/restore.XXXXXX); chmod 700 "$T"
+  T=$(mktemp -d /tmp/restore.XXXXXX) && [ -d "$T" ] || fail "could not make the restore keyring"; chmod 700 "$T"
   GNUPGHOME="$T" gpg --batch --import "$B/secret.asc" || { rm -rf "$T"; fail "backup did not import"; }
   echo restore > "$T/r.txt"
   GNUPGHOME="$T" gpg --local-user "$FPR" --armor --detach-sign "$T/r.txt" || { rm -rf "$T"; fail "backup did not sign"; }
@@ -113,8 +119,8 @@ step_public() {
   O="/media/amnesia/$L-PUB"
   mounted_at "$O" || fail "$O is not mounted. Format the stick in Disks (FAT, no password, volume name $L-PUB), then open it in Files"
   gpg --export --armor "$FPR" > "$O/key.pub.asc" || fail "public export failed"
-  sync
-  say "SHA-256 of the public key (write it on the public sheet):"; sha256sum "$O/key.pub.asc"
+  sync || fail "sync failed"
+  say "SHA-256 of the public key (write it on the public sheet):"; sha256sum "$O/key.pub.asc" || fail "could not hash the public key"
   pass "public key written. Leave $L-PUB in."
 }
 
@@ -136,8 +142,8 @@ step_policy() {
     say "Signature PIN is not forced. Type, in order:  admin   forcesig   q"
     gpg --card-edit
   fi
-  gpg --card-status | grep 'Signature PIN'
-  gpg --card-status | grep 'Signature PIN' | grep -q 'not forced' && fail "signature PIN is still not forced"
+  pin=$(gpg --card-status | grep 'Signature PIN'); echo "$pin"
+  echo "$pin" | grep -Eq 'Signature PIN[ .]*: forced$' || fail "signature PIN is not shown as forced"
   say "Raw touch policy (photograph this):"
   out=$(gpg-connect-agent 'SCD GETATTR UIF-1' /bye); echo "$out"
   echo "$out" | grep -qx 'S UIF-1 %02+' || fail "touch policy is not permanent (want 'S UIF-1 %02+')"
@@ -157,16 +163,17 @@ step_tests() {
   cat ~/nt.err; echo "exit=$rc"
   [ "$rc" -ne 0 ] || fail "signing succeeded without a touch"
   [ -s ~/nt.asc ] && fail "a signature was written without a touch"
-  grep -qi 'time' ~/nt.err || fail "the error was not a timeout (wrong or cancelled PIN?): run 'tests' again"
+  grep -q 'signing failed: Timeout' ~/nt.err || fail "the error was not the card's touch timeout ('signing failed: Timeout'); a wrong or cancelled PIN does not count: run 'tests' again"
   cp ~/proof.txt ~/proof.txt.asc "$O/" || fail "could not copy the proof"
-  sync
+  sync || fail "sync failed"
   pass "touch is enforced. Write the error text above on the public sheet. Eject $L-PUB, then shut down."
 }
 
 step_verify() {
   case "${1:-}" in REH|ROOT|REL) L=$1;; *) fail "usage: verify REH|ROOT|REL";; esac
   [ -f "$STATE" ] && fail "state exists: this must be a fresh boot"
-  GNUPGHOME=$(mktemp -d /tmp/gnupg.XXXXXX); chmod 700 "$GNUPGHOME"; export GNUPGHOME
+  GNUPGHOME=$(mktemp -d /tmp/gnupg.XXXXXX) && [ -d "$GNUPGHOME" ] || fail "could not make the keyring"; chmod 700 "$GNUPGHOME"; export GNUPGHOME
+  [ "$(findmnt -n -o FSTYPE --target "$GNUPGHOME")" = tmpfs ] || fail "keyring is not on tmpfs"
   printf 'Type the fingerprint from the public sheet (spaces allowed): '; read -r typed
   FPR=$(echo "$typed" | tr -d ' ' | tr a-f A-F)
   [ ${#FPR} -eq 40 ] || fail "that is not 40 characters"
@@ -180,7 +187,9 @@ step_verify() {
   gpg --local-user "$FPR" --armor --yes --detach-sign ~/c.txt || fail "the card did not sign"
   gpg --verify ~/c.txt.asc ~/c.txt || fail "card signature does not verify"
   say "CARD-OK. Remove the YubiKey now, then press Enter."; read -r _
+  gpg --card-status >/dev/null 2>&1 && fail "the YubiKey is still inserted: remove it and run 'verify' again in a new boot"
   gpg --batch --import "$B/secret.asc" || fail "backup did not import"
+  gpg --with-colons --list-secret-keys "$FPR" | awk -F: '$1=="sec"{print $15}' | grep -qE '^(D27600|#)' && fail "the backup holds only a card stub, not the key"
   echo backup > ~/b.txt
   gpg --local-user "$FPR" --armor --yes --detach-sign ~/b.txt || fail "the backup did not sign"
   gpg --verify ~/b.txt.asc ~/b.txt || fail "backup signature does not verify"
