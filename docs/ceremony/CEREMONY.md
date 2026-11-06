@@ -21,6 +21,15 @@
 > lineage), and the second backup's extra stick and steps cost more operator error than they buy. The rehearsal
 > uses its own sticks. Where this document and the operator sheet differ in a command, the operator sheet is current.
 
+> **Scripted form (2026-11-06, author's suggestion):** the steps run from `tessera-ceremony.sh`, carried on the INPUT
+> stick, checked against its SHA-256 and read by the author before use. Hand-typed commands were error-prone (a
+> four-line wrapped command merged visually with the next). **What the checksum does and does not do:** it proves
+> the file is the reviewed version; it does not protect against a compromised NUC, which produces both the script
+> and its hash. Neither does hand typing, since the printed commands also come from the NUC. The defence in both
+> cases is that the author reads what runs. The one risk a script adds, copying the secret onto the public stick, is
+> checked by two hand-typed commands at the end of each run (step 11). The INPUT stick is NUC-written and read-only
+> in the session; hostile USB firmware is an accepted residual for V1.
+
 ## Why two keys, two sessions, separate backups
 
 - **Repository root (A)** signs key-assertion commits and the end-of-issuance statement: the git channel's authority.

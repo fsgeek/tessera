@@ -1,169 +1,127 @@
 # Key ceremony — operator sheet (one process, run three times)
 
-Final form, top to bottom. The reasoning and review history are in `CEREMONY.md`; you do not need it to run this.
+The reasoning and review history are in `CEREMONY.md`. The steps are done by `tessera-ceremony.sh`, which you read
+before running. Every command you type is on its own line: type one, press Enter, read the result, then the next.
 
-| Run | `L` | YubiKey | Encrypted backup stick | Public stick | Key name |
-|---|---|---|---|---|---|
-| 1 rehearsal | `REH` | C | `REH-PRIV` | `REH-PUB` | `Tessera REHEARSAL` |
-| 2 root | `ROOT` | A | `ROOT-PRIV` | `ROOT-PUB` | `Tessera repository root` |
-| 3 release | `REL` | B | `REL-PRIV` | `REL-PUB` | `Tessera release key` |
+| Run | `L` | YubiKey | Encrypted backup stick | Public stick |
+|---|---|---|---|---|
+| 1 rehearsal | `REH` | C | volume name `REH-PRIV` | volume name `REH-PUB` |
+| 2 root | `ROOT` | A | `ROOT-PRIV` | `ROOT-PUB` |
+| 3 release | `REL` | B | `REL-PRIV` | `REL-PUB` |
 
-The stick labels are the author's: what each stick holds (for example "Root: backup (private)" and "Root: public").
-The short names in the table are only the **volume names** typed into *Disks* when formatting; the commands find
-the stick by that name (`/media/amnesia/ROOT-PRIV`).
+Stick labels are yours (what each holds). The short names are only the **volume names** typed into *Disks*.
+The script reaches you on the **INPUT** stick (the old rehearsal-1 stick: written by the NUC, only ever read here).
 
-Rules: one run per sitting. Network cable out, Wi-Fi off. Only the sticks this sheet names, one at a time. Never
-photograph or type into chat a PIN, passphrase or secret key. Each key's passphrase and PINs are its own (run 1:
-throwaway). **If something goes wrong, what to do depends on where you are:**
-- **Before step 5** (no key exists yet): shut down and start Part 1 again. Runs 2–3: at step 2, reset the card
-  first (it holds no key, so nothing is lost; a reset also restores the default PINs).
-- **Steps 5–7** (the key exists only in memory): **do not shut down.** Fix the failing step in this same session
-  (for step 6, format the stick again and redo step 6).
-- **From step 8 on** (the key is on the card): **never reset the card and never restart.** Keep the card and the
-  backup stick, finish what you can, take photos, and bring them to the owner.
-Photograph (public output only) the lines marked 📷. Write values marked ✎ on the public sheet.
+**If a step prints FAIL**, nothing has been deleted: fix what it says and run the same step again. Never reboot
+between `generate` and `tests` unless the owner says so: the key is in memory until it is on the card and backed up.
+Never photograph or type into chat a PIN or passphrase. 📷 = photograph the screen. ✎ = write on the public sheet.
+
+## Before the session (on paper)
+
+✎ the script's SHA-256 from the owner's message or the commit, in groups of 8.
 
 ## Part 1 (one boot)
 
-Tails Welcome Screen: **set an administration password** (needed for formatting); do **not** unlock Persistent
-Storage. Open a terminal. Every command runs in this one terminal.
+Welcome Screen: **set an administration password**; do **not** unlock Persistent Storage. Network off.
+Insert the INPUT stick, open it in *Files*, open a terminal.
 
-**1. Session** 📷
+**0. Check and read the script**
 ```
-L=ROOT
-gpg --version | head -1; ip -brief link; swapon --show
-export GNUPGHOME="$(mktemp -d /tmp/gnupg.XXXXXX)"; chmod 700 "$GNUPGHOME"
-findmnt -n -o FSTYPE --target "$GNUPGHOME"
+sha256sum /media/amnesia/INPUT/tessera-ceremony.sh
 ```
-(`L=` is `REH`, `ROOT` or `REL` from the table.) Want: links other than `lo` DOWN, nothing from `swapon`, last line
-`tmpfs`. ✎ the GnuPG version.
+It must equal the paper. Then read it (space pages, q quits):
+```
+less /media/amnesia/INPUT/tessera-ceremony.sh
+```
+Copy it into memory:
+```
+cp /media/amnesia/INPUT/tessera-ceremony.sh /tmp/c.sh
+```
+```
+sha256sum /tmp/c.sh
+```
+Same hash again. Eject INPUT and remove it. From here on, every step is `bash /tmp/c.sh <step>`.
 
-**2. Card.** Insert the run's YubiKey only. `gpg --card-status`. ✎ the serial.
-- Run 1 (C): reset it: `gpg --card-edit` → `admin` → `factory-reset` → `y` → `yes` → `q`.
-- Runs 2–3 (A, B): it must show no keys and PIN retries `3 0 3`. If not, stop.
+**1. Start** 📷 ✎ GnuPG version
+```
+bash /tmp/c.sh start ROOT
+```
+(`REH`, `ROOT` or `REL`.)
 
-**3. PINs:** `gpg --card-edit` → `admin` → `passwd` → `3` (admin, default `12345678`) → `1` (user, default
-`123456`) → `q` → `q`.
+**2. Card** — insert the run's YubiKey only. ✎ serial.
+```
+bash /tmp/c.sh card
+```
 
-**4. P-256 slot:** `gpg --expert --card-edit` → `admin` → `key-attr` → signature: `2` (ECC), then NIST P-256;
-encryption and authentication: keep current → admin PIN → `q`.
+**3. PINs** — the script shows what to type.
+```
+bash /tmp/c.sh pins
+```
 
-**5. Key** (in memory):
+**4. P-256 slot**
 ```
-gpg --expert --full-generate-key
+bash /tmp/c.sh slot
 ```
-`10` (ECC sign only) → NIST P-256 → `0` (no expiry) → the run's key name → email `tessera@wamason.com` → passphrase.
-```
-gpg --list-keys
-FPR=<the 40 characters, no spaces>
-gpg --list-keys "$FPR" >/dev/null && echo FPR-OK
-```
-✎ the fingerprint, then read it back.
 
-**6. Encrypted backup** (`L-PRIV` stick). *Disks* → the stick → ⋮ *Format Disk* (GPT) → `+` → *Internal disk for
-use with Linux systems only (Ext4)* → name `ROOT-PRIV` (etc.) → *Password protect volume (LUKS)* → the key's
-passphrase. Open it in *Files* (enter the passphrase), then:
+**5. Generate** — enter the passphrase twice when asked. ✎ the fingerprint, then read it back.
 ```
-B="/media/amnesia/$L-PRIV"; DEV="$(findmnt -n -o SOURCE --target "$B")"
-[ "$(findmnt -n -o TARGET --target "$B")" = "$B" ] && [ "$(lsblk -no TYPE "$DEV")" = crypt ] && echo LUKS-OK || echo FAIL
-sudo cryptsetup status "$DEV" | grep -E 'type|cipher|device'
-gpg --export-secret-keys --armor "$FPR" > "$B/secret.asc" && test -s "$B/secret.asc" && echo SECRET-OK || echo FAIL
-gpg --export --armor "$FPR" > "$B/public.asc" && test -s "$B/public.asc" && echo PUBLIC-OK || echo FAIL
-cp "$GNUPGHOME/openpgp-revocs.d/$FPR.rev" "$B/revocation.rev" && echo REV-OK || echo FAIL
-sync
+bash /tmp/c.sh generate
 ```
-Want: `LUKS-OK`, `type: LUKS2` (✎ type and cipher), `SECRET-OK`, `PUBLIC-OK`, `REV-OK`. Now prove it restores, in a
-separate keyring, while the key is still in memory:
-```
-T="$(mktemp -d /tmp/r.XXXXXX)"; chmod 700 "$T"
-GNUPGHOME="$T" gpg --batch --import "$B/secret.asc" && echo IMPORTED
-echo r > "$T/r.txt"; GNUPGHOME="$T" gpg --local-user "$FPR" --armor --detach-sign "$T/r.txt" && GNUPGHOME="$T" gpg --verify "$T/r.txt.asc" "$T/r.txt" && echo RESTORE-OK
-gpgconf --homedir "$T" --kill gpg-agent; rm -rf "$T"
-```
-Want: `IMPORTED`, `RESTORE-OK`. If not, do not go on: format the stick again and redo step 6. Eject in *Files*;
-remove the stick.
 
-**7. Public stick** (`L-PUB` stick). *Disks* → ⋮ *Format Disk* (GPT) → `+` → *For use with all systems (FAT)*,
-name `ROOT-PUB` (etc.), no password. Open it in *Files*, then:
+**6. Backup** — first, in *Disks*: the `L-PRIV` stick → ⋮ *Format Disk* (GPT) → `+` → *Internal disk for use with
+Linux systems only (Ext4)*, volume name `ROOT-PRIV` (etc.), *Password protect volume (LUKS)*, the key's passphrase.
+Open it in *Files*. Then: ✎ LUKS type and cipher.
 ```
-O="/media/amnesia/$L-PUB"
-[ "$(findmnt -n -o TARGET --target "$O")" = "$O" ] && echo PUB-OK || echo FAIL
-gpg --export --armor "$FPR" > "$O/key.pub.asc" && sha256sum "$O/key.pub.asc"
+bash /tmp/c.sh backup
 ```
-Want: `PUB-OK` and a hash (✎ the hash). Leave the stick in.
+It asks for the passphrase once more (the restore test). On PASS, eject `L-PRIV` and remove it.
 
-**8. Onto the card** (only after `RESTORE-OK` in step 6):
+**7. Public stick** — in *Disks*: the `L-PUB` stick → *Format Disk* (GPT) → `+` → *For use with all systems (FAT)*,
+volume name `ROOT-PUB` (etc.), no password. Open it in *Files*. Then: ✎ the hash.
 ```
-gpg --edit-key "$FPR"
+bash /tmp/c.sh public
 ```
-`keytocard` → `y` → `1` → passphrase → admin PIN → `save`. Then `gpg --card-status`: the signature key line shows
-your fingerprint.
+Leave it in.
 
-**9. Card policy** 📷 (the last command's output)
+**8. Onto the card** — the script shows what to type.
 ```
-gpg --card-edit
+bash /tmp/c.sh tocard
 ```
-`admin` → `uif 1 permanent` → `q`. Then check the PIN policy:
-```
-gpg --card-status | grep 'Signature PIN'
-```
-Only if it says `not forced`: `gpg --card-edit` → `admin` → `forcesig` → `q`, and check again. (`forcesig`
-toggles: never run it when it already says `forced`.) Then:
-```
-gpg --card-status | grep 'Signature PIN'
-gpg-connect-agent 'SCD GETATTR UIF-1' /bye
-```
-Want: `Signature PIN ....: forced`, then exactly `S UIF-1 %02+` and `OK`. Anything else: stop (the key is on the
-card: see the rules at the top).
 
-**10. Signing tests** 📷
+**9. Policy** 📷 (the `S UIF-1` line)
 ```
-echo "tessera $L $(date -u +%FT%TZ)" > ~/proof.txt
-gpg --local-user "$FPR" --armor --detach-sign ~/proof.txt && gpg --verify ~/proof.txt.asc ~/proof.txt && echo PROOF-OK
+bash /tmp/c.sh policy
 ```
-User PIN, then **touch when the key blinks** (no prompt says so). Want `PROOF-OK`.
-```
-rm -f ~/nt.asc; gpg --local-user "$FPR" --armor --output ~/nt.asc --detach-sign ~/proof.txt; echo "exit=$?"; test -s ~/nt.asc && echo SIGNED-WITHOUT-TOUCH || echo NO-SIGNATURE
-```
-Enter the **correct** user PIN, keep the card in, **do not touch**, wait. Want all three: an error that mentions a
-timeout, `exit=` followed by a number other than 0, and `NO-SIGNATURE`. If the error is anything else (a wrong or
-cancelled PIN, a card error), the test did not run: run this block again. ✎ the exact error text (run 1 records
-what this Tails prints).
-```
-cp ~/proof.txt ~/proof.txt.asc "$O/" && sync && echo PROOF-COPIED
-```
-Eject the public stick. Remove it.
 
-**11. Shut down.** Remove the YubiKey.
+**10. Tests** 📷 — the first signature needs a touch; the second must not be touched. ✎ the error text.
+```
+bash /tmp/c.sh tests
+```
 
-## Part 2 (a new boot: proves the card and the backup each work alone)
+**11. Check the public stick yourself** (typed by hand, not by the script). 📷
+```
+ls -la /media/amnesia/ROOT-PUB
+```
+Want: `key.pub.asc`, `proof.txt`, `proof.txt.asc`, nothing else.
+```
+gpg --show-keys /media/amnesia/ROOT-PUB/key.pub.asc
+```
+Want: a line starting `pub` and **no line starting `sec`**, and your fingerprint. Then eject, remove, shut down.
 
-Welcome Screen as before. Then:
-```
-L=ROOT
-FPR=<the fingerprint from the sheet>
-export GNUPGHOME="$(mktemp -d /tmp/gnupg.XXXXXX)"; chmod 700 "$GNUPGHOME"
-```
-**12. Card alone.** Insert the YubiKey and the `L-PRIV` stick (open it in *Files*):
-```
-B="/media/amnesia/$L-PRIV"
-gpg --import "$B/public.asc" && gpg --card-status > /dev/null
-echo c > ~/c.txt; gpg --local-user "$FPR" --armor --detach-sign ~/c.txt && gpg --verify ~/c.txt.asc ~/c.txt && echo CARD-OK
-```
-PIN, touch. Want `CARD-OK`. Remove the YubiKey.
+## Part 2 (a new boot)
 
-**13. Backup alone** (same boot, after step 12):
+Welcome Screen as before. INPUT stick: repeat step 0 (check, read, copy to `/tmp/c.sh`). Open `L-PRIV` in *Files*
+(passphrase). Have the YubiKey ready but not inserted.
 ```
-gpg --batch --import "$B/secret.asc"
-echo b > ~/b.txt; gpg --local-user "$FPR" --armor --detach-sign ~/b.txt && gpg --verify ~/b.txt.asc ~/b.txt && echo BACKUP-OK
+bash /tmp/c.sh verify ROOT
 ```
-Passphrase. Want `BACKUP-OK`. Eject; shut down.
+Type the fingerprint from the sheet; insert the YubiKey when asked; PIN and touch; remove it when asked; then the
+passphrase for the backup. Want PASS. Eject; shut down.
 
 ## After each run
-- **Run 1:** reset C (as in step 2). Keep `REH-PUB` for the owner if you like; `REH-PRIV` can be reformatted.
+
+- **Run 1:** reset C (`gpg --card-edit`, then `admin`, `factory-reset`, `y`, `yes`, `q`).
 - **Runs 2–3:** the YubiKey and its `L-PRIV` stick go to **different places**; the passphrase paper to a third.
-  A's and B's things are not stored together. Tell the owner only "done". The `L-PUB` stick goes to the owner, who
-  checks the key and proof with the verifier and writes the custody record. It never returns to a signing session.
-- If step 9's readback or step 10's no-touch test fails: the key is **not** used. Keep the card and the backup,
-  reset nothing (except C in run 1), and bring the photos to the owner. If step 12 fails but 13 passes (or the
-  reverse): keep everything, reset nothing, and ask.
+  A's and B's things are not stored together. Tell the owner only "done". The `L-PUB` stick goes to the owner and
+  never returns to a signing session.
+- **From step 8 on, never reset the card**, whatever fails. Keep the card and the backup and bring the photos.
