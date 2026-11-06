@@ -273,17 +273,32 @@ mapper, and LUKS2 is read from the partition under that mapper. F05 B's first ac
 NUC, repository and DNS, chosen by the author before B's first production use; public keys are retained on the
 backup sticks. C02/C03 residuals: scdaemon version recorded; GNUPGHOME must be on tmpfs or stop; no NUC scripts.
 
-## Rehearsal 2 (before the real ceremony; YubiKey C)
+## Rehearsal 2 (before the real ceremony): a dress rehearsal of this revision on YubiKey C
 
-YubiKey C still holds rehearsal 1's throwaway key with `uif 1 permanent` set, so it is the test object for the S8
-readback. In a Tails session (S0 first), with only C inserted:
-```
-gpg-connect-agent 'SCD GETATTR UIF-1' /bye
-gpg --card-status | grep -E 'UIF|Signature PIN'
-```
-Record both outputs (a photo is fine; nothing secret). Pass: the first byte is `02`. Then factory-reset C
-(`gpg --card-edit`, `admin`, `factory-reset`) and shut down. If the readback shows anything else, S8 is revised
-before any production key exists.
+YubiKey C was factory-reset after rehearsal 1, so rehearsal 2 runs the whole procedure with a throwaway key:
+Session 1 (S0–S10) and Session 2, exactly as written, with these substitutions:
+- Name the key `Tessera REHEARSAL 2`; YubiKey **C**; throwaway PINs and passphrase (still never photographed).
+- Backups: the two sticks that will be **A's** backups (one Kingston, one Lexar). The real ceremony reformats them in
+  S5, which destroys the throwaway backup.
+- Out stick: the rehearsal-1 stick (already "out only"), not one of the new ones.
+- At S8, record the output of `gpg-connect-agent 'SCD GETATTR UIF-1' /bye` (a photo is fine). **This is the check
+  rehearsal 2 exists for:** the first byte must be `02`. If not, stop and bring the output to the owner.
+- After Session 2: factory-reset C (`gpg --card-edit`, `admin`, `factory-reset`) and shut down.
+Bring the out stick to the owner, who checks the proof signature with the verifier's code and records the run,
+including step times and anything that did not go as written.
+
+## Sticks (author, 2026-11-06): 3 Kingston, 3 Lexar
+
+| Role | Vendor |
+|---|---|
+| `ROOT-BK1` | Kingston |
+| `ROOT-BK2` | Lexar |
+| `REL-BK1` | Lexar |
+| `REL-BK2` | Kingston |
+| Out stick, root session | Kingston |
+| Out stick, release session | Lexar |
+
+Each key's two backups are from different vendors, so one bad batch cannot take both copies. Label them now.
 
 ## Revision 4 changes (Codex confirmation 2)
 
