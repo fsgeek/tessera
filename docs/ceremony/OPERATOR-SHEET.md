@@ -8,6 +8,10 @@ Final form, top to bottom. The reasoning and review history are in `CEREMONY.md`
 | 2 root | `ROOT` | A | `ROOT-PRIV` | `ROOT-PUB` | `Tessera repository root` |
 | 3 release | `REL` | B | `REL-PRIV` | `REL-PUB` | `Tessera release key` |
 
+The stick labels are the author's: what each stick holds (for example "Root: backup (private)" and "Root: public").
+The short names in the table are only the **volume names** typed into *Disks* when formatting; the commands find
+the stick by that name (`/media/amnesia/ROOT-PRIV`).
+
 Rules: one run per sitting. Network cable out, Wi-Fi off. Only the sticks this sheet names, one at a time. Never
 photograph or type into chat a PIN, passphrase or secret key. Each key's passphrase and PINs are its own (run 1:
 throwaway). **If anything goes wrong in Part 1, shut down and start Part 1 again; step 2 resets the card.**
