@@ -110,3 +110,12 @@ margins, would hold `_tessera-v1.wamason.com` longer than the ceremony delays pr
 
 Next: step 9 needs the window: the ceremony (repository root), the key-assertion commit with k = 6, the DNS TXT,
 `config/window.json`. Then the smoke test and step 10.
+
+## 2026-11-10 — slot-2 scheduler paused (owner)
+
+The author's Google billing alert ($10/month budget exceeded) traced to `tessera-signer-gpg-tick`, which ran the
+Cloud Run job (1 vCPU, 512 MiB, ~30–40 s) **every minute** since 2026-11-02, polling an empty queue: about 1,440
+executions a day. No window exists, so nothing could be signed. Paused at 2026-11-10 ~13:35Z
+(`gcloud scheduler jobs pause`). `deploy.sh scheduler` now sets every 10 minutes (the issuer poller's cadence; a
+request's budget is days). Resume only when the window is published. Remaining standing GCP cost: two HSM key
+versions (`slot2-v1`, and `slot2-spike` until its deletion), artifact storage.

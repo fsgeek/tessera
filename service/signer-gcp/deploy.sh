@@ -149,13 +149,13 @@ job() {
 }
 
 scheduler() {
-  say "Cloud Scheduler $SCHED: every minute, runs the job as $INVOKER_SA (OAuth); E-01: keep it running while signing is possible"
+  say "Cloud Scheduler $SCHED: every 10 minutes (the issuer poller's cadence; owner 2026-11-10, was every minute), runs the job as $INVOKER_SA (OAuth); E-01: run it only while a window is open"
   local uri="https://run.googleapis.com/v2/projects/$PROJECT/locations/$REGION/jobs/$JOB:run"
   if $GC scheduler jobs describe $SCHED --location=$REGION >/dev/null 2>&1; then
-    $GC scheduler jobs update http $SCHED --location=$REGION --schedule="* * * * *" --uri="$uri" \
+    $GC scheduler jobs update http $SCHED --location=$REGION --schedule="*/10 * * * *" --uri="$uri" \
       --http-method=POST --oauth-service-account-email="$INVOKER_SA"
   else
-    $GC scheduler jobs create http $SCHED --location=$REGION --schedule="* * * * *" --uri="$uri" \
+    $GC scheduler jobs create http $SCHED --location=$REGION --schedule="*/10 * * * *" --uri="$uri" \
       --http-method=POST --oauth-service-account-email="$INVOKER_SA" --time-zone=UTC --attempt-deadline=60s
   fi
 }
