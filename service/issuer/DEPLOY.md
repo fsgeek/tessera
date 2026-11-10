@@ -120,6 +120,10 @@ permission checks bypassed. Tolerable while nothing relies on Tessera; not after
 
 Before the first **public verifier release**: the custody procedure and its rehearsal; the production release key;
 
+**Off-site custody** (owner, 2026-11-10): today each key's YubiKey, backup stick and passphrase paper are kept
+apart within one apartment. Before the first public verifier release, each key's backup stick or its passphrase
+paper moves off-site, so one fire or burglary cannot take a key's card, backup and passphrase together.
+
 **Root (repository key) rotation protocol** (owner, 2026-11-06, on the author's question "why don't we have a rotation
 protocol for it"). The verifier bounds a repository key only through the trust configuration (an open entry is
 usable to the release's `as_of`; profile "Open endpoints"), and the release invariants allow adding a successor and

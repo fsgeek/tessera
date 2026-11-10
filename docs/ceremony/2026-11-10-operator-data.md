@@ -45,10 +45,14 @@ names are local; screen clocks show GMT. Photo SHA-256 manifest: `2026-11-10-pho
 
 ### Open (author)
 1. ~~Was Part 2 (`verify`) run for Root and Release?~~ Yes, both PASS (author, 2026-11-10; not photographed).
-2. The step-7 hashes on the public sheet for Root and Release: do they equal `001565af…` and `1a817ae3…`?
-3. Any stick or card still holding a rehearsal key (especially the two named "Tessera release key") reformatted or
-   reset? YubiKey C reset?
-4. Storage: each YubiKey, its backup stick and its passphrase paper in different places; A's and B's not together.
+2. ~~Step-7 hashes~~: not written on the sheet for Root and Release (author, 2026-11-10; five continuous hours).
+   Superseded by the fingerprint: the author confirmed Root's paper fingerprint equals the key received on the stick;
+   Release's generation photo (13.07.17) shows `CADC…035E`, the key received. Pending: the author's glance at the
+   paper for Release.
+3. Rehearsal material: separated and tagged purple, not yet cleared (author, 2026-11-10). To clear when convenient.
+4. Storage (author, 2026-11-10): separate places within one apartment, colour-tagged (root red, release white,
+   rehearsal purple). Protects against mix-ups, not fire or burglary. **Release gate:** before the first public
+   verifier release, each key's backup stick or passphrase paper moves off-site (`service/issuer/DEPLOY.md`).
 
 # Pictures
 
