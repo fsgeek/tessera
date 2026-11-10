@@ -37,7 +37,10 @@ step_start() {
   [ "$hw_up" -eq 0 ] || fail "a hardware network interface is not down (cable or Wi-Fi?)"
   say "Routes to the outside (must be none):"; ip route show default; ip -6 route show default
   [ -z "$(ip route show default)$(ip -6 route show default)" ] || fail "a default route exists"
-  [ -z "$(swapon --show)" ] || fail "swap is active"
+  # swapon is not on an ordinary user's PATH on Tails (found 2026-11-10: the old check passed vacuously); read the
+  # kernel's list instead. zram (compressed RAM) is allowed: it never reaches a disk.
+  say "Swap devices (only zram allowed):"; cat /proc/swaps
+  nonzram=$(awk 'NR>1 && $1 !~ /^\/dev\/zram/' /proc/swaps | wc -l); [ "$nonzram" -eq 0 ] || fail "a swap device other than zram is active"
   GNUPGHOME=$(mktemp -d /tmp/gnupg.XXXXXX); chmod 700 "$GNUPGHOME"; export GNUPGHOME
   fs=$(findmnt -n -o FSTYPE --target "$GNUPGHOME"); echo "keyring filesystem: $fs"
   [ "$fs" = tmpfs ] || fail "keyring is not on tmpfs"

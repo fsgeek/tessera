@@ -33,6 +33,10 @@
 > writes it to an INPUT stick that has never been in the NUC. A NUC compromise after review cannot change what runs
 > in the session; a compromise while the script was written is defended by the review and by the author reading it.
 
+> **Run names for any future ceremony (author, 2026-11-10):** `REH`, `REL` and `ROOT` share letters (`REH`/`REL`
+> differ by one), which is hard on a human under load. Future runs (rotation, replacement) use **Test / Root /
+> Deploy** or equally distinct names. The 2026-11-10 keys keep the names they were made with.
+
 ## Why two keys, two sessions, separate backups
 
 - **Repository root (A)** signs key-assertion commits and the end-of-issuance statement: the git channel's authority.
