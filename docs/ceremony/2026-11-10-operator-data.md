@@ -47,12 +47,14 @@ names are local; screen clocks show GMT. Photo SHA-256 manifest: `2026-11-10-pho
 1. ~~Was Part 2 (`verify`) run for Root and Release?~~ Yes, both PASS (author, 2026-11-10; not photographed).
 2. ~~Step-7 hashes~~: not written on the sheet for Root and Release (author, 2026-11-10; five continuous hours).
    Superseded by the fingerprint: the author confirmed Root's paper fingerprint equals the key received on the stick;
-   Release's generation photo (13.07.17) shows `CADC…035E`, the key received. Pending: the author's glance at the
-   paper for Release.
-3. Rehearsal material: separated and tagged purple, not yet cleared (author, 2026-11-10). To clear when convenient.
+   Release's generation photo (13.07.17) shows `CADC…035E`, the key received. Release: the author read the paper as
+   `CADC 96CF 0023 55F8 E83F E97F AFF8 0961 D825 035E` (2026-11-10), equal to the key received.
+3. Rehearsal material: separated and tagged purple, never near the NUC (author, 2026-11-10). Clearing is about
+   confusion, not contamination (two throwaway keys are named "Tessera release key"): reformat the sticks and reset
+   YubiKey C; they then serve as never-NUC spares for later signing sessions.
 4. Storage (author, 2026-11-10): separate places within one apartment, colour-tagged (root red, release white,
-   rehearsal purple). Protects against mix-ups, not fire or burglary. **Release gate:** before the first public
-   verifier release, each key's backup stick or passphrase paper moves off-site (`service/issuer/DEPLOY.md`).
+   rehearsal purple). A 19th-floor, access-limited steel-and-concrete building: theft is remote; fire is the residual. **Release gate:** before the first public
+   verifier release, one copy of each key's material (backup stick or passphrase paper) is kept where a fire at home cannot reach it (`service/issuer/DEPLOY.md`).
 
 # Pictures
 
