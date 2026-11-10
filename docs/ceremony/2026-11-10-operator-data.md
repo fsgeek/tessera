@@ -26,7 +26,7 @@ names are local; screen clocks show GMT. Photo SHA-256 manifest: `2026-11-10-pho
 | No-touch test | `gpg: signing failed: Timeout`, exit=2, PASS (12.46.56) | same, PASS (13.15.32; first attempt `Bad PIN`, rerun passed) | same, PASS (11.46.31) |
 | Public key received (owner, NUC) | `key.pub.asc` SHA-256 `001565af5b4bd9bc…` | `key.pub.asc` SHA-256 `1a817ae39f974501…` | not brought |
 | Proof verified by the verifier's code | yes; tampered copy fails | yes; tampered copy fails | — |
-| Part 2 `verify` | **not photographed: open** | **not photographed: open** | — |
+| Part 2 `verify` | PASS, attested by the author 2026-11-10 (not photographed) | PASS, attested by the author (not photographed) | — |
 
 ### Findings for the record
 - **Swap check was hollow.** `swapon: command not found` for the user (every `start`), so the script's check
@@ -44,7 +44,7 @@ names are local; screen clocks show GMT. Photo SHA-256 manifest: `2026-11-10-pho
   13.03.54).
 
 ### Open (author)
-1. Was Part 2 (`verify`) run for Root and Release, and did each print PASS?
+1. ~~Was Part 2 (`verify`) run for Root and Release?~~ Yes, both PASS (author, 2026-11-10; not photographed).
 2. The step-7 hashes on the public sheet for Root and Release: do they equal `001565af…` and `1a817ae3…`?
 3. Any stick or card still holding a rehearsal key (especially the two named "Tessera release key") reformatted or
    reset? YubiKey C reset?
