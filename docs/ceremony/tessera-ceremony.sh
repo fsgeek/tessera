@@ -25,8 +25,18 @@ step_start() {
   case "${1:-}" in REH|ROOT|REL) L=$1;; *) fail "usage: start REH|ROOT|REL";; esac
   [ -f "$STATE" ] && fail "a run is already in progress ($STATE exists). Reboot to start over."
   say "Versions:"; gpg --version | head -1; /usr/lib/gnupg/scdaemon --version 2>/dev/null | head -1
-  say "Network links (all except lo must be DOWN):"; ip -brief link
-  up=$(ip -brief link | awk '$1!="lo" && $2=="UP"' | wc -l); [ "$up" -eq 0 ] || fail "a network link is UP"
+  # Only hardware interfaces count (they have a /sys/class/net/<if>/device link). Tails' own veth-* links are
+  # virtual: they join its internal compartments (Tor, OnionShare, ...) and reach no hardware (author's run 1).
+  say "Hardware network interfaces (each must be DOWN, or none at all):"
+  hw_up=0
+  for i in /sys/class/net/*; do
+    [ -e "$i/device" ] || continue
+    n=$(basename "$i"); st=$(cat "$i/operstate" 2>/dev/null); echo "  $n: $st"
+    [ "$st" = down ] || hw_up=1
+  done
+  [ "$hw_up" -eq 0 ] || fail "a hardware network interface is not down (cable or Wi-Fi?)"
+  say "Routes to the outside (must be none):"; ip route show default; ip -6 route show default
+  [ -z "$(ip route show default)$(ip -6 route show default)" ] || fail "a default route exists"
   [ -z "$(swapon --show)" ] || fail "swap is active"
   GNUPGHOME=$(mktemp -d /tmp/gnupg.XXXXXX); chmod 700 "$GNUPGHOME"; export GNUPGHOME
   fs=$(findmnt -n -o FSTYPE --target "$GNUPGHOME"); echo "keyring filesystem: $fs"
