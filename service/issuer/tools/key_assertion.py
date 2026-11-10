@@ -28,6 +28,7 @@ from tessera_issue.encode import assertion_value          # noqa: E402
 KMS_FP = "spki-sha256:a33c216e4151f7202b4863f9edebf060b374ee1bb91ff9ca5734b8e7ba75679f"
 GPG_FP = "gpg-sha256:6a2d7e757b99b46e469dd81f293387b7cfdbe3a1cab2b614dd2d26ecc79dda59"
 IDENT = b"Tessera repository root <tessera@wamason.com>"
+ROOT_FPR = "6BDA21559F18D5DB8E1312C363210B5FF92AD30A"   # docs/ceremony/2026-11-10-operator-data.md (CA-02)
 
 
 def oid(kind, body):
@@ -65,6 +66,7 @@ def build(a):
 def assemble(a):
     from tessera_verify.codec import public_key, signature_verifies
     from tessera_verify.git_channel import dearmor, object_id, parse_commit, verify_path
+    from tessera_verify import sha1dc
     out = Path(a.out)
     payload = (out / "payload.txt").read_bytes()
     armor = Path(a.sig).read_bytes().replace(b"\r\n", b"\n").rstrip(b"\n").split(b"\n")
@@ -83,12 +85,21 @@ def assemble(a):
     body = raw[2:2 + raw[1]]
     if not signature_verifies(payload, sig, public_key(body, "gpg")):
         sys.exit("FAIL: the signature does not verify over the payload under the root key")
+    fpr = hashlib.sha1(b"\x99" + len(body).to_bytes(2, "big") + body).hexdigest().upper()
+    if fpr != ROOT_FPR:
+        sys.exit(f"FAIL: the supplied key {fpr} is not the repository root {ROOT_FPR}")
     root, sub, blob = ((out / n).read_bytes() for n in ("tree-root.bin", "tree-sub.bin", "blob.bin"))
     verify_path(tree, (root, sub), blob)
+    inst = json.loads((HERE.parents[2] / "verifier" / "install.json").read_text())
+    sha1dc.configure(inst["sha1dc_binary"], inst["sha1dc_binary_sha256"])   # the verifier's pinned install
+    if not sha1dc.available():            # CA-03: the profile's pinned SHA-1 collision detector (§15.4 "Ids")
+        sys.exit("FAIL: SHA-1DC detector unavailable (service/verifier/install.sh)")
+    for kind, obj in (("commit", signed), ("tree", root), ("tree", sub), ("blob", blob)):
+        if sha1dc.collision(kind, obj):
+            sys.exit(f"FAIL: SHA-1DC reports a collision pattern in the {kind} object")
     cid = object_id("commit", signed)
     (out / "commit.bin").write_bytes(signed)
     (out / "git-stamp.txt").write_bytes((cid + "\n").encode())
-    fpr = hashlib.sha1(b"\x99" + len(body).to_bytes(2, "big") + body).hexdigest().upper()
     print(f"PASS: commit {cid} signed by the repository root {fpr}; path and signature checked by the verifier's code")
 
 

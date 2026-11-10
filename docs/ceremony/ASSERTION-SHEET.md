@@ -1,7 +1,13 @@
 # Signing the key assertion — operator sheet (one short sitting)
 
 YubiKey A signs one git commit that names the window's two service keys and dates. The NUC built the commit; the
-script shows it to you, checks it, and signs only if you type `yes`.
+script checks its exact form, shows you the keys and dates it names, and signs only if you type `yes`.
+
+**What your signature does and does not mean.** It authorizes these two service keys for this window, in the root's
+name. It does not prove who holds them: their fingerprints come from the owner (the NUC), and the root cannot check
+them independently. Compare them **in full** with the values the owner gives you:
+- kms: `spki-sha256: a33c216e 4151f720 2b4863f9 edebf060 b374ee1b b91ff9ca 5734b8e7 ba75679f`
+- gpg: `gpg-sha256: 6a2d7e75 7b99b46e 469dd81f 293387b7 cfdbe3a1 cab2b614 dd2d26ec c79dda59`
 
 Sticks: **INPUT** and **OUT**, both never in the NUC (the reformatted purple rehearsal sticks will do).
 **[PHOTO]** = photograph the screen. Nothing secret appears on screen except the PIN prompt.
@@ -40,8 +46,8 @@ Same as the owner's value. Read it (`less /tmp/s.sh`). Then:
 ```
 bash /tmp/s.sh
 ```
-**[PHOTO]** the commit text and the `MATCH` line. Read the text: `kms=a33c216e…`, `gpg=6a2d7e75…`, and the two
-dates the owner gave you. If they are right, type `yes`, insert YubiKey A when asked, enter the PIN, touch when it
+**[PHOTO]** the `FORM OK, TREE MATCH` block. Compare both fingerprints in full with the ones above, and the two
+dates with the owner's. If they are right, type `yes`, insert YubiKey A when asked, enter the PIN, touch when it
 blinks. Want `==> PASS`. **[PHOTO]**. Eject both sticks, remove YubiKey A, shut down. OUT goes to the owner.
 
 If anything fails: nothing has been signed or changed on the card. Photograph it and stop.

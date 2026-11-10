@@ -25,32 +25,37 @@ export GNUPGHOME=$(mktemp -d /tmp/gnupg.XXXXXX) && chmod 700 "$GNUPGHOME"
 [ "$(findmnt -n -o TARGET --target "$OUT" 2>/dev/null)" = "$OUT" ] || fail "$OUT is not mounted (format a stick FAT, volume name OUT)"
 echo "ok"
 
-say "What you are about to sign (read the kms=, gpg= and dates):"
-echo "------------------------------------------------------------"
-cat "$IN/payload.txt"
-echo "------------------------------------------------------------"
-sha256sum "$IN/payload.txt"
-
-say "Recomputing the tree from the value in the message:"
-python3 - "$IN/payload.txt" <<'EOF' || fail "the commit's tree does not match the value in its message: DO NOT SIGN"
-import hashlib, sys
+say "Checking the commit's exact form, then recomputing its tree (nothing is shown before this passes):"
+python3 - "$IN/payload.txt" <<'EOF' || fail "the commit is not in the expected form, or its tree does not match its value: DO NOT SIGN"
+import hashlib, re, sys
 p = open(sys.argv[1], 'rb').read()
-head, msg = p.split(b'\n\n', 1)
-tree = head.split(b'\n')[0]
-assert tree.startswith(b'tree '), 'no tree line'
-lines = msg.split(b'\n')
-value = [l for l in lines if l.startswith(b'v=tessera1;')]
-assert len(value) == 1 and len(value[0]) == 255, 'message must hold exactly one 255-byte value'
+# CA-01: only printable ASCII and LF, exact structure, bounded size, before anything reaches the terminal.
+assert len(p) < 1024 and all(32 <= b < 127 or b == 10 for b in p), 'non-printable byte or oversized payload'
+lines = p.split(b'\n')
+ident = rb'Tessera repository root <tessera@wamason\.com> [0-9]{10} \+0000'
+assert len(lines) == 8 and lines[7] == b'', 'unexpected number of lines'
+assert re.fullmatch(rb'tree [0-9a-f]{40}', lines[0]), 'tree line'
+assert re.fullmatch(rb'author ' + ident, lines[1]) and re.fullmatch(rb'committer ' + ident, lines[2]), 'identity lines'
+assert lines[3] == b'' and lines[4] == b'Tessera V1 key assertion' and lines[5] == b'', 'message lines'
+m = re.fullmatch(rb'v=tessera1;profile=tessera-v1-strict;kms=([0-9a-f]{64});gpg=([0-9a-f]{64});'
+                 rb'issuance-not-before=([0-9TZ:-]{20});issuance-not-after=([0-9TZ:-]{20})', lines[6])
+assert m and len(lines[6]) == 255, 'value line'
 def oid(k, b): return hashlib.sha1(k + b' ' + str(len(b)).encode() + b'\0' + b).digest()
-sub = b'100644 key-assertion\0' + oid(b'blob', value[0])
+sub = b'100644 key-assertion\0' + oid(b'blob', lines[6])
 root = b'40000 tessera-v1\0' + oid(b'tree', sub)
-want = oid(b'tree', root).hex().encode()
-print('tree in commit:   ', tree[5:].decode()); print('tree from value:  ', want.decode())
-assert tree[5:] == want, 'mismatch'
-print('MATCH')
+assert lines[0][5:] == oid(b'tree', root).hex().encode(), 'tree does not match the value'
+kms, gpg, nb, na = (x.decode() for x in m.groups())
+g = lambda h: ' '.join(h[i:i+8] for i in range(0, 64, 8))
+print('FORM OK, TREE MATCH. What the root will sign:')
+print('  kms service key  spki-sha256:', g(kms))
+print('  gpg service key  gpg-sha256: ', g(gpg))
+print('  window           ', nb, ' to ', na)
 EOF
+sha256sum "$IN/payload.txt"
+say "These fingerprints come from the owner (the NUC). Your signature authorizes these keys for this window; it does"
+say "not prove who holds them. Compare them, in full, with the values the owner gave you."
 
-printf '\nDoes the text above name the right keys and dates? Type yes to sign: '; read -r ok
+printf '\nDo the keys and dates above equal the owner'"'"'s values, in full? Type yes to sign: '; read -r ok
 [ "$ok" = yes ] || fail "not confirmed; nothing signed"
 
 gpg --import "$IN/root.pub.asc" || fail "root public key import failed"
