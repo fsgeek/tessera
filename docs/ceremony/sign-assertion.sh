@@ -60,6 +60,10 @@ printf '\nDo the keys and dates above equal the owner'"'"'s values, in full? Typ
 
 gpg --import "$IN/root.pub.asc" || fail "root public key import failed"
 say "Insert YubiKey A now, then press Enter."; read -r _
+# A plain --card-status is what links the card's key to this fresh keyring (found 2026-11-13: without it, signing
+# reports "no secret key"); retry, since the first read of a just-inserted card can fail.
+for t in 1 2 3; do gpg --card-status >/dev/null 2>&1 && break; sleep 2; done
+gpg --card-status | grep -E 'Serial|Signature key'
 card=$(gpg --with-colons --card-status 2>/dev/null | awk -F: '$1=="fpr"{print toupper($2)}')
 [ "$card" = "$ROOT_FPR" ] || fail "the card is not YubiKey A (card holds '$card')"
 say "Signing: enter the user PIN, then touch the key when it blinks."
