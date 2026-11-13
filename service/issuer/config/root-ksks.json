@@ -1,0 +1,60 @@
+[
+ {
+  "algorithm": "8",
+  "dnskey_rdata": "AQEDCAMBAAGs/7QJvMk5+DH3oeXsiPelklXsUwQL5DICc5Ckzoltb5CG88Xhd/v+EYFjqux68UYsR5RZRMTiwCa+Xpi7ze0ll4Jy4ePgecUJTVc/DoPJLwKzLTUTsVULgmkpyA3Q+Syslm0Xdp/VhntkfD84Apq9xIFS648gcVnsxdIyx8FTfHn0t6wo/xFoLyFoG/bWq6VVAyv2+fA2vrKqpbN3jW7r+6a/nqGRvkqwyup1ni93Oh+QKcc+y41XNbkyHbCF8bji2AOP4pQZklSM7g1n3UVH4R3WOvnJ/BxUZvtoTPAJ1xl8LPeeeSq1AeaoocpRmvLLm19jZ+lMDUdQJFE1e+G1",
+  "ds_sha256": "e06d44b80b8f1d39a95c0b0d7c65d08458e880409bbc683457104237c7f8ec8d",
+  "key_tag": "20326",
+  "name": "KSK-2017",
+  "publication": "2017-07-11T00:00:00Z",
+  "reliance_lifetime_s": "1814400",
+  "revocation": "2027-01-11T00:00:00Z",
+  "signing_end": "2026-10-11T00:00:00Z",
+  "signing_start": "2018-10-11T16:00:00Z",
+  "sources": [
+   {
+    "description": "IANA root-anchors.xml KeyDigest id=Klajeyz (PublicKey, Flags, DS digest cross-checked); .p7s: verified (openssl cms -verify; CA bundle from the same HTTPS channel, not an independent bootstrap): CMS Verification successful; fetched 2026-10-19T13:52:50Z",
+    "sha256": "3ccaab38830025ee0a0f6c1f25769427544f81ea2865aa860468f3ef5278b908",
+    "uri": "https://data.iana.org/root-anchors/root-anchors.xml"
+   },
+   {
+    "description": "archived live root DNSKEY RRset (spike capture) contains this RDATA byte for byte",
+    "sha256": "f7d038871edd77882c9c15b9d0a984d97db32ec2b769cab12b4deff3c3a2c8d4",
+    "uri": "repo:prototype/spike/out/dns-snapshot.json"
+   },
+   {
+    "description": "archived live root DNSKEY RRset (spike capture) contains this RDATA byte for byte",
+    "sha256": "8d1444a9ede5bf168f3447f2c33efeb3fabc9dc1711546e871d0a6c5629fc3e2",
+    "uri": "repo:prototype/spike/out-ksk2024/dns-snapshot.json"
+   }
+  ]
+ },
+ {
+  "algorithm": "8",
+  "dnskey_rdata": "AQEDCAMBAAGveo3rpJ2ZWnkq78gCY+mR79vIYTipMd6yxl1Wguq107A3OOPf3InZbaZMhsAiTZzgJRTShdowaLGQVOXnh7KWkFjpjhJWbIyAjEDAt2nh2xokob2bMeMDGEox/Hu1a4W7uoq8As1QQKREo21HaVlphJ4WrYVrtY6PrIhVIkQAMZvasiTYP8Dmaqsy/3S/6vD5HEVOaFChKVIHu9TN3o9v+wj6qXVcLjKE76AfmTk+GHhssTLx5m68ZRcxjhzoo7czfrtU0DWrV9lwbs2TUNSvrNgl5DyGaO7OiYGcr2gXr2LcT72C8OM/Zkeytr2hdfFGB/WfRjVFHmsn3ygu9z2H",
+  "ds_sha256": "683d2d0acb8c9b712a1948b27f741219298d0a450d612c483af444a4c0fb2b16",
+  "key_tag": "38696",
+  "name": "KSK-2024",
+  "publication": "2025-01-11T00:00:00Z",
+  "reliance_lifetime_s": "1814400",
+  "revocation": null,
+  "signing_end": null,
+  "signing_start": "2026-10-11T00:00:00Z",
+  "sources": [
+   {
+    "description": "IANA root-anchors.xml KeyDigest id=Kmyv6jo (PublicKey, Flags, DS digest cross-checked); .p7s: verified (openssl cms -verify; CA bundle from the same HTTPS channel, not an independent bootstrap): CMS Verification successful; fetched 2026-10-19T13:52:50Z",
+    "sha256": "3ccaab38830025ee0a0f6c1f25769427544f81ea2865aa860468f3ef5278b908",
+    "uri": "https://data.iana.org/root-anchors/root-anchors.xml"
+   },
+   {
+    "description": "archived live root DNSKEY RRset (spike capture) contains this RDATA byte for byte",
+    "sha256": "f7d038871edd77882c9c15b9d0a984d97db32ec2b769cab12b4deff3c3a2c8d4",
+    "uri": "repo:prototype/spike/out/dns-snapshot.json"
+   },
+   {
+    "description": "archived live root DNSKEY RRset (spike capture) contains this RDATA byte for byte",
+    "sha256": "8d1444a9ede5bf168f3447f2c33efeb3fabc9dc1711546e871d0a6c5629fc3e2",
+    "uri": "repo:prototype/spike/out-ksk2024/dns-snapshot.json"
+   }
+  ]
+ }
+]

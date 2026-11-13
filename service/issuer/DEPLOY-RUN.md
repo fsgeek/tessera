@@ -119,3 +119,16 @@ executions a day. No window exists, so nothing could be signed. Paused at 2026-1
 (`gcloud scheduler jobs pause`). `deploy.sh scheduler` now sets every 10 minutes (the issuer poller's cadence; a
 request's budget is days). Resume only when the window is published. Remaining standing GCP cost: two HSM key
 versions (`slot2-v1`, and `slot2-spike` until its deletion), artifact storage.
+
+## 2026-11-13 — window prepared (owner)
+
+- Key assertion signed by the repository root (`docs/ceremony/2026-11-13-assertion-signing.md`): commit `aad530ed…`,
+  DNS TXT published and DNSSEC-validated, OTS anchored at block 975705 (8 confirmations at check).
+- `service/issuer/config/root-ksks.json`: the DNS root KSK entries (KSK-2017 closed 2026-10-11, KSK-2024 open),
+  exported as data from `formal/trust-sources/` with the prototype's `trustcfg.roots()` (which cross-checks the
+  IANA XML, its .p7s and the DS digests). Data, not code; the issuer's pre-ship parser validates it.
+- `service/issuer/tools/build_window.py` → `service/issuer/config/window.json`: window 2026-11-15T00:00:00Z ..
+  2027-02-01T00:00:00Z; kms `a33c216e…`, gpg `6a2d7e75…`; repository root `6BDA…D30A` from 2026-11-10T19:44:55Z.
+  Accepted by `window.load_json` (the Lambda's loader) and `preship.check_config`.
+- Next: upload to `s3://tessera-v1-issuer-results-0241cd18c7441abb3eaab257e8/config/window.json` (needs the
+  author's AWS login), resume the slot-2 scheduler, smoke test after the window opens.
