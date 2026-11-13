@@ -132,3 +132,8 @@ versions (`slot2-v1`, and `slot2-spike` until its deletion), artifact storage.
   Accepted by `window.load_json` (the Lambda's loader) and `preship.check_config`.
 - Next: upload to `s3://tessera-v1-issuer-results-0241cd18c7441abb3eaab257e8/config/window.json` (needs the
   author's AWS login), resume the slot-2 scheduler, smoke test after the window opens.
+- **Uploaded** 2026-11-13 22:11Z: `config/window.json` (SHA-256 `2c8d9e7b…327242c3`, read back identical).
+- **Pre-window check:** one request with the `smoke-test` key → HTTP 403 `REFUSED / OUTSIDE_WINDOW` (request key
+  `d8397488-…`): the API Lambda loaded and parsed the production window.
+- **Slot-2 scheduler** set to `*/10 * * * *` and resumed (22:11Z).
+- Next: smoke test after 2026-11-15T00:00:00Z (step 9), then step 10.
