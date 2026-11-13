@@ -24,3 +24,7 @@ signed by the repository root; path, rule-O signature and SHA-1DC checked with t
 check: exactly one TXT at `_tessera-v1.wamason.com` on the authoritative server (`kanye.ns.cloudflare.com`) and at
 1.1.1.1 and 8.8.8.8, TTL 300; 255 bytes equal to `value.txt`, the value the root signed; DNSSEC fully validated
 (`ad` flag; `delv`: fully validated).
+
+**Anchored (owner, 2026-11-13 20:58Z).** `git-stamp.txt.ots` upgraded: BitcoinBlockHeaderAttestation(975705), merkle
+root `e0f27ef1…080e6886`, equal to blockstream.info and mempool.space; tip 975712 at check, 8 confirmations (k = 6
+met).
