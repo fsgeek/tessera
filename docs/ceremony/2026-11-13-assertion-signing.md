@@ -19,3 +19,8 @@ signed by the repository root; path, rule-O signature and SHA-1DC checked with t
 2026-11-13 ~19:27Z (pending).
 
 **Script fixed** for later sessions: a plain `gpg --card-status` (with retries) before the fingerprint check.
+
+**DNS (author, Cloudflare, 2026-11-13).** The TEST record (spike keys, window ended 2026-10-26) was replaced. Owner's
+check: exactly one TXT at `_tessera-v1.wamason.com` on the authoritative server (`kanye.ns.cloudflare.com`) and at
+1.1.1.1 and 8.8.8.8, TTL 300; 255 bytes equal to `value.txt`, the value the root signed; DNSSEC fully validated
+(`ad` flag; `delv`: fully validated).
