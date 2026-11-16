@@ -88,6 +88,17 @@ produces a real receipt over honest smoke-test content.
 Detection, not only logging. API access logs exist from the first apply (`aws_api_gateway_stage.v1`); nothing watches
 them yet, and no alarm exists. Before a second API key is issued:
 
+0. **Tessera's Arariwa** (owner, 2026-11-16; the term from tupay's seed: "the minimal state that narrows the set of
+   executions consistent with what was observed, so an unanticipated failure can be traced back"; learned from
+   tupay, built Tessera's way, not tupay's design). Two parts, which are also this gate's core:
+   (a) one **trace record per receipt**, kept for the window's life plus a margin: credential id, request-key hash,
+   attempt ids, signer request ids and signature hashes, the matching CloudTrail `kms:Sign` event ids, anchor
+   heights, receipt hash. Today these facts sit in six stores with six retention periods and no join. It is also the
+   accounting ledger ("who requested this receipt, and was it ours?" after 30 days).
+   (b) an **independent watcher of effects**: re-verify every issued receipt as a relying party would (as the
+   2026-11-16 smoke test did), and reconcile every signature made against the receipts shipped. A signature with no
+   receipt, or a receipt that does not verify, is the unknown-category signal.
+   Plus, for invited clients: an invitation record (who, which key, when, on what terms) and a per-key quota.
 1. **Detection contract** (owner): each attack or fault, what it must leave in which log, which alarm fires, how fast,
    and who is told. At least: flood and throttling; missing or guessed keys; oversized or malformed requests;
    per-key volume; signer refusals only an attacker or a fault produces (KEY_FP_MISMATCH, unsolicited responses,
