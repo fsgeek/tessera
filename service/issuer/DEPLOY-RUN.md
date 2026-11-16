@@ -151,3 +151,9 @@ versions (`slot2-v1`, and `slot2-spike` until its deletion), artifact storage.
 - **Step 10:** both functions' `CodeSha256` = `SG7VL7wV…` = `issuer.zip` `486ed52f…`; P3 verification profile with
   the deployed identity: 1202 passed. P3 condition (c) discharged.
 - Evidence: `docs/smoke/2026-11-16-first-receipt/` (receipt, content, trust, reports, the check script, SHA256SUMS).
+
+## 2026-11-16 — pilot client and quota (owner)
+
+Usage plan quota 100/day per key added; key `yanantin-pilot` (id `l5hkmlu1yd`) created (apply: 2 added, 1 changed,
+0 destroyed; state backed up). The value was written only to `~/.local/share/tessera-handoff/tessera-pilot` (0600,
+never printed) for the author to carry to Yanantin. Gate exception recorded in DEPLOY.md.

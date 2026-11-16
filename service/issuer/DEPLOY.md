@@ -85,6 +85,11 @@ produces a real receipt over honest smoke-test content.
 
 ## Gate before any client beyond `smoke-test` (owner, 2026-10-30)
 
+> **Recorded exception (owner, 2026-11-16):** one invited pilot key, `yanantin-pilot`, issued before items 0–3 are
+> done: one known ayllu client, about one request a night, accepted the six stated limits
+> (`docs/requests/2026-11-16-to-yanantin-pilot-offer.md`). Item 4 (a per-key daily quota, 100) is done. No further
+> key until the gate closes.
+
 Detection, not only logging. API access logs exist from the first apply (`aws_api_gateway_stage.v1`); nothing watches
 them yet, and no alarm exists. Before a second API key is issued:
 

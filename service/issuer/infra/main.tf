@@ -519,6 +519,11 @@ resource "aws_api_gateway_usage_plan" "clients" {
     burst_limit = 20
     rate_limit  = 5
   }
+  # Per key per day (owner, 2026-11-16, before the first client beyond smoke-test). V1 pilot volumes are a few a day.
+  quota_settings {
+    limit  = 100
+    period = "DAY"
+  }
 }
 
 resource "aws_api_gateway_api_key" "client" {
