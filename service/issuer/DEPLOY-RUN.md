@@ -137,3 +137,17 @@ versions (`slot2-v1`, and `slot2-spike` until its deletion), artifact storage.
   `d8397488-…`): the API Lambda loaded and parsed the production window.
 - **Slot-2 scheduler** set to `*/10 * * * *` and resumed (22:11Z).
 - Next: smoke test after 2026-11-15T00:00:00Z (step 9), then step 10.
+
+## 2026-11-16 — step 9 smoke test and step 10 (owner): the first production receipt
+
+- Request `ca33cc04-6032-4da0-8a7a-7fffd0373dd3` (key `smoke-test`), content "Tessera V1 smoke test: the first
+  production receipt, requested 2026-11-16 by the steward." (SHA-256 `d170b6bf…`). Accepted 12:55:59Z; attempt 1
+  open 13:01Z; latched 15:37Z; **COMPLETE 15:46:50Z**, receipt SHA-256 `aca4dfb2…`. No poller errors in the logs.
+- **Relying-party verification:** service verifier CLI, trust = the production window's entries (DNS root KSKs,
+  repository root `6BDA…D30A`) plus pins of the bundle's 12 headers (975705–975710: the key assertion's k = 6;
+  976141–976146: the receipt's anchor), each fetched from blockstream.info and mempool.space and required to agree;
+  TEST release over it (the production release, YubiKey B, does not exist yet). **Verdict `VALID_STRICT`**, exit 0.
+- **Control:** one character changed inside `layers[0].a_sig` → **`INVALID`**.
+- **Step 10:** both functions' `CodeSha256` = `SG7VL7wV…` = `issuer.zip` `486ed52f…`; P3 verification profile with
+  the deployed identity: 1202 passed. P3 condition (c) discharged.
+- Evidence: `docs/smoke/2026-11-16-first-receipt/` (receipt, content, trust, reports, the check script, SHA256SUMS).
