@@ -73,3 +73,8 @@ the NUC), Cloudflare token kept off any cloud-credentialed host.
 - **Tupay:** learn concepts, build them Tessera's way; don't reconstruct tupay here.
 - Context: this tenure used ~75% of 1M tokens; most of it went on large tool outputs. Pipe through `head`/`grep`;
   delegate photo reading to a subagent.
+
+## Addendum (end of tenure, 2026-11-17)
+A12 sections 1–2 were drafted and reviewed by Codex: **not ready** (five HIGH). Start from
+`docs/reviews/amendment-12/DISPOSITION.md`: two author choices with recommendations (the bound overrides latched
+attempts; accept and state a ≥9-day rotation gap), then the listed steward work and a Codex re-review.

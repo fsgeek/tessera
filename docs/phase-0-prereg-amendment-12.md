@@ -1,6 +1,8 @@
 # Tessera — Phase 0 Pre-Registration, Amendment 12 — V1 implementation: bounded termination; successor windows (DRAFT, 2026-11-17)
 
-> **Status: DRAFT by the steward (Claude Opus 5.5). Not signed. Sections 1 and 2 are drafted; 3–5 are placeholders.**
+> **Status: DRAFT by the steward (Claude Opus 5.5). Not signed. Sections 1 and 2 drafted and reviewed by Codex
+> (`docs/reviews/amendment-12/CODEX-REVIEW.md`): NOT ready; see `DISPOSITION.md` for the two author choices and the
+> remaining steward work. Sections 3–5 are placeholders.**
 > The author's first commit containing the final text is its signing act (the A11 convention). Layered on the
 > original and Amendments 1–11, none of which is edited. Every registered sentence this amendment changes is quoted
 > with its locator.
