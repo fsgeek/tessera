@@ -157,3 +157,4 @@ versions (`slot2-v1`, and `slot2-spike` until its deletion), artifact storage.
 Usage plan quota 100/day per key added; key `yanantin-pilot` (id `l5hkmlu1yd`) created (apply: 2 added, 1 changed,
 0 destroyed; state backed up). The value was written only to `~/.local/share/tessera-handoff/tessera-pilot` (0600,
 never printed) for the author to carry to Yanantin. Gate exception recorded in DEPLOY.md.
+- 2026-11-17: the author carried the key to Yanantin; the NUC handoff copy was deleted (shred).
