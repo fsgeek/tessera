@@ -27,3 +27,11 @@ the next steward does, and the two choices that belong to the author (they chang
   capture and the issuing-account requester are not addressed by rotation (prechecks 1, 3).
 - Inventory every registered sentence changed (A2.1 `:130-160`, A2.3 `:260-289`, A2.4 `:307-315`, A9 `:409-418`,
   A10.2 if its semantics change; reconcile the profile's descriptive "one window") (A12-08).
+
+## Resolution of the two choices (steward, 2026-11-19)
+The author, 2026-11-19, on being asked: "As steward, I will abide by your recommendation here." Both are adopted as
+recommended above, as OWNER DECISIONS, and take registered effect when the author signs A12:
+1. The termination bound overrides latched, timely attempts: an explicit registered change to A2.1/A2.3, worded as
+   in choice 1 (refused `EVIDENCE_UNAVAILABLE` by the bound; no claim the lag exceeded S).
+2. The rotation gap (at least nine days without new acceptances at each window change) is accepted for V1 and
+   stated plainly in the contract and to clients. Shrinking it is a separate L1 operating choice, not part of A12.
