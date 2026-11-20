@@ -174,11 +174,14 @@ def poll(iss, budget_s=None):
     nor a request that exhausts (or kills) an invocation takes the others' turns. -> summary dict."""
     d = deadline.Deadline(getattr(iss, "elapsed_clock", None) or iss.clock,          # ILC-I2-01: monotonic
                           iss.budget_s if budget_s is None else budget_s, POLL_RESERVE_S)
-    out = {"drained": 0, "advanced": {}, "cleaned": 0}
+    out = {"drained": 0, "advanced": {}, "cleaned": 0, "committed": 0}
     try:
         return _poll(iss, d, out)
     finally:
-        logs.emit("poll_summary", **out)
+        try:                                           # G1: a logging fault never replaces an exception or a return
+            logs.emit("poll_summary", **out)
+        except BaseException:  # noqa: BLE001
+            pass
 
 
 def _poll(iss, d, out):
@@ -230,7 +233,11 @@ def _serve_requests(iss, d, out):
                 iss.note("pre-ship unavailable, request kept:", rid[:12], e)
             except Exception as e:  # noqa: BLE001  one request's fault never stops the others; retried next tick
                 iss.note("stage", before, "error, request kept:", rid[:12], type(e).__name__, e)
-            out["advanced"][rid] = (before, rec["stage"] or rec["state"])
+            after = _persisted(iss).pop(rid, None)     # G1: what was COMMITTED (a failed or lost save changes nothing)
+            after = (after[0] or after[1]) if after else before
+            out["advanced"][rid] = (before, after)
+            if after != before:
+                out["committed"] += 1
         if nxt is None:
             if wrapped or cur["token"] is None and not rids:
                 put({"token": None, "skip": 0})
@@ -241,24 +248,43 @@ def _serve_requests(iss, d, out):
         put(cur)
 
 
+def _persisted(iss):
+    """G1: rid -> (stage, state) as last read from or committed to the store by this process; never saved."""
+    return iss.__dict__.setdefault("_persisted_stage", {})
+
+
+def _note_read(iss, rec):
+    _persisted(iss)[rec["rid"]] = (rec.get("stage"), rec.get("state"))
+
+
 def advance(iss, rec):
     now = iss.clock()
     before = rec["stage"]
+    _note_read(iss, rec)
     try:
         STAGES[before](iss, rec, now)
     except StageError as e:
         iss.note("stage", before, "deferred:", e)
-    else:
-        if rec["stage"] != before:                     # G1: a stage change inside ACCEPTED (state changes: _commit)
-            logs.emit("request_stage", rid=rec["rid"], attempt=rec.get("cur"), from_stage=before,
-                      to_stage=rec["stage"])
 
 
 def _commit(iss, rec, expect):
-    """Commit: a write guarded on `expect` (the lifecycle guard as read) and the record version."""
+    """Commit: a write guarded on `expect` (the lifecycle guard as read) and the record version. G1: stage and
+    transition lines are emitted here, after a successful save only, against the previously persisted values."""
     if not iss.requests.save(rec, expect):
         raise Superseded("record changed since it was read; re-read next tick")
+    prev = _persisted(iss).get(rec["rid"])
+    _persisted(iss)[rec["rid"]] = (rec.get("stage"), rec.get("state"))
+    _log_stage(rec, prev)
     _log_transition(rec, expect)
+
+
+def _log_stage(rec, prev):
+    try:
+        if prev is not None and rec.get("state") == "ACCEPTED" and prev[0] != rec.get("stage"):
+            logs.emit("request_stage", rid=rec["rid"], attempt=rec.get("cur"), from_stage=prev[0],
+                      to_stage=rec.get("stage"))
+    except BaseException:  # noqa: BLE001  logging never changes behaviour
+        pass
 
 
 def _log_transition(rec, expect):
@@ -274,7 +300,7 @@ def _log_transition(rec, expect):
         logs.emit("request_transition", rid=rec["rid"], from_state=expect["state"], to_state=to["state"],
                   from_attempt=expect["attempt"], to_attempt=to["attempt"], from_astate=expect["astate"],
                   to_astate=to["astate"], stage=rec.get("stage"), reason=reason)
-    except Exception:  # noqa: BLE001  logging never changes behaviour
+    except BaseException:  # noqa: BLE001  logging never changes behaviour
         pass
 
 
@@ -465,11 +491,20 @@ def drain(iss, max_batches=50, share_s=float("inf")):
     return n
 
 
+# G1: every reason the two signers can answer with (service/signer-kms signer.py and policy; service/signer-gcp
+# signer.py and policy.py) plus the issuer's own codes. A syntactically valid code outside this set is not logged or
+# stored as a reason: it maps to UNRECOGNIZED_REASON like a malformed one (its raw bytes go to the diagnostic).
+KNOWN_SIGNER_REASONS = frozenset({
+    "BAD_REQUEST", "TRUNCATED", "ALG_NOT_ALLOWED", "KEY_FP_MISMATCH", "DECLARED_TIME_OUTSIDE_EPSILON",
+    "SIGNING_STOPPED", "FRAME_UNAVAILABLE", "FRAME_TOO_LARGE", "FRAME_DIGEST_MISMATCH", "SIGNING_ERROR",
+    "INTERNAL_ERROR", "SIGNER_ERROR", "INTERNAL", "NO_REASON", "UNRECOGNIZED_REASON"})
+
+
 def _bounded(raw):
     """ILI-07: a signer-supplied reason as a bounded code. -> (code, diagnostic bytes or None)."""
     if raw is None:
         return None, None
-    if isinstance(raw, str) and REASON_RE.match(raw):
+    if isinstance(raw, str) and REASON_RE.match(raw) and raw in KNOWN_SIGNER_REASONS:
         return raw, None
     data = raw.encode("utf-8", "replace") if isinstance(raw, str) else json.dumps(raw, sort_keys=True).encode()
     return "UNRECOGNIZED_REASON", data[:DIAG_MAX]
@@ -510,6 +545,8 @@ def _take(iss, slot, signer, body, receives=1):
         entry["disposition"] = "unrequested"
     else:
         rec = iss.requests.get(idx["rid"])
+        if rec is not None:
+            _note_read(iss, rec)
         a = current(rec) if rec else None
         job = a["jobs"].get(idx["job"]) if a else None
         if rec is None or rec["state"] != "ACCEPTED":
