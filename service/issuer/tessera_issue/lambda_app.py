@@ -11,7 +11,7 @@ import base64
 import json
 import os
 
-from . import api, freeze, pipeline, service, window as window_mod
+from . import api, freeze, logs, pipeline, service, window as window_mod
 from .aws import DynamoRequestStore, S3ResultStore, SnsWake
 from .chain import ExplorerHeaders
 from .dns import LiveDns, udp_tcp_transport
@@ -65,8 +65,37 @@ def _issuer():
     return _ISSUER
 
 
+def _api_log(method, resource, cred, key, status, resp, length, error=None):
+    """G1: exactly one line per request: credential digest (never the key), rid, route, outcome, content length."""
+    try:
+        body = resp.body if resp is not None and isinstance(resp.body, dict) else {}
+        k = key if isinstance(key, str) and api.UUID_RE.match(key) else None
+        logs.emit("api", method=method, route=resource, status=status,
+                  reason=error and "EXCEPTION" or body.get("reason") or body.get("error"), error=error, state=body.get("state"),
+                  cred=api.cred_digest(cred) if cred else None,
+                  rid=api.record_id(cred, k.lower()) if cred and k else None, content_len=length)
+    except Exception:  # noqa: BLE001
+        pass
+
+
 def handle_api_event(iss, event):
     """API Gateway REST proxy event -> proxy response. Plain function; api_handler binds the issuer."""
+    method = event.get("httpMethod")
+    resource = event.get("resource") or ""
+    headers = {k.lower(): v for k, v in (event.get("headers") or {}).items()}
+    cred = ((event.get("requestContext") or {}).get("identity") or {}).get("apiKeyId")
+    key = (event.get("pathParameters") or {}).get("key") if method == "GET" else headers.get("tessera-request-key")
+    box = {}
+    try:
+        out = _handle_api_event(iss, event, box)
+    except BaseException as e:
+        _api_log(method, resource, cred, key, 500, None, box.get("len"), error=type(e).__name__)
+        raise
+    _api_log(method, resource, cred, key, out["statusCode"], box.get("resp"), box.get("len"))
+    return out
+
+
+def _handle_api_event(iss, event, box):
     method = event.get("httpMethod")
     resource = event.get("resource") or ""
     headers = {k.lower(): v for k, v in (event.get("headers") or {}).items()}
@@ -81,6 +110,7 @@ def handle_api_event(iss, event):
         if body is None:
             resp = api.Response(400, {"state": "REFUSED", "reason": "BAD_REQUEST"})
         else:
+            box["len"] = len(body)
             resp = api.submit(iss, cred, headers.get("tessera-request-key"), body)
     elif method == "GET" and resource == "/v1/requests/{key}":
         resp = api.status(iss, cred, key)
@@ -88,6 +118,7 @@ def handle_api_event(iss, event):
         resp = api.receipt(iss, cred, key)
     else:
         resp = api.Response(404, {"error": "NOT_FOUND"})
+    box["resp"] = resp
     status, hdrs, data = api.encode(resp)
     return {"statusCode": status, "headers": hdrs, "body": data.decode("utf-8"), "isBase64Encoded": False}
 

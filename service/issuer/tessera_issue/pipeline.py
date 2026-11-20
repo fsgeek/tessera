@@ -69,7 +69,7 @@ from tessera_verify.codec import Fault, read_anchor, read_frame, registered_code
 from tessera_verify.dnssec import parse_snapshot, txt_value, validate_snapshot
 from tessera_verify.verify import ROWS
 
-from . import deadline, ots
+from . import deadline, logs, ots
 from .api import content_name
 from .deadline import OutOfBudget
 from .chain import check_links, pin_of
@@ -175,6 +175,13 @@ def poll(iss, budget_s=None):
     d = deadline.Deadline(getattr(iss, "elapsed_clock", None) or iss.clock,          # ILC-I2-01: monotonic
                           iss.budget_s if budget_s is None else budget_s, POLL_RESERVE_S)
     out = {"drained": 0, "advanced": {}, "cleaned": 0}
+    try:
+        return _poll(iss, d, out)
+    finally:
+        logs.emit("poll_summary", **out)
+
+
+def _poll(iss, d, out):
     with deadline.Installed(d):
         try:
             out["drained"] = drain(iss, share_s=DRAIN_SHARE * d.limit)
@@ -236,16 +243,39 @@ def _serve_requests(iss, d, out):
 
 def advance(iss, rec):
     now = iss.clock()
+    before = rec["stage"]
     try:
-        STAGES[rec["stage"]](iss, rec, now)
+        STAGES[before](iss, rec, now)
     except StageError as e:
-        iss.note("stage", rec["stage"], "deferred:", e)
+        iss.note("stage", before, "deferred:", e)
+    else:
+        if rec["stage"] != before:                     # G1: a stage change inside ACCEPTED (state changes: _commit)
+            logs.emit("request_stage", rid=rec["rid"], attempt=rec.get("cur"), from_stage=before,
+                      to_stage=rec["stage"])
 
 
 def _commit(iss, rec, expect):
     """Commit: a write guarded on `expect` (the lifecycle guard as read) and the record version."""
     if not iss.requests.save(rec, expect):
         raise Superseded("record changed since it was read; re-read next tick")
+    _log_transition(rec, expect)
+
+
+def _log_transition(rec, expect):
+    """G1: one line per committed change of the guarded fields (request state, attempt, attempt state)."""
+    try:
+        to = lifecycle_guard(rec)
+        if to == expect:
+            return
+        reason = rec.get("reason") if rec.get("state") != "ACCEPTED" else None
+        if reason is None:
+            prev = next((x for x in rec.get("attempts") or [] if x["id"] == expect["attempt"]), None)
+            reason = ((prev or {}).get("end") or {}).get("reason")
+        logs.emit("request_transition", rid=rec["rid"], from_state=expect["state"], to_state=to["state"],
+                  from_attempt=expect["attempt"], to_attempt=to["attempt"], from_astate=expect["astate"],
+                  to_astate=to["astate"], stage=rec.get("stage"), reason=reason)
+    except Exception:  # noqa: BLE001  logging never changes behaviour
+        pass
 
 
 def _event(rec, now, *what):
@@ -496,7 +526,7 @@ def _take(iss, slot, signer, body, receives=1):
         elif status == "REFUSED":
             entry["disposition"] = "refused"
             extra = {"diagnostic": _keep_diagnostic(iss, rec["rid"], a["id"], diag)} if diag is not None else None
-            iss.requests.siglog_add(entry)
+            _siglog(iss, entry)
             return _end_attempt(iss, rec, DISCARDED, "SIGNER_REFUSED:" + str(reason or "NO_REASON"), now, extra)
         elif sig is None:
             entry["disposition"] = "malformed"
@@ -516,18 +546,26 @@ def _take(iss, slot, signer, body, receives=1):
                 frame = iss.results.get("work", rec["rid"], f"{a['id']}/{job['frame']}")
                 if frame is None or sha256hex(frame) != job["frame_sha256"] or not signer.verify(frame, sig):
                     entry["disposition"] = "bad-signature"
-                    iss.requests.siglog_add(entry)
+                    _siglog(iss, entry)
                     return
                 iss.results.put("work", rec["rid"], name, sig)
             entry["disposition"] = "used"
             if not logged:
-                iss.requests.siglog_add(entry)         # IS-01: durable in the log before it can be used
+                _siglog(iss, entry)         # IS-01: durable in the log before it can be used
             outcome = _record_signature(iss, idx["rid"], a["id"], idx["job"], entry["signature_sha256"], srid,
                                         now, rec=rec)
             if outcome != "used":                      # IS-08: say what became of it
-                iss.requests.siglog_add(dict(entry, disposition="superseded:" + outcome))
+                _siglog(iss, dict(entry, disposition="superseded:" + outcome))
             return
+    _siglog(iss, entry)
+
+
+def _siglog(iss, entry):
+    """Write one SIGLOG# disposition (durable first), then log it (G1, D5). A logging fault changes nothing."""
     iss.requests.siglog_add(entry)
+    logs.emit("signer_response", **{k: entry.get(k) for k in (
+        "slot", "request_id", "status", "reason", "disposition", "frame_sha256", "signature_sha256", "attempt")},
+        recovered=bool(entry.get("recovered")))
 
 
 def sig_name(job, sig_sha256):
@@ -572,7 +610,7 @@ def _reconcile(iss, rec, a):
             if not (h and name == f"{aid}/" + sig_name(job, h)):
                 continue
             if not iss.requests.siglog_has(j["request_id"], h):
-                iss.requests.siglog_add({"at": rfc3339(iss.clock()), "slot": j["slot"], "request_id": j["request_id"],
+                _siglog(iss, {"at": rfc3339(iss.clock()), "slot": j["slot"], "request_id": j["request_id"],
                                          "status": "SIGNED", "reason": None, "frame_sha256": j["frame_sha256"],
                                          "signature_sha256": h, "disposition": "used", "attempt": aid,
                                          "recovered": True})
