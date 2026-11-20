@@ -501,7 +501,7 @@ KNOWN_SIGNER_REASONS = frozenset({
     # the verifier codec's Fault codes, which both signers forward (test_logging checks this list against codec.py)
     "ANCHOR_COUNT", "CONTAINER_SCHEMA", "CV_UNKNOWN", "JSON_DEPTH", "JSON_DUPLICATE_NAME", "JSON_ENCODING",
     "JSON_NONCANONICAL", "JSON_NUMBER", "JSON_SYNTAX", "KEY_FORMAT", "LENGTH_CAP", "SCHEMA", "SIG_EMPTY", "SIG_FORMAT",
-    "SIG_PACKET", "SIG_POLICY", "TAG_MISMATCH", "TAG_UNKNOWN"})
+    "SIG_PACKET", "SIG_POLICY", "TAG_MISMATCH", "TAG_UNKNOWN", "TRAILING"})
 
 
 def _bounded(raw):

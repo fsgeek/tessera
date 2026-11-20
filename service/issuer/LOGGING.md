@@ -58,7 +58,9 @@ present `out_of_time`, `deferred`.
 `poller_note`: each in-memory note the poller records. `msg` is built from the note's arguments: an exception becomes
 its CLASS name; a number is kept; a string is kept only if it is a literal tag or code (letters, digits, spaces and
 `_ . : # , ; ( ) -`, at most 80 characters, so no URL, query string or `key=value` can pass), and any other string,
-or an argument that cannot be rendered, becomes `<withheld>`. It never contains an exception's text (which can carry
+or an argument that cannot be rendered, becomes `<withheld>`. The filter is by syntax, not provenance: it cannot tell a
+secret word from a tag. It is sufficient because the real call sites (`pipeline.py`) pass only code literals, configured
+slot names, stage names and exception class names, never exception text or request data. It never contains an exception's text (which can carry
 pre-signed URLs, credentials or object keys); the in-memory note list is never emitted or returned.
 `msg` is truncated to 200 characters.
 

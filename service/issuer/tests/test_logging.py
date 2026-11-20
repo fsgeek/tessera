@@ -259,7 +259,9 @@ def test_every_codec_fault_code_is_a_known_signer_reason():
     import re
     import tessera_verify.codec as codec
     src = pathlib.Path(codec.__file__).read_text()
-    codes = set(re.findall(r"Fault\('([A-Z_]+)'\)", src)) | set(re.findall(r"demand\([^\n]*?,\s*'([A-Z_]+)'\)", src))
+    codes = (set(re.findall(r"Fault\('([A-Z_]+)'\)", src)) | set(re.findall(r"demand\([^\n]*?,\s*'([A-Z_]+)'\)", src))
+             | set(re.findall(r"code\s*=\s*'([A-Z_]+)'", src)))          # default codes, e.g. Cursor.end's TRAILING
+    assert "TRAILING" in codes and "TRUNCATED" in codes
     assert codes and codes <= pipeline.KNOWN_SIGNER_REASONS, sorted(codes - pipeline.KNOWN_SIGNER_REASONS)
 
 
