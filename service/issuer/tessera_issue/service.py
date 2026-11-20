@@ -52,6 +52,11 @@ class Issuer:
 
     def note(self, *a):
         self.log.append(" ".join(str(x) for x in a))
+        try:                                           # G1: notes were discarded; emit them (bounded, no content)
+            from . import logs
+            logs.emit("poller_note", msg=self.log[-1][:500])
+        except Exception:  # noqa: BLE001
+            pass
 
     @property
     def tombstone_until(self):
