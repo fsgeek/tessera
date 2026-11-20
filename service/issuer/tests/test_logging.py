@@ -33,7 +33,7 @@ def test_api_accepted_request_logs_one_line_without_content_or_key(loc, key, cap
     assert out["statusCode"] == 202
     raw = capsys.readouterr().out
     assert key not in raw and "cred-A" not in raw and SECRET_CONTENT.decode() not in raw
-    (ln,) = [json.loads(x) for x in raw.splitlines() if x.startswith("{")]
+    (ln,) = [json.loads(x) for x in raw.splitlines() if x.startswith("{") and '"event":"api"' in x]
     assert ln["event"] == "api" and ln["v"] == 1 and ln["status"] == 202 and ln["state"] == "ACCEPTED"
     assert ln["method"] == "POST" and ln["route"] == "/v1/requests" and ln["content_len"] == len(SECRET_CONTENT)
     assert ln["cred"] == api.cred_digest("cred-A") and ln["rid"] == api.record_id("cred-A", key)
@@ -51,7 +51,7 @@ def test_api_key_content_mismatch_and_status_lookup(loc, key, capsys):
     lambda_app.handle_api_event(loc.iss, event(key, b"one"))
     lambda_app.handle_api_event(loc.iss, event(key, b"two"))
     lambda_app.handle_api_event(loc.iss, event(None, None, method="GET", resource="/v1/requests/{key}", path_key=key))
-    a, b, c = lines(capsys)
+    a, b, c = [x for x in lines(capsys) if x["event"] == "api"]
     assert b["status"] == 409 and b["reason"] == "KEY_CONTENT_MISMATCH"
     assert c["method"] == "GET" and c["status"] == 200 and c["content_len"] is None
     assert c["rid"] == a["rid"]
@@ -251,3 +251,36 @@ def test_committed_stage_change_is_logged_even_if_the_stage_then_raises(loc, key
     assert st == [("frames", "signing")]
     assert out["advanced"][rid] == ["frames", "signing"] or out["advanced"][rid] == ("frames", "signing")
     assert out["committed"] == 1 and loc.iss.requests.get(rid)["stage"] == "signing"
+
+
+def test_every_codec_fault_code_is_a_known_signer_reason():
+    """Both signers forward the verifier codec's Fault codes as refusal reasons; none may be remapped."""
+    import pathlib
+    import re
+    import tessera_verify.codec as codec
+    src = pathlib.Path(codec.__file__).read_text()
+    codes = set(re.findall(r"Fault\('([A-Z_]+)'\)", src)) | set(re.findall(r"demand\([^\n]*?,\s*'([A-Z_]+)'\)", src))
+    assert codes and codes <= pipeline.KNOWN_SIGNER_REASONS, sorted(codes - pipeline.KNOWN_SIGNER_REASONS)
+
+
+def test_note_withholds_strings_that_are_not_literal_tags(loc, capsys):
+    loc.iss.note("snapshot capture failed, retried:", "ab12cd34ef56", "https://bucket.s3/x?X-Amz-Signature=SECRET",
+                 "token=SECRET", 3)
+    (ln,) = [x for x in lines(capsys) if x["event"] == "poller_note"]
+    assert "SECRET" not in ln["msg"] and "https" not in ln["msg"]
+    assert ln["msg"] == "snapshot capture failed, retried: ab12cd34ef56 <withheld> <withheld> 3"
+
+
+def test_note_argument_whose_str_raises_changes_nothing(loc, capsys):
+    class Bad:
+        def __str__(self):
+            raise RuntimeError("SECRET")
+    loc.iss.note("tag:", Bad())                         # must not raise
+    (ln,) = [x for x in lines(capsys) if x["event"] == "poller_note"]
+    assert ln["msg"] == "tag: <withheld>"
+
+
+def test_api_upload_stage_change_is_logged_at_its_commit(loc, key, capsys):
+    lambda_app.handle_api_event(loc.iss, event(key, SECRET_CONTENT))
+    st = [x for x in lines(capsys) if x["event"] == "request_stage"]
+    assert any(x["from_stage"] == "upload" and x["to_stage"] == "frames" and x["by"] == "api" for x in st)

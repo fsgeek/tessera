@@ -35,15 +35,16 @@ none). Logged after the guarded write succeeds. A failed (superseded) write logs
 `request_stage`: one per committed stage change inside ACCEPTED, emitted from `pipeline._commit` after the guarded save
 succeeds, comparing the stage last read or committed with the committed one. A save that fails (superseded) emits
 nothing; a committed change is logged even if the stage function raises afterwards. `rid`, `attempt` (number),
-`from_stage`, `to_stage`. Not covered: the API's own `upload` -> `frames` save (`api._finish_upload`), which is
-visible in its `api` line only.
+`from_stage`, `to_stage`. The API's own `upload` -> `frames` save (`api._finish_upload`) emits the same event after
+its save succeeds, with `attempt` null and `by` = `"api"`.
 
 `signer_response`: one per SIGLOG# item the issuer writes, emitted after the item is durable and best effort: the line
 can be missing (a timeout or stdout failure after the write, or a redelivery that finds the SIGLOG# item already
 present). The durable record is SIGLOG#, which the planned detection watcher reads (docs/V1-DETECTION-CONTRACT.md D5);
 a metric filter on this line is a convenience, not durable coverage. `slot`, `request_id` (signer request id, or
 `invalid:<hash>` if the response id was malformed), `status` (`SIGNED`, `REFUSED`, `OTHER`), `reason` (a code from the
-known set of both signers' refusal reasons and the issuer's own codes, `pipeline.KNOWN_SIGNER_REASONS`; any other
+known set of both signers' own refusal reasons, the verifier codec's Fault codes (which both signers forward; a test
+checks the set against `codec.py`) and the issuer's own codes, `pipeline.KNOWN_SIGNER_REASONS`; any other
 value, malformed or merely well-formed, is logged and stored as `UNRECOGNIZED_REASON` and the raw value is kept only
 as a diagnostic object, never logged; null if none), `disposition` (`used`, `unrequested`, `malformed`,
 `bad-signature`, `refused`, `duplicate`, `not-waiting`, `other-attempt`, `superseded:<outcome>`), `frame_sha256`,
@@ -54,9 +55,11 @@ as a diagnostic object, never logged; null if none), `disposition` (`used`, `unr
 it equal to "before"), `committed` (the number of requests whose committed stage or state changed this run), and when
 present `out_of_time`, `deferred`.
 
-`poller_note`: each in-memory note the poller records. `msg` is a fixed message tag plus short safe identifiers (request
-id prefix of 12 hex characters, slot, stage) and exception CLASS names. It never contains an exception's text (which
-can carry pre-signed URLs, credentials or object keys); the in-memory note list is never emitted or returned.
+`poller_note`: each in-memory note the poller records. `msg` is built from the note's arguments: an exception becomes
+its CLASS name; a number is kept; a string is kept only if it is a literal tag or code (letters, digits, spaces and
+`_ . : # , ; ( ) -`, at most 80 characters, so no URL, query string or `key=value` can pass), and any other string,
+or an argument that cannot be rendered, becomes `<withheld>`. It never contains an exception's text (which can carry
+pre-signed URLs, credentials or object keys); the in-memory note list is never emitted or returned.
 `msg` is truncated to 200 characters.
 
 ## Residuals
@@ -66,3 +69,7 @@ can carry pre-signed URLs, credentials or object keys); the in-memory note list 
 - The poll budget keeps margin (`POLL_RESERVE_S`), but the deadline guard's worst-case arithmetic does not account for
   time spent in a log write.
 - A line can be missing after a durable write (see `signer_response`); SIGLOG# is the record.
+- Not this package: both signers' own logs include exception text (GCP signer `repr(exc)` on retries and response
+  details; KMS signer retry and refusal detail) and log after or before their response in ways a logging failure can
+  affect (`docs/reviews/g1-logging/CODEX-CONFIRM.md`, "Additional class findings"). The signers are pinned and
+  deployed separately; this is corrected in the next signer release, under its own review.

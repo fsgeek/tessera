@@ -28,6 +28,10 @@ WRITE_LEASE_S = 15 * 60             # CF-02: the longest a Lambda invocation can
 SIGNER_RETRY_S = 30 * 60            # re-send an unanswered signer request (same request id) after 30 min
 
 
+
+NOTE_TOKEN = __import__("re").compile(r"\A[A-Za-z0-9_ .:#,;()-]{1,80}\Z")   # G1: literal tags, codes, rid
+# prefixes; no "/ ? & % @ =" so a URL or query string can never pass
+
 @dataclass
 class Issuer:
     window: object
@@ -51,16 +55,26 @@ class Issuer:
     log: list = field(default_factory=list)
 
     def note(self, *a):
-        self.log.append(" ".join(str(x) for x in a))   # in memory only: never emitted, never returned
-        try:                       # G1: the emitted line carries a fixed tag and exception CLASS names, never their text
+        try:
+            self.log.append(" ".join(str(x) for x in a))   # in memory only: never emitted, never returned
+        except BaseException:  # noqa: BLE001  an argument whose __str__ fails never changes control flow
+            pass
+        try:                       # G1: the emitted line carries exception CLASS names and short safe tokens only
             from . import logs
             parts = []
-            for x in a:                                # an exception object becomes its class name (once)
-                t = type(x).__name__ if isinstance(x, BaseException) else str(x)
-                if not (isinstance(x, BaseException) and parts and parts[-1] == t):
-                    parts.append(t)
-            msg = " ".join(parts)
-            logs.emit("poller_note", msg=msg[:200])
+            for x in a:
+                if isinstance(x, BaseException):       # an exception object becomes its class name (once)
+                    t = type(x).__name__
+                    if parts and parts[-1] == t:
+                        continue
+                elif isinstance(x, (int, float)) and not isinstance(x, bool):
+                    t = str(x)
+                elif isinstance(x, str) and NOTE_TOKEN.match(x):
+                    t = x
+                else:                                  # any other string (a URL, exception text, content): withheld
+                    t = "<withheld>"
+                parts.append(t)
+            logs.emit("poller_note", msg=" ".join(parts)[:200])
         except BaseException:  # noqa: BLE001
             pass
 

@@ -100,6 +100,8 @@ def _finish_upload(iss, rec, body):
     iss.results.put("content", rec["rid"], content_name(rec["content_sha256"]), body)
     rec["stage"] = "frames"
     if iss.requests.save(rec):
+        from . import logs                                     # G1: the API's one committed stage change
+        logs.emit("request_stage", rid=rec["rid"], attempt=None, from_stage="upload", to_stage="frames", by="api")
         return rec
     cur = iss.requests.get(rec["rid"])                         # moved on concurrently (another retry, the poller)
     if cur is not None and cur["state"] != "ACCEPTED":
