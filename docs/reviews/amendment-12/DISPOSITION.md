@@ -35,3 +35,26 @@ recommended above, as OWNER DECISIONS, and take registered effect when the autho
    in choice 1 (refused `EVIDENCE_UNAVAILABLE` by the bound; no claim the lag exceeded S).
 2. The rotation gap (at least nine days without new acceptances at each window change) is accepted for V1 and
    stated plainly in the contract and to clients. Shrinking it is a separate L1 operating choice, not part of A12.
+
+## Rounds 2-4 and the exit (steward, 2026-11-20)
+- **r2** (four HIGH): r2 described present code as providing guarantees it only partly provides (a clock read
+  before a remote write as a commit-time tie; eventual availability as a 10-minute bound; COMPLETE-only URLs as an
+  object fence; DNS cutover ignoring caches). r3 narrowed each and moved the rest into implementation duties.
+- **r3** (three HIGH against promises): still promising real-time outcomes from an asynchronous system. r4 restated
+  the bound as a rule of each invocation's behaviour and the gap from dates.
+- **r4** (final scoped round; two HIGH against promises, one duty): the r4 text kept an absolute "only refuses from
+  L_term" statement that contradicted its own per-invocation rule, and treated issuer clock readings as real time.
+  By the pre-registered exit (no fifth round), r5 deletes both promises: L_term governs what each invocation attempts
+  by its own reading and is disclaimed as a real-time cutoff; the gap's nine-day minimum is stated by the issuer's
+  clock readings, with no real-time minimum. R4-03's conditions (reread on a lost fence; hash-named objects with the
+  hash checked before a URL is minted) are added to the duties.
+- **What A12 now promises:** never both COMPLETE and REFUSED; no client receipt for a request not durably COMPLETE;
+  each invocation reading at or after L_term attempts only refusal; successor acceptance only after its fence. It
+  promises no termination time and no real-time gap. Everything else is a gate before the bound is enabled.
+- **Found along the way, independent of A12:** the deployed issuer stores each receipt at a fixed, overwritable key
+  in an unversioned bucket (`result/<rid>/receipt.json`), so a stale delayed put could in principle replace a
+  delivered receipt. Unlikely (it needs a put delayed across poller runs) and detectable (the API returns the
+  receipt's hash; Yanantin checks it). Corrected by the content-addressing duty, deployed with Codex review whether
+  or not A12 is signed.
+- **Status:** r5 goes to the author for signing, with all four reviews. The author's first commit containing the final
+  text is the signing act.

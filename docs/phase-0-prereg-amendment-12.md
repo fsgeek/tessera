@@ -1,8 +1,9 @@
-# Tessera — Phase 0 Pre-Registration, Amendment 12 — V1 implementation: bounded termination; successor windows (DRAFT r4, 2026-11-20)
+# Tessera — Phase 0 Pre-Registration, Amendment 12 — V1 implementation: bounded termination; successor windows (r5 for signing, 2026-11-20)
 
-> **Status: DRAFT r4 by the steward (Claude Opus 5.5, tenure from 2026-11-19). Not signed.** Reviews: r1
-> (`CODEX-REVIEW-r1.md`, five HIGH), r2 (four HIGH), r3 (three HIGH against promises). r4 states the bound as a rule
-> of the issuer's behaviour, not a real-time outcome, and states the gap from dates alone (map at the end). The two choices the r1 disposition
+> **Status: r5, ready for the author's signature (steward, Claude Opus 5.5, tenure from 2026-11-19). Not signed.**
+> Reviews: r1 (five HIGH), r2 (four), r3 (three against promises), r4 final scoped round (two against promises, one
+> duty), all in `docs/reviews/amendment-12/`. By the exit pre-registered in `BRIEF-r4.md`, r5 deletes the two
+> remaining promises found false and keeps only what holds; there is no further round. Disposition: `DISPOSITION.md`. The two choices the r1 disposition
 > put to the author were resolved by him on 2026-11-19 ("As steward, I will abide by your recommendation"), as
 > OWNER DECISIONS adopted by his signature. Sections 3–5 are placeholders.
 > The author's first commit containing the final text is its signing act (the A11 convention). Layered on the
@@ -37,8 +38,9 @@ work-around)? Otherwise, I'd worry that you've created a denial-of-service attac
    recorded by the issuer. 14 days is a **selected cap**, not a derived guarantee: it exceeds the nominal budget
    N × (δ + S) = 12 days (A2.3) by 2 days, but time before, between and after attempts is not bounded by A2.3, so
    no request is promised its full nominal budget within the cap.
-2. **The bound overrides the latch.** From L_term on, the issuer's only permitted ending for a request that is not
-   durably COMPLETE is `REFUSED / EVIDENCE_UNAVAILABLE`, and every attempt it holds, latched or not, ends with it.
+2. **The bound overrides the latch.** An invocation whose clock reads at or after a request's L_term may end that
+   request only `REFUSED / EVIDENCE_UNAVAILABLE`, and every attempt it holds, latched or not, ends with it. Which
+   ending a request has is whichever terminal write becomes durable first (5).
 3. **What the refusal says.** It says the bound was reached. It does not assert that any attempt's lag exceeded S;
    the A2.1 trigger is not invoked. An artifact of such an attempt keeps its cryptographic validity and evidential
    admissibility; not having been shipped inside a receipt, it has no protocol standing, by A2.4 as written.
@@ -53,7 +55,9 @@ work-around)? Otherwise, I'd worry that you've created a denial-of-service attac
      the request is then refused at a later visit); that a refusal becomes durable by any time after L_term; that
      termination occurs at all if the poller or its dependencies (window configuration in S3, request store and
      index, the cleanup-obligation write) do not return, or if the poller's per-run budget never reaches the request.
-     L_term bounds when the issuer stops trying to complete a request, not when the request is seen to end.
+     Nor is it promised that no COMPLETE becomes durable after L_term in real time: a completion write made before
+     L_term can commit after it, and a later invocation whose clock reads earlier may complete. L_term governs what
+     each invocation attempts by its own reading; it is not a real-time cutoff.
 5. **Construction rules (implementation duties; not all present in the deployed code).**
    - *Who writes what.* The API creates a request (ACCEPTED, or REFUSED at acceptance) and records upload completion
      with a version compare-and-set (`api.py:98-106,127-145`). Every later lifecycle transition, including every
@@ -68,9 +72,12 @@ work-around)? Otherwise, I'd worry that you've created a denial-of-service attac
      record's `receipt_sha256`. A stale worker's delayed put can then never replace the object a client fetches.
      (Today the key is fixed, `result/<rid>/receipt.json`, and the bucket is unversioned, `infra/main.tf:89-93`;
      this is a defect in the deployed code, corrected under this duty whether or not A12 is signed.)
-   - *Refusal begins with a fence.* The refusal at L_term is made by the existing fence-then-commit sequence
-     (`pipeline.py:245-261`), so a delayed record write of an earlier invocation fails its guard; S3 objects are not
-     fenced by it and are handled by content addressing.
+   - *Refusal begins with a fence (duty).* The refusal is made by fence-then-commit (`pipeline.py:255-261`). A
+     pending earlier write can win before the fence; the fence then fails, and the invocation rereads the durable
+     state and acts on it (a durable COMPLETE stands). After the fence succeeds, older record writes fail their guard.
+     S3 puts are not fenced by it: each receipt object's name is computed by its writer from the SHA-256 of its own
+     bytes, so a stale put of different bytes lands at a different name and cannot replace the object the durable
+     COMPLETE record names; the API checks the fetched object's hash against that record before minting a URL.
    - *Access boundary and residual.* The results bucket is private; client credentials reach a receipt only through
      a URL the API mints for a durably COMPLETE request. An object left by a turn whose commit did not land is not
      reachable by any client credential, and persists until cleanup succeeds; cleanup can fail indefinitely, retaining
@@ -92,7 +99,8 @@ work-around)? Otherwise, I'd worry that you've created a denial-of-service attac
 10. **Gates before the bound is enabled in production** (none is present today). The `formal/tla/issuer-lifecycle/` model gains the deadline, the
     cut as a read followed by a separate, possibly delayed write, a stale worker whose write is delayed across
     another invocation, content-addressed objects and URL fetch. It is checked for: (a) never both COMPLETE and
-    REFUSED; (b) every fetch returns the object whose hash the durable COMPLETE record names; (c) no completion
+    REFUSED; (b) every fetch returns the object whose hash the durable COMPLETE record names, including under a stale put
+    delayed past the winning commit, and a fence that loses to an earlier write ends in the durable winner's state; (c) no completion
     attempted by an invocation reading at or after L_term. Broken companions (fixed-key object; no cut) must go red on (b) and (c). Codex reviews
     the code change with the model's result. Detection D10 (`docs/V1-DETECTION-CONTRACT.md`) is extended to alarm on
     any request open past L_term + 1 hour, built, deployed and seen to fire under the gate's item 3. This is future
@@ -147,7 +155,9 @@ keeping the same path.
 6. **The gap, stated.** Each window change has a period with no new acceptances, from the last actual acceptance
    under the old window to the first under the successor. Its minimum follows from dates alone: the last old
    acceptance is at least 216 h before the old not-after (L1), and no successor acceptance precedes the successor
-   not-before (item 5), which is strictly later than the old not-after (item 3). So the gap exceeds 9 days. Its
+   not-before (item 5), which is strictly later than the old not-after (item 3). So, **by the issuer's clock readings**, the gap
+   exceeds 9 days. In real time it can be shorter by the clocks' skew and by the time between an acceptance's clock
+   read and its write; no real-time minimum is promised. Its
    maximum is not promised: it depends on the drain (A12.1 promises no time by which old requests end), publication,
    propagation and deployment.
 7. **Telling clients (contract duty).** `docs/V1-CONTRACT.md` §3 gains: *"Issuance runs in windows of at most 90
@@ -180,8 +190,8 @@ keeping the same path.
 permitted stops are used: acceptance stops 2027-01-23T00:00Z, signing 2027-01-28T00:00Z, and the client notice is due
 by 2027-01-09. Preparation (new service keys; a root signing session for the successor commit, which needs k = 6
 before first issuance; the rotation registration of 8) should be complete by about that date. A request accepted at
-the stop has L_term 2027-02-06T00:00Z, the time from which the issuer only refuses it; when it ends, and so when the
-drain ends, is not promised. Successor acceptance opens at the fence of 5, no earlier than the successor not-before.
+the stop has L_term 2027-02-06T00:00Z, after which an invocation reading its clock attempts only its refusal; when it
+ends, and so when the drain ends, is not promised. Successor acceptance opens at the fence of 5, no earlier than the successor not-before.
 
 ## A12.3 The canary's open findings (placeholder)
 Levadura's beyond-window report on the 13 findings needing an amendment beyond A11 (obs-0185), when it arrives.
@@ -215,4 +225,7 @@ adding the new entry and closing the old interval), and how relying parties lear
 | r3 R3-04 gap minimum | items 5 (not-before in the fence), 4 (old API invocations drained), 6 (minimum from dates) |
 | r3 R3-05 dates | item 6 maximum not promised; consequence paragraph |
 | r3 R3-06 inventory | A12.2 inventory: frozen profile copy; A10.4.1 not operative (listing cut); historical text |
+| r4 R4-01 absolute deadline | changes 2, 4: per-invocation rule and durable winner; real-time cutoff disclaimed |
+| r4 R4-02 real-time gap | item 6: minimum by issuer clock readings; real-time minimum not promised; consequence paragraph |
+| r4 R4-03 fence and objects | change 5 fence duty (reread on loss; hash-named objects, hash checked before URL); change 10 (b) |
 | r3 R3-07 vectors | item 8: logical mutation with regenerated evidence; time-compatible snapshot; SNAPSHOT_IMPOSSIBLE wording |
