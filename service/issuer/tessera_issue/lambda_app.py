@@ -74,7 +74,7 @@ def _api_log(method, resource, cred, key, status, resp, length, error=None):
                   reason=error and "EXCEPTION" or body.get("reason") or body.get("error"), error=error, state=body.get("state"),
                   cred=api.cred_digest(cred) if cred else None,
                   rid=api.record_id(cred, k.lower()) if cred and k else None, content_len=length)
-    except Exception:  # noqa: BLE001
+    except BaseException:  # noqa: BLE001  a logging fault never replaces the handler's exception or its return
         pass
 
 

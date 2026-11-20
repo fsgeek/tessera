@@ -51,11 +51,17 @@ class Issuer:
     log: list = field(default_factory=list)
 
     def note(self, *a):
-        self.log.append(" ".join(str(x) for x in a))
-        try:                                           # G1: notes were discarded; emit them (bounded, no content)
+        self.log.append(" ".join(str(x) for x in a))   # in memory only: never emitted, never returned
+        try:                       # G1: the emitted line carries a fixed tag and exception CLASS names, never their text
             from . import logs
-            logs.emit("poller_note", msg=self.log[-1][:500])
-        except Exception:  # noqa: BLE001
+            parts = []
+            for x in a:                                # an exception object becomes its class name (once)
+                t = type(x).__name__ if isinstance(x, BaseException) else str(x)
+                if not (isinstance(x, BaseException) and parts and parts[-1] == t):
+                    parts.append(t)
+            msg = " ".join(parts)
+            logs.emit("poller_note", msg=msg[:200])
+        except BaseException:  # noqa: BLE001
             pass
 
     @property
