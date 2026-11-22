@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tessera-watch"
+version = "0.0.0"
+description = "Tessera V1 detection watcher (docs/V1-DETECTION-CONTRACT.md, item 0)"
+requires-python = "==3.14.*"
+# tessera-verify is the frozen service verifier (../verifier): the only code shared with the issuer.
+# boto3 is needed only in the Lambda (lambda_app.from_env, provided by the runtime); tests use fakes.
+dependencies = ["cryptography==50.0.2", "tessera-verify"]
+
+[tool.setuptools]
+packages = ["tessera_watch"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

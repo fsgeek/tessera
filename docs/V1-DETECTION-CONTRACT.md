@@ -71,8 +71,13 @@ Thresholds are initial values, chosen so a test can cross them; they are tuned o
 - **Step 2 deployed** (`service/detect/infra/`): topic `tessera-v1-alarms` (us-east-2) with the author's email
   subscription (pending the author's confirmation), D7 EventBridge rules for KMS, CloudTrail, S3, API Gateway, SNS,
   EventBridge, CloudWatch, Logs, SQS, DynamoDB and Lambda, D10 Lambda `Errors` alarms and a $10 monthly budget
-  (50% actual, 100% forecast). Not yet: D7 IAM (watcher), D9, D1-D6, D8, GCP-side alarms. None is "seen to fire"
-  until item 3's tests.
+  (50% actual, 100% forecast). Not yet deployed: D1-D6, D7 IAM, D8, D9 (D5, D6 slot 1, D7 IAM, D8 and D9 are built,
+  below), GCP-side alarms. None is "seen to fire" until item 3's tests.
+- **Step 4, watcher: built, not deployed** (`service/watcher/`, `service/detect/infra/watcher.tf`): D5 from `SIGLOG#`,
+  D6 slot 1 (CloudTrail `kms:Sign` reconciled against kms signatures; foreign principal; `AccessDenied`), D7 IAM writes
+  from the trail, D8 (stored bytes against `receipt_sha256`, then the frozen verifier as a relying party), D9 heartbeat
+  alarm, trace records 0(a) under Object Lock COMPLIANCE until not-after + 400 days. Owner's unit tests only. **D6 slot
+  2 (GCP `useToSign`) is a TODO** until G4. Latencies and limits: `service/watcher/README.md`.
 
 ## The build, in order
 1. G1: structured log lines from the API (one per request, with key id, rid, outcome) and the poller (one per state
