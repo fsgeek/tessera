@@ -167,27 +167,17 @@ def status(iss, credential, key):
     return Response(200, view(rec, now))                 # read-only: no lifecycle write (design step 1)
 
 
-LEGACY_RECEIPT = "receipt.json"
-
-
 def _receipt_object(iss, rid, digest):
-    """-> the object name to serve, or None. A12 r5 change 5: only the object named by the durable COMPLETE record's
-    receipt_sha256 (`<sha256>.json`) is served, and only after its bytes are fetched and hashed to that digest.
-    LEGACY FALLBACK: receipts issued before content addressing sit at the fixed key `receipt.json`; one is served
-    only when it exists and its bytes hash to the record's digest. Nothing is migrated. Every legacy receipt expires
-    30 days (RETENTION_S) after it was issued, so this fallback can be removed 30 days after the content-addressed
-    issuer is deployed."""
+    """-> the object name to serve, or None. A12 change 5: only the object named by the durable COMPLETE record's
+    receipt_sha256 (`<sha256>.json`) is ever served. The poller names each object from the SHA-256 of the exact
+    bytes it writes, so a stale put of different bytes lands at a different name. The API does not re-read the object
+    (a check before the client's fetch cannot cover the fetch); the client checks the body against the
+    `Tessera-Receipt-SHA256` header, as S2 requires. Receipts issued before content addressing were copied to their
+    digest names by `tools/migrate_receipts.py` (DEPLOY-RUN 2026-11-22); no fixed-key name is served."""
     if not isinstance(digest, str) or not digest:
         return None
-    for name in (f"{digest}.json", LEGACY_RECEIPT):
-        if iss.results.size("result", rid, name) is None:
-            continue
-        data = iss.results.get("result", rid, name)
-        if data is not None and sha256hex(bytes(data)) == digest:
-            return name
-        if name != LEGACY_RECEIPT:
-            return None                                  # the addressed object exists but is not its name: refuse
-    return None
+    name = f"{digest}.json"
+    return name if iss.results.size("result", rid, name) is not None else None
 
 
 def receipt(iss, credential, key):

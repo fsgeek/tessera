@@ -282,12 +282,12 @@ the author decides"; the checked protocol is `formal/tla/issuer-lifecycle/Issuer
 `_ship` stores the receipt at `result/<rid>/<receipt_sha256>.json`; the digest is computed from the exact bytes put and
 is the `receipt_sha256` the guarded COMPLETE commit records. The bucket is unversioned, so a fixed key let a delayed
 stale put replace delivered bytes; under a content-addressed name a stale put can only write a different name.
-`api.receipt` serves only the object named by the durable record's `receipt_sha256`, after fetching it and checking
-its SHA-256 equals that digest; any mismatch answers 410, the same as a missing object. Minted URLs are not logged.
-Cleanup lists by `result/<rid>/` prefix, so it deletes every result object of a request in either naming form.
+`api.receipt` serves only the object named by the durable record's `receipt_sha256`, after checking it exists (the API
+role may list `result/*`, so a missing object is a 404 and answers 410, not a 403 and a 502). The API does not re-read
+the body: a check before the client's fetch cannot cover the fetch, and S2 already requires the client to check the
+body against `Tessera-Receipt-SHA256`. Minted URLs are not logged. Cleanup lists by `result/<rid>/` prefix, so it
+deletes every result object of a request, including any fixed-key object left from before this change.
 
-Legacy fallback: receipts issued before this change sit at `result/<rid>/receipt.json`. If the hash-named object is
-absent and the fixed-key object exists, it is served only when its bytes hash to the record's `receipt_sha256`.
-Nothing is migrated. Legacy receipts live 30 days, so `LEGACY_RECEIPT` in `api.py` and its branch can be removed 30
-days after the content-addressed issuer is deployed. A legacy object remains overwritable between the check and the
-client's GET; the client-side `Tessera-Receipt-SHA256` header is the guard for those receipts only.
+Receipts issued before this change sat at `result/<rid>/receipt.json`. `tools/migrate_receipts.py` copies each one to
+its digest name when its bytes hash to the record's `receipt_sha256` (run before and after the deployment; DEPLOY-RUN
+2026-11-22). No fixed-key name is ever served (A12 change 5).

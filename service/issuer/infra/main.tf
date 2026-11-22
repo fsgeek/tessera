@@ -213,7 +213,7 @@ data "aws_iam_policy_document" "api" {
     condition {
       test     = "StringLike"
       variable = "s3:prefix"
-      values   = ["content/*"]
+      values   = ["content/*", "result/*"] # result/*: a missing receipt object is a 404 (-> 410), not a 403 (-> 502)
     }
   }
   statement {
