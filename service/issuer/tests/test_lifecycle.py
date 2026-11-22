@@ -672,7 +672,7 @@ def test_6_the_preserved_presentation_is_shipped_never_a_later_one(loc, key):
     loc.iss.results.put("work", rid, "a1/receipt.upgraded.ots", b"overwritten working copy")
     rec = run(loc, rid)
     assert rec["state"] == "COMPLETE"
-    bundle = json.loads(loc.iss.results.get("result", rid, "receipt.json"))
+    bundle = json.loads(loc.iss.results.get("result", rid, rec["receipt_sha256"] + ".json"))
     layer = bundle["layers"][0]
     assert layer["receipt_anchor"]["ots"] == pres["ots"]
     assert {k: v for k, v in layer["headers"].items() if k in pres["headers"]} == pres["headers"]
@@ -800,7 +800,7 @@ def test_9_a_failed_deletion_leaves_the_objects_marked_for_the_backstop_and_the_
     assert rec["state"] == "COMPLETE"
     work = [k for b, k in s3.objects if k.startswith(f"work/{rid}/")]
     assert work and all(s3.tags.get(("bucket", k)) == {"cleanup-due": "true"} for k in work)
-    receipt = ("bucket", f"result/{rid}/receipt.json")
+    receipt = ("bucket", f"result/{rid}/{rec['receipt_sha256']}.json")
     assert receipt in s3.objects and not s3.tags.get(receipt)
     s3.fail_delete = lambda k: None
     loc.clock.t = rec["ended_at"] + RETENTION_S - 1

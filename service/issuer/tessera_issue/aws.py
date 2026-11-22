@@ -13,7 +13,7 @@ DynamoDB table (one table, partition key "pk"):
   CLEAN#<rid>    a cleanup obligation (IS-07), pending_shard = "2" in the same sparse index; no expiry
   POLLER#cursor  the poller's scheduling cursor (ILI-05): the request id it last started on
 S3 bucket: content/<rid>/..., work/<rid>/..., frames/<rid>/<sha256> (large frames, read by the signers by reference),
-result/<rid>/receipt.json, config/window.json. The poller deletes each request's objects itself (IS-07), first
+result/<rid>/<receipt sha256>.json (content-addressed; pre-A12 receipts: result/<rid>/receipt.json), config/window.json. The poller deletes each request's objects itself (IS-07), first
 tagging them cleanup-due; the bucket's lifecycle rule expires only tagged objects, as a backstop (5.3.1)."""
 import json
 import uuid

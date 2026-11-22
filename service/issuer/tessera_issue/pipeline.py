@@ -1299,10 +1299,11 @@ def st_snapshot(iss, rec, now):
 
 
 def _ship(iss, rec, a, bundle, stable, now):
-    iss.results.put("result", rec["rid"], "receipt.json", bundle)
+    digest = sha256hex(bundle)                           # A12 r5 change 5: content-addressed; a stale put of other bytes
+    iss.results.put("result", rec["rid"], f"{digest}.json", bundle)   # lands under another name, never on this one
     g = lifecycle_guard(rec)
     a["state"] = SHIPPED
-    rec["receipt_sha256"] = sha256hex(bundle)
+    rec["receipt_sha256"] = digest
     rec["T"] = stable["T"]
     _end_request(iss, rec, g, "COMPLETE", None, now)
 

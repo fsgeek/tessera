@@ -277,3 +277,17 @@ the author decides"; the checked protocol is `formal/tla/issuer-lifecycle/Issuer
   after `ended_at`).
 - **Public view.** ACCEPTED shows `attempt` {number, of, state} and, for an open attempt, `expiry_boundary` (B) with a
   note that the twelve-day budget is nominal; REFUSED lists each attempt's outcome and reason.
+
+## Receipt objects are content-addressed (A12-R2-03)
+`_ship` stores the receipt at `result/<rid>/<receipt_sha256>.json`; the digest is computed from the exact bytes put and
+is the `receipt_sha256` the guarded COMPLETE commit records. The bucket is unversioned, so a fixed key let a delayed
+stale put replace delivered bytes; under a content-addressed name a stale put can only write a different name.
+`api.receipt` serves only the object named by the durable record's `receipt_sha256`, after fetching it and checking
+its SHA-256 equals that digest; any mismatch answers 410, the same as a missing object. Minted URLs are not logged.
+Cleanup lists by `result/<rid>/` prefix, so it deletes every result object of a request in either naming form.
+
+Legacy fallback: receipts issued before this change sit at `result/<rid>/receipt.json`. If the hash-named object is
+absent and the fixed-key object exists, it is served only when its bytes hash to the record's `receipt_sha256`.
+Nothing is migrated. Legacy receipts live 30 days, so `LEGACY_RECEIPT` in `api.py` and its branch can be removed 30
+days after the content-addressed issuer is deployed. A legacy object remains overwritable between the check and the
+client's GET; the client-side `Tessera-Receipt-SHA256` header is the guard for those receipts only.
