@@ -58,3 +58,11 @@ recommended above, as OWNER DECISIONS, and take registered effect when the autho
   or not A12 is signed.
 - **Status:** r5 goes to the author for signing, with all four reviews. The author's first commit containing the final
   text is the signing act.
+
+## The author's review (Codex, run by the author, 2026-11-22) and r6
+All three points accepted: (1) item 7's contract text promised "at least nine days", the real-time minimum r5
+withdrew; now "normally of more than nine days; its dates are announced in advance". (2) "Bounded termination"
+overstated what survives; renamed "termination deadline (conditional abandonment)", and change 4 now states the
+remaining exposure (in ordinary operation, per-credential open requests bounded by quota × 14 days; no bound under
+overload or failure). (3) Placeholders under a signature: A12.3–A12.5 replaced by an explicit "Deferred: not
+registered" section; DEPLOY.md's posture item 5 now points to a later amendment and stays open.

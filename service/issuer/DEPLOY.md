@@ -130,7 +130,7 @@ permission checks bypassed. Tolerable while nothing relies on Tessera; not after
 3. The repository signing key off the NUC, on a token.
 4. Detection seen to fire (the gate above).
 5. The V1 contract states the actual operational posture, including today's single administration machine
-   (registered text: in A12).
+   (registered text: deferred from A12 to a later amendment; this item stays open until then).
 
 ## Not deployment gates, but release gates (still open; `formal/freeze-v1/FREEZE-RECORD.md:84-91`)
 
