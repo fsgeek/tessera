@@ -66,3 +66,7 @@ overstated what survives; renamed "termination deadline (conditional abandonment
 remaining exposure (in ordinary operation, per-credential open requests bounded by quota × 14 days; no bound under
 overload or failure). (3) Placeholders under a signature: A12.3–A12.5 replaced by an explicit "Deferred: not
 registered" section; DEPLOY.md's posture item 5 now points to a later amendment and stays open.
+- **Second author review (2026-11-22):** r6's exposure paragraph turned the API Gateway usage-plan quota into a
+  ceiling (~1,400 open requests per credential). AWS documents usage-plan quotas as best-effort, so no ceiling
+  follows. Replaced with the reviewer's wording: the quota reduces admission pressure; no maximum backlog is promised.
+  A hard admission limit remains a separate design choice.
