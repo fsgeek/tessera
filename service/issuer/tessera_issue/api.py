@@ -167,6 +167,29 @@ def status(iss, credential, key):
     return Response(200, view(rec, now))                 # read-only: no lifecycle write (design step 1)
 
 
+LEGACY_RECEIPT = "receipt.json"
+
+
+def _receipt_object(iss, rid, digest):
+    """-> the object name to serve, or None. A12 r5 change 5: only the object named by the durable COMPLETE record's
+    receipt_sha256 (`<sha256>.json`) is served, and only after its bytes are fetched and hashed to that digest.
+    LEGACY FALLBACK: receipts issued before content addressing sit at the fixed key `receipt.json`; one is served
+    only when it exists and its bytes hash to the record's digest. Nothing is migrated. Every legacy receipt expires
+    30 days (RETENTION_S) after it was issued, so this fallback can be removed 30 days after the content-addressed
+    issuer is deployed."""
+    if not isinstance(digest, str) or not digest:
+        return None
+    for name in (f"{digest}.json", LEGACY_RECEIPT):
+        if iss.results.size("result", rid, name) is None:
+            continue
+        data = iss.results.get("result", rid, name)
+        if data is not None and sha256hex(bytes(data)) == digest:
+            return name
+        if name != LEGACY_RECEIPT:
+            return None                                  # the addressed object exists but is not its name: refuse
+    return None
+
+
 def receipt(iss, credential, key):
     """IS-06 (owner decision): one plain GET. After the credential check (the record id is scoped to the credential)
     and only for a COMPLETE, unexpired request, mint a fresh pre-signed URL valid for RECEIPT_URL_TTL_S and answer 303.
@@ -180,13 +203,14 @@ def receipt(iss, credential, key):
     if v["state"] != "COMPLETE":
         return Response(409, v)
     rid = record_id(credential, key.lower())
-    if iss.results.size("result", rid, "receipt.json") is None:
-        return Response(410, {"request_key": v["request_key"], "state": "EXPIRED"})
     rec = iss.requests.get(rid)
+    name = _receipt_object(iss, rid, rec["receipt_sha256"] if rec else None)
+    if name is None:
+        return Response(410, {"request_key": v["request_key"], "state": "EXPIRED"})
     now = iss.clock()                                    # CF-03, CF2-02: after every read, just before minting
     if rec is None or _expired(rec, now):
         return Response(410, {"request_key": v["request_key"], "state": "EXPIRED"})
-    url = iss.results.presign("result", rid, "receipt.json", RECEIPT_URL_TTL_S, now)
+    url = iss.results.presign("result", rid, name, RECEIPT_URL_TTL_S, now)
     return Response(303, {}, {"Location": url, "Tessera-Receipt-SHA256": v["receipt_sha256"],
                               "Cache-Control": "no-store"})
 

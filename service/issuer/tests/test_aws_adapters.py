@@ -162,7 +162,7 @@ def test_whole_issuance_through_lambda_handlers_on_aws_adapters(tmp_path, monkey
     assert r["statusCode"] == 303 and r["body"] == "{}"                      # IS-06: one GET, redirect to a short-lived URL
     assert r["headers"]["Location"].endswith("X-Amz-Expires=300") and "Range" not in r["headers"]
     rid = api.record_id("apikey-1", key)
-    bundle = s3.objects[("results", f"result/{rid}/receipt.json")]
+    bundle = s3.objects[("results", f"result/{rid}/{st['receipt_sha256']}.json")]
     assert r["headers"]["Tessera-Receipt-SHA256"] == st["receipt_sha256"]
     assert not [k for b, k in s3.objects if k.startswith(("content/", "work/"))]      # deleted at the end
     rc, out, err = verify_with_cli(loc, bundle, tmp_path)

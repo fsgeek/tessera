@@ -359,7 +359,7 @@ def test_ILI06_pruning_holds_the_presentation_when_lower_evidence_arrives_with_t
     loc.iss.headers = real                                # the lower segment is now obtainable
     rec = run(loc, rid)
     assert rec["state"] == "COMPLETE" and len(rec["attempts"]) == 1
-    bundle = json.loads(loc.iss.results.get("result", rid, "receipt.json"))
+    bundle = json.loads(loc.iss.results.get("result", rid, rec["receipt_sha256"] + ".json"))
     assert str(h1) in bundle["layers"][0]["headers"]     # the lower segment travelled with the snapshot
     assert rec["T"] == rfc3339(att(rec)["latch"]["T"])  # the latched height's T, not the lower one's
 
