@@ -129,8 +129,9 @@ def test_d6_only_used_signatures_count(env, disposition):
     assert sg["final"] is None and not W.Watcher.counts(sg)
 
 
-def test_d6_a_signature_recorded_on_a_job_counts_as_used(env):
-    """The equivalent of a "used" entry: the issuer records a signature on its job only after verifying it."""
+def test_d6_a_signature_recorded_on_a_job_without_a_used_entry_does_not_count(env):
+    """Final pass: only a "used" SIGLOG# entry counts (the issuer logs it before recording the job), so a used entry
+    deleted while a not-waiting row and the job remain leaves its Sign unmatched."""
     h = fakes.sha(b"on a job")
     env.trail(T0 - 3000, [fakes.sign_event(T0 - 3000)])
     kms_signed(env, "SIGLOG#1", T0 - 2900, sig=h, disposition="not-waiting")
@@ -138,7 +139,7 @@ def test_d6_a_signature_recorded_on_a_job_counts_as_used(env):
     env.ddb.put("REQ#" + rid, fakes.request(rid, "FAILED", T0 - 2000, jobs={"s_kms": fakes.job("kms", "kms-req-1", h)}))
     env.clock.t = T0 + W.SIGN_HORIZON_S
     env.run()
-    assert D(env) == []
+    assert env.codes() == ["SIGN_WITHOUT_SIGNED_JOB"]
 
 
 def test_d6_a_signature_of_an_attempt_that_did_not_ship_counts_and_is_traced_not_alarmed(env):

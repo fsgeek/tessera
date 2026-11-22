@@ -24,8 +24,11 @@ def test_role_actions_are_reads_on_issuer_stores_and_writes_on_its_own():
     st = statements()
     writes = {a for acts, _ in st.values() for a in acts if not re.match(
         r"(dynamodb:(Scan|GetItem|DescribeTable)|s3:(GetObject|ListBucket)|logs:(CreateLogStream|PutLogEvents))$", a)}
-    assert writes == {"s3:PutObject", "s3:DeleteObject", "sns:Publish", "cloudwatch:PutMetricData"}
+    assert writes == {"s3:PutObject", "s3:PutObjectRetention", "s3:DeleteObject", "sns:Publish",
+                      "cloudwatch:PutMetricData"}
     for sid, (acts, body) in st.items():
+        if "s3:PutObjectRetention" in acts:                    # the explicit-retention trace put needs it (final pass)
+            assert "aws_s3_bucket.trace.arn}/trace/*" in body and len(re.findall(r"arn", body)) == 1, sid
         if "s3:DeleteObject" in acts:
             assert "aws_s3_bucket.watcher_state.arn}/findings/*" in body and len(re.findall(r"arn", body)) == 1, sid
         if any(a.startswith("s3:Put") or a.startswith("s3:Delete") for a in acts):

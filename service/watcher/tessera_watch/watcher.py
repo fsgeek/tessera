@@ -10,19 +10,25 @@ Order of a run:
   5. for each pending terminal request (oldest attempt first, bounded per run): re-verify a COMPLETE receipt and bind
      it to its record (D8), then write its trace record (0(a)) once its kms signatures are final;
   6. publish every finding waiting in the outbox (each was written there when it was found); 7. commit the state;
-  8. publish the heartbeat (D9), unless a source could not be read, a finding could not be published, or the
-     verifier's own startup check fails.
+  8. publish the heartbeat (D9), unless a source could not be read, a trail file, trail record or SIGLOG# entry
+     failed or was not reached (D6 is then not finalized), a finding could not be published, or the verifier's own
+     startup check fails. A finding that could be neither written to the outbox nor published stops
+     the run before 7 (no commit: the next run reads the same sources and finds it again).
 
 Failure isolation (review H1): a failure while checking one trail file, one SIGLOG# entry or one request becomes a
 `W` finding (detection, item id or rid prefix, exception class name only) and the run goes on; that item stays
-unchecked and is retried next run. A failure of a whole source (the scan, the trail listing) is a `W` finding and
+unchecked and is retried next run (a trail record whose classification raises is not retried: its file is marked
+read). A trail file or SIGLOG# entry that failed, or a trail file left unread for lack of time, also means no D6
+outcome is finalized and no heartbeat is sent in that run (final pass). A failure of a whole source (the scan, the
+trail listing) is a `W` finding and
 withholds the heartbeat. Anything else (the state cannot be loaded or committed) is a failure of the run: the handler
 reports WATCHER_ERROR with the class name and no heartbeat is sent, so D9 fires if it persists.
 
 Cursors (review H2, M2): no cursor moves by an issuer-supplied time. Issuer items are new while their key is not in the
 seen set; a seen key is forgotten only when the item is no longer in the (complete, strongly consistent) scan. The
-trail cursor advances only to the watcher's own clock minus TRAIL_LAG_S, and never past a file it has not read. An
-issuer time more than FUTURE_S ahead of the watcher's clock is a finding and never counts.
+trail cursor advances only to the watcher's own clock minus TRAIL_LAG_S, and never past a file it has not read (keys
+are read in key-time order). D6 outcomes are finalized only in a run that read the trail, the scan and every SIGLOG#
+entry in full. An issuer time more than FUTURE_S ahead of the watcher's clock is a finding and never counts.
 
 Nothing here imports issuer code. The request id formula is the issuer's documented one, restated."""
 import calendar
@@ -100,7 +106,7 @@ class Finding:
     @classmethod
     def from_line(cls, d):
         """A finding read back from the outbox: rebuilt and validated again on the way out."""
-        d = dict(d) if isinstance(d, dict) else {}
+        d = {k: v for k, v in d.items() if k in S.RULES} if isinstance(d, dict) else {}   # no unknown names (H4)
         det, code = d.pop("detection", "W"), d.pop("code", "OUTBOX_UNREADABLE")
         d.pop("event", None)
         d.pop("v", None)
@@ -232,29 +238,33 @@ class Watcher:
             self.find_once(f"selfcheck:{code}", "W", "VERIFIER_SELF_CHECK_FAILED", reason=reason,
                            reason_detail=detail)
             healthy = False
+        complete = True                                            # every D6 source read in full this run
         try:
-            self.read_trail(st, now, stats)
+            complete = self.read_trail(st, now, stats)
         except SourceDown as e:
             self.find("W", "SOURCE_UNAVAILABLE", source="trail", error_class=str(e))
-            healthy = False
+            healthy = complete = False
         reqs = siglog = None
         try:
             reqs, siglog = self.table.scan()
         except Exception as e:  # noqa: BLE001
             self.find("W", "SOURCE_UNAVAILABLE", source="issuer_table", error_class=S.class_name(e))
-            healthy = False
+            healthy = complete = False
         if siglog is not None:
-            self.read_siglog(st, siglog, now, stats)
+            complete = self.read_siglog(st, siglog, now, stats) and complete
         if reqs is not None:
-            self.note_job_signatures(st, reqs, now)
-        self.reconcile(st, now)
+            self.note_job_signatures(st, reqs, now, complete)
+        if complete:                                               # no D6 outcome from a partial read (final pass)
+            self.reconcile(st, now)
         if reqs is not None:
             self.process_requests(st, reqs, now, stats)
         self.prune(st, now)
-        delivered = self.deliver()                                 # 6: before the commit (at-least-once)
+        delivered, lost = self.deliver()                           # 6: before the commit (at-least-once)
+        if lost:                                                   # a finding neither in the outbox nor published:
+            raise RuntimeError("finding not delivered")            # no commit, so the next run finds it again
         st["last_ok"] = now
         self.state_store.save(st, etag)                            # 7: the commit; a conflict raises (no heartbeat)
-        beat = healthy and delivered
+        beat = healthy and delivered and complete                  # D6 not finalized this run: D9 fires if it persists
         if beat:
             try:
                 self.hb.beat()                                     # 8: D9 heartbeat only after a committed, sound run
@@ -268,8 +278,9 @@ class Watcher:
 
     def deliver(self):
         """Publish every finding waiting in the outbox (this run's and any earlier run's), deleting each only after SNS
-        accepted it; then any finding this run could not write to the outbox. -> True if nothing is left unpublished."""
-        ok = True
+        accepted it; then any finding this run could not write to the outbox. -> (ok, lost): ok if nothing is left
+        unpublished; lost if a finding that is not in the outbox could not be published."""
+        ok, lost = True, False
         if self.outbox is not None:
             try:
                 keys = self.outbox.keys()
@@ -288,9 +299,9 @@ class Watcher:
             try:
                 self.topic.publish(f.subject(), json.dumps(f.line(), sort_keys=True, indent=1))
             except Exception as e:  # noqa: BLE001
-                ok = False
+                ok, lost = False, True
                 log({"event": "publish_failed", "v": 1, "error_class": S.class_name(e)}, self.out)
-        return ok
+        return ok, lost
 
     # ------------------------------------------------------------------------------------- 2: the trail
     def read_trail(self, st, now, stats):
@@ -300,19 +311,21 @@ class Watcher:
             keys = cloudtrail.candidate_keys(self.trail.c, self.trail.b, base, t["cursor"], now)
         except Exception as e:  # noqa: BLE001
             raise SourceDown(S.class_name(e)) from None
-        first_unread = None
+        first_unread, complete = None, True
         for key in keys:
             if key in t["files"]:
                 continue
             kt = cloudtrail.key_time(key)
             if self.left_s() < TRAIL_RESERVE_S:                    # out of time: the cursor stops at this file
                 first_unread = kt if first_unread is None else min(first_unread, kt)
-                break
+                complete = False
+                break                                              # keys are in time order: none later is earlier
             try:
                 records = cloudtrail.parse(self.trail.get(key))
             except Exception as e:  # noqa: BLE001  this file only; retried until LOOKBACK_S after its time
                 cls = S.class_name(e)
                 where = cloudtrail.safe_parts(key)
+                complete = False
                 if now - kt > LOOKBACK_S:
                     self.find("W", "TRAIL_FILE_ABANDONED", error_class=cls, **where)
                     t["files"][key] = kt
@@ -329,7 +342,8 @@ class Watcher:
                 try:
                     for kind, d in cloudtrail.classify(rec, self.key, self.cfg.signer_role_arn):
                         self.on_trail_event(st, kind, d, rec, stats)
-                except Exception as e:  # noqa: BLE001  this record only
+                except Exception as e:  # noqa: BLE001  this record only; reported, not retried
+                    complete = False
                     self.item_failed("trail", f"{item_id(key)}:{i}", e, **cloudtrail.safe_parts(key))
             t["files"][key] = kt
             t["failing"].pop(key, None)
@@ -337,6 +351,7 @@ class Watcher:
         if first_unread is not None:
             target = min(target, first_unread)
         t["cursor"] = max(t["cursor"], target)
+        return complete
 
     def on_trail_event(self, st, kind, d, rec, stats):
         if kind == "sign":
@@ -362,7 +377,7 @@ class Watcher:
     # ----------------------------------------------------------------------------------- 3: SIGLOG# (D5)
     def read_siglog(self, st, siglog, now, stats):
         s = st["siglog"]
-        present = set()
+        present, complete = set(), True
         for pk, e in siglog:
             iid = item_id(pk)
             present.add(iid)
@@ -372,9 +387,11 @@ class Watcher:
                 self.on_siglog(st, iid, e, now, stats)
             except Exception as ex:  # noqa: BLE001  this entry only; not marked seen, so retried next run
                 self.item_failed("siglog", iid, ex, item=iid[:16])
+                complete = False
                 continue
             s["seen"][iid] = now
         s["seen"] = {k: v for k, v in s["seen"].items() if k in present}
+        return complete
 
     def on_siglog(self, st, iid, e, now, stats):
         at = parse_time(e.get("at")) if isinstance(e, dict) else None
@@ -401,7 +418,7 @@ class Watcher:
                 cur = st["sigs"][h] = {"at": at, "first_seen": now, "request_id": S.clean("request_id",
                                                                                          e.get("request_id")),
                                        "event": None, "final": None, "dispositions": [], "used": False,
-                                       "on_job": False, "future": False, "reported": False}
+                                       "future": False, "reported": False}
             elif not cur["final"]:
                 cur["at"] = min(cur["at"], at)
             if d not in cur["dispositions"]:
@@ -409,9 +426,11 @@ class Watcher:
             cur["future"] = cur["future"] or future
             cur["used"] = cur["used"] or disp == COUNTED
 
-    def note_job_signatures(self, st, reqs, now):
-        """The issuer records a kms signature on its job only after verifying it and logging it "used": a signature on
-        a job is the equivalent of that entry (review H3). One with no SIGLOG# entry at all is tracked (M5)."""
+    def note_job_signatures(self, st, reqs, now, complete=True):
+        """A kms signature on a job with no SIGLOG# entry at all is tracked (M5) and, after UNLOGGED_S, reported, but
+        only from a run whose SIGLOG# read was complete. A job signature does not count for D6 by itself: only a "used"
+        SIGLOG# entry does (the issuer logs it before recording the job), so deleting that entry leaves the Sign
+        unmatched (final pass)."""
         for pk, rec in reqs:
             try:
                 for a in (rec.get("attempts") or []) if isinstance(rec, dict) else []:
@@ -422,7 +441,6 @@ class Watcher:
                         if not (isinstance(h, str) and S.HEX64.fullmatch(h)):
                             continue
                         if h in st["sigs"]:
-                            st["sigs"][h]["on_job"] = True
                             st["unlogged"].pop(h, None)
                         else:
                             st["unlogged"].setdefault(h, now)
@@ -431,19 +449,20 @@ class Watcher:
         for h, first in list(st["unlogged"].items()):
             if h in st["sigs"]:
                 st["unlogged"].pop(h)
-            elif now - first > UNLOGGED_S:
+            elif complete and now - first > UNLOGGED_S:
                 self.find_once(f"unlogged:{h}", "D6", "JOB_SIGNATURE_NOT_LOGGED", signature_sha256=h)
 
     # ------------------------------------------------------------------------------------------ 4: D6
     @staticmethod
     def counts(sg):
-        return (sg["used"] or sg["on_job"]) and not sg["future"]
+        return sg["used"] and not sg["future"]
 
     def reconcile(self, st, now):
         """Time order, one to one: each counted kms signature (one the issuer verified and used), ordered by when the
         issuer first logged it, takes the earliest free signer-role Sign in [at - MATCH_WINDOW_S, at + SKEW_S]. Signs
-        carry no message or signature, so this matches by time and count only. The matching is recomputed every run
-        over everything not yet final (review M1): a Sign delivered late can still take its place in the order. A
+        carry no message or signature, so this matches by time and count only. The matching is recomputed every
+        complete run (the caller skips a run with a partial read, final pass) over everything not yet final (review
+        M1): a Sign delivered late can still take its place in the order. A
         signature's match (or its absence) becomes final SIG_HORIZON_S after it was logged, when every Sign it could
         take has been delivered; a Sign is declared unmatched SIGN_HORIZON_S after its time."""
         sigs, signs = st["sigs"], st["signs"]
@@ -521,9 +540,8 @@ class Watcher:
             p = pending[rid]
             try:
                 rec = present.get(rid)
-                if rec is not None:
-                    p["snap"] = self.snapshot(rec)
-                    p["source"] = "issuer-record"
+                if rec is not None:                                # the snapshot is the one taken when first seen
+                    p["source"] = "issuer-record"                  # terminal: never refreshed (final pass, M9)
                 else:                                              # gone (expired) while pending: trace what we hold
                     p["source"] = "snapshot"
                     self.find_once(f"gone:{rid}", "W", "TRACE_FROM_SNAPSHOT", rid=rid)
