@@ -36,7 +36,13 @@ VERIFY_RESERVE_S = 120        # no new verification is started with less than th
 
 # D5: signer reasons only an attacker or a fault produces, and the poller dispositions (contract table, row D5).
 D5_REASONS = frozenset({"KEY_FP_MISMATCH", "FRAME_DIGEST_MISMATCH", "ALG_NOT_ALLOWED", "DECLARED_TIME_OUTSIDE_EPSILON",
-                        "BAD_REQUEST", "TRUNCATED", "UNRECOGNIZED_REASON"})
+                        "BAD_REQUEST", "TRUNCATED", "UNRECOGNIZED_REASON",
+                        # the verifier codec's Fault codes, forwarded by both signers: the issuer builds every frame,
+                        # so a codec fault on one is a fault or an attacker (steward, 2026-11-22)
+                        "ANCHOR_COUNT", "CONTAINER_SCHEMA", "CV_UNKNOWN", "JSON_DEPTH", "JSON_DUPLICATE_NAME",
+                        "JSON_ENCODING", "JSON_NONCANONICAL", "JSON_NUMBER", "JSON_SYNTAX", "KEY_FORMAT", "LENGTH_CAP",
+                        "SCHEMA", "SIG_EMPTY", "SIG_FORMAT", "SIG_PACKET", "SIG_POLICY", "TAG_MISMATCH", "TAG_UNKNOWN",
+                        "TRAILING"})
 D5_DISPOSITIONS = frozenset({"unrequested", "malformed", "bad-signature"})
 NOT_A_JOB = D5_DISPOSITIONS                   # D6: such a response is not a signed job, whatever it carries
 
