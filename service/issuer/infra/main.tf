@@ -213,8 +213,16 @@ data "aws_iam_policy_document" "api" {
     condition {
       test     = "StringLike"
       variable = "s3:prefix"
-      values   = ["content/*", "result/*"] # result/*: a missing receipt object is a 404 (-> 410), not a 403 (-> 502)
+      values   = ["content/*"]
     }
+  }
+  statement {
+    # HeadObject on a missing key answers 404 only with an unconditional s3:ListBucket on the bucket (an s3:prefix
+    # condition does not apply to HeadObject); otherwise 403, which surfaced as a 502 for a missing receipt. Lists
+    # object names only.
+    sid       = "ListForHead"
+    actions   = ["s3:ListBucket"]
+    resources = [aws_s3_bucket.results.arn]
   }
   statement {
     sid       = "Config"

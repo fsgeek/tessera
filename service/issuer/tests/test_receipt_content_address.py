@@ -107,3 +107,23 @@ def test_cleanup_deletes_both_naming_forms_on_s3(key):
     for _ in range(4):
         loc.tick()
     assert not [k for b, k in s3.objects if k.startswith(f"result/{rid}/")]
+
+
+def test_migration_never_overwrites_skips_expired_and_reports_wrong_present_bytes(key):
+    loc = local.build(FROZEN)
+    rid, rec = complete(loc, key)
+    digest = rec["receipt_sha256"]
+    good = loc.iss.results.get("result", rid, digest + ".json")
+    loc.iss.results.delete("result", rid)
+    loc.iss.results.put("result", rid, LEGACY, good)
+    loc.iss.results.put("result", rid, digest + ".json", b"wrong bytes")            # present, wrong
+    assert migrate_receipts.migrate(loc.iss.requests, loc.iss.results, [rid], apply=True) == [(rid[:12], "present-mismatch")]
+    assert loc.iss.results.get("result", rid, digest + ".json") == b"wrong bytes"   # not overwritten
+    loc.iss.results.delete("result", rid)
+    loc.iss.results.put("result", rid, LEGACY, good)
+    assert migrate_receipts.migrate(loc.iss.requests, loc.iss.results, [rid], apply=True,
+                                    now=rec["expires_at"]) == [(rid[:12], "expired")]
+    assert loc.iss.results.size("result", rid, digest + ".json") is None
+    raced = migrate_receipts.migrate(loc.iss.requests, loc.iss.results, [rid], apply=True,
+                                     create_only=lambda r, n, d: False)
+    assert raced == [(rid[:12], "exists-raced")] and loc.iss.results.size("result", rid, digest + ".json") is None
