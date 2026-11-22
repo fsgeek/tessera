@@ -59,12 +59,20 @@ and observed the email.
 | D4 | Per-key volume; unknown key | access log by `apiKeyId`; invitation record (`config/invitations.json`: who, key id, when, terms, expected volume) | any key above its invited daily volume (yanantin-pilot: 5); any 2xx from a key id not in the invitation record; any `QUOTA_EXCEEDED` | 15 min |
 | D5 | Signer refusals only an attacker or a fault produces | `SIGLOG#` (both slots' responses); KMS signer log `refused`; GCP stdout `response`, `refuse_to_run` | any one of: `KEY_FP_MISMATCH`, `FRAME_DIGEST_MISMATCH`, `ALG_NOT_ALLOWED`, `DECLARED_TIME_OUTSIDE_EPSILON`, `BAD_REQUEST`, `TRUNCATED`, `UNRECOGNIZED_REASON`; poller dispositions `unrequested` (E-06), `malformed`, `bad-signature`; KMS signer startup `KeyMismatch` (Lambda Errors); GCP `refuse_to_run` (log-based alert) | 20 min |
 | D6 | A signature no receipt accounts for | watcher reconciliation (slot 1: CloudTrail; slot 2: GCP Data Access) | any unmatched `kms:Sign`/`useToSign`; any `kms:Sign` by a principal other than the signer role, or any `AccessDenied` on the key | 1 h (CloudTrail delivery lag *(platform)*) |
-| D7 | Control-plane tampering | CloudTrail management write events via EventBridge (IAM's in us-east-1 *(platform)*); GCP Admin Activity audit log (always on *(platform)*) | any of: `PutKeyPolicy`, `CreateGrant`, `DisableKey`, `ScheduleKeyDeletion` on the v1 key; `StopLogging`, `DeleteTrail`, `UpdateTrail`, `PutEventSelectors`; IAM changes to the issuer, signer or watcher roles, `CreateAccessKey`; `UpdateFunctionCode`/`Configuration` on the issuer, signer or watcher; trail-bucket policy or lock changes; API key or usage-plan changes; SNS alarm-topic or subscription changes; GCP: KMS IAM policy, key version state, Cloud Run job update | 10 min |
+| D7 | Control-plane tampering | CloudTrail management write events via EventBridge in us-east-2; **IAM events reach EventBridge only in us-east-1, which the organization's SCP closes to this account, so IAM changes are read by the watcher from the multi-region trail (latency up to ~1 h)**; GCP Admin Activity audit log (always on *(platform)*) | any of: `PutKeyPolicy`, `CreateGrant`, `DisableKey`, `ScheduleKeyDeletion` on the v1 key; `StopLogging`, `DeleteTrail`, `UpdateTrail`, `PutEventSelectors`; IAM changes to the issuer, signer or watcher roles, `CreateAccessKey`; `UpdateFunctionCode`/`Configuration` on the issuer, signer or watcher; trail-bucket policy or lock changes; API key or usage-plan changes; SNS alarm-topic or subscription changes; GCP: KMS IAM policy, key version state, Cloud Run job update | 10 min |
 | D8 | A receipt that does not verify | watcher step 1 | any verdict other than `VALID_STRICT` | 20 min |
 | D9 | Watcher silent or dead | heartbeat metric | missing for 30 min (missing data = breaching) | 40 min |
 | D10 | Service fault | Lambda `Errors` (API, poller, KMS signer); requests non-terminal past their bound; AWS and GCP budgets | any Lambda error; any request open > 24 h (until A12's L_term is live); spend above 50% of the monthly budget | 1 h |
 
 Thresholds are initial values, chosen so a test can cross them; they are tuned on the record, not silently.
+
+## Status (2026-11-22)
+- **G1 deployed** (structured logs; `service/issuer/LOGGING.md`; DEPLOY-RUN 2026-11-22). First `poll_summary` line seen in production.
+- **Step 2 deployed** (`service/detect/infra/`): topic `tessera-v1-alarms` (us-east-2) with the author's email
+  subscription (pending the author's confirmation), D7 EventBridge rules for KMS, CloudTrail, S3, API Gateway, SNS,
+  EventBridge, CloudWatch, Logs, SQS, DynamoDB and Lambda, D10 Lambda `Errors` alarms and a $10 monthly budget
+  (50% actual, 100% forecast). Not yet: D7 IAM (watcher), D9, D1-D6, D8, GCP-side alarms. None is "seen to fire"
+  until item 3's tests.
 
 ## The build, in order
 1. G1: structured log lines from the API (one per request, with key id, rid, outcome) and the poller (one per state
