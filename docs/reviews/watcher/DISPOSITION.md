@@ -30,3 +30,38 @@ the reason. Owner's unit tests over fakes only; nothing here has been seen to fi
 | 2 Trigger clause (FAIL: D10 "until A12's L_term is live") | NOT DISPOSED here: outside the steward's dispositions for this branch, and it concerns the D10 row and the signed A12 gate, not the watcher. Left for the steward. |
 | 3 Requester (FAIL) | NARROWED as part of H2/H3: README D6 rule says the signer-role attribution identifies the KMS caller, not who submitted the work, and the contract (b) says the poller can write `used` entries for Signs it caused through the KMS request queue. |
 | 4 Binding text (FAIL) | Partly: the D6 wording now matches what is reconciled, by the steward's disposition of H3 (the contract is the steward's draft). The D10/A12 part is precheck 2's, not disposed here. |
+
+## Final pass (2026-11-22, branch `watcher-final`)
+
+Against `docs/reviews/watcher/CODEX-CONFIRM.md`, under the pre-registered exit (no further review round before
+deployment). FIXED = smallest code or Terraform change, with a test that fails without it (`tests/test_final_pass.py`,
+`tests/test_infra.py`); NARROWED = `service/watcher/README.md` / `docs/V1-DETECTION-CONTRACT.md` now say what the code
+does, residual named; REMOVED = mechanism taken out. Owner's unit tests over fakes only.
+
+| Item | Disposition | One line |
+|---|---|---|
+| New HIGH: trace PUT permission (M6, M5) | FIXED | `s3:PutObjectRetention` restored to the role, on `trace/*` only (S3 requires it for a put that sets retain-until; the bucket policy requires that date); explicit retention and the policy floor kept. |
+| New HIGH: source failure finalizes a wrong D6 outcome (H1, M1) | FIXED | No D6 outcome (match, unmatched signature, unmatched Sign, `JOB_SIGNATURE_NOT_LOGGED`) is finalized in a run whose trail listing, any trail file or record, the scan or any `SIGLOG#` entry failed, or that ran out of time on the trail; such a run also withholds the heartbeat, so a failure that persists is D9's rather than a silent stop of D6. |
+| New HIGH: budget cutoff skips a delivered trail file (M2) | FIXED | Candidate keys are read in key-time order across regions (not path order), so a cutoff leaves the cursor at or before every unread file. |
+| New HIGH: finding consumed while delivery fails (M3) | FIXED | A finding that could be neither written to the outbox nor published raises before the commit (no commit, no heartbeat): the next run reads the same sources and finds it again. Outbox entries were already deleted only after SNS accepted them. Residual (source gone before the replay) stated. |
+| New MEDIUM: handler suppresses Errors for caught run failures | NARROWED | README: a caught failure counts in neither Errors nor D9 when its best-effort `WATCHER_ERROR` publish fails and adjacent runs heartbeat. |
+| H1 | CONFIRMED | No change. |
+| H2 | NARROWED + REMOVED | REMOVED the job signature as an equivalent of a `used` entry (`on_job`), so deleting the `used` entry while a duplicate row and the job remain now leaves the Sign unmatched. README/contract: CloudTrail surfaces a deleted `used` entry (with no other `used` entry of the digest), not a deleted COMPLETE row whose `used` entries remain (that suppresses D8 and the trace). |
+| H3 | NARROWED + REMOVED | With `on_job` removed, a signature counts only with a `used` `SIGLOG#` entry; README states the time rule as implemented (earliest of any non-D5 kms SIGNED entry of the digest, duplicate or unused rows included). |
+| H4 | NARROWED (+ one-line fix) | Fix: an outbox entry's fields without a rule are dropped on the way out (`Finding.from_line`), so a property name no longer reaches SNS. README names the rest: validation by shape (code-shaped secrets in a `SIGLOG#` reason, digest/UUID/id/ARN-shaped values), full trail keys in the state, the `Unavailable` code and CLI stderr token in state and reason, verifier output in pending state, import-time failures in the runtime log. |
+| M1 | NARROWED | README: the 45 min bound covers delivery plus the watcher's read; recomputation can change which Sign a non-final signature takes; a pre-coverage signature can take a Sign just after the boundary. |
+| M2 | FIXED (cutoff, above) + NARROWED | README: a failing file is retried until 24 h after its key time, so one first read after a longer outage is abandoned on its first error. |
+| M3 | FIXED (dual failure, above) + NARROWED | README/contract: a finding is lost only if it could not be queued or published and its source is gone before the replay; the run-failure `WATCHER_ERROR` is best-effort, not queued. |
+| M4 | NARROWED | README: the deadline starts after the S3 read and hashing; explorer timeouts bound each socket wait, not a whole response; a persistently unreadable object ends `NO_RECEIPT/OBJECT_UNREADABLE`, not `RECEIPT_UNCHECKED`. |
+| M5 | FIXED (permission, above) + NARROWED | README: after its wait a trace is written as it stands (a signature can show `pending`); a job signature whose digest is in `SIGLOG#` only under another signer request id is shown neither matched nor `not-logged`. |
+| M6 | FIXED (permission, above) | README names the role's `s3:PutObjectRetention` on `trace/*`. |
+| M7 | NARROWED | README/contract D9: the bound holds with timely metric ingestion; a late beat can be evaluated as 0. |
+| M8 | CONFIRMED | No change. |
+| M9 | NARROWED + REMOVED | REMOVED the per-run snapshot refresh: the snapshot is taken once, when the request is first seen terminal, so the verified receipt digest and the traced one are the same by construction. README/contract: binding fields are compared only where the record holds them (no shipped attempt, or a job without a signature digest, lets a same-content receipt of another request pass). |
+| L1 | CONFIRMED | No change. |
+| Precheck 1 (PASS), 3 (PASS) | — | No change. |
+| Precheck 2, 4 (FAIL: D10 "until A12's L_term is live") | NOT DISPOSED | The D10 row and the signed A12 gate are the steward's, not the watcher's; left open as recorded above. |
+
+Mechanism added by the previous pass and kept: the outbox (its only defect was the dual-failure path, fixed by not
+committing), snapshot traces (refresh removed), reconciliation horizons (finalization now gated on a complete read),
+`ISSUER_TIME_IN_FUTURE` (no confirmation item traced a defect to it).

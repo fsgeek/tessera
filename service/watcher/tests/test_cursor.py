@@ -123,8 +123,8 @@ def test_a_trail_file_that_fails_to_read_is_reported_and_retried(env):
             raise fakes.ClientError("SlowDown")
         return real(Bucket, Key)
     env.s3.get_object = flaky
-    env.run()                                             # isolated: the run commits and heartbeats
-    assert env.codes() == ["TRAIL_FILE_UNREADABLE"] and len(env.cw.beats) == 1
+    env.run()                                             # isolated: the run commits; D6 not final, so no heartbeat
+    assert env.codes() == ["TRAIL_FILE_UNREADABLE"] and env.cw.beats == []
     msg = json.loads(env.sns.sent[0]["Message"])
     assert msg["error_class"] == "ClientError" and msg["region"] == "us-east-1" and k not in json.dumps(msg)
     env.s3.get_object = real

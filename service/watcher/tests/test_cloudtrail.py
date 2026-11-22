@@ -90,7 +90,7 @@ def test_candidate_keys_all_regions_days_and_window():
         s3.put("trail", k, b"x")
     s3.put("trail", f"AWSLogs/{fakes.ACCOUNT}/CloudTrail-Digest/us-east-2/x.json.gz", b"x")
     got = ct.candidate_keys(s3, "trail", base, T0 - 2 * 86400, T0)
-    assert got == sorted(inside)
+    assert got == sorted(inside, key=lambda k: (ct.key_time(k), k))         # key-time order, across regions
 
 
 def test_base_prefix_with_trail_prefix():

@@ -346,9 +346,12 @@ data "aws_iam_policy_document" "watcher" {
     actions   = ["s3:ListBucket"]
     resources = [aws_s3_bucket.watcher_state.arn]
   }
+  # s3:PutObjectRetention: S3 requires it for a PUT that sets a retain-until date, which the bucket policy requires of
+  # every put (final pass: the previous pass removed it, so every trace write was refused). Under COMPLIANCE mode it
+  # can only set or extend a date, never shorten one, and the policy refuses a date before the floor.
   statement {
     sid       = "TraceWrite"
-    actions   = ["s3:GetObject", "s3:PutObject"]
+    actions   = ["s3:GetObject", "s3:PutObject", "s3:PutObjectRetention"]
     resources = ["${aws_s3_bucket.trace.arn}/trace/*"]
   }
   statement {

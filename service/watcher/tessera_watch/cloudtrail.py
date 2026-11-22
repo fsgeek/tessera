@@ -7,7 +7,8 @@ trail; every region present in the bucket is read, so the reader does not depend
 
 Which file is new: every key whose timestamp is at or after the trail cursor is read once; the set of keys read is
 part of the durable state. The cursor is the watcher's own clock minus an hour at its last commit, held back to the
-oldest file it could not read (watcher.read_trail). A file that appears in the bucket more than that hour after its
+oldest file it could not read or did not reach (watcher.read_trail; keys are read in key-time order across
+regions). A file that appears in the bucket more than that hour after its
 key timestamp, while the cursor has moved past it, is never read (stated in README)."""
 import calendar
 import datetime as dt
@@ -78,7 +79,7 @@ def candidate_keys(s3, bucket, base, since, until):
                 kt = key_time(k)
                 if kt is not None and since <= kt <= until + 3600:
                     keys.append(k)
-    return sorted(keys)
+    return sorted(keys, key=lambda k: (key_time(k), k))     # time order, so a cutoff leaves no earlier key unread
 
 
 def parse(raw):

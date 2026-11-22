@@ -11,9 +11,10 @@ GCP) is marked *(platform)* and is what the tests must confirm, not assume.
 ## Who is told
 Every alarm publishes to one SNS topic, `tessera-v1-alarms`, with an email subscription to the author (address a
 Terraform variable, not in the repository). The watcher also writes each finding to its own log and to a durable
-outbox it republishes from until SNS accepts it. Delivery is promised to the topic; the email additionally needs the
-author's confirmed subscription. The steward is not running continuously; **the author's email is the only real-time
-path**, and the contract promises nothing faster.
+outbox it republishes from until SNS accepts it; a finding that can be neither queued nor published stops the run's
+commit, so the next run finds it again if its source remains. Delivery is promised to the topic; the email
+additionally needs the author's confirmed subscription. The steward is not running continuously; **the author's email
+is the only real-time path**, and the contract promises nothing faster.
 
 ## What exists today (gaps the build must close)
 - **G1** The issuer API and poller Lambdas emit no application log lines; poller notes and `poll()` summaries are
@@ -50,8 +51,9 @@ topic), every 10 minutes. It shares no code with the issuer beyond the frozen re
 observations. No issuer role can write the watcher's buckets, and the watcher cannot write the issuer's. But `REQ#`
 and `SIGLOG#` are the issuer's own records: a principal able to write the issuer table can suppress D5 and D8 for the
 rows it deletes or alters before the watcher reads them, and can write `used` entries for Signs it caused through the
-KMS request queue. CloudTrail is the independent evidence: a deleted or never-written `SIGLOG#`/COMPLETE row still
-leaves its `kms:Sign`, which surfaces as an unmatched Sign under D6.
+KMS request queue. CloudTrail is the independent evidence: a deleted or never-written `SIGLOG#` `used` entry (with no
+other `used` entry of that digest) still leaves its `kms:Sign`, which surfaces as an unmatched Sign under D6; a deleted
+or altered COMPLETE row whose `used` entries remain does not (it suppresses D8 and the trace record).
 
 **Limitation, stated:** the watcher runs in the same AWS account as the issuer. An attacker holding that account's
 administrator can silence it; D7 makes that noisy, and D9 makes silence itself an alarm, but neither defeats a
@@ -70,8 +72,8 @@ and observed the email.
 | D5 | Signer refusals only an attacker or a fault produces | `SIGLOG#` (both slots' responses; the watcher's path); KMS signer log `refused`; GCP stdout `response`, `refuse_to_run` | any one of: `KEY_FP_MISMATCH`, `FRAME_DIGEST_MISMATCH`, `ALG_NOT_ALLOWED`, `DECLARED_TIME_OUTSIDE_EPSILON`, `BAD_REQUEST`, `TRUNCATED`, `UNRECOGNIZED_REASON`; poller dispositions `unrequested` (E-06), `malformed`, `bad-signature` (watcher, from `SIGLOG#`); KMS signer startup `KeyMismatch` (no response: the shared Lambda `Errors` alarm only); a refusal logged only by a signer, and GCP `refuse_to_run` with no response (log-based alert, not built) | 20 min |
 | D6 | A signature the issuer did not verify and use | watcher reconciliation (slot 1: CloudTrail `kms:Sign` events against the signatures the issuer verified and used, by time and count; slot 2: GCP Data Access) | any `kms:Sign`/`useToSign` no such signature accounts for; any `kms:Sign` by a principal other than the signer role, or any `AccessDenied` on the key recorded in the issuing account's trail (one made from another account is logged only there) | 1 h (CloudTrail delivery lag *(platform)*) |
 | D7 | Control-plane tampering | CloudTrail management write events via EventBridge in us-east-2; **IAM events reach EventBridge only in us-east-1, which the organization's SCP closes to this account, so IAM changes are read by the watcher from the multi-region trail (latency up to ~1 h)**; GCP Admin Activity audit log (always on *(platform)*) | any of: `PutKeyPolicy`, `CreateGrant`, `DisableKey`, `ScheduleKeyDeletion` on the v1 key; `StopLogging`, `DeleteTrail`, `UpdateTrail`, `PutEventSelectors`; IAM changes to the issuer, signer or watcher roles, `CreateAccessKey`; `UpdateFunctionCode`/`Configuration` on the issuer, signer or watcher; trail-bucket policy or lock changes; API key or usage-plan changes; SNS alarm-topic or subscription changes; GCP: KMS IAM policy, key version state, Cloud Run job update | 10 min (IAM, via the watcher: up to ~1 h) |
-| D8 | A receipt that does not verify, or is not its request's | watcher step 1 | any verdict other than `VALID_STRICT`; a receipt whose content or signatures are not its record's; a missing or unreadable receipt object | 20 min (a check that cannot be made, or one deferred behind a backlog: `RECEIPT_UNCHECKED` within 6 h) |
-| D9 | Watcher silent or dead (sustained) | heartbeat metric | no heartbeat in three consecutive 10-minute periods (`FILL` to 0; missing data = breaching) | 40 min after the last heartbeat, plus CloudWatch evaluation *(platform)* |
+| D8 | A receipt that does not verify, or is not its request's | watcher step 1 | any verdict other than `VALID_STRICT`; a receipt whose content or signatures are not its record's (compared where the record holds them); a missing or unreadable receipt object | 20 min (a check that cannot be made, or one deferred behind a backlog: `RECEIPT_UNCHECKED` within 6 h) |
+| D9 | Watcher silent or dead (sustained) | heartbeat metric | no heartbeat in three consecutive 10-minute periods (`FILL` to 0; missing data = breaching) | 40 min after the last heartbeat with metrics ingested on time, plus CloudWatch evaluation *(platform)* |
 | D10 | Service fault | Lambda `Errors` (API, poller, KMS signer); requests non-terminal past their bound; AWS and GCP budgets | any Lambda error; any request open > 24 h (until A12's L_term is live); spend above 50% of the monthly budget | 1 h |
 
 Thresholds are initial values, chosen so a test can cross them; they are tuned on the record, not silently.
