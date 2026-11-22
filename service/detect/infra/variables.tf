@@ -84,18 +84,6 @@ variable "explorers" {
   default     = ["https://blockstream.info/api", "https://mempool.space/api"]
 }
 
-variable "trace_retention_days_after_window" {
-  description = "Trace records are kept under Object Lock COMPLIANCE until the window's issuance-not-after plus this many days (contract item 0(a): 400). Cannot be shortened once written."
-  type        = number
-  default     = 400
-}
-
-variable "trace_default_retention_days" {
-  description = "The trace bucket's default COMPLIANCE retention: a floor only; every record carries its explicit date."
-  type        = number
-  default     = 400
-}
-
 variable "watcher_log_retention_days" {
   type    = number
   default = 400

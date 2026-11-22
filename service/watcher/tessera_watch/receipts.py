@@ -16,6 +16,7 @@ import re
 import subprocess
 import sys
 import tempfile
+import time
 import urllib.request
 from pathlib import Path
 
@@ -23,7 +24,7 @@ import tessera_verify
 from cryptography.hazmat.primitives import hashes, serialization
 from cryptography.hazmat.primitives.asymmetric import ec
 from cryptography.hazmat.primitives.asymmetric.utils import decode_dss_signature
-from tessera_verify.codec import jcs
+from tessera_verify.codec import jcs, read_anchor
 from tessera_verify.release_auth import TEST_FORMAT, jcs_ascii
 
 ISSUER_DOMAIN = "wamason.com"                 # the window's issuer domain (V1 contract); the trust object's field
@@ -32,6 +33,11 @@ CATALOG_SHA256 = "aaf4306fed070119022c8486219f5160dc869edaa929f323d962fbb679e27f
 PASS = "VALID_STRICT"
 CODE_RE = re.compile(r"[A-Z][A-Z0-9_]{0,63}")
 UA = "tessera-watcher"
+VERIFY_CAP_S = 300
+
+
+MAX_HEIGHTS = 32                              # a V1 bundle carries a dozen; more is not the issuer's (review M4)
+HTTP_TIMEOUT_S = 20
 
 
 class Unavailable(Exception):
@@ -40,6 +46,30 @@ class Unavailable(Exception):
     def __init__(self, code):
         super().__init__(code)
         self.code = code
+
+
+class Uncheckable(Exception):
+    """The bundle cannot be checked within the watcher's bounds (too many headers to pin): reported at once as D8
+    RECEIPT_UNCHECKED, not retried."""
+
+    def __init__(self, code):
+        super().__init__(code)
+        self.code = code
+
+
+class Deadline:
+    """A total budget for one check (review M4): every explorer request and the verifier process get what is left."""
+
+    def __init__(self, seconds, clock=time.monotonic):
+        self.clock, self.end = clock, (None if seconds is None else clock() + seconds)
+
+    def left(self, cap):
+        if self.end is None:
+            return cap
+        left = self.end - self.clock()
+        if left <= 1:
+            raise Unavailable("CHECK_DEADLINE")
+        return min(cap, left)
 
 
 def load_catalog(path):
@@ -62,33 +92,52 @@ def pin_of(header):
 
 
 def bundle_heights(bundle):
-    """Heights of the bundle's Bitcoin headers, or [] if the bundle does not parse (the verifier then judges it)."""
+    """Heights of the bundle's Bitcoin headers, or [] if the bundle does not parse (the verifier then judges it). A
+    height must be a decimal string or an integer in [0, 10**7); anything else (a float, an infinity) is a bundle the
+    verifier judges, never an exception here (review M4)."""
     try:
         layers = json.loads(bundle)["layers"]
-        return sorted({int(h) for layer in layers for h in layer["headers"]})
-    except (ValueError, KeyError, TypeError, AttributeError):
+        out = set()
+        for layer in layers:
+            for h in layer["headers"]:
+                if isinstance(h, bool) or not isinstance(h, (str, int)):
+                    return []
+                if isinstance(h, str) and not re.fullmatch(r"[0-9]{1,7}", h):
+                    return []
+                n = int(h)
+                if not 0 <= n < 10 ** 7:
+                    return []
+                out.add(n)
+        return sorted(out)
+    except (ValueError, KeyError, TypeError, AttributeError, OverflowError, RecursionError):
         return []
 
 
-def http_get(url, timeout=20):
+def http_get(url, timeout=HTTP_TIMEOUT_S):
     req = urllib.request.Request(url, headers={"User-Agent": UA})
     with urllib.request.urlopen(req, timeout=timeout) as r:      # noqa: S310  fixed https explorer bases
         return r.read(1 << 16).decode("ascii").strip()
 
 
-def explorer_headers(heights, explorers, get=http_get):
-    """{height: 80-byte header}, each fetched from every explorer; all must agree (rp_verify.py's rule)."""
+def explorer_headers(heights, explorers, get=http_get, deadline=None):
+    """{height: 80-byte header}, each fetched from every explorer; all must agree (rp_verify.py's rule). Every request
+    is bounded by what is left of the check's deadline."""
     if len(explorers) < 2:
         raise Unavailable("EXPLORERS_TOO_FEW")
+    if len(heights) > MAX_HEIGHTS:
+        raise Uncheckable("HEIGHTS_OVER_CAP")
+    deadline = deadline or Deadline(None)
     out = {}
     for h in heights:
         got = []
         for api in explorers:
             try:
-                bh = get(f"{api}/block-height/{int(h)}")
+                bh = _get(get, f"{api}/block-height/{int(h)}", deadline)
                 if not re.fullmatch(r"[0-9a-f]{64}", bh):
                     raise ValueError("hash")
-                hdr = bytes.fromhex(get(f"{api}/block/{bh}/header"))
+                hdr = bytes.fromhex(_get(get, f"{api}/block/{bh}/header", deadline))
+            except Unavailable:
+                raise
             except Exception:  # noqa: BLE001  any failure of one explorer: the check is not possible now
                 raise Unavailable("EXPLORER_UNAVAILABLE") from None
             if len(hdr) != 80 or pin_of(hdr) != bh:
@@ -98,6 +147,11 @@ def explorer_headers(heights, explorers, get=http_get):
             raise Unavailable("EXPLORERS_DISAGREE")
         out[h] = got[0]
     return out
+
+
+def _get(get, url, deadline):
+    t = deadline.left(HTTP_TIMEOUT_S)
+    return get(url) if get is not http_get else http_get(url, timeout=t)
 
 
 def trust_bytes(window, headers, as_of):
@@ -139,10 +193,12 @@ def run_cli(workdir, install_json=None, timeout=600, python=None):
     return p.returncode, p.stdout, p.stderr
 
 
-def verify(bundle, window, catalog, as_of, explorers, get=http_get, cli=run_cli, tmp=None):
-    """-> {"verdict", "reason", "heights"}; raises Unavailable if no verdict could be obtained."""
+def verify(bundle, window, catalog, as_of, explorers, get=http_get, cli=run_cli, tmp=None, budget_s=None):
+    """-> {"verdict", "reason", "heights", "T", "binding"}; raises Unavailable if no verdict could be obtained within
+    budget_s (explorers and the verifier process together), Uncheckable if the bundle exceeds the watcher's bounds."""
+    deadline = Deadline(budget_s)
     heights = bundle_heights(bundle)
-    headers = explorer_headers(heights, explorers, get)
+    headers = explorer_headers(heights, explorers, get, deadline)
     trust = trust_bytes(window, headers, as_of)
     rel, key = test_release(trust, catalog)
     with tempfile.TemporaryDirectory(dir=tmp) as d:
@@ -150,7 +206,7 @@ def verify(bundle, window, catalog, as_of, explorers, get=http_get, cli=run_cli,
                            ("receipt.json", bundle)):
             (Path(d) / name).write_bytes(data)
         try:
-            code, out, err = cli(d)
+            code, out, err = cli(d, timeout=deadline.left(VERIFY_CAP_S))
         except subprocess.TimeoutExpired:
             raise Unavailable("VERIFIER_TIMEOUT") from None
     if code != 0:
@@ -161,5 +217,29 @@ def verify(bundle, window, catalog, as_of, explorers, get=http_get, cli=run_cli,
         verdict, reason = stable["verdict"], stable["reason"]
     except (ValueError, KeyError, TypeError):
         raise Unavailable("VERIFIER_OUTPUT") from None
-    bounded = lambda v: v if isinstance(v, str) and CODE_RE.fullmatch(v.replace("/", "_")) else "UNPARSEABLE"  # noqa: E731
-    return {"verdict": bounded(verdict), "reason": bounded(reason), "heights": heights, "T": stable.get("T")}
+    bounded = lambda v: v.replace("/", "_") if isinstance(v, str) and CODE_RE.fullmatch(v.replace("/", "_")) \
+        else "UNPARSEABLE"  # noqa: E731
+    return {"verdict": bounded(verdict), "reason": bounded(reason), "heights": heights, "T": stable.get("T"),
+            "binding": binding(bundle)}
+
+
+def binding(bundle):
+    """What the receipt commits to that its request record also holds (review M9): the content's SHA-256 and length
+    (the attest statement's `content`), the signatures' SHA-256 (statement signatures from A_sig, possession
+    signatures from the layer), A_sig's SHA-256 (the attempt's receipt_id) and the declared issue time. Read with the
+    frozen verifier's codec; None if the bundle does not decode (then nothing can be bound to the request)."""
+    try:
+        layer = json.loads(bundle)["layers"][-1]
+        a_sig = base64.b64decode(layer["a_sig"], validate=True)
+        (_, o_kms, s_kms, _), (_, o_gpg, s_gpg, _) = read_anchor(a_sig)
+        content = base64.b64decode(o_kms["common"]["content"], validate=True)
+        if o_gpg["common"]["content"] != o_kms["common"]["content"]:
+            return None
+        sha = lambda b: hashlib.sha256(b).hexdigest()  # noqa: E731
+        return {"content_sha256": sha(content), "content_len": len(content), "receipt_id": sha(a_sig),
+                "declared_issue_time": o_kms["common"]["declared_issue_time"],
+                "sigs": {"s_kms": sha(s_kms), "s_gpg": sha(s_gpg),
+                         "p_kms": sha(base64.b64decode(layer["possession"]["kms"], validate=True)),
+                         "p_gpg": sha(base64.b64decode(layer["possession"]["gpg"], validate=True))}}
+    except Exception:  # noqa: BLE001  any decoding failure: unbound
+        return None

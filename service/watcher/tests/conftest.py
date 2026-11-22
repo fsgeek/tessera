@@ -29,13 +29,15 @@ class Env:
     def __init__(self, verify=None):
         self.s3, self.ddb, self.sns, self.cw = fakes.FakeS3(), fakes.FakeDynamo(), fakes.FakeSNS(), fakes.FakeCW()
         self.clock = Clock()
+        self.selfcheck = lambda: None
         self.verify = verify or (lambda bundle, *a, **k: {"verdict": "VALID_STRICT", "reason": "OK",
-                                                          "heights": [1, 2], "T": "2026-11-16T14:35:57Z"})
+                                                          "heights": [1, 2], "T": "2026-11-16T14:35:57Z",
+                                                          "binding": self.binding_of(bundle)})
         self.cfg = Config(account=fakes.ACCOUNT, kms_key_arn=fakes.KEY_ARN, kms_aliases=(fakes.ALIAS,),
                           signer_role_arn=fakes.SIGNER_ROLE, explorers=("https://a.example", "https://b.example"),
                           client_key_ids={"smoke-test": "abc123key"}, window=receipts.load_window(WINDOW),
                           catalog=receipts.load_catalog(CATALOG), retain_until="2028-03-07T00:00:00Z",
-                          watcher_version="test")
+                          watcher_version="7" * 64)
         self.until = "2028-03-07T00:00:00Z"
 
     def make(self, remaining=lambda: 1e9):
@@ -43,7 +45,21 @@ class Env:
                        stores.TrailBucket(self.s3, "trail"), stores.StateObject(self.s3, "state", "state/watcher.json"),
                        stores.TraceBucket(self.s3, "trace", self.until), stores.Topic(self.sns, "arn:topic"),
                        stores.Heartbeat(self.cw), clock=self.clock, verify=self.verify, remaining=remaining,
-                       out=self.out)
+                       out=self.out, outbox=stores.Outbox(self.s3, "state"), selfcheck=self.selfcheck)
+
+    def binding_of(self, bundle):
+        """A stand-in for receipts.binding: the commitments of the record whose receipt this is (a receipt that is its
+        request's). Tests of a misattributed receipt replace verify."""
+        digest = fakes.sha(bundle)
+        for it in self.ddb.items.values():
+            rec = json.loads(it["doc"]["S"])
+            if isinstance(rec, dict) and rec.get("receipt_sha256") == digest:
+                shipped = [a for a in rec.get("attempts") or [] if a.get("state") == "shipped"]
+                a = shipped[0] if shipped else {}
+                return {"content_sha256": rec.get("content_sha256"), "content_len": rec.get("content_len"),
+                        "receipt_id": a.get("receipt_id"), "declared_issue_time": a.get("declared_issue_time"),
+                        "sigs": {n: j.get("sig_sha256") for n, j in (a.get("jobs") or {}).items()}}
+        return None
 
     out = None
 
@@ -54,6 +70,9 @@ class Env:
         key = fakes.trail_key(t, region)
         self.s3.put("trail", key, fakes.trail_file(records))
         return key
+
+    def outbox(self):
+        return [k for (b, k) in self.s3.objects if b == "state" and k.startswith("findings/")]
 
     def codes(self, sent=None):
         return [json.loads(m["Message"])["code"] for m in (self.sns.sent if sent is None else sent)]

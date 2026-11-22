@@ -4,11 +4,14 @@
 # the alarm topic. It has no write access to any issuer store. D5, D6 (slot 1), D7 (IAM), D8, D9, trace records 0(a).
 
 locals {
-  # Trace records are kept until the window's issuance-not-after + trace_retention_days_after_window (contract: 400).
-  window             = jsondecode(file("${path.module}/../../issuer/config/window.json"))
-  trace_retain_until = timeadd(local.window.not_after, "${var.trace_retention_days_after_window * 24}h")
-  trail_objects      = "${var.trail_prefix == "" ? "" : "${trimsuffix(var.trail_prefix, "/")}/"}AWSLogs/${local.account}/CloudTrail/"
-  watcher_name       = "${var.name}-watcher"
+  # Trace records are kept until the window's issuance-not-after + 400 days (contract item 0(a)). Both numbers are
+  # fixed here and in the watcher's code (lambda_app.TRACE_RETENTION_DAYS, which reads the window.json packaged in its
+  # zip), not deploy inputs, so a later deploy cannot shorten either the writer's date or the policy's floor (M6).
+  trace_retention_days = 400
+  window               = jsondecode(file("${path.module}/../../issuer/config/window.json"))
+  trace_retain_until   = timeadd(local.window.not_after, "${local.trace_retention_days * 24}h")
+  trail_objects        = "${var.trail_prefix == "" ? "" : "${trimsuffix(var.trail_prefix, "/")}/"}AWSLogs/${local.account}/CloudTrail/"
+  watcher_name         = "${var.name}-watcher"
 }
 
 data "aws_kms_key" "v1" {
@@ -37,13 +40,15 @@ resource "aws_s3_bucket_versioning" "trace" {
 }
 
 # The watcher writes every record with an explicit COMPLIANCE retain-until date (local.trace_retain_until); the bucket
-# policy refuses any put without it. The default retention is a floor for nothing else.
+# policy refuses any put without it. The default retention (COMPLIANCE, fixed) is a floor for anything else. Once the
+# bucket policy is in place it refuses PutBucketObjectLockConfiguration to every principal, so this cannot be
+# changed by a later apply without first rewriting the policy (the stated operator residual).
 resource "aws_s3_bucket_object_lock_configuration" "trace" {
   bucket = aws_s3_bucket.trace.id
   rule {
     default_retention {
       mode = "COMPLIANCE"
-      days = var.trace_default_retention_days
+      days = local.trace_retention_days
     }
   }
   depends_on = [aws_s3_bucket_versioning.trace]
@@ -105,6 +110,36 @@ data "aws_iam_policy_document" "trace_bucket" {
     }
   }
   statement {
+    sid       = "DenyPutWithoutLockMode"
+    effect    = "Deny"
+    actions   = ["s3:PutObject"]
+    resources = ["${aws_s3_bucket.trace.arn}/*"]
+    principals {
+      type        = "*"
+      identifiers = ["*"]
+    }
+    condition {
+      test     = "Null"
+      variable = "s3:object-lock-mode"
+      values   = ["true"]
+    }
+  }
+  statement {
+    sid       = "DenyPutWithoutRetainUntil"
+    effect    = "Deny"
+    actions   = ["s3:PutObject"]
+    resources = ["${aws_s3_bucket.trace.arn}/*"]
+    principals {
+      type        = "*"
+      identifiers = ["*"]
+    }
+    condition {
+      test     = "Null"
+      variable = "s3:object-lock-retain-until-date"
+      values   = ["true"]
+    }
+  }
+  statement {
     sid       = "DenyPutRetainedTooShort"
     effect    = "Deny"
     actions   = ["s3:PutObject"]
@@ -119,12 +154,41 @@ data "aws_iam_policy_document" "trace_bucket" {
       values   = [local.trace_retain_until]
     }
   }
+  # Only the watcher writes trace records.
+  statement {
+    sid       = "DenyPutByOthers"
+    effect    = "Deny"
+    actions   = ["s3:PutObject"]
+    resources = ["${aws_s3_bucket.trace.arn}/*"]
+    principals {
+      type        = "*"
+      identifiers = ["*"]
+    }
+    condition {
+      test     = "ArnNotEquals"
+      variable = "aws:PrincipalArn"
+      values   = [aws_iam_role.watcher.arn]
+    }
+  }
+  # Nobody (the watcher included) places a delete marker over a record, deletes a version, or changes the lock
+  # configuration: the current key stays the first record written (M6). An account administrator can still rewrite
+  # this policy first (PutBucketPolicy, a D7 event); the locked versions survive even that.
+  statement {
+    sid       = "DenyDeleteAndLockChanges"
+    effect    = "Deny"
+    actions   = ["s3:DeleteObject", "s3:DeleteObjectVersion", "s3:PutBucketObjectLockConfiguration"]
+    resources = [aws_s3_bucket.trace.arn, "${aws_s3_bucket.trace.arn}/*"]
+    principals {
+      type        = "*"
+      identifiers = ["*"]
+    }
+  }
 }
 
 resource "aws_s3_bucket_policy" "trace" {
   bucket     = aws_s3_bucket.trace.id
   policy     = data.aws_iam_policy_document.trace_bucket.json
-  depends_on = [aws_s3_bucket_public_access_block.trace]
+  depends_on = [aws_s3_bucket_public_access_block.trace, aws_s3_bucket_object_lock_configuration.trace]
 }
 
 # ------------------------------------------------------------------------------- state bucket (the cursor)
@@ -192,6 +256,22 @@ data "aws_iam_policy_document" "state_bucket" {
       values   = ["false"]
     }
   }
+  # Only the watcher writes or deletes its cursor and its finding outbox.
+  statement {
+    sid       = "DenyWritesByOthers"
+    effect    = "Deny"
+    actions   = ["s3:PutObject", "s3:DeleteObject", "s3:DeleteObjectVersion"]
+    resources = ["${aws_s3_bucket.watcher_state.arn}/*"]
+    principals {
+      type        = "*"
+      identifiers = ["*"]
+    }
+    condition {
+      test     = "ArnNotEquals"
+      variable = "aws:PrincipalArn"
+      values   = [aws_iam_role.watcher.arn]
+    }
+  }
 }
 
 resource "aws_s3_bucket_policy" "watcher_state" {
@@ -234,6 +314,13 @@ data "aws_iam_policy_document" "watcher" {
     actions   = ["s3:GetObject"]
     resources = ["arn:aws:s3:::${var.results_bucket}/result/*"]
   }
+  # Unconditional, so that GetObject on an absent receipt answers 404 (reported as RECEIPT_OBJECT_MISSING), not 403
+  # (review H1). It lists keys only; it reads nothing outside result/*.
+  statement {
+    sid       = "ReceiptsList"
+    actions   = ["s3:ListBucket"]
+    resources = ["arn:aws:s3:::${var.results_bucket}"]
+  }
   statement {
     sid       = "TrailList"
     actions   = ["s3:ListBucket"]
@@ -250,13 +337,18 @@ data "aws_iam_policy_document" "watcher" {
     resources = ["${aws_s3_bucket.watcher_state.arn}/state/*"]
   }
   statement {
+    sid       = "FindingsOutbox"
+    actions   = ["s3:GetObject", "s3:PutObject", "s3:DeleteObject"]
+    resources = ["${aws_s3_bucket.watcher_state.arn}/findings/*"]
+  }
+  statement {
     sid       = "StateList"
     actions   = ["s3:ListBucket"]
     resources = [aws_s3_bucket.watcher_state.arn]
   }
   statement {
     sid       = "TraceWrite"
-    actions   = ["s3:GetObject", "s3:PutObject", "s3:PutObjectRetention"]
+    actions   = ["s3:GetObject", "s3:PutObject"]
     resources = ["${aws_s3_bucket.trace.arn}/trace/*"]
   }
   statement {
@@ -321,7 +413,6 @@ resource "aws_lambda_function" "watcher" {
       STATE_BUCKET                = aws_s3_bucket.watcher_state.bucket
       STATE_KEY                   = "state/watcher.json"
       TRACE_BUCKET                = aws_s3_bucket.trace.bucket
-      TRACE_RETAIN_UNTIL          = local.trace_retain_until
       ALARM_TOPIC_ARN             = aws_sns_topic.alarms.arn
       EXPLORERS                   = jsonencode(var.explorers)
       CLIENT_KEY_IDS              = jsonencode(var.client_api_key_ids)
@@ -359,15 +450,16 @@ resource "aws_lambda_permission" "watcher" {
 }
 
 # ---------------------------------------------------------------------------------------------- D9: heartbeat
-# One datapoint per committed run (every 10 minutes). Three empty 10-minute periods, i.e. 30 minutes without a
-# committed run, is an alarm; missing data is breaching, so a dead, failing or deleted watcher alarms by silence.
+# One datapoint per committed, sound run (every 10 minutes; a run lasts at most its 600 s timeout). FILL(hb, 0) turns
+# every 10-minute period without a heartbeat into an explicit 0, so the alarm does not depend on CloudWatch's
+# missing-data look-back (review M7): it fires when three consecutive whole periods hold no heartbeat. With the last
+# heartbeat anywhere in a period P0 and none in P1..P3, the alarm is evaluated at the end of P3: 30 to 40 minutes
+# after that heartbeat, plus CloudWatch's evaluation delay (platform, typically a minute or two). It measures
+# sustained silence: intermittent failures between sound runs do not fire it (Lambda errors and timeouts are the
+# Errors alarm's, main.tf). treat_missing_data = breaching covers a metric that has never reported.
 resource "aws_cloudwatch_metric_alarm" "watcher_heartbeat" {
   alarm_name          = "${local.watcher_name}-heartbeat"
-  alarm_description   = "D9: the watcher has not completed a run for 30 minutes"
-  namespace           = "Tessera/Watcher"
-  metric_name         = "Heartbeat"
-  statistic           = "Sum"
-  period              = 600
+  alarm_description   = "D9: no sound watcher run in three consecutive 10-minute periods (30-40 min of silence)"
   evaluation_periods  = 3
   datapoints_to_alarm = 3
   threshold           = 1
@@ -375,4 +467,20 @@ resource "aws_cloudwatch_metric_alarm" "watcher_heartbeat" {
   treat_missing_data  = "breaching"
   alarm_actions       = [aws_sns_topic.alarms.arn]
   ok_actions          = [aws_sns_topic.alarms.arn]
+
+  metric_query {
+    id          = "beats"
+    expression  = "FILL(hb, 0)"
+    label       = "Heartbeats per 10 minutes (missing as 0)"
+    return_data = true
+  }
+  metric_query {
+    id = "hb"
+    metric {
+      namespace   = "Tessera/Watcher"
+      metric_name = "Heartbeat"
+      period      = 600
+      stat        = "Sum"
+    }
+  }
 }
