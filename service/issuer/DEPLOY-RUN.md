@@ -158,3 +158,17 @@ Usage plan quota 100/day per key added; key `yanantin-pilot` (id `l5hkmlu1yd`) c
 0 destroyed; state backed up). The value was written only to `~/.local/share/tessera-handoff/tessera-pilot` (0600,
 never printed) for the author to carry to Yanantin. Gate exception recorded in DEPLOY.md.
 - 2026-11-17: the author carried the key to Yanantin; the NUC handoff copy was deleted (shred).
+
+## 2026-11-22: detection gap G1 deployed (steward)
+Structured application logs (`service/issuer/LOGGING.md`; reviews `docs/reviews/g1-logging/`: review, two
+confirmations, final dispositions `f85319d` under the pre-registered exit). Code only; no configuration change.
+- Suites on main before packaging: issuer 255, signer-kms 48, signer-gcp 121, verifier 135 (+77 subtests).
+- `dist/issuer.zip` (from `f85319d`, `--install-json install-facts.json`) SHA-256
+  `3a5520a9d713604dcdf93f00ee443193447a3041e77ec76b7c87b058afff282f`; a second build gave the same digest.
+- Plan: 0 to add, 2 to change (`aws_lambda_function.api`, `.poller`: `source_code_hash` only), 0 to destroy. Vars as
+  before: `client_names=["smoke-test","yanantin-pilot"]`, `signer_principals={gpg=…:role/tessera-v1-signer-gpg-federated}`,
+  runtime pinned `…runtime:e75e9c9c…6aeed`. Applied 2026-11-22T06:03Z under the author's `aws login` session.
+  State backed up before and after (`~/.local/share/tessera-tfstate/`).
+- **Step 10:** both functions' `CodeSha256` = `OlUgqdcTYE3N+T8A7kQxk0R6MEHnfsdrfIewWK//KC8=` = hex `3a5520a9…`;
+  `formal/p3-verification-profile` with `TESSERA_LAMBDA_ZIP`/`TESSERA_LAMBDA_CODESHA256`: 1202 passed. Runtime
+  version unchanged.
