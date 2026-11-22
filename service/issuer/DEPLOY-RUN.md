@@ -172,3 +172,21 @@ confirmations, final dispositions `f85319d` under the pre-registered exit). Code
 - **Step 10:** both functions' `CodeSha256` = `OlUgqdcTYE3N+T8A7kQxk0R6MEHnfsdrfIewWK//KC8=` = hex `3a5520a9…`;
   `formal/p3-verification-profile` with `TESSERA_LAMBDA_ZIP`/`TESSERA_LAMBDA_CODESHA256`: 1202 passed. Runtime
   version unchanged.
+
+## 2026-11-22: content-addressed receipts deployed (steward)
+Repairs the deployed fixed-key defect (A12-R2-03; A12 change 5). Reviews `docs/reviews/receipt-ca/` (review: one HIGH,
+the legacy fallback unreachable under IAM; scoped confirmation; dispositions `4154be5`, `7330ae2`).
+- Suites on main: issuer 263, signer-kms 48, signer-gcp 121, verifier 135 (+77 subtests).
+- **Migration, pass 1** (before the deploy; `tools/migrate_receipts.py --apply`, create-only): 7 fixed-key receipts, all
+  COMPLETE with matching bytes, all copied to their digest names. None had been overwritten.
+- `dist/issuer.zip` SHA-256 `f6a5cf1de21a8b273a93f5b0d23b8daff1647399f7ff8a64264f6c0e9b6cf82d` (two builds equal).
+  Plan: 0 add, 3 change (API role policy: `ListForHead` = unconditional `s3:ListBucket` on the results bucket; both
+  functions' code), 0 destroy. Applied 2026-11-22T06:37Z. State backed up before and after.
+- `iam simulate-principal-policy` (API role, `aws:RequestedRegion=us-east-2`): `s3:ListBucket` and `s3:GetObject`
+  allowed. Without the region context the SCP region lock shows `explicitDeny`, as expected.
+- **Step 10:** both `CodeSha256` = `9qXPHeIa…` = hex `f6a5cf1d…`; `formal/p3-verification-profile`: 1202 passed.
+- **Live check:** the deployed API, invoked as `smoke-test` for the first receipt (request key `ca33cc04-…`), answered
+  303 to `result/<rid>/<digest>.json` (no fixed key); the 4,876,783 fetched bytes hash to `Tessera-Receipt-SHA256`.
+- **Migration, pass 2** (06:42:35Z, after the poller's 300 s timeout had passed since the apply): the same 7, all
+  `present` with bytes hashing to their records; no fixed-key receipt was written by old code in between. Exit 0.
+  The fixed-key copies remain until each request's normal cleanup; no fixed-key name is served.
