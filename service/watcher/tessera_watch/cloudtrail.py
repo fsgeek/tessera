@@ -5,8 +5,10 @@ Layout (an account trail, not an organization trail): <prefix>AWSLogs/<account>/
 under CloudTrail-Digest/ and are not read. Global IAM events are delivered in the us-east-1 files of a multi-region
 trail; every region present in the bucket is read, so the reader does not depend on where an event lands.
 
-Which file is new: every key whose timestamp lies within the look-back is read once; the set of keys read is part of
-the durable state. A file delivered later than the look-back after its timestamp is never read (stated in README)."""
+Which file is new: every key whose timestamp is at or after the trail cursor is read once; the set of keys read is
+part of the durable state. The cursor is the watcher's own clock minus an hour at its last commit, held back to the
+oldest file it could not read (watcher.read_trail). A file that appears in the bucket more than that hour after its
+key timestamp, while the cursor has moved past it, is never read (stated in README)."""
 import calendar
 import datetime as dt
 import gzip
@@ -14,6 +16,7 @@ import json
 import re
 
 KEY_TS = re.compile(r"_CloudTrail_[a-z0-9-]+_(\d{8}T\d{4}Z)_[A-Za-z0-9]+\.json\.gz\Z")
+KEY_PARTS = re.compile(r"_CloudTrail_([a-z]{2}(?:-[a-z]+)+-[0-9])_(\d{8}T\d{4}Z)_[A-Za-z0-9]+\.json\.gz\Z")
 ACCESS_DENIED = {"AccessDenied", "AccessDeniedException"}
 
 
@@ -21,13 +24,22 @@ def key_time(key):
     m = KEY_TS.search(key)
     if not m:
         return None
-    return calendar.timegm(dt.datetime.strptime(m.group(1), "%Y%m%dT%H%MZ").timetuple())
+    try:
+        return calendar.timegm(dt.datetime.strptime(m.group(1), "%Y%m%dT%H%MZ").timetuple())
+    except ValueError:
+        return None
+
+
+def safe_parts(key):
+    """What a finding may say about a trail file: its region and key timestamp, from the fixed key pattern only."""
+    m = KEY_PARTS.search(key) if isinstance(key, str) else None
+    return {"region": m.group(1), "file_time": m.group(2)} if m else {"region": None, "file_time": None}
 
 
 def event_time(rec):
     try:
         return calendar.timegm(dt.datetime.strptime(rec["eventTime"], "%Y-%m-%dT%H:%M:%SZ").timetuple())
-    except (KeyError, TypeError, ValueError):
+    except (KeyError, TypeError, ValueError, OverflowError):
         return None
 
 

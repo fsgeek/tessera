@@ -6,6 +6,9 @@ Issuer item shapes read (service/issuer/tessera_issue/aws.py docstring): REQ#<ri
 JSON); SIGLOG#<uuid> and SIGLOG#USED#<signer request id>#<signature sha256> with "doc" (one signer response as
 logged). Receipts: result/<rid>/<receipt sha256>.json in the results bucket."""
 import json
+import re
+
+HEX64 = re.compile(r"[0-9a-f]{64}")
 
 
 def _code(exc):
@@ -45,12 +48,16 @@ class IssuerTable:
 
 
 class Results:
-    """GetObject on result/* only."""
+    """GetObject on result/* only. The role also holds s3:ListBucket on the bucket (review H1), so an absent object
+    answers 404 (None here), not 403; any other failure raises to the caller, which reports it per receipt. The key is
+    built only from a validated 64-hex rid and digest, so an SDK error can never carry an issuer-supplied path."""
 
     def __init__(self, client, bucket):
         self.c, self.b = client, bucket
 
     def receipt(self, rid, digest):
+        if not (isinstance(rid, str) and HEX64.fullmatch(rid) and isinstance(digest, str) and HEX64.fullmatch(digest)):
+            raise ValueError("receipt key")
         try:
             return self.c.get_object(Bucket=self.b, Key=f"result/{rid}/{digest}.json")["Body"].read()
         except Exception as e:  # noqa: BLE001
@@ -86,13 +93,57 @@ class StateObject:
     def save(self, state, etag):
         body = json.dumps(state, sort_keys=True, separators=(",", ":")).encode()
         kw = {"IfMatch": etag} if etag else {"IfNoneMatch": "*"}
-        self.c.put_object(Bucket=self.b, Key=self.k, Body=body, ContentType="application/json",
-                          ServerSideEncryption="AES256", **kw)
+        r = self.c.put_object(Bucket=self.b, Key=self.k, Body=body, ContentType="application/json",
+                              ServerSideEncryption="AES256", **kw)
+        return (r or {}).get("ETag")
+
+
+class Outbox:
+    """Findings awaiting publication (review M3): findings/<id>.json in the watcher's state bucket. A finding is written
+    here when it is found, before any trace write and before publication; it is deleted only after SNS accepted it, so
+    one that fails to publish (or whose run dies) is published by a later run. The id is a digest of the finding, so a
+    replayed run that finds the same thing again writes nothing new while it is still waiting."""
+
+    PREFIX = "findings/"
+
+    def __init__(self, client, bucket):
+        self.c, self.b = client, bucket
+
+    def put(self, fid, line):
+        body = json.dumps(line, sort_keys=True, separators=(",", ":")).encode()
+        try:
+            self.c.put_object(Bucket=self.b, Key=f"{self.PREFIX}{fid}.json", Body=body,
+                              ContentType="application/json", ServerSideEncryption="AES256", IfNoneMatch="*")
+        except Exception as e:  # noqa: BLE001
+            if _code(e) in ("PreconditionFailed", "ConditionalRequestConflict"):
+                return                                  # already waiting
+            raise
+
+    def keys(self):
+        out, token = [], None
+        while True:
+            kw = {"Bucket": self.b, "Prefix": self.PREFIX}
+            if token:
+                kw["ContinuationToken"] = token
+            r = self.c.list_objects_v2(**kw)
+            out += [o["Key"] for o in r.get("Contents", [])]
+            token = r.get("NextContinuationToken")
+            if not token:
+                return sorted(out)
+
+    def get(self, key):
+        return json.loads(self.c.get_object(Bucket=self.b, Key=key)["Body"].read())
+
+    def delete(self, key):
+        self.c.delete_object(Bucket=self.b, Key=key)
 
 
 class TraceBucket:
-    """trace/<rid>.json under Object Lock COMPLIANCE until retain_until. Written once: an existing record is kept, never
-    replaced (a re-run after a crash finds it and writes nothing)."""
+    """trace/<rid>.json under Object Lock COMPLIANCE until retain_until (computed in code from the packaged window record,
+    lambda_app.retain_until). Written once under the current key: an existing record is kept, never replaced (a re-run
+    after a crash finds it and writes nothing). The bucket policy refuses delete markers and version deletes to every
+    principal, so the current key stays the first record written (an account administrator who rewrites the bucket
+    policy is the stated residual)."""
 
     def __init__(self, client, bucket, retain_until):
         self.c, self.b, self.until = client, bucket, retain_until
@@ -107,6 +158,8 @@ class TraceBucket:
             raise
 
     def put(self, rid, record):
+        if not (isinstance(rid, str) and HEX64.fullmatch(rid)):
+            raise ValueError("trace key")
         if self.exists(rid):
             return False
         body = json.dumps(record, sort_keys=True, separators=(",", ":")).encode()

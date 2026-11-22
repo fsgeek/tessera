@@ -59,6 +59,10 @@ class FakeS3:
             raise ClientError("NoSuchKey")
         return {"Body": Body(o["body"]), "ETag": o["etag"]}
 
+    def delete_object(self, Bucket, Key):
+        self.objects.pop((Bucket, Key), None)
+        self.deletes = getattr(self, "deletes", []) + [(Bucket, Key)]
+
     def head_object(self, Bucket, Key):
         if (Bucket, Key) not in self.objects:
             raise ClientError("404")

@@ -10,8 +10,10 @@ GCP) is marked *(platform)* and is what the tests must confirm, not assume.
 
 ## Who is told
 Every alarm publishes to one SNS topic, `tessera-v1-alarms`, with an email subscription to the author (address a
-Terraform variable, not in the repository). The watcher also writes each finding to its own log. The steward is not
-running continuously; **the author's email is the only real-time path**, and the contract promises nothing faster.
+Terraform variable, not in the repository). The watcher also writes each finding to its own log and to a durable
+outbox it republishes from until SNS accepts it. Delivery is promised to the topic; the email additionally needs the
+author's confirmed subscription. The steward is not running continuously; **the author's email is the only real-time
+path**, and the contract promises nothing faster.
 
 ## What exists today (gaps the build must close)
 - **G1** The issuer API and poller Lambdas emit no application log lines; poller notes and `poll()` summaries are
@@ -33,15 +35,23 @@ CloudTrail `kms:Sign` event ids (by the reconciliation rule below), anchor heigh
 verdict. Stored in an S3 bucket with Object Lock COMPLIANCE until the window's not-after + 400 days. This is the
 accounting ledger: "who requested this receipt, and was it ours?" remains answerable after 30 days.
 
-**(b) Independent watcher**: a separate Lambda, own read-only role (read `REQ#`/`SIGLOG#`, results bucket, trail
-bucket; write only its trace bucket, its log and the alarm topic), every 10 minutes. It shares no code with the
-issuer beyond the frozen relying-party verifier. Each run it:
-1. re-verifies every newly completed receipt as a relying party would (the smoke test's `rp_verify.py`);
-2. reconciles signatures: for slot 1, every CloudTrail `kms:Sign` on `alias/tessera-v1-kms` against signed jobs,
-   matched one-to-one in time order within the delivery lag; for slot 2, the same against GCP `useToSign` records
-   once G4 is closed;
+**(b) Independent watcher**: a separate Lambda, own read-only role on the issuer's stores (read `REQ#`/`SIGLOG#`,
+results bucket, trail bucket; write only its own state and trace buckets, its log, the heartbeat metric and the alarm
+topic), every 10 minutes. It shares no code with the issuer beyond the frozen relying-party verifier. Each run it:
+1. re-verifies every newly completed receipt as a relying party would (the smoke test's `rp_verify.py`), and checks
+   that the receipt's content and signatures are its own request's;
+2. reconciles signatures: for slot 1, CloudTrail `kms:Sign` events on `alias/tessera-v1-kms` against the signatures
+   the issuer verified and used, by time and count, one-to-one in time order within the delivery lag; for slot 2, the
+   same against GCP `useToSign` records once G4 is closed;
 3. writes trace records for newly terminal requests;
 4. publishes a heartbeat metric.
+
+**What "independent" means here, stated:** resource separation, not the integrity of issuer-controlled
+observations. No issuer role can write the watcher's buckets, and the watcher cannot write the issuer's. But `REQ#`
+and `SIGLOG#` are the issuer's own records: a principal able to write the issuer table can suppress D5 and D8 for the
+rows it deletes or alters before the watcher reads them, and can write `used` entries for Signs it caused through the
+KMS request queue. CloudTrail is the independent evidence: a deleted or never-written `SIGLOG#`/COMPLETE row still
+leaves its `kms:Sign`, which surfaces as an unmatched Sign under D6.
 
 **Limitation, stated:** the watcher runs in the same AWS account as the issuer. An attacker holding that account's
 administrator can silence it; D7 makes that noisy, and D9 makes silence itself an alarm, but neither defeats a
@@ -57,11 +67,11 @@ and observed the email.
 | D2 | Missing or guessed API keys | access log, 403 `INVALID_API_KEY` / `MISSING_AUTHENTICATION_TOKEN` *(platform)* | metric filter; ≥ 50 in 5 min (the URL is public; scanners are background) | 10 min |
 | D3 | Oversized or malformed requests from a valid key | access log 400/413 with non-empty `apiKeyId`; `REQ#` REFUSED `TOO_LARGE` | ≥ 5 in 1 h from any one key | 15 min |
 | D4 | Per-key volume; unknown key | access log by `apiKeyId`; invitation record (`config/invitations.json`: who, key id, when, terms, expected volume) | any key above its invited daily volume (yanantin-pilot: 5); any 2xx from a key id not in the invitation record; any `QUOTA_EXCEEDED` | 15 min |
-| D5 | Signer refusals only an attacker or a fault produces | `SIGLOG#` (both slots' responses); KMS signer log `refused`; GCP stdout `response`, `refuse_to_run` | any one of: `KEY_FP_MISMATCH`, `FRAME_DIGEST_MISMATCH`, `ALG_NOT_ALLOWED`, `DECLARED_TIME_OUTSIDE_EPSILON`, `BAD_REQUEST`, `TRUNCATED`, `UNRECOGNIZED_REASON`; poller dispositions `unrequested` (E-06), `malformed`, `bad-signature`; KMS signer startup `KeyMismatch` (Lambda Errors); GCP `refuse_to_run` (log-based alert) | 20 min |
-| D6 | A signature no receipt accounts for | watcher reconciliation (slot 1: CloudTrail; slot 2: GCP Data Access) | any unmatched `kms:Sign`/`useToSign`; any `kms:Sign` by a principal other than the signer role, or any `AccessDenied` on the key | 1 h (CloudTrail delivery lag *(platform)*) |
-| D7 | Control-plane tampering | CloudTrail management write events via EventBridge in us-east-2; **IAM events reach EventBridge only in us-east-1, which the organization's SCP closes to this account, so IAM changes are read by the watcher from the multi-region trail (latency up to ~1 h)**; GCP Admin Activity audit log (always on *(platform)*) | any of: `PutKeyPolicy`, `CreateGrant`, `DisableKey`, `ScheduleKeyDeletion` on the v1 key; `StopLogging`, `DeleteTrail`, `UpdateTrail`, `PutEventSelectors`; IAM changes to the issuer, signer or watcher roles, `CreateAccessKey`; `UpdateFunctionCode`/`Configuration` on the issuer, signer or watcher; trail-bucket policy or lock changes; API key or usage-plan changes; SNS alarm-topic or subscription changes; GCP: KMS IAM policy, key version state, Cloud Run job update | 10 min |
-| D8 | A receipt that does not verify | watcher step 1 | any verdict other than `VALID_STRICT` | 20 min |
-| D9 | Watcher silent or dead | heartbeat metric | missing for 30 min (missing data = breaching) | 40 min |
+| D5 | Signer refusals only an attacker or a fault produces | `SIGLOG#` (both slots' responses; the watcher's path); KMS signer log `refused`; GCP stdout `response`, `refuse_to_run` | any one of: `KEY_FP_MISMATCH`, `FRAME_DIGEST_MISMATCH`, `ALG_NOT_ALLOWED`, `DECLARED_TIME_OUTSIDE_EPSILON`, `BAD_REQUEST`, `TRUNCATED`, `UNRECOGNIZED_REASON`; poller dispositions `unrequested` (E-06), `malformed`, `bad-signature` (watcher, from `SIGLOG#`); KMS signer startup `KeyMismatch` (no response: the shared Lambda `Errors` alarm only); a refusal logged only by a signer, and GCP `refuse_to_run` with no response (log-based alert, not built) | 20 min |
+| D6 | A signature the issuer did not verify and use | watcher reconciliation (slot 1: CloudTrail `kms:Sign` events against the signatures the issuer verified and used, by time and count; slot 2: GCP Data Access) | any `kms:Sign`/`useToSign` no such signature accounts for; any `kms:Sign` by a principal other than the signer role, or any `AccessDenied` on the key recorded in the issuing account's trail (one made from another account is logged only there) | 1 h (CloudTrail delivery lag *(platform)*) |
+| D7 | Control-plane tampering | CloudTrail management write events via EventBridge in us-east-2; **IAM events reach EventBridge only in us-east-1, which the organization's SCP closes to this account, so IAM changes are read by the watcher from the multi-region trail (latency up to ~1 h)**; GCP Admin Activity audit log (always on *(platform)*) | any of: `PutKeyPolicy`, `CreateGrant`, `DisableKey`, `ScheduleKeyDeletion` on the v1 key; `StopLogging`, `DeleteTrail`, `UpdateTrail`, `PutEventSelectors`; IAM changes to the issuer, signer or watcher roles, `CreateAccessKey`; `UpdateFunctionCode`/`Configuration` on the issuer, signer or watcher; trail-bucket policy or lock changes; API key or usage-plan changes; SNS alarm-topic or subscription changes; GCP: KMS IAM policy, key version state, Cloud Run job update | 10 min (IAM, via the watcher: up to ~1 h) |
+| D8 | A receipt that does not verify, or is not its request's | watcher step 1 | any verdict other than `VALID_STRICT`; a receipt whose content or signatures are not its record's; a missing or unreadable receipt object | 20 min (a check that cannot be made, or one deferred behind a backlog: `RECEIPT_UNCHECKED` within 6 h) |
+| D9 | Watcher silent or dead (sustained) | heartbeat metric | no heartbeat in three consecutive 10-minute periods (`FILL` to 0; missing data = breaching) | 40 min after the last heartbeat, plus CloudWatch evaluation *(platform)* |
 | D10 | Service fault | Lambda `Errors` (API, poller, KMS signer); requests non-terminal past their bound; AWS and GCP budgets | any Lambda error; any request open > 24 h (until A12's L_term is live); spend above 50% of the monthly budget | 1 h |
 
 Thresholds are initial values, chosen so a test can cross them; they are tuned on the record, not silently.
@@ -74,10 +84,13 @@ Thresholds are initial values, chosen so a test can cross them; they are tuned o
   (50% actual, 100% forecast). Not yet deployed: D1-D6, D7 IAM, D8, D9 (D5, D6 slot 1, D7 IAM, D8 and D9 are built,
   below), GCP-side alarms. None is "seen to fire" until item 3's tests.
 - **Step 4, watcher: built, not deployed** (`service/watcher/`, `service/detect/infra/watcher.tf`): D5 from `SIGLOG#`,
-  D6 slot 1 (CloudTrail `kms:Sign` reconciled against kms signatures; foreign principal; `AccessDenied`), D7 IAM writes
-  from the trail, D8 (stored bytes against `receipt_sha256`, then the frozen verifier as a relying party), D9 heartbeat
-  alarm, trace records 0(a) under Object Lock COMPLIANCE until not-after + 400 days. Owner's unit tests only. **D6 slot
-  2 (GCP `useToSign`) is a TODO** until G4. Latencies and limits: `service/watcher/README.md`.
+  D6 slot 1 (CloudTrail `kms:Sign` reconciled by time and count against the kms signatures the issuer verified and
+  used; foreign principal; `AccessDenied` in this account's trail), D7 IAM writes from the trail, D8 (stored bytes
+  against `receipt_sha256`, the frozen verifier as a relying party, and the receipt bound to its record), D9 heartbeat
+  alarm (sustained silence), trace records 0(a) under Object Lock COMPLIANCE until not-after + 400 days, one per
+  terminal request. Owner's unit tests only. Codex review and its dispositions:
+  `docs/reviews/watcher/CODEX-REVIEW.md`, `docs/reviews/watcher/DISPOSITION.md`. **D6 slot 2 (GCP `useToSign`) is a
+  TODO** until G4. Latencies and limits: `service/watcher/README.md`.
 
 ## The build, in order
 1. G1: structured log lines from the API (one per request, with key id, rid, outcome) and the poller (one per state
