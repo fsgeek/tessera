@@ -237,8 +237,15 @@ Public-key bootstrap:
    documentation and the user documentation.
 4. Keep the approved public key and fingerprint outside the NUC.
 5. Give users one authenticated way to get the fingerprint that does not pass through the NUC, the repository or
-   DNS. *(Author: name it, or state authenticated first acquisition as an assumption with a concrete delivery
-   method.)*
+   DNS. **Named by the author, 2026-11-22: his ORCID record** (`https://orcid.org/0000-0002-0651-5019`, Biography,
+   visibility Everyone), which states the release key `CADC 96CF 0023 55F8 E83F E97F AFF8 0961 D825 035E` and the
+   repository root `6BDA 2155 9F18 D5DB 8E13 12C3 6321 0B5F F92A D30A`. The author copied both from his paper ceremony
+   record and verified them. The steward read the public record through ORCID's API, unauthenticated, on 2026-11-22
+   (visibility `public`), and found both equal to the ceremony records and to the fingerprints of the committed
+   public keys (`docs/ceremony/keys/`). For ayllu clients running on the NUC, first acquisition passes through the NUC
+   by construction; for them it is stated as an assumption (authenticated first acquisition), with ORCID as the
+   check available to anyone who can reach it from elsewhere. Each release sheet checks the ORCID fingerprint against
+   the paper before signing.
 
 Two matching web publications alone do not authenticate the release key.
 
