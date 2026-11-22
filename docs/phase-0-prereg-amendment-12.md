@@ -1,16 +1,18 @@
-# Tessera — Phase 0 Pre-Registration, Amendment 12 — V1 implementation: bounded termination; successor windows (r5 for signing, 2026-11-20)
+# Tessera — Phase 0 Pre-Registration, Amendment 12 — V1 implementation: a termination deadline (conditional abandonment); successor windows (r6 for signing, 2026-11-22)
 
-> **Status: r5, ready for the author's signature (steward, Claude Opus 5.5, tenure from 2026-11-19). Not signed.**
+> **Status: SIGNED by the author (final text r6; drafted by the steward, Claude Opus 5.5, tenure from 2026-11-19).**
 > Reviews: r1 (five HIGH), r2 (four), r3 (three against promises), r4 final scoped round (two against promises, one
-> duty), all in `docs/reviews/amendment-12/`. By the exit pre-registered in `BRIEF-r4.md`, r5 deletes the two
-> remaining promises found false and keeps only what holds; there is no further round. Disposition: `DISPOSITION.md`. The two choices the r1 disposition
-> put to the author were resolved by him on 2026-11-19 ("As steward, I will abide by your recommendation"), as
-> OWNER DECISIONS adopted by his signature. Sections 3–5 are placeholders.
+> duty), all in `docs/reviews/amendment-12/`. By the exit pre-registered in `BRIEF-r4.md`, r5 deleted the two
+> remaining promises found false. r6 answers the author's own review (Codex, 2026-11-22: the contract's nine-day
+> wording, the "bounded termination" title, the placeholders). Disposition: `DISPOSITION.md`. The two choices the r1
+> disposition put to the author were resolved by him on 2026-11-19 ("As steward, I will abide by your
+> recommendation"), as OWNER DECISIONS adopted by his signature. The signature adopts A12.1 and A12.2 only; the
+> sections planned as A12.3–A12.5 are deferred and not registered (end of this document).
 > The author's first commit containing the final text is its signing act (the A11 convention). Layered on the
 > original and Amendments 1–11, none of which is edited. Every registered sentence this amendment changes is quoted
 > with its locator. All times are UTC.
 
-## A12.1 Bounded termination
+## A12.1 Termination deadline (conditional abandonment)
 
 **Registered text changed.**
 - A2.1 (`phase-0-prereg-amendment-2.md:131-135`): "Timeliness is **latched at eligibility**: an attempt eligible
@@ -58,6 +60,10 @@ work-around)? Otherwise, I'd worry that you've created a denial-of-service attac
      Nor is it promised that no COMPLETE becomes durable after L_term in real time: a completion write made before
      L_term can commit after it, and a later invocation whose clock reads earlier may complete. L_term governs what
      each invocation attempts by its own reading; it is not a real-time cutoff.
+   - *What exposure remains.* In ordinary operation, requests still open when a poller invocation reads at or after
+     L_term are refused when processed. The configured API Gateway quota targets 100 requests per credential per day,
+     reducing admission pressure, but is best-effort and establishes no hard ceiling on open requests. No maximum
+     backlog is promised under this amendment.
 5. **Construction rules (implementation duties; not all present in the deployed code).**
    - *Who writes what.* The API creates a request (ACCEPTED, or REFUSED at acceptance) and records upload completion
      with a version compare-and-set (`api.py:98-106,127-145`). Every later lifecycle transition, including every
@@ -161,8 +167,8 @@ keeping the same path.
    maximum is not promised: it depends on the drain (A12.1 promises no time by which old requests end), publication,
    propagation and deployment.
 7. **Telling clients (contract duty).** `docs/V1-CONTRACT.md` §3 gains: *"Issuance runs in windows of at most 90
-   days. Between windows there is a period of at least nine days in which new requests are refused; receipts already
-   issued are unaffected."* At least 14 days before an acceptance stop, the steward tells every client with a key,
+   days. Between windows there is a period in which new requests are refused, normally of more than nine days; its
+   dates are announced in advance. Receipts already issued are unaffected."* At least 14 days before an acceptance stop, the steward tells every client with a key,
    directly and on the service page: the last acceptance time, the reason, and the earliest date successor
    acceptance can open, updated when it opens.
 8. **Rotation registration, before the first successor issuance.** The steward records the dated registration A9
@@ -193,16 +199,15 @@ before first issuance; the rotation registration of 8) should be complete by abo
 the stop has L_term 2027-02-06T00:00Z, after which an invocation reading its clock attempts only its refusal; when it
 ends, and so when the drain ends, is not promised. Successor acceptance opens at the fence of 5, no earlier than the successor not-before.
 
-## A12.3 The canary's open findings (placeholder)
-Levadura's beyond-window report on the 13 findings needing an amendment beyond A11 (obs-0185), when it arrives.
-
-## A12.4 Operational posture (placeholder)
-The V1 contract's limits gain: one operational machine today holds the administration of both signers (the AWS
-management account login and the GCP project owner); the gate before reliance (DEPLOY.md) and its status.
-
-## A12.5 Root rotation (placeholder)
-Cryptoperiod (at most two years), triggers, procedure (a commit by the outgoing root naming its successor; a release
-adding the new entry and closing the old interval), and how relying parties learn of it.
+## Deferred: not registered by this amendment
+The signature adopts A12.1 and A12.2 only. The following were planned for A12 and are **deferred to a later
+amendment**; nothing here registers them, and every gate that depends on them stays closed exactly as before.
+- **The canary's open findings** (Levadura's beyond-window report on the 13 findings, obs-0185): not yet received.
+- **Operational posture** (the V1 contract's statement that one machine administers both signers, and the status of
+  the gate before reliance): the gate in `service/issuer/DEPLOY.md` ("Gate before Tessera is relied on", item 5) stays
+  open until a later amendment registers that text.
+- **Root rotation** (cryptoperiod, triggers, procedure, how relying parties learn of it): remains a release gate
+  (`formal/freeze-v1/FREEZE-RECORD.md:84-91`).
 
 ## Finding map
 | Finding | Where answered |
@@ -217,6 +222,10 @@ adding the new entry and closing the old interval), and how relying parties lear
 | r1 A12-06, r2 R2-07 vectors | item 8 (single mutation, non-acceptance, first reason where determined) |
 | r1 A12-07, r2 R2-06 gap and dates | items 6, 7 (contract text and client notice); consequence paragraph (conditional dates) |
 | r1 A12-08, r2 R2-05 inventory | A12.1 adds A2.1 `:157-160`; A12.2 adds ENCODING-V1 §7.1, frozen spec, profile |
+| Author's review (Codex, 2026-11-22): nine-day contract promise | item 7: contract text no longer promises a real-time minimum |
+| Author's review: "bounded termination" overstates | title and A12.1 heading; change 4 "What exposure remains" |
+| Author's second review: quota is not a ceiling | change 4 "What exposure remains", in the reviewer's wording |
+| Author's review: placeholders under a signature | "Deferred: not registered by this amendment"; DEPLOY.md pointer |
 | Prechecks 1, 3 | item 9 |
 | Prechecks 2, 4 | changes 3, 4; inventories |
 | r3 R3-01 tie | change 4: a rule on each invocation's behaviour; outcomes in flight not promised |
