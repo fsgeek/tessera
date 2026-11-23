@@ -58,14 +58,16 @@ subprocess, and compares with `expected.json`. It never imports instrument code.
 
 `release/release_tool.py` (standard library only; runs on the NUC, on Tails and on a relying party's machine)
 assembles, checks, authenticates and unpacks a release; it never signs. A release's own files are tracked under
-`release/v1-<n>/` (`trust.json`, the generated `release_constants.py`); `install.sh`, run inside an unpacked release,
-re-checks every R2 binding equality and installs that `release_constants.py`. Dependencies install from
-`requirements.lock` with hash checking required (R6). The candidate for release 1 and its procedure:
-`docs/releases/v1-1/SUMMARY.md`, `docs/V1-RELEASE-PROCEDURE.md`.
+`release/v1-<n>/` (`trust.json`, the generated `release_constants.py`). `acquire` reads the archive and signature
+once, checks the copy it read (rule O, the authenticated key, `gpgv`, R2, the expected namespace), unpacks it into a
+new directory and runs that tree's `install.sh`, which first checks that the tree holds exactly the release's files
+and re-checks every R2 equality, then installs that `release_constants.py`. `install.sh` refuses an unpacked tree it
+was not started on by `acquire`. Dependencies install from `requirements.lock` with hashes required and no source
+builds (R6); release 1's lock covers Linux x86_64 (glibc) only.
 
 ```sh
 python3 release/release_tool.py build --repo ../.. --commit C --out OUT       # tessera-verifier-v1-1.parts
-python3 release/release_tool.py acquire A A.sig --fingerprint F --key K --out DIR && bash DIR/service/verifier/install.sh
+python3 release/release_tool.py acquire A A.sig --fingerprint F --key K --out DIR   # verifies, unpacks, installs
 ```
 
 ## Not yet done

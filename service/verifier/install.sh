@@ -2,42 +2,50 @@
 # Install the V1 service verifier.
 #   bash install.sh
 # From a source checkout it reads nothing outside this directory and installs an unprovisioned verifier (production
-# refuses with TRUST_CONFIG_UNAUTHENTICATED). From an unpacked release (release_tool.py acquire: RELEASE.json two
-# levels up) it first re-checks every profile 15.9 R2 binding equality, then installs that release's generated
-# release_constants.py; any failure means no installation.
-# Creates .venv (Python 3.14, Unicode 16.0.0, pinned requirements), checks the six pinned SHA-1DC source digests
-# (vendor/SHA1DC-PIN.md), builds the detector in build/, runs known-answer checks, and writes install.json: the
-# per-installation record (profile 15.9 R2), outside any signed archive, unsigned, carrying no authority.
-# Offline except the package install. Needs: uv or python3.14, and cc + make.
+# refuses with TRUST_CONFIG_UNAUTHENTICATED). An unpacked release (RELEASE.json two levels up) is installed only by
+# `release_tool.py acquire --out DIR`, which runs this script on the tree it has just authenticated and unpacked
+# (TESSERA_ACQUIRED_ROOT); before anything is written, the tree must hold exactly the release's files and every
+# profile 15.9 R2 binding equality must hold; then that release's release_constants.py is installed. Any failure
+# means no installation. Run by hand on an unpacked tree, it refuses.
+# Creates .venv (Python 3.14, Unicode 16.0.0), installs the pinned wheels with hashes required and no source builds,
+# puts this directory on the venv's path (a .pth file and a tessera-verify launcher: no build step, no build
+# dependency), checks the six pinned SHA-1DC source digests (vendor/SHA1DC-PIN.md), builds the detector in build/,
+# runs known-answer checks, and writes install.json: the per-installation record (profile 15.9 R2), outside any
+# signed archive, unsigned, carrying no authority.
+# Offline except the wheel download. Needs: uv or python3.14, and cc + make.
 set -euo pipefail
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SRC="$HERE/vendor/sha1collisiondetection"
 BUILD="$HERE/build/sha1collisiondetection"
 PYTHON="$HERE/.venv/bin/python"
-ROOT="$(cd "$HERE/../.." && pwd)"
 die() { echo "install: $*" >&2; exit 1; }
 
+ROOT="$(cd "$HERE/../.." && pwd -P)"
+if [ -f "$ROOT/RELEASE.json" ]; then
+  [ "${TESSERA_ACQUIRED_ROOT:-}" = "$ROOT" ] || die "an unpacked release is installed only by release_tool.py acquire --out (not by hand): not installed"
+  command -v python3 >/dev/null 2>&1 || die "need python3 for the R2 check"
+  CONSTS="$(python3 -I "$HERE/release/release_tool.py" bindings "$ROOT")" || die "release tree or bindings (R2) failed: not installed"
+  RELEASE=1
+else
+  RELEASE=""
+fi
 if [ ! -x "$PYTHON" ]; then
   if command -v uv >/dev/null 2>&1; then uv venv --python 3.14 "$HERE/.venv"
   elif command -v python3.14 >/dev/null 2>&1; then python3.14 -m venv "$HERE/.venv"
   else die "need uv or python3.14"; fi
 fi
-if [ -f "$ROOT/RELEASE.json" ]; then
-  CONSTS="$("$PYTHON" -I "$HERE/release/release_tool.py" bindings "$ROOT")" || die "release bindings (R2) failed: not installed"
-  cp "$ROOT/$CONSTS" "$HERE/tessera_verify/release_constants.py"
-  EXTRA=""
-else
-  EXTRA="pytest"
-fi
+[ -z "$RELEASE" ] || cp "$ROOT/$CONSTS" "$HERE/tessera_verify/release_constants.py"
 if command -v uv >/dev/null 2>&1; then
-  uv pip install --python "$PYTHON" --require-hashes -r "$HERE/requirements.lock"
-  [ -z "$EXTRA" ] || uv pip install --python "$PYTHON" $EXTRA
-  uv pip install --python "$PYTHON" --no-deps -e "$HERE"
+  uv pip install --python "$PYTHON" --require-hashes --no-build -r "$HERE/requirements.lock"
+  [ -n "$RELEASE" ] || uv pip install --python "$PYTHON" pytest
 else
-  "$PYTHON" -m pip install --no-cache-dir --require-hashes -r "$HERE/requirements.lock"
-  [ -z "$EXTRA" ] || "$PYTHON" -m pip install --no-cache-dir $EXTRA
-  "$PYTHON" -m pip install --no-cache-dir --no-deps -e "$HERE"
+  "$PYTHON" -m pip install --no-cache-dir --require-hashes --only-binary=:all: -r "$HERE/requirements.lock"
+  [ -n "$RELEASE" ] || "$PYTHON" -m pip install --no-cache-dir pytest
 fi
+SITE="$("$PYTHON" -I -c 'import sysconfig; print(sysconfig.get_paths()["purelib"])')"
+printf '%s\n' "$HERE" > "$SITE/tessera_verify_tree.pth"
+printf '#!%s\nimport sys\nfrom tessera_verify.cli import main\nsys.exit(main())\n' "$PYTHON" > "$HERE/.venv/bin/tessera-verify"
+chmod 755 "$HERE/.venv/bin/tessera-verify"
 "$PYTHON" - <<'PY' || die "Python must be 3.14 with Unicode 16.0.0 tables"
 import sys, unicodedata
 assert sys.version_info[:2] == (3, 14), sys.version
@@ -70,4 +78,5 @@ sys.path.insert(0, sys.argv[1])
 from tessera_verify import install_record
 json.dump(install_record.current_facts(sys.argv[2], sys.argv[3]), open(sys.argv[1] + '/install.json', 'w'), indent=1, sort_keys=True)
 PY
-echo "installed. run: $HERE/.venv/bin/tessera-verify --help   (tests: $HERE/.venv/bin/python -m pytest $HERE/tests)"
+echo "installed. run: $HERE/.venv/bin/tessera-verify --help"
+[ -n "$RELEASE" ] || echo "tests: $HERE/.venv/bin/python -m pytest $HERE/tests"
