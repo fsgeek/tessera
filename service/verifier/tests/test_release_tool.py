@@ -19,6 +19,7 @@ RELEASE_FPR = 'CADC96CF002355F8E83FE97FAFF80961D825035E'
 RELEASE_KEY = REPO / 'docs/ceremony/keys/release-CADC96CF002355F8E83FE97FAFF80961D825035E.pub.asc'
 VECTORS = REPO / 'service/release-vectors'
 GPG = shutil.which('gpg') and shutil.which('gpgv')
+BASELINE = 'b134cdfdacc5d89f2748fa7ec15c46e38b51a32c'   # the verifier package commit, OTS block 973240
 
 
 class Build(unittest.TestCase):
@@ -63,6 +64,52 @@ class Build(unittest.TestCase):
         for bad in (self.data + b'\n', self.data[:-1], b'tessera-v1-part ../x 0\n\n', b'tessera-v1-part b 0\n\ntessera-v1-part a 0\n\n'):
             with self.assertRaises(rt.Refused): rt.parse_archive(bad)
 
+    def rewrite(self, parts):
+        m = json.loads(parts['RELEASE.json']); m['parts'] = {p: rt.sha(b) for p, b in parts.items() if p != 'RELEASE.json'}
+        parts['RELEASE.json'] = rt.jcs(m); return parts
+
+    def test_required_parts_and_string_types(self):
+        for p in ('service/verifier/requirements.lock', 'docs/V1-RELYING-PARTY.md', 'service/verifier/install.sh',
+                  'service/verifier/vendor/SHA1DC-PIN.md'):
+            bad = dict(self.parts); del bad[p]
+            with self.assertRaises(rt.Refused, msg=p) as e: rt.check_bindings(self.rewrite(bad))
+            self.assertIn('required part is missing', str(e.exception))
+        m = json.loads(self.parts['RELEASE.json']); m['trust_config_version'] = 1
+        with self.assertRaises(rt.Refused): rt.check_bindings(dict(self.parts, **{'RELEASE.json': rt.jcs(m)}))
+
+    def test_install_tree_must_be_exactly_the_release(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = os.path.join(d, 'r'); rt.unpack(self.parts, root)
+            self.assertEqual(rt.bindings(root), 'service/verifier/release/v1-1/release_constants.py')
+            extra = os.path.join(root, 'service/verifier/tessera_verify/stray.py'); Path(extra).write_text('x = 1\n')
+            with self.assertRaises(rt.Refused) as e: rt.bindings(root)
+            self.assertIn('not exactly the release', str(e.exception))
+            os.remove(extra); os.remove(os.path.join(root, 'service/verifier/README.md'))
+            with self.assertRaises(rt.Refused): rt.bindings(root)
+
+    def test_install_sh_refuses_an_unpacked_tree_run_by_hand(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = os.path.join(d, 'r'); rt.unpack(self.parts, root)
+            r = subprocess.run(['bash', os.path.join(root, 'service/verifier/install.sh')], capture_output=True, text=True,
+                               env={k: v for k, v in os.environ.items() if k != 'TESSERA_ACQUIRED_ROOT'})
+            self.assertNotEqual(r.returncode, 0)
+            self.assertIn('installed only by release_tool.py acquire', r.stderr)
+            self.assertFalse(os.path.exists(os.path.join(root, 'service/verifier/.venv')))
+
+    def test_diff_is_deterministic_and_self_hashed(self):
+        a, line = rt.diff(str(REPO), BASELINE, 'HEAD', '1')
+        self.assertEqual(rt.diff(str(REPO), BASELINE, 'HEAD', '1')[0], a)
+        body, last = a.rsplit(b'\n', 2)[0] + b'\n', a.splitlines()[-1].decode()
+        self.assertEqual(last, line); self.assertTrue(line.endswith(rt.groups(rt.sha(body), 8)))
+        self.assertIn(b'added     ', a); self.assertIn(b'service/verifier/release/release_tool.py', a)
+
+    def test_baseline_proof_parses_to_its_anchor(self):
+        tree = rt.blobs_at(str(REPO), 'HEAD'); c = rt.resolve(str(REPO), BASELINE)
+        stamp = rt.read_blob(str(REPO), tree['timestamps/anchored/' + c])
+        atts = rt.ots_heights(rt.read_blob(str(REPO), tree['timestamps/anchored/%s.ots' % c]), rt.hashlib.sha256(stamp).digest())
+        self.assertEqual(min(atts)[0], 973240)
+        with self.assertRaises(rt.Refused): rt.ots_heights(rt.read_blob(str(REPO), tree['timestamps/anchored/%s.ots' % c]), b'\0' * 32)
+
     def test_release_key_file(self):
         self.assertTrue(rt.release_key(str(RELEASE_KEY), RELEASE_FPR))
         with self.assertRaises(rt.Refused): rt.release_key(str(RELEASE_KEY), 'A' * 40)
@@ -101,9 +148,34 @@ class RowThirtySix(unittest.TestCase):
         self.assertIn('not by the authenticated key', self.refused(self.test_key))
 
     def test_acquire_writes_nothing_on_refusal(self):
-        out = os.path.join(self.tmp, 'never')
-        with self.assertRaises(rt.Refused): rt.acquire(self.archive, self.sig, RELEASE_FPR, str(RELEASE_KEY), out)
-        self.assertFalse(os.path.exists(out))
+        for key in (RELEASE_KEY, self.test_key):
+            out = os.path.join(self.tmp, 'never')
+            with self.assertRaises(rt.Refused) as e: rt.acquire(self.archive, self.sig, RELEASE_FPR, str(key), out)
+            self.assertEqual(str(e.exception), 'signed by %s, not by the authenticated key %s' % (self.test_fpr, RELEASE_FPR))
+            self.assertFalse(os.path.exists(out))
+
+    def test_acquire_requires_the_expected_namespace(self):
+        # M3: an explicit TEST acquisition refuses a PRODUCTION-labelled archive.
+        with self.assertRaises(rt.Refused) as e: rt.acquire(self.archive, self.sig, self.test_fpr, self.test_key, None, namespace='TEST')
+        self.assertIn('namespace is PRODUCTION, not the expected TEST', str(e.exception))
+        # The boundary R4 states: refusal is by key. A caller who supplies a TEST fingerprint as if it were the
+        # production one has substituted the bootstrap authority, which no label check can detect.
+        m, h = rt.acquire(self.archive, self.sig, self.test_fpr, self.test_key, None)
+        self.assertEqual((m['namespace'], h), ('PRODUCTION', rt.sha(Path(self.archive).read_bytes())))
+
+    def test_signature_without_issuer_fingerprint_is_not_a_rule_o_refusal(self):
+        # M4: rule O allows the hashed issuer fingerprint to be absent; the signer is then established by gpgv alone.
+        sig = Path(self.sig).read_bytes(); h = 2 if sig[0] == 0x88 else 3; b = sig[h:]
+        hl = int.from_bytes(b[4:6], 'big'); hashed = b[6:6 + hl]; kept, pos = b'', 0
+        while pos < len(hashed):
+            n = hashed[pos]; sp = hashed[pos:pos + 1 + n]
+            if sp[1] & 0x7F != 33: kept += sp
+            pos += 1 + n
+        body = b[:4] + len(kept).to_bytes(2, 'big') + kept + b[6 + hl:]
+        bad = bytes([0x88, len(body)]) + body
+        self.assertIsNone(rt.rule_o(bad))
+        with self.assertRaises(rt.Refused) as e: rt.verify_bytes(Path(self.archive).read_bytes(), bad, self.test_fpr, self.test_key)
+        self.assertTrue(str(e.exception).startswith('gpgv refused'), str(e.exception))
 
     def test_the_test_path_needs_the_test_fingerprint_named_explicitly(self):
         # R4(a): a TEST acquisition names the TEST key explicitly; it is the same check, never a production acceptance.
@@ -111,7 +183,8 @@ class RowThirtySix(unittest.TestCase):
 
     def test_one_byte_mutation_fails(self):
         bad = self.archive + '.mut'; b = bytearray(Path(self.archive).read_bytes()); b[len(b) // 2] ^= 1; Path(bad).write_bytes(b)
-        with self.assertRaises(rt.Refused): rt.verify_sig(bad, self.sig, self.test_fpr, self.test_key)
+        with self.assertRaises(rt.Refused) as e: rt.verify_sig(bad, self.sig, self.test_fpr, self.test_key)
+        self.assertTrue(str(e.exception).startswith('gpgv refused (exit 1)'), str(e.exception))
 
     def test_armored_or_doubled_signature_fails_rule_o(self):
         sig = Path(self.sig).read_bytes()
