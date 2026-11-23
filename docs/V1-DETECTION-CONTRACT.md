@@ -78,6 +78,23 @@ and observed the email.
 
 Thresholds are initial values, chosen so a test can cross them; they are tuned on the record, not silently.
 
+## D1-D4 as built (2026-11-23; `service/detect/infra/access.tf`; review `docs/reviews/access-alarms/`)
+These supersede the D1-D4 rows above where they differ. Latencies are event to alarm state (one evaluation period
+plus CloudWatch's evaluation delay); event-to-email is what the item-3 tests measure.
+- **D1** 50+ `THROTTLED` log lines in 5 min. API Gateway may omit log lines for excessive 429s, so a backstop alarms on
+  the API's own metrics: 300+ requests or 50+ 4XX responses in 5 min.
+- **D2** 50+ `INVALID_API_KEY` or `MISSING_AUTHENTICATION_TOKEN` in 5 min: missing or invalid keys **or unknown
+  routes** (the log cannot tell which key a caller sent).
+- **D3** 5+ logged 400/413 in 1 h from one invited key; any logged 400/413 from a key not in the invitation record.
+  Gateway-level 413/431 rejections may not be logged (the 4XX backstop counts them).
+- **D4** each invited key's logged requests per day above its invited volume; any logged success from a key not in
+  the invitation record; any observed `QUOTA_EXCEEDED` (the usage-plan quota is best-effort).
+- **The invitation record** is the `invitations` map in `access.tf` (key id, name, expected daily volume), kept in step
+  with the issuer's `client_names`. A key added to the issuer but not to the map fails loudly (D4 unknown-key success).
+- Filter patterns were tested with `aws logs test-metric-filter`: against 58 real access-log lines (no false match;
+  the pilot volume filter matched exactly its 20 lines) and against synthetic lines in the exact logged format for
+  each event (each matched only its own). That shows matching, not emission or delivery.
+
 ## Deployed (2026-11-23)
 - **Watcher deployed** (`service/watcher/`, DEPLOY-RUN 2026-11-22/23), pinned, `CodeSha256` = `watcher.zip` `5cdd50c5…`.
   First run of the deployable package (00:07Z): 8 receipts re-verified (no D8 finding), 8 trace records written,
