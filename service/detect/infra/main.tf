@@ -78,6 +78,18 @@ resource "aws_cloudwatch_event_target" "d7" {
   for_each = local.d7_regional
   rule     = aws_cloudwatch_event_rule.d7[each.key].name
   arn      = aws_sns_topic.alarms.arn
+
+  input_transformer {
+    input_paths = {
+      name = "$.detail.eventName"
+      src  = "$.detail.eventSource"
+      who  = "$.detail.userIdentity.arn"
+      at   = "$.detail.eventTime"
+      err  = "$.detail.errorCode"
+      id   = "$.detail.eventID"
+    }
+    input_template = "\"Tessera D7 (control-plane change): <name> on <src> by <who> at <at>; error <err>; CloudTrail event <id>. Expected only during a deployment the steward announced.\""
+  }
 }
 
 resource "aws_cloudwatch_event_rule" "d7_lambda" {
@@ -93,6 +105,18 @@ resource "aws_cloudwatch_event_rule" "d7_lambda" {
 resource "aws_cloudwatch_event_target" "d7_lambda" {
   rule = aws_cloudwatch_event_rule.d7_lambda.name
   arn  = aws_sns_topic.alarms.arn
+
+  input_transformer {
+    input_paths = {
+      name = "$.detail.eventName"
+      src  = "$.detail.eventSource"
+      who  = "$.detail.userIdentity.arn"
+      at   = "$.detail.eventTime"
+      err  = "$.detail.errorCode"
+      id   = "$.detail.eventID"
+    }
+    input_template = "\"Tessera D7 (control-plane change): <name> on <src> by <who> at <at>; error <err>; CloudTrail event <id>. Expected only during a deployment the steward announced.\""
+  }
 }
 
 # IAM and STS are global: their events reach EventBridge only in us-east-1, which the organization's SCP closes to this
