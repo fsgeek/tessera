@@ -78,6 +78,12 @@ and observed the email.
 
 Thresholds are initial values, chosen so a test can cross them; they are tuned on the record, not silently.
 
+## Deployed (2026-11-23)
+- **Watcher deployed** (`service/watcher/`, DEPLOY-RUN 2026-11-22/23), pinned, `CodeSha256` = `watcher.zip` `5cdd50c5…`.
+  First run of the deployable package (00:07Z): 8 receipts re-verified (no D8 finding), 8 trace records written,
+  heartbeat sent; 2 D7 IAM findings, both the deployment's own IAM writes. Heartbeat alarm returned to OK at 00:12Z.
+  This is operation, not the gate's item 3: no detection is "seen to fire" until another family's tests show it.
+
 ## Status (2026-11-22)
 - **G1 deployed** (structured logs; `service/issuer/LOGGING.md`; DEPLOY-RUN 2026-11-22). First `poll_summary` line seen in production.
 - **Step 2 deployed** (`service/detect/infra/`): topic `tessera-v1-alarms` (us-east-2) with the author's email
