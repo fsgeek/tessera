@@ -1,0 +1,38 @@
+# candidate: source commit f2511c0d87f390396b50e687a7bef496544462da, archive sha256 7fd00606b5591d9a3a410512776e3a0e82fa26628c17998749ca1a0da61de614
+# throwaway TEST key 53D3016C69AD8FAA15D575ED9E5768CEC9BF76DD (made for this run, discarded)
+# acquire --fingerprint CADC96CF002355F8E83FE97FAFF80961D825035E (production), key offered: release-CADC96CF002355F8E83FE97FAFF80961D825035E.pub.asc
+REFUSED: signed by 53D3016C69AD8FAA15D575ED9E5768CEC9BF76DD, not by the authenticated key CADC96CF002355F8E83FE97FAFF80961D825035E
+exit=1  out-dir-exists=no
+# acquire --fingerprint CADC96CF002355F8E83FE97FAFF80961D825035E (production), key offered: test.pub
+REFUSED: signed by 53D3016C69AD8FAA15D575ED9E5768CEC9BF76DD, not by the authenticated key CADC96CF002355F8E83FE97FAFF80961D825035E
+exit=1  out-dir-exists=no
+# acquire --namespace TEST with the TEST key: the PRODUCTION-labelled archive is refused
+REFUSED: the archive's namespace is PRODUCTION, not the expected TEST
+exit=1  out-dir-exists=no
+# one changed byte
+REFUSED: gpgv refused (exit 1): ['gpgv: BAD signature from "THROWAWAY TEST release key <throwaway@invalid>"']
+exit=1
+# control (not a release): the TEST fingerprint and key named as the authority; acquire verifies, unpacks, installs
+exit=0
+ACQUIRED PRODUCTION release 1, sha256 7fd00606 b5591d9a 3a410512 776e3a0e 82fa2662 8c179987 49ca1a0d a61de614; unpacked into <tmp>/rel and installed
+# installed verifier, default (production) mode, first production receipt
+{"stable":{"T":"2026-11-16T14:35:57Z","historical_security":"NOT_EVALUATED","reason":"OK","revocation":"NOT_EVALUATED","standing":"ABSENT/NOT_ISSUED_IN_PROFILE","verdict":"VALID_STRICT"},"utc_assessment":{"assumption_id":"A-UTC-7200-6","utc_upper_bound":"2026-11-16T17:33:10Z"}}
+exit=0
+# section 3.5 interface flags on the installed production verifier
+TEST_AUTHORITY_REFUSED
+exit=2
+# TESSERA_V1_TEST_RELEASE / _RELEASE_KEY variables
+TEST_AUTHORITY_REFUSED
+exit=2
+# install.sh run by hand on a freshly unpacked tree
+install: an unpacked release is installed only by release_tool.py acquire --out (not by hand): not installed
+exit=1
+# the same tree with one stray module, started as acquire would start it
+REFUSED: the tree is not exactly the release: extra ['service/verifier/tessera_verify/stray.py'], missing []
+install: release tree or bindings (R2) failed: not installed
+exit=1
+# the same tree, stray removed, one byte appended to verify.py
+REFUSED: part hash differs: service/verifier/tessera_verify/verify.py
+install: release tree or bindings (R2) failed: not installed
+exit=1
+  .venv created: no
