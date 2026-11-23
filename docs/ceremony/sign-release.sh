@@ -19,11 +19,11 @@ say()  { printf '\n%s\n' "$*"; }
 ask()  { printf '\n%s Type yes: ' "$1"; read -r ok; [ "$ok" = yes ] || fail "not confirmed; nothing signed"; }
 disk_of() { lsblk -nrso NAME,TYPE "$1" 2>/dev/null | awk '$2=="disk"{print $1; exit}'; }
 stick() { local d; d=$(disk_of "$(findmnt -n -o SOURCE --target "$1")"); lsblk -ndo SERIAL,SIZE,MODEL "/dev/$d" 2>/dev/null; }
-# expect_refusal TEXT COMMAND...: the command must exit 1 and print exactly the line "REFUSED: TEXT..." first.
+# expect_refusal TEXT COMMAND...: the command must exit 1, and its whole error output must be exactly "REFUSED: TEXT".
 expect_refusal() {
   local want="$1"; shift
   local err rc; err=$("$@" 2>&1 >/dev/null); rc=$?
-  [ "$rc" -eq 1 ] && [ "${err#REFUSED: $want}" != "$err" ] || fail "expected exit 1 and 'REFUSED: $want', got exit $rc: $err"
+  [ "$rc" -eq 1 ] && [ "$err" = "REFUSED: $want" ] || fail "expected exit 1 and exactly 'REFUSED: $want', got exit $rc: $err"
   echo "  $err"
 }
 [ "$MODE" = rehearse ] || [ "$MODE" = sign ] || fail "say 'rehearse' or 'sign'"
@@ -94,7 +94,7 @@ if [ "$MODE" = sign ]; then
   serial=$(gpg --card-status 2>/dev/null | sed -n 's/^Serial number[ .]*: *//p')
   card=$(gpg --with-colons --card-status 2>/dev/null | awk -F: '$1=="fpr"{print toupper($2)}')
   [ "$serial" = "$REL_SERIAL" ] && [ "$card" = "$REL_FPR" ] || fail "the card is not YubiKey B (serial '$serial', key '$card'): remove it"
-  SIGNER=$REL_FPR; KEY="$W/release.pub.asc"
+  SIGNER=$REL_FPR; KEY="$W/release.pub.asc"; UID_="Tessera release key <tessera@wamason.com>"
   say "5. Last check before signing. The archive you are signing:"
   sha256sum "$W/$NAME" | awk '{h=$1; printf "  "; for(i=1;i<=64;i+=8) printf "%s ", substr(h,i,8); print ""}'
   ask "This equals the archive hash you wrote in Part 1 (your own build)? This signs."
@@ -103,8 +103,8 @@ if [ "$MODE" = sign ]; then
   say "Remove YubiKey B now, then press Enter."; read -r _
 else
   say "5. Rehearsal: making a throwaway TEST key in memory (never a release key)."
-  gpg --batch --pinentry-mode loopback --passphrase '' --quick-generate-key \
-      "THROWAWAY TEST release key, rehearsal $T0 <throwaway@invalid>" nistp256 sign never 2>/dev/null || fail "TEST key generation"
+  UID_="THROWAWAY TEST release key, rehearsal $T0 <throwaway@invalid>"
+  gpg --batch --pinentry-mode loopback --passphrase '' --quick-generate-key "$UID_" nistp256 sign never 2>/dev/null || fail "TEST key generation"
   SIGNER=$(gpg --with-colons --list-secret-keys 2>/dev/null | awk -F: '$1=="fpr"{print toupper($10); exit}')
   [ -n "$SIGNER" ] && [ "$SIGNER" != "$REL_FPR" ] || fail "TEST key"
   gpg --export "$SIGNER" 2>/dev/null > "$W/test.pub.pgp" || fail "TEST key export"
@@ -123,7 +123,7 @@ say "8. One changed byte must be refused by gpgv:"
 python3 -I - "$W/$NAME" "$W/mutated" <<'EOF' || fail "mutation copy"
 import sys; b = bytearray(open(sys.argv[1], 'rb').read()); b[len(b) // 2] ^= 1; open(sys.argv[2], 'wb').write(b)
 EOF
-expect_refusal "gpgv refused (exit 1)" python3 -I "$W/release_tool.py" verify-sig "$W/mutated" "$W/$NAME.sig" \
+expect_refusal "gpgv refused (exit 1): ['gpgv: BAD signature from \"$UID_\"']" python3 -I "$W/release_tool.py" verify-sig "$W/mutated" "$W/$NAME.sig" \
   --fingerprint "$SIGNER" --key "$KEY"
 echo "  MUTATION REFUSED (as required)"
 
@@ -156,6 +156,7 @@ for f in $FILES; do
   [ "$(sha256sum < "$OUT/$f")" = "$(sha256sum < "$W/$f")" ] || quarantine "OUT's $f does not read back equal"
 done
 [ "$(ls -A "$OUT" | sort | tr '\n' ' ')" = "$(echo $FILES | tr ' ' '\n' | sort | tr '\n' ' ')" ] || quarantine "OUT holds other files"
-ls -la "$OUT"
-sha256sum "$OUT"/* | sed "s#$OUT/##"
+ls -A1 "$OUT" || quarantine "could not list OUT"
+H=$(cd "$OUT" && sha256sum $FILES) || quarantine "could not hash OUT's files"
+echo "$H"
 printf '\n==> PASS: %s. Eject OUT, shut down. OUT goes to the owner and never returns to a signing session.\n\n' "$MODE"
