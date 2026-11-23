@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
-# Install the V1 service verifier from this directory only (it reads nothing outside it).
+# Install the V1 service verifier.
 #   bash install.sh
+# From a source checkout it reads nothing outside this directory and installs an unprovisioned verifier (production
+# refuses with TRUST_CONFIG_UNAUTHENTICATED). From an unpacked release (release_tool.py acquire: RELEASE.json two
+# levels up) it first re-checks every profile 15.9 R2 binding equality, then installs that release's generated
+# release_constants.py; any failure means no installation.
 # Creates .venv (Python 3.14, Unicode 16.0.0, pinned requirements), checks the six pinned SHA-1DC source digests
 # (vendor/SHA1DC-PIN.md), builds the detector in build/, runs known-answer checks, and writes install.json: the
 # per-installation record (profile 15.9 R2), outside any signed archive, unsigned, carrying no authority.
@@ -10,6 +14,7 @@ HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SRC="$HERE/vendor/sha1collisiondetection"
 BUILD="$HERE/build/sha1collisiondetection"
 PYTHON="$HERE/.venv/bin/python"
+ROOT="$(cd "$HERE/../.." && pwd)"
 die() { echo "install: $*" >&2; exit 1; }
 
 if [ ! -x "$PYTHON" ]; then
@@ -17,11 +22,20 @@ if [ ! -x "$PYTHON" ]; then
   elif command -v python3.14 >/dev/null 2>&1; then python3.14 -m venv "$HERE/.venv"
   else die "need uv or python3.14"; fi
 fi
+if [ -f "$ROOT/RELEASE.json" ]; then
+  CONSTS="$("$PYTHON" -I "$HERE/release/release_tool.py" bindings "$ROOT")" || die "release bindings (R2) failed: not installed"
+  cp "$ROOT/$CONSTS" "$HERE/tessera_verify/release_constants.py"
+  EXTRA=""
+else
+  EXTRA="pytest"
+fi
 if command -v uv >/dev/null 2>&1; then
-  uv pip install --python "$PYTHON" -r "$HERE/requirements.txt" pytest
+  uv pip install --python "$PYTHON" --require-hashes -r "$HERE/requirements.lock"
+  [ -z "$EXTRA" ] || uv pip install --python "$PYTHON" $EXTRA
   uv pip install --python "$PYTHON" --no-deps -e "$HERE"
 else
-  "$PYTHON" -m pip install --no-cache-dir -r "$HERE/requirements.txt" pytest
+  "$PYTHON" -m pip install --no-cache-dir --require-hashes -r "$HERE/requirements.lock"
+  [ -z "$EXTRA" ] || "$PYTHON" -m pip install --no-cache-dir $EXTRA
   "$PYTHON" -m pip install --no-cache-dir --no-deps -e "$HERE"
 fi
 "$PYTHON" - <<'PY' || die "Python must be 3.14 with Unicode 16.0.0 tables"
