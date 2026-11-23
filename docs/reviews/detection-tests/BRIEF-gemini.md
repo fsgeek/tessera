@@ -50,7 +50,8 @@ watcher message bodies), the alarm name and state-change time, the throwaway res
 **Two observation endpoints, recorded separately.** (a) *SNS delivery*: your test SQS subscription's receive time
 establishes delivery through SNS only. (b) *Email*: the contract's latency is event-to-email; use the email's arrival
 time. The steward reads the alarm messages' arrival times from the author's mailbox (read-only) and gives them to
-  you after each test, by event time and subject; you do not need mailbox access and the author forwards nothing.
+  you after each test, with the identifiers above (CloudTrail event id, alarm name and state-change time, resource
+  name) as well as event time and subject; you do not need mailbox access and the author forwards nothing.
 
 **Three evidence classes, never merged.** For each promised detection report exactly one:
 - **PRODUCTION PATH**: the triggering event occurred on the production resource or production request path (only
