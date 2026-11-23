@@ -1,16 +1,15 @@
 """Built-in hard safety guards for Tessera V1 live detection tests.
 
-Enforces Hard Safety Rules 1-6 from docs/reviews/detection-tests/BRIEF-gemini.md (r5):
+Enforces Hard Safety Rules 1-6 from docs/reviews/detection-tests/BRIEF-gemini.md (r5),
+narrowed by the steward removal pass (2026-11-23):
 - Region locked strictly to us-east-2 with no AWS endpoint override honoured.
-- Global IAM client access requires explicit opt-in (allow_global_iam=True) and is
-  pinned to iam.amazonaws.com.
+  IAM, S3 and Lambda clients are not available at all (those tests were removed).
 - All created/mutated/deleted resources must match tessera-dtest-<run_id>-*, pass
   live tag ownership checks (purpose=detection-test AND run_id=<run_id>), and never
-  reference production tessera-v1-* resources (narrow exception: subscribing and
-  unsubscribing our verified throwaway SQS queue on tessera-v1-alarms, without
-  touching its topic policy or any existing subscription).
-- API calls are pinned to the exact us-east-2 API Gateway host and /v1 stage from
-  TESSERA_API, never follow redirects, and allow ONLY read-only GET
+  reference production tessera-v1-* resources. There is NO exception for the
+  production alarm topic: nothing subscribes to or unsubscribes from it.
+- API calls go only to the deployed API (PINNED_API_HOST, stage /v1); TESSERA_API
+  must name exactly that host. Redirects are never followed, and allow ONLY read-only GET
   /v1/requests/<uuid> and malformed 400 POST /v1/requests with a missing or
   non-UUID Tessera-Request-Key (rejected before any DynamoDB write). Any POST
   the issuer records (such as D3b oversized 413) is forbidden and removed.
@@ -38,29 +37,27 @@ RUN_ID_TAG_KEY = "run_id"
 PRODUCTION_ALARM_TOPIC_NAME = "tessera-v1-alarms"
 PRODUCTION_ACCESS_LOG_GROUP = "/aws/apigateway/tessera-v1-issuer-access"
 SMOKE_TEST_API_KEY_ID = "g8plxeex43"
+# The deployed issuer API (service/issuer/DEPLOY-RUN.md). Nothing else receives the smoke key.
+PINNED_API_HOST = "p4e0222jof.execute-api.us-east-2.amazonaws.com"
+PINNED_API_STAGE = "/v1"
 
 # Usage plan limit is 5 rps, burst 20. Hard ceiling in code stays strictly below.
 HARD_MAX_RPS = 4.5
 HARD_MAX_BURST = 1
 
-# Exact official AWS hostnames permitted by this test suite.
-# Regional services are pinned to us-east-2; IAM is AWS's global service and
-# requires allow_global_iam=True.
+# Exact official AWS hostnames permitted by this test suite (all regional, us-east-2).
 ALLOWED_AWS_ENDPOINTS: dict[str, str] = {
     "sts": f"sts.{ALLOWED_REGION}.amazonaws.com",
     "kms": f"kms.{ALLOWED_REGION}.amazonaws.com",
-    "s3": f"s3.{ALLOWED_REGION}.amazonaws.com",
     "sns": f"sns.{ALLOWED_REGION}.amazonaws.com",
     "sqs": f"sqs.{ALLOWED_REGION}.amazonaws.com",
     "apigateway": f"apigateway.{ALLOWED_REGION}.amazonaws.com",
-    "lambda": f"lambda.{ALLOWED_REGION}.amazonaws.com",
     "cloudtrail": f"cloudtrail.{ALLOWED_REGION}.amazonaws.com",
     "dynamodb": f"dynamodb.{ALLOWED_REGION}.amazonaws.com",
     "cloudwatch": f"monitoring.{ALLOWED_REGION}.amazonaws.com",
     "logs": f"logs.{ALLOWED_REGION}.amazonaws.com",
     "events": f"events.{ALLOWED_REGION}.amazonaws.com",
     "resourcegroupstaggingapi": f"tagging.{ALLOWED_REGION}.amazonaws.com",
-    "iam": "iam.amazonaws.com",
 }
 
 _RUN_ID_RE = re.compile(r"^[a-z0-9]{4,16}$")
@@ -68,10 +65,6 @@ _NAME_RE = re.compile(r"^tessera-dtest-[a-z0-9]{4,16}-[a-z0-9][a-z0-9._-]{0,60}$
 _ACCOUNT_ID_RE = re.compile(r"^\d{12}$")
 _STATUS_PATH_RE = re.compile(
     r"^/v1/requests/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
-    re.IGNORECASE,
-)
-_APIGW_HOST_RE = re.compile(
-    rf"^[a-z0-9]{{10}}\.execute-api\.{re.escape(ALLOWED_REGION)}\.amazonaws\.com$",
     re.IGNORECASE,
 )
 _SQS_PATH_RE = re.compile(
@@ -82,6 +75,7 @@ _SQS_URL_REDACT_RE = re.compile(
     re.IGNORECASE,
 )
 _URL_RE = re.compile(r"https?://[^\s\"'<>)\]}]+", re.IGNORECASE)
+_ARN_ACCOUNT_RE = re.compile(r"(arn:aws:[a-z0-9-]+:[a-z0-9-]*:)\d{12}(?=:)")
 _AWS_KEY_RE = re.compile(r"\b(?:AKIA|ASIA|AGPA|AIDA|AROA|AIPA|ANPA|ANVA)[A-Z0-9]{16}\b")
 _ERROR_CODE_RE = re.compile(r"^[A-Za-z0-9_.-]{1,64}$")
 
@@ -108,11 +102,6 @@ _SENSITIVE_DICT_KEYS = frozenset(
 
 class SafetyViolation(RuntimeError):
     """Raised whenever an action would violate a hard safety rule."""
-
-
-class TopicPolicyChangeRequired(RuntimeError):
-    """Raised if subscribing the observer SQS queue would require changing
-    tessera-v1-alarms' topic policy (forbidden by Rule 1)."""
 
 
 def validate_run_id(run_id: str) -> str:
@@ -308,12 +297,10 @@ def validate_tessera_api_url(raw_url: str) -> tuple[str, str, str]:
     if parsed.query or parsed.fragment:
         raise SafetyViolation("TESSERA_API must not contain query parameters or fragments.")
     host = (parsed.hostname or "").lower()
-    if not _APIGW_HOST_RE.match(host):
-        raise SafetyViolation(
-            f"TESSERA_API host must be a {ALLOWED_REGION} execute-api.amazonaws.com endpoint."
-        )
+    if host != PINNED_API_HOST:
+        raise SafetyViolation("TESSERA_API host is not the deployed Tessera API.")
     base_path = parsed.path.rstrip("/")
-    if base_path != "/v1":
+    if base_path != PINNED_API_STAGE:
         raise SafetyViolation(
             "TESSERA_API stage path must be exactly '/v1'."
         )
@@ -353,7 +340,7 @@ def assert_safe_api_request(
             raise SafetyViolation("HTTP target must not use a non-443 port.")
         if parsed.query or parsed.fragment:
             raise SafetyViolation("HTTP target must not contain query or fragment.")
-        if (parsed.hostname or "").lower() != pinned_host.lower():
+        if (parsed.hostname or "").lower() != pinned_host.lower() or pinned_host.lower() != PINNED_API_HOST:
             raise SafetyViolation("HTTP target host does not match pinned TESSERA_API host.")
         expected_full_path = f"{base_path.rstrip('/')}{path}"
         if parsed.path != expected_full_path:
@@ -538,6 +525,7 @@ def _sanitize_str(text: str, secret_list: list[str]) -> str:
     out = _SQS_URL_REDACT_RE.sub(r"sqs-queue:\1", out)
     out = _URL_RE.sub("[REDACTED_URL]", out)
     out = _AWS_KEY_RE.sub("[REDACTED_AWS_KEY_ID]", out)
+    out = _ARN_ACCOUNT_RE.sub(r"\1<account>", out)
     return out
 
 
@@ -586,16 +574,11 @@ def locked_boto3_client(
     service_name: str,
     *,
     session: Any = None,
-    allow_global_iam: bool = False,
 ) -> Any:
     """Create a boto3 client strictly bound to us-east-2 with no endpoint override (Rule 2)."""
     assert_aws_env_safe()
     if service_name not in ALLOWED_AWS_ENDPOINTS:
         raise SafetyViolation(f"AWS service {service_name!r} is not on the allowed list.")
-    if service_name == "iam" and not allow_global_iam:
-        raise SafetyViolation(
-            "IAM is a global account-wide service; allow_global_iam=True is required."
-        )
 
     expected_host = ALLOWED_AWS_ENDPOINTS[service_name]
     expected_endpoint = f"https://{expected_host}"
