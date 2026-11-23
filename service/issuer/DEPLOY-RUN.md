@@ -190,3 +190,17 @@ the legacy fallback unreachable under IAM; scoped confirmation; dispositions `41
 - **Migration, pass 2** (06:42:35Z, after the poller's 300 s timeout had passed since the apply): the same 7, all
   `present` with bytes hashing to their records; no fixed-key receipt was written by old code in between. Exit 0.
   The fixed-key copies remain until each request's normal cleanup; no fixed-key name is served.
+
+## 2026-11-22/23: detection watcher deployed (steward)
+`service/watcher/` (the Arariwa: D5, D6 slot 1, D7 IAM, D8, D9, trace records) in `service/detect/infra/`. Reviews
+`docs/reviews/watcher/` (review: 4 HIGH, 9 MEDIUM; confirmation: 4 new HIGH from the fixes; final minimal pass per the
+pre-registered exit). Suites on main at `286f027`: watcher 398, issuer 263, signer-kms 48, signer-gcp 121, verifier 135.
+- Bootstrap `watcher-bootstrap.zip` SHA-256 `ee66c0432b37529aa572b3bea3bacd1ceab67c4662e858df995c203a868e1927`
+  (two builds equal). Plan 23 add, 0 change, 0 destroy; applied 2026-11-22T23:56Z.
+- Install facts (`service/watcher/install-facts.json`) sampled on runtime
+  `arn:aws:lambda:us-east-2::runtime:eaebdc1115476ede1dce9876df554dcaaae527c20c43bd19bfeaa754e9eafb4d`.
+- Deployable `watcher.zip` SHA-256 `5cdd50c53452fb5f4bcf9c86c460159f0bcdce86406acac5ffc7c9c91a3f9585` (two builds
+  equal). Plan 1 add (runtime pin), 1 change (code); applied 2026-11-23T00:01Z. Deployed `CodeSha256`
+  `XN1QxTRS…` = hex `5cdd50c5…`. State backed up before and after each apply.
+- Expected alarms from this deployment: one D9 (bootstrap self-check), and D7 IAM findings for the deployment's own
+  IAM writes once the watcher reads the trail.
