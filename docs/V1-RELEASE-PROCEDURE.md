@@ -51,17 +51,24 @@ Labels: **[REG]** registered text (cited); **[OWNER DECISION]** decided by the s
 4. **[OWNER DECISION, 2026-11-23, review H1]** First-release baseline (custody draft §9, "For the first release ...
    say how you create it"): commit `b134cdf` (the Codex-reviewed verifier package, 2026-10-26, a descendant of the
    freeze commit `52ee179`), dated by its OpenTimestamps proof (Bitcoin block 973240), which the author checks on the
-   Pangolin against two explorers over Tor (`release_tool.py baseline`). The candidate is approved as a change from
-   that baseline: the author reads one printed change list (`release_tool.py diff`: every file that enters the
-   archive, plus the signing script and vectors, in full where added or changed) and signs it on paper; on the
-   Pangolin the scripts' `sha256sum` and the list's own hash line must equal his paper; he then rebuilds the archive
-   there, and every hash he compares later is the Pangolin's. The freeze objects are recomputed as before
+   Pangolin against two explorers over Tor (`release_tool.py baseline`). That shows the anchored commit cannot have
+   been rewritten after 2026-10-26 (given genuine chain data and Git's object hashes); it does not show the author's
+   approval of it, a preparer could have proposed a different pre-existing tree, and a NUC compromised before the
+   anchor is out of scope. The candidate is approved as a change from that baseline: at the rehearsal the Pangolin
+   makes the change list itself (`release_tool.py diff`: every file that enters the archive, plus the signing script
+   and vectors, in full where added or changed), and the author reads that output on the Pangolin's screen
+   (`less`), reads the two scripts from the files themselves, checks their `sha256sum` against their lines in the
+   list, and writes the SHA-256 of the whole list file on his rehearsal sheet. A NUC printout is only a reading aid
+   and is never what he approves. At the production sitting the Pangolin makes the list again; its whole-file SHA-256
+   must equal his rehearsal value, or the sitting stops. He then rebuilds the archive there, and every hash he
+   compares later is the Pangolin's. The freeze objects are recomputed as before
    (`assemble.py --commit 270ca49`; `check` against `52ee179`). *Not established:* that the author signed the
    baseline. No commit here is signed by his YubiKey A; the freeze commit and `b134cdf` are signed by the NUC's commit
    key. The baseline is dated and reviewed, not author-signed.
 5. **[OWNER DECISION]** The checker (custody draft §9 item 4): `sha256sum` plus
-   `service/verifier/release/release_tool.py`, which the author reads in the printed change list. Its hash is that
-   list's line for it, checked with `sha256sum` on the Pangolin and again offline. A relying party's copy from GitHub
+   `service/verifier/release/release_tool.py`, which the author reads on the Pangolin's screen. Its hash is the
+   approved change list's line for it, checked with `sha256sum` on the Pangolin and again offline. Ordinary
+   acquisition outside the ceremony relies on a checker and `gpgv` its caller selected; nothing stronger is claimed. A relying party's copy from GitHub
    is authenticated only by that party's own reading or trust in GitHub. gpgv: the Tails binary whose SHA-256 the
    rehearsal records after it passes the vectors; the production sitting compares its hash (review M4).
 6. **[OWNER DECISION]** Before signing, the author checks the release fingerprint against his ORCID record
@@ -99,13 +106,16 @@ Labels: **[REG]** registered text (cited); **[OWNER DECISION]** decided by the s
 3. Write `docs/releases/v1-<n>/SUMMARY.md`: every change from the last approved release, every hash and its trace.
    For release 2 onward, also `tessera-verify --previous <last trust> --next <new trust>` must print `ACCEPT`
    (the release checker's invariants, custody §9 item 5).
-4. Give the author the printed change list and the printed sheet, which carries the source and baseline commits
-   and the expected values. They can only stop the sitting: the author's own Pangolin results decide.
+4. Give the author the printed sheet, which carries the source and baseline commits and the expected values (and,
+   if he wants one, the change list printed as a reading aid). They can only stop the sitting: the author's own
+   Pangolin results decide.
 
 **B. Independent approval (author, networked Tails)**, custody §9 items 1–14:
-5. Before the sitting: read the printed change list in full; sign it if approved.
-5a. Clone from GitHub; `sha256sum` of the two scripts equals their lines on the signed list; `diff` reproduces the
-   list's last line; `baseline` shows the baseline's OpenTimestamps block and time.
+5. Clone from GitHub; `diff` makes the change list on the Pangolin. Rehearsal: read the two scripts from the files
+   and the whole list on the Pangolin's screen; `sha256sum` of the two scripts equals their lines in it; write the
+   list file's whole SHA-256 on the sheet and record the approval. Production: the list file's whole SHA-256 equals
+   the rehearsal's written value, or stop; the scripts' lines in it equal their `sha256sum`.
+5a. `baseline` shows the baseline's OpenTimestamps block and time.
 6. Recompute the freeze objects; rebuild the archive from the source commit; write its hash (it must also equal the
    sheet's).
 7. `release_tool.py check`: `CHECK PASS`, then compare the printed authority entries by eye: the repository key
@@ -155,7 +165,8 @@ From `formal/freeze-v1/FREEZE-RECORD.md` "Before the first public verifier relea
 - **[PROPOSAL]** The networked Tails boot on the Pangolin is the review-and-build environment (C01), in place of the
   draft's review VM. It is amnesic, holds no credential and reaches only GitHub, IANA, two block explorers and ORCID
   over Tor. It is not independent of GitHub: a GitHub captor could serve altered source. The author's checks catch a
-  change to any file that enters the archive (the signed change list, its hash recomputed there, the dated baseline)
+  change to any file that enters the archive (the change list made and read there, its whole-file hash written at
+  the rehearsal and compared at production, the dated baseline)
   and to the authority entries (paper, ORCID, public sources). The unchanged verifier code is approved as the dated,
   reviewed baseline `b134cdf`, not by the author's reading.
 - **[PROPOSAL]** The rehearsal uses a TEST key made in memory, not a YubiKey: the card path (PIN, touch, the
@@ -186,7 +197,7 @@ These steps establish what the author intended. They do not prove the verifier c
 5. **The baseline.** The steward's plan was to root the baseline in the freeze commit as signed by your YubiKey A.
    It is not: `52ee179`, like every commit here, is signed by the NUC's commit key (`2B9C…3835`), and YubiKey A has
    signed only the parentless key-assertion commit. The sheets therefore root the baseline in time instead (`b134cdf`,
-   OpenTimestamps block 973240, 2026-10-26), which a candidate preparer of November cannot change, but which a NUC
-   compromised before then could have shaped. Is a dated, Codex-reviewed baseline enough for C01's "approved
+   OpenTimestamps block 973240, 2026-10-26): that commit cannot have been rewritten since, but a NUC compromised
+   before then could have shaped it, and the sheet's naming of it is the preparer's proposal. Is a dated, Codex-reviewed baseline enough for C01's "approved
    baseline", or do you want to approve it explicitly (for example by signing, with a key of yours, a statement
    naming `b134cdf`) before the production sitting?

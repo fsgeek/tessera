@@ -1,56 +1,65 @@
-# Verifier release 1: release summary (candidate 2, unsigned)
+# Verifier release 1: release summary (candidate 3, unsigned)
 
 Owner instance (Claude Opus 5.5), 2026-11-23. This is the release summary of custody draft §9 ("Preparation on the
-NUC"). It is an aid, not evidence of approval: the author's reading of the printed change list (`DIFF.txt`) and his
-own build and checks on the Pangolin (`docs/ceremony/release-v1-1-SHEET.md`) are the approval. Procedure:
-`docs/V1-RELEASE-PROCEDURE.md`. Candidate 1 (`49e65de3…`, source `7b986e8`) is withdrawn after the Codex review
-(`docs/reviews/release-v1-1/CODEX-REVIEW.md`; dispositions in `DISPOSITION.md` there).
+NUC"). It is an aid, not evidence of approval: the author's reading, on the Pangolin's screen, of the change list the
+Pangolin itself makes (`DIFF.txt` here is the NUC's copy, a reading aid only) and his own build and checks there
+(`docs/ceremony/release-v1-1-SHEET.md`) are the approval. Procedure: `docs/V1-RELEASE-PROCEDURE.md`. Candidate 1
+(`49e65de3…`, source `7b986e8`) is withdrawn after the Codex review (`docs/reviews/release-v1-1/CODEX-REVIEW.md`;
+dispositions in `DISPOSITION.md` there). Candidate 2 (`7fd00606…`, source `f2511c0`) is withdrawn after the scoped
+confirmation (`CODEX-CONFIRM.md`): only `sign-release.sh` changed (final pass, `DISPOSITION.md`), so candidate 3's
+parts are byte-identical to candidate 2's and only `RELEASE.json`'s `source_commit` differs.
 
 ## The candidate
 
 | | |
 |---|---|
 | Archive | `tessera-verifier-v1-1.parts` (profile §15.9 R1; 709298 bytes, 31 parts) |
-| Archive SHA-256 | `7fd00606 b5591d9a 3a410512 776e3a0e 82fa2662 8c179987 49ca1a0d a61de614` |
+| Archive SHA-256 | `f50e5388 4cf4ae59 85a4b27a 4dc92416 f458d267 fa86c794 3f96fac6 92d514fd` |
 | Namespace, release | `PRODUCTION`, `1`; `release_key_successor` null |
-| Source commit | `f2511c0d87f390396b50e687a7bef496544462da` (branch `release-fixes`; must be on GitHub before the sitting) |
+| Source commit | `554a1fbed87fee615428e88431ee3202c7e199d3` (branch `release-final`; must be on GitHub before the sitting) |
 | Baseline commit | `b134cdfdacc5d89f2748fa7ec15c46e38b51a32c` (the Codex-reviewed verifier, 2026-10-26; OpenTimestamps block 973240) |
-| Change list | `DIFF.txt`, last line `DIFF 7 added or changed, 0 removed; sha256 of the text above 09bd9d55 fcfa0501 f7a60b51 6849227f def0f749 a9a685e5 f8756ac4 82e6c874` |
+| Change list | `DIFF.txt`, last line `DIFF 7 added or changed, 0 removed; sha256 of the text above f1a7d0a1 b6ab3c5a 219372c8 16ecfc21 e8794896 01e26034 0a06fb8b 2ffb6833`; whole file SHA-256 `0093cf56 95fd27cb 2efc175d d103424e 60c04e42 d98e0485 72d43d1f 015f0a99` |
 | Signature (to be made) | `tessera-verifier-v1-1.parts.sig`: detached, binary, OpenPGP v4 type 0x00, ECDSA P-256, SHA-256, by `CADC 96CF 0023 55F8 E83F E97F AFF8 0961 D825 035E` (YubiKey B) |
-| Build | `python3 service/verifier/release/release_tool.py build --repo . --commit f2511c0d87f390396b50e687a7bef496544462da --out OUT` |
+| Build | `python3 service/verifier/release/release_tool.py build --repo . --commit 554a1fbed87fee615428e88431ee3202c7e199d3 --out OUT` |
 
-**Reproducibility.** Built twice on 2026-11-23: once from the `release-fixes` worktree with its own tool, once from an
+**Reproducibility.** Built twice on 2026-11-23: once from the `release-final` worktree with its own tool, once from an
 independent `git clone --no-local` checked out at the source commit with the clone's copy of the tool. The two archives
-are byte-identical (`cmp`), both SHA-256 `7fd00606…a61de614`. The archive depends only on tracked blob bytes at the
+are byte-identical (`cmp`), both SHA-256 `f50e5388…92d514fd`. The archive depends only on tracked blob bytes at the
 source commit and at the freeze commit; no time, user, path or file mode enters it. Git reads ignore replace refs
 (review L1). The change list was produced the same two ways and is byte-identical.
 
-## The approved baseline (A10.4.2 C01; review H1)
+## The baseline and the change (A10.4.2 C01; review H1)
 
-The author's approval does not rest on anything the NUC computes at release time:
 - **Baseline.** Commit `b134cdf` is the verifier package as Codex reviewed it (352/352 conformance), with the freeze
   commit `52ee179` as its ancestor. Its OpenTimestamps proof (`timestamps/anchored/b134cdf….ots`) is anchored in
   Bitcoin block 973240, header time 2026-10-26T13:12:22Z, four weeks before any release file existed (2026-11-23).
   `release_tool.py baseline` checks that proof against the block header from two explorers over Tor, on the
-  Pangolin. Whoever prepared this candidate could not have chosen the baseline's bytes.
-- **The change.** `DIFF.txt` lists every file that enters the archive with its SHA-256 and prints in full each one
-  added or changed since the baseline: `release_tool.py`, `sign-release.sh` (not in the archive; it runs in the
-  signing session), `install.sh`, `README.md`, `requirements.lock`, `release/v1-1/trust.json` and
+  Pangolin. What this shows: the anchored commit's bytes cannot have been rewritten after 2026-10-26, provided the
+  explorers serve genuine chain data and Git's object hashes hold. What it does not show: that the author approved
+  that baseline (question 5 of the procedure is open), or which commit should be the baseline. A preparer could
+  propose a different tree that already existed; the author's check is that the sheet names `b134cdf` and the tool
+  proves that commit's date. A NUC compromised before the anchor could have shaped the baseline; that case is outside
+  what this procedure addresses.
+- **The change.** `release_tool.py diff` lists every file that enters the archive with its SHA-256 and prints in full
+  each one added or changed since the baseline: `release_tool.py`, `sign-release.sh` (not in the archive; it runs in
+  the signing session), `install.sh`, `README.md`, `requirements.lock`, `release/v1-1/trust.json` and
   `release/v1-1/release_constants.py`. The verifier code (`tessera_verify/`), the vendored SHA-1DC source, the
-  relying-party text, the catalog and the release vectors are unchanged since the baseline. The author reads and signs
-  the printed copy; on the Pangolin, `sha256sum` of the two scripts, and the change list's own last line as the tool
-  he read recomputes it, must equal his paper. His reading is then of the real change, and the scripts that run are
-  the ones he read.
+  relying-party text, the catalog and the release vectors are unchanged since the baseline. At the rehearsal the
+  Pangolin makes the change list itself; the author reads that output on its screen (`less`), reads the two scripts
+  from the files themselves (the tool writes the list, including its own text), checks that the scripts'
+  `sha256sum` equal their lines in the list, and writes the SHA-256 of the whole list file on his rehearsal sheet. A
+  NUC printout is at most a reading aid and is not approved. At the production sitting the Pangolin makes the list
+  again and its whole-file SHA-256 must equal the value on his rehearsal sheet, or the sitting stops.
 - **The hashes he compares later** (the archive, the two scripts, the key file, the vectors) are computed on the
   Pangolin from that source. The sheet also prints them; a printed value that differs from the Pangolin's is a stop,
   so the paper can stop the sitting but cannot choose what is signed.
 
-**What this does not establish.** The baseline is dated, not signed by the author: no commit in this repository is
-signed by YubiKey A (all are signed by the NUC's commit key `2B9C…3835`, including the freeze commit; the 2026-11-13
-key assertion is a parentless commit outside this history). A compromise of the NUC before 2026-10-26 could have shaped
-the baseline; the defence there is the Codex review of `b134cdf` and the first production receipt's verification under
-it (2026-11-16), not this procedure. The author does not review the verifier code itself; he approves the change from
-a dated, reviewed baseline.
+**What this does not establish.** The baseline is dated, not signed or approved by the author: no commit in this
+repository is signed by YubiKey A (all are signed by the NUC's commit key `2B9C…3835`, including the freeze commit;
+the 2026-11-13 key assertion is a parentless commit outside this history). The defence for the baseline's contents is
+the Codex review of `b134cdf` and the first production receipt's verification under it (2026-11-16), not this
+procedure. The author does not review the verifier code itself; he approves the change from a dated, reviewed
+baseline, if he accepts that baseline (procedure, question 5).
 
 ## What is in it
 
@@ -78,8 +87,9 @@ refuses an archive that lacks any of R1's required part classes (review M3).
 
 | Object | SHA-256 | Traces to |
 |---|---|---|
-| Archive | `7fd00606b5591d9a3a410512776e3a0e82fa26628c17998749ca1a0da61de614` | Rebuilt by the author on the Pangolin at the source commit; equal, or stop. |
-| Change list `DIFF.txt` (text above its last line) | `09bd9d55fcfa0501f7a60b516849227fdef0f749a9a685e5f8756ac482e6c874` | Recomputed by `release_tool.py diff` on the Pangolin; equal to the author's signed paper, or stop. |
+| Archive | `f50e53884cf4ae5985a4b27a4dc92416f458d267fa86c7943f96fac692d514fd` | Rebuilt by the author on the Pangolin at the source commit; equal, or stop. |
+| Change list `DIFF.txt` (text above its last line) | `f1a7d0a1b6ab3c5a219372c816ecfc21e879489601e260340a06fb8b2ffb6833` | Printed by `release_tool.py diff` as the list's last line. |
+| Change list `DIFF.txt` (whole file) | `0093cf5695fd27cb2efc175dd103424e60c04e42d98e048572d43d1f015f0a99` | `sha256sum` of the list the Pangolin makes; written by the author at the rehearsal after reading that list on screen; at production, equal to that written value, or stop. |
 | Freeze record (`formal/freeze-v1/FREEZE-RECORD.md` at `52ee179`) | `05542967b091424a614afd38a32cfb847b9b6b3f0e5a7b7103b11cd22d95575e` | `RELEASE.json` `freeze_record_sha256`. Commit `52ee179` (2026-10-24) is signed by the NUC commit key `2B9C…3835`, not by the author's YubiKey; its OpenTimestamps proof is anchored in block 972977; it is an ancestor of the baseline. |
 | Catalog (`catalog.json`, 662 bytes) | `aaf4306fed070119022c8486219f5160dc869edaa929f323d962fbb679e27fc2` | The freeze record's table row; byte-equal to the file at `52ee179`; recomputed by `formal/freeze-v1/assemble.py --commit 270ca49`. Equals `release_constants.CATALOG_SHA256`; `CATALOG_BYTES` equals the part. |
 | Spec object (named in the catalog) | `397581f781830b38ce1d07a25867f26d2c025e439cdd2a94e83ee77685d26daf` | The freeze record; recomputed by the assembler. Bound through the catalog's `spec_sha256`. |
@@ -89,7 +99,7 @@ refuses an archive that lacks any of R1's required part classes (review M3).
 | Trust file (`release/v1-1/trust.json`) | `9faa03683df7506cefa07afa4c0629182ebc5d4286b97801e1053cb8d86a7f89` | `trust_config_sha256` = `release_constants.TRUST_SHA256`. Not in the freeze record (trust is per release, profile §5). Byte-identical to `docs/smoke/2026-11-16-first-receipt/trust.json`. Printed in full in `DIFF.txt`. |
 | `release_constants.py` (v1-1) | `f30e2e5988fc10a9b610e942b3a27952ed374d94b8e66350c9b470c87eef306a` | Generated by `release_tool.py constants` from the trust file and catalog; printed in full in `DIFF.txt`. |
 | `release_tool.py` | `a4531c7d527953b26cfb6c7c72e404207f38152398e4fb944c7fd977b0e6539f` | Printed in full in `DIFF.txt`; the author reads it there. |
-| `docs/ceremony/sign-release.sh` (not in the archive) | `4f7ac1b4d33d4147bb3c9f4eff1c1c6ddea76bd4d7045242c7ea1055bb014275` | As above. |
+| `docs/ceremony/sign-release.sh` (not in the archive) | `20d5e19c1ff46f0af25b3dc9308290e3014a3084c0c887a031b450e38a2df15a` | As above. |
 | `service/release-vectors/` (all files; rehearsal only) | `66d149cd999d0cccfca10c984715d3edbbddb6ad4ba2b789682d45b0c43eca93` | `find … \| sort \| xargs sha256sum \| sha256sum` on the Pangolin; unchanged since the baseline; checked again offline before `run.py` runs. |
 | Release public key `docs/ceremony/keys/release-CADC…035E.pub.asc` | `1a817ae39f97450184d85e5c09bbdc0a301b18be65c8c3975144d3d8160cf6f3` | The key received on REL-PUB at the 2026-11-10 ceremony (`2026-11-10-operator-data.md`: `1a817ae39f974501…`); its fingerprint is on the author's paper and ORCID record. |
 
@@ -117,9 +127,13 @@ production receipt's bundle. A later receipt whose required headers all fall ins
 covered; in practice each later anchor is at a new height, which needs a later release (trust version 2 or more) made
 by this procedure with a signing sitting.
 
-## Checks run on the NUC, 2026-11-23 (candidate 2)
+## Checks run on the NUC, 2026-11-23 (candidates 2 and 3)
 
-Transcripts: `evidence/candidate-2.txt`, `evidence/dry-rehearse-2.txt`.
+Transcripts: `evidence/candidate-2.txt`, `evidence/dry-rehearse-2.txt` (candidate 2); `evidence/candidate-3.txt`,
+`evidence/dry-rehearse-3.txt` (candidate 3: the acquisition refusals, the changed byte, and the signing script's
+simulated rehearsal, rerun because the script changed). The install and installed-verifier runs below were made on
+candidate 2, whose parts are byte-identical to candidate 3's (only `RELEASE.json`'s `source_commit` differs); they were
+not repeated.
 - Two builds, byte-identical (above); `release_tool.py check` from the clone: `CHECK PASS`, 31 parts.
 - `release_tool.py baseline` for `b134cdf`: `BASELINE PASS … block 973240, header time 2026-10-26T13:12:22Z`
   (direct HTTPS, not Tor).
@@ -140,8 +154,9 @@ Transcripts: `evidence/candidate-2.txt`, `evidence/dry-rehearse-2.txt`.
   `acquire` starts it, on a tree with one stray module: `the tree is not exactly the release: extra […stray.py]`; with
   one byte appended to `verify.py`: `part hash differs`; no `.venv` created in either case.
 - `sign-release.sh rehearse` in a simulated session (paths and the network, route, swap, USB-disk, OUT-mount and tmpfs
-  checks replaced; Ubuntu gpg 2.4.4): every step passed with the exact refusal strings, vectors 9/9, OUT written and
-  read back.
+  checks replaced; Ubuntu gpg 2.4.4), candidate 3: every step passed, each refusal's whole error output equal to the
+  full expected line, vectors 9/9, OUT written, read back, listed and hashed. The signing mode's expected changed-byte
+  line (with the release key's user ID) is not exercised without YubiKey B.
 - `service/verifier/tests/test_release_tool.py`: 22 pass. The whole verifier suite with the main checkout's venv: 156
   pass, 1 fails (the known worktree-only independence check, which loads the main checkout's editable install); with
   the worktree's own venv, installed by the new `install.sh`: 157 pass.
@@ -152,7 +167,7 @@ Registered (R4, A10 row 36): an otherwise correct archive signed only by a TEST 
 acquisition procedure, including when the TEST public key is offered as the key; and an installed production verifier
 refuses the section 3.5 interface.
 1. **Acquisition leg.** Shown on the NUC (above) and, at the rehearsal, by `acquire` itself on Tails: two refusals
-   with the exact string and nothing unpacked. Any other failure (an I/O error, a different refusal) fails the
+   whose whole error output equals the full expected line (not a prefix), and nothing unpacked. Any other failure (an I/O error, a different refusal) fails the
    rehearsal.
 2. **Installed-verifier leg.** `TEST_AUTHORITY_REFUSED`, exit 2, no verdict, by flags and by variables: NUC evidence
    only (`evidence/row36.txt`, `evidence/candidate-2.txt`). It needs Python 3.14 and cryptography, which an offline
@@ -166,8 +181,9 @@ real stick, mount, eject and card paths, which no simulation here exercised; the
 
 ## The checker and gpgv (review M4)
 
-- **The checker** is `release_tool.py`. For the author it is authenticated by his reading it in the printed change
-  list and by `sha256sum`, on the Pangolin and again offline, equalling that list's line for it. For a relying party,
+- **The checker** is `release_tool.py`. For the author it is authenticated by his reading the file itself on the
+  Pangolin and by `sha256sum`, there and again offline, equalling the sheet's value and its line in the change list
+  he approved. For a relying party,
   R3 asks only that the checker be available before the archive runs: a copy fetched from GitHub is authenticated by
   nothing but the relying party's own reading or trust in GitHub. Nothing more is claimed.
 - **gpgv.** R3 pins upstream GnuPG 2.4.4 and accepts a distribution build only if it reproduces upstream on the
@@ -175,6 +191,9 @@ real stick, mount, eject and card paths, which no simulation here exercised; the
   `record.txt` after it passed 9/9; the production sitting compares its binary's hash with that value. An ordinary
   acquisition uses whatever `gpgv` its `PATH` or `--gpgv` names; nothing here establishes that it is the pinned or a
   qualified build.
+- **Ordinary acquisition** (any run of `acquire` outside the ceremony, the owner's publication step included) relies
+  on a checker and a `gpgv` that its caller selected and trusts. Its result is no stronger than those two programs
+  and the local machine; nothing in this release establishes more.
 - The hashed issuer-fingerprint subpacket is no longer required (rule O allows its absence); when present it must name
   the authenticated key. The signer is established by `gpgv` with a keyring holding only that key.
 

@@ -1,19 +1,21 @@
 # Verifier release 1 (YubiKey B): operator sheet
 
-You confirm the changes you approved at the rehearsal, build release 1 yourself from GitHub and check it, then sign
+You confirm that the change list the Pangolin makes now is, byte for byte, the one you read and approved on screen at
+the rehearsal (its digest is on your rehearsal sheet), build release 1 yourself from GitHub and check it, then sign
 that archive with YubiKey B in an offline session. Your signature says: *this exact archive is Tessera's first
 production verifier release.* The owner then publishes the archive the NUC built, which must be byte-identical to
 yours, or your signature does not verify over it.
 
-**Time:** Part 1 about 60 minutes, Part 2 about 30. Nothing to read beforehand if the source commit below is the
-rehearsal's; if it is not, the owner gives you a new printed change list first and this sheet is reprinted.
+**Time:** Part 1 about 60 minutes, Part 2 about 30. Nothing to read if the source commit below is the
+rehearsal's; if it is not, this sheet is reprinted and you read and approve the new change list on screen first, as at
+the rehearsal.
 
 | Item | What | Rule |
 |---|---|---|
 | INPUT | the rehearsal's INPUT (purple), or a new stick; never in the NUC or any everyday computer | written only in Part 1 |
 | OUT | a **new** stick, never in the NUC or any computer, not the rehearsal's OUT | goes to the owner after Part 2; never returns |
 | YubiKey B | the release key, white tag, serial 39975596 | inserted only when the script asks |
-| Paper | your 2026-11-10 ceremony record; the change list you signed at the rehearsal | at hand for both parts |
+| Paper | your 2026-11-10 ceremony record; your filled-in rehearsal sheet | at hand for both parts |
 
 Every command is on its own line: type one, press Enter, read the result, then the next. **[PHOTO]** = photograph the
 screen. **[WRITE]** = write on this sheet. Never photograph or type into chat a PIN. Hashes are shown in groups of 8.
@@ -25,12 +27,14 @@ Values (each must equal what you see, in full):
 
 | Name | Value |
 |---|---|
-| source commit | `f2511c0d 87f39039 6b50e687 a7bef496 544462da` (the rehearsal's) |
+| source commit | `554a1fbe d87fee61 5428e884 31ee3202 c7e199d3` (the rehearsal's) |
 | baseline commit | `b134cdfd acc5d89f 2748fa7e c15c46e3 8b51a32c` |
-| printed changes, last line | `DIFF 7 added or changed, 0 removed; sha256 of the text above 09bd9d55 fcfa0501 f7a60b51 6849227f def0f749 a9a685e5 f8756ac4 82e6c874` |
-| archive `tessera-verifier-v1-1.parts` | `7fd00606 b5591d9a 3a410512 776e3a0e 82fa2662 8c179987 49ca1a0d a61de614` |
+| change list, last line | `DIFF 7 added or changed, 0 removed; sha256 of the text above f1a7d0a1 b6ab3c5a 219372c8 16ecfc21 e8794896 01e26034 0a06fb8b 2ffb6833` |
+| change list, whole file `/tmp/diff.txt` | `0093cf56 95fd27cb 2efc175d d103424e 60c04e42 d98e0485 72d43d1f 015f0a99` |
+| change list digest you approved | ____________________________________________________________ (from your rehearsal sheet) |
+| archive `tessera-verifier-v1-1.parts` | `f50e5388 4cf4ae59 85a4b27a 4dc92416 f458d267 fa86c794 3f96fac6 92d514fd` |
 | `release_tool.py` | `a4531c7d 527953b2 6cfb6c7c 72e40420 7f381523 98e4fb94 4c7fd977 b0e6539f` |
-| `sign-release.sh` | `4f7ac1b4 d33d4147 bb3c9f4e ff1c1c6d dea76bd4 d7045242 c7ea1055 bb014275` |
+| `sign-release.sh` | `20d5e19c 1ff46f0a f25b3dc9 308290e3 014a3084 c0c887a0 31b450e3 8a2df15a` |
 | release public key file | `1a817ae3 9f974501 84d85e5c 09bbdc0a 301b18be 65c8c397 5144d3d8 160cf6f3` |
 | release key fingerprint | `CADC 96CF 0023 55F8 E83F E97F AFF8 0961 D825 035E` |
 | repository root fingerprint | `6BDA 2155 9F18 D5DB 8E13 12C3 6321 0B5F F92A D30A` |
@@ -49,7 +53,7 @@ git clone https://github.com/fsgeek/tessera.git
 cd tessera
 ```
 ```
-git checkout f2511c0d87f390396b50e687a7bef496544462da
+git checkout 554a1fbed87fee615428e88431ee3202c7e199d3
 ```
 ```
 git rev-parse HEAD
@@ -58,12 +62,22 @@ Want: the source commit, in full.
 ```
 sha256sum service/verifier/release/release_tool.py docs/ceremony/sign-release.sh
 ```
-Want: the `release_tool.py` and `sign-release.sh` values above, equal to their lines in your signed change list.
+Want: the `release_tool.py` and `sign-release.sh` values above.
 ```
 python3 service/verifier/release/release_tool.py diff --repo . --base b134cdfdacc5d89f2748fa7ec15c46e38b51a32c --commit HEAD --out /tmp/diff.txt
 ```
-Want one line, equal to the last line of your signed change list: `DIFF 7 added or changed, 0 removed; sha256 of the
-text above 09bd9d55 fcfa0501 f7a60b51 6849227f def0f749 a9a685e5 f8756ac4 82e6c874`.
+Want one line: `DIFF 7 added or changed, 0 removed; sha256 of the text above f1a7d0a1 b6ab3c5a 219372c8 16ecfc21
+e8794896 01e26034 0a06fb8b 2ffb6833`.
+```
+sha256sum /tmp/diff.txt
+```
+Want: all eight groups equal to the change-list digest you wrote on your rehearsal sheet (copied above). **Any
+difference is a stop:** this is not the change list you approved. (The sheet's printed value must also match.)
+```
+grep -E '  (service/verifier/release/release_tool.py|docs/ceremony/sign-release.sh)$' /tmp/diff.txt
+```
+Want two lines whose hashes equal the two `sha256sum` results above: the scripts that run are the ones in the change
+list you approved.
 ```
 python3 service/verifier/release/release_tool.py baseline --repo . --commit b134cdfdacc5d89f2748fa7ec15c46e38b51a32c --source HEAD
 ```
@@ -84,13 +98,13 @@ catalog.json                     662 aaf4306fed070119022c8486219f5160dc869edaa92
 ```
 python3 service/verifier/release/release_tool.py build --repo . --commit HEAD --out /tmp/out
 ```
-Want one line: `BUILT tessera-verifier-v1-1.parts  sha256 7fd00606 b5591d9a 3a410512 776e3a0e 82fa2662 8c179987 49ca1a0d
-a61de614`. **[WRITE]** the eight groups you see: ____________________________________________________________
+Want one line: `BUILT tessera-verifier-v1-1.parts  sha256 f50e5388 4cf4ae59 85a4b27a 4dc92416 f458d267 fa86c794 3f96fac6
+92d514fd`. **[WRITE]** the eight groups you see: ____________________________________________________________
 ```
 python3 service/verifier/release/release_tool.py check /tmp/out/tessera-verifier-v1-1.parts --repo .
 ```
 Want exactly 12 lines: `CHECK PASS: …`; the archive line with the hash above; `namespace PRODUCTION release 1
-successor None`; `source commit f2511c0d…`; `freeze commit 52ee1791… record sha256 05542967 b091424a 614afd38 a32cfb84
+successor None`; `source commit 554a1fbe…`; `freeze commit 52ee1791… record sha256 05542967 b091424a 614afd38 a32cfb84
 7b9b6b3f 0e5a7b71 03b11cd2 2d95575e`; `catalog sha256 aaf4306f ed070119 022c8486 219f5160 dc869eda a929f323 d962fbb6
 79e27fc2`; `trust file sha256 9faa0368 3df7506c efa07afa 4c062918 2ebc5d42 86b97801 e1053cb8 d86a7f89 version 1 as_of
 2026-11-16T15:48:11Z`; `parts 31`; `repository key 6BDA 2155 9F18 D5DB 8E13 12C3 6321 0B5F F92A D30A from
@@ -183,9 +197,9 @@ It asks you, in order:
 
 Then it runs to the end. Want, in order: `SIGNATURE PASS: rule O, signer CADC 96CF 0023 55F8 E83F E97F AFF8 0961 D825
 035E, gpgv exit 0 with only that key.`; `REFUSED: gpgv refused (exit 1): …BAD signature…` and `MUTATION REFUSED (as
-required)`; the OUT listing with exactly `record.txt` and `tessera-verifier-v1-1.parts.sig`, their hashes; and
-`==> PASS: sign. …`. **[PHOTO]** the SIGNATURE PASS line, the OUT hashes and the final PASS. **[WRITE]** the `.sig`
-hash, 8 groups: ____________________________________________________________
+required)`; the OUT listing, exactly 2 names, `record.txt` and `tessera-verifier-v1-1.parts.sig`, then exactly 2
+hash lines, one per file; and `==> PASS: sign. …`. **[PHOTO]** the SIGNATURE PASS line, the OUT hashes and the final
+PASS. **[WRITE]** the `.sig` hash, 8 groups: ____________________________________________________________
 
 Eject OUT; remove it; shut down. **End time:** ________
 

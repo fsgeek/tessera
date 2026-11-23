@@ -1,0 +1,17 @@
+# candidate 3: source commit 554a1fbed87fee615428e88431ee3202c7e199d3, archive sha256 f50e53884cf4ae5985a4b27a4dc92416f458d267fa86c7943f96fac692d514fd
+# throwaway TEST key 63C4C638B0386EBAB829C7409D26D6AFC26ABF75 (made for this run, discarded)
+# acquire --fingerprint CADC96CF002355F8E83FE97FAFF80961D825035E (production), key offered: release-CADC96CF002355F8E83FE97FAFF80961D825035E.pub.asc
+REFUSED: signed by 63C4C638B0386EBAB829C7409D26D6AFC26ABF75, not by the authenticated key CADC96CF002355F8E83FE97FAFF80961D825035E
+exit=1  out-dir-exists=no
+# acquire --fingerprint CADC96CF002355F8E83FE97FAFF80961D825035E (production), key offered: test.pub
+REFUSED: signed by 63C4C638B0386EBAB829C7409D26D6AFC26ABF75, not by the authenticated key CADC96CF002355F8E83FE97FAFF80961D825035E
+exit=1  out-dir-exists=no
+# acquire --namespace TEST with the TEST key: the PRODUCTION-labelled archive is refused
+REFUSED: the archive's namespace is PRODUCTION, not the expected TEST
+exit=1  out-dir-exists=no
+# one changed byte
+REFUSED: gpgv refused (exit 1): ['gpgv: BAD signature from "THROWAWAY TEST release key <throwaway@invalid>"']
+exit=1
+# control (not a release): the TEST fingerprint and key named as the authority, no --out
+ACQUIRED PRODUCTION release 1, sha256 f50e5388 4cf4ae59 85a4b27a 4dc92416 f458d267 fa86c794 3f96fac6 92d514fd; not unpacked (no --out)
+exit=0

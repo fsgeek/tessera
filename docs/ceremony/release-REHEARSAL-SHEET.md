@@ -1,11 +1,12 @@
 # Release rehearsal (TEST key): operator sheet
 
-You check the changes since the approved baseline, build the release yourself from GitHub, then sign it offline with
+You read, on the Pangolin's own screen, the change list the Pangolin makes from GitHub (every change since the dated
+baseline), approve it and write its digest on this sheet; build the release yourself; then sign it offline with
 a throwaway TEST key that the script makes in memory. The production acquisition must then **refuse** that
 TEST-signed archive (A10 row 36). No YubiKey is used. Nothing from this sitting is ever a release.
 
-**Time:** reading the printed changes, before the sitting, about 2 hours (once; the production sitting reuses it).
-The sitting itself: Part 1 about 60 minutes, Part 2 about 30.
+**Time:** Part 1 about 60 minutes plus about 2 hours reading the change list on screen (once; the production sitting
+compares against the digest you write here). Part 2 about 30 minutes.
 
 | Stick | What | Rule |
 |---|---|---|
@@ -22,25 +23,24 @@ Values (each must equal what you see, in full):
 
 | Name | Value |
 |---|---|
-| source commit | `f2511c0d 87f39039 6b50e687 a7bef496 544462da` |
-| baseline commit | `b134cdfd acc5d89f 2748fa7e c15c46e3 8b51a32c` (the Codex-reviewed verifier, 2026-10-26) |
+| source commit | `554a1fbe d87fee61 5428e884 31ee3202 c7e199d3` |
+| baseline commit | `b134cdfd acc5d89f 2748fa7e c15c46e3 8b51a32c` (the Codex-reviewed verifier, dated 2026-10-26) |
 | freeze commit | `52ee1791 8c5ed841 587d78cb 2ca3e8c5 4c4682d2` |
-| printed changes, last line | `DIFF 7 added or changed, 0 removed; sha256 of the text above 09bd9d55 fcfa0501 f7a60b51 6849227f def0f749 a9a685e5 f8756ac4 82e6c874` |
-| archive `tessera-verifier-v1-1.parts` | `7fd00606 b5591d9a 3a410512 776e3a0e 82fa2662 8c179987 49ca1a0d a61de614` |
+| change list, last line | `DIFF 7 added or changed, 0 removed; sha256 of the text above f1a7d0a1 b6ab3c5a 219372c8 16ecfc21 e8794896 01e26034 0a06fb8b 2ffb6833` |
+| change list, whole file `/tmp/diff.txt` | `0093cf56 95fd27cb 2efc175d d103424e 60c04e42 d98e0485 72d43d1f 015f0a99` |
+| archive `tessera-verifier-v1-1.parts` | `f50e5388 4cf4ae59 85a4b27a 4dc92416 f458d267 fa86c794 3f96fac6 92d514fd` |
 | `release_tool.py` | `a4531c7d 527953b2 6cfb6c7c 72e40420 7f381523 98e4fb94 4c7fd977 b0e6539f` |
-| `sign-release.sh` | `4f7ac1b4 d33d4147 bb3c9f4e ff1c1c6d dea76bd4 d7045242 c7ea1055 bb014275` |
+| `sign-release.sh` | `20d5e19c 1ff46f0a f25b3dc9 308290e3 014a3084 c0c887a0 31b450e3 8a2df15a` |
 | release public key file | `1a817ae3 9f974501 84d85e5c 09bbdc0a 301b18be 65c8c397 5144d3d8 160cf6f3` |
 | release vectors (all files) | `66d149cd 999d0ccc fca10c98 4715d3ed bbddb6ad 4ba2b789 682d45b0 c43eca93` |
 | release key fingerprint | `CADC 96CF 0023 55F8 E83F E97F AFF8 0961 D825 035E` |
 | repository root fingerprint | `6BDA 2155 9F18 D5DB 8E13 12C3 6321 0B5F F92A D30A` |
 
-## Before the sitting: read the printed changes
+## Before the sitting (optional)
 
-The owner gives you `docs/releases/v1-1/DIFF.txt` on paper. It lists every file that enters the archive, each with
-its SHA-256, and prints in full each one that was added or changed since the baseline commit: the release tool, the
-signing script, `install.sh`, the lock, the trust file, the release constants, the README. The verifier code and the
-vendored SHA-1DC source are unchanged since the baseline (their lines say `unchanged`). Read all of it. Mark anything
-you do not accept. If you accept it, sign and date the last page: ________________ . Bring it to the sitting.
+The owner may give you `docs/releases/v1-1/DIFF.txt` printed, to read beforehand and mark. It is only a reading aid:
+it was printed by the NUC, and you do not sign or approve it. What you approve is the change list the Pangolin itself
+makes in Part 1, read on the Pangolin's screen.
 
 ## Part 1: check, build, decide (a Tails boot, network ON)
 
@@ -54,7 +54,7 @@ git clone https://github.com/fsgeek/tessera.git
 cd tessera
 ```
 ```
-git checkout f2511c0d87f390396b50e687a7bef496544462da
+git checkout 554a1fbed87fee615428e88431ee3202c7e199d3
 ```
 ```
 git rev-parse HEAD
@@ -63,20 +63,46 @@ Want: the source commit, in full.
 ```
 sha256sum service/verifier/release/release_tool.py docs/ceremony/sign-release.sh
 ```
-Want: the `release_tool.py` and `sign-release.sh` values above, which are also on their lines in your signed paper.
-These are the scripts you read on paper; they run next.
+Want: the `release_tool.py` and `sign-release.sh` values above. These two scripts run in both sittings.
 ```
 python3 service/verifier/release/release_tool.py diff --repo . --base b134cdfdacc5d89f2748fa7ec15c46e38b51a32c --commit HEAD --out /tmp/diff.txt
 ```
-Want one line, equal to the last line of your signed paper: `DIFF 7 added or changed, 0 removed; sha256 of the text
-above 09bd9d55 fcfa0501 f7a60b51 6849227f def0f749 a9a685e5 f8756ac4 82e6c874`. Then the paper is exactly the change.
+Want one line: `DIFF 7 added or changed, 0 removed; sha256 of the text above f1a7d0a1 b6ab3c5a 219372c8 16ecfc21
+e8794896 01e26034 0a06fb8b 2ffb6833`.
+```
+sha256sum /tmp/diff.txt
+```
+Want: the change list, whole file, value above. **[WRITE]** the eight groups you see:
+____________________________________________________________ (the production sitting compares against this).
+```
+grep -E '  (service/verifier/release/release_tool.py|docs/ceremony/sign-release.sh)$' /tmp/diff.txt
+```
+Want two lines whose hashes equal the two `sha256sum` results above.
+
+**Read the change.** The release tool writes the change list, including its own text, so read the two scripts from
+the files themselves:
+```
+less service/verifier/release/release_tool.py docs/ceremony/sign-release.sh
+```
+(Space: next page; `b`: back; `:n`: the second file; `q`: quit.) Then read the whole change list on this screen:
+```
+less /tmp/diff.txt
+```
+It lists every file that enters the archive, each with its SHA-256, and prints in full each one added or changed
+since the baseline commit: the release tool, the signing script (both just read), `install.sh`, the lock, the trust
+file, the release constants, the README. The verifier code and the vendored SHA-1DC source are unchanged since the
+baseline (their lines say `unchanged`). A printout, if you have one, may help you follow; it is not what you approve.
+**[WRITE]** I approve the change list as read on this screen, whole-file digest as written above: yes / no ________ .
+No is a stop.
 ```
 python3 service/verifier/release/release_tool.py baseline --repo . --commit b134cdfdacc5d89f2748fa7ec15c46e38b51a32c --source HEAD
 ```
 Want exactly two lines (about a minute over Tor):
 `BASELINE PASS: b134cdfdacc5d89f2748fa7ec15c46e38b51a32c existed by Bitcoin block 973240, header time 2026-10-26T13:12:22Z (blockstream.info and mempool.space agree);`
-and `  freeze commit 52ee17918c5ed841587d78cb2ca3e8c54c4682d2 is its ancestor.` The baseline existed four weeks before
-any release file (2026-11-23); nobody preparing this candidate could have changed it. **[PHOTO]**
+and `  freeze commit 52ee17918c5ed841587d78cb2ca3e8c54c4682d2 is its ancestor.` So the baseline commit's bytes were
+fixed by 2026-10-26, four weeks before any release file, and cannot have been rewritten since, if the two explorers
+serve genuine chain data and Git's object hashes hold. It does not show that you approved that baseline (the
+procedure's question 5). **[PHOTO]**
 ```
 python3 formal/freeze-v1/assemble.py --repo . --commit 270ca49 --out /tmp/fz
 ```
@@ -92,13 +118,13 @@ Build the release yourself:
 ```
 python3 service/verifier/release/release_tool.py build --repo . --commit HEAD --out /tmp/out
 ```
-Want one line: `BUILT tessera-verifier-v1-1.parts  sha256 7fd00606 b5591d9a 3a410512 776e3a0e 82fa2662 8c179987 49ca1a0d
-a61de614`. **[WRITE]** the eight groups you see: ____________________________________________________________
+Want one line: `BUILT tessera-verifier-v1-1.parts  sha256 f50e5388 4cf4ae59 85a4b27a 4dc92416 f458d267 fa86c794 3f96fac6
+92d514fd`. **[WRITE]** the eight groups you see: ____________________________________________________________
 ```
 python3 service/verifier/release/release_tool.py check /tmp/out/tessera-verifier-v1-1.parts --repo .
 ```
 Want exactly 12 lines: `CHECK PASS: …`; the archive line with the hash above; `namespace PRODUCTION release 1
-successor None`; `source commit f2511c0d…`; `freeze commit 52ee1791… record sha256 05542967 b091424a 614afd38 a32cfb84
+successor None`; `source commit 554a1fbe…`; `freeze commit 52ee1791… record sha256 05542967 b091424a 614afd38 a32cfb84
 7b9b6b3f 0e5a7b71 03b11cd2 2d95575e`; `catalog sha256 aaf4306f ed070119 022c8486 219f5160 dc869eda a929f323 d962fbb6
 79e27fc2`; `trust file sha256 9faa0368 3df7506c efa07afa 4c062918 2ebc5d42 86b97801 e1053cb8 d86a7f89 version 1 as_of
 2026-11-16T15:48:11Z`; `parts 31`; `repository key 6BDA 2155 9F18 D5DB 8E13 12C3 6321 0B5F F92A D30A from
@@ -199,14 +225,15 @@ Then it runs to the end. Want, in order:
   each followed by `ROW 36 REFUSED, nothing unpacked, key offered: …` (first `release.pub.asc`, then `test.pub.pgp`);
 - `(The installed verifier's section 3.5 refusal needs Python 3.14 and cannot run here: NUC evidence only.)`;
 - the vector table: 9 lines starting `match`, then `9/9 match`;
-- the OUT listing with exactly `record.txt`, `tessera-verifier-v1-1.parts.sig`, `test.pub.pgp`, their hashes, and
-  `==> PASS: rehearse. …`
+- the OUT listing: exactly 3 names, `record.txt`, `tessera-verifier-v1-1.parts.sig`, `test.pub.pgp`; then exactly
+  3 hash lines, one per file; then `==> PASS: rehearse. …`
 
 **[PHOTO]** the row 36 lines, the vector table and the final PASS. Eject OUT; shut down. **End time:** ________
 
 ## After
 
-OUT goes to the owner (the TEST signature, the TEST public key and `record.txt`; all public). Keep INPUT purple and
+OUT goes to the owner (the TEST signature, the TEST public key and `record.txt`; all public). Keep this sheet: the
+change-list digest you wrote is what the production sitting compares. Keep INPUT purple and
 away from the NUC and every everyday computer: it may be the production sitting's INPUT. Tell the owner the times
 and everything you wrote. The second half of row 36 (the installed production verifier refusing the section 3.5
 interface with `TEST_AUTHORITY_REFUSED`, exit 2, no verdict) needs Python 3.14, which Tails lacks; it is the NUC's
