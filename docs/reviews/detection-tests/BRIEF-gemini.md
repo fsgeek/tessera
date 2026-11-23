@@ -1,6 +1,7 @@
 # Brief: detection tests for Tessera V1 (for Gemini via `agy`; steward draft, 2026-11-22)
 
-**Status: DRAFT r4 (r2 answered the author's Codex review of r1; r3 added the mailbox endpoint and D1-D4 as built;
+**Approved by the author for preparation (plan and test code, no AWS access), 2026-11-23; run by `agy` with
+`gemini-4-neon-high`, AWS credentials unreachable.** Status: r4 (r2 answered the author's Codex review of r1; r3 added the mailbox endpoint and D1-D4 as built;
 r4, 2026-11-23, answers the author's Codex review of r3). Preparing the test code is approved by this brief;
 execution needs the author's separate approval and an AWS session.**
 
