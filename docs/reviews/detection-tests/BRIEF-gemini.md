@@ -1,11 +1,12 @@
 # Brief: detection tests for Tessera V1 (for Gemini via `agy`; steward draft, 2026-11-22)
 
-**Status: DRAFT r2 (after the author's Codex review, 2026-11-22). Preparing the test code is approved by this brief;
+**Status: DRAFT r3 (r2 answered the author's Codex review of r1; r3, 2026-11-23, adds the mailbox endpoint and D1-D4 as built). Preparing the test code is approved by this brief;
 execution needs the author's separate approval and an AWS session.**
 
 You are writing and running the tests that show Tessera's detections fire (gate item 3,
 `service/issuer/DEPLOY.md` "Gate before any client beyond smoke-test"). Work **from the detection contract and the
-threat model, not from the alarm code**: `docs/V1-DETECTION-CONTRACT.md`, `docs/V1-CONTRACT.md` §4 (failure model).
+threat model, not from the alarm code**: `docs/V1-DETECTION-CONTRACT.md` (for D1-D4 use its section "D1-D4 as
+built", which supersedes the original rows), `docs/V1-CONTRACT.md` §4 (failure model).
 Do not read `service/detect/infra/` or `service/watcher/` before your tests are written; you may read them afterwards
 to explain a failure. A detection that has never been seen to fire is a claim, not a control. Codex reviews your tests
 and results afterwards.
@@ -37,7 +38,8 @@ establish. Checks beyond the contract's named cases may be added but never subst
 
 **Two observation endpoints, recorded separately.** (a) *SNS delivery*: your test SQS subscription's receive time
 establishes delivery through SNS only. (b) *Email*: the contract's latency is event-to-email; use the email's arrival
-time from its headers (the author forwards the messages; the forwarding time is not the arrival time).
+time. The steward reads the alarm messages' arrival times from the author's mailbox (read-only) and gives them to
+  you after each test, by event time and subject; you do not need mailbox access and the author forwards nothing.
 
 **Three evidence classes, never merged.** For each promised detection report exactly one:
 - **PRODUCTION PATH**: the triggering event occurred on the production resource or production request path (only
