@@ -1,0 +1,88 @@
+# sign-release.sh 20d5e19c1ff46f0af25b3dc9308290e3014a3084c0c887a031b450e38a2df15a, rehearse, SIMULATED on the NUC (Ubuntu gpg 2.4.4), over candidate 3 (f50e5388...92d514fd).
+# Replaced for the simulation: the INPUT/OUT/work paths, and the network, route, swap, USB-disk, OUT-mount and tmpfs checks (8 lines):
+> IN=<sim>/INPUT; OUT=<sim>/OUT; W=<sim>/rel
+>   : || fail "hardware network interface $(basename "$i") is not down"
+> : || fail "a default route exists"
+> : || fail "non-zram swap is active"
+>   : || fail "$src is mounted and is not on a USB stick (an internal disk?)"
+> : || fail "$OUT is not mounted (format a stick FAT, volume name OUT)"
+> export GNUPGHOME=$(mktemp -d <sim>/gnupg.XXXXXX) && chmod 700 "$GNUPGHOME"
+> : || fail "/tmp is not in memory"
+# run:
+
+1. Session checks:
+gpg (GnuPG) 2.4.4
+gpgv (GnuPG) 2.4.4
+  gpgv binary /usr/bin/gpgv
+    f14d026b 9eae172c 432e015b ce227483 293b4966 f2f3fdcf a582f71d 3dbb2ae8 
+  INPUT stick: PHNR001101721P0B 953.9G INTEL SSDPEKNW010T9
+  OUT stick:   PHNR001101721P0B 953.9G INTEL SSDPEKNW010T9
+
+INPUT's serial is the one you wrote in Part 1, and OUT is the stick your sheet names? Type yes: 
+2. The files now in memory. Compare each with the value you wrote in Part 1, in full:
+  <sim>/rel/tessera-verifier-v1-1.parts
+    f50e5388 4cf4ae59 85a4b27a 4dc92416 f458d267 fa86c794 3f96fac6 92d514fd 
+  <sim>/rel/release_tool.py
+    a4531c7d 527953b2 6cfb6c7c 72e40420 7f381523 98e4fb94 4c7fd977 b0e6539f 
+  <sim>/rel/release.pub.asc
+    1a817ae3 9f974501 84d85e5c 09bbdc0a 301b18be 65c8c397 5144d3d8 160cf6f3 
+  release-vectors (all files)
+    66d149cd 999d0ccc fca10c98 4715d3ed bbddb6ad 4ba2b789 682d45b0 c43eca93 
+
+Every value equals what you wrote? Type yes: 
+Eject INPUT in Files and remove it now. Then press Enter.
+
+3. The archive (read only; nothing in it is run):
+INSPECT PASS: PRODUCTION release 1, 31 parts, R2 bindings hold.
+  sha256 f50e5388 4cf4ae59 85a4b27a 4dc92416 f458d267 fa86c794 3f96fac6 92d514fd
+  namespace PRODUCTION
+
+4. The release public key on INPUT:
+pub   nistp256 2026-11-10 [SC]
+      CADC 96CF 0023 55F8 E83F  E97F AFF8 0961 D825 035E
+uid                      Tessera release key <tessera@wamason.com>
+  key file holds exactly the key CADC 96CF 0023 55F8 E83F E97F AFF8 0961 D825 035E
+
+5. Rehearsal: making a throwaway TEST key in memory (never a release key).
+  TEST key 1AA15B1BCECD28F8423AE9AC9CFACE420FE2D441
+
+6. Signing the PRODUCTION archive with the TEST key only.
+
+7. The new signature over the same bytes, with only the signer's key (rehearsal: a control, not a release):
+SIGNATURE PASS: rule O, signer 1AA1 5B1B CECD 28F8 423A E9AC 9CFA CE42 0FE2 D441, gpgv exit 0 with only that key.
+
+8. One changed byte must be refused by gpgv:
+  REFUSED: gpgv refused (exit 1): ['gpgv: BAD signature from "THROWAWAY TEST release key, rehearsal 2026-11-23T18:54:05Z <throwaway@invalid>"']
+  MUTATION REFUSED (as required)
+
+9. A10 row 36: production acquisition (fingerprint CADC...035E) must refuse the TEST-signed archive, unpack nothing.
+  REFUSED: signed by 1AA15B1BCECD28F8423AE9AC9CFACE420FE2D441, not by the authenticated key CADC96CF002355F8E83FE97FAFF80961D825035E
+  ROW 36 REFUSED, nothing unpacked, key offered: release.pub.asc (as required)
+  REFUSED: signed by 1AA15B1BCECD28F8423AE9AC9CFACE420FE2D441, not by the authenticated key CADC96CF002355F8E83FE97FAFF80961D825035E
+  ROW 36 REFUSED, nothing unpacked, key offered: test.pub.pgp (as required)
+  (The installed verifier's section 3.5 refusal needs Python 3.14 and cannot run here: NUC evidence only.)
+
+10. This Tails gpgv against the release-format vectors (profile 15.9 R3):
+gpgv: /usr/bin/gpgv ['gpgv (GnuPG) 2.4.4']
+match    01-valid-production                      exit=0 expected=0 accept=True
+match    02-valid-test                            exit=0 expected=0 accept=True
+match    03-wrong-key                             exit=2 expected=nonzero accept=False
+match    04-test-key-as-production                exit=2 expected=nonzero accept=False
+match    05-truncated-archive                     exit=1 expected=nonzero accept=False
+match    06-signature-over-different-archive      exit=1 expected=nonzero accept=False
+match    07-signature-corrupted                   exit=1 expected=nonzero accept=False
+match    08-archive-extra-byte                    exit=1 expected=nonzero accept=False
+match    09-test-key-offered-as-key               exit=0 expected=0 accept=False
+9/9 match
+
+11. Writing OUT (only now), then reading it back:
+record.txt
+tessera-verifier-v1-1.parts.sig
+test.pub.pgp
+fec1aceab594264b8cb6491f23ffea637b1d6ca45439afcd6964b501b60f6fa4  tessera-verifier-v1-1.parts.sig
+b491b1549d38cce77180a5222745d55b6897b8e56a674b02d9ffa58577a597d0  record.txt
+bb40e6fdb958d6a49b2164cf4995812349aacd71f22142c737ee471212d181ed  test.pub.pgp
+
+==> PASS: rehearse. Eject OUT, shut down. OUT goes to the owner and never returns to a signing session.
+
+exit=0

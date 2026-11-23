@@ -137,3 +137,27 @@ it is); the public-key blob hash still traces only to the ceremony record.
 namespace, a signature without the issuer fingerprint). Whole verifier suite, main checkout's venv: 156 pass, 1 fails
 (the known worktree-only independence check: it loads the main checkout's editable install). With the worktree's
 own venv, installed by the new `install.sh`: 157 pass.
+
+## Final pass (after `CODEX-CONFIRM.md`; pre-registered exit, no further review round)
+
+Source `554a1fbe…c7e199d3`, candidate 3 `f50e5388…92d514fd` (two builds from two checkouts, byte-identical; parts equal
+to candidate 2's, only `RELEASE.json` `source_commit` differs, because `sign-release.sh` changed); `release_tool.py`
+unchanged (`a4531c7d…`).
+
+- **H1 (paper approval).** MECHANISM. Both sheets and the procedure: the Pangolin makes the change list (`diff`), the
+  author reads it on that screen (`less`), reads the two scripts from the files themselves (the tool writes the list,
+  its own text included), checks their `sha256sum` against their lines in it (`grep`), and at the rehearsal writes
+  `sha256sum /tmp/diff.txt` (the whole list, last line included; `0093cf56…015f0a99`); a NUC printout is only a
+  reading aid and is never signed; the production sitting compares the regenerated list's whole-file digest with that
+  written value and stops on any difference. No tool change was needed (`sha256sum` gives the whole-file digest).
+- **H1 (time premise).** WORDING. SUMMARY ("could not have chosen the baseline's bytes", "The approved baseline") and
+  the procedure (decision 4, question 5, proposal) now say: the anchored commit cannot be rewritten after 2026-10-26
+  under the stated assumptions; this does not show the author's approval; a preparer could propose a different
+  pre-existing tree; a NUC compromised before the anchor is out of scope.
+- **M1.** MECHANISM. `expect_refusal` compares the command's whole error output with the full expected line (the
+  changed-byte check names the signer's user ID); SUMMARY's claim now matches. Simulated rehearsal:
+  `evidence/dry-rehearse-3.txt`; the signing mode's changed-byte line is not exercised without YubiKey B.
+- **M4.** WORDING. SUMMARY and procedure decision 5: ordinary (non-ceremony) acquisition relies on a caller-selected
+  checker and `gpgv`; no stronger claim.
+- **M6.** MECHANISM. The final OUT listing (`ls -A1`) and the hashes of the written files are checked; a failure
+  quarantines OUT before PASS. Sheets: exactly 3 names and 3 hash lines (rehearsal), 2 and 2 (signing).
