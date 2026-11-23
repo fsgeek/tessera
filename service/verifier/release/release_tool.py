@@ -8,6 +8,8 @@ It runs on the NUC, on Tails (the author's sitting) and on a relying party's mac
   check     ARCHIVE --repo R
             The author's check: archive grammar, R2 equalities, every part equal to its blob at the named source
             commit, the catalog and freeze record equal to the freeze commit's, then a summary to compare by eye.
+  inspect   ARCHIVE
+            Offline (the signing session): archive grammar and R2 equalities only; prints namespace, release, hash.
   sources   ARCHIVE
             Networked (Tor on Tails): KSK digests against IANA root-anchors.xml; header pins against two explorers.
   verify-sig ARCHIVE SIG --fingerprint F --key KEY [--gpgv P]
@@ -61,6 +63,13 @@ def need(cond, why):
 
 def sha(b):
     return hashlib.sha256(b).hexdigest()
+
+
+def load_json(raw, what):
+    try:
+        return json.loads(raw.decode("utf-8"))
+    except ValueError:
+        raise Refused(what + " is not JSON") from None
 
 
 def jcs(obj):  # RFC 8785 for this manifest: ASCII strings, null and objects only, no numbers
@@ -148,7 +157,7 @@ def check_bindings(parts):
     """Every R2 binding equality. Returns (manifest, trust object, constants path)."""
     need("RELEASE.json" in parts, "no RELEASE.json")
     raw = parts["RELEASE.json"]
-    m = json.loads(raw)
+    m = load_json(raw, "RELEASE.json")
     need(isinstance(m, dict) and set(m) == MANIFEST_KEYS and jcs(m) == raw, "RELEASE.json is not the closed JCS object")
     need(m["format"] == "tessera-v1-release/1" and m["profile"] == "tessera-v1-strict", "format or profile")
     need(m["namespace"] in ("PRODUCTION", "TEST"), "namespace")
@@ -169,7 +178,7 @@ def check_bindings(parts):
     c = parse_constants(others[cpath])
     need(sha(trust) == m["trust_config_sha256"] == c["TRUST_SHA256"], "trust hash binding")
     need(sha(catalog) == m["catalog_sha256"] == c["CATALOG_SHA256"] and c["CATALOG_BYTES"] == catalog, "catalog binding")
-    t = json.loads(trust)
+    t = load_json(trust, "trust.json")
     need(isinstance(t, dict) and t.get("version") == m["trust_config_version"], "trust version binding")
     need(c["NAMESPACE"] == m["namespace"] and c["UNICODE_VERSION"] == "16.0.0", "namespace binding")
     if m["namespace"] == "PRODUCTION":
@@ -415,6 +424,7 @@ def main(argv=None):
     b.add_argument("--release", default="1"); b.add_argument("--out", required=True)
     c = sub.add_parser("check"); c.add_argument("archive"); c.add_argument("--repo", default=".")
     s = sub.add_parser("sources"); s.add_argument("archive")
+    n = sub.add_parser("inspect"); n.add_argument("archive")
     for name in ("verify-sig", "acquire"):
         v = sub.add_parser(name); v.add_argument("archive"); v.add_argument("sig")
         v.add_argument("--fingerprint", required=True); v.add_argument("--key", required=True)
@@ -437,6 +447,11 @@ def main(argv=None):
             check(a.archive, a.repo)
         elif a.cmd == "sources":
             sources(a.archive)
+        elif a.cmd == "inspect":
+            data = open(a.archive, "rb").read()
+            m, _, _ = check_bindings(parse_archive(data))
+            print("INSPECT PASS: %s release %s, %d parts, R2 bindings hold." % (m["namespace"], m["release"], len(m["parts"]) + 1))
+            print("  sha256 %s" % groups(sha(data), 8))
         elif a.cmd == "verify-sig":
             verify_sig(a.archive, a.sig, a.fingerprint, a.key, a.gpgv)
             print("SIGNATURE PASS: rule O, signer %s, gpgv exit 0 with only that key." % groups(a.fingerprint))
