@@ -9,19 +9,22 @@ NOTE (BRIEF-gemini.md r5, Hard Safety Rule 3):
   any DynamoDB read or write.
 
 Transport & safety guarantees:
-- TESSERA_API is pinned strictly to an https://<id>.execute-api.us-east-2.amazonaws.com/v1
-  origin and stage.
+- TESSERA_API must be exactly https://p4e0222jof.execute-api.us-east-2.amazonaws.com/v1
+  (safety.PINNED_API_HOST); any other host is refused before any request.
 - Custom opener disables HTTP proxies and refuses ALL redirects (SafetyViolation).
 - TESSERA_SMOKE_KEY is sent ONLY to the exact pinned host.
 - One process-wide RateLimiter paces ALL API traffic (< 5 rps, burst 1).
 - POST refusal (non-2xx) is asserted immediately on HTTP status before reading the body.
 - Per-attempt evidence (UUID, timestamp, status, x-amzn-requestid, error_type) is
-  preserved even if a batch fails mid-way; no raw response bodies or URLs are logged.
+  preserved even if a batch fails mid-way; response header values are kept only if
+  they match a strict allowlist pattern (UUID request ID, alphabetic error type);
+  no raw response bodies, other headers, or URLs are logged.
 """
 
 from __future__ import annotations
 
 import os
+import re
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -31,6 +34,7 @@ from typing import Any
 
 from ledger import RunLedger, utc_now_iso
 from safety import (
+    PINNED_API_HOST,
     RateLimiter,
     SafetyViolation,
     SmokeTestQuotaTracker,
@@ -38,6 +42,16 @@ from safety import (
     assert_safe_api_request,
     validate_tessera_api_url,
 )
+
+
+_REQUEST_ID_RE = re.compile(r"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$")
+_ERROR_TYPE_RE = re.compile(r"^[A-Za-z]{1,64}$")
+
+
+def _allowlisted(value: Any, pattern: re.Pattern[str]) -> str | None:
+    if isinstance(value, str) and pattern.match(value.strip()):
+        return value.strip()
+    return None
 
 
 class NoRedirectHandler(urllib.request.HTTPRedirectHandler):
@@ -123,8 +137,11 @@ def _send_http(
         sent_smoke = any(config.smoke_key in str(v) for v in headers.values())
         if sent_smoke and not using_smoke_key:
             raise SafetyViolation("TESSERA_SMOKE_KEY found in headers when using_smoke_key=False.")
-        if using_smoke_key and urllib.parse.urlsplit(url).hostname != config.pinned_host:
-            raise SafetyViolation("Refusing to send TESSERA_SMOKE_KEY to non-pinned host.")
+        if sent_smoke and (
+            urllib.parse.urlsplit(url).hostname != PINNED_API_HOST
+            or config.pinned_host != PINNED_API_HOST
+        ):
+            raise SafetyViolation("Refusing to send TESSERA_SMOKE_KEY to any host but the deployed API.")
 
     if using_smoke_key:
         if quota is None:
@@ -157,8 +174,8 @@ def _send_http(
     return {
         "sent_at_utc": sent_at,
         "status": status,
-        "request_id": resp_headers.get("x-amzn-requestid"),
-        "error_type": resp_headers.get("x-amzn-errortype"),
+        "request_id": _allowlisted(resp_headers.get("x-amzn-requestid"), _REQUEST_ID_RE),
+        "error_type": _allowlisted(str(resp_headers.get("x-amzn-errortype") or "").split(":")[0], _ERROR_TYPE_RE),
     }
 
 
@@ -251,7 +268,6 @@ def run_d2a_missing_key(
             "trigger_timestamp_utc": trigger_ts,
             "request_ids": request_ids,
             "contract_latency_s": 600,
-            "sns_observable": True,
             "details": {"completed_count": len(attempts), "status_counts": statuses, "error_type_counts": error_types},
         },
         {
@@ -265,7 +281,6 @@ def run_d2a_missing_key(
             "trigger_timestamp_utc": trigger_ts,
             "request_ids": request_ids,
             "contract_latency_s": 600,
-            "sns_observable": True,
             "details": {"completed_count": len(attempts), "status_counts": statuses},
         },
     ]
@@ -360,7 +375,6 @@ def run_d2b_invalid_key(
             "trigger_timestamp_utc": threshold_crossed_at or ended,
             "request_ids": request_ids,
             "contract_latency_s": 600,
-            "sns_observable": True,
             "details": {"completed_count": len(attempts), "status_counts": statuses, "error_type_counts": error_types},
         }
     ]
@@ -459,7 +473,6 @@ def run_d3a_malformed_post(
             "trigger_timestamp_utc": threshold_crossed_at or ended,
             "request_ids": request_ids,
             "contract_latency_s": 900,
-            "sns_observable": True,
             "details": {"completed_count": len(attempts), "status_counts": statuses},
         }
     ]
@@ -554,7 +567,6 @@ def run_d4a_smoke_volume(
             "trigger_timestamp_utc": threshold_crossed_at or ended,
             "request_ids": request_ids,
             "contract_latency_s": 900,
-            "sns_observable": True,
             "details": {
                 "completed_this_step": len(attempts),
                 "cumulative_smoke_requests_daily": quota.total_daily_count,
@@ -674,7 +686,6 @@ def run_d4c_quota_exceeded(
             "request_ids": request_ids,
             "require_access_log_error": "QUOTA_EXCEEDED",
             "contract_latency_s": 900,
-            "sns_observable": True,
             "details": {
                 "completed_this_step": len(attempts),
                 "observed_quota_429": quota_429_request_id is not None,

@@ -25,3 +25,26 @@
 | Precheck 2: Trigger clause | **FIXED** | Removed premature "EQUIVALENT BY SCOPE (confirmed)" claims in `PLAN.md`; marked all throwaway rows `CANDIDATE` until live firing and observed delivery confirm the deployed path. |
 | Precheck 3: Requester | **FIXED** | Updated `PLAN.md` §1 and `D6c` to state explicitly that neither receipt verification nor `D6c` settles requester authorization for an in-account principal submitting work through the authorized issuer/signer path. |
 | Precheck 4: Binding text | **FIXED** | Updated `PLAN.md` to use operative `yanantin-pilot` volume `10` (superseding `5`), framed reset durations as test-design estimates behind a verified `OK` baseline, and separated brief execution limits from registered contract promises. |
+
+## Steward removal pass (2026-11-23)
+
+This pass ran under the pre-registered exit. The steward fixes the remaining safety findings with the smallest change, or by removing the capability. No further review round follows. Removal was preferred to new guards. One line per finding in `CODEX-CONFIRM.md`:
+
+| Confirmation finding | Status | Change |
+|---|---|---|
+| 1. D3b removed | **NOT COVERED** (confirmed) | No change. `D3b` stays removed. |
+| 2. Recovery can remove a pre-existing production-topic subscription | **REMOVED** | The SQS observer, its subscribe/unsubscribe, teardown and recovery are deleted (`observer.py`, `d7_tests.py`). No code calls `tessera-v1-alarms` or its subscriptions, and a source-scan test checks this. `D7-sns-sub-subscribe`/`-unsubscribe` and the SNS endpoint are NOT COVERED. |
+| 3. Approved API ID unbound (HIGH) | **FIXED** | `TESSERA_API` host must equal `p4e0222jof.execute-api.us-east-2.amazonaws.com` and the stage must be `/v1` (`safety.PINNED_API_HOST`). The smoke key is refused for any other host, even in a hand-built config. Tests cover both. |
+| 4. Global IAM mutations; S3 tags before location check (HIGH) | **REMOVED** | All IAM code is deleted: throwaway roles, inline policies, users, access keys, and the Lambda role. The `iam`, `s3` and `lambda` clients are also deleted. The IAM, Lambda, S3 and CloudTrail rows are NOT COVERED. |
+| 5. No exclusive run-ID claim (HIGH) | **FIXED** | The run ID is now generated (uuid4 hex, 12 characters), and `--run-id` and `--output-dir` are removed. An `O_CREAT|O_EXCL` lock in `run-output/` gives one run at a time, released in `finally`. The ledger is created with `O_EXCL`. No observer subscriptions remain to collide. |
+| 6. Create-to-recovery gap (HIGH) | **REMOVED / FIXED** | Removed S3 and CloudTrail (untagged-bucket gap), the KMS alias and grant, the REST API, the usage-plan key and the throwaway-topic subscription, because none can be found by tag search. Every remaining resource is tagged in its create call. An intent is flushed first, and recovery reconciles only by us-east-2 tag search on both tags. |
+| 7. Recovery can report success with residuals | **FIXED** | A search miss never closes an intent. A failed create closes as `not_created` only on a 4xx. Otherwise it stays `unresolved`, which counts as a residual. The grant entry is removed. After deletes, recovery searches again. Any live item or unclean entry gives a non-zero exit, and results are persisted. |
+| 8. Pacing and quota per process (HIGH) | **FIXED (narrowed) / documented** | The lock limits a checkout to one process. README and runner say only one run at a time is supported. If today's access-log count cannot be read, smoke-key rows do not start (no default of zero). A log read is still a snapshot (documented). |
+| 9. Recovery/response evidence can write secrets | **FIXED** | Recovery sanitizes with `TESSERA_SMOKE_KEY`/`TESSERA_API` from the environment. Output shows only validated names and type/class labels. Account IDs inside ARNs are redacted. Summary lines drop identifiers. Response headers are kept only if they match a UUID request-ID pattern or an alphabetic error-type pattern. |
+| 10. D4c opt-in and cap | **FIXED** (confirmed) | No change. |
+| 11. StopLogging setup gap | **REMOVED** | The CloudTrail opt-in is deleted. `D7-ct-*` are NOT COVERED. |
+| 12. Lost access-key response | **REMOVED** | The IAM access-key test is deleted. `D7-iam-accesskey` is NOT COVERED. |
+| Additional HIGH: refused preflight leaves an adoptable ledger | **FIXED** | Preflight (identity plus tag search) runs before any ledger exists. A refusal writes nothing, which a test checks. Recovery acts only on tag-found types that have an intent in the ledger. The ledger account must match the caller. |
+| Additional HIGH: teardown deletes queue, leaves production subscription | **REMOVED** | The observer is gone. |
+
+Rows by evidence class after this pass (§4, 68 rows): 6 PRODUCTION PATH (5 without opt-in `D4c`), 8 EQUIVALENT BY SCOPE (CANDIDATE), 54 NOT COVERED. §5 (10 rows): 5 candidate, 5 NOT COVERED.

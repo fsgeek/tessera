@@ -10,6 +10,7 @@ All writes pass through safety.sanitize_value to enforce Hard Safety Rule 5
 from __future__ import annotations
 
 import json
+import os
 import uuid
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
@@ -48,10 +49,15 @@ class RunLedger:
     def __post_init__(self) -> None:
         validate_run_id(self.run_id)
         self.path.parent.mkdir(parents=True, exist_ok=True)
-        if self.exclusive_create and self.path.exists():
-            raise SafetyViolation(
-                f"Ledger already exists for run_id={self.run_id}; refusing to overwrite or reuse run_id."
-            )
+        if self.exclusive_create:
+            # Atomic claim: O_CREAT|O_EXCL fails if any ledger for this run_id exists.
+            try:
+                fd = os.open(self.path, os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o600)
+            except FileExistsError as exc:
+                raise SafetyViolation(
+                    "Ledger already exists for this run_id; refusing to overwrite or reuse run_id."
+                ) from exc
+            os.close(fd)
         if not self.data:
             self.data = {
                 "run_id": self.run_id,
@@ -62,7 +68,6 @@ class RunLedger:
                 "resources": [],
                 "events": [],
                 "row_results": [],
-                "sns_messages": [],
                 "alarm_transitions": [],
                 "access_log_matches": [],
                 "steward_mailbox_handoff": [],
@@ -265,10 +270,6 @@ class RunLedger:
         self.data["steward_mailbox_handoff"] = handoff
         self._flush()
 
-    def record_sns_message(self, message: dict[str, Any]) -> None:
-        self.data["sns_messages"].append(message)
-        self._flush()
-
     def record_alarm_transition(self, transition: dict[str, Any]) -> None:
         self.data["alarm_transitions"].append(transition)
         self._flush()
@@ -292,10 +293,7 @@ class RunLedger:
         lines: list[str] = []
         for r in self.data["resources"]:
             detail = f" ({r['detail']})" if r.get("detail") else ""
-            raw_line = (
-                f"- [{r['status']}] {r['resource_type']} name={r['name']} "
-                f"id={r.get('identifier') or '(pending)'}{detail}"
-            )
+            raw_line = f"- [{r['status']}] {r['resource_type']} name={r['name']}{detail}"
             lines.append(sanitize_value(raw_line, self.secrets))
         return lines
 

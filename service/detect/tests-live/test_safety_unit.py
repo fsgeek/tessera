@@ -1,5 +1,4 @@
-"""Offline unit tests for safety guards, transport pinning, live-verified recovery,
-rate limiting, redaction, and evidence correlation.
+"""Offline unit tests for the detection-test safety guards (steward removal pass).
 
 Runs without AWS credentials, without network access, and without boto3 installed.
 """
@@ -7,26 +6,28 @@ Runs without AWS credentials, without network access, and without boto3 installe
 from __future__ import annotations
 
 import json
+import re
 import sys
 import types
 import urllib.request
 import uuid
-from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
 import pytest
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
+HERE = Path(__file__).resolve().parent
+sys.path.insert(0, str(HERE))
 
-import api_tests
-import d7_tests
-import run_tests
-from api_tests import ApiConfig, NoRedirectHandler, _send_http
-from ledger import RunLedger, load_ledger
-from observer import parse_sns_sqs_message
-from safety import (
+import api_tests  # noqa: E402
+import d7_tests  # noqa: E402
+import run_tests  # noqa: E402
+from api_tests import ApiConfig, NoRedirectHandler, _send_http  # noqa: E402
+from ledger import RunLedger, load_ledger  # noqa: E402
+from safety import (  # noqa: E402
+    ALLOWED_AWS_ENDPOINTS,
     ALLOWED_REGION,
+    PINNED_API_HOST,
     PURPOSE_TAG_KEY,
     PURPOSE_TAG_VALUE,
     RUN_ID_TAG_KEY,
@@ -38,7 +39,6 @@ from safety import (
     assert_post_was_refused,
     assert_region,
     assert_safe_api_request,
-    assert_throwaway_id_registered,
     assert_throwaway_name,
     locked_boto3_client,
     make_throwaway_name,
@@ -47,28 +47,86 @@ from safety import (
     validate_tessera_api_url,
 )
 
+ACCT = "123456789012"
+PINNED_BASE = f"https://{PINNED_API_HOST}/v1"
+ENV_VARS = (
+    "AWS_REGION",
+    "AWS_DEFAULT_REGION",
+    "AWS_ENDPOINT_URL",
+    "AWS_ENDPOINT_URL_KMS",
+    "AWS_USE_FIPS_ENDPOINT",
+    "AWS_USE_DUALSTACK_ENDPOINT",
+    "AWS_STS_REGIONAL_ENDPOINTS",
+    "TESSERA_API",
+    "TESSERA_SMOKE_KEY",
+)
+
+
+@pytest.fixture(autouse=True)
+def _clean_env(monkeypatch: pytest.MonkeyPatch) -> None:
+    for var in ENV_VARS:
+        monkeypatch.delenv(var, raising=False)
+
+
+def _meta(service: str) -> Any:
+    return types.SimpleNamespace(region_name="us-east-2", endpoint_url=f"https://{ALLOWED_AWS_ENDPOINTS[service]}")
+
+
+class _Pag:
+    def __init__(self, pages: list[dict[str, Any]]) -> None:
+        self._pages = pages
+
+    def paginate(self, **kwargs: Any) -> list[dict[str, Any]]:
+        return self._pages
+
+
+class _Sts:
+    meta = _meta("sts")
+
+    def get_caller_identity(self) -> dict[str, str]:
+        return {"Account": ACCT, "Arn": f"arn:aws:iam::{ACCT}:root"}
+
+
+class _TagApi:
+    meta = _meta("resourcegroupstaggingapi")
+
+    def __init__(self, arns: list[str]) -> None:
+        self.arns = arns
+        self.calls: list[Any] = []
+
+    def get_paginator(self, name: str) -> Any:
+        api = self
+
+        class _P:
+            def paginate(self, **kwargs: Any) -> list[dict[str, Any]]:
+                api.calls.append(kwargs)
+                return [{"ResourceTagMappingList": [{"ResourceARN": a} for a in api.arns]}]
+
+        return _P()
+
+
+class _Session:
+    def __init__(self, clients: dict[str, Any]) -> None:
+        self.clients = clients
+        self.requested: list[str] = []
+
+    def client(self, service: str, **kwargs: Any) -> Any:
+        self.requested.append(service)
+        if service not in self.clients:
+            raise AssertionError(f"unexpected client {service}")
+        return self.clients[service]
+
+
+# ---------------------------------------------------------------------------
+# Region / endpoint / removed services
+# ---------------------------------------------------------------------------
 
 def test_region_lock_and_env_endpoint_overrides(monkeypatch: pytest.MonkeyPatch) -> None:
     assert assert_region(ALLOWED_REGION) == "us-east-2"
-    for bad in ("us-east-1", "us-west-2", "eu-west-1", "", None):
+    for bad in ("us-east-1", "eu-west-1", "", None):
         with pytest.raises(SafetyViolation):
             assert_region(bad)
-
-    for var in (
-        "AWS_REGION",
-        "AWS_DEFAULT_REGION",
-        "AWS_ENDPOINT_URL",
-        "AWS_ENDPOINT_URL_KMS",
-        "AWS_USE_FIPS_ENDPOINT",
-        "AWS_USE_DUALSTACK_ENDPOINT",
-        "AWS_STS_REGIONAL_ENDPOINTS",
-    ):
-        monkeypatch.delenv(var, raising=False)
     assert_aws_env_safe()
-
-    monkeypatch.setenv("AWS_REGION", "us-east-2")
-    assert_aws_env_safe()
-
     for var, bad_val in (
         ("AWS_REGION", "us-east-1"),
         ("AWS_DEFAULT_REGION", "us-west-2"),
@@ -84,745 +142,445 @@ def test_region_lock_and_env_endpoint_overrides(monkeypatch: pytest.MonkeyPatch)
         monkeypatch.delenv(var, raising=False)
 
 
-def test_locked_boto3_client_refuses_endpoint_override_and_unscoped_iam(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    for var in (
-        "AWS_REGION",
-        "AWS_DEFAULT_REGION",
-        "AWS_ENDPOINT_URL",
-        "AWS_USE_FIPS_ENDPOINT",
-        "AWS_USE_DUALSTACK_ENDPOINT",
-        "AWS_STS_REGIONAL_ENDPOINTS",
-    ):
-        monkeypatch.delenv(var, raising=False)
+def test_locked_client_refuses_overrides_and_removed_services() -> None:
+    class _Fake:
+        def __init__(self, region: str, ep: str) -> None:
+            self.meta = types.SimpleNamespace(region_name=region, endpoint_url=ep)
 
-    class _FakeClient:
-        def __init__(self, region: str, endpoint_url: str) -> None:
-            self.meta = types.SimpleNamespace(region_name=region, endpoint_url=endpoint_url)
-
-    class _HijackedSession:
+    class _Hijacked:
         def client(self, service: str, **kwargs: Any) -> Any:
-            return _FakeClient("us-east-2", "https://attacker.example.com")
+            return _Fake("us-east-2", "https://attacker.example.com")
 
     with pytest.raises(SafetyViolation):
-        locked_boto3_client("kms", session=_HijackedSession())
+        locked_boto3_client("kms", session=_Hijacked())
 
-    class _WrongRegionSession:
-        def client(self, service: str, **kwargs: Any) -> Any:
-            return _FakeClient("us-east-1", "https://kms.us-east-1.amazonaws.com")
-
-    with pytest.raises(SafetyViolation):
-        locked_boto3_client("kms", session=_WrongRegionSession())
-
-    class _GoodSession:
+    class _Good:
         def client(self, service: str, region_name: str, endpoint_url: str) -> Any:
-            return _FakeClient(region_name, endpoint_url)
+            return _Fake(region_name, endpoint_url)
 
-    # IAM requires explicit allow_global_iam=True
-    with pytest.raises(SafetyViolation):
-        locked_boto3_client("iam", session=_GoodSession())
-    iam_client = locked_boto3_client("iam", session=_GoodSession(), allow_global_iam=True)
-    assert iam_client.meta.endpoint_url == "https://iam.amazonaws.com"
-
-    kms_client = locked_boto3_client("kms", session=_GoodSession())
-    assert kms_client.meta.endpoint_url == "https://kms.us-east-2.amazonaws.com"
-
-
-def test_throwaway_name_and_sqs_url_strict_binding() -> None:
-    run_id = "1123abc1"
-    acct = "123456789012"
-    name = make_throwaway_name(run_id, "kms")
-    assert name == "tessera-dtest-1123abc1-kms"
-    assert_throwaway_name(name, run_id=run_id)
-    assert_throwaway_name(f"alias/{name}", allow_alias_prefix=True, run_id=run_id)
-    assert_throwaway_name(f"arn:aws:sns:us-east-2:{acct}:{name}", run_id=run_id, account_id=acct)
-    assert_throwaway_name(f"arn:aws:iam::{acct}:role/{name}", run_id=run_id, account_id=acct)
-    assert_throwaway_name(
-        f"https://sqs.us-east-2.amazonaws.com/{acct}/{name}",
-        run_id=run_id,
-        account_id=acct,
-    )
-
-    forbidden = [
-        "tessera-v1-alarms",
-        "alias/tessera-v1-kms",
-        "tessera-dtest-1123abc1-tessera-v1-sneaky",
-        "tessera-dtest-other999-kms",  # wrong run_id
-        f"arn:aws:sns:us-east-2:999999999999:{name}",  # wrong account
-        f"arn:aws:sns:us-east-1:{acct}:{name}",  # wrong region
-        f"https://evil.us-east-2.example.com/{acct}/{name}",  # substring-spoofed SQS URL
-        f"https://sqs.us-east-2.amazonaws.com/999999999999/{name}",  # wrong SQS account
-        f"https://sqs.us-east-1.amazonaws.com/{acct}/{name}",
-        "my-random-bucket",
-        "",
-    ]
-    for bad in forbidden:
+    assert locked_boto3_client("kms", session=_Good()).meta.endpoint_url == "https://kms.us-east-2.amazonaws.com"
+    # IAM, S3 and Lambda clients no longer exist in this suite.
+    for svc in ("iam", "s3", "lambda"):
         with pytest.raises(SafetyViolation):
-            assert_throwaway_name(bad, allow_alias_prefix=True, run_id=run_id, account_id=acct)
-
-    assert_ownership_tags({PURPOSE_TAG_KEY: PURPOSE_TAG_VALUE, RUN_ID_TAG_KEY: run_id}, run_id, "test")
-    with pytest.raises(SafetyViolation):
-        assert_ownership_tags({PURPOSE_TAG_KEY: PURPOSE_TAG_VALUE, RUN_ID_TAG_KEY: "other999"}, run_id, "test")
-    with pytest.raises(SafetyViolation):
-        assert_ownership_tags({RUN_ID_TAG_KEY: run_id}, run_id, "test")
+            locked_boto3_client(svc, session=_Good())
 
 
-def test_d3b_removed_and_http_destination_pinned() -> None:
-    # D3b must not exist anywhere in dispatch or api_tests
-    assert not hasattr(api_tests, "run_d3b_oversized_post")
-    assert "d3b" not in run_tests.ALL_TESTS
+def test_source_never_touches_alarm_topic_subscriptions_or_iam() -> None:
+    """Item 1 & 2: no subscribe/unsubscribe, no IAM/S3/Lambda calls anywhere in the code."""
+    forbidden = [
+        r"\.subscribe\(",
+        r"\.unsubscribe\(",
+        r"list_subscriptions",
+        r"get_subscription_attributes",
+        r"PRODUCTION_ALARM_TOPIC_NAME",
+        r"allow_global_iam",
+        r"locked_boto3_client\(\s*\"(iam|s3|lambda)\"",
+        r"create_role|put_role_policy|create_user|create_access_key|assume_role",
+        r"create_bucket|create_trail|stop_logging|create_function",
+        r"create_grant|create_alias|create_usage_plan_key|create_rest_api",
+    ]
+    for src in ("run_tests.py", "d7_tests.py", "observer.py", "api_tests.py", "ledger.py"):
+        text = (HERE / src).read_text(encoding="utf-8")
+        for pat in forbidden:
+            assert not re.search(pat, text), f"{src} matches forbidden pattern {pat}"
 
-    valid_host = "abcdefgh12.execute-api.us-east-2.amazonaws.com"
-    valid_base = f"https://{valid_host}/v1"
-    norm, host, base_path = validate_tessera_api_url(valid_base + "/")
-    assert norm == valid_base
-    assert host == valid_host
-    assert base_path == "/v1"
 
-    for bad_url in (
-        "http://abcdefgh12.execute-api.us-east-2.amazonaws.com/v1",
-        "https://attacker.example.com/v1",
-        "https://abcdefgh12.execute-api.us-east-1.amazonaws.com/v1",
-        "https://abcdefgh12.execute-api.us-east-2.amazonaws.com/prod",
-        "https://abcdefgh12.execute-api.us-east-2.amazonaws.com/v1?x=1",
-        "https://user:pass@abcdefgh12.execute-api.us-east-2.amazonaws.com/v1",
-        "https://abcdefgh12.execute-api.us-east-2.amazonaws.com:8443/v1",
+def test_throwaway_name_binding_and_tags() -> None:
+    run_id = "a1b2c3d4e5f6"
+    name = make_throwaway_name(run_id, "kms")
+    assert name == "tessera-dtest-a1b2c3d4e5f6-kms"
+    assert_throwaway_name(f"arn:aws:sns:us-east-2:{ACCT}:{name}", run_id=run_id, account_id=ACCT)
+    for bad in (
+        "tessera-v1-alarms",
+        "tessera-dtest-a1b2c3d4e5f6-tessera-v1-sneaky",
+        "tessera-dtest-000000000000-kms",
+        f"arn:aws:sns:us-east-2:999999999999:{name}",
+        f"arn:aws:sns:us-east-1:{ACCT}:{name}",
+        f"https://sqs.us-east-2.amazonaws.com/999999999999/{name}",
     ):
         with pytest.raises(SafetyViolation):
-            validate_tessera_api_url(bad_url)
-
-    valid_uuid = str(uuid.uuid4())
-    # Allowed read-only GET
-    assert_safe_api_request(
-        "GET",
-        f"/v1/requests/{valid_uuid}",
-        headers={},
-        body=None,
-        using_smoke_key=False,
-        target_url=f"{valid_base}/v1/requests/{valid_uuid}",
-        pinned_host=valid_host,
-        base_path="/v1",
-    )
-    # Refused host mismatch
+            assert_throwaway_name(bad, run_id=run_id, account_id=ACCT)
+    assert_ownership_tags({PURPOSE_TAG_KEY: PURPOSE_TAG_VALUE, RUN_ID_TAG_KEY: run_id}, run_id, "t")
     with pytest.raises(SafetyViolation):
-        assert_safe_api_request(
-            "GET",
-            f"/v1/requests/{valid_uuid}",
-            headers={},
-            body=None,
-            using_smoke_key=False,
-            target_url=f"https://otherhost1.execute-api.us-east-2.amazonaws.com/v1/v1/requests/{valid_uuid}",
-            pinned_host=valid_host,
-            base_path="/v1",
-        )
-    # Allowed malformed_400 POST (non-UUID header)
-    assert_safe_api_request(
-        "POST",
-        "/v1/requests",
-        headers={"Tessera-Request-Key": "not-a-uuid"},
-        body=b"small",
-        using_smoke_key=True,
-        post_refusal_mode="malformed_400",
-        target_url=f"{valid_base}/v1/requests",
-        pinned_host=valid_host,
-        base_path="/v1",
-    )
-    # Refused valid UUID in malformed_400
-    with pytest.raises(SafetyViolation):
-        assert_safe_api_request(
-            "POST",
-            "/v1/requests",
-            headers={"Tessera-Request-Key": valid_uuid},
-            body=b"small",
-            using_smoke_key=True,
-            post_refusal_mode="malformed_400",
-            target_url=f"{valid_base}/v1/requests",
-            pinned_host=valid_host,
-            base_path="/v1",
-        )
-    # Refused oversized_413 (removed under r5 Rule 3!)
-    with pytest.raises(SafetyViolation):
-        assert_safe_api_request(
-            "POST",
-            "/v1/requests",
-            headers={"Tessera-Request-Key": valid_uuid},
-            body=b"X" * 1_100_000,
-            using_smoke_key=True,
-            post_refusal_mode="oversized_413",
-            target_url=f"{valid_base}/v1/requests",
-            pinned_host=valid_host,
-            base_path="/v1",
-        )
+        assert_ownership_tags({RUN_ID_TAG_KEY: run_id}, run_id, "t")
 
 
-def test_http_redirect_refused_and_post_2xx_checked_before_body_read() -> None:
+# ---------------------------------------------------------------------------
+# Item 3: API host binding
+# ---------------------------------------------------------------------------
+
+def test_api_bound_to_deployed_host_only() -> None:
+    norm, host, base = validate_tessera_api_url(PINNED_BASE + "/")
+    assert (norm, host, base) == (PINNED_BASE, PINNED_API_HOST, "/v1")
+    for bad in (
+        "https://abcdefgh12.execute-api.us-east-2.amazonaws.com/v1",  # another valid-looking API ID
+        "http://p4e0222jof.execute-api.us-east-2.amazonaws.com/v1",
+        "https://p4e0222jof.execute-api.us-east-1.amazonaws.com/v1",
+        "https://p4e0222jof.execute-api.us-east-2.amazonaws.com/prod",
+        "https://p4e0222jof.execute-api.us-east-2.amazonaws.com/v1/extra",
+        "https://p4e0222jof.execute-api.us-east-2.amazonaws.com.evil.com/v1",
+        "https://user:pw@p4e0222jof.execute-api.us-east-2.amazonaws.com/v1",
+        "https://p4e0222jof.execute-api.us-east-2.amazonaws.com/v1?x=1",
+    ):
+        with pytest.raises(SafetyViolation):
+            validate_tessera_api_url(bad)
+
+
+def test_api_config_from_env_refuses_other_host(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("TESSERA_API", "https://abcdefgh12.execute-api.us-east-2.amazonaws.com/v1")
+    monkeypatch.setenv("TESSERA_SMOKE_KEY", "smk")
+    with pytest.raises(SafetyViolation):
+        ApiConfig.from_env()
+    monkeypatch.setenv("TESSERA_API", PINNED_BASE)
+    assert ApiConfig.from_env().pinned_host == PINNED_API_HOST
+
+
+def test_smoke_key_never_sent_to_a_hand_built_other_host() -> None:
+    other = "abcdefgh12.execute-api.us-east-2.amazonaws.com"
+    cfg = ApiConfig(base_url=f"https://{other}/v1", pinned_host=other, base_path="/v1", smoke_key="smk")
+    opened: list[Any] = []
+
+    class _Opener:
+        def open(self, req: Any, timeout: float = 15.0) -> Any:
+            opened.append(req)
+            raise AssertionError("must not open")
+
+    limiter = RateLimiter(rps=4.0, _clock=lambda: 1.0, _sleeper=lambda _: None)
+    with pytest.raises(SafetyViolation):
+        _send_http(cfg, method="GET", path=f"/v1/requests/{uuid.uuid4()}", headers={"x-api-key": "smk"},
+                   body=None, using_smoke_key=True, post_refusal_mode=None, limiter=limiter, rps=1.0,
+                   quota=SmokeTestQuotaTracker(max_requests=10), opener=_Opener())  # type: ignore[arg-type]
+    assert opened == []
+
+
+def test_redirect_refused_post_2xx_checked_and_headers_allowlisted() -> None:
     handler = NoRedirectHandler()
-    req = urllib.request.Request("https://abcdefgh12.execute-api.us-east-2.amazonaws.com/v1/v1/requests")
     with pytest.raises(SafetyViolation):
-        handler.redirect_request(req, None, 302, "Found", {}, "https://evil.example.com/steal")
+        handler.redirect_request(urllib.request.Request(PINNED_BASE), None, 302, "Found", {}, "https://evil.example.com")
 
-    cfg = ApiConfig(
-        base_url="https://abcdefgh12.execute-api.us-east-2.amazonaws.com/v1",
-        pinned_host="abcdefgh12.execute-api.us-east-2.amazonaws.com",
-        base_path="/v1",
-        smoke_key="secret-smoke-key",
-    )
+    cfg = ApiConfig(base_url=PINNED_BASE, pinned_host=PINNED_API_HOST, base_path="/v1", smoke_key="smk")
     limiter = RateLimiter(rps=4.0, _clock=lambda: 100.0, _sleeper=lambda _: None)
-    quota = SmokeTestQuotaTracker(max_requests=10)
 
-    class _Fake202Resp:
-        status = 202
-        headers: dict[str, str] = {}
+    class _Resp:
+        def __init__(self, status: int, headers: dict[str, str]) -> None:
+            self.status = status
+            self.headers = headers
 
-        def __enter__(self) -> "_Fake202Resp":
+        def __enter__(self) -> "_Resp":
             return self
 
-        def __exit__(self, *args: Any) -> None:
+        def __exit__(self, *a: Any) -> None:
             return None
 
         def read(self, n: int = -1) -> bytes:
-            raise OSError("body read exploded")
+            raise OSError("body read must not happen first")
 
-    class _FakeOpener:
-        def open(self, request: Any, timeout: float = 15.0) -> Any:
-            return _Fake202Resp()
+    class _Opener:
+        def __init__(self, resp: _Resp) -> None:
+            self.resp = resp
 
-    # Must raise SafetyViolation (2xx POST) BEFORE read() raises OSError!
+        def open(self, req: Any, timeout: float = 15.0) -> Any:
+            return self.resp
+
     with pytest.raises(SafetyViolation):
-        _send_http(
-            cfg,
-            method="POST",
-            path="/v1/requests",
-            headers={"x-api-key": "secret-smoke-key", "Tessera-Request-Key": "not-a-uuid"},
-            body=b"abc",
-            using_smoke_key=True,
-            post_refusal_mode="malformed_400",
-            limiter=limiter,
-            rps=1.0,
-            quota=quota,
-            opener=_FakeOpener(),  # type: ignore[arg-type]
-        )
+        _send_http(cfg, method="POST", path="/v1/requests", headers={"x-api-key": "smk", "Tessera-Request-Key": "nope"},
+                   body=b"x", using_smoke_key=True, post_refusal_mode="malformed_400", limiter=limiter, rps=1.0,
+                   quota=SmokeTestQuotaTracker(max_requests=10), opener=_Opener(_Resp(202, {})))  # type: ignore[arg-type]
+
+    class _OkResp(_Resp):
+        def read(self, n: int = -1) -> bytes:
+            return b""
+
+    rid = str(uuid.uuid4())
+    res = _send_http(cfg, method="GET", path=f"/v1/requests/{uuid.uuid4()}", headers={}, body=None,
+                     using_smoke_key=False, post_refusal_mode=None, limiter=limiter, rps=1.0, quota=None,
+                     opener=_Opener(_OkResp(404, {"x-amzn-RequestId": rid, "x-amzn-ErrorType": "NotFoundException:http://x"})))  # type: ignore[arg-type]
+    assert res["request_id"] == rid and res["error_type"] == "NotFoundException"
+    res2 = _send_http(cfg, method="GET", path=f"/v1/requests/{uuid.uuid4()}", headers={}, body=None,
+                      using_smoke_key=False, post_refusal_mode=None, limiter=limiter, rps=1.0, quota=None,
+                      opener=_Opener(_OkResp(404, {"x-amzn-RequestId": "smk-reflected", "x-amzn-ErrorType": "a b"})))  # type: ignore[arg-type]
+    assert res2["request_id"] is None and res2["error_type"] is None
 
     assert_post_was_refused(400, "d3a")
     with pytest.raises(SafetyViolation):
         assert_post_was_refused(200, "d3a")
-
-
-def test_ledger_exclusive_create_and_recovery_refuses_production_targets(tmp_path: Path) -> None:
-    ledger_path = tmp_path / "ledger-1123abcd.json"
-    ledger = RunLedger(run_id="1123abcd", path=ledger_path, account_id="123456789012")
-    # Reusing same run_id/path must be refused!
     with pytest.raises(SafetyViolation):
-        RunLedger(run_id="1123abcd", path=ledger_path)
+        assert_safe_api_request("POST", "/v1/requests", headers={"Tessera-Request-Key": str(uuid.uuid4())},
+                                body=b"x", using_smoke_key=True, post_refusal_mode="malformed_400")
 
-    # Tamper ledger to pair throwaway display names with LIVE PRODUCTION identifiers (Finding 2!)
-    data = load_ledger(ledger_path)
-    data["resources"] = [
-        {
-            "resource_type": "kms_key",
-            "identifier": "prod-kms-key-id-999",
-            "name": "tessera-dtest-1123abcd-kms",
-            "status": "active",
-        },
-        {
-            "resource_type": "apigw_rest_api",
-            "identifier": "prodapi999",
-            "name": "tessera-dtest-1123abcd-api",
-            "status": "active",
-        },
-        {
-            "resource_type": "sns_observer_subscription",
-            "identifier": "arn:aws:sns:us-east-2:123456789012:tessera-v1-alarms:author-email-sub",
-            "name": "tessera-dtest-1123abcd-obs-q->tessera-v1-alarms",
-            "status": "active",
-        },
-    ]
-    ledger_path.write_text(json.dumps(data), encoding="utf-8")
 
-    destructive_calls: list[str] = []
+# ---------------------------------------------------------------------------
+# Item 4: run identity and preflight-before-ledger
+# ---------------------------------------------------------------------------
 
-    class _MockSts:
-        meta = types.SimpleNamespace(region_name="us-east-2", endpoint_url="https://sts.us-east-2.amazonaws.com")
+def test_run_id_is_generated_and_cannot_be_supplied() -> None:
+    ids = {run_tests.generate_run_id() for _ in range(50)}
+    assert len(ids) == 50
+    assert all(re.fullmatch(r"[0-9a-f]{12}", i) for i in ids)
+    with pytest.raises(SystemExit):
+        run_tests.build_parser().parse_args(["--run-id", "abcd1234"])
+    with pytest.raises(SystemExit):
+        run_tests.build_parser().parse_args(["--output-dir", "/tmp/elsewhere"])
 
-        def get_caller_identity(self) -> dict[str, str]:
-            return {"Account": "123456789012", "Arn": "arn:aws:iam::123456789012:root"}
 
-    class _MockKms:
-        meta = types.SimpleNamespace(region_name="us-east-2", endpoint_url="https://kms.us-east-2.amazonaws.com")
+def test_preflight_refusal_writes_no_ledger_and_releases_lock(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    fixed = "abcdef123456"
+    monkeypatch.setattr(run_tests, "generate_run_id", lambda: fixed)
+    tag = _TagApi([f"arn:aws:sqs:us-east-2:{ACCT}:tessera-dtest-{fixed}-q"])
+    sess = _Session({"sts": _Sts(), "resourcegroupstaggingapi": tag})
+    rc = run_tests.main(["--only", "d7-sup-sqs"], output_dir=tmp_path, session=sess)
+    assert rc == 1
+    assert list(tmp_path.glob("ledger-*")) == []
+    assert not (tmp_path / ".lock").exists()
+    # Tag search used BOTH tags.
+    keys = {f["Key"] for f in tag.calls[0]["TagFilters"]}
+    assert keys == {PURPOSE_TAG_KEY, RUN_ID_TAG_KEY}
 
-        def describe_key(self, KeyId: str) -> dict[str, Any]:
-            return {
-                "KeyMetadata": {
-                    "KeyId": KeyId,
-                    "AWSAccountId": "123456789012",
-                    "Arn": f"arn:aws:kms:us-east-2:123456789012:key/{KeyId}",
-                    "Description": "Production Tessera V1 signing key",
-                }
-            }
 
-        def list_resource_tags(self, KeyId: str) -> dict[str, Any]:
-            return {"Tags": []}
+def test_access_log_failure_fails_closed_before_smoke_key_traffic(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("TESSERA_API", PINNED_BASE)
+    monkeypatch.setenv("TESSERA_SMOKE_KEY", "smk")
 
-        def schedule_key_deletion(self, **kwargs: Any) -> None:
-            destructive_calls.append("kms:schedule_key_deletion")
+    def _boom(*a: Any, **k: Any) -> Any:
+        raise AssertionError("smoke-key traffic must not start")
 
-    class _MockApiGw:
-        meta = types.SimpleNamespace(region_name="us-east-2", endpoint_url="https://apigateway.us-east-2.amazonaws.com")
+    monkeypatch.setattr(run_tests, "run_d3a_malformed_post", _boom)
 
-        def get_rest_api(self, restApiId: str) -> dict[str, Any]:
-            return {"id": restApiId, "name": "tessera-v1-issuer", "tags": {}}
-
-        def delete_rest_api(self, **kwargs: Any) -> None:
-            destructive_calls.append("apigw:delete_rest_api")
-
-    class _MockSns:
-        meta = types.SimpleNamespace(region_name="us-east-2", endpoint_url="https://sns.us-east-2.amazonaws.com")
+    class _Logs:
+        meta = _meta("logs")
 
         def get_paginator(self, name: str) -> Any:
-            class _P:
-                def paginate(self, **kwargs: Any) -> list[dict[str, Any]]:
-                    return [{"Topics": [{"TopicArn": "arn:aws:sns:us-east-2:123456789012:tessera-v1-alarms"}]}]
-            return _P()
+            raise RuntimeError("logs unavailable")
 
-        def get_subscription_attributes(self, SubscriptionArn: str) -> dict[str, Any]:
-            return {
-                "Attributes": {
-                    "TopicArn": "arn:aws:sns:us-east-2:123456789012:tessera-v1-alarms",
-                    "Protocol": "email",
-                    "Endpoint": "author@example.com",
-                }
-            }
+    sess = _Session({"sts": _Sts(), "resourcegroupstaggingapi": _TagApi([]), "logs": _Logs()})
+    rc = run_tests.main(["--only", "d3a", "--wait-seconds", "0"], output_dir=tmp_path, session=sess)
+    assert rc == 1
+    ledgers = list(tmp_path.glob("ledger-*.json"))
+    assert len(ledgers) == 1
+    raw = ledgers[0].read_text(encoding="utf-8")
+    assert "smk" not in raw and "logs unavailable" not in raw
 
-        def unsubscribe(self, **kwargs: Any) -> None:
-            destructive_calls.append("sns:unsubscribe")
 
-    class _MockSqs:
-        meta = types.SimpleNamespace(region_name="us-east-2", endpoint_url="https://sqs.us-east-2.amazonaws.com")
+# ---------------------------------------------------------------------------
+# Item 5: one process at a time
+# ---------------------------------------------------------------------------
 
-    class _MockSession:
-        def client(self, service: str, **kwargs: Any) -> Any:
-            return {
-                "sts": _MockSts(),
-                "kms": _MockKms(),
-                "apigateway": _MockApiGw(),
-                "sns": _MockSns(),
-                "sqs": _MockSqs(),
-            }[service]
+def test_lock_refuses_second_run_and_is_left_alone(tmp_path: Path) -> None:
+    lock = run_tests.RunLock(tmp_path)
+    lock.acquire()
+    with pytest.raises(SafetyViolation):
+        run_tests.RunLock(tmp_path).acquire()
 
-    res = d7_tests.cleanup_from_ledger_file(ledger_path, session=_MockSession(), discover_live=False)
-    assert destructive_calls == []
+    sess = _Session({})  # any AWS client request would fail the test
+    assert run_tests.main(["--only", "d7-kms"], output_dir=tmp_path, session=sess) == 1
+    assert run_tests.main(["--cleanup-ledger", "ledger-abcdef123456.json"], output_dir=tmp_path, session=sess) == 1
+    assert sess.requested == []
+    assert (tmp_path / ".lock").exists()  # refusing process did not delete another's lock
+    lock.release()
+    assert not (tmp_path / ".lock").exists()
+    lock.release()  # idempotent
+
+
+def test_dry_run_makes_no_files_no_calls(tmp_path: Path) -> None:
+    sess = _Session({})
+    assert run_tests.main(["--dry-run", "--suite", "all"], output_dir=tmp_path, session=sess) == 0
+    assert list(tmp_path.iterdir()) == []
+    assert sess.requested == []
+    assert run_tests.main(["--dry-run", "--cleanup-ledger", "x.json"], output_dir=tmp_path) == 2
+
+
+# ---------------------------------------------------------------------------
+# Items 6 & 7: tag-only recovery, never closing on a miss, redaction
+# ---------------------------------------------------------------------------
+
+def _ledger_with(tmp_path: Path, run_id: str, entries: list[dict[str, Any]]) -> Path:
+    path = tmp_path / f"ledger-{run_id}.json"
+    led = RunLedger(run_id=run_id, path=path, account_id=ACCT)
+    led.data["resources"] = entries
+    led._flush()
+    return path
+
+
+def test_recovery_refuses_ledger_identifiers_and_untargeted_types(tmp_path: Path) -> None:
+    run_id = "abcdef123456"
+    destructive: list[str] = []
+    path = _ledger_with(tmp_path, run_id, [
+        {"resource_type": "kms_key", "identifier": "prod-key", "name": f"tessera-dtest-{run_id}-kms", "status": "active"},
+    ])
+
+    class _Sqs:
+        meta = _meta("sqs")
+
+        def delete_queue(self, **k: Any) -> None:
+            destructive.append("sqs")
+
+    # Tag search returns nothing for the ledger's kms entry, but finds a queue with no intent.
+    tag = _TagApi([f"arn:aws:sqs:us-east-2:{ACCT}:tessera-dtest-{run_id}-q"])
+    sess = _Session({"sts": _Sts(), "resourcegroupstaggingapi": tag, "sqs": _Sqs(), "kms": object()})
+    res = d7_tests.cleanup_from_ledger_file(path, session=sess)
+    assert destructive == []
     assert res["ok"] is False
-    assert len(res["refused"]) == 3
-
-    persisted = load_ledger(ledger_path)
-    assert all(r["status"] == "refused_unverified" for r in persisted["resources"])
-    assert len(persisted["recovery_runs"]) == 1
-    assert persisted["recovery_runs"][0]["ok"] is False
+    assert any("refused_no_matching_intent" in r for r in res["refused"])
+    # The ledger-only production identifier was never acted on and remains a residual.
+    assert any(r.startswith("ledger:kms_key") for r in res["residuals"])
+    assert load_ledger(path)["recovery_runs"][-1]["ok"] is False
 
 
-def test_s3_empty_checks_versions_delete_markers_and_errors() -> None:
-    deleted_batches: list[list[dict[str, str]]] = []
+def test_recovery_unresolved_intent_stays_open_on_tag_miss(tmp_path: Path) -> None:
+    run_id = "abcdef123456"
+    path = _ledger_with(tmp_path, run_id, [
+        {"resource_type": "kms_key", "identifier": None, "name": f"tessera-dtest-{run_id}-kms", "status": "unresolved"},
+    ])
+    sess = _Session({"sts": _Sts(), "resourcegroupstaggingapi": _TagApi([])})
+    res = d7_tests.cleanup_from_ledger_file(path, session=sess)
+    assert res["ok"] is False
+    assert load_ledger(path)["resources"][0]["status"] == "unresolved"
 
-    class _MockS3:
-        def get_bucket_location(self, Bucket: str, ExpectedBucketOwner: str) -> dict[str, str]:
-            return {"LocationConstraint": "us-east-2"}
 
-        def get_bucket_tagging(self, Bucket: str, ExpectedBucketOwner: str) -> dict[str, Any]:
-            return {
-                "TagSet": [
-                    {"Key": PURPOSE_TAG_KEY, "Value": PURPOSE_TAG_VALUE},
-                    {"Key": RUN_ID_TAG_KEY, "Value": "1123abcd"},
-                ]
-            }
+def test_recovery_deletes_tag_found_resource_after_service_verification(tmp_path: Path) -> None:
+    run_id = "abcdef123456"
+    q = f"tessera-dtest-{run_id}-q"
+    state = {"exists": True}
+    path = _ledger_with(tmp_path, run_id, [
+        {"resource_type": "sqs_queue", "identifier": None, "name": q, "status": "creating"},
+    ])
 
+    class _Sqs:
+        meta = _meta("sqs")
+
+        def get_queue_url(self, QueueName: str, QueueOwnerAWSAccountId: str) -> dict[str, str]:
+            return {"QueueUrl": f"https://sqs.us-east-2.amazonaws.com/{ACCT}/{QueueName}"}
+
+        def list_queue_tags(self, QueueUrl: str) -> dict[str, Any]:
+            return {"Tags": {PURPOSE_TAG_KEY: PURPOSE_TAG_VALUE, RUN_ID_TAG_KEY: run_id}}
+
+        def delete_queue(self, QueueUrl: str) -> None:
+            state["exists"] = False
+
+    class _DynTag(_TagApi):
         def get_paginator(self, name: str) -> Any:
-            assert name == "list_object_versions"
+            self.arns = [f"arn:aws:sqs:us-east-2:{ACCT}:{q}"] if state["exists"] else []
+            return super().get_paginator(name)
 
-            class _P:
-                def paginate(self, **kwargs: Any) -> list[dict[str, Any]]:
-                    return [
-                        {
-                            "Versions": [{"Key": "a", "VersionId": "v1"}],
-                            "DeleteMarkers": [{"Key": "b", "VersionId": "dm1"}],
-                        }
-                    ]
-            return _P()
-
-        def delete_objects(self, Bucket: str, Delete: dict[str, Any], ExpectedBucketOwner: str) -> dict[str, Any]:
-            deleted_batches.append(Delete["Objects"])
-            return {"Errors": [{"Key": "a", "Code": "AccessDenied"}]}
-
-    with pytest.raises(RuntimeError):
-        d7_tests._empty_throwaway_bucket(
-            _MockS3(), "tessera-dtest-1123abcd-ct-bkt", "1123abcd", "123456789012"
-        )
-    assert deleted_batches == [[{"Key": "a", "VersionId": "v1"}, {"Key": "b", "VersionId": "dm1"}]]
+    sess = _Session({"sts": _Sts(), "resourcegroupstaggingapi": _DynTag([]), "sqs": _Sqs()})
+    res = d7_tests.cleanup_from_ledger_file(path, session=sess)
+    assert res["ok"] is True, res
+    assert state["exists"] is False
+    assert load_ledger(path)["resources"][0]["status"] == "deleted"
+    out = json.dumps(res)
+    assert ACCT not in out and "https://" not in out
 
 
-def test_cli_flags_opt_in_dedup_d4c_last_and_wait_windows(monkeypatch: pytest.MonkeyPatch) -> None:
-    for var in ("AWS_REGION", "AWS_DEFAULT_REGION", "AWS_ENDPOINT_URL"):
-        monkeypatch.delenv(var, raising=False)
+def test_tag_arn_classification_is_region_and_account_bound() -> None:
+    run_id = "abcdef123456"
+    c = d7_tests._classify_tagged_arn
+    assert c(f"arn:aws:sqs:us-east-2:{ACCT}:tessera-dtest-{run_id}-q", run_id, ACCT)["resource_type"] == "sqs_queue"
+    assert c("arn:aws:apigateway:us-east-2::/apikeys/abc123", run_id, ACCT)["resource_type"] == "apigw_api_key"
+    assert c(f"arn:aws:logs:us-east-2:{ACCT}:log-group:tessera-dtest-{run_id}-logs:*", run_id, ACCT)["identifier"] == f"tessera-dtest-{run_id}-logs"
+    for bad in (
+        f"arn:aws:sqs:us-east-1:{ACCT}:tessera-dtest-{run_id}-q",
+        f"arn:aws:sqs:us-east-2:999999999999:tessera-dtest-{run_id}-q",
+        f"arn:aws:sqs:us-east-2:{ACCT}:tessera-v1-queue",
+        f"arn:aws:s3:::tessera-dtest-{run_id}-bkt",
+        "arn:aws:apigateway:us-east-2::/restapis/abc",
+    ):
+        assert c(bad, run_id, ACCT)["resource_type"] == "unknown"
 
-    # Incompatible --dry-run + --cleanup-ledger must exit non-zero (Finding 7)
-    assert run_tests.main(["--dry-run", "--cleanup-ledger", "foo.json"]) == 2
 
-    # Duplicate opt-ins in --only must ALL be removed without flags (Finding 10)
-    args = run_tests.build_parser().parse_args(
-        ["--only", "d4c,d4c,d7-cloudtrail,d7-cloudtrail,d7-kms,d7-kms"]
+def test_create_failure_classification() -> None:
+    class _E(Exception):
+        def __init__(self, status: int | None) -> None:
+            self.response = {"Error": {"Code": "X"}, "ResponseMetadata": {"HTTPStatusCode": status}} if status else None
+
+    assert d7_tests._definitely_not_created(_E(400)) is True
+    assert d7_tests._definitely_not_created(_E(500)) is False
+    assert d7_tests._definitely_not_created(_E(None)) is False
+    assert d7_tests._definitely_not_created(TimeoutError()) is False
+
+
+def test_redaction_and_summary_lines(tmp_path: Path) -> None:
+    secrets = [PINNED_BASE, "my-super-secret-smoke-key"]
+    path = tmp_path / "ledger-abcdef123456.json"
+    led = RunLedger(run_id="abcdef123456", path=path, secrets=secrets, account_id=ACCT)
+    iid = led.record_intent("kms_key", "tessera-dtest-abcdef123456-kms")
+    led.confirm_created(iid, "1234abcd-12ab-34cd-56ef-1234567890ab")
+    led.add_note(
+        f"arn=arn:aws:sns:us-east-2:{ACCT}:tessera-dtest-abcdef123456-topic "
+        "other=https://unrelated.example.com/p key=my-super-secret-smoke-key aws=AKIAIOSFODNN7EXAMPLE"
     )
-    assert run_tests._select_tests(args) == ["d7-kms"]
+    raw = path.read_text(encoding="utf-8")
+    assert "https://" not in raw and "my-super-secret-smoke-key" not in raw and "AKIAIOSFODNN7EXAMPLE" not in raw
+    assert f":{ACCT}:" not in raw
+    lines = led.cleanup_summary_lines()
+    assert lines and "1234abcd-12ab" not in lines[0] and "name=tessera-dtest-abcdef123456-kms" in lines[0]
+    assert led.has_uncleaned_resources()
+    with pytest.raises(SafetyViolation):
+        RunLedger(run_id="abcdef123456", path=path)
+    assert safe_error_label(RuntimeError(f"contacting {PINNED_BASE}")) == "RuntimeError"
+    clean = sanitize_value({"SecretAccessKey": "s", "queue_url": "q"}, [])
+    assert clean == {"SecretAccessKey": "[REDACTED]", "queue_url": "[REDACTED]"}
 
-    # d4c MUST be enforced strictly LAST even if listed first in --only
-    args2 = run_tests.build_parser().parse_args(
-        ["--only", "d4c,d3a,d4a", "--include-quota-exhaustion"]
-    )
-    assert run_tests._select_tests(args2) == ["d3a", "d4a", "d4c"]
 
-    # Auto observer wait reflects contract latencies (up to 3600s for IAM)
-    assert run_tests.compute_required_wait_seconds(["d7-kms"], observer_enabled=True) == 600
-    assert run_tests.compute_required_wait_seconds(["d3a"], observer_enabled=True) == 900
-    assert run_tests.compute_required_wait_seconds(["d7-iam-role"], observer_enabled=True) == 3600
+# ---------------------------------------------------------------------------
+# Selection, pacing, correlation
+# ---------------------------------------------------------------------------
+
+def test_cli_selection_opt_in_and_removed_tests() -> None:
+    for removed in ("d3b", "d7-s3", "d7-lambda", "d7-cloudtrail", "d7-iam-role", "d7-iam-access-key"):
+        assert removed not in run_tests.ALL_TESTS
+    p = run_tests.build_parser()
+    assert run_tests._select_tests(p.parse_args(["--only", "d4c,d4c,d7-kms,d7-kms"])) == ["d7-kms"]
+    assert run_tests._select_tests(p.parse_args(["--only", "d4c,d3a,d4a", "--include-quota-exhaustion"])) == ["d3a", "d4a", "d4c"]
+    with pytest.raises(SystemExit):
+        run_tests._select_tests(p.parse_args(["--only", "d7-iam-role"]))
+    assert run_tests.compute_required_wait_seconds(["d7-kms"]) == 600
+    assert run_tests.compute_required_wait_seconds(["d7-kms", "d3a"]) == 900
 
 
 def test_shared_rate_limiter_and_prior_quota() -> None:
     with pytest.raises(SafetyViolation):
         RateLimiter(rps=5.0)
-    with pytest.raises(SafetyViolation):
-        RateLimiter(rps=0.0)
-
     now = [100.0]
     slept: list[float] = []
 
-    def fake_clock() -> float:
-        return now[0]
-
-    def fake_sleep(dt: float) -> None:
+    def sleep(dt: float) -> None:
         slept.append(dt)
         now[0] += dt
 
-    # Process-wide limiter spaces consecutive calls across different row rps settings
-    rl = RateLimiter(rps=2.0, _clock=fake_clock, _sleeper=fake_sleep)
-    rl.wait(rps=2.0)  # immediate first request
-    rl.wait(rps=2.0)  # +0.5s
-    rl.wait(rps=0.5)  # +2.0s (slower row honoured)
-    rl.wait(rps=4.0)  # +0.5s (global 2.0 rps ceiling still enforced)
+    rl = RateLimiter(rps=2.0, _clock=lambda: now[0], _sleeper=sleep)
+    for r in (2.0, 2.0, 0.5, 4.0):
+        rl.wait(rps=r)
     assert [round(s, 3) for s in slept] == [0.5, 2.0, 0.5]
-
-    qt = SmokeTestQuotaTracker(max_requests=60, prior_count=58)
-    assert qt.consume() == 59
+    qt = SmokeTestQuotaTracker(max_requests=60, prior_count=59)
     assert qt.consume() == 60
     with pytest.raises(SafetyViolation):
         qt.consume()
-    qt.raise_cap_for_d4c(120)
-    assert qt.consume() == 61
 
 
-def test_redaction_urls_exceptions_and_allowlisted_sns_parser(tmp_path: Path) -> None:
-    secrets = ["https://abcdefgh12.execute-api.us-east-2.amazonaws.com/v1", "my-super-secret-smoke-key"]
-    ledger_file = tmp_path / "ledger-redact.json"
-    ledger = RunLedger(run_id="1123abcd", path=ledger_file, secrets=secrets)
-    intent_id = ledger.record_intent("kms_key", "tessera-dtest-1123abcd-kms")
-    ledger.confirm_created(intent_id, "key-uuid-1")
-    ledger.record_kms_scheduled_deletion("key-uuid-1", "2026-11-30", intent_id=intent_id)
-    ledger.add_note(
-        "sqs=https://sqs.us-east-2.amazonaws.com/123456789012/tessera-dtest-1123abcd-obs-q "
-        "other=https://unrelated.example.com/secret/path "
-        "api=https://abcdefgh12.execute-api.us-east-2.amazonaws.com/v1 "
-        "key=my-super-secret-smoke-key aws=AKIAIOSFODNN7EXAMPLE"
-    )
-    raw = ledger_file.read_text(encoding="utf-8")
-    assert "https://" not in raw
-    assert "abcdefgh12.execute-api" not in raw
-    assert "unrelated.example.com" not in raw
-    assert "my-super-secret-smoke-key" not in raw
-    assert "AKIAIOSFODNN7EXAMPLE" not in raw
-    assert "sqs-queue:tessera-dtest-1123abcd-obs-q" in raw
-    assert "scheduled, deletes on 2026-11-30" in raw
-    assert not ledger.has_uncleaned_resources()
-
-    # Dict keys AND sensitive keys sanitized
-    clean = sanitize_value(
-        {"https://leak.example.com": "val", "SecretAccessKey": "s3cr3t", "queue_url": "https://sqs.x"},
-        secrets,
-    )
-    assert "https://leak.example.com" not in clean
-    assert clean["SecretAccessKey"] == "[REDACTED]"
-    assert clean["queue_url"] == "[REDACTED]"
-
-    # safe_error_label never emits raw exception message
-    err = RuntimeError("failed contacting https://abcdefgh12.execute-api.us-east-2.amazonaws.com/v1")
-    label = safe_error_label(err)
-    assert label == "RuntimeError"
-    assert "execute-api" not in label
-
-    # EventBridge D7 plain-text sentence parsed cleanly into allowlisted identifiers (no raw excerpt!)
-    ev_uuid = "11111111-2222-3333-4444-555555555555"
-    eb_text = (
-        "Tessera D7 (control-plane change): PutKeyPolicy on kms.amazonaws.com "
-        "by arn:aws:iam::123456789012:user/admin at 2026-11-23T14:00:00Z; "
-        f"error null; CloudTrail event {ev_uuid}. Expected only during a deployment."
-    )
-    envelope = json.dumps(
-        {
-            "MessageId": "sns-msg-eb-1",
-            "Timestamp": "2026-11-23T14:00:03.000Z",
-            "Message": eb_text,
-        }
-    )
-    parsed = parse_sns_sqs_message(
-        body=envelope,
-        sent_timestamp_ms="1795442404000",
-        received_at_utc="2026-11-23T14:00:05.000000Z",
-    )
-    assert "raw_message_excerpt" not in parsed
-    assert parsed["message_format"] == "eventbridge_d7_text"
-    assert parsed["identifiers"]["cloudtrail_event_id"] == ev_uuid
-    assert parsed["identifiers"]["event_name"] == "PutKeyPolicy"
-    assert parsed["identifiers"]["error_code"] is None
-
-
-def test_correlate_row_results_joins_by_exact_identifiers() -> None:
+def test_correlate_row_results_uses_cloudtrail_and_alarm_history_only() -> None:
     ev_ok = "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"
-    ev_denied = "99999999-bbbb-cccc-dddd-eeeeeeeeeeee"
     stimuli = [
-        {
-            "row_id": "D7-kms-policy",
-            "action": "kms:PutKeyPolicy",
-            "kind": "d7_eventbridge",
-            "resource_name": "tessera-dtest-1123abcd-kms",
-            "expected_event_names": ["PutKeyPolicy"],
-            "started_at_utc": "2026-11-23T14:00:00.000000Z",
-            "ended_at_utc": "2026-11-23T14:00:01.000000Z",
-            "api_call_succeeded": True,
-            "contract_latency_s": 600,
-            "sns_observable": True,
-        },
-        {
-            "row_id": "D7-kms-disable",
-            "action": "kms:DisableKey",
-            "kind": "d7_eventbridge",
-            "resource_name": "tessera-dtest-1123abcd-kms",
-            "expected_event_names": ["DisableKey"],
-            "started_at_utc": "2026-11-23T14:00:02.000000Z",
-            "ended_at_utc": "2026-11-23T14:00:03.000000Z",
-            "api_call_succeeded": True,
-            "contract_latency_s": 600,
-            "sns_observable": True,
-        },
-        {
-            "row_id": "D4c",
-            "action": "GET until QUOTA_EXCEEDED",
-            "kind": "api_alarm",
-            "resource_name": "production-api-gateway",
-            "expected_alarm_names": ["tessera-v1-d4-quota"],
-            "started_at_utc": "2026-11-23T14:05:00.000000Z",
-            "ended_at_utc": "2026-11-23T14:06:00.000000Z",
-            "trigger_timestamp_utc": "2026-11-23T14:06:00.000000Z",
-            "request_ids": ["req-1"],
-            "require_access_log_error": "QUOTA_EXCEEDED",
-            "contract_latency_s": 900,
-            "sns_observable": True,
-        },
+        {"row_id": "D7-kms-policy", "action": "kms:PutKeyPolicy", "kind": "d7_eventbridge",
+         "started_at_utc": "2026-11-23T14:00:00.000000Z", "ended_at_utc": "2026-11-23T14:00:01.000000Z",
+         "api_call_succeeded": True, "contract_latency_s": 600},
+        {"row_id": "D7-kms-disable", "action": "kms:DisableKey", "kind": "d7_eventbridge",
+         "started_at_utc": "2026-11-23T14:00:02.000000Z", "ended_at_utc": "2026-11-23T14:00:03.000000Z",
+         "api_call_succeeded": True, "contract_latency_s": 600},
+        {"row_id": "D4c", "action": "GET", "kind": "api_alarm", "expected_alarm_names": ["tessera-v1-d4-quota"],
+         "started_at_utc": "2026-11-23T14:05:00.000000Z", "ended_at_utc": "2026-11-23T14:06:00.000000Z",
+         "request_ids": ["r"], "require_access_log_error": "QUOTA_EXCEEDED", "contract_latency_s": 900},
     ]
-    sns_messages = [
-        {
-            "sns_message_id": "m1",
-            "sns_timestamp_utc": "2026-11-23T14:00:10Z",
-            "sqs_sent_at_utc": "2026-11-23T14:00:11Z",
-            "received_at_utc": "2026-11-23T14:00:12Z",
-            "message_format": "eventbridge_d7_text",
-            "identifiers": {"cloudtrail_event_id": ev_ok, "event_name": "PutKeyPolicy"},
-        },
-        {
-            "sns_message_id": "m2",
-            "sns_timestamp_utc": "2026-11-23T14:00:15Z",
-            "sqs_sent_at_utc": "2026-11-23T14:00:16Z",
-            "received_at_utc": "2026-11-23T14:00:17Z",
-            "message_format": "eventbridge_d7_text",
-            "identifiers": {"cloudtrail_event_id": ev_denied, "event_name": "DisableKey", "error_code": "AccessDenied"},
-        },
-        {
-            "sns_message_id": "m3",
-            "sns_timestamp_utc": "2026-11-23T14:08:00Z",
-            "sqs_sent_at_utc": "2026-11-23T14:08:01Z",
-            "received_at_utc": "2026-11-23T14:08:02Z",
-            "message_format": "cloudwatch_alarm",
-            "identifiers": {
-                "alarm_name": "tessera-v1-d4-quota",
-                "new_state": "ALARM",
-                "state_change_time": "2026-11-23T14:08:00Z",
-            },
-        },
-    ]
-    alarm_transitions = [
-        {
-            "alarm_name": "tessera-v1-d4-quota",
-            "state_updated_timestamp": "2026-11-23T14:08:00.000000Z",
-            "old_state": "OK",
-            "new_state": "ALARM",
-        }
-    ]
-    ct_events_by_row = {
-        "D7-kms-policy": [{"event_id": ev_ok, "succeeded": True, "error_code": None}],
-        # AccessDenied event must NOT be credited as a successful tamper pass!
-        "D7-kms-disable": [{"event_id": ev_denied, "succeeded": False, "error_code": "AccessDenied"}],
-    }
-    # Access log shows THROTTLED instead of QUOTA_EXCEEDED -> D4c must stay OPEN!
-    access_logs_by_row = {
-        "D4c": [{"request_id": "req-1", "status": "429", "error": "THROTTLED"}]
-    }
-
-    rows, handoff = run_tests.correlate_row_results(
-        stimuli,
-        sns_messages,
-        alarm_transitions,
-        ct_events_by_row=ct_events_by_row,
-        access_logs_by_row=access_logs_by_row,
-    )
-    by_id = {r["row_id"]: r for r in rows}
-    assert by_id["D7-kms-policy"]["overall_status"] == "OBSERVED_SNS_PENDING_EMAIL"
-    assert by_id["D7-kms-disable"]["overall_status"] == "OPEN_MISSING_CORRELATED_EVIDENCE"
-    assert by_id["D4c"]["overall_status"] == "OPEN_MISSING_CORRELATED_EVIDENCE"
-    assert by_id["D4c"]["access_log_error_verified"] is False
-    assert len(handoff) == 3
-
-    # Once access log confirms QUOTA_EXCEEDED, D4c transitions to observed pending email
-    rows2, _ = run_tests.correlate_row_results(
-        stimuli,
-        sns_messages,
-        alarm_transitions,
-        ct_events_by_row=ct_events_by_row,
-        access_logs_by_row={"D4c": [{"request_id": "req-1", "status": "429", "error": "QUOTA_EXCEEDED"}]},
-    )
-    assert {r["row_id"]: r for r in rows2}["D4c"]["overall_status"] == "OBSERVED_ALARM_AND_SNS_PENDING_EMAIL"
-
-
-def test_preflight_refuses_existing_run_resources_and_reconciles_intents(tmp_path: Path) -> None:
-    run_id = "1123beef"
-    acct = "123456789012"
-    q_name = f"tessera-dtest-{run_id}-q"
-    q_url = f"https://sqs.us-east-2.amazonaws.com/{acct}/{q_name}"
-    user_name = f"tessera-dtest-{run_id}-user"
-
-    deleted_ops: list[str] = []
-    live_state = {"queue_exists": True, "user_exists": True, "user_keys": ["AKIAFAKEKEY000000001"]}
-
-    def _empty_pag(key: str) -> Any:
-        class _P:
-            def paginate(self, **kwargs: Any) -> list[dict[str, Any]]:
-                return [{key: []}]
-        return _P()
-
-    class _MockSts:
-        meta = types.SimpleNamespace(region_name="us-east-2", endpoint_url="https://sts.us-east-2.amazonaws.com")
-        def get_caller_identity(self) -> dict[str, str]:
-            return {"Account": acct, "Arn": f"arn:aws:iam::{acct}:root"}
-
-    class _MockTagApi:
-        meta = types.SimpleNamespace(region_name="us-east-2", endpoint_url="https://tagging.us-east-2.amazonaws.com")
-        def get_paginator(self, name: str) -> Any:
-            class _P:
-                def paginate(self, **kwargs: Any) -> list[dict[str, Any]]:
-                    items = []
-                    if live_state["queue_exists"]:
-                        items.append({"ResourceARN": f"arn:aws:sqs:us-east-2:{acct}:{q_name}"})
-                    return [{"ResourceTagMappingList": items}]
-            return _P()
-
-    class _MockSqs:
-        meta = types.SimpleNamespace(region_name="us-east-2", endpoint_url="https://sqs.us-east-2.amazonaws.com")
-        def list_queues(self, QueueNamePrefix: str) -> dict[str, Any]:
-            return {"QueueUrls": [q_url] if live_state["queue_exists"] else []}
-        def get_queue_url(self, QueueName: str, QueueOwnerAWSAccountId: str) -> dict[str, str]:
-            return {"QueueUrl": q_url}
-        def list_queue_tags(self, QueueUrl: str) -> dict[str, Any]:
-            return {"Tags": {PURPOSE_TAG_KEY: PURPOSE_TAG_VALUE, RUN_ID_TAG_KEY: run_id}}
-        def delete_queue(self, QueueUrl: str) -> None:
-            deleted_ops.append("sqs:delete_queue")
-            live_state["queue_exists"] = False
-
-    class _MockIam:
-        meta = types.SimpleNamespace(region_name="us-east-2", endpoint_url="https://iam.amazonaws.com")
-        def get_paginator(self, name: str) -> Any:
-            if name == "list_users":
-                class _P:
-                    def paginate(self, **kwargs: Any) -> list[dict[str, Any]]:
-                        return [{"Users": [{"UserName": user_name}] if live_state["user_exists"] else []}]
-                return _P()
-            return _empty_pag("Roles")
-        def get_user(self, UserName: str) -> dict[str, Any]:
-            return {
-                "User": {
-                    "Arn": f"arn:aws:iam::{acct}:user/{UserName}",
-                    "Tags": [
-                        {"Key": PURPOSE_TAG_KEY, "Value": PURPOSE_TAG_VALUE},
-                        {"Key": RUN_ID_TAG_KEY, "Value": run_id},
-                    ],
-                }
-            }
-        def list_access_keys(self, UserName: str) -> dict[str, Any]:
-            return {"AccessKeyMetadata": [{"AccessKeyId": k} for k in live_state["user_keys"]]}
-        def delete_access_key(self, UserName: str, AccessKeyId: str) -> None:
-            deleted_ops.append("iam:delete_access_key")
-            live_state["user_keys"] = [k for k in live_state["user_keys"] if k != AccessKeyId]
-        def delete_user(self, UserName: str) -> None:
-            assert not live_state["user_keys"], "keys must be deleted before user"
-            deleted_ops.append("iam:delete_user")
-            live_state["user_exists"] = False
-
-    class _EmptyService:
-        def __init__(self, ep: str, key: str = "items") -> None:
-            self.meta = types.SimpleNamespace(region_name="us-east-2", endpoint_url=ep)
-            self._key = key
-        def get_paginator(self, name: str) -> Any:
-            return _empty_pag(self._key)
-        def list_buckets(self) -> dict[str, Any]:
-            return {"Buckets": []}
-        def list_trails(self) -> dict[str, Any]:
-            return {"Trails": []}
-
-    class _Session:
-        def client(self, service: str, **kwargs: Any) -> Any:
-            table: dict[str, Any] = {
-                "sts": _MockSts(),
-                "resourcegroupstaggingapi": _MockTagApi(),
-                "sqs": _MockSqs(),
-                "iam": _MockIam(),
-                "sns": _EmptyService("https://sns.us-east-2.amazonaws.com", "Topics"),
-                "s3": _EmptyService("https://s3.us-east-2.amazonaws.com"),
-                "kms": _EmptyService("https://kms.us-east-2.amazonaws.com", "Aliases"),
-                "apigateway": _EmptyService("https://apigateway.us-east-2.amazonaws.com", "items"),
-                "lambda": _EmptyService("https://lambda.us-east-2.amazonaws.com", "Functions"),
-                "cloudtrail": _EmptyService("https://cloudtrail.us-east-2.amazonaws.com"),
-                "dynamodb": _EmptyService("https://dynamodb.us-east-2.amazonaws.com", "TableNames"),
-                "cloudwatch": _EmptyService("https://monitoring.us-east-2.amazonaws.com", "MetricAlarms"),
-                "logs": _EmptyService("https://logs.us-east-2.amazonaws.com", "logGroups"),
-                "events": _EmptyService("https://events.us-east-2.amazonaws.com", "Rules"),
-            }
-            return table[service]
-
-    sess = _Session()
-    # 1. Pre-flight MUST refuse to start because resources for run_id already exist!
-    with pytest.raises(SafetyViolation):
-        d7_tests.assert_no_existing_run_resources(run_id, acct, session=sess)
-
-    # 2. Recovery reconciles 'creating' intents via live discovery and deletes verified resources cleanly
-    ledger_path = tmp_path / f"ledger-{run_id}.json"
-    ledger = RunLedger(run_id=run_id, path=ledger_path, account_id=acct)
-    ledger.record_intent("sqs_queue", q_name)
-    ledger.record_intent("iam_user", user_name)
-    ledger.record_intent("iam_access_key", user_name)
-
-    res = d7_tests.cleanup_from_ledger_file(ledger_path, session=sess, discover_live=True)
-    assert res["ok"] is True
-    assert res["residuals"] == []
-    assert res["refused"] == []
-    assert "sqs:delete_queue" in deleted_ops
-    assert "iam:delete_access_key" in deleted_ops
-    assert "iam:delete_user" in deleted_ops
-
-    # Check registered ID helper still enforces membership
-    assert assert_throwaway_id_registered("id-1", {"id-1"}, "test") == "id-1"
-    with pytest.raises(SafetyViolation):
-        assert_throwaway_id_registered("prod-id", {"id-1"}, "test")
+    transitions = [{"alarm_name": "tessera-v1-d4-quota", "state_updated_timestamp": "2026-11-23T14:08:00.000000Z",
+                    "old_state": "OK", "new_state": "ALARM"}]
+    ct = {"D7-kms-policy": [{"event_id": ev_ok, "succeeded": True}],
+          "D7-kms-disable": [{"event_id": "x", "succeeded": False, "error_code": "AccessDenied"}]}
+    rows, handoff = run_tests.correlate_row_results(stimuli, transitions, ct_events_by_row=ct,
+                                                    access_logs_by_row={"D4c": [{"error": "THROTTLED"}]})
+    by = {r["row_id"]: r for r in rows}
+    assert by["D7-kms-policy"]["overall_status"] == "STIMULUS_CONFIRMED_PENDING_EMAIL"
+    assert by["D7-kms-disable"]["overall_status"] == "OPEN_MISSING_STIMULUS_EVIDENCE"
+    assert by["D4c"]["overall_status"] == "OPEN_MISSING_ALARM_EVIDENCE"
+    assert len(handoff) == 3 and all("sns" not in json.dumps(r).lower() for r in rows)
+    rows2, _ = run_tests.correlate_row_results(stimuli, transitions, ct_events_by_row=ct,
+                                               access_logs_by_row={"D4c": [{"error": "QUOTA_EXCEEDED"}]})
+    assert {r["row_id"]: r for r in rows2}["D4c"]["overall_status"] == "ALARM_FIRED_PENDING_EMAIL"
