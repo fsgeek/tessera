@@ -1,6 +1,7 @@
 # Brief: detection tests for Tessera V1 (for Gemini via `agy`; steward draft, 2026-11-22)
 
-**Status: DRAFT r3 (r2 answered the author's Codex review of r1; r3, 2026-11-23, adds the mailbox endpoint and D1-D4 as built). Preparing the test code is approved by this brief;
+**Status: DRAFT r4 (r2 answered the author's Codex review of r1; r3 added the mailbox endpoint and D1-D4 as built;
+r4, 2026-11-23, answers the author's Codex review of r3). Preparing the test code is approved by this brief;
 execution needs the author's separate approval and an AWS session.**
 
 You are writing and running the tests that show Tessera's detections fire (gate item 3,
@@ -23,8 +24,12 @@ and results afterwards.
    end, and list what you created and deleted. A KMS key you create is scheduled for deletion with the minimum window.
 3. The API may be exercised only through API Gateway with the `smoke-test` key, which the author provides at run
    time, and only for: read-only GETs, and POSTs designed to be refused (oversized, malformed). No request that would
-   be accepted for issuance.
-4. No flood above the usage plan's rate (5 rps, burst 20); a throttling test uses short bursts, under one minute.
+   be accepted for issuance. **Narrow exception for D2:** `GET /v1/requests/{key}` (the status route) for random
+   request-key UUIDs, sent with no API key or with a random invalid key, within rule 4's rate.
+4. No flood above the usage plan's rate (5 rps, burst 20); a throttling test uses short bursts, under one minute. If
+   reaching a detection's threshold (for example D1's 50 `THROTTLED` lines) would require exceeding this rule, that
+   detection is NOT COVERED; the desired result is never permission to exceed it. Note that every smoke-test request
+   counts toward its daily quota (100) and its D4 volume alarm (50); plan for both.
 5. No credentials, keys or URLs in your output files. The author supplies the API endpoint and the smoke-test key at
    run time as environment variables (`TESSERA_API`, `TESSERA_SMOKE_KEY`); write them nowhere.
 6. Cleanup: list every resource created and its deletion. A KMS key can only be *scheduled* for deletion (minimum 7
@@ -36,6 +41,12 @@ listed event or threshold within it): the promise in the contract's words; the t
 or threshold needed to cross it; the observation endpoint; the contract's latency; and exactly what a pass would
 establish. Checks beyond the contract's named cases may be added but never substitute for a promised one.
 
+**Latency standard per endpoint.** The contract has two: its original table states event-to-email, and its "D1-D4
+as built" section states event-to-alarm-state. For each row the plan names which applies to which endpoint: alarm
+state (from the alarm's CloudWatch history, `StateUpdatedTimestamp`), SNS receipt, and email arrival. Never pick one
+silently. **Correlate by identifiers**, not by subject and time alone: the CloudTrail event id (present in D7 and
+watcher message bodies), the alarm name and state-change time, the throwaway resource's name.
+
 **Two observation endpoints, recorded separately.** (a) *SNS delivery*: your test SQS subscription's receive time
 establishes delivery through SNS only. (b) *Email*: the contract's latency is event-to-email; use the email's arrival
 time. The steward reads the alarm messages' arrival times from the author's mailbox (read-only) and gives them to
@@ -45,8 +56,10 @@ time. The steward reads the alarm messages' arrival times from the author's mail
 - **PRODUCTION PATH**: the triggering event occurred on the production resource or production request path (only
   possible within rule 3, e.g. D1–D4 through the API).
 - **EQUIVALENT BY SCOPE**: fired with a throwaway resource, *and* (after your tests are written) you read the deployed
-  rule or code and confirm it does not filter by resource, so the same event on the production resource matches.
-  State the rule and the evidence that it is unfiltered.
+  rule *and every later stage of its processing and notification path* (any input transformer, the watcher's
+  filters, permissions on the path) and confirm that none filters by resource or behaves differently for the
+  production resource, so the same event on it would take the same deployed path to the same notification. State
+  each filter checked. This is never reported as if the production resource had been exercised.
 - **NOT COVERED**: not testable within the rules (with the reason), or fired only on a throwaway resource whose rule
   *does* filter by resource.
 Each row also gets FIRED / DID NOT FIRE, measured latencies (SNS, email) against the contract, and the run time.
