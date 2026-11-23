@@ -1,7 +1,7 @@
 # Brief: detection tests for Tessera V1 (for Gemini via `agy`; steward draft, 2026-11-22)
 
 **Approved by the author for preparation (plan and test code, no AWS access), 2026-11-23; run by `agy` with
-`gemini-4-neon-high`, AWS credentials unreachable.** Status: r4 (r2 answered the author's Codex review of r1; r3 added the mailbox endpoint and D1-D4 as built;
+`gemini-4-neon-high`, AWS credentials unreachable.** Status: r5 (r4 approved; r5 narrows rule 3 after Codex's safety review) (r2 answered the author's Codex review of r1; r3 added the mailbox endpoint and D1-D4 as built;
 r4, 2026-11-23, answers the author's Codex review of r3). Preparing the test code is approved by this brief;
 execution needs the author's separate approval and an AWS session.**
 
@@ -24,8 +24,11 @@ and results afterwards.
    `purpose=detection-test`, in **us-east-2 only** (the organization SCP denies other regions). Delete every one at the
    end, and list what you created and deleted. A KMS key you create is scheduled for deletion with the minimum window.
 3. The API may be exercised only through API Gateway with the `smoke-test` key, which the author provides at run
-   time, and only for: read-only GETs, and POSTs designed to be refused (oversized, malformed). No request that would
-   be accepted for issuance. **Narrow exception for D2:** `GET /v1/requests/{key}` (the status route) for random
+   time, and only for read-only GETs. **No POST that the issuer records** (steward correction r5, 2026-11-23, after
+   Codex): a refused POST such as `TOO_LARGE` still writes a durable REFUSED record and tombstone to the production
+   request table, and the watcher locks a trace for it for 400 days. A POST is allowed only if it is rejected before
+   any record is created (for example a missing or malformed request-key header, rejected as 400 before the record
+   write) and you show from the contract or a dry inspection that it creates none; otherwise the row is NOT COVERED. **Narrow exception for D2:** `GET /v1/requests/{key}` (the status route) for random
    request-key UUIDs, sent with no API key or with a random invalid key, within rule 4's rate.
 4. No flood above the usage plan's rate (5 rps, burst 20); a throttling test uses short bursts, under one minute. If
    reaching a detection's threshold (for example D1's 50 `THROTTLED` lines) would require exceeding this rule, that
