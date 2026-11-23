@@ -1,0 +1,21 @@
+# acquire, TEST-signed production candidate, production fingerprint and production key
+REFUSED: signed by B0224818323F29DE0ADB48A3F9A1478E254885DF, not by the authenticated key CADC96CF002355F8E83FE97FAFF80961D825035E
+exit=1  out-dir-exists=no
+# acquire, same, TEST public key offered as the key
+REFUSED: signed by B0224818323F29DE0ADB48A3F9A1478E254885DF, not by the authenticated key CADC96CF002355F8E83FE97FAFF80961D825035E
+exit=1  out-dir-exists=no
+# install the candidate (unpacked without R3, which needs the production signature) and run it
+install exit=0
+# production (default) on the first production receipt
+{"stable":{"T":"2026-11-16T14:35:57Z","historical_security":"NOT_EVALUATED","reason":"OK","revocation":"NOT_EVALUATED","standing":"ABSENT/NOT_ISSUED_IN_PROFILE","verdict":"VALID_STRICT"},"utc_assessment":{"assumption_id":"A-UTC-7200-6","utc_upper_bound":"2026-11-16T17:33:10Z"}}
+exit=0
+# section 3.5 interface with an authentic TEST record
+TEST_AUTHORITY_REFUSED
+exit=2
+# TESSERA_V1_TEST_* variables
+TEST_AUTHORITY_REFUSED
+exit=2
+# install.sh refuses an unpacked tree with one changed part
+REFUSED: part hash differs: service/verifier/tessera_verify/verify.py
+install: release bindings (R2) failed: not installed
+exit=1

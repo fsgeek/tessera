@@ -1,0 +1,70 @@
+
+1. Session checks:
+gpg (GnuPG) 2.4.4
+gpgv (GnuPG) 2.4.4
+ok
+
+2. The files now in memory. Compare each with your paper, in full:
+  $SCRATCH/dry/rel/tessera-verifier-v1-1.parts
+    49e65de3 b460c589 25c75329 35dabd91 8d81828f df8cf4b8 ff9be745 b730d829 
+  $SCRATCH/dry/rel/release_tool.py
+    3a506e9e ae09e24f 25aa41c5 f1847778 2bebb86f 2082d1b5 4d16d284 820e045c 
+  $SCRATCH/dry/rel/release.pub.asc
+    1a817ae3 9f974501 84d85e5c 09bbdc0a 301b18be 65c8c397 5144d3d8 160cf6f3 
+
+All three equal the paper? Type yes: 
+Eject INPUT in Files and remove it now. Then press Enter.
+
+3. The archive (read only; nothing in it is run):
+INSPECT PASS: PRODUCTION release 1, 32 parts, R2 bindings hold.
+  sha256 49e65de3 b460c589 25c75329 35dabd91 8d81828f df8cf4b8 ff9be745 b730d829
+
+4. The release public key on INPUT:
+pub   nistp256 2026-11-10 [SC]
+      CADC 96CF 0023 55F8 E83F  E97F AFF8 0961 D825 035E
+uid                      Tessera release key <tessera@wamason.com>
+  key file holds exactly the key CADC 96CF 0023 55F8 E83F E97F AFF8 0961 D825 035E
+
+5. Rehearsal: making a throwaway TEST key in memory (never a release key).
+  TEST key B0224818323F29DE0ADB48A3F9A1478E254885DF
+
+6. Signing the PRODUCTION archive with the TEST key only.
+
+7. Verify the signature over the same bytes, as a relying party would:
+SIGNATURE PASS: rule O, signer B022 4818 323F 29DE 0ADB 48A3 F9A1 478E 2548 85DF, gpgv exit 0 with only that key.
+
+8. One changed byte must fail:
+  MUTATION REFUSED (as required)
+
+9. A10 row 36: the archive signed only by the TEST key must be refused by the production procedure.
+REFUSED: signed by B0224818323F29DE0ADB48A3F9A1478E254885DF, not by the authenticated key CADC96CF002355F8E83FE97FAFF80961D825035E
+  ROW 36 REFUSED with key release.pub.asc (as required)
+REFUSED: signed by B0224818323F29DE0ADB48A3F9A1478E254885DF, not by the authenticated key CADC96CF002355F8E83FE97FAFF80961D825035E
+  ROW 36 REFUSED with key test.pub.pgp (as required)
+
+10. This Tails gpgv against the release-format vectors (profile 15.9 R3):
+gpgv: /usr/bin/gpgv ['gpgv (GnuPG) 2.4.4']
+match    01-valid-production                      exit=0 expected=0 accept=True
+match    02-valid-test                            exit=0 expected=0 accept=True
+match    03-wrong-key                             exit=2 expected=nonzero accept=False
+match    04-test-key-as-production                exit=2 expected=nonzero accept=False
+match    05-truncated-archive                     exit=1 expected=nonzero accept=False
+match    06-signature-over-different-archive      exit=1 expected=nonzero accept=False
+match    07-signature-corrupted                   exit=1 expected=nonzero accept=False
+match    08-archive-extra-byte                    exit=1 expected=nonzero accept=False
+match    09-test-key-offered-as-key               exit=0 expected=0 accept=False
+9/9 match
+
+11. Writing OUT:
+total 20
+drwxrwxr-x 2 tony tony 4096 Nov 23 17:03 .
+drwxrwxr-x 6 tony tony 4096 Nov 23 17:02 ..
+-rw-rw-r-- 1 tony tony 1166 Nov 23 17:03 record.txt
+-rw-rw-r-- 1 tony tony  119 Nov 23 17:03 tessera-verifier-v1-1.parts.sig
+-rw-rw-r-- 1 tony tony  313 Nov 23 17:03 test.pub.pgp
+b04958fea5a7aef1ecb1b4123d9b374914a3b619e18c31ff023394d83ac7587e  record.txt
+cd8d3913757e8384e8ef80163283704b50073dfaa3c51b52f9dc995ef0bb61b2  tessera-verifier-v1-1.parts.sig
+4f1ae7c797180fceb5c80f3527a5b59bc674a72f5fbab634e6ff814f42b82964  test.pub.pgp
+
+==> PASS: rehearse. Eject OUT, shut down. OUT goes to the owner and never returns to a signing session.
+

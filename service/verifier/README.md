@@ -54,14 +54,26 @@ recipe, request, `expected.json`) and the universe release public key, runs the 
 subprocess, and compares with `expected.json`. It never imports instrument code. Run it alone with
 `python tests/conformance_runner.py --jobs 6`.
 
+## Releases (profile 15.9)
+
+`release/release_tool.py` (standard library only; runs on the NUC, on Tails and on a relying party's machine)
+assembles, checks, authenticates and unpacks a release; it never signs. A release's own files are tracked under
+`release/v1-<n>/` (`trust.json`, the generated `release_constants.py`); `install.sh`, run inside an unpacked release,
+re-checks every R2 binding equality and installs that `release_constants.py`. Dependencies install from
+`requirements.lock` with hash checking required (R6). The candidate for release 1 and its procedure:
+`docs/releases/v1-1/SUMMARY.md`, `docs/V1-RELEASE-PROCEDURE.md`.
+
+```sh
+python3 release/release_tool.py build --repo ../.. --commit C --out OUT       # tessera-verifier-v1-1.parts
+python3 release/release_tool.py acquire A A.sig --fingerprint F --key K --out DIR && bash DIR/service/verifier/install.sh
+```
+
 ## Not yet done
 
-- **No production release key and no release signing.** Section 15.9 R3 (detached OpenPGP signature over the
-  archive, `gpgv` acceptance, trusted acquisition-side checker), the key ceremony, bootstrap record and rehearsal
-  come after the freeze. A source tree is unprovisioned, so production mode refuses with
-  `TRUST_CONFIG_UNAUTHENTICATED` until a release generates `release_constants.py`.
-- No release assembler: `RELEASE.json`, the `.parts` archive, the dependency lock part, and `install.sh` checks of
-  R2's binding equalities. No production `trust.json`.
+- **No production release signature yet.** The key exists (YubiKey B, `CADC96CF...035E`, ceremony 2026-11-10); the
+  rehearsal and the signing sitting are in `docs/ceremony/release-REHEARSAL-SHEET.md` and
+  `docs/ceremony/release-v1-1-SHEET.md`. A source tree stays unprovisioned, so production mode refuses with
+  `TRUST_CONFIG_UNAUTHENTICATED`.
 - SHA-1DC absent or non-functional is a startup refusal (R2, "else the existing startup refusals"): exit 2,
   `SHA1DC_UNAVAILABLE` on stderr, no verdict. The instrument's verdict-level SHA-1DC-unavailable code is removed.
 - E10 evidence (vectors against AWS) and the P9 code inspection are not done.
