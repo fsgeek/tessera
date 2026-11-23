@@ -89,6 +89,10 @@ plus CloudWatch's evaluation delay); event-to-email is what the item-3 tests mea
   Gateway-level 413/431 rejections may not be logged (the 4XX backstop counts them).
 - **D4** each invited key's logged requests per day above its invited volume; any logged success from a key not in
   the invitation record; any observed `QUOTA_EXCEEDED` (the usage-plan quota is best-effort).
+- **Invited volumes as deployed:** `smoke-test` 50 a day (busiest real day 37), `yanantin-pilot` 10 a day (busiest 5,
+  normal night 3); these replace the original row's 5.
+- **D10 "any request open > 24 h" is not built.** It becomes "open past L_term + 1 h" when A12's deadline is enabled
+  (A12 change 10); until then no alarm exists for a request that stays open. (Found by the item-3 test author.)
 - **The invitation record** is the `invitations` map in `access.tf` (key id, name, expected daily volume), kept in step
   with the issuer's `client_names`. A key added to the issuer but not to the map fails loudly (D4 unknown-key success).
 - Filter patterns were tested with `aws logs test-metric-filter`: against 58 real access-log lines (no false match;
