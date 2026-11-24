@@ -20,6 +20,12 @@ It runs on the NUC, on Tails (the author's sitting) and on a relying party's mac
             Offline (the signing session): archive grammar and R2 equalities only; prints namespace, release, hash.
   sources   ARCHIVE
             Networked (Tor on Tails): KSK digests against IANA root-anchors.xml; header pins against two explorers.
+  pins      --trust T --heights H1,H2,...
+            Networked, preparation only: for each anchor height h, the headers h..h+5 from both explorers, byte-equal,
+            each hashing to its block id, each linking to the one before; h+5 buried by PIN_DEPTH blocks. Adds the
+            missing pins to the unsigned trust file T in place (an existing pin must equal the fetched hash, or it
+            refuses); as_of becomes the latest header time pinned, never earlier than before; version and
+            previous_sha256 are untouched. Regenerates the release_constants.py beside T if present.
   verify-sig ARCHIVE SIG --fingerprint F --key KEY [--gpgv P]
             R3 signature check alone: one unarmored rule-O signature, the key file is exactly the key F, then gpgv
             with a keyring holding only that key. Says nothing about the namespace.
@@ -36,6 +42,7 @@ F is the release key's full fingerprint as the relying party obtained it out of 
 import argparse
 import ast
 import base64
+import calendar
 import difflib
 import hashlib
 import json
@@ -441,6 +448,78 @@ def sources(archive_path):
     print("SOURCES PASS: %d KSKs and %d pins equal their public sources." % (len(t["root_ksks"]), len(t["header_pins"])))
 
 
+# ---- header pins (profile sections 5 and 7.2; preparation, before the author's sitting) ----
+
+PIN_DEPTH = 6   # owner choice: h+5 (the profile's k = 6 needs only that it exists) has 6 confirmations, so a pin is
+                # not taken from the tip; pins are immutable (profile section 5), a reorged pin could never be fixed
+
+
+def utc_s(s):
+    need(re.fullmatch(r"\d{4}-\d\d-\d\dT\d\d:\d\d:\d\dZ", s), "as_of grammar")
+    return calendar.timegm(time.strptime(s, "%Y-%m-%dT%H:%M:%SZ"))
+
+
+def run_headers(h, get=None):
+    """Headers h..h+5 as {height: (block id, 80 bytes)}: both explorers byte-equal, hashes and links checked."""
+    get = get or fetch
+    tips = [int(get("%s/blocks/tip/height" % api)) for api in EXPLORERS]
+    need(min(tips) >= h + 5 + PIN_DEPTH - 1, "height %d: h+5 = %d has fewer than %d confirmations (tips %s)"
+         % (h, h + 5, PIN_DEPTH, tips))
+    out = {}
+    for j in range(h, h + 6):
+        got = []
+        for api in EXPLORERS:
+            bh = get("%s/block-height/%d" % (api, j))
+            hdr = bytes.fromhex(get("%s/block/%s/header" % (api, bh)))
+            need(len(hdr) == 80 and hashlib.sha256(hashlib.sha256(hdr).digest()).digest()[::-1].hex() == bh,
+                 "%s: header %d does not hash to its block id" % (api, j))
+            got.append((bh, hdr))
+        need(got[0] == got[1], "the two explorers disagree on block %d" % j)
+        if j > h:
+            need(got[0][1][4:36] == hashlib.sha256(hashlib.sha256(out[j - 1][1]).digest()).digest(),
+                 "block %d does not link to block %d" % (j, j - 1))
+        out[j] = got[0]
+    return out
+
+
+def add_pins(trust_raw, heights, get=None, now=None):
+    """-> (new trust bytes, added heights, as_of). Refuses on any disagreement; never alters an existing pin."""
+    t = load_json(trust_raw, "trust file")
+    need(jcs(t) == trust_raw, "the trust file is not in its canonical form")
+    need(heights and len(set(heights)) == len(heights), "heights must be nonempty and distinct")
+    pins, added, latest = dict(t["header_pins"]), [], utc_s(t["as_of"])
+    for h in sorted(heights):
+        need(0 < h < 10 ** 7, "height %d" % h)
+        for j, (bh, hdr) in sorted(run_headers(h, get).items()):
+            if str(j) in pins:
+                need(pins[str(j)] == bh, "height %d is pinned to %s; both explorers say %s" % (j, pins[str(j)], bh))
+            else:
+                pins[str(j)] = bh
+                added.append(j)
+            latest = max(latest, int.from_bytes(hdr[68:72], "little"))
+    need(latest <= (now if now is not None else time.time()), "a header time is later than this machine's clock")
+    as_of = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime(latest))
+    new = dict(t, header_pins=pins, as_of=as_of)
+    need(new["version"] == t["version"] and new["previous_sha256"] == t["previous_sha256"], "version or previous")
+    return jcs(new), added, as_of
+
+
+def pins_cmd(trust_path, heights):
+    raw = open(trust_path, "rb").read()
+    new, added, as_of = add_pins(raw, heights)
+    cpath = os.path.join(os.path.dirname(trust_path), "release_constants.py")
+    c = parse_constants(open(cpath, "rb").read()) if os.path.exists(cpath) else None
+    for path, data in ((trust_path, new), (cpath, c and constants_source(c["NAMESPACE"], new, c["CATALOG_BYTES"]))):
+        if data:
+            with open(path + ".new", "xb") as fh:
+                fh.write(data)
+            os.replace(path + ".new", path)
+    t = json.loads(new)
+    print("PINS ADDED %d: %s" % (len(added), " ".join(str(h) for h in added) or "(none)"))
+    print("  %d pins; as_of %s; trust sha256 %s%s" % (len(t["header_pins"]), as_of, groups(sha(new), 8),
+                                                     "; release_constants.py regenerated" if c else ""))
+
+
 # ---- R3: rule-O signature and the release key ----
 
 def dearmor(raw):
@@ -637,6 +716,7 @@ def main(argv=None):
     k = sub.add_parser("constants"); k.add_argument("--trust", required=True); k.add_argument("--catalog", required=True)
     k.add_argument("--namespace", default="PRODUCTION", choices=("PRODUCTION", "TEST")); k.add_argument("--out", required=True)
     i = sub.add_parser("bindings"); i.add_argument("root")
+    q = sub.add_parser("pins"); q.add_argument("--trust", required=True); q.add_argument("--heights", required=True)
     a = ap.parse_args(argv)
     try:
         if a.cmd == "build":
@@ -673,6 +753,9 @@ def main(argv=None):
             trust, catalog = open(a.trust, "rb").read(), open(a.catalog, "rb").read()
             with open(a.out, "xb") as fh:
                 fh.write(constants_source(a.namespace, trust, catalog))
+        elif a.cmd == "pins":
+            need(all(DEC.fullmatch(x) for x in a.heights.split(",")), "heights: comma-separated decimals")
+            pins_cmd(a.trust, [int(x) for x in a.heights.split(",")])
         elif a.cmd == "bindings":
             print(bindings(a.root))
     except Refused as e:

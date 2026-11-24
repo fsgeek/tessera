@@ -1,0 +1,100 @@
+Candidate 4, NUC, 2026-11-24 (owner instance). Direct HTTPS, not Tor.
+
+$ release_tool.py pins --trust service/verifier/release/v1-1/trust.json --heights 976209,976283,976445,976596,976735,976918,977072,977216
+PINS ADDED 48: 976209 976210 976211 976212 976213 976214 976283 976284 976285 976286 976287 976288 976445 976446 976447 976448 976449 976450 976596 976597 976598 976599 976600 976601 976735 976736 976737 976738 976739 976740 976918 976919 976920 976921 976922 976923 977072 977073 977074 977075 977076 977077 977216 977217 977218 977219 977220 977221
+  60 pins; as_of 2026-11-23T14:44:14Z; trust sha256 59199eaf e5e8a005 81ed506c 30e6f6b1 a1281b18 8c41684b 9e2bfc0a f2d836c6; release_constants.py regenerated
+(explorer tips at the time: blockstream 977299, mempool 977299)
+
+$ build (worktree) and build (git clone --no-local, its own tool), source cb474356aafa95a5bf8c35128aaec654b2b3e33f
+BUILT tessera-verifier-v1-1.parts  sha256 e88a0a78 5a49b174 2c8acd6d 2fc4bc8a be33f35e a90dff2f 40987354 56e8f19c
+BUILT tessera-verifier-v1-1.parts  sha256 e88a0a78 5a49b174 2c8acd6d 2fc4bc8a be33f35e a90dff2f 40987354 56e8f19c
+cmp: IDENTICAL; 717659 bytes
+
+$ check (clone)
+CHECK PASS: grammar, R2 bindings, every part equals its blob at the source commit, catalog = freeze record.
+  archive        tessera-verifier-v1-1.parts  sha256 e88a0a78 5a49b174 2c8acd6d 2fc4bc8a be33f35e a90dff2f 40987354 56e8f19c
+  namespace      PRODUCTION   release 1   successor None
+  source commit  cb474356aafa95a5bf8c35128aaec654b2b3e33f
+  freeze commit  52ee17918c5ed841587d78cb2ca3e8c54c4682d2   record sha256 05542967 b091424a 614afd38 a32cfb84 7b9b6b3f 0e5a7b71 03b11cd2 2d95575e
+  catalog        sha256 aaf4306f ed070119 022c8486 219f5160 dc869eda a929f323 d962fbb6 79e27fc2
+  trust file     sha256 59199eaf e5e8a005 81ed506c 30e6f6b1 a1281b18 8c41684b 9e2bfc0a f2d836c6   version 1   as_of 2026-11-23T14:44:14Z
+  parts          31
+  repository key 6BDA 2155 9F18 D5DB 8E13 12C3 6321 0B5F F92A D30A  from 2026-11-10T19:44:55Z to None
+  root KSK       KSK-2017 tag 20326 DS e06d44b8 0b8f1d39 a95c0b0d 7c65d084 58e88040 9bbc6834 57104237 c7f8ec8d
+  root KSK       KSK-2024 tag 38696 DS 683d2d0a cb8c9b71 2a1948b2 7f741219 298d0a45 0d612c48 3af444a4 c0fb2b16
+  header pins    60 heights: 975705 975706 975707 975708 975709 975710 976141 976142 976143 976144 976145 976146 976209 976210 976211 976212 976213 976214 976283 976284 976285 976286 976287 976288 976445 976446 976447 976448 976449 976450 976596 976597 976598 976599 976600 976601 976735 976736 976737 976738 976739 976740 976918 976919 976920 976921 976922 976923 977072 977073 977074 977075 977076 977077 977216 977217 977218 977219 977220 977221
+
+$ diff (both checkouts; cmp identical)
+DIFF 7 added or changed, 0 removed; sha256 of the text above ea02b7b8 ca7f7256 054d077b 63c98501 f72017b7 b5b440b0 9d99d591 23b91e2f
+f5e88951ae6976a558e0c6107d03fd0a6375311d02d6f38054e5b5531226e95f  docs/releases/v1-1/DIFF.txt
+
+$ sources
+  KSK-2017 tag 20326: digest equals IANA root-anchors.xml
+  KSK-2024 tag 38696: digest equals IANA root-anchors.xml
+  height 975705: pin equals blockstream.info and mempool.space
+  height 975706: pin equals blockstream.info and mempool.space
+  height 975707: pin equals blockstream.info and mempool.space
+  height 975708: pin equals blockstream.info and mempool.space
+  height 975709: pin equals blockstream.info and mempool.space
+  height 975710: pin equals blockstream.info and mempool.space
+  height 976141: pin equals blockstream.info and mempool.space
+  height 976142: pin equals blockstream.info and mempool.space
+  height 976143: pin equals blockstream.info and mempool.space
+  height 976144: pin equals blockstream.info and mempool.space
+  height 976145: pin equals blockstream.info and mempool.space
+  height 976146: pin equals blockstream.info and mempool.space
+  height 976209: pin equals blockstream.info and mempool.space
+  height 976210: pin equals blockstream.info and mempool.space
+  height 976211: pin equals blockstream.info and mempool.space
+  height 976212: pin equals blockstream.info and mempool.space
+  height 976213: pin equals blockstream.info and mempool.space
+  height 976214: pin equals blockstream.info and mempool.space
+  height 976283: pin equals blockstream.info and mempool.space
+  height 976284: pin equals blockstream.info and mempool.space
+  height 976285: pin equals blockstream.info and mempool.space
+  height 976286: pin equals blockstream.info and mempool.space
+  height 976287: pin equals blockstream.info and mempool.space
+  height 976288: pin equals blockstream.info and mempool.space
+  height 976445: pin equals blockstream.info and mempool.space
+  height 976446: pin equals blockstream.info and mempool.space
+  height 976447: pin equals blockstream.info and mempool.space
+  height 976448: pin equals blockstream.info and mempool.space
+  height 976449: pin equals blockstream.info and mempool.space
+  height 976450: pin equals blockstream.info and mempool.space
+  height 976596: pin equals blockstream.info and mempool.space
+  height 976597: pin equals blockstream.info and mempool.space
+  height 976598: pin equals blockstream.info and mempool.space
+  height 976599: pin equals blockstream.info and mempool.space
+  height 976600: pin equals blockstream.info and mempool.space
+  height 976601: pin equals blockstream.info and mempool.space
+  height 976735: pin equals blockstream.info and mempool.space
+  height 976736: pin equals blockstream.info and mempool.space
+  height 976737: pin equals blockstream.info and mempool.space
+  height 976738: pin equals blockstream.info and mempool.space
+  height 976739: pin equals blockstream.info and mempool.space
+  height 976740: pin equals blockstream.info and mempool.space
+  height 976918: pin equals blockstream.info and mempool.space
+  height 976919: pin equals blockstream.info and mempool.space
+  height 976920: pin equals blockstream.info and mempool.space
+  height 976921: pin equals blockstream.info and mempool.space
+  height 976922: pin equals blockstream.info and mempool.space
+  height 976923: pin equals blockstream.info and mempool.space
+  height 977072: pin equals blockstream.info and mempool.space
+  height 977073: pin equals blockstream.info and mempool.space
+  height 977074: pin equals blockstream.info and mempool.space
+  height 977075: pin equals blockstream.info and mempool.space
+  height 977076: pin equals blockstream.info and mempool.space
+  height 977077: pin equals blockstream.info and mempool.space
+  height 977216: pin equals blockstream.info and mempool.space
+  height 977217: pin equals blockstream.info and mempool.space
+  height 977218: pin equals blockstream.info and mempool.space
+  height 977219: pin equals blockstream.info and mempool.space
+  height 977220: pin equals blockstream.info and mempool.space
+  height 977221: pin equals blockstream.info and mempool.space
+SOURCES PASS: 2 KSKs and 60 pins equal their public sources.
+
+$ first production receipt, candidate 4 trust file, TEST release record in memory, source-tree verifier
+{"stable":{"T":"2026-11-16T14:35:57Z","historical_security":"NOT_EVALUATED","reason":"OK","revocation":"NOT_EVALUATED","standing":"ABSENT/NOT_ISSUED_IN_PROFILE","verdict":"VALID_STRICT"},"utc_assessment":{"assumption_id":"A-UTC-7200-6","utc_upper_bound":"2026-11-16T17:33:10Z"}}  (exit 0)
+
+$ pytest (service/verifier, main checkout venv)
+1 failed, 166 passed, 77 subtests passed (failed: test_independence.py::IndependenceTests::test_loaded_modules_come_from_the_service_tree_only, worktree-only)

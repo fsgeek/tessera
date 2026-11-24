@@ -214,4 +214,108 @@ class ReleaseVectors(unittest.TestCase):
         self.assertIn('is not the authenticated', str(e.exception))
 
 
+
+class Pins(unittest.TestCase):
+    """`pins`: recorded explorer answers (2026-11-24, blockstream.info and mempool.space), no network."""
+    REC = json.loads((HERE / 'tests/fixtures_pins/explorers-976141-976209.json').read_text())
+    TRUST = (HERE / 'release/v1-1/trust.json').read_bytes()
+    NOW = rt.utc_s('2026-11-24T00:00:00Z')   # this machine's clock, after every recorded header
+
+    def base(self):   # the release's first twelve pins, as before this change
+        t = json.loads(self.TRUST)
+        t['header_pins'] = {h: p for h, p in t['header_pins'].items() if int(h) <= 976146}
+        t['as_of'] = '2026-11-16T15:48:11Z'
+        return rt.jcs(t)
+
+    def getter(self, **patch):
+        rec = dict(self.REC, **patch)
+        return lambda u: rec[u]
+
+    def add(self, heights, trust=None, **patch):
+        return rt.add_pins(trust or self.base(), heights, self.getter(**patch), now=self.NOW)
+
+    def test_adds_six_pins_and_keeps_everything_else(self):
+        new, added, as_of = self.add([976209])
+        old, t = json.loads(self.base()), json.loads(new)
+        self.assertEqual(added, list(range(976209, 976215)))
+        for h, p in old['header_pins'].items():
+            self.assertEqual(t['header_pins'][h], p)
+        for h in added:
+            self.assertEqual(t['header_pins'][str(h)], self.REC['https://blockstream.info/api/block-height/%d' % h])
+        self.assertEqual({k: v for k, v in t.items() if k not in ('header_pins', 'as_of')},
+                         {k: v for k, v in old.items() if k not in ('header_pins', 'as_of')})
+        self.assertEqual((t['version'], t['previous_sha256']), ('1', '0' * 64))
+        self.assertEqual(rt.jcs(t), new)
+        times = [int.from_bytes(bytes.fromhex(self.REC['https://blockstream.info/api/block/%s/header' % t['header_pins'][str(h)]])[68:72], 'little') for h in added]
+        self.assertEqual(rt.utc_s(as_of), max(times))
+
+    def test_already_pinned_run_is_idempotent(self):
+        new, added, as_of = self.add([976141])
+        self.assertEqual((added, as_of), ([], '2026-11-16T15:48:11Z'))
+        self.assertEqual(new, self.base())
+
+    def test_as_of_never_decreases(self):
+        t = json.loads(self.base()); t['as_of'] = '2026-11-30T00:00:00Z'
+        later = rt.utc_s('2026-12-01T00:00:00Z')
+        self.assertEqual(rt.add_pins(rt.jcs(t), [976209], self.getter(), now=later)[2], '2026-11-30T00:00:00Z')
+        with self.assertRaises(rt.Refused):     # an as_of later than the clock is refused, not carried
+            self.add([976209], trust=rt.jcs(t))
+
+    def test_conflicting_existing_pin_is_refused(self):
+        t = json.loads(self.base()); t['header_pins']['976143'] = 'ab' * 32
+        with self.assertRaises(rt.Refused) as e: self.add([976141], trust=rt.jcs(t))
+        self.assertIn('976143 is pinned', str(e.exception))
+
+    def test_explorers_disagreeing_is_refused(self):
+        m = 'https://mempool.space/api/block-height/976211'
+        other = self.REC['https://blockstream.info/api/block-height/976141']   # a real block, hashes to its id
+        with self.assertRaises(rt.Refused) as e:
+            self.add([976209], **{m: other, 'https://mempool.space/api/block/%s/header' % other:
+                                  self.REC['https://blockstream.info/api/block/%s/header' % other]})
+        self.assertIn('disagree on block 976211', str(e.exception))
+
+    def test_header_not_hashing_to_its_id_is_refused(self):
+        bh = self.REC['https://blockstream.info/api/block-height/976212']
+        u = 'https://mempool.space/api/block/%s/header' % bh
+        bad = self.REC[u][:-2] + ('00' if self.REC[u][-2:] != '00' else '01')
+        with self.assertRaises(rt.Refused) as e: self.add([976209], **{u: bad})
+        self.assertIn('does not hash', str(e.exception))
+
+    def test_broken_link_is_refused(self):
+        other = self.REC['https://blockstream.info/api/block-height/976143']   # valid header, wrong parent
+        patch = {}
+        for api in rt.EXPLORERS:
+            patch['%s/block-height/976212' % api] = other
+            patch['%s/block/%s/header' % (api, other)] = self.REC['https://blockstream.info/api/block/%s/header' % other]
+        with self.assertRaises(rt.Refused) as e: self.add([976209], **patch)
+        self.assertIn('976212 does not link to block 976211', str(e.exception))
+
+    def test_too_few_confirmations_is_refused(self):
+        tip = {'%s/blocks/tip/height' % api: str(976209 + 5 + rt.PIN_DEPTH - 2) for api in rt.EXPLORERS}
+        with self.assertRaises(rt.Refused) as e: self.add([976209], **tip)
+        self.assertIn('fewer than 6 confirmations', str(e.exception))
+        tip = {'%s/blocks/tip/height' % api: str(976209 + 5 + rt.PIN_DEPTH - 1) for api in rt.EXPLORERS}
+        self.assertEqual(len(self.add([976209], **tip)[1]), 6)
+
+    def test_noncanonical_trust_or_repeated_heights_are_refused(self):
+        with self.assertRaises(rt.Refused): self.add([976209], trust=self.base() + b'\n')
+        with self.assertRaises(rt.Refused): self.add([976209, 976209])
+
+    def test_cli_rewrites_trust_and_constants(self):
+        with tempfile.TemporaryDirectory() as d:
+            tp, cp = Path(d) / 'trust.json', Path(d) / 'release_constants.py'
+            tp.write_bytes(self.base())
+            catalog = (REPO / rt.FROZEN_CATALOG).read_bytes()
+            cp.write_bytes(rt.constants_source('PRODUCTION', self.base(), catalog))
+            saved = rt.fetch; rt.fetch = self.getter()
+            try:
+                rt.pins_cmd(str(tp), [976209])
+            finally:
+                rt.fetch = saved
+            c = rt.parse_constants(cp.read_bytes())
+            self.assertEqual(c['TRUST_SHA256'], rt.sha(tp.read_bytes()))
+            self.assertEqual((c['NAMESPACE'], c['CATALOG_BYTES']), ('PRODUCTION', catalog))
+            self.assertEqual(sorted(os.listdir(d)), ['release_constants.py', 'trust.json'])
+
+
 if __name__ == '__main__': unittest.main()
