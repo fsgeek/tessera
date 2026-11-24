@@ -1,30 +1,36 @@
-# Verifier release 1: release summary (candidate 3, unsigned)
+# Verifier release 1: release summary (candidate 4, unsigned)
 
-Owner instance (Claude Opus 5.5), 2026-11-23. This is the release summary of custody draft §9 ("Preparation on the
+Owner instance (Claude Opus 5.5), 2026-11-23; candidate 4, 2026-11-24. This is the release summary of custody draft §9 ("Preparation on the
 NUC"). It is an aid, not evidence of approval: the author's reading, on the Pangolin's screen, of the change list the
 Pangolin itself makes (`DIFF.txt` here is the NUC's copy, a reading aid only) and his own build and checks there
 (`docs/ceremony/release-v1-1-SHEET.md`) are the approval. Procedure: `docs/V1-RELEASE-PROCEDURE.md`. Candidate 1
 (`49e65de3…`, source `7b986e8`) is withdrawn after the Codex review (`docs/reviews/release-v1-1/CODEX-REVIEW.md`;
 dispositions in `DISPOSITION.md` there). Candidate 2 (`7fd00606…`, source `f2511c0`) is withdrawn after the scoped
 confirmation (`CODEX-CONFIRM.md`): only `sign-release.sh` changed (final pass, `DISPOSITION.md`), so candidate 3's
-parts are byte-identical to candidate 2's and only `RELEASE.json`'s `source_commit` differs.
+parts are byte-identical to candidate 2's and only `RELEASE.json`'s `source_commit` differs. Candidate 3 (`f50e5388…`,
+source `554a1fb`) is superseded by candidate 4 before any sitting: its trust file pinned only the first production
+receipt's anchor, so every later receipt was `UNVERIFIABLE / HEADERS_NOT_COVERED` under it. Candidate 4 adds the pins
+of eight later production anchors (48 pins) with a new `release_tool.py pins` subcommand; three parts differ from
+candidate 3 (`release_tool.py`, `trust.json`, `release_constants.py`), and the release is still release 1, trust
+version `"1"`, zero `previous_sha256`. Refreshing the pins again before the sitting: `REFRESH.md`.
 
 ## The candidate
 
 | | |
 |---|---|
-| Archive | `tessera-verifier-v1-1.parts` (profile §15.9 R1; 709298 bytes, 31 parts) |
-| Archive SHA-256 | `f50e5388 4cf4ae59 85a4b27a 4dc92416 f458d267 fa86c794 3f96fac6 92d514fd` |
+| Archive | `tessera-verifier-v1-1.parts` (profile §15.9 R1; 717659 bytes, 31 parts) |
+| Archive SHA-256 | `e88a0a78 5a49b174 2c8acd6d 2fc4bc8a be33f35e a90dff2f 40987354 56e8f19c` |
 | Namespace, release | `PRODUCTION`, `1`; `release_key_successor` null |
-| Source commit | `554a1fbed87fee615428e88431ee3202c7e199d3` (branch `release-final`; must be on GitHub before the sitting) |
+| Source commit | `cb474356aafa95a5bf8c35128aaec654b2b3e33f` (branch `release-pins`; must be on GitHub before the sitting) |
 | Baseline commit | `b134cdfdacc5d89f2748fa7ec15c46e38b51a32c` (the Codex-reviewed verifier, 2026-10-26; OpenTimestamps block 973240) |
-| Change list | `DIFF.txt`, last line `DIFF 7 added or changed, 0 removed; sha256 of the text above f1a7d0a1 b6ab3c5a 219372c8 16ecfc21 e8794896 01e26034 0a06fb8b 2ffb6833`; whole file SHA-256 `0093cf56 95fd27cb 2efc175d d103424e 60c04e42 d98e0485 72d43d1f 015f0a99` |
+| Change list | `DIFF.txt`, last line `DIFF 7 added or changed, 0 removed; sha256 of the text above ea02b7b8 ca7f7256 054d077b 63c98501 f72017b7 b5b440b0 9d99d591 23b91e2f`; whole file SHA-256 `f5e88951 ae6976a5 58e0c610 7d03fd0a 6375311d 02d6f380 54e5b553 1226e95f` |
 | Signature (to be made) | `tessera-verifier-v1-1.parts.sig`: detached, binary, OpenPGP v4 type 0x00, ECDSA P-256, SHA-256, by `CADC 96CF 0023 55F8 E83F E97F AFF8 0961 D825 035E` (YubiKey B) |
-| Build | `python3 service/verifier/release/release_tool.py build --repo . --commit 554a1fbed87fee615428e88431ee3202c7e199d3 --out OUT` |
+| Build | `python3 service/verifier/release/release_tool.py build --repo . --commit cb474356aafa95a5bf8c35128aaec654b2b3e33f --out OUT` |
 
-**Reproducibility.** Built twice on 2026-11-23: once from the `release-final` worktree with its own tool, once from an
-independent `git clone --no-local` checked out at the source commit with the clone's copy of the tool. The two archives
-are byte-identical (`cmp`), both SHA-256 `f50e5388…92d514fd`. The archive depends only on tracked blob bytes at the
+**Reproducibility.** Candidate 4 was built twice on 2026-11-24: once from the `release-pins` worktree with its own tool,
+once from an independent `git clone --no-local` checked out at the source commit with the clone's copy of the tool. The
+two archives are byte-identical (`cmp`), both SHA-256 `e88a0a78…56e8f19c` (candidate 3 was built the same way on
+2026-11-23). The archive depends only on tracked blob bytes at the
 source commit and at the freeze commit; no time, user, path or file mode enters it. Git reads ignore replace refs
 (review L1). The change list was produced the same two ways and is byte-identical.
 
@@ -87,18 +93,18 @@ refuses an archive that lacks any of R1's required part classes (review M3).
 
 | Object | SHA-256 | Traces to |
 |---|---|---|
-| Archive | `f50e53884cf4ae5985a4b27a4dc92416f458d267fa86c7943f96fac692d514fd` | Rebuilt by the author on the Pangolin at the source commit; equal, or stop. |
-| Change list `DIFF.txt` (text above its last line) | `f1a7d0a1b6ab3c5a219372c816ecfc21e879489601e260340a06fb8b2ffb6833` | Printed by `release_tool.py diff` as the list's last line. |
-| Change list `DIFF.txt` (whole file) | `0093cf5695fd27cb2efc175dd103424e60c04e42d98e048572d43d1f015f0a99` | `sha256sum` of the list the Pangolin makes; written by the author at the rehearsal after reading that list on screen; at production, equal to that written value, or stop. |
+| Archive | `e88a0a785a49b1742c8acd6d2fc4bc8abe33f35ea90dff2f4098735456e8f19c` | Rebuilt by the author on the Pangolin at the source commit; equal, or stop. |
+| Change list `DIFF.txt` (text above its last line) | `ea02b7b8ca7f7256054d077b63c98501f72017b7b5b440b09d99d59123b91e2f` | Printed by `release_tool.py diff` as the list's last line. |
+| Change list `DIFF.txt` (whole file) | `f5e88951ae6976a558e0c6107d03fd0a6375311d02d6f38054e5b5531226e95f` | `sha256sum` of the list the Pangolin makes; written by the author at the rehearsal after reading that list on screen; at production, equal to that written value, or stop. |
 | Freeze record (`formal/freeze-v1/FREEZE-RECORD.md` at `52ee179`) | `05542967b091424a614afd38a32cfb847b9b6b3f0e5a7b7103b11cd22d95575e` | `RELEASE.json` `freeze_record_sha256`. Commit `52ee179` (2026-10-24) is signed by the NUC commit key `2B9C…3835`, not by the author's YubiKey; its OpenTimestamps proof is anchored in block 972977; it is an ancestor of the baseline. |
 | Catalog (`catalog.json`, 662 bytes) | `aaf4306fed070119022c8486219f5160dc869edaa929f323d962fbb679e27fc2` | The freeze record's table row; byte-equal to the file at `52ee179`; recomputed by `formal/freeze-v1/assemble.py --commit 270ca49`. Equals `release_constants.CATALOG_SHA256`; `CATALOG_BYTES` equals the part. |
 | Spec object (named in the catalog) | `397581f781830b38ce1d07a25867f26d2c025e439cdd2a94e83ee77685d26daf` | The freeze record; recomputed by the assembler. Bound through the catalog's `spec_sha256`. |
 | Vectors object (named in the catalog) | `19ac772a155daf3808727587407a09410572e8291235524b8c36a1ac870bdf3f` | As above, `vectors_sha256`. |
 | Preamble (named in the catalog) | `1eebd4a8c2ac405117ba5c4951f053c92459952194a760993dafea1c8959468f` | As above (review L2). |
 | Dependency manifest (named in the catalog) | `20020475a8ef852fbd3d9331b370a3161e925a44cddf83c8f51d26be2ac9e063` | As above (review L2). |
-| Trust file (`release/v1-1/trust.json`) | `9faa03683df7506cefa07afa4c0629182ebc5d4286b97801e1053cb8d86a7f89` | `trust_config_sha256` = `release_constants.TRUST_SHA256`. Not in the freeze record (trust is per release, profile §5). Byte-identical to `docs/smoke/2026-11-16-first-receipt/trust.json`. Printed in full in `DIFF.txt`. |
-| `release_constants.py` (v1-1) | `f30e2e5988fc10a9b610e942b3a27952ed374d94b8e66350c9b470c87eef306a` | Generated by `release_tool.py constants` from the trust file and catalog; printed in full in `DIFF.txt`. |
-| `release_tool.py` | `a4531c7d527953b26cfb6c7c72e404207f38152398e4fb944c7fd977b0e6539f` | Printed in full in `DIFF.txt`; the author reads it there. |
+| Trust file (`release/v1-1/trust.json`) | `59199eafe5e8a00581ed506c30e6f6b1a1281b188c41684b9e2bfc0af2d836c6` | `trust_config_sha256` = `release_constants.TRUST_SHA256`. Not in the freeze record (trust is per release, profile §5). The smoke test's trust file (`docs/smoke/2026-11-16-first-receipt/trust.json`, `9faa0368…`) plus 48 pins and a later `as_of`; every other byte of its content unchanged. Printed in full in `DIFF.txt`. |
+| `release_constants.py` (v1-1) | `11e99aff481b8634fa2461ef42427be7b5347cfd20438237dcd6491d41191c67` | Regenerated by `release_tool.py pins` (the same generator as `constants`) from the trust file and catalog; printed in full in `DIFF.txt`. |
+| `release_tool.py` | `2d2694fb3e87b795f252e5ddc26686098ef8863bffdd315b9697eff1ba103880` | Printed in full in `DIFF.txt`; the author reads it there. |
 | `docs/ceremony/sign-release.sh` (not in the archive) | `20d5e19c1ff46f0af25b3dc9308290e3014a3084c0c887a031b450e38a2df15a` | As above. |
 | `service/release-vectors/` (all files; rehearsal only) | `66d149cd999d0cccfca10c984715d3edbbddb6ad4ba2b789682d45b0c43eca93` | `find … \| sort \| xargs sha256sum \| sha256sum` on the Pangolin; unchanged since the baseline; checked again offline before `run.py` runs. |
 | Release public key `docs/ceremony/keys/release-CADC…035E.pub.asc` | `1a817ae39f97450184d85e5c09bbdc0a301b18be65c8c3975144d3d8160cf6f3` | The key received on REL-PUB at the 2026-11-10 ceremony (`2026-11-10-operator-data.md`: `1a817ae39f974501…`); its fingerprint is on the author's paper and ORCID record. |
@@ -113,19 +119,57 @@ compares each part with its blob at the source commit.
 | Repository key | v4 fingerprint `6BDA 2155 9F18 D5DB 8E13 12C3 6321 0B5F F92A D30A`, open from `2026-11-10T19:44:55Z` | YubiKey A, ceremony 2026-11-10. The author compares it with his paper record and with ORCID (both sheets). |
 | KSK-2017 | tag 20326, DS `e06d44b8…c7f8ec8d`, signing ended 2026-10-11, reliance 21 days | IANA `root-anchors.xml`; `release_tool.py sources` compares over Tor. |
 | KSK-2024 | tag 38696, DS `683d2d0a…c0fb2b16`, signing from 2026-10-11 | As above. |
-| Header pins | 12: heights 975705–975710 and 976141–976146 | Fetched from blockstream.info and mempool.space, which agreed, on 2026-11-16; `sources` re-checked all 12 on 2026-11-23; the author repeats it over Tor. |
+| Header pins | 60: the six-header runs h…h+5 at h = 975705, 976141, 976209, 976283, 976445, 976596, 976735, 976918, 977072, 977216 | The first 12 fetched from blockstream.info and mempool.space, which agreed, on 2026-11-16. The other 48 by `release_tool.py pins` on 2026-11-24 (both explorers byte-equal on every raw header, each hashing to its id and linking to the one before, h+5 with at least 6 confirmations: tip 977299). `sources` re-checked all 60 on 2026-11-24; the author repeats it over Tor. |
 
-`version` `"1"`, `previous_sha256` 64 zeros, `as_of` `2026-11-16T15:48:11Z`. No previous release exists, so the
+`version` `"1"`, `previous_sha256` 64 zeros, `as_of` `2026-11-23T14:44:14Z` (see below). No previous release exists, so the
 release checker's cross-release invariants have nothing to compare; acquisition requires release 1 to carry trust
 version `"1"` with a zero `previous_sha256`.
 
 **What these pins cover** (review L2). Pins are per header height. A bundle verifies only if every header it supplies
-and every header it requires is pinned (else `UNVERIFIABLE / HEADERS_NOT_COVERED`, profile §5), and only if it meets
-every other verification condition. The pinned ranges are the six-header segments at 975705 (the key assertion's OTS
-anchor, 2026-11-13) and 976141 (the first production receipt's, 2026-11-16). Release 1 is known to cover the first
-production receipt's bundle. A later receipt whose required headers all fall inside those ranges would also be
-covered; in practice each later anchor is at a new height, which needs a later release (trust version 2 or more) made
-by this procedure with a signing sitting.
+and every header it requires is pinned (else `UNVERIFIABLE / HEADERS_NOT_COVERED`, profile §5 "Header pins", §7.2),
+and only if it meets every other verification condition. The required headers are h*…h*+5 of the selected attestation
+of each of the three proofs (receipt, snapshot, git; §7.2 "Coverage"). The pinned runs are at 975705 (the key
+assertion's OTS anchor, 2026-11-13), 976141 (the first production receipt's receipt and snapshot anchor, 2026-11-16)
+and the eight later production anchor heights the steward read from the issuer's records on 2026-11-24 (976209,
+976283, 976445, 976596, 976735, 976918, 977072, 977216). **Release 1 covers the headers of every receipt anchored at or
+below 977216 whose three proofs anchor at pinned heights; a receipt anchored above 977216, or one whose snapshot proof
+anchored at a height not in this list, needs a later release** (a refresh before the sitting, `REFRESH.md`, or trust
+version 2 or more made by this procedure with a signing sitting). Known to verify: only the first production receipt
+(`VALID_STRICT` under the candidate 4 trust file, 2026-11-24, TEST-mode check below). No later receipt has been
+verified under it: receipts are fetched only by the steward.
+
+**`as_of`.** The profile fixes no value; it constrains it. §5 "Open endpoints" (`docs/V1-PROFILE.md` lines 597-599):
+an open KSK's reliance and an open repository key's use run to `as_of`, and evidence later than `as_of` under an open
+entry gives `UNVERIFIABLE / TRUST_HORIZON`; §5 release invariants (line 603) and §15.5 (line 1705): `as_of` is
+nondecreasing; §15.5 (line 1694): an open entry's `signing_start` ≤ `as_of`. The evidence times compared with it are
+T_snap (line 507) and T_git (line 762), each nTime(h*) of a proof's anchor (§7.1). Owner choice: `as_of` is the latest
+header time among the pinned headers, `2026-11-23T14:44:14Z` (block 977221, the newest pinned height; both explorers),
+never earlier than the previous `as_of` and never later than the preparing machine's clock. It is at or after the
+T_snap and T_git of every proof anchored at a pinned height, so no covered receipt meets `TRUST_HORIZON`, and it
+asserts only that KSK-2024 and the repository key were still signing at a time already past. The 2026-11-16 value
+(`2026-11-16T15:48:11Z`) was the smoke-test machine's clock (`rp_verify.py`), not a header time.
+
+## Checks run on the NUC, 2026-11-24 (candidate 4)
+
+Transcript: `evidence/candidate-4.txt`.
+- `release_tool.py pins --heights 976209,976283,976445,976596,976735,976918,977072,977216`: `PINS ADDED 48`, 60 pins,
+  `as_of 2026-11-23T14:44:14Z` (direct HTTPS, not Tor; both explorers' tip 977299, so every h+5 had at least 79
+  confirmations). The previous 12 pins and every other entry are unchanged; the verifier's own append-only checker
+  (`policy.check_extension`, with the version bump a later release would make simulated) and its trust-file parser
+  accept the new file against the old.
+- Two builds, byte-identical (above); `release_tool.py check` from the clone: `CHECK PASS`, 31 parts, 60 pins.
+- `release_tool.py diff` from both checkouts, byte-identical: `DIFF 7 added or changed, 0 removed; … ea02b7b8 …
+  23b91e2f`, whole file `f5e88951…1226e95f` (1325 lines).
+- `release_tool.py sources` on the archive: `SOURCES PASS: 2 KSKs and 60 pins equal their public sources.` (63 lines,
+  direct HTTPS).
+- The first production receipt under the candidate 4 trust file (TEST release record made in memory, as in the
+  2026-11-16 smoke test, source-tree verifier): `VALID_STRICT / OK`, `T` `2026-11-16T14:35:57Z`. Not repeated: the
+  install from an acquired candidate 4 tree, the acquisition refusals and the simulated signing rehearsal; the
+  verifier code, `install.sh` and `sign-release.sh` are unchanged from candidate 3, and the refusals do not depend on
+  the trust file.
+- `service/verifier/tests/test_release_tool.py`: 32 pass (22 before, plus 10 for `pins` on recorded explorer answers,
+  `tests/fixtures_pins/`). The whole verifier suite with the main checkout's venv: 166 pass, 1 fails (the known
+  worktree-only independence check).
 
 ## Checks run on the NUC, 2026-11-23 (candidates 2 and 3)
 
@@ -206,12 +250,12 @@ equals the printed one; that equality, not the file name, is what binds the publ
 
 ## What changed from the TEST release used in the smoke test (2026-11-16)
 
-| | Smoke test (TEST) | Release 1 (candidate 2) |
+| | Smoke test (TEST) | Release 1 (candidate 4) |
 |---|---|---|
 | Form | No archive. A `tessera-v1-test-release/1` record through the §3.5 instrument interface, `--mode test`, from the source checkout | The §15.9 R1 archive, R2 manifest, R3 signature over the whole archive, code included |
 | Signer | An in-memory P-256 key made by `rp_verify.py`, discarded | The production release key `CADC…035E`, YubiKey B, offline on Tails |
 | Mode | TEST, provisioned in memory for one process | PRODUCTION, from the installed `release_constants.py`; every TEST flag or variable is refused |
-| Trust file | `trust.json`, SHA-256 `9faa0368…d86a7f89` | The same bytes |
+| Trust file | `trust.json`, SHA-256 `9faa0368…d86a7f89` | The same entries plus 48 pins and a later `as_of` (`59199eaf…f2d836c6`) |
 | Catalog | The frozen catalog (`aaf4306f…`), carried inside the TEST record | The same bytes, as a part and compiled into `release_constants.py` |
 | Verifier code | `tessera_verify/` as of `b134cdf` (2026-10-26) | Unchanged: no commit has touched `tessera_verify/` since `b134cdf` (`DIFF.txt`: `unchanged`) |
 | Installer, dependencies | `install.sh` editable install, `requirements.txt` without hashes | `install.sh`: release trees only from `acquire`, exact-tree and R2 checks, the constants installed, no build step; wheels from `requirements.lock`, hashes required |
@@ -224,8 +268,15 @@ equals the printed one; that equality, not the file name, is what binds the publ
   tree's tests and TEST harness keep working. Every part is still a verbatim blob at the source commit (R1).
 - "The freeze record" in `freeze_record_sha256` is `formal/freeze-v1/FREEZE-RECORD.md` at the freeze commit `52ee179`
   (the JSON form is labelled draft).
-- The trust file is the smoke test's, unchanged: its entries were already checked against their sources, and it
-  covers the first production receipt.
+- The trust file is the smoke test's with pins added: its entries were already checked against their sources. Candidate
+  4 adds the six-header runs of the production anchor heights the steward listed on 2026-11-24, so that receipts
+  issued since 2026-11-16 are covered without a second signing sitting.
+- `release_tool.py pins` refuses unless h+5 has 6 confirmations (`PIN_DEPTH`, tip ≥ h+10). The profile's k = 6 needs
+  only that h+5 exists; pins are immutable (§5), so a pin taken at the tip and then reorganized away could never be
+  corrected and would make every bundle carrying the real header `INVALID / HEADER_CONFLICTS_PIN`.
+- `as_of` is the latest pinned header time (above). The profile constrains it but does not fix it.
+- The `pins` subcommand is in `release_tool.py`, so it is in the archive and in the author's reading (83 lines).
+  Nothing it does is trusted at the sitting: `sources` re-checks every pin against both explorers over Tor.
 - The baseline is `b134cdf`, not the freeze commit: the verifier code did not exist at `52ee179`, so a change list
   from the freeze would print all of it (about 7000 lines). `b134cdf` is the reviewed package, dated by OpenTimestamps.
 - The lock covers Linux x86_64 glibc only, so the author's change list carries 21 lines of it instead of 170, and no
