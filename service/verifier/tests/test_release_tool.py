@@ -317,5 +317,62 @@ class Pins(unittest.TestCase):
             self.assertEqual((c['NAMESPACE'], c['CATALOG_BYTES']), ('PRODUCTION', catalog))
             self.assertEqual(sorted(os.listdir(d)), ['release_constants.py', 'trust.json'])
 
+    def setup_dir(self, d):
+        tp, cp = Path(d) / 'trust.json', Path(d) / 'release_constants.py'
+        tp.write_bytes(self.base())
+        cp.write_bytes(rt.constants_source('PRODUCTION', self.base(), (REPO / rt.FROZEN_CATALOG).read_bytes()))
+        return tp, cp
+
+    def run_cmd(self, tp, get=None):
+        saved = rt.fetch; rt.fetch = get or self.getter()
+        try:
+            rt.pins_cmd(str(tp), [976209])
+        finally:
+            rt.fetch = saved
+
+    def test_failure_between_the_replaces_restores_trust(self):
+        import unittest.mock as um
+        with tempfile.TemporaryDirectory() as d:
+            tp, cp = self.setup_dir(d)
+            t0, c0 = tp.read_bytes(), cp.read_bytes()
+            real, n = os.replace, [0]
+            def flaky(a, b):
+                n[0] += 1
+                if n[0] == 2: raise OSError('boom')
+                return real(a, b)
+            with um.patch('os.replace', flaky), self.assertRaises(OSError):
+                self.run_cmd(tp)
+            self.assertEqual((tp.read_bytes(), cp.read_bytes()), (t0, c0))
+            self.assertEqual(sorted(os.listdir(d)), ['release_constants.py', 'trust.json'])
+
+    def test_stale_new_file_does_not_block(self):
+        with tempfile.TemporaryDirectory() as d:
+            tp, cp = self.setup_dir(d)
+            (Path(d) / 'release_constants.py.new').write_bytes(b'stale'); (Path(d) / 'trust.json.new').write_bytes(b'stale')
+            self.run_cmd(tp)
+            self.assertEqual(rt.parse_constants(cp.read_bytes())['TRUST_SHA256'], rt.sha(tp.read_bytes()))
+            self.assertEqual(len(json.loads(tp.read_bytes())['header_pins']), 18)
+
+    def test_disk_change_during_run_is_refused(self):
+        with tempfile.TemporaryDirectory() as d:
+            tp, cp = self.setup_dir(d)
+            c0 = cp.read_bytes()
+            other = json.loads(self.base()); other['as_of'] = '2026-11-17T00:00:00Z'
+            other = rt.jcs(other)
+            rec, hit = self.getter(), [False]
+            def get(u):
+                if not hit[0]: hit[0] = True; tp.write_bytes(other)   # a concurrent writer, mid-fetch
+                return rec(u)
+            with self.assertRaises(rt.Refused) as e: self.run_cmd(tp, get)
+            self.assertIn('changed during this run', str(e.exception))
+            self.assertEqual((tp.read_bytes(), cp.read_bytes()), (other, c0))
+            self.assertEqual(sorted(os.listdir(d)), ['release_constants.py', 'trust.json'])
+
+    def test_noncanonical_pin_key_is_refused(self):
+        for bad in ('0976141', '+976141', '976141 '):
+            t = json.loads(self.base()); t['header_pins'][bad] = t['header_pins'].pop('976141')
+            with self.assertRaises(rt.Refused) as e: self.add([976209], trust=rt.jcs(t))
+            self.assertIn('canonical decimal', str(e.exception))
+
 
 if __name__ == '__main__': unittest.main()

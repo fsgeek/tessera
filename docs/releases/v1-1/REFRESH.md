@@ -23,6 +23,9 @@ Expect two lines, exit 0:
 PINS ADDED <6 × new heights>: <each added height, ascending>
   <60 + added> pins; as_of <newest pinned header time>; trust sha256 <8 groups>; release_constants.py regenerated
 ```
+`as_of` here is steward preparation policy (owner decision 2026-11-24): newest pinned header time, never below the
+previous `as_of`, never above the local clock; the profile only requires a valid nondecreasing horizon. The command holds
+a lock (`trust.json.lock`, removed at the end) so one run at a time, and writes both files or neither.
 Any `REFUSED:` line (explorers disagree, a header not hashing to its id, a broken link, too few confirmations, an
 existing pin contradicted) is a stop: nothing is written on refusal. A `curl` error: run it once more.
 

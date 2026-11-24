@@ -24,7 +24,9 @@ It runs on the NUC, on Tails (the author's sitting) and on a relying party's mac
             Networked, preparation only: for each anchor height h, the headers h..h+5 from both explorers, byte-equal,
             each hashing to its block id, each linking to the one before; h+5 buried by PIN_DEPTH blocks. Adds the
             missing pins to the unsigned trust file T in place (an existing pin must equal the fetched hash, or it
-            refuses); as_of becomes the latest header time pinned, never earlier than before; version and
+            refuses); as_of is steward preparation policy (owner decision 2026-11-24): newest pinned header time, never below
+            the previous as_of, never above the local clock (the profile only requires a valid nondecreasing horizon);
+            one run at a time per trust file (flock), both outputs staged before either is replaced; version and
             previous_sha256 are untouched. Regenerates the release_constants.py beside T if present.
   verify-sig ARCHIVE SIG --fingerprint F --key KEY [--gpgv P]
             R3 signature check alone: one unarmored rule-O signature, the key file is exactly the key F, then gpgv
@@ -487,6 +489,9 @@ def add_pins(trust_raw, heights, get=None, now=None):
     t = load_json(trust_raw, "trust file")
     need(jcs(t) == trust_raw, "the trust file is not in its canonical form")
     need(heights and len(set(heights)) == len(heights), "heights must be nonempty and distinct")
+    keys = list(t["header_pins"])
+    need(all(re.fullmatch(r"[1-9][0-9]*", k) for k in keys) and len({int(k) for k in keys}) == len(keys),
+         "header_pins keys must be canonical decimal heights (no leading zeros, no duplicates)")
     pins, added, latest = dict(t["header_pins"]), [], utc_s(t["as_of"])
     for h in sorted(heights):
         need(0 < h < 10 ** 7, "height %d" % h)
@@ -505,15 +510,57 @@ def add_pins(trust_raw, heights, get=None, now=None):
 
 
 def pins_cmd(trust_path, heights):
-    raw = open(trust_path, "rb").read()
-    new, added, as_of = add_pins(raw, heights)
-    cpath = os.path.join(os.path.dirname(trust_path), "release_constants.py")
-    c = parse_constants(open(cpath, "rb").read()) if os.path.exists(cpath) else None
-    for path, data in ((trust_path, new), (cpath, c and constants_source(c["NAMESPACE"], new, c["CATALOG_BYTES"]))):
-        if data:
-            with open(path + ".new", "xb") as fh:
+    """Serialized per trust file (flock); both outputs staged in unique temp files before either is replaced."""
+    import fcntl
+    d = os.path.dirname(os.path.abspath(trust_path))
+    lock_path = os.path.abspath(trust_path) + ".lock"
+    while True:   # the lock file is removed at the end, so confirm the locked file is still the one at the path
+        lock = open(lock_path, "a")
+        fcntl.flock(lock, fcntl.LOCK_EX)
+        try:
+            same = os.stat(lock_path).st_ino == os.fstat(lock.fileno()).st_ino
+        except FileNotFoundError:
+            same = False
+        if same:
+            break
+        lock.close()
+    staged = []
+    try:
+        raw = open(trust_path, "rb").read()
+        new, added, as_of = add_pins(raw, heights)
+        cpath = os.path.join(d, "release_constants.py")
+        c = parse_constants(open(cpath, "rb").read()) if os.path.exists(cpath) else None
+        outs = [(os.path.abspath(trust_path), new)]
+        if c:
+            outs.append((cpath, constants_source(c["NAMESPACE"], new, c["CATALOG_BYTES"])))
+        for path, data in outs:
+            fd, tmp = tempfile.mkstemp(dir=d, prefix=os.path.basename(path) + ".", suffix=".new")
+            staged.append((path, tmp))
+            with os.fdopen(fd, "wb") as fh:
                 fh.write(data)
-            os.replace(path + ".new", path)
+        need(open(trust_path, "rb").read() == raw, "the trust file changed during this run; nothing was written")
+        os.replace(staged[0][1], staged[0][0])
+        if len(staged) > 1:
+            try:
+                os.replace(staged[1][1], staged[1][0])
+            except BaseException:
+                fd, back = tempfile.mkstemp(dir=d, prefix="trust.json.", suffix=".new")
+                staged.append((None, back))
+                with os.fdopen(fd, "wb") as fh:
+                    fh.write(raw)
+                os.replace(back, staged[0][0])
+                raise
+    finally:
+        for _, tmp in staged:
+            try:
+                os.unlink(tmp)
+            except FileNotFoundError:
+                pass
+        try:
+            os.unlink(lock_path)
+        except FileNotFoundError:
+            pass
+        lock.close()
     t = json.loads(new)
     print("PINS ADDED %d: %s" % (len(added), " ".join(str(h) for h in added) or "(none)"))
     print("  %d pins; as_of %s; trust sha256 %s%s" % (len(t["header_pins"]), as_of, groups(sha(new), 8),

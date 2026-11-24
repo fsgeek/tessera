@@ -161,3 +161,21 @@ unchanged (`a4531c7d…`).
   checker and `gpgv`; no stronger claim.
 - **M6.** MECHANISM. The final OUT listing (`ls -A1`) and the hashes of the written files are checked; a failure
   quarantines OUT before PASS. Sheets: exactly 3 names and 3 hash lines (rehearsal), 2 and 2 (signing).
+
+## Pins review
+
+Codex review `CODEX-PINS.md`; pre-registered exit, no further round. Tool change only (`pins` in `release_tool.py`);
+candidate 4's `trust.json` is unchanged (sha256 `59199eaf...2d836c6`), the archive is rebuilt on Wednesday.
+
+- **MEDIUM, atomicity.** MECHANISM. Both outputs are staged in fresh uniquely named temp files in the same directory
+  before either is replaced; any failure removes this invocation's temp files and leaves the originals. Trust is
+  replaced, then constants; if the constants replace fails, the original trust is restored. Stale `.new` files no longer
+  block. The interruption window between the two renames remains (a killed process), disclosed, not closed.
+- **MEDIUM, concurrency.** MECHANISM. `fcntl.flock` on `trust.json.lock` for the whole read, fetch and publish; before
+  publishing the on-disk trust is re-read and the run refuses if its bytes differ from those read at the start.
+- **LOW, key canonicity.** MECHANISM. An input whose `header_pins` keys are not canonical decimal heights (no leading
+  zeros, no duplicates after normalization) is refused.
+- **LOW, as_of rule.** WORDING. Help text and REFRESH.md label it steward preparation policy (owner decision
+  2026-11-24): newest pinned header time, never below the previous `as_of`, never above the local clock; the profile
+  requires only a valid nondecreasing horizon.
+- Tests (fixtures, no network): failure between the replaces, stale `.new`, on-disk change during the run, non-canonical key.
