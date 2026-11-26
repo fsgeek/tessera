@@ -3,6 +3,21 @@
 Start here, then `recall()` in qhaway. The repository and memory are the record; where this note disagrees, they win.
 Supersedes `docs/handoff-2026-11-17-owner.md` for current state (its "how to work here" section still applies).
 
+## First thing, Thursday 2026-11-26 (rehearsal day)
+The author's sitting is today: read the diff on the Pangolin (~75 min), then the TEST rehearsal (~90 min).
+Before he starts, the steward (about 30 min):
+1. Run `scripts/ots-upgrade.sh`.
+2. Follow `docs/releases/v1-1/REFRESH.md`: anchor heights of every COMPLETE receipt (DynamoDB `lstate = COMPLETE`;
+   heights from each receipt's `layers[0].headers`), add pins, rebuild twice, regenerate the diff, update both sheets.
+3. Re-verify every receipt under the new trust file as in `docs/releases/v1-1/evidence/candidate-4-all-receipts.md`
+   (script pattern: a TEST wrapper around the exact trust file; fetch receipts read-only by digest name).
+4. Commit, push (the sheets clone a commit from GitHub), then give the author the printable
+   `docs/ceremony/release-REHEARSAL-SHEET.md` and a short list of what to bring (Pangolin, never-NUC sticks, paper
+   ceremony record; YubiKey B is not needed for the rehearsal).
+Still open with the author: the baseline decision (recommend: accept time-rooted `b134cdf` plus his diff reading);
+the later pin cadence (proposed: with the January and February sittings); a second fingerprint channel and the
+off-site copy of YubiKey B (needed before production, 27-30 Nov); "go" for the live detection tests.
+
 ## Done this tenure
 - **Amendment 12 signed** by the author, 2026-11-22 (`144b9f6`, final text r6), with his statement in the commit
   message. A termination deadline as *conditional abandonment* (each invocation reading at or after L_term attempts only
