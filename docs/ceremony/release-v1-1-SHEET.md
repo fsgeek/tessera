@@ -27,12 +27,12 @@ Values (each must equal what you see, in full):
 
 | Name | Value |
 |---|---|
-| source commit | `cb474356 aafa95a5 bf8c3512 8aaec654 b2b3e33f` (the rehearsal's) |
+| source commit | `b22e08f2 98da6aef 8d750322 d2ee006e b9738f33` (the rehearsal's) |
 | baseline commit | `b134cdfd acc5d89f 2748fa7e c15c46e3 8b51a32c` |
-| change list, last line | `DIFF 7 added or changed, 0 removed; sha256 of the text above ea02b7b8 ca7f7256 054d077b 63c98501 f72017b7 b5b440b0 9d99d591 23b91e2f` |
-| change list, whole file `/tmp/diff.txt` | `f5e88951 ae6976a5 58e0c610 7d03fd0a 6375311d 02d6f380 54e5b553 1226e95f` |
+| change list, last line | `DIFF 7 added or changed, 0 removed; sha256 of the text above 74e65031 abd7ff75 6a574a6b 4c417f4d 41a6f65a bf9ed9e8 e95126e3 a90e33fa` |
+| change list, whole file `/tmp/diff.txt` | `c7bbb193 842decff 8854e483 f91ac60e d17563be 5a700cd2 6736194e 15ab3ff1` |
 | change list digest you approved | ____________________________________________________________ (from your rehearsal sheet) |
-| archive `tessera-verifier-v1-1.parts` | `e88a0a78 5a49b174 2c8acd6d 2fc4bc8a be33f35e a90dff2f 40987354 56e8f19c` |
+| archive `tessera-verifier-v1-1.parts` | `1342b5b9 815eba01 c07ba464 702a2444 56515d5c 2afa38a0 f1814e88 088dc272` |
 | `release_tool.py` | `2d2694fb 3e87b795 f252e5dd c2668609 8ef8863b ffdd315b 9697eff1 ba103880` |
 | `sign-release.sh` | `20d5e19c 1ff46f0a f25b3dc9 308290e3 014a3084 c0c887a0 31b450e3 8a2df15a` |
 | release public key file | `1a817ae3 9f974501 84d85e5c 09bbdc0a 301b18be 65c8c397 5144d3d8 160cf6f3` |
@@ -53,7 +53,7 @@ git clone https://github.com/fsgeek/tessera.git
 cd tessera
 ```
 ```
-git checkout cb474356aafa95a5bf8c35128aaec654b2b3e33f
+git checkout b22e08f298da6aef8d750322d2ee006eb9738f33
 ```
 ```
 git rev-parse HEAD
@@ -66,8 +66,8 @@ Want: the `release_tool.py` and `sign-release.sh` values above.
 ```
 python3 service/verifier/release/release_tool.py diff --repo . --base b134cdfdacc5d89f2748fa7ec15c46e38b51a32c --commit HEAD --out /tmp/diff.txt
 ```
-Want one line: `DIFF 7 added or changed, 0 removed; sha256 of the text above ea02b7b8 ca7f7256 054d077b 63c98501
-f72017b7 b5b440b0 9d99d591 23b91e2f`.
+Want one line: `DIFF 7 added or changed, 0 removed; sha256 of the text above 74e65031 abd7ff75 6a574a6b 4c417f4d
+41a6f65a bf9ed9e8 e95126e3 a90e33fa`.
 ```
 sha256sum /tmp/diff.txt
 ```
@@ -98,18 +98,18 @@ catalog.json                     662 aaf4306fed070119022c8486219f5160dc869edaa92
 ```
 python3 service/verifier/release/release_tool.py build --repo . --commit HEAD --out /tmp/out
 ```
-Want one line: `BUILT tessera-verifier-v1-1.parts  sha256 e88a0a78 5a49b174 2c8acd6d 2fc4bc8a be33f35e a90dff2f 40987354
-56e8f19c`. **[WRITE]** the eight groups you see: ____________________________________________________________
+Want one line: `BUILT tessera-verifier-v1-1.parts  sha256 1342b5b9 815eba01 c07ba464 702a2444 56515d5c 2afa38a0 f1814e88
+088dc272`. **[WRITE]** the eight groups you see: ____________________________________________________________
 ```
 python3 service/verifier/release/release_tool.py check /tmp/out/tessera-verifier-v1-1.parts --repo .
 ```
 Want exactly 12 lines: `CHECK PASS: …`; the archive line with the hash above; `namespace PRODUCTION release 1
-successor None`; `source commit cb474356…`; `freeze commit 52ee1791… record sha256 05542967 b091424a 614afd38 a32cfb84
+successor None`; `source commit b22e08f2…`; `freeze commit 52ee1791… record sha256 05542967 b091424a 614afd38 a32cfb84
 7b9b6b3f 0e5a7b71 03b11cd2 2d95575e`; `catalog sha256 aaf4306f ed070119 022c8486 219f5160 dc869eda a929f323 d962fbb6
-79e27fc2`; `trust file sha256 59199eaf e5e8a005 81ed506c 30e6f6b1 a1281b18 8c41684b 9e2bfc0a f2d836c6 version 1 as_of
-2026-11-23T14:44:14Z`; `parts 31`; `repository key 6BDA 2155 9F18 D5DB 8E13 12C3 6321 0B5F F92A D30A from
+79e27fc2`; `trust file sha256 3ef97f19 527d7616 8dab10d8 5f396a6d 5c8a602c b63047a5 61098646 0e69a176 version 1 as_of
+2026-11-25T16:20:25Z`; `parts 31`; `repository key 6BDA 2155 9F18 D5DB 8E13 12C3 6321 0B5F F92A D30A from
 2026-11-10T19:44:55Z to None`; two `root KSK` lines (KSK-2017 tag 20326, KSK-2024 tag 38696);
-`header pins 60 heights: …` followed by the 60 heights below, in this order (ten runs of six). Compare the
+`header pins 72 heights: …` followed by the 72 heights below, in this order (twelve runs of six). Compare the
 repository key with your paper ceremony record. **[PHOTO]**
 ```
 975705 975706 975707 975708 975709 975710
@@ -122,13 +122,15 @@ repository key with your paper ceremony record. **[PHOTO]**
 976918 976919 976920 976921 976922 976923
 977072 977073 977074 977075 977076 977077
 977216 977217 977218 977219 977220 977221
+977379 977380 977381 977382 977383 977384
+977531 977532 977533 977534 977535 977536
 ```
 ```
 python3 service/verifier/release/release_tool.py sources /tmp/out/tessera-verifier-v1-1.parts
 ```
-Want exactly 63 lines: 2 `KSK-… digest equals IANA root-anchors.xml`, 60 `height … pin equals blockstream.info and
-mempool.space` (the 60 heights above, ascending), then `SOURCES PASS: 2 KSKs and 60 pins equal their public
-sources.` (about 15 minutes over Tor.) If it fails with a network error, run it once more; a second failure,
+Want exactly 75 lines: 2 `KSK-… digest equals IANA root-anchors.xml`, 72 `height … pin equals blockstream.info and
+mempool.space` (the 72 heights above, ascending), then `SOURCES PASS: 2 KSKs and 72 pins equal their public
+sources.` (about 18 minutes over Tor.) If it fails with a network error, run it once more; a second failure,
 or any unequal value, is a stop. **[PHOTO]**
 ```
 sha256sum docs/ceremony/keys/release-CADC96CF002355F8E83FE97FAFF80961D825035E.pub.asc

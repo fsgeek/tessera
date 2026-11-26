@@ -33,7 +33,7 @@ existing pin contradicted) is a stop: nothing is written on refusal. A `curl` er
 ```
 cd service/verifier && TESSERA_VERIFY_INSTALL_JSON=/home/tony/projects/tessera/service/verifier/install.json /home/tony/projects/tessera/service/verifier/.venv/bin/python -m pytest -q -p no:cacheprovider; cd ../..
 ```
-Expect `1 failed, 166 passed` (the failure is `test_independence.py::…test_loaded_modules_come_from_the_service_tree_only`,
+Expect `1 failed, 170 passed` (candidate 5, 2026-11-26; 166 before the pins tests of `1f9d914`; the failure is `test_independence.py::…test_loaded_modules_come_from_the_service_tree_only`,
 worktree-only). The `Pins` tests use their own fixture and do not change with the trust file.
 
 **2.3** Commit the source (the post-commit hook then adds an `ots: stamp` commit; that is expected):
