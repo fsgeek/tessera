@@ -44,10 +44,15 @@ Labels: **[REG]** registered text (cited); **[OWNER DECISION]** decided by the s
 2. **[OWNER DECISION]** The signature is a detached OpenPGP binary signature, SHA-256, over the exact archive bytes,
    by the release key `CADC 96CF 0023 55F8 E83F E97F AFF8 0961 D825 035E` on YubiKey B (equal to R3).
 3. **[OWNER DECISION]** Tools: the GnuPG in the Tails image the author used at the ceremony (2.4.7 then). Its
-   version lines and the SHA-256 of its `gpgv` binary are recorded at the rehearsal, and the production sitting checks
-   the same lines and hash. R3 pins upstream
-   gpgv 2.4.4 and accepts a distribution build only if it reproduces upstream on the release-format vectors, so the
-   rehearsal runs Tails' gpgv on them.
+   version line is recorded at the rehearsal, and the production sitting checks the same line. **[OWNER DECISION
+   2026-11-27]** No `gpgv` runs in the signing session: Tails 7.16 ships none (Debian 13's apt verifies with `sqv`),
+   found at the 2026-11-26 rehearsal. The session checks the new signature against rule O and requires it to name
+   its signer, which is all R3 asks of the session ("checks it against rule O before it leaves the session"). R3's
+   acceptance (`gpgv` with only the release key) runs on the NUC before anything else, with the NUC's `gpgv`, which
+   reproduces upstream 2.4.4 on the release-format vectors (9/9, `service/release-vectors/RESULTS.txt`). Cost,
+   accepted: a signature that fails `gpgv` is found on the NUC, not in the session, and needs another signing sitting;
+   nothing is published. *(Was: Tails' `gpgv` version and binary hash recorded at the rehearsal and checked at
+   production; Tails' `gpgv` run on the vectors at the rehearsal.)*
 4. **[OWNER DECISION, 2026-11-23, review H1]** First-release baseline (custody draft §9, "For the first release ...
    say how you create it"): commit `b134cdf` (the Codex-reviewed verifier package, 2026-10-26, a descendant of the
    freeze commit `52ee179`), dated by its OpenTimestamps proof (Bitcoin block 973240), which the author checks on the
@@ -69,8 +74,8 @@ Labels: **[REG]** registered text (cited); **[OWNER DECISION]** decided by the s
    `service/verifier/release/release_tool.py`, which the author reads on the Pangolin's screen. Its hash is the
    approved change list's line for it, checked with `sha256sum` on the Pangolin and again offline. Ordinary
    acquisition outside the ceremony relies on a checker and `gpgv` its caller selected; nothing stronger is claimed. A relying party's copy from GitHub
-   is authenticated only by that party's own reading or trust in GitHub. gpgv: the Tails binary whose SHA-256 the
-   rehearsal records after it passes the vectors; the production sitting compares its hash (review M4).
+   is authenticated only by that party's own reading or trust in GitHub. gpgv: the NUC's, after it passes the
+   vectors (decision 3, 2026-11-27; was the Tails binary, review M4).
 6. **[OWNER DECISION]** Before signing, the author checks the release fingerprint against his ORCID record
    (`https://orcid.org/0000-0002-0651-5019`) **and** his paper ceremony record.
 
@@ -131,9 +136,11 @@ Labels: **[REG]** registered text (cited); **[OWNER DECISION]** decided by the s
 12. `inspect`: grammar, R2 equalities, namespace `PRODUCTION`. The key file is exactly `CADC…035E`; paper, ORCID and
     screen agree; YubiKey B is the card.
 13. Compare the archive hash with the paper one last time; sign (PIN, touch); remove YubiKey B.
-14. Verify the new signature as a relying party would (rule O, signer, `gpgv` with only that key).
-15. A copy with one byte changed must fail.
-16. Write the signature and `record.txt` to OUT; shut down.
+14. Check the new signature against rule O; it must name the release key as its signer (decision 3, 2026-11-27).
+15. Write the signature and `record.txt` to OUT; shut down.
+16. (Owner, NUC, before step 17.) Verify the signature as a relying party would: `verify-sig` with only the release
+    key and the NUC's vector-checked `gpgv`; a copy with one changed byte must be refused. A failure is a stop: a new
+    signing sitting; nothing is published.
 
 **D. Publication (owner, NUC)**, custody §9 "Publication":
 17. `release_tool.py acquire` (no `--out`) with fingerprint `CADC…035E` over the NUC's own archive and the signature

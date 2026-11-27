@@ -30,9 +30,8 @@ Values (each must equal what you see, in full):
 | change list, whole file `/tmp/diff.txt` | `c7bbb193 842decff 8854e483 f91ac60e d17563be 5a700cd2 6736194e 15ab3ff1` |
 | archive `tessera-verifier-v1-1.parts` | `1342b5b9 815eba01 c07ba464 702a2444 56515d5c 2afa38a0 f1814e88 088dc272` |
 | `release_tool.py` | `5225491c 3a8ff58c d63be3a0 0b44c51a d617667f 8a20e412 0b75966c 01e7c458` |
-| `sign-release.sh` | `20d5e19c 1ff46f0a f25b3dc9 308290e3 014a3084 c0c887a0 31b450e3 8a2df15a` |
+| `sign-release.sh` | `5da81233 2a37202b 0abe2e92 0778c215 8f731263 d8aa7dc6 b4ad534c 2fe00526` |
 | release public key file | `1a817ae3 9f974501 84d85e5c 09bbdc0a 301b18be 65c8c397 5144d3d8 160cf6f3` |
-| release vectors (all files) | `66d149cd 999d0ccc fca10c98 4715d3ed bbddb6ad 4ba2b789 682d45b0 c43eca93` |
 | release key fingerprint | `CADC 96CF 0023 55F8 E83F E97F AFF8 0961 D825 035E` |
 | repository root fingerprint | `6BDA 2155 9F18 D5DB 8E13 12C3 6321 0B5F F92A D30A` |
 
@@ -166,16 +165,6 @@ gpg --show-keys docs/ceremony/keys/release-CADC96CF002355F8E83FE97FAFF80961D8250
 ```
 Want: one `pub nistp256 2026-11-10 [SC]` line, the release key fingerprint above, `uid Tessera release key
 <tessera@wamason.com>`, and no `sub` line.
-```
-cd service
-```
-```
-find release-vectors -type f -print0 | LC_ALL=C sort -z | xargs -0 sha256sum | sha256sum
-```
-Want: the release vectors value above, then `  -`.
-```
-cd ..
-```
 In Tor Browser open `https://orcid.org/0000-0002-0651-5019`. In the Biography, compare the release key and the
 repository root with your paper ceremony record and with the two fingerprints above. **[WRITE]** ORCID = paper =
 sheet, both keys: yes / no ________ . No is a stop.
@@ -191,9 +180,6 @@ cp /tmp/out/tessera-verifier-v1-1.parts service/verifier/release/release_tool.py
 ```
 ```
 cp docs/ceremony/keys/release-CADC96CF002355F8E83FE97FAFF80961D825035E.pub.asc /media/amnesia/INPUT/release.pub.asc
-```
-```
-cp -R service/release-vectors /media/amnesia/INPUT/release-vectors
 ```
 ```
 sha256sum /media/amnesia/INPUT/tessera-verifier-v1-1.parts /media/amnesia/INPUT/release_tool.py /media/amnesia/INPUT/sign-release.sh /media/amnesia/INPUT/release.pub.asc
@@ -225,28 +211,25 @@ bash /tmp/s.sh rehearse
 write QUARANTINE on OUT; nothing on it is used. In every other case OUT is empty.
 
 It asks, in order:
-1. After the `gpg (GnuPG)` and `gpgv (GnuPG)` lines, the `gpgv binary` hash and the two stick lines: **[WRITE]** the
-   two version lines ______________ / ______________ and the gpgv binary hash, 8 groups:
-   ____________________________________________________________ . The INPUT stick line must show the serial you
-   wrote in Part 1 and the OUT line the serial you wrote above; type `yes`.
-2. Four values: the archive (equal to what you wrote in Part 1), `release_tool.py`, the release public key file and
-   the release vectors (equal to the values above); type `yes`.
+1. After the `gpg (GnuPG)` line and the two stick lines: **[WRITE]** the version line ______________ . There is no
+   `gpgv` in this Tails (7.16 ships none); the signature is verified with `gpgv` on the NUC afterwards. The INPUT
+   stick line must show the serial you wrote in Part 1 and the OUT line the serial you wrote above; type `yes`.
+2. Three values: the archive (equal to what you wrote in Part 1), `release_tool.py` and the release public key file
+   (equal to the values above); type `yes`.
 3. Eject INPUT in *Files*, remove it, press Enter.
 
 Then it runs to the end. Want, in order:
 - `INSPECT PASS: PRODUCTION release 1, 31 parts, R2 bindings hold.`, the archive hash, `namespace PRODUCTION`;
 - the release key lines and `key file holds exactly the key CADC 96CF 0023 55F8 E83F E97F AFF8 0961 D825 035E`;
 - `TEST key …` (a new 40-character fingerprint, not the release key's);
-- `SIGNATURE PASS: rule O, signer <the TEST key>, …`: a control, showing the TEST signature itself is good;
-- `REFUSED: gpgv refused (exit 1): …BAD signature…` and `MUTATION REFUSED (as required)`;
+- `RULE O PASS, signed by <the TEST key, in groups>`: the TEST signature's form and its named signer;
 - **twice** `REFUSED: signed by <the TEST key>, not by the authenticated key CADC96CF002355F8E83FE97FAFF80961D825035E`,
   each followed by `ROW 36 REFUSED, nothing unpacked, key offered: …` (first `release.pub.asc`, then `test.pub.pgp`);
 - `(The installed verifier's section 3.5 refusal needs Python 3.14 and cannot run here: NUC evidence only.)`;
-- the vector table: 9 lines starting `match`, then `9/9 match`;
 - the OUT listing: exactly 3 names, `record.txt`, `tessera-verifier-v1-1.parts.sig`, `test.pub.pgp`; then exactly
   3 hash lines, one per file; then `==> PASS: rehearse. …`
 
-**[PHOTO]** the row 36 lines, the vector table and the final PASS. Eject OUT; shut down. **End time:** ________
+**[PHOTO]** the row 36 lines and the final PASS. Eject OUT; shut down. **End time:** ________
 
 ## After
 
@@ -255,4 +238,6 @@ change-list digest you wrote is what the production sitting compares. Keep INPUT
 away from the NUC and every everyday computer: it may be the production sitting's INPUT. Tell the owner the times
 and everything you wrote. The second half of row 36 (the installed production verifier refusing the section 3.5
 interface with `TEST_AUTHORITY_REFUSED`, exit 2, no verdict) needs Python 3.14, which Tails lacks; it is the NUC's
-recorded evidence (`docs/releases/v1-1/evidence/`), not part of this sitting.
+recorded evidence (`docs/releases/v1-1/evidence/`), not part of this sitting. The owner then rehearses the NUC's
+first step after a real signing: `gpgv` with only the TEST key accepts the TEST signature, and refuses it over a copy
+with one changed byte.

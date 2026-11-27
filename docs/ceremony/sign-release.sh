@@ -2,10 +2,13 @@
 # Sign (or rehearse signing) a Tessera verifier release, offline on Tails (owner, 2026-11-23). Read before running.
 #   bash /tmp/s.sh rehearse     a throwaway TEST key made in memory; shows the A10 row-36 refusals; no YubiKey
 #   bash /tmp/s.sh sign         YubiKey B (serial 39975596), the production release key CADC...035E
-# Reads /media/amnesia/INPUT/{tessera-verifier-v1-1.parts, release.pub.asc, release_tool.py[, release-vectors/]},
+# Reads /media/amnesia/INPUT/{tessera-verifier-v1-1.parts, release.pub.asc, release_tool.py},
 # copies them into memory once and asks you to remove INPUT before any key is used. Runs only files whose SHA-256 you
 # wrote in the networked session from the approved source. Writes only to /media/amnesia/OUT, after every check, and
 # reads back what it wrote. It never runs or installs anything from the archive.
+# No gpgv here (OWNER DECISION 2026-11-27): Tails 7.16 ships none (Debian 13's apt uses sqv). The session checks the
+# new signature against rule O and its named signer; the owner verifies it with gpgv on the NUC before anything else
+# (procedure step 14), with the gpgv that reproduces upstream on the release-format vectors.
 set -u
 export LC_ALL=C LANG=C
 MODE="${1:-}"
@@ -42,27 +45,19 @@ for src in $(findmnt -rn -o SOURCE | sed 's/\[.*//' | grep '^/dev/' | sort -u); 
 done
 command -v python3 >/dev/null || fail "python3 is not available"
 [ -s "$IN/$NAME" ] && [ -s "$IN/release.pub.asc" ] && [ -s "$IN/release_tool.py" ] || fail "INPUT must hold $NAME, release.pub.asc, release_tool.py"
-[ "$MODE" = sign ] || [ -s "$IN/release-vectors/run.py" ] || fail "INPUT must hold release-vectors/ for the rehearsal"
 [ "$(findmnt -n -o TARGET --target "$OUT" 2>/dev/null)" = "$OUT" ] || fail "$OUT is not mounted (format a stick FAT, volume name OUT)"
 [ -z "$(ls -A "$OUT")" ] || fail "$OUT is not empty: format it again"
 [ -e "$W" ] && fail "$W exists: this is not a fresh session; shut down and start again"
 mkdir "$W" && cp "$IN/$NAME" "$IN/release.pub.asc" "$IN/release_tool.py" "$W/" || fail "copy from INPUT"
-[ "$MODE" = sign ] || cp -R "$IN/release-vectors" "$W/" || fail "copy release-vectors"
 export GNUPGHOME=$(mktemp -d /tmp/gnupg.XXXXXX) && chmod 700 "$GNUPGHOME"
 [ "$(findmnt -n -o FSTYPE --target "$W")" = tmpfs ] && [ "$(findmnt -n -o FSTYPE --target "$GNUPGHOME")" = tmpfs ] || fail "/tmp is not in memory"
-GPGV=$(command -v gpgv) || fail "no gpgv"
-gpg --version | head -1; gpgv --version | head -1
-sha256sum "$GPGV" | awk '{h=$1; printf "  gpgv binary %s\n    ", $2; for(i=1;i<=64;i+=8) printf "%s ", substr(h,i,8); print ""}'
+gpg --version | head -1
 echo "  INPUT stick: $(stick "$IN")"
 echo "  OUT stick:   $(stick "$OUT")"
 ask "INPUT's serial is the one you wrote in Part 1, and OUT is the stick your sheet names?"
 
 say "2. The files now in memory. Compare each with the value you wrote in Part 1, in full:"
 sha256sum "$W/$NAME" "$W/release_tool.py" "$W/release.pub.asc" | awk '{h=$1; printf "  %s\n    ", $2; for(i=1;i<=64;i+=8) printf "%s ", substr(h,i,8); print ""}'
-if [ "$MODE" = rehearse ]; then
-  VEC=$(cd "$W" && find release-vectors -type f -print0 | LC_ALL=C sort -z | xargs -0 sha256sum | sha256sum | cut -d' ' -f1)
-  echo "$VEC" | awk '{h=$1; printf "  release-vectors (all files)\n    "; for(i=1;i<=64;i+=8) printf "%s ", substr(h,i,8); print ""}'
-fi
 ask "Every value equals what you wrote?"
 say "Eject INPUT in Files and remove it now. Then press Enter."; read -r _
 [ -z "$(findmnt -n -o TARGET --target "$IN" 2>/dev/null | grep -x "$IN")" ] || fail "INPUT is still mounted: eject and remove it, then run again from step 0"
@@ -115,20 +110,17 @@ else
       --output "$W/$NAME.sig" --detach-sign "$W/$NAME" 2>/dev/null || fail "TEST signing failed"
 fi
 
-say "7. The new signature over the same bytes, with only the signer's key (rehearsal: a control, not a release):"
-python3 -I "$W/release_tool.py" verify-sig "$W/$NAME" "$W/$NAME.sig" --fingerprint "$SIGNER" --key "$KEY" \
-  || fail "the new signature does not verify"
-
-say "8. One changed byte must be refused by gpgv:"
-python3 -I - "$W/$NAME" "$W/mutated" <<'EOF' || fail "mutation copy"
-import sys; b = bytearray(open(sys.argv[1], 'rb').read()); b[len(b) // 2] ^= 1; open(sys.argv[2], 'wb').write(b)
+say "7. The new signature: rule O, naming its signer (gpgv verification follows on the NUC, procedure step 14):"
+python3 -I - "$W/release_tool.py" "$W/$NAME.sig" "$SIGNER" <<'EOF' || fail "the new signature fails rule O or does not name its signer"
+import importlib.util, sys
+s = importlib.util.spec_from_file_location('rt', sys.argv[1]); rt = importlib.util.module_from_spec(s); s.loader.exec_module(rt)
+issuer = rt.rule_o(open(sys.argv[2], 'rb').read())
+assert issuer == sys.argv[3], 'issuer %r' % issuer
+print('  RULE O PASS, signed by', rt.groups(issuer))
 EOF
-expect_refusal "gpgv refused (exit 1): ['gpgv: BAD signature from \"$UID_\"']" python3 -I "$W/release_tool.py" verify-sig "$W/mutated" "$W/$NAME.sig" \
-  --fingerprint "$SIGNER" --key "$KEY"
-echo "  MUTATION REFUSED (as required)"
 
 if [ "$MODE" = rehearse ]; then
-  say "9. A10 row 36: production acquisition (fingerprint CADC...035E) must refuse the TEST-signed archive, unpack nothing."
+  say "8. A10 row 36: production acquisition (fingerprint CADC...035E) must refuse the TEST-signed archive, unpack nothing."
   n=0
   for key in "$W/release.pub.asc" "$W/test.pub.pgp"; do
     n=$((n + 1))
@@ -138,17 +130,12 @@ if [ "$MODE" = rehearse ]; then
     echo "  ROW 36 REFUSED, nothing unpacked, key offered: $(basename "$key") (as required)"
   done
   echo "  (The installed verifier's section 3.5 refusal needs Python 3.14 and cannot run here: NUC evidence only.)"
-  say "10. This Tails gpgv against the release-format vectors (profile 15.9 R3):"
-  python3 -I "$W/release-vectors/run.py" "$GPGV" > "$W/vectors.txt"; rc=$?
-  cat "$W/vectors.txt"
-  [ "$rc" -eq 0 ] && [ "$(tail -1 "$W/vectors.txt")" = "9/9 match" ] || fail "this gpgv does not reproduce upstream on the vectors"
 fi
 
-say "11. Writing OUT (only now), then reading it back:"
+say "9. Writing OUT (only now), then reading it back:"
 { echo "mode $MODE"; echo "started $T0"; echo "finished $(date -u +%Y-%m-%dT%H:%M:%SZ)"
-  echo "signer $SIGNER"; gpg --version | head -1; gpgv --version | head -1; sha256sum "$GPGV"
-  sha256sum "$W/$NAME" "$W/$NAME.sig" | sed "s#$W/##"
-  [ "$MODE" = sign ] || cat "$W/vectors.txt"; } > "$W/record.txt" || fail "record.txt"
+  echo "signer $SIGNER"; gpg --version | head -1
+  sha256sum "$W/$NAME" "$W/$NAME.sig" | sed "s#$W/##"; } > "$W/record.txt" || fail "record.txt"
 FILES="$NAME.sig record.txt"; [ "$MODE" = sign ] || FILES="$FILES test.pub.pgp"
 for f in $FILES; do cp "$W/$f" "$OUT/$f" || quarantine "could not write $f to OUT"; done
 sync || quarantine "sync failed"

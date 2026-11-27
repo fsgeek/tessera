@@ -34,12 +34,11 @@ Values (each must equal what you see, in full):
 | change list digest you approved | ____________________________________________________________ (from your rehearsal sheet) |
 | archive `tessera-verifier-v1-1.parts` | `1342b5b9 815eba01 c07ba464 702a2444 56515d5c 2afa38a0 f1814e88 088dc272` |
 | `release_tool.py` | `5225491c 3a8ff58c d63be3a0 0b44c51a d617667f 8a20e412 0b75966c 01e7c458` |
-| `sign-release.sh` | `20d5e19c 1ff46f0a f25b3dc9 308290e3 014a3084 c0c887a0 31b450e3 8a2df15a` |
+| `sign-release.sh` | `5da81233 2a37202b 0abe2e92 0778c215 8f731263 d8aa7dc6 b4ad534c 2fe00526` |
 | release public key file | `1a817ae3 9f974501 84d85e5c 09bbdc0a 301b18be 65c8c397 5144d3d8 160cf6f3` |
 | release key fingerprint | `CADC 96CF 0023 55F8 E83F E97F AFF8 0961 D825 035E` |
 | repository root fingerprint | `6BDA 2155 9F18 D5DB 8E13 12C3 6321 0B5F F92A D30A` |
-| GnuPG lines at the rehearsal | ______________________ / ______________________ (from your rehearsal sheet) |
-| gpgv binary at the rehearsal | ____________________________________________________________ (from your rehearsal sheet) |
+| GnuPG line at the rehearsal | ______________________ (from your rehearsal sheet) |
 
 ## Part 1: check, build, decide (a Tails boot, network ON)
 
@@ -198,8 +197,8 @@ the message says OUT IS QUARANTINED, write QUARANTINE on OUT, and nothing on it 
 the owner. Never reset the card, whatever fails.
 
 It asks you, in order:
-1. After the `gpg (GnuPG)` and `gpgv (GnuPG)` lines and the `gpgv binary` hash: these three must equal the
-   rehearsal's, written above (if not: Ctrl-C, shut down, tell the owner). The INPUT stick line must show the serial
+1. After the `gpg (GnuPG)` line: it must equal the rehearsal's, written above (if not: Ctrl-C, shut down, tell the
+   owner). No `gpgv` runs in this session (Tails 7.16 ships none). The INPUT stick line must show the serial
    you wrote in Part 1 and the OUT line the serial you wrote in Part 2; type `yes`.
 2. Three values: the archive (equal to what you wrote in Part 1), `release_tool.py` and the release public key file
    (equal to the values above); type `yes`.
@@ -213,10 +212,9 @@ It asks you, in order:
 7. Enter the user PIN; touch YubiKey B when it blinks.
 8. Remove YubiKey B, press Enter.
 
-Then it runs to the end. Want, in order: `SIGNATURE PASS: rule O, signer CADC 96CF 0023 55F8 E83F E97F AFF8 0961 D825
-035E, gpgv exit 0 with only that key.`; `REFUSED: gpgv refused (exit 1): …BAD signature…` and `MUTATION REFUSED (as
-required)`; the OUT listing, exactly 2 names, `record.txt` and `tessera-verifier-v1-1.parts.sig`, then exactly 2
-hash lines, one per file; and `==> PASS: sign. …`. **[PHOTO]** the SIGNATURE PASS line, the OUT hashes and the final
+Then it runs to the end. Want, in order: `RULE O PASS, signed by CADC 96CF 0023 55F8 E83F E97F AFF8 0961 D825 035E`;
+the OUT listing, exactly 2 names, `record.txt` and `tessera-verifier-v1-1.parts.sig`, then exactly 2
+hash lines, one per file; and `==> PASS: sign. …`. **[PHOTO]** the RULE O PASS line, the OUT hashes and the final
 PASS. **[WRITE]** the `.sig` hash, 8 groups: ____________________________________________________________
 
 Eject OUT; remove it; shut down. **End time:** ________
@@ -225,6 +223,9 @@ Eject OUT; remove it; shut down. **End time:** ________
 
 - OUT goes to the owner. YubiKey B goes back to its place; where it and its backup are kept is stated in the custody
   record, not here.
-- Tell the owner "signed", the `.sig` hash and the times. The owner runs the release tool's `acquire` over the NUC's
+- Tell the owner "signed", the `.sig` hash and the times. The owner first verifies the signature with `gpgv` and only
+  the release key (`release_tool.py verify-sig`, the NUC's `gpgv` that matched upstream on the release-format vectors),
+  then checks that a copy with one changed byte is refused; either failing means a new signing sitting, and nothing is
+  published. The owner then runs the release tool's `acquire` over the NUC's
   own archive and the signature from OUT, publishes the exact bytes it reports, the signature and the summary, stamps
   them, and writes the bootstrap record.
