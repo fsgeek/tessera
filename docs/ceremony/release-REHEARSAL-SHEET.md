@@ -29,7 +29,7 @@ Values (each must equal what you see, in full):
 | change list, last line | `DIFF 7 added or changed, 0 removed; sha256 of the text above 74e65031 abd7ff75 6a574a6b 4c417f4d 41a6f65a bf9ed9e8 e95126e3 a90e33fa` |
 | change list, whole file `/tmp/diff.txt` | `c7bbb193 842decff 8854e483 f91ac60e d17563be 5a700cd2 6736194e 15ab3ff1` |
 | archive `tessera-verifier-v1-1.parts` | `1342b5b9 815eba01 c07ba464 702a2444 56515d5c 2afa38a0 f1814e88 088dc272` |
-| `release_tool.py` | `2d2694fb 3e87b795 f252e5dd c2668609 8ef8863b ffdd315b 9697eff1 ba103880` |
+| `release_tool.py` | `5225491c 3a8ff58c d63be3a0 0b44c51a d617667f 8a20e412 0b75966c 01e7c458` |
 | `sign-release.sh` | `20d5e19c 1ff46f0a f25b3dc9 308290e3 014a3084 c0c887a0 31b450e3 8a2df15a` |
 | release public key file | `1a817ae3 9f974501 84d85e5c 09bbdc0a 301b18be 65c8c397 5144d3d8 160cf6f3` |
 | release vectors (all files) | `66d149cd 999d0ccc fca10c98 4715d3ed bbddb6ad 4ba2b789 682d45b0 c43eca93` |
@@ -103,6 +103,9 @@ and `  freeze commit 52ee17918c5ed841587d78cb2ca3e8c54c4682d2 is its ancestor.` 
 fixed by 2026-10-26, four weeks before any release file, and cannot have been rewritten since, if the two explorers
 serve genuine chain data and Git's object hashes hold. It does not show that you approved that baseline (the
 procedure's question 5). **[PHOTO]**
+If it prints `REFUSED:` with a `curl` network error (exit status 28 is a timeout, 97 a failed connection to Tor;
+not an unequal value), check that *Tor Connection* shows connected, then run it once more. A second network failure
+is a stop: **[WRITE]** the error here: ______________ .
 ```
 python3 formal/freeze-v1/assemble.py --repo . --commit 270ca49 --out /tmp/fz
 ```

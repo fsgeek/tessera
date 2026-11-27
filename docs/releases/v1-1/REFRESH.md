@@ -12,6 +12,13 @@ verifier requires h*…h*+5 of all three proofs (profile §7.2 "Coverage"). Heig
 are checked against both explorers and left unchanged. A height whose h+5 does not yet have 6 confirmations (tip below
 h+10, about 100 minutes after h) is refused: leave it out and say so.
 
+## Step 1: read the new anchor heights (steward, read-only)
+
+`aws login --profile tessera` (the author runs it). Scan `tessera-v1-issuer-requests` for `lstate = COMPLETE`; fetch
+every `result/<rid>/<sha256>.json` from the results bucket by name and check each file's SHA-256 equals its name.
+The heights are the starts of the six-header runs in each receipt's `layers[0].headers`. List those not already
+pinned. Run the verification wrapper with `service/verifier/.venv/bin/python` (system `cryptography` lacks ML-DSA).
+
 ## Step 2: add the pins
 
 **2.1** Fetch, check and add:
@@ -94,8 +101,9 @@ python3 service/verifier/release/release_tool.py sources $B1/out/tessera-verifie
 ```
 Expect `SOURCES PASS: 2 KSKs and <count> pins equal their public sources.` and `<count + 3>`.
 
-**3.8** Update by hand, with the values from 3.1-3.7 (`release_tool.py` and `sign-release.sh` do not change on a
-refresh, so their hashes stay):
+**3.8** Update by hand, with the values from 3.1-3.7. **Compute** the hashes of `release_tool.py` and
+`sign-release.sh` at the source commit and compare them with both sheets; never assume they are unchanged (candidate
+5's tool hash on the sheets was stale because `1f9d914` changed the tool after candidate 4; the author caught it):
 - `docs/ceremony/release-REHEARSAL-SHEET.md` and `docs/ceremony/release-v1-1-SHEET.md`: the source commit (table, in
   groups of 8, and the `git checkout` line), the change list's last line (table and the `Want one line` after `diff`),
   the change list's whole-file digest, the archive hash (table and `Want one line` after `build`), the `check`

@@ -33,7 +33,7 @@ Values (each must equal what you see, in full):
 | change list, whole file `/tmp/diff.txt` | `c7bbb193 842decff 8854e483 f91ac60e d17563be 5a700cd2 6736194e 15ab3ff1` |
 | change list digest you approved | ____________________________________________________________ (from your rehearsal sheet) |
 | archive `tessera-verifier-v1-1.parts` | `1342b5b9 815eba01 c07ba464 702a2444 56515d5c 2afa38a0 f1814e88 088dc272` |
-| `release_tool.py` | `2d2694fb 3e87b795 f252e5dd c2668609 8ef8863b ffdd315b 9697eff1 ba103880` |
+| `release_tool.py` | `5225491c 3a8ff58c d63be3a0 0b44c51a d617667f 8a20e412 0b75966c 01e7c458` |
 | `sign-release.sh` | `20d5e19c 1ff46f0a f25b3dc9 308290e3 014a3084 c0c887a0 31b450e3 8a2df15a` |
 | release public key file | `1a817ae3 9f974501 84d85e5c 09bbdc0a 301b18be 65c8c397 5144d3d8 160cf6f3` |
 | release key fingerprint | `CADC 96CF 0023 55F8 E83F E97F AFF8 0961 D825 035E` |
@@ -84,6 +84,9 @@ python3 service/verifier/release/release_tool.py baseline --repo . --commit b134
 Want exactly two lines:
 `BASELINE PASS: b134cdfdacc5d89f2748fa7ec15c46e38b51a32c existed by Bitcoin block 973240, header time 2026-10-26T13:12:22Z (blockstream.info and mempool.space agree);`
 and `  freeze commit 52ee17918c5ed841587d78cb2ca3e8c54c4682d2 is its ancestor.` **[PHOTO]**
+If it prints `REFUSED:` with a `curl` network error (exit status 28 is a timeout, 97 a failed connection to Tor;
+not an unequal value), check that *Tor Connection* shows connected, then run it once more. A second network failure
+is a stop: **[WRITE]** the error here: ______________ .
 ```
 python3 formal/freeze-v1/assemble.py --repo . --commit 270ca49 --out /tmp/fz
 ```
