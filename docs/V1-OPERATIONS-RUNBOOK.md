@@ -15,6 +15,19 @@
 
 ## 1. Hardware
 
+> **Which physical key is which** (owner, 2026-11-27; found by hamut'ay's residents, plaza seq 312/313/316, and
+> levadura's request `docs/requests/2026-11-26-from-levadura-yubikey-naming.md`). This runbook and the profile number
+> the keys; the ceremony (`docs/ceremony/CEREMONY.md`) letters them. Serials and fingerprints are from
+> `docs/ceremony/2026-11-10-operator-data.md`; the sheets and `sign-release.sh` identify a key by serial and
+> fingerprint, never by name.
+>
+> | Role | Ceremony | Runbook / profile | Serial | Fingerprint |
+> |---|---|---|---|---|
+> | Offline repository root | **YubiKey A** | **YubiKey 2** | 39975687 | `6BDA 2155 9F18 D5DB 8E13 12C3 6321 0B5F F92A D30A` |
+> | Production release key | **YubiKey B** (white tag) | not numbered (§ "Not YubiKey 2") | 39975596 | `CADC 96CF 0023 55F8 E83F E97F AFF8 0961 D825 035E` |
+> | Spares | C (39975816), D | — | | |
+> | Issuer `gpg` slot token | — | YubiKey 1 (only "if token custody is selected") | | Not confirmed provisioned: slot 2 runs on a GCP HSM (README) |
+
 - **If token custody is selected: YubiKey 1, the gpg signing token.** Holds the `gpg` slot's P-256 key, generated on the token, non-exportable.
   PIN required; touch **off** for signing (the queue-fed signer runs unattended). It stops key export, not misuse:
   whoever controls the queue has signing capability (A9 C3).
