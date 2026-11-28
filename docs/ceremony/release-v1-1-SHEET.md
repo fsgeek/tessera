@@ -34,7 +34,7 @@ Values (each must equal what you see, in full):
 | change list digest you approved | ____________________________________________________________ (from your rehearsal sheet) |
 | archive `tessera-verifier-v1-1.parts` | `1342b5b9 815eba01 c07ba464 702a2444 56515d5c 2afa38a0 f1814e88 088dc272` |
 | `release_tool.py` | `5225491c 3a8ff58c d63be3a0 0b44c51a d617667f 8a20e412 0b75966c 01e7c458` |
-| `sign-release.sh` | `5da81233 2a37202b 0abe2e92 0778c215 8f731263 d8aa7dc6 b4ad534c 2fe00526` |
+| `sign-release.sh` | `9f249fcb b45573cd 5b499686 cbbc0e76 e4d153e2 5813b363 8aef9d0e 3bb9fd44` |
 | release public key file | `1a817ae3 9f974501 84d85e5c 09bbdc0a 301b18be 65c8c397 5144d3d8 160cf6f3` |
 | release key fingerprint | `CADC 96CF 0023 55F8 E83F E97F AFF8 0961 D825 035E` |
 | repository root fingerprint | `6BDA 2155 9F18 D5DB 8E13 12C3 6321 0B5F F92A D30A` |
@@ -212,7 +212,8 @@ It asks you, in order:
 7. Enter the user PIN; touch YubiKey B when it blinks.
 8. Remove YubiKey B, press Enter.
 
-Then it runs to the end. Want, in order: `RULE O PASS, signed by CADC 96CF 0023 55F8 E83F E97F AFF8 0961 D825 035E`;
+Then it runs to the end. Want, in order: `RULE O PASS (form and named signer only; not verified here): CADC 96CF 0023 55F8 E83F E97F AFF8 0961
+D825 035E`;
 the OUT listing, exactly 2 names, `record.txt` and `tessera-verifier-v1-1.parts.sig`, then exactly 2
 hash lines, one per file; and `==> PASS: sign. …`. **[PHOTO]** the RULE O PASS line, the OUT hashes and the final
 PASS. **[WRITE]** the `.sig` hash, 8 groups: ____________________________________________________________
@@ -223,9 +224,10 @@ Eject OUT; remove it; shut down. **End time:** ________
 
 - OUT goes to the owner. YubiKey B goes back to its place; where it and its backup are kept is stated in the custody
   record, not here.
-- Tell the owner "signed", the `.sig` hash and the times. The owner first verifies the signature with `gpgv` and only
-  the release key (`release_tool.py verify-sig`, the NUC's `gpgv` that matched upstream on the release-format vectors),
-  then checks that a copy with one changed byte is refused; either failing means a new signing sitting, and nothing is
+- Tell the owner "signed", the `.sig` hash and the times. The owner first runs the release-format vectors with one
+  explicit `gpgv` path (`run.py /usr/bin/gpgv`: `9/9 match`) and records that binary's SHA-256, then, with the same
+  path (`--gpgv /usr/bin/gpgv`), verifies the signature with only the release key (`release_tool.py verify-sig`) and
+  checks that a copy with one changed byte is refused; either failing means a new signing sitting, and nothing is
   published. The owner then runs the release tool's `acquire` over the NUC's
   own archive and the signature from OUT, publishes the exact bytes it reports, the signature and the summary, stamps
   them, and writes the bootstrap record.

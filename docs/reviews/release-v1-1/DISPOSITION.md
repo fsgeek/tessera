@@ -179,3 +179,17 @@ candidate 4's `trust.json` is unchanged (sha256 `59199eaf...2d836c6`), the archi
   2026-11-24): newest pinned header time, never below the previous `as_of`, never above the local clock; the profile
   requires only a valid nondecreasing horizon.
 - Tests (fixtures, no network): failure between the replaces, stale `.new`, on-disk change during the run, non-canonical key.
+
+## Codex, 2026-11-28 (CODEX-GPGV.md): dispositions (steward; exit rule pre-registered in the brief)
+
+- **M1 (pins killed between renames) and M2 (symlink alias bypasses the lock): recorded, not fixed in code.**
+  `check_bindings` (release_tool.py:225) refuses unless `sha(trust.json)`, the manifest and
+  `release_constants.TRUST_SHA256` agree, and `build`, `check`, `inspect` and `acquire` all run it, so a mismatched
+  pair cannot become a release. A code fix would change the archive and the change list the author read. REFRESH.md
+  now names the one path to use and how to recover.
+- **M3 (the NUC gpgv that passed the vectors is not shown to be the one invoked): fixed in the procedure and sheet.**
+  Step 16 runs the vectors with one explicit path, records that binary's hash, and passes the same path to
+  `verify-sig` and `acquire`.
+- **L1 (RULE O PASS overstates): fixed** in wording: "form and named signer only; not verified here".
+- **L2 (step 14 should be 16): fixed.**
+No further round: no fix changes the archive.

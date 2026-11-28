@@ -138,8 +138,9 @@ Labels: **[REG]** registered text (cited); **[OWNER DECISION]** decided by the s
 13. Compare the archive hash with the paper one last time; sign (PIN, touch); remove YubiKey B.
 14. Check the new signature against rule O; it must name the release key as its signer (decision 3, 2026-11-27).
 15. Write the signature and `record.txt` to OUT; shut down.
-16. (Owner, NUC, before step 17.) Verify the signature as a relying party would: `verify-sig` with only the release
-    key and the NUC's vector-checked `gpgv`; a copy with one changed byte must be refused. A failure is a stop: a new
+16. (Owner, NUC, before step 17.) Run the release-format vectors with one explicit `gpgv` path (`9/9 match`) and
+    record that binary's SHA-256; then, with the same path (`--gpgv`), `verify-sig` with only the release key, and a
+    copy with one changed byte must be refused; `acquire` (step 17) is given the same `--gpgv` path. A failure is a stop: a new
     signing sitting; nothing is published.
 
 **D. Publication (owner, NUC)**, custody §9 "Publication":

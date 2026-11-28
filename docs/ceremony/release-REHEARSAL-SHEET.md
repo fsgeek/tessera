@@ -30,7 +30,7 @@ Values (each must equal what you see, in full):
 | change list, whole file `/tmp/diff.txt` | `c7bbb193 842decff 8854e483 f91ac60e d17563be 5a700cd2 6736194e 15ab3ff1` |
 | archive `tessera-verifier-v1-1.parts` | `1342b5b9 815eba01 c07ba464 702a2444 56515d5c 2afa38a0 f1814e88 088dc272` |
 | `release_tool.py` | `5225491c 3a8ff58c d63be3a0 0b44c51a d617667f 8a20e412 0b75966c 01e7c458` |
-| `sign-release.sh` | `5da81233 2a37202b 0abe2e92 0778c215 8f731263 d8aa7dc6 b4ad534c 2fe00526` |
+| `sign-release.sh` | `9f249fcb b45573cd 5b499686 cbbc0e76 e4d153e2 5813b363 8aef9d0e 3bb9fd44` |
 | release public key file | `1a817ae3 9f974501 84d85e5c 09bbdc0a 301b18be 65c8c397 5144d3d8 160cf6f3` |
 | release key fingerprint | `CADC 96CF 0023 55F8 E83F E97F AFF8 0961 D825 035E` |
 | repository root fingerprint | `6BDA 2155 9F18 D5DB 8E13 12C3 6321 0B5F F92A D30A` |
@@ -222,7 +222,7 @@ Then it runs to the end. Want, in order:
 - `INSPECT PASS: PRODUCTION release 1, 31 parts, R2 bindings hold.`, the archive hash, `namespace PRODUCTION`;
 - the release key lines and `key file holds exactly the key CADC 96CF 0023 55F8 E83F E97F AFF8 0961 D825 035E`;
 - `TEST key …` (a new 40-character fingerprint, not the release key's);
-- `RULE O PASS, signed by <the TEST key, in groups>`: the TEST signature's form and its named signer;
+- `RULE O PASS (form and named signer only; not verified here): <the TEST key, in groups>`;
 - **twice** `REFUSED: signed by <the TEST key>, not by the authenticated key CADC96CF002355F8E83FE97FAFF80961D825035E`,
   each followed by `ROW 36 REFUSED, nothing unpacked, key offered: …` (first `release.pub.asc`, then `test.pub.pgp`);
 - `(The installed verifier's section 3.5 refusal needs Python 3.14 and cannot run here: NUC evidence only.)`;

@@ -8,7 +8,7 @@
 # reads back what it wrote. It never runs or installs anything from the archive.
 # No gpgv here (OWNER DECISION 2026-11-27): Tails 7.16 ships none (Debian 13's apt uses sqv). The session checks the
 # new signature against rule O and its named signer; the owner verifies it with gpgv on the NUC before anything else
-# (procedure step 14), with the gpgv that reproduces upstream on the release-format vectors.
+# (procedure step 16), with the gpgv that reproduces upstream on the release-format vectors.
 set -u
 export LC_ALL=C LANG=C
 MODE="${1:-}"
@@ -110,13 +110,13 @@ else
       --output "$W/$NAME.sig" --detach-sign "$W/$NAME" 2>/dev/null || fail "TEST signing failed"
 fi
 
-say "7. The new signature: rule O, naming its signer (gpgv verification follows on the NUC, procedure step 14):"
+say "7. The new signature: rule O, naming its signer (gpgv verification follows on the NUC, procedure step 16):"
 python3 -I - "$W/release_tool.py" "$W/$NAME.sig" "$SIGNER" <<'EOF' || fail "the new signature fails rule O or does not name its signer"
 import importlib.util, sys
 s = importlib.util.spec_from_file_location('rt', sys.argv[1]); rt = importlib.util.module_from_spec(s); s.loader.exec_module(rt)
 issuer = rt.rule_o(open(sys.argv[2], 'rb').read())
 assert issuer == sys.argv[3], 'issuer %r' % issuer
-print('  RULE O PASS, signed by', rt.groups(issuer))
+print('  RULE O PASS (form and named signer only; not verified here):', rt.groups(issuer))
 EOF
 
 if [ "$MODE" = rehearse ]; then
